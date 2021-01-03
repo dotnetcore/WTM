@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 {
@@ -13,20 +15,30 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             ListVM = new FrameworkGroupListVM();
         }
 
-        protected override bool CheckIfCanDelete(object id, out string errorMessage)
+        public override bool DoBatchDelete()
         {
-            Guid? checkid = Guid.Parse(id.ToString());
-            var check = DC.Set<FrameworkUserGroup>().Any(x => x.GroupId == checkid);
-            if (check == true)
+            using (var trans = DC.BeginTransaction())
             {
-                errorMessage = Localizer["CannotDelete", Localizer["Group"]];
-                return false;
+                var userorleids = DC.Set<FrameworkUserGroup>().AsNoTracking().Where(y => DC.Set<FrameworkGroup>().CheckIDs(Ids.ToList(), null).Select(x => x.GroupCode).Contains(y.GroupCode)).Select(x => x.ID);
+                foreach (var item in userorleids)
+                {
+                    FrameworkUserGroup f = new FrameworkUserGroup { ID = item };
+                    DC.DeleteEntity(f);
+                }
+                DC.SaveChanges();
+                base.DoBatchDelete();
+                if (MSD.IsValid == true)
+                {
+                    trans.Commit();
+                }
+                else
+                {
+                    trans.Rollback();
+                }
             }
-            else
-            {
-                errorMessage = null;
-                return true;
-            }
+
+            return base.DoBatchDelete();
         }
+
     }
 }

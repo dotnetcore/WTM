@@ -37,78 +37,100 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login([FromForm]string userid, [FromForm]string password, [FromForm]bool rememberLogin = false, [FromForm]bool cookie = true)
+        public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] bool rememberLogin = false)
         {
 
-            var user = await Wtm.LoadUserFromDB(null, userid, password);
+            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => x.ITCode).SingleOrDefaultAsync();
 
             //如果没有找到则输出错误
-            if (user == null)
+            if (string.IsNullOrEmpty(code))
+            {
+                ModelState.AddModelError(" ", Localizer["LoginFailed"].Value);
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            LoginUserInfo user = new LoginUserInfo
+            {
+                ITCode = code
+            };
+            //读取角色，用户组，页面权限，数据权限等框架配置信息
+            await user.LoadBasicInfoAsync(Wtm);
+            Wtm.LoginUserInfo = user;
+
+            AuthenticationProperties properties = null;
+            if (rememberLogin)
+            {
+                properties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(30))
+                };
+            }
+
+            var principal = Wtm.LoginUserInfo.CreatePrincipal();
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
+            List<SimpleMenu> ms = new List<SimpleMenu>();
+            LoginUserInfo forapi = new LoginUserInfo();
+            forapi.ITCode = user.ITCode;
+            forapi.Name = user.Name;
+            forapi.Roles = user.Roles;
+            forapi.Groups = user.Groups;
+            forapi.PhotoId = user.PhotoId;
+            var menus = DC.Set<FunctionPrivilege>()
+                .Where(x => x.RoleCode != null && user.Roles.Select(x => x.RoleCode).Contains(x.RoleCode))
+                .Select(x => x.MenuItem)
+                .Where(x => x.MethodName == null)
+                .OrderBy(x => x.DisplayOrder)
+                .Select(x => new SimpleMenu
+                {
+                    Id = x.ID.ToString().ToLower(),
+                    ParentId = x.ParentId.ToString().ToLower(),
+                    Text = x.PageName,
+                    Url = x.Url,
+                    Icon = x.ICon
+                }).ToList();
+            LocalizeMenu(menus);
+            ms.AddRange(menus);
+
+            List<string> urls = new List<string>();
+            urls.AddRange(DC.Set<FunctionPrivilege>()
+                .Where(x => x.RoleCode != null && user.Roles.Select(x => x.RoleCode).Contains(x.RoleCode))
+                .Select(x => x.MenuItem)
+                .Where(x => x.MethodName != null)
+                .Select(x => x.Url)
+                );
+            urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
+            forapi.Attributes = new Dictionary<string, object>();
+            forapi.Attributes.Add("Menus", menus);
+            forapi.Attributes.Add("Actions", urls);
+
+            return Ok(forapi);
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
+        {
+
+            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password.ToLower())).Select(x => x.ITCode).SingleOrDefaultAsync();
+
+            //如果没有找到则输出错误
+            if (string.IsNullOrEmpty(code))
             {
                 return BadRequest(Localizer["LoginFailed"].Value);
             }
+            LoginUserInfo user = new LoginUserInfo
+            {
+                ITCode = code
+            };
+            //读取角色，用户组，页面权限，数据权限等框架配置信息
+            await user.LoadBasicInfoAsync(Wtm);
             Wtm.LoginUserInfo = user;
 
-            if (cookie) // cookie auth
-            {
-                AuthenticationProperties properties = null;
-                if (rememberLogin)
-                {
-                    properties = new AuthenticationProperties
-                    {
-                        IsPersistent = true,
-                        ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(30))
-                    };
-                }
+            var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
 
-                var principal = Wtm.LoginUserInfo.CreatePrincipal();
-                // 在上面注册AddAuthentication时，指定了默认的Scheme，在这里便可以不再指定Scheme。
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
-                List<SimpleMenu> ms = new List<SimpleMenu>();
-                LoginUserInfo forapi = new LoginUserInfo();
-                forapi.Id = user.Id;
-                forapi.ITCode = user.ITCode;
-                forapi.Name = user.Name;
-                forapi.Roles = user.Roles;
-                forapi.Groups = user.Groups;
-                forapi.PhotoId = user.PhotoId;
-                var menus = DC.Set<FunctionPrivilege>()
-                    .Where(x => x.UserId == user.Id || (x.RoleId != null && user.Roles.Select(x=>x.ID).Contains(x.RoleId.Value)))
-                    .Select(x => x.MenuItem)
-                    .Where(x => x.MethodName == null)
-                    .OrderBy(x=>x.DisplayOrder)
-                    .Select(x => new SimpleMenu
-                    {
-                        Id = x.ID.ToString().ToLower(),
-                        ParentId = x.ParentId.ToString().ToLower(),
-                        Text = x.PageName,
-                        Url = x.Url,
-                        Icon = x.ICon
-                    }).ToList();
-                LocalizeMenu(menus);
-                ms.AddRange(menus);
-
-                List<string> urls = new List<string>();
-                urls.AddRange(DC.Set<FunctionPrivilege>()
-                    .Where(x => x.UserId == user.Id || (x.RoleId != null && user.Roles.Select(x => x.ID).Contains(x.RoleId.Value)))
-                    .Select(x => x.MenuItem)
-                    .Where(x => x.MethodName != null)
-                    .Select(x => x.Url)
-                    );
-                urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
-                forapi.Attributes = new Dictionary<string, object>();
-                forapi.Attributes.Add("Menus", menus);
-                forapi.Attributes.Add("Actions", urls);
-
-                return Ok(forapi);
-            }
-            else // jwt auth
-            {
-                var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
-
-                var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
-                return Content(JsonSerializer.Serialize(token), "application/json");
-            }
+            var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
+            return Content(JsonSerializer.Serialize(token), "application/json");
         }
 
 
@@ -123,7 +145,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 if (menu.Text?.StartsWith("MenuKey.") == true)
                 {
-                        menu.Text = Localizer[menu.Text];
+                    menu.Text = Localizer[menu.Text];
                 }
             }
         }
@@ -137,7 +159,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return await _authService.RefreshTokenAsync(refreshToken);
         }
 
-        [Public]
+        [AllRights]
         [HttpGet("[action]")]
         public IActionResult CheckUserInfo()
         {
@@ -148,7 +170,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             else
             {
                 var forapi = new LoginUserInfo();
-                forapi.Id = Wtm.LoginUserInfo.Id;
                 forapi.ITCode = Wtm.LoginUserInfo.ITCode;
                 forapi.Name = Wtm.LoginUserInfo.Name;
                 forapi.Roles = Wtm.LoginUserInfo.Roles;
@@ -156,12 +177,12 @@ namespace WalkingTec.Mvvm.Admin.Api
                 forapi.PhotoId = Wtm.LoginUserInfo.PhotoId;
 
                 var ms = new List<SimpleMenu>();
-                var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.ID).ToList();
+                var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
                 var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
                 var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
                 var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()
-                                .Where(x => x.UserId == Wtm.LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                                .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
                                 .Select(x => new { x.MenuItem.ID, x.MenuItem.Url })
                                 .ToList();
 
@@ -218,8 +239,8 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [AllRights]
-        [HttpGet("[action]/{id}")]
-        public async Task Logout(Guid? id)
+        [HttpGet("[action]")]
+        public async Task Logout()
         {
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -239,5 +260,11 @@ namespace WalkingTec.Mvvm.Admin.Api
         public string Url { get; set; }
 
         public string Icon { get; set; }
+    }
+
+    public class SimpleLogin
+    {
+        public string Account { get; set; }
+        public string Password { get; set; }
     }
 }

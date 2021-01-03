@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]
-        public string Search(FrameworkMenuSearcher searcher)
+        public string Search(BaseSearcher searcher)
         {
             var vm = Wtm.CreateVM<FrameworkMenuListVM2>();
             vm.Searcher = searcher;
@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Export")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcel(FrameworkMenuSearcher searcher)
+        public IActionResult ExportExcel(BaseSearcher searcher)
         {
             var vm = Wtm.CreateVM<FrameworkMenuListVM2>();
             vm.Searcher = searcher;
@@ -176,7 +176,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 if (p.Text.StartsWith("MenuKey."))
                 {
-                        p.Text = Localizer[p.Text];
+                    p.Text = Localizer[p.Text];
                 }
             }
 

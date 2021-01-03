@@ -24,6 +24,8 @@ namespace WalkingTec.Mvvm.Mvc.Helper
         /// Set the sub directory of uploaded file, if you want to save file in different directories according to datetime or other properties, use this selector
         /// </summary>
         public Func<IWtmFileHandler, string> FileSubDirSelector { get; set; }
+
+        public Func<WTMContext,string,LoginUserInfo> ReloadUserFunc { get; set; }
     }
 
 }

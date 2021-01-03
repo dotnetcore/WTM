@@ -55,7 +55,7 @@ export default class LoginDemo extends React.Component<any, any>{
   }
   render() {
     const { getFieldDecorator, getFieldsError, isFieldTouched, getFieldError } = this.props.form;
-    const userNameError = isFieldTouched('userid') && getFieldError('userid');
+      const userNameError = isFieldTouched('account') && getFieldError('account');
     const passwordError = isFieldTouched('password') && getFieldError('password');
     const disabled = hasErrors(getFieldsError())
     return (
@@ -66,7 +66,7 @@ export default class LoginDemo extends React.Component<any, any>{
             validateStatus={userNameError ? 'error' : ''}
             help={userNameError || ''}
           >
-            {getFieldDecorator('userid', {
+                    {getFieldDecorator('account', {
               rules: [{ required: true, message: '请输入 用户名!' }],
               initialValue: globalConfig.development ? "admin" : ''
             })(

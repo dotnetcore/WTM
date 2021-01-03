@@ -57,7 +57,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
             }
 
-            var user = vm.DoLogin();
+            var user = await vm.DoLoginAsync();
             if (user == null)
             {
                 return View(vm);
@@ -87,8 +87,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
                 var principal = user.CreatePrincipal();
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
-
-                var test = DC.Set<City>().OrderByDescending(x=>x.ID).GetTreeSelectListItems(Wtm, x => x.Name,SortByName:false).ToList();
                 return Redirect(HttpUtility.UrlDecode(url));
             }
         }

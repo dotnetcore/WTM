@@ -19,11 +19,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public string Name { get; set; }
         [Display(Name = "Privileges")]
         public string TableName { get; set; }
+        public List<ComboSelectListItem> TableNames { get; set; }
+
         [Display(Name = "DpType")]
         public DpTypeEnum DpType { get; set; }
-
+        public Guid? DomainID { get; set; }
+        public List<ComboSelectListItem> AllDomains { get; set; }
         protected override void InitVM()
         {
+            TableNames = new List<ComboSelectListItem>();
         }
     }
 }

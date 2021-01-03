@@ -7,19 +7,50 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
 {
     public class ActionLogListVM : BasePagedListVM<ActionLog, ActionLogSearcher>
     {
+        protected override List<GridAction> InitGridAction()
+        {
+            var actions = new List<GridAction>
+            {
+                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
+                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
+            };
+            return actions;
+        }
 
         protected override IEnumerable<IGridColumn<ActionLog>> InitGridHeader()
         {
             var header = new List<GridColumn<ActionLog>>();
 
-            header.Add(this.MakeGridHeader(x => x.LogType));
-            header.Add(this.MakeGridHeader(x => x.ModuleName));
-            header.Add(this.MakeGridHeader(x => x.ActionName));
-            header.Add(this.MakeGridHeader(x => x.ITCode));
-            header.Add(this.MakeGridHeader(x => x.ActionUrl));
-            header.Add(this.MakeGridHeader(x => x.ActionTime).SetFormat((a, b) => a.ActionTime.ToString("yyyy-MM-dd HH:mm:ss")));
-            header.Add(this.MakeGridHeader(x => x.Duration).SetFormat((entity,v)=> { return ((double)v).ToString("f2"); }));
-            header.Add(this.MakeGridHeader(x => x.IP));
+            header.Add(this.MakeGridHeader(x => x.LogType, 100).SetForeGroundFunc((entity)=> {
+                if(entity.LogType == ActionLogTypesEnum.Exception)
+                {
+                    return "FF0000";
+                }
+                else
+                {
+                    return "";
+                }
+            }));
+            header.Add(this.MakeGridHeader(x => x.ModuleName, 120));
+            header.Add(this.MakeGridHeader(x => x.ActionName, 120));
+            header.Add(this.MakeGridHeader(x => x.ITCode, 120));
+            header.Add(this.MakeGridHeader(x => x.ActionUrl, 200));
+            header.Add(this.MakeGridHeader(x => x.ActionTime, 200).SetSort(true).SetFormat((a, b) => a.ActionTime.ToString("yyyy-MM-dd HH:mm:ss")));
+            header.Add(this.MakeGridHeader(x => x.Duration, 100).SetSort(true).SetForeGroundFunc((entity)=> {
+                if(entity.Duration <= 1)
+                {
+                    return "008000";
+                }
+                else if(entity.Duration <= 3)
+                {
+                    return "FFC90E";
+                }
+                else
+                {
+                    return "FF0000";
+                }
+            }).SetFormat((entity,v)=> { return ((double)v).ToString("f2"); }));
+            header.Add(this.MakeGridHeader(x => x.IP, 120));
             header.Add(this.MakeGridHeader(x => x.Remark).SetFormat((a,b)=> {
                 if (SearcherMode == ListVMSearchModeEnum.Search && a.Remark?.Length > 30)
                 {
@@ -27,7 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 }
                 return a.Remark;
             }));
-            header.Add(this.MakeGridHeaderAction());
+            header.Add(this.MakeGridHeaderAction(width: 120));
 
             return header;
         }
@@ -37,6 +68,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
             var query = DC.Set<ActionLog>()
                 .CheckContain(Searcher.ITCode, x=>x.ITCode)
                 .CheckContain(Searcher.ActionUrl, x=>x.ActionUrl)
+                //.CheckEqual(Searcher.LogType, x=>x.LogType)
                 .CheckContain(Searcher.LogType, x=>x.LogType)
                 .CheckContain(Searcher.IP, x=>x.IP)
                 .CheckBetween(Searcher.ActionTime?.GetStartTime(), Searcher.ActionTime?.GetEndTime(), x=>x.ActionTime, includeMax:false)

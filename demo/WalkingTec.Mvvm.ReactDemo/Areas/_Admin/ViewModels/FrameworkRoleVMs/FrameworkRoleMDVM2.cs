@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
         protected override void InitVM()
         {
             var allowedids = DC.Set<FunctionPrivilege>()
-.Where(x => x.RoleId == Entity.ID && x.Allowed == true).Select(x => x.MenuItemId)
+.Where(x => x.RoleCode == Entity.RoleCode && x.Allowed == true).Select(x => x.MenuItemId)
 .ToList();
             var data = DC.Set<FrameworkMenu>().ToList();
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || x.MethodName == null).ToList();
@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 }
             }
 
-            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => x.RoleId == Entity.ID).Select(x => x.ID).ToList();
+            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => x.RoleCode == Entity.RoleCode).Select(x => x.ID).ToList();
             foreach (var oldid in oldIDs)
             {
                 FunctionPrivilege fp = new FunctionPrivilege { ID = oldid };
@@ -86,13 +86,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             {
                 FunctionPrivilege fp = new FunctionPrivilege();
                 fp.MenuItemId = menuid;
-                fp.RoleId = Entity.ID;
-                fp.UserId = null;
+                fp.RoleCode = Entity.RoleCode;
                 fp.Allowed = true;
                 DC.Set<FunctionPrivilege>().Add(fp);
             }
             await DC.SaveChangesAsync();
-            var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleId == Entity.ID).Select(x => x.UserId.ToString()).ToArray();
+            var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == Entity.RoleCode).Select(x => x.UserCode).ToArray();
             await Wtm.RemoveUserCache(userids);
             return true;
         }

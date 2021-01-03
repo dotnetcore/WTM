@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +13,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             var rv = CreateFieldsInfo(SimpleField(x => x.GroupName));
             rv.AddGroup(SimpleField(x => x.GroupCode));
             return rv;
+        }
+
+        public override void DoEdit(bool updateAllFields = false)
+        {
+            if (FC.ContainsKey("Entity.GroupCode"))
+            {
+                FC.Remove("Entity.GroupCode");
+            }
+
+            base.DoEdit(updateAllFields);
         }
     }
 }

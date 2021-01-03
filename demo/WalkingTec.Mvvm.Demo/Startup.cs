@@ -71,9 +71,13 @@ namespace WalkingTec.Mvvm.Demo
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddWtmDataAnnotationsLocalization(typeof(Program));
-            //services.AddScoped<IDataContext>(x => Configuration.Get<Configs>().ConnectionStrings[1].CreateDC());
             
-            services.AddWtmContext(ConfigRoot, x=> x.DataPrivileges = DataPrivilegeSettings());
+            services.AddWtmContext(ConfigRoot, (options)=> {
+                options.DataPrivileges = DataPrivilegeSettings();
+                options.CsSelector = CSSelector;
+                options.FileSubDirSelector = SubDirSelector;
+                options.ReloadUserFunc = ReloadUser;
+            });
 
         }
 
@@ -154,6 +158,18 @@ namespace WalkingTec.Mvvm.Demo
         /// <param name="fh">IWtmFileHandler</param>
         /// <returns>subdir name</returns>
         public string SubDirSelector(IWtmFileHandler fh)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Custom Reload user process when cache is not available
+        /// 设置自定义的方法重新读取用户信息，这个方法会在用户缓存失效的时候调用
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public LoginUserInfo ReloadUser(WTMContext context, string account)
         {
             return null;
         }

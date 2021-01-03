@@ -7,14 +7,27 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 {
     public class FrameworkGroupListVM : BasePagedListVM<FrameworkGroup, FrameworkGroupSearcher>
     {
+        protected override List<GridAction> InitGridAction()
+        {
+            return new List<GridAction>
+            {
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Edit, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Delete, "", "_Admin",dialogWidth: 800),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
+                this.MakeAction("FrameworkGroup","DataFunction",Localizer["DataPrivilege"],Localizer["DataPrivilege"], GridActionParameterTypesEnum.SingleId,"_Admin",800,null,null,x=>x.GroupCode).SetShowInRow(),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
+            };
+        }
 
         protected override IEnumerable<IGridColumn<FrameworkGroup>> InitGridHeader()
         {
             return new List<GridColumn<FrameworkGroup>>{
-                this.MakeGridHeader(x => x.GroupCode),
-                this.MakeGridHeader(x => x.GroupName),
+                this.MakeGridHeader(x => x.GroupCode, 120),
+                this.MakeGridHeader(x => x.GroupName, 120),
                 this.MakeGridHeader(x => x.GroupRemark),
-                this.MakeGridHeaderAction()
+                this.MakeGridHeaderAction(width: 300)
             };
         }
 

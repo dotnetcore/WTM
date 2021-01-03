@@ -23,5 +23,8 @@ namespace WalkingTec.Mvvm.Core
         public string TableName { get; set; }
         public string RelateId { get; set; }
 
+        [Display(Name = "Domain")]
+        public string Domain { get; set; }
+
     }
 }

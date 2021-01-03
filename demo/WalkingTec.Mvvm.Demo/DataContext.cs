@@ -36,6 +36,8 @@ namespace WalkingTec.Mvvm.Demo
             var state = await base.DataInit(allModules, IsSpa);
             if (state == true)
             {
+                //when state is true, means it's the first time EF create database, do data init here
+                //当state是true的时候，表示这是第一次创建数据库，可以在这里进行数据初始化
                 var user = new FrameworkUser
                 {
                     ITCode = "admin",
@@ -46,12 +48,11 @@ namespace WalkingTec.Mvvm.Demo
 
                 var userrole = new FrameworkUserRole
                 {
-                        UserCode = user.ITCode,
-                        RoleCode = "001"
+                    UserCode = user.ITCode,
+                    RoleCode = "001"
                 };
                 Set<FrameworkUser>().Add(user);
                 Set<FrameworkUserRole>().Add(userrole);
-                await SaveChangesAsync();
             }
             return state;
         }

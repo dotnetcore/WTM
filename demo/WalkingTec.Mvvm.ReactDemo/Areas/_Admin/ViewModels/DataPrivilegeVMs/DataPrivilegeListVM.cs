@@ -10,13 +10,32 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     public class DataPrivilegeListVM : BasePagedListVM<DataPrivilege_ListView, DataPrivilegeSearcher>
     {
 
+        protected override List<GridAction> InitGridAction()
+        {
+            string tp = "";
+            if (Searcher.DpType == DpTypeEnum.User)
+            {
+                tp = "User";
+            }
+            if (Searcher.DpType == DpTypeEnum.UserGroup)
+            {
+                tp = "UserGroup";
+            }
+
+                return new List<GridAction>
+            {
+                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800).SetQueryString($"Type={tp}"),
+                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
+            };
+        }
+
         protected override IEnumerable<IGridColumn<DataPrivilege_ListView>> InitGridHeader()
         {
             return new List<GridColumn<DataPrivilege_ListView>>{
-                this.MakeGridHeader(x => x.Name),
+                this.MakeGridHeader(x => x.Name, 200),
                 this.MakeGridHeader(x => x.TableName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
                 this.MakeGridHeader(x => x.RelateIDs),
-                this.MakeGridHeader(x=>x.Edit).SetHeader(Localizer["Operation"]),
+                this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Localizer["Operation"]).SetDisableExport(),
                 this.MakeGridHeader(x => x.DpType).SetHide(true),
                 this.MakeGridHeader(x => x.TargetId).SetHide(true)
            };
@@ -36,6 +55,27 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
         }
 
+        public List<ColumnFormatInfo> GetOperation(DataPrivilege_ListView item)
+        {
+            string editurl = "";
+            string delurl = "";
+            if(Searcher.DpType == DpTypeEnum.User)
+            {
+                editurl = "/_Admin/DataPrivilege/Edit?ModelName=" + item.TableName + "&Type=User&Id=" + item.TargetId;
+                delurl = "/_Admin/DataPrivilege/Delete?ModelName=" + item.TableName + "&Type=User&Id=" + item.TargetId;
+            }
+            else
+            {
+                editurl = "/_Admin/DataPrivilege/Edit?ModelName=" + item.TableName + "&Type=UserGroup&Id=" + item.TargetId;
+                delurl = "/_Admin/DataPrivilege/Delete?ModelName=" + item.TableName + "&Type=UserGroup&Id=" + item.TargetId;
+            }
+            return new List<ColumnFormatInfo>
+            {
+                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,editurl,Localizer["Edit"],800,null,Localizer["Edit"]),
+                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,delurl,Localizer["Delete"],null,null,showDialog:false)
+            };
+        }
+
         /// <summary>
         /// 查询结果
         /// </summary>
@@ -45,13 +85,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             if (Searcher.DpType == DpTypeEnum.User)
             {
                 query = DC.Set<DataPrivilege>()
-                    .Join(DC.Set<FrameworkUserBase>(), ok => ok.UserId, ik => ik.ID, (dp, user) => new { dp = dp, user = user })
+                    .Join(DC.Set<FrameworkUserBase>(), ok => ok.UserCode, ik => ik.ITCode, (dp, user) => new { dp = dp, user = user })
                     .CheckContain(Searcher.Name, x => x.user.Name)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                    .GroupBy(x => new { x.user.Name, x.user.ID, x.dp.TableName }, x => x.dp.RelateId)
+                    .GroupBy(x => new { x.user.Name, x.user.ITCode, x.dp.TableName }, x => x.dp.RelateId)
                     .Select(x => new DataPrivilege_ListView
                     {
-                        TargetId = x.Key.ID,
+                        TargetId = x.Key.ITCode,
                         Name = x.Key.Name,
                         TableName = x.Key.TableName,
                         RelateIDs = x.Count(),
@@ -62,13 +102,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             else
             {
                 query = DC.Set<DataPrivilege>()
-                    .Join(DC.Set<FrameworkGroup>(), ok => ok.GroupId, ik => ik.ID, (dp, group) => new { dp = dp, group = group })
+                    .Join(DC.Set<FrameworkGroup>(), ok => ok.GroupCode, ik => ik.GroupCode, (dp, group) => new { dp = dp, group = group })
                     .CheckContain(Searcher.Name, x => x.group.GroupName)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                       .GroupBy(x => new { x.group.GroupName, x.group.ID, x.dp.TableName }, x => x.dp.RelateId)
+                       .GroupBy(x => new { x.group.GroupName, x.group.GroupCode, x.dp.TableName }, x => x.dp.RelateId)
                        .Select(x => new DataPrivilege_ListView
                        {
-                           TargetId = x.Key.ID,
+                           TargetId = x.Key.GroupCode,
                            Name = x.Key.GroupName,
                            TableName = x.Key.TableName,
                            RelateIDs = x.Count(),
@@ -88,7 +128,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     {
         [Display(Name = "DpTargetName")]
         public string Name { get; set; }
-        public Guid TargetId { get; set; }
+        public string TargetId { get; set; }
         [Display(Name = "DataPrivilegeName")]
         public string TableName { get; set; }
         [Display(Name = "DataPrivilegeCount")]

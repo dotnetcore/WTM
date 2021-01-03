@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
-    public class FrameworkMenuListVM2 : BasePagedListVM<FrameworkMenu_ListView, FrameworkMenuSearcher>
+    public class FrameworkMenuListVM2 : BasePagedListVM<FrameworkMenu_ListView, BaseSearcher>
     {
         /// <summary>
         /// 页面显示按钮方案，如果需要增加Action类型则将按钮添加到此类中
@@ -21,16 +21,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             List<GridColumn<FrameworkMenu_ListView>> rv = new List<GridColumn<FrameworkMenu_ListView>>();
             rv.AddRange(new GridColumn<FrameworkMenu_ListView>[] {
-                        this.MakeGridHeader(x => x.PageName),
-                        this.MakeGridHeader(x => x.ModuleName),
-                        this.MakeGridHeader(x => x.ShowOnMenu),
-                        this.MakeGridHeader(x => x.FolderOnly),
-                        this.MakeGridHeader(x => x.IsPublic),
-                        this.MakeGridHeader(x => x.DisplayOrder),
-                        this.MakeGridHeader(x => x.ICon),
-                        this.MakeGridHeader(x => x.Children),
+                        this.MakeGridHeader(x => x.PageName, 300),
+                        this.MakeGridHeader(x => x.ModuleName, 150),
+                        this.MakeGridHeader(x => x.ShowOnMenu, 60),
+                        this.MakeGridHeader(x => x.FolderOnly, 60),
+                        this.MakeGridHeader(x => x.IsPublic, 60),
+                        this.MakeGridHeader(x => x.DisplayOrder, 60),
+                        this.MakeGridHeader(x => x.ICon, 100),
+                        this.MakeGridHeader(x => x.Children, 100),
                         this.MakeGridHeader(x=>x.ParentID).SetHide(),
-                        this.MakeGridHeaderAction()
+                        this.MakeGridHeaderAction(width: 290)
                     });
             return rv;
         }
@@ -46,13 +46,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (item.PageName?.StartsWith("MenuKey.") == true)
                 {
-                        item.PageName = Localizer[item.PageName];
+                    item.PageName = Localizer[item.PageName];
                 }
                 if (item.ModuleName?.StartsWith("MenuKey.") == true)
                 {
-                        item.ModuleName = Localizer[item.ModuleName];
+                    item.ModuleName = Localizer[item.ModuleName];
                 }
-
             }
             int order = 0;
             var data2 = topdata.Select(x => new FrameworkMenu_ListView
@@ -73,8 +72,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             return data2.AsQueryable() as IOrderedQueryable<FrameworkMenu_ListView>;
         }
-    }
 
+
+
+    }
     public class FrameworkMenu_ListView : BasePoco
     {
         [Display(Name = "PageName")]

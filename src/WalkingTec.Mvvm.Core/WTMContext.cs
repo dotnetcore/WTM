@@ -118,6 +118,9 @@ namespace WalkingTec.Mvvm.Core
         public ISessionService Session { get; set; }
 
         public IModelStateService MSD { get; set; }
+
+        public static Func<WTMContext,string,LoginUserInfo> ReloadUserFunc { get; set; }
+
         #region DataContext
 
         private IDataContext _dc;
@@ -152,22 +155,21 @@ namespace WalkingTec.Mvvm.Core
                     string usercode = userIdStr;
                     var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr}";
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                    if (_loginUserInfo == null || _loginUserInfo.ITCode != usercode)
+                    if (_loginUserInfo == null)
                     {
-                        //try
-                        //{
-                        //    _loginUserInfo = LoadUserFromDB(userId).Result;
-                        //}
-                        //catch { }
-                        //if (_loginUserInfo != null)
-                        //{
-                        //    Cache.Add(cacheKey, _loginUserInfo);
-                        //}
-                        //else
-                        //{
-                            //HttpContext.ChallengeAsync().Wait();
+                        try
+                        {
+                            _loginUserInfo = ReloadUser(usercode).Result;
+                        }
+                        catch { }
+                        if (_loginUserInfo != null)
+                        {
+                            Cache.Add(cacheKey, _loginUserInfo);
+                        }
+                        else
+                        {
                             return null;
-                        //}
+                        }
                     }
                 }
                 return _loginUserInfo;
@@ -202,75 +204,40 @@ namespace WalkingTec.Mvvm.Core
                 return _localizer ?? WalkingTec.Mvvm.Core.CoreProgram._localizer;
             }
         }
+
         /// <summary>
         /// 从数据库读取用户
         /// </summary>
-        /// <param name="userId">用户ID，如果为空，则使用用户名和密码查询</param>
         /// <param name="itcode">用户名</param>
-        /// <param name="password">密码</param>
         /// <returns>用户信息</returns>
-        public virtual async Task<LoginUserInfo> LoadUserFromDB(Guid? userId, string itcode = null, string password = null)
+        public virtual async Task<LoginUserInfo>
+            ReloadUser(string itcode)
         {
+            if(ReloadUserFunc != null)
+            {
+                var reload = ReloadUserFunc.Invoke(this, itcode);
+                if(reload != null)
+                {
+                    return reload;
+                }
+            }
             if (DC == null)
             {
                 return null;
             }
-            string username = await DC.Set<FrameworkUserBase>().CheckEqual(userId, x => x.ID).Where(x => x.ITCode.ToLower() == itcode.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => x.ITCode).SingleOrDefaultAsync();
-            return await GetUserInfoByItcode(username);
-        }
-
-        public async Task<LoginUserInfo> GetUserInfoByItcode(string itcode)
-        {
-            if (string.IsNullOrEmpty(itcode))
+            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x => x.ITCode).SingleOrDefaultAsync();
+            if (string.IsNullOrEmpty(code))
             {
                 return null;
             }
-            var userInfo = await DC.Set<FrameworkUserBase>()
-                                        .Where(x => x.ITCode.ToLower() == itcode.ToLower() && x.IsValid)
-                                        .Select(x=> new {
-                                            user = x,
-                                            UserRoles = DC.Set<FrameworkUserRole>().Where(y=>y.UserCode == x.ITCode).ToList(),
-                                            UserGroups = DC.Set<FrameworkUserGroup>().Where(y => y.UserCode == x.ITCode).ToList(),
-                                        })
-                                        .SingleOrDefaultAsync();
-
-            LoginUserInfo rv = null;
-            if (userInfo != null)
+            LoginUserInfo rv = new LoginUserInfo
             {
-                // 初始化用户信息
-                var roleIDs = userInfo.UserRoles.Select(x => x.RoleCode).ToList();
-                var groupIDs = userInfo.UserGroups.Select(x => x.GroupCode).ToList();
-
-
-                var dataPris = await DC.Set<DataPrivilege>().AsNoTracking()
-                                .Where(x => x.UserCode == userInfo.user.ITCode || (x.GroupCode != null && groupIDs.Contains(x.GroupCode)))
-                                .Distinct()
-                                .ToListAsync();
-                ProcessTreeDp(dataPris);
-
-                //查找登录用户的页面权限
-                var funcPrivileges = await DC.Set<FunctionPrivilege>().AsNoTracking()
-                    .Where(x=> x.RoleCode != null && roleIDs.Contains(x.RoleCode))
-                    .Distinct()
-                    .ToListAsync();
-
-                var roles = DC.Set<FrameworkRole>().AsNoTracking().Where(x => roleIDs.Contains(x.RoleCode)).ToList();
-                var groups = DC.Set<FrameworkGroup>().AsNoTracking().Where(x => groupIDs.Contains(x.GroupCode)).ToList();
-
-                rv = new LoginUserInfo()
-                {
-                    ITCode = userInfo.user.ITCode,
-                    Name = userInfo.user.Name,
-                    PhotoId = userInfo.user.PhotoId,
-                    Roles = roles.Select(x => new SimpleRole { ID = x.ID, RoleCode = x.RoleCode, RoleName = x.RoleName }).ToList(),
-                    Groups = groups.Select(x => new SimpleGroup { ID = x.ID, GroupCode = x.GroupCode, GroupName = x.GroupName }).ToList(),
-                    DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserCode = x.UserCode, GroupCode = x.GroupCode }).ToList(),
-                    FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, RoleCode = x.RoleCode, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList()
-                };
-            }
+                ITCode = code
+            };
+            await rv.LoadBasicInfoAsync(this);
             return rv;
-
         }
+
         #endregion
 
         #region URL
@@ -743,44 +710,6 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
-
-        private void ProcessTreeDp(List<DataPrivilege> dps)
-        {
-            var dpsSetting = DataPrivilegeSettings;
-            foreach (var dp in dpsSetting)
-            {
-                if (typeof(TreePoco).IsAssignableFrom(dp.ModelType))
-                {                    
-                    var ids = dps.Where(x => x.TableName == dp.ModelName).Select(x => x.RelateId).ToList();
-                    if (ids.Count > 0 && ids.Contains(null) == false)
-                    {
-                        var skipids = dp.GetTreeParentIds(this, dps);
-                        List<string> subids = new List<string>();
-                        subids.AddRange(GetSubIds(dp,ids, dp.ModelType, skipids));
-                        subids = subids.Distinct().ToList();
-                        subids.ForEach(x => dps.Add(new DataPrivilege
-                        {
-                            TableName = dp.ModelName,
-                            RelateId = x.ToString()
-                        }));
-                    }
-                }
-
-            }
-        }
-        private IEnumerable<string> GetSubIds(IDataPrivilege dp, List<string> p_id, Type modelType, List<string> skipids)
-        {
-            var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
-            var subids = dp.GetTreeSubIds(this, ids);
-            if (subids.Count > 0)
-            {
-                return subids.Concat(GetSubIds(dp,subids, modelType, skipids));
-            }
-            else
-            {
-                return new List<string>();
-            }
-        }
 
     }
 

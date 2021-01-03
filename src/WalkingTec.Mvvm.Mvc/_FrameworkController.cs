@@ -450,9 +450,27 @@ namespace WalkingTec.Mvvm.Mvc
                     var pmenu = GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
                     if (pmenu != null)
                     {
+                        if (this.Localizer[pmenu.PageName].ResourceNotFound == true)
+                        {
+                            pmenu.PageName = Core.CoreProgram._localizer[pmenu.PageName];
+                        }
+                        else
+                        {
+                            pmenu.PageName = this.Localizer[pmenu.PageName];
+                        }
+
                         pagetitle = pmenu.PageName + " - ";
                     }
                 }
+                if (this.Localizer[menu.PageName].ResourceNotFound == true)
+                {
+                    menu.PageName = Core.CoreProgram._localizer[menu.PageName];
+                }
+                else
+                {
+                    menu.PageName = this.Localizer[menu.PageName];
+                }
+
                 pagetitle += menu.PageName;
             }
             if (Wtm.IsAccessable(url))

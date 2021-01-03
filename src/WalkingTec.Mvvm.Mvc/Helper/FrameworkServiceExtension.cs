@@ -111,7 +111,6 @@ namespace WalkingTec.Mvvm.Mvc
                     using (var dc = ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                     {
                         menus.AddRange(dc?.Set<FrameworkMenu>()
-                                .Include(x => x.Domain)
                                 .OrderBy(x => x.DisplayOrder)
                                 .Select(x => new SimpleMenu
                                 {
@@ -461,6 +460,7 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSingleton(op.DataPrivileges??new List<IDataPrivilege>());
             DataContextFilter._csfunc = op.CsSelector;
             WtmFileProvider._subDirFunc = op.FileSubDirSelector;
+            WTMContext.ReloadUserFunc = op.ReloadUserFunc;
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
             services.AddSingleton<WtmFileProvider>();

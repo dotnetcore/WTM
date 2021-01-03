@@ -4,7 +4,7 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 {
-    public class FrameworkUserBatchVM : BaseBatchVM<FrameworkUserBase, FrameworkUser_BatchEdit>
+    public class FrameworkUserBatchVM : BaseBatchVM<FrameworkUser, FrameworkUser_BatchEdit>
     {
         public FrameworkUserBatchVM()
         {

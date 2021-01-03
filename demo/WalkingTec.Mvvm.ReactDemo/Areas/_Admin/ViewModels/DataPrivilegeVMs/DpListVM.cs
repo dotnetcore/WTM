@@ -27,7 +27,20 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             var dps = Wtm.DataPrivilegeSettings.Where(x => x.ModelName == Searcher.TableName).SingleOrDefault();
             if (dps != null)
             {
-                return dps.GetItemList(Wtm).Select(x => new DpView { ID = x.Value.ToString(), Name = x.Text }).AsQueryable().OrderBy(x => x.Name);
+                return dps.GetItemList(Wtm, Searcher.Filter).Select(x => new DpView { ID = x.Value.ToString(), Name = x.Text }).AsQueryable().OrderBy(x => x.Name);
+            }
+            else
+            {
+                return new List<DpView>().AsQueryable().OrderBy(x => x.Name);
+            }
+        }
+
+        public override IOrderedQueryable<DpView> GetBatchQuery()
+        {
+            var dps = Wtm.DataPrivilegeSettings.Where(x => x.ModelName == Searcher.TableName).SingleOrDefault();
+            if (dps != null)
+            {
+                return dps.GetItemList(Wtm, null,Ids).Select(x => new DpView { ID = x.Value.ToString(), Name = x.Text }).AsQueryable().OrderBy(x => x.Name);
             }
             else
             {
@@ -47,6 +60,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     public class DpSearcher : BaseSearcher
     {
         public string TableName { get; set; }
+        [Display(Name = "DataPrivilegeName")]
+        public string Filter { get; set; }
     }
-    
+
 }
