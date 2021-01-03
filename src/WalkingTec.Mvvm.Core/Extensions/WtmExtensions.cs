@@ -292,5 +292,81 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return await CallAPI(self, domainName, url, method, content, error, errormsg, timeout, proxy);
         }
 
+        public static async Task<byte[]> CallStreamAPI(this WTMContext self, string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
+            var factory = self.ServiceProvider.GetRequiredService<IHttpClientFactory>();
+            try
+            {
+                if (string.IsNullOrEmpty(url))
+                {
+                    return null;
+                }
+                //新建http请求
+                HttpClient client = null;
+                if (string.IsNullOrEmpty(domainName))
+                {
+                    client = factory.CreateClient();
+                }
+                else
+                {
+                    client = factory.CreateClient(domainName);
+                }
+                //如果配置了代理，则使用代理
+                //设置超时
+                if (timeout.HasValue)
+                {
+                    client.Timeout = new TimeSpan(0, 0, 0, timeout.Value, 0);
+                }
+                //填充表单数据
+                HttpResponseMessage res = null;
+                switch (method)
+                {
+                    case HttpMethodEnum.GET:
+                        res = await client.GetAsync(url);
+                        break;
+                    case HttpMethodEnum.POST:
+                        res = await client.PostAsync(url, content);
+                        break;
+                    case HttpMethodEnum.PUT:
+                        res = await client.PutAsync(url, content);
+                        break;
+                    case HttpMethodEnum.DELETE:
+                        res = await client.DeleteAsync(url);
+                        break;
+                    default:
+                        break;
+                }
+                byte[] rv = null;
+                if (res == null)
+                {
+                    return rv;
+                }
+                if (res.IsSuccessStatusCode == true)
+                {
+                    rv = await res.Content.ReadAsByteArrayAsync();
+                }
+                else
+                {
+                    if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        error = JsonSerializer.Deserialize<ErrorObj>(await res.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        errormsg = await res.Content.ReadAsStringAsync();
+                    }
+                }
+
+                return rv;
+            }
+            catch (Exception ex)
+            {
+                errormsg = ex.ToString();
+                return null;
+            }
+
+        }
+
     }
 }

@@ -64,7 +64,7 @@ namespace WalkingTec.Mvvm.Core.Json
                 if (reader.TokenType == JsonTokenType.EndObject)
                 {
                     depth--;
-                    if(reader.IsFinalBlock == true)
+                    if(reader.IsFinalBlock == true && depth == 0)
                     {
                         reader.Read();
                         break;

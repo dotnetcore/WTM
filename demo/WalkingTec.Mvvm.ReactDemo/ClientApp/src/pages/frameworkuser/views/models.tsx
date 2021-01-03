@@ -134,23 +134,21 @@ export default {
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 角色 */
-            "Entity.UserRoles": {
+            "SelectedRolesCodes": {
                 label: <FormattedMessage id='frameworkuser.UserRoles' />,
                 rules: [],
                 formItem: <WtmTransfer
                     listStyle={undefined}
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" })}
-                    mapKey="RoleId"
                 />
             },
             /** 用户组 */
-            "Entity.UserGroups": {
+            "SelectedGroupCodes": {
                 label: <FormattedMessage id='frameworkuser.UserGroups' />,
                 rules: [],
                 formItem: <WtmTransfer
                     listStyle={undefined}
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkGroups" })}
-                    mapKey="GroupId"
                 />
             }
 
