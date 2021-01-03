@@ -146,12 +146,12 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.PhotoId" />
             <FormItem {...props} fieId="Entity.IsValid" />
             <Col span={24}>
-                <FormItem {...props} fieId="SelectedRolesCodes" layout="row" mapKey="RoleCode"
+                <FormItem {...props} fieId="SelectedRolesCodes" layout="row" 
                 // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")}
                 />
             </Col>
             <Col span={24}>
-                <FormItem {...props} fieId="SelectedGroupCodes" layout="row" mapKey="GroupCode"
+                <FormItem {...props} fieId="SelectedGroupCodes" layout="row" 
                 // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserGroups'), "GroupId")}
                 />
             </Col>

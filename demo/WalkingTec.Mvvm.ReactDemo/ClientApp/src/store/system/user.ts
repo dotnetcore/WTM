@@ -41,7 +41,7 @@ class Store {
     @action.bound
     async CheckLogin() {
         try {
-            const userid = lodash.get(this.UserInfo, 'Id');
+            const userid = lodash.get(this.UserInfo, 'ITCode');
             if (userid) {
                 const res = await Request.ajax("/api/_Account/CheckUserInfo" ).toPromise();
                 await this.onSetUserInfo(res);
