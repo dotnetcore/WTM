@@ -23,7 +23,7 @@
     "react": "^16.14.0",
     "react-contexify": "^4.1.1",
     "react-dom": "^16.14.0",
-    "react-intl": "~4.5.12",
+    "react-intl": "~4.7.6",
     "react-resizable": "^1.11.0",
     "react-router-config": "^5.1.1",
     "react-router-dom": "~5.1.2",
