@@ -1,4 +1,4 @@
-﻿import { Col } from 'antd';
+import { Col } from 'antd';
 import { DialogFormDes, FormItem, InfoShellLayout } from 'components/dataView';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
@@ -19,15 +19,15 @@ export class InsertForm extends React.Component<any, any> {
             ...this.props,
             models: this.models,
         }
-        const Isgroup = Models.getValue(props, "DpType", 0) == "0"
+        const Isgroup = Models.getValue(props, "DpType", "UserGroup") == "UserGroup"
         const Isall = Models.getValue(props, "IsAll", true) == "true"
         return <InfoShellLayout>
-            <FormItem {...props} fieId="DpType" layout="row" value='0' />
-            {(!Isgroup)&& <FormItem {...props} fieId="UserItCode"  />}
-            {(Isgroup)&& <FormItem {...props} fieId="Entity.GroupId" />}
+            <FormItem {...props} fieId="DpType" layout="row" value='UserGroup' />
+            {(!Isgroup)&& <FormItem {...props} fieId="Entity.UserCode"  />}
+            {(Isgroup)&& <FormItem {...props} fieId="Entity.GroupCode" />}
             <Col span={24}></Col>
             <FormItem {...props} fieId="Entity.TableName" />
-            <FormItem {...props} fieId="IsAll" value='true' />
+            <FormItem {...props} fieId="IsAll" value={true} />
             <FormItem {...props} fieId="SelectedItemsID" disabled={Isall} />
         </InfoShellLayout>
     }
@@ -56,15 +56,15 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             ...this.props,
             models: this.models,
         }
-        lodash.update(props, 'defaultValues.IsAll', value => String(value));
-        lodash.update(props, 'defaultValues.DpType', value => String(value));
+       // lodash.update(props, 'defaultValues.IsAll', value => String(value));
+        //lodash.update(props, 'defaultValues.DpType', value => String(value));
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
-        const Isgroup = Models.getValue(props, "DpType") == "0"
+        const Isgroup = Models.getValue(props, "DpType") == "UserGroup"
         const Isall = Models.getValue(props, "IsAll") == "true"
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" />
-            {(!Isgroup)&& <FormItem {...props} fieId="UserItCode"  />}
-            {(Isgroup)&& <FormItem {...props} fieId="Entity.GroupId" />}
+            {(!Isgroup)&& <FormItem {...props} fieId="Entity.UserCode"  />}
+            {(Isgroup)&& <FormItem {...props} fieId="Entity.GroupCode" />}
             <Col span={24}></Col>
             <FormItem {...props} fieId="Entity.TableName" />
             <FormItem {...props} fieId="IsAll" />
@@ -89,12 +89,12 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
             display: true,
         }
-        const Isgroup = Models.getValue(props, "DpType") == "0"
+        const Isgroup = Models.getValue(props, "DpType") == "UserGroup"
         const Isall = Models.getValue(props, "IsAll") == "true"
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" />
-            <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
-            <FormItem {...props} fieId="Entity.GroupId" hidden={!Isgroup} />
+            <FormItem {...props} fieId="Entity.UserCode" hidden={Isgroup} />
+            <FormItem {...props} fieId="Entity.GroupCode" hidden={!Isgroup} />
             <Col span={24}></Col>
             <FormItem {...props} fieId="Entity.TableName" />
             <FormItem {...props} fieId="IsAll" />

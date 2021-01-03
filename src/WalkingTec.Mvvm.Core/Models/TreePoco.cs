@@ -19,6 +19,7 @@ namespace WalkingTec.Mvvm.Core
     {
 
         [Display(Name = "Parent")]
+        [JsonIgnore]
         public T Parent { get; set; }
         public List<T> Children { get; set; }
     }

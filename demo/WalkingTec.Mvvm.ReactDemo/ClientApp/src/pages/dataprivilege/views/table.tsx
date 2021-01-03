@@ -22,7 +22,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
         headerName: "dataprivilege.Name", field: "Name"
     },
     {
-        headerName: "dataprivilege.TableName", field: "TableName",
+        headerName: "dataprivilege.TableName", field: "PName",
     },
     {
         headerName: "dataprivilege.RelateIDs", field: "RelateIDs",

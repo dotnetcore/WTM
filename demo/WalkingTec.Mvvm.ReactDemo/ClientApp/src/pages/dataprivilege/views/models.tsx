@@ -56,8 +56,8 @@ export default {
                     "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.DpType')}}/> }],
                 formItem: <WtmRadio
                     dataSource={[
-                        { Text: <FormattedMessage id='dataprivilege.DpType.dataSource.0' />, Value: '0' },
-                        { Text: <FormattedMessage id='dataprivilege.DpType.dataSource.1' />, Value: '1' },
+                        { Text: <FormattedMessage id='dataprivilege.DpType.dataSource.0' />, Value: 'UserGroup' },
+                        { Text: <FormattedMessage id='dataprivilege.DpType.dataSource.1' />, Value: 'User' },
                     ]} />
             },
             /** 权限名称 */
@@ -89,18 +89,18 @@ export default {
                 rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.IsAll') }} /> }],
                 formItem: <WtmSelect
                     dataSource={[
-                        { Text: <FormattedMessage id='tips.bool.true' />, Value: 'true' },
-                        { Text: <FormattedMessage id='tips.bool.false' />, Value: 'false' },
+                        { Text: <FormattedMessage id='tips.bool.true' />, Value: true},
+                        { Text: <FormattedMessage id='tips.bool.false' />, Value: false },
                     ]} />
             },
             /** 用户Id */
-            "UserItCode": {
+            "Entity.UserCode": {
                 label: <FormattedMessage id='dataprivilege.UserItCode' />,
                 rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.UserItCode') }} /> }],
                 formItem: <Input placeholder="" />
             },
             /** 用户组 */
-            "Entity.GroupId": {
+            "Entity.GroupCode": {
                 label: <FormattedMessage id='dataprivilege.GroupId' />,
                 rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.GroupId') }} /> }],
                 formItem: <WtmSelect placeholder={<FormattedMessage id='tips.placeholder.choose' values={{ txt: getLocalesValue('dataprivilege.GroupId') }}/>}

@@ -33,7 +33,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         {
             return new List<GridColumn<DataPrivilege_ListView>>{
                 this.MakeGridHeader(x => x.Name, 200),
-                this.MakeGridHeader(x => x.TableName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
+                this.MakeGridHeader(x => "PName").SetFormat((entity,val)=>GetPrivilegeName(entity)),
+                this.MakeGridHeader(x => x.TableName),
                 this.MakeGridHeader(x => x.RelateIDs),
                 this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Localizer["Operation"]).SetDisableExport(),
                 this.MakeGridHeader(x => x.DpType).SetHide(true),

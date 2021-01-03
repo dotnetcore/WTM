@@ -53,6 +53,7 @@ namespace WalkingTec.Mvvm.Demo
                 };
                 Set<FrameworkUser>().Add(user);
                 Set<FrameworkUserRole>().Add(userrole);
+                await SaveChangesAsync();
             }
             return state;
         }
