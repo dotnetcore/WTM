@@ -134,7 +134,7 @@ export default {
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 角色 */
-            "Entity.UserRoles": {
+            "SelectedRolesCodes": {
                 label: <FormattedMessage id='frameworkuser.UserRoles' />,
                 rules: [],
                 formItem: <WtmTransfer
@@ -144,7 +144,7 @@ export default {
                 />
             },
             /** 用户组 */
-            "Entity.UserGroups": {
+            "SelectedGroupCodes": {
                 label: <FormattedMessage id='frameworkuser.UserGroups' />,
                 rules: [],
                 formItem: <WtmTransfer

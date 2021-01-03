@@ -227,13 +227,13 @@ export class GridCommunity extends React.Component<ITableProps, any> {
             this.setSelected();
         });
     }
-    @Debounce(100)
+    @Debounce(50)
     autoSizeAll() {
         // var allColumnIds = [];
         // this.gridApi.columnApi.getAllColumns().forEach((column: any) => {
         //     allColumnIds.push(column.colId);
         // });
-        this.gridApi.columnApi.autoSizeColumns(['Action']);
+        this.gridApi.columnApi.autoSizeColumns(['RowAction']);
     }
     setSelected() {
         this.gridApi &&
@@ -253,7 +253,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
         this.gridApi = event;
         lodash.defer(() => {
             this.sizeColumnsToFit();
-            this.autoSizeAll();
+            // this.autoSizeAll();
             this.setSelected();
         });
     }
@@ -455,6 +455,10 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                             onGridReady && onGridReady(event);
                             this.onGridReady(event);
                         }}
+                        onRowDataChanged={event => {
+                            // this.gridApi.api.sizeColumnsToFit();
+                            this.autoSizeAll()
+                        }}
                     />
                     {/* </Spin> */}
                 </div>
@@ -495,6 +499,8 @@ export function columnsRender(text, record) {
         text = (text === true || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
     } else if (Regular.isHtml.test(text)) {
         // text = <Popover content={
+                        console.log("🚀 ~ file: gridCommunity.tsx ~ line 501 ~ GridCommunity ~ render ~ event", event)
+                        console.log("🚀 ~ file: gridCommunity.tsx ~ line 501 ~ GridCommunity ~ render ~ event", event)
         //     <div dangerouslySetInnerHTML={{ __html: text }}></div>
         // } trigger="hover">
         //     <a>查看详情</a>

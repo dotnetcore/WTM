@@ -59,10 +59,10 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Entity.ZipCode" />
             <FormItem {...props} fieId="Entity.PhotoId" />
             <Col span={24}>
-                <FormItem {...props} fieId="Entity.UserRoles" layout="row" mapKey="RoleCode"/>
+                <FormItem {...props} fieId="SelectedRolesCodes" layout="row" />
             </Col>
             <Col span={24}>
-                <FormItem {...props} fieId="Entity.UserGroups" layout="row" mapKey="GroupCode"/>
+                <FormItem {...props} fieId="SelectedGroupCodes" layout="row" />
             </Col>
 
         </InfoShellLayout>
@@ -104,12 +104,12 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.PhotoId" />
             <FormItem {...props} fieId="Entity.IsValid" />
             <Col span={24}>
-                <FormItem {...props} fieId="Entity.UserRoles" layout="row" mapKey="RoleCode"
+                <FormItem {...props} fieId="SelectedRolesCodes" layout="row" 
                 // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")}
                 />
             </Col>
             <Col span={24}>
-                <FormItem {...props} fieId="Entity.UserGroups" layout="row" mapKey="GroupCode"
+                <FormItem {...props} fieId="SelectedGroupCodes" layout="row" 
                 // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserGroups'), "GroupId")}
                 />
             </Col>
@@ -146,12 +146,12 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.PhotoId" />
             <FormItem {...props} fieId="Entity.IsValid" />
             <Col span={24}>
-                <FormItem {...props} fieId="Entity.UserRoles" layout="row" mapKey="RoleCode"
+                <FormItem {...props} fieId="SelectedRolesCodes" layout="row" 
                 // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")}
                 />
             </Col>
             <Col span={24}>
-                <FormItem {...props} fieId="Entity.UserGroups" layout="row" mapKey="GroupCode"
+                <FormItem {...props} fieId="SelectedGroupCodes" layout="row" 
                 // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserGroups'), "GroupId")}
                 />
             </Col>
