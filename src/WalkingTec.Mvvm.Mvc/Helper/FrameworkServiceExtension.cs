@@ -43,6 +43,7 @@ using WalkingTec.Mvvm.Mvc.Auth;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Helper;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.AspNetCore.SpaServices.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -803,24 +804,6 @@ namespace WalkingTec.Mvvm.Mvc
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 });
             }
-            return app;
-        }
-
-        public static IApplicationBuilder UseVue(this IApplicationBuilder app)
-        {
-            var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
-            if (env.IsDevelopment())
-            {
-                //app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                //{
-                //    HotModuleReplacement = false,
-                //    ConfigFile = "config/webpack.dev.js",
-                //    ProjectPath = System.IO.Path.Combine(env.ContentRootPath, "ClientApp/")
-
-                //});
-            }
-            app.UseSpaStaticFiles();
-
             return app;
         }
 

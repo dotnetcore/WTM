@@ -18,6 +18,11 @@ using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Core.Json;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
+using System.Text.Json.Serialization;
+using VueCliMiddleware;
+using Microsoft.AspNetCore.SpaServices;
+using Microsoft.Extensions.Hosting;
 
 namespace WalkingTec.Mvvm.VueDemo
 {
@@ -35,8 +40,6 @@ namespace WalkingTec.Mvvm.VueDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Configs>(ConfigRoot);
-           // services.AddControllersWithViews();
             services.AddDistributedMemoryCache();
             services.AddWtmSession(3600);
             services.AddWtmCrossDomain();
@@ -47,17 +50,12 @@ namespace WalkingTec.Mvvm.VueDemo
 
             services.AddMvc(options =>
             {
-                // ModelBinderProviders
-                options.ModelBinderProviders.Insert(0, new StringBinderProvider());
-
-                // Filters
-                options.Filters.Add(new DataContextFilter());
-                options.Filters.Add(new PrivilegeFilter());
-                options.Filters.Add(new FrameworkFilter());
-                options.EnableEndpointRouting = true;
+                options.UseWtmDefaultOptions();
             })
             .AddJsonOptions(options => {
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
@@ -71,26 +69,22 @@ namespace WalkingTec.Mvvm.VueDemo
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddWtmDataAnnotationsLocalization(typeof(Program));
-            services.AddWtmContext(ConfigRoot);
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
+
+            services.AddWtmContext(ConfigRoot, (options) => {
+                options.DataPrivileges = DataPrivilegeSettings();
+                options.CsSelector = CSSelector;
+                options.FileSubDirSelector = SubDirSelector;
+                options.ReloadUserFunc = ReloadUser;
             });
+            services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs)
         {
             IconFontsHelper.GenerateIconFont();
-            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
 
-            if (configs == null)
-            {
-                throw new InvalidOperationException("Can not find Configs service, make sure you call AddWtmContext at ConfigService");
-            }
-
-            app.UseExceptionHandler(configs.ErrorHandler);
-
+            app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -99,7 +93,7 @@ namespace WalkingTec.Mvvm.VueDemo
                     typeof(_CodeGenController).GetTypeInfo().Assembly,
                     "WalkingTec.Mvvm.Mvc")
             });
-
+            app.UseSpaStaticFiles();
             app.UseRouting();
             app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
@@ -107,7 +101,6 @@ namespace WalkingTec.Mvvm.VueDemo
             app.UseAuthorization();
             app.UseSession();
             app.UseWtmSwagger();
-            app.UseVue();
             app.UseWtm();
 
             app.UseEndpoints(endpoints =>
@@ -118,28 +111,75 @@ namespace WalkingTec.Mvvm.VueDemo
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
+                if (env.IsDevelopment())
+                {
+                    // This forwards everything to the "vue-cli-service":
+                    endpoints.MapToVueCliProxy(
+                        "{*path}",
+                        new SpaOptions { SourcePath = "ClientApp" },
+                        npmScript: "start",
+                        regex: "Compiled successfully");
+                }
             });
 
             app.UseWtmContext();
-
-
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+            });
         }
 
+        /// <summary>
+        /// Wtm will call this function to dynamiclly set connection string
+        /// 框架会调用这个函数来动态设定每次访问需要链接的数据库
+        /// </summary>
+        /// <param name="context">ActionContext</param>
+        /// <returns>Connection string key name</returns>
         public string CSSelector(ActionExecutingContext context)
         {
             //To override the default logic of choosing connection string,
-            //change this function to return different connection string key            
+            //change this function to return different connection string key
+            //根据context返回不同的连接字符串的名称
             return null;
         }
 
+        /// <summary>
+        /// Set data privileges that system supports
+        /// 设置系统支持的数据权限
+        /// </summary>
+        /// <returns>data privileges list</returns>
         public List<IDataPrivilege> DataPrivilegeSettings()
         {
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
-            //pris.Add(new DataPrivilegeInfo<typea>("aaaPrivilege", m => m.Name));
-            //pris.Add(new DataPrivilegeInfo<typeb>("bbbPrivilege", m => m.Name));
+            //指定哪些模型需要数据权限
             return pris;
         }
+
+        /// <summary>
+        /// Set sub directory of uploaded files
+        /// 动态设置上传文件的子目录
+        /// </summary>
+        /// <param name="fh">IWtmFileHandler</param>
+        /// <returns>subdir name</returns>
+        public string SubDirSelector(IWtmFileHandler fh)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Custom Reload user process when cache is not available
+        /// 设置自定义的方法重新读取用户信息，这个方法会在用户缓存失效的时候调用
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public LoginUserInfo ReloadUser(WTMContext context, string account)
+        {
+            return null;
+        }
+
 
     }
 }

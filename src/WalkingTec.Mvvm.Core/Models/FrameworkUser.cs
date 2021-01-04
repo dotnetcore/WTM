@@ -39,6 +39,7 @@ namespace WalkingTec.Mvvm.Core
         public Guid? PhotoId { get; set; }
 
         [Display(Name = "Photo")]
+        [JsonIgnore]
         public FileAttachment Photo { get; set; }
 
     }

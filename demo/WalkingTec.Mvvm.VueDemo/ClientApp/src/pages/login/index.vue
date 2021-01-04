@@ -29,7 +29,7 @@ export default class Login extends Vue {
     @Action
     login;
     formData = {
-        userid: config.development ? "admin" : "",
+        account: config.development ? "admin" : "",
         password: config.development ? "000000" : ""
     };
     isloading: boolean = false;

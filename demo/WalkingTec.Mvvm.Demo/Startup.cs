@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,19 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Mvc.Binders;
-using WalkingTec.Mvvm.Mvc.Filters;
-using WalkingTec.Mvvm.Core.Json;
-using System.Text.Json;
-using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Json;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Demo.Models;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Localization;
+using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -57,6 +48,7 @@ namespace WalkingTec.Mvvm.Demo
             })
             .AddJsonOptions(options => {
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                options.JsonSerializerOptions.IgnoreNullValues = true;
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
             })
@@ -87,7 +79,6 @@ namespace WalkingTec.Mvvm.Demo
             IconFontsHelper.GenerateIconFont();
 
             app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
-
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -103,7 +94,7 @@ namespace WalkingTec.Mvvm.Demo
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
-            app.UseWtmSwagger(false);
+            app.UseWtmSwagger();
             app.UseWtm();
 
             app.UseEndpoints(endpoints =>
