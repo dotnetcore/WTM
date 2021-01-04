@@ -3,7 +3,7 @@
         <el-form :model="formData" label-width="0">
             <h1>WalkingTec MVVM</h1>
             <el-form-item>
-                <el-input v-model="formData.userid" :placeholder="$t('login.pleaseEnterUsername')" prefix-icon="el-icon-user" />
+                <el-input v-model="formData.account" :placeholder="$t('login.pleaseEnterUsername')" prefix-icon="el-icon-user" />
             </el-form-item>
             <el-form-item>
                 <el-input v-model="formData.password" @keyup.enter.native="onSubmit" :placeholder="$t('login.pleaseEnterPassword')" prefix-icon="el-icon-lock" show-password />
@@ -34,8 +34,8 @@ export default class Login extends Vue {
     };
     isloading: boolean = false;
     get isDisabled() {
-        const { userid, password } = this.formData;
-        return !(!!userid && !!password);
+        const { account, password } = this.formData;
+        return !(!!account && !!password);
     }
 
     onSubmit() {

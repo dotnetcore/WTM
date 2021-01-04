@@ -20,7 +20,6 @@ using WalkingTec.Mvvm.Core.Json;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using System.Text.Json.Serialization;
-using VueCliMiddleware;
 using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.Hosting;
 
@@ -82,8 +81,6 @@ namespace WalkingTec.Mvvm.VueDemo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs)
         {
-            IconFontsHelper.GenerateIconFont();
-
             app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
@@ -93,14 +90,14 @@ namespace WalkingTec.Mvvm.VueDemo
                     typeof(_CodeGenController).GetTypeInfo().Assembly,
                     "WalkingTec.Mvvm.Mvc")
             });
-            app.UseSpaStaticFiles();
+            app.UseWtmSwagger();
+
             app.UseRouting();
             app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
-            app.UseWtmSwagger();
             app.UseWtm();
 
             app.UseEndpoints(endpoints =>
@@ -111,23 +108,9 @@ namespace WalkingTec.Mvvm.VueDemo
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
-                if (env.IsDevelopment())
-                {
-                    // This forwards everything to the "vue-cli-service":
-                    endpoints.MapToVueCliProxy(
-                        "{*path}",
-                        new SpaOptions { SourcePath = "ClientApp" },
-                        npmScript: "start",
-                        regex: "Compiled successfully");
-                }
             });
-
+            
             app.UseWtmContext();
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-            });
         }
 
         /// <summary>

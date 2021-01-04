@@ -27,9 +27,6 @@
     <None Remove="ClientApp\package-lock.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="VueCliMiddleware" Version="3.1.2" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />

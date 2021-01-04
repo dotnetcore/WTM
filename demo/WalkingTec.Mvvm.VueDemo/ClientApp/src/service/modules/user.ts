@@ -1,8 +1,8 @@
 import config from "@/config/index";
-const reqPath = config.headerApi + "/_Account/";
+const reqPath = config.headerApi + "/_login/";
 // 验证登陆
 const loginCheckLogin = {
-    url: reqPath + "CheckUserInfo",
+  url: reqPath + "CheckLogin/{ID}",
   method: "get"
 };
 // 验证登出
