@@ -22,19 +22,19 @@ namespace WalkingTec.Mvvm.Core
     public class ActionLog : BasePoco, ICloneable
     {
         [Display(Name = "Module")]
-        [StringLength(255, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(255, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ModuleName { get; set; }
 
         [Display(Name = "Action")]
-        [StringLength(255, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(255, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ActionName { get; set; }
 
         [Display(Name = "Account")]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ITCode { get; set; }
 
         [Display(Name = "Url")]
-        [StringLength(250, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(250, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ActionUrl { get; set; }
 
         [Display(Name = "ActionTime")]
@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "Remark")]
         public string Remark { get; set; }
 
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         [Display(Name = "IP")]
         public string IP { get; set; }
 
@@ -61,14 +61,14 @@ namespace WalkingTec.Mvvm.Core
         public string GetLogString()
         {
             return $@"
-|-{Core.CoreProgram._localizer["ActionTime"]}：{this.ActionTime}
-|-{Core.CoreProgram._localizer["Account"]}：{this.ITCode??""}
+|-{Core.CoreProgram._localizer["_Admin.ActionTime"]}：{this.ActionTime}
+|-{Core.CoreProgram._localizer["_Admin.Account"]}：{this.ITCode??""}
 |-IP：{this.IP??""}
-|-{Core.CoreProgram._localizer["Module"]}：{this.ModuleName??""}
-|-{Core.CoreProgram._localizer["MethodName"]}：{this.ActionName ?? ""}
+|-{Core.CoreProgram._localizer["_Admin.Module"]}：{this.ModuleName??""}
+|-{Core.CoreProgram._localizer["_Admin.MethodName"]}：{this.ActionName ?? ""}
 |-Url：{this.ActionUrl ?? ""}
-|-{Core.CoreProgram._localizer["Duration"]}：{this.Duration.ToString("F2")+" s"}
-|-{Core.CoreProgram._localizer["Remark"]}：{this.Remark}
+|-{Core.CoreProgram._localizer["_Admin.Duration"]}：{this.Duration.ToString("F2")+" s"}
+|-{Core.CoreProgram._localizer["_Admin.Remark"]}：{this.Remark}
 ";
         }
     }

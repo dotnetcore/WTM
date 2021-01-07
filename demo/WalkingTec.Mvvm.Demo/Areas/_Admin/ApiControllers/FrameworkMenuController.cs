@@ -144,7 +144,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             Cache.Delete("FFMenus");
             var userids = DC.Set<FrameworkUserBase>().Select(x => x.ID.ToString().ToLower()).ToArray();
             await Wtm.RemoveUserCache(userids);
-            return Ok(Localizer["OprationSuccess"]);
+            return Ok(Localizer["Sys.OprationSuccess"]);
         }
         #endregion
 

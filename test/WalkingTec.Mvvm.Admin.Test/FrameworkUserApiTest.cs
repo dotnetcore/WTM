@@ -74,11 +74,9 @@ namespace WalkingTec.Mvvm.Admin.Test
             var oldID = v.ID;
             v = new FrameworkUser();
             v.ID = oldID;
-            v.ITCode = "itcode1";
             v.Name = "name1";
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
-            vm.FC.Add("Entity.ITCode", "");
             vm.FC.Add("Entity.Name", "");
             var rv = _controller.Edit(vm);
             Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
@@ -86,7 +84,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
                 var data = context.Set<FrameworkUser>().FirstOrDefault();
-                Assert.AreEqual(data.ITCode, "itcode1");
+                Assert.AreEqual(data.ITCode, "itcode");
                 Assert.AreEqual(data.Name, "name1");
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);

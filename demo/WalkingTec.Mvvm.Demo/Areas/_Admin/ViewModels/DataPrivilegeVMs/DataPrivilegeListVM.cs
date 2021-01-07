@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 this.MakeGridHeader(x => x.Name, 200),
                 this.MakeGridHeader(x => x.TableName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
                 this.MakeGridHeader(x => x.RelateIDs),
-                this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Localizer["Operation"]).SetDisableExport(),
+                this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Localizer["Sys.Operation"]).SetDisableExport(),
                 this.MakeGridHeader(x => x.DpType).SetHide(true),
                 this.MakeGridHeader(x => x.TargetId).SetHide(true)
            };
@@ -71,8 +71,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             return new List<ColumnFormatInfo>
             {
-                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,editurl,Localizer["Edit"],800,null,Localizer["Edit"]),
-                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,delurl,Localizer["Delete"],null,null,showDialog:false)
+                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,editurl,Localizer["Sys.Edit"],800,null,Localizer["Sys.Edit"]),
+                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,delurl,Localizer["Sys.Delete"],null,null,showDialog:false)
             };
         }
 

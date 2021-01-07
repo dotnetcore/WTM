@@ -16,11 +16,11 @@ namespace WalkingTec.Mvvm.Core
     public class FileAttachment : TopBasePoco, IWtmFile, IDisposable
     {
         [Display(Name = "FileName")]
-        [Required(ErrorMessage = "{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public string FileName { get; set; }
 
         [Display(Name = "FileExt")]
-        [Required(ErrorMessage = "{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(10)]
         public string FileExt { get; set; }
 

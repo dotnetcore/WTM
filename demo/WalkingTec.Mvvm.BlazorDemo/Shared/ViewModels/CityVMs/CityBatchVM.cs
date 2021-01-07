@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using WalkingTec.Mvvm.BlazorDemo.Models;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.CityVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 {
     public partial class CityBatchVM : BaseBatchVM<City, City_BatchEdit>
     {

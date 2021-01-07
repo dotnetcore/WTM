@@ -17,38 +17,38 @@ namespace WalkingTec.Mvvm.Doc.Models
     public class Student : BasePoco
     {
         [Display(Name = "Account")]
-        [Required(ErrorMessage = "{0}required")]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string LoginName { get; set; }
 
         [Display(Name = "Password")]
-        [Required(ErrorMessage = "{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(32)]
         public string Password { get; set; }
 
         [Display(Name = "Email")]
         [DataType(DataType.EmailAddress)]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Email { get; set; }
 
         [Display(Name = "Name")]
-        [Required(ErrorMessage = "{0}required")]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Name { get; set; }
 
         [Display(Name = "Sex")]
         public SexEnum? Sex { get; set; }
 
         [Display(Name = "CellPhone")]
-        [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}formaterror")]
+        [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "Validate.{0}formaterror")]
         public string CellPhone { get; set; }
 
         [Display(Name = "Address")]
-        [StringLength(200, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(200, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Address { get; set; }
 
         [Display(Name = "Zip")]
-        [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "{0}formaterror")]
+        [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "Validate.{0}formaterror")]
         public string ZipCode { get; set; }
 
         [Display(Name = "Photo")]

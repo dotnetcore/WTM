@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.BlazorDemo.Models;
-using WalkingTec.Mvvm.BlazorDemo.ViewModels.MajorVMs;
+using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Demo.ViewModels.MajorVMs;
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.SchoolVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public class SchoolVM : BaseCRUDVM<School>
     {

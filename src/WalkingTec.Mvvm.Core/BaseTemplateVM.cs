@@ -107,8 +107,8 @@ namespace WalkingTec.Mvvm.Core
 
             ISheet enumSheet = workbook.CreateSheet();
             IRow enumSheetRow1 = enumSheet.CreateRow(0);
-            enumSheetRow1.CreateCell(0).SetCellValue(CoreProgram._localizer?["Yes"]);
-            enumSheetRow1.CreateCell(1).SetCellValue(CoreProgram._localizer?["No"]);
+            enumSheetRow1.CreateCell(0).SetCellValue(CoreProgram._localizer?["Sys.Yes"]);
+            enumSheetRow1.CreateCell(1).SetCellValue(CoreProgram._localizer?["Sys.No"]);
             enumSheetRow1.CreateCell(2).SetCellValue(this.GetType().Name); //为模板添加标记,必要时可添加版本号
 
             ISheet dataSheet = workbook.CreateSheet();

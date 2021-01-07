@@ -179,33 +179,33 @@ namespace WalkingTec.Mvvm.Core
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? long.MaxValue.ToString() : this.MaxValuseOrLength;
                     dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateNumericConstraint(ValidationType.INTEGER, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength);
                     dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Error"], CoreProgram._localizer?["PleaseInputNumber"]);
+                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.PleaseInputNumber"]);
                     dataStyle.DataFormat = dataFormat.GetFormat("0");
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["PleaseInputNumberFormat"], CoreProgram._localizer?["DataRange", MinValueOrLength, MaxValuseOrLength]);
+                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.PleaseInputNumberFormat"], CoreProgram._localizer?["Sys.DataRange", MinValueOrLength, MaxValuseOrLength]);
                     break;
                 case ColumnDataType.Float:
                     this.MinValueOrLength = string.IsNullOrEmpty(this.MinValueOrLength) ? decimal.MinValue.ToString() : this.MinValueOrLength;
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? decimal.MaxValue.ToString() : this.MaxValuseOrLength;
                     dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateNumericConstraint(ValidationType.DECIMAL, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength);
                     dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Error"], CoreProgram._localizer?["PleaseInputDecimal"]);
+                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.PleaseInputDecimal"]);
                     dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("0.00");
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["PleaseInputDecimalFormat"], CoreProgram._localizer?["DataRange", MinValueOrLength, MaxValuseOrLength]);
+                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.PleaseInputDecimalFormat"], CoreProgram._localizer?["Sys.DataRange", MinValueOrLength, MaxValuseOrLength]);
                     break;
                 case ColumnDataType.Bool:
                     dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateFormulaListConstraint("Sheet1!$A$1:$B$1");
                     dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Error"], CoreProgram._localizer?["PleaseInputExistData"]);
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["ComboBox"], CoreProgram._localizer?["PleaseInputExistData"]);
+                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.PleaseInputExistData"]);
+                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.ComboBox"], CoreProgram._localizer?["Sys.PleaseInputExistData"]);
                     break;
                 case ColumnDataType.Text:
                     this.MinValueOrLength = string.IsNullOrEmpty(this.MinValueOrLength) ? "0" : this.MinValueOrLength;
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? "2000" : this.MaxValuseOrLength;
                     dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateNumericConstraint(ValidationType.TEXT_LENGTH, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength);
                     dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Error"], CoreProgram._localizer?["WrongTextLength"]);
+                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.WrongTextLength"]);
                     dataStyle.DataFormat = dataFormat.GetFormat("@");
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["PleaseInputText"], CoreProgram._localizer?["DataRange", MinValueOrLength, MaxValuseOrLength]);
+                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.PleaseInputText"], CoreProgram._localizer?["Sys.DataRange", MinValueOrLength, MaxValuseOrLength]);
                     break;
                 case ColumnDataType.ComboBox:
                 case ColumnDataType.Enum:
@@ -221,7 +221,7 @@ namespace WalkingTec.Mvvm.Core
                     range.NameName = "dicRange" + porpetyIndex;
                     dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateFormulaListConstraint("dicRange" + porpetyIndex);
                     dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Error"], CoreProgram._localizer?["PleaseInputExistData"]);
+                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.PleaseInputExistData"]);
                     var listItemsTemp = this.ListItems.ToList();
                     for (int rowIndex = 0; rowIndex < this.ListItems.Count(); rowIndex++)
                     {
@@ -234,12 +234,12 @@ namespace WalkingTec.Mvvm.Core
                         dataStyle.DataFormat = dataFormat.GetFormat("@");
                         dataSheetRow.Cells.Where(x => x.ColumnIndex == porpetyIndex).FirstOrDefault().CellStyle = dataStyle;
                     }
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["ComboBox"], CoreProgram._localizer?["PleaseInputExistData"]);
+                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.ComboBox"], CoreProgram._localizer?["Sys.PleaseInputExistData"]);
                     break;
                 default:
                     dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateNumericConstraint(ValidationType.TEXT_LENGTH, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength);
                     dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Error"], CoreProgram._localizer?["WrongTextLength"]);
+                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.WrongTextLength"]);
                     dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("@");
                     break;
             }
@@ -280,7 +280,7 @@ namespace WalkingTec.Mvvm.Core
                         DateTime tryDateTimeResult;
                         if (!DateTime.TryParse(value, out tryDateTimeResult))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["{0}formaterror", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}formaterror", this.ColumnName] };
                         }
                         this.Value = tryDateTimeResult;
                         break;
@@ -288,7 +288,7 @@ namespace WalkingTec.Mvvm.Core
                         int tryIntResult;
                         if (!int.TryParse(value, out tryIntResult))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["{0}formaterror", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}formaterror", this.ColumnName] };
                         }
                         this.Value = tryIntResult;
                         break;
@@ -296,22 +296,22 @@ namespace WalkingTec.Mvvm.Core
                         decimal tryDecimalResult;
                         if (!decimal.TryParse(value, out tryDecimalResult))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["{0}formaterror", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}formaterror", this.ColumnName] };
                         }
                         this.Value = tryDecimalResult;
                         break;
                     case ColumnDataType.Bool:
-                        if (value == CoreProgram._localizer["Yes"])
+                        if (value == CoreProgram._localizer["Sys.Yes"])
                         {
                             this.Value = true;
                         }
-                        else if (value == CoreProgram._localizer["No"])
+                        else if (value == CoreProgram._localizer["Sys.No"])
                         {
                             this.Value = false;
                         }
                         else
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["{0}formaterror", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}formaterror", this.ColumnName] };
                         }
                         break;
                     case ColumnDataType.Text:
@@ -321,7 +321,7 @@ namespace WalkingTec.Mvvm.Core
                     case ColumnDataType.Enum:
                         if (!this.ListItems.Any(x => x.Text == value))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["{0}ValueNotExist", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}ValueNotExist", this.ColumnName] };
                         }
                         else
                         {

@@ -71,14 +71,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             {
                 if (string.IsNullOrEmpty(Entity.UserCode))
                 {
-                    MSD.AddModelError("UserItCode", Localizer["{0}required", Localizer["Account"]]);
+                    MSD.AddModelError("UserItCode", Localizer["Validate.{0}required", Localizer["_Admin.Account"]]);
                 }
                 else
                 {
                     var user = DC.Set<FrameworkUserBase>().Where(x => x.ITCode == Entity.UserCode).FirstOrDefault();
                     if (user == null)
                     {
-                        MSD.AddModelError("Entity.UserCode", Localizer["CannotFindUser", Entity.UserCode]);
+                        MSD.AddModelError("Entity.UserCode", Localizer["Sys.CannotFindUser", Entity.UserCode]);
                     }
                 }
             }
@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             {
                 if(string.IsNullOrEmpty(Entity.GroupCode))
                 {
-                    MSD.AddModelError("Entity.GroupId", Localizer["{0}required", Localizer["Group"]]);
+                    MSD.AddModelError("Entity.GroupId", Localizer["Validate.{0}required", Localizer["_Admin.Group"]]);
                 }
             }
 

@@ -17,8 +17,8 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "Group")]
         public string GroupCode { get; set; }
 
-        [Required(ErrorMessage = "{0}required")]
-        [StringLength(50,ErrorMessage = "{0}stringmax{1}")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [StringLength(50,ErrorMessage = "Validate.{0}stringmax{1}")]
         [Display(Name = "TableName")]
         public string TableName { get; set; }
         public string RelateId { get; set; }

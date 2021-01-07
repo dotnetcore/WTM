@@ -138,10 +138,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.PreContent.AppendHtml($@"
 <div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}x"">
   <div class=""layui-colla-item"">
-    <h2 class=""layui-colla-title"">{THProgram._localizer["SearchCondition"]}
+    <h2 class=""layui-colla-title"">{THProgram._localizer["Sys.SearchCondition"]}
       <div style=""text-align:right;margin-top:-43px;"" id=""{tempSearchTitleId}"">
-        <a href=""javascript:void(0)"" class=""layui-btn layui-btn-sm"" id=""{SearchBtnId}""><i class=""layui-icon"">&#xe615;</i>{THProgram._localizer["Search"]}</a>
-        {(!ResetBtn ? string.Empty : $@"<button type=""button"" class=""layui-btn layui-btn-sm"" id=""{ResetBtnId}"">{THProgram._localizer["Reset"]}</button>")}
+        <a href=""javascript:void(0)"" class=""layui-btn layui-btn-sm"" id=""{SearchBtnId}""><i class=""layui-icon"">&#xe615;</i>{THProgram._localizer["Sys.Search"]}</a>
+        {(!ResetBtn ? string.Empty : $@"<button type=""button"" class=""layui-btn layui-btn-sm"" id=""{ResetBtnId}"">{THProgram._localizer["Sys.Reset"]}</button>")}
       </div>
     </h2>
     <div class=""layui-colla-content{layuiShow}"" >

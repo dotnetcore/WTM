@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagAndEndTag;
 
             output.Attributes.SetAttribute("href", $"/_Framework/GetExcelTemplate?_DONOT_USE_VMNAME={vmQualifiedName}");
-            Text = THProgram._localizer["DownloadTemplate"];
+            Text = THProgram._localizer["Sys.DownloadTemplate"];
             base.Process(context, output);
         }
 

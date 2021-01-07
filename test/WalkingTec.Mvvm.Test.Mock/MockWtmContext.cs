@@ -28,12 +28,12 @@ namespace WalkingTec.Mvvm.Test.Mock
             MockHttpSession mockSession = new MockHttpSession();
             mockHttpRequest.Setup(x => x.Cookies).Returns(new MockCookie());
             mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions())));
-            mockService.Setup(x => x.GetService(typeof(WtmFileProvider))).Returns(new WtmFileProvider(Options.Create<Configs>(new Configs()), gd));
+            mockService.Setup(x => x.GetService(typeof(WtmFileProvider))).Returns(new WtmFileProvider(new Configs()));
             mockHttpContext.Setup(x => x.Request).Returns(mockHttpRequest.Object);
             mockHttpContext.Setup(x => x.RequestServices).Returns(mockService.Object);
             var httpa = new HttpContextAccessor();
             httpa.HttpContext = mockHttpContext.Object;
-            var wtmcontext = new WTMContext(Options.Create<Configs>(new Configs()), new GlobalData(), httpa, new DefaultUIService(), null,dataContext);
+            var wtmcontext = new WTMContext(null, new GlobalData(), httpa, new DefaultUIService(), null,dataContext);
             wtmcontext.MSD = new BasicMSD();
             wtmcontext.Session = new SessionServiceProvider(mockSession);
             if (dataContext == null)

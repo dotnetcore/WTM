@@ -229,7 +229,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert(Localizer["ImportSuccess", vm.EntityList.Count.ToString()]);
+                return FFResult().RefreshGrid().CloseDialog().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
         #endregion

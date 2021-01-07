@@ -23,9 +23,9 @@ namespace WalkingTec.Mvvm.Mvc
             options.Filters.Add(new DataContextFilter());
             options.Filters.Add(new PrivilegeFilter());
             options.Filters.Add(new FrameworkFilter());
-            options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.CoreProgram._localizer["ValueIsInvalidAccessor", x]);
-            options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => Core.CoreProgram._localizer["AttemptedValueIsInvalidAccessor", x, y]);
-            options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor((x) => Core.CoreProgram._localizer["ValueIsInvalidAccessor", x]);
+            options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.CoreProgram._localizer["Sys.ValueIsInvalidAccessor", x]);
+            options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => Core.CoreProgram._localizer["Sys.AttemptedValueIsInvalidAccessor", x, y]);
+            options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor((x) => Core.CoreProgram._localizer["Sys.ValueIsInvalidAccessor", x]);
             options.ModelMetadataDetailsProviders.Add(new ExcludeBindingMetadataProvider(typeof(IModelStateService)));
             options.ModelMetadataDetailsProviders.Add(new ExcludeBindingMetadataProvider(typeof(IDataContext)));
             options.ModelMetadataDetailsProviders.Add(new ExcludeBindingMetadataProvider(typeof(WTMContext)));

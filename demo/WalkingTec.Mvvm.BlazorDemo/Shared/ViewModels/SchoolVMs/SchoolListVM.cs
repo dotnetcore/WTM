@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.BlazorDemo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.SchoolVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
     {
@@ -47,6 +47,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.SchoolVMs
                 this.MakeActionsGroup("批量处理",new List<GridAction>(){
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
+                 }),
+                this.MakeActionsGroup("批量处理2",new List<GridAction>(){
+                      this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
+                      this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
                  })
             };
         }
@@ -71,6 +75,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.SchoolVMs
                 .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x => x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x => x.SchoolType)
+                .DPWhere(Wtm, x=>x.ID)
                 .Select(x => new School_View
                 {
                     ID = x.ID,

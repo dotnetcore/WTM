@@ -143,7 +143,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 }
                 var userids = DC.Set<FrameworkUserGroup>().Where(x => DC.Set<FrameworkGroup>().Where(y => groupids.Contains(y.ID)).Select(y => y.GroupCode).Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
                 await Wtm.RemoveUserCache(userids);
-                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["OprationSuccess"]);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.OprationSuccess"]);
             }
         }
         #endregion
@@ -166,7 +166,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["ImportSuccess", vm.EntityList.Count.ToString()]);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
         #endregion

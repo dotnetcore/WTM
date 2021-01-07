@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 {
                         act.Text = Localizer[act.Text];
                 }
-                item.AllActions.Insert(0, new ComboSelectListItem { Text = Localizer["MainPage"], Value = item.ID.ToString() });
+                item.AllActions.Insert(0, new ComboSelectListItem { Text = Localizer["Sys.MainPage"], Value = item.ID.ToString() });
                 var ids = item.AllActions.Select(x => Guid.Parse(x.Value.ToString()));
                 item.Actions = ids.Where(x => allowedids.Contains(x)).ToList();
             }

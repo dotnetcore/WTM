@@ -22,7 +22,7 @@ Layout = null;
   </script>
 </head>
 @{
-    string preview = WalkingTec.Mvvm.Core.CoreProgram._localizer["Preview"];
+    string preview = WalkingTec.Mvvm.Core.CoreProgram._localizer["Sys.Preview"];
 }
 <body class="layui-layout-body">
 
@@ -32,7 +32,7 @@ Layout = null;
 
         <wt:form vm="@Model" url="/_CodeGen/DoGen" label-width="150">
           <wt:quote>
-            @WalkingTec.Mvvm.Core.CoreProgram._localizer["Codegen.confirm"]<br />
+            @WalkingTec.Mvvm.Core.CoreProgram._localizer["Codegen.Confirm"]<br />
           </wt:quote>
           <wt:fieldset title="Controller">
             <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
@@ -159,7 +159,7 @@ Layout = null;
           <wt:hidden field="AuthMode" />
 
           <wt:row align="AlignEnum.Right">
-            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@WalkingTec.Mvvm.Core.CoreProgram._localizer["Codegen.start"]" />
+            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@WalkingTec.Mvvm.Core.CoreProgram._localizer["Codegen.Start"]" />
             <wt:closebutton />
           </wt:row>
 

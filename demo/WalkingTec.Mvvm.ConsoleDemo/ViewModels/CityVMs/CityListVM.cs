@@ -17,14 +17,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("City", GridActionStandardTypesEnum.Create, Localizer["Create"],"", dialogWidth: 800),
-                this.MakeStandardAction("City", GridActionStandardTypesEnum.Edit, Localizer["Edit"],"", dialogWidth: 800),
-                this.MakeStandardAction("City", GridActionStandardTypesEnum.Delete, Localizer["Delete"], "",dialogWidth: 800),
-                this.MakeStandardAction("City", GridActionStandardTypesEnum.Details, Localizer["Details"],"", dialogWidth: 800),
-                this.MakeStandardAction("City", GridActionStandardTypesEnum.BatchEdit, Localizer["BatchEdit"],"", dialogWidth: 800),
-                this.MakeStandardAction("City", GridActionStandardTypesEnum.BatchDelete, Localizer["BatchDelete"],"", dialogWidth: 800),
-                this.MakeStandardAction("City", GridActionStandardTypesEnum.Import, Localizer["Import"],"", dialogWidth: 800),
-                this.MakeStandardAction("City", GridActionStandardTypesEnum.ExportExcel, Localizer["Export"],""),
+                this.MakeStandardAction("City", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
+                this.MakeStandardAction("City", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"],"", dialogWidth: 800),
+                this.MakeStandardAction("City", GridActionStandardTypesEnum.Delete, Localizer["Sys.Delete"], "",dialogWidth: 800),
+                this.MakeStandardAction("City", GridActionStandardTypesEnum.Details, Localizer["Sys.Details"],"", dialogWidth: 800),
+                this.MakeStandardAction("City", GridActionStandardTypesEnum.BatchEdit, Localizer["Sys.BatchEdit"],"", dialogWidth: 800),
+                this.MakeStandardAction("City", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"],"", dialogWidth: 800),
+                this.MakeStandardAction("City", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"],"", dialogWidth: 800),
+                this.MakeStandardAction("City", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"],""),
             };
         }
 
@@ -48,6 +48,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         {
             var query = DC.Set<City>()
                 .CheckEqual(Searcher.ParentId, x=>x.ParentId)
+                .DPWhere(Wtm, x=>x.ID)
                 .Select(x => new City_View
                 {
 				    ID = x.ID,

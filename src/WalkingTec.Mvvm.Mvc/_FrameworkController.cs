@@ -336,7 +336,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                return Content($"{{\"code\": 1 , \"msg\": \"{MvcProgram._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
+                return Content($"{{\"code\": 1 , \"msg\": \"{MvcProgram._localizer["Sys.UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
 
             }
 
@@ -450,26 +450,12 @@ namespace WalkingTec.Mvvm.Mvc
                     var pmenu = GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
                     if (pmenu != null)
                     {
-                        if (this.Localizer[pmenu.PageName].ResourceNotFound == true)
-                        {
                             pmenu.PageName = Core.CoreProgram._localizer[pmenu.PageName];
-                        }
-                        else
-                        {
-                            pmenu.PageName = this.Localizer[pmenu.PageName];
-                        }
 
                         pagetitle = pmenu.PageName + " - ";
                     }
                 }
-                if (this.Localizer[menu.PageName].ResourceNotFound == true)
-                {
                     menu.PageName = Core.CoreProgram._localizer[menu.PageName];
-                }
-                else
-                {
-                    menu.PageName = this.Localizer[menu.PageName];
-                }
 
                 pagetitle += menu.PageName;
             }
@@ -480,7 +466,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                throw new Exception(MvcProgram._localizer["NoPrivilege"]);
+                throw new Exception(MvcProgram._localizer["Sys.NoPrivilege"]);
             }
         }
 
@@ -564,14 +550,7 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var menu in menus)
             {
                 LocalizeMenu(menu.Children);
-                if (Core.CoreProgram._Callerlocalizer[menu.Title].ResourceNotFound == true)
-                {
                     menu.Title = Core.CoreProgram._localizer[menu.Title];
-                }
-                else
-                {
-                    menu.Title = Core.CoreProgram._Callerlocalizer[menu.Title];
-                }
             }
         }
 
@@ -774,10 +753,10 @@ namespace WalkingTec.Mvvm.Mvc
         public Dictionary<string, string> GetScriptLanguage()
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
-            rv.Add("DONOTUSE_Text_LoadFailed", MvcProgram._localizer["LoadFailed"]);
-            rv.Add("DONOTUSE_Text_SubmitFailed", MvcProgram._localizer["SubmitFailed"]);
-            rv.Add("DONOTUSE_Text_PleaseSelect", MvcProgram._localizer["PleaseSelect"]);
-            rv.Add("DONOTUSE_Text_FailedLoadData", MvcProgram._localizer["FailedLoadData"]);
+            rv.Add("DONOTUSE_Text_LoadFailed", MvcProgram._localizer["Sys.LoadFailed"]);
+            rv.Add("DONOTUSE_Text_SubmitFailed", MvcProgram._localizer["Sys.SubmitFailed"]);
+            rv.Add("DONOTUSE_Text_PleaseSelect", MvcProgram._localizer["Sys.PleaseSelect"]);
+            rv.Add("DONOTUSE_Text_FailedLoadData", MvcProgram._localizer["Sys.FailedLoadData"]);
             return rv;
         }
 
@@ -813,7 +792,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                return Content($"{{\"code\": 1 , \"msg\": \"{MvcProgram._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
+                return Content($"{{\"code\": 1 , \"msg\": \"{MvcProgram._localizer["Sys.UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
 
             }
 

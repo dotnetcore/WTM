@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,10 +6,10 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using WalkingTec.Mvvm.BlazorDemo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.MajorVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 {
     public class MajorDetailListVM : BasePagedListVM<Major, MajorSearcher>
     {
@@ -33,6 +33,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.MajorVMs
                 this.MakeGridHeader(x => x.MajorCode).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.MajorType).SetEditType(EditTypeEnum.ComboBox,typeof(MajorTypeEnum).ToListItems(null,true)),
                 this.MakeGridHeader(x => x.MajorName).SetEditType(EditTypeEnum.TextBox).SetEditType(EditTypeEnum.TextBox),
+                this.MakeGridHeader(x => "click").SetHeader("单击单元格事件").SetEditType(EditTypeEnum.TextBox).SetEvent("setSign"),  //SetEvent设置 事件名称，在layui数据表格进行事件监听
                this.MakeGridHeaderAction(width: 200)
             };
         }

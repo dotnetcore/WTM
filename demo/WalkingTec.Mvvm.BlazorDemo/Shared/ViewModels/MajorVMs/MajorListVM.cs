@@ -5,10 +5,10 @@ using System.Linq;
 
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.BlazorDemo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.MajorVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 {
     public class MajorListVM : BasePagedListVM<Major_View, MajorSearcher>
     {
@@ -46,6 +46,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.MajorVMs
                 .CheckContain(Searcher.MajorName, x => x.MajorName)
                 .CheckEqual(Searcher.SchoolId, x => x.SchoolId)
                 .DPWhere(Wtm, x => x.SchoolId)
+                .DPWhere(Wtm, x=>x.ID)
                 .Select(x => new Major_View
                 {
                     ID = x.ID,

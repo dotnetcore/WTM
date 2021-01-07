@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (!string.IsNullOrEmpty(ConfirmTxt))
                 {
-                    Click = $"layer.confirm('{ConfirmTxt}', {{icon: 3, title:'{THProgram._localizer["Info"]}'}}, function(index){{ {Click};layer.close(index); }})";
+                    Click = $"layer.confirm('{ConfirmTxt}', {{icon: 3, title:'{THProgram._localizer["Sys.Info"]}'}}, function(index){{ {Click};layer.close(index); }})";
                 }
                 //if (this is SubmitButtonTagHelper)
                 //{

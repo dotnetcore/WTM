@@ -26,20 +26,7 @@ namespace WalkingTec.Mvvm.Core
 
         public void SetLoccalizer(Type controllertype)
         {
-            if (Core.CoreProgram.Buildindll.Any(x => controllertype.FullName.StartsWith(x)))
-            {
-                if (Core.CoreProgram._localizer != null)
-                {
-                    _localizer = Core.CoreProgram._localizer;
-                }
-            }
-            else
-            {
-                if (Core.CoreProgram._Callerlocalizer != null)
-                {
-                    _localizer = Core.CoreProgram._Callerlocalizer;
-                }
-            }
+            _localizer = Core.CoreProgram._localizer;
         }
     }
 }

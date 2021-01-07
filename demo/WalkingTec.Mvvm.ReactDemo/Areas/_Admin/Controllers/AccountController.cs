@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             //如果没有找到则输出错误
             if (string.IsNullOrEmpty(code))
             {
-                ModelState.AddModelError(" ", Localizer["LoginFailed"].Value);
+                ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"].Value);
                 return BadRequest(ModelState.GetErrorJson());
             }
             LoginUserInfo user = new LoginUserInfo
@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             //如果没有找到则输出错误
             if (string.IsNullOrEmpty(code))
             {
-                return BadRequest(Localizer["LoginFailed"].Value);
+                return BadRequest(Localizer["Sys.LoginFailed"].Value);
             }
             LoginUserInfo user = new LoginUserInfo
             {

@@ -9,7 +9,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             if (string.IsNullOrEmpty(Text))
             {
-                Text = THProgram._localizer["Close"];
+                Text = THProgram._localizer["Sys.Close"];
             }
             Click = "ff.CloseDialog()";
 

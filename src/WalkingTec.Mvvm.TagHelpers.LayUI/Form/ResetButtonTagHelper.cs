@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.SetAttribute("type", "reset");
             if (string.IsNullOrEmpty(Text))
             {
-                Text = THProgram._localizer["Reset"];
+                Text = THProgram._localizer["Sys.Reset"];
             }
             base.Process(context, output);
         }

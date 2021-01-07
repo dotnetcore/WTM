@@ -3,7 +3,7 @@ using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Attributes;
 
-namespace WalkingTec.Mvvm.BlazorDemo.Models
+namespace WalkingTec.Mvvm.Demo.Models
 {
     [MiddleTable]
     public class StudentMajor : BasePoco

@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.BlazorDemo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.SchoolVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public partial class SchoolApiVM : BaseCRUDVM<School>
     {

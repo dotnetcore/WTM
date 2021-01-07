@@ -14,8 +14,8 @@ namespace WalkingTec.Mvvm.Core
     {
 
         [Display(Name = "PageName")]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
-        [Required(ErrorMessage = "{0}required")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public string PageName { get; set; }
 
         [Display(Name = "ActionName")]
@@ -25,11 +25,11 @@ namespace WalkingTec.Mvvm.Core
         public string ModuleName { get; set; }
 
         [Display(Name = "FolderOnly")]
-        [Required(ErrorMessage = "{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public bool FolderOnly { get; set; }
 
         [Display(Name = "IsInherit")]
-        [Required(ErrorMessage = "{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public bool IsInherit { get; set; }
 
         [Display(Name = "Privileges")]
@@ -51,19 +51,19 @@ namespace WalkingTec.Mvvm.Core
         public string Domain { get; set; }
 
         [Display(Name = "ShowOnMenu")]
-        [Required(ErrorMessage = "{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public bool ShowOnMenu { get; set; }
 
         [Display(Name = "IsPublic")]
-        [Required(ErrorMessage = "{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public bool IsPublic { get; set; }
 
         [Display(Name = "DisplayOrder")]
-        [Required(ErrorMessage = "{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public int? DisplayOrder { get; set; }
 
         [Display(Name = "IsInside")]
-        [Required(ErrorMessage = "{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public bool? IsInside { get; set; }
 
         /// <summary>

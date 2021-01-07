@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 case ListVMSearchModeEnum.Custom2:
                     rv.AddRange(new GridColumn<FrameworkMenu_ListView>[] {
                         this.MakeGridHeader(x => x.PageName,200),
-                         this.MakeGridHeader(x => x.ParentID).SetHeader(Localizer["Operation"]).SetFormat((item, cell) => GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
+                         this.MakeGridHeader(x => x.ParentID).SetHeader(Localizer["Sys.Operation"]).SetFormat((item, cell) => GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
                    });
                     break;
                 default:
@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
 
                     var others = item.Children?.ToList();
-                    rv += UIService.MakeCheckBox(item.Allowed, Localizer["MainPage"], "menu_" + item.ID, "1");
+                    rv += UIService.MakeCheckBox(item.Allowed, Localizer["Sys.MainPage"], "menu_" + item.ID, "1");
                     if (others != null)
                     {
                         foreach (var c in others)
@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
                 else
                 {
-                    rv += UIService.MakeCheckBox(item.Allowed, Localizer["MainPage"], "menu_" + item.ID, "1");
+                    rv += UIService.MakeCheckBox(item.Allowed, Localizer["Sys.MainPage"], "menu_" + item.ID, "1");
                 }
             }
             return rv;
@@ -93,12 +93,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             if (SearcherMode == ListVMSearchModeEnum.Search)
             {
                 return new List<GridAction>{
-                this.MakeAction("FrameworkMenu", "Create",Localizer["Create"], Localizer["Create"],  GridActionParameterTypesEnum.SingleIdWithNull,"_Admin").SetIconCls("layui-icon layui-icon-add-1"),
+                this.MakeAction("FrameworkMenu", "Create",Localizer["Sys.Create"], Localizer["Sys.Create"],  GridActionParameterTypesEnum.SingleIdWithNull,"_Admin").SetIconCls("layui-icon layui-icon-add-1"),
                 this.MakeStandardAction("FrameworkMenu", GridActionStandardTypesEnum.Edit, "", "_Admin"),
                 this.MakeStandardAction("FrameworkMenu", GridActionStandardTypesEnum.Delete, "", "_Admin"),
                 this.MakeStandardAction("FrameworkMenu", GridActionStandardTypesEnum.Details, "", "_Admin"),
-                this.MakeAction( "FrameworkMenu", "UnsetPages", Localizer["CheckPage"], Localizer["UnsetPages"],GridActionParameterTypesEnum.NoId, "_Admin").SetIconCls("layui-icon layui-icon-ok"),
-                this.MakeAction("FrameworkMenu", "RefreshMenu", Localizer["RefreshMenu"], Localizer["RefreshMenu"],  GridActionParameterTypesEnum.NoId,"_Admin").SetShowDialog(false).SetIconCls("layui-icon layui-icon-refresh"),
+                this.MakeAction( "FrameworkMenu", "UnsetPages", Localizer["_Admin.CheckPage"], Localizer["_Admin.UnsetPages"],GridActionParameterTypesEnum.NoId, "_Admin").SetIconCls("layui-icon layui-icon-ok"),
+                this.MakeAction("FrameworkMenu", "RefreshMenu", Localizer["_Admin.RefreshMenu"], Localizer["_Admin.RefreshMenu"],  GridActionParameterTypesEnum.NoId,"_Admin").SetShowDialog(false).SetIconCls("layui-icon layui-icon-refresh"),
                 };
             }
             else

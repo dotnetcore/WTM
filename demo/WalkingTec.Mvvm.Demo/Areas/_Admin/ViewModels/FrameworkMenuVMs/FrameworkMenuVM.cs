@@ -122,7 +122,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (x.MethodName == null || x.MethodName == "Index") && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
                 {
-                    MSD.AddModelError(" error", Localizer["ModuleHasSet"]);
+                    MSD.AddModelError(" error", Localizer["_Admin.ModuleHasSet"]);
                 }
 
             }
@@ -148,7 +148,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", Localizer["SelectModule"]);
+                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
                     return;
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
@@ -158,7 +158,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)
                     {
-                        MSD.AddModelError("Entity.ModuleId", Localizer["NoIndexInModule"]);
+                        MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
                         return;
                     }
                     if (mainAction == null && Entity.ShowOnMenu == false)
@@ -249,7 +249,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", Localizer["SelectModule"]);
+                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
                     return;
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
@@ -259,7 +259,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)
                     {
-                        MSD.AddModelError("Entity.ModuleId", Localizer["NoIndexInModule"]);
+                        MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
                         return;
                     }
                     if (mainAction == null && Entity.ShowOnMenu == false)

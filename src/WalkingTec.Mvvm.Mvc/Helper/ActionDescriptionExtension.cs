@@ -19,14 +19,7 @@ namespace WalkingTec.Mvvm.Mvc
             string rv = "";
             if (string.IsNullOrEmpty(self.Description) == false)
             {
-                if (Core.CoreProgram._Callerlocalizer[self.Description].ResourceNotFound == true)
-                {
                     rv = Core.CoreProgram._localizer[self.Description];
-                }
-                else
-                {
-                    rv = Core.CoreProgram._Callerlocalizer[self.Description];
-                }
             }
             return rv;
 

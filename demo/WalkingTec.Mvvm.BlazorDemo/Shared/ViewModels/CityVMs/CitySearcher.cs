@@ -5,16 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.BlazorDemo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.CityVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 {
     public partial class CitySearcher : BaseSearcher
     {
         public List<ComboSelectListItem> AllParents { get; set; }
         [Display(Name = "父级")]
-        public Guid? ParentId { get; set; }
+        public int? ParentId { get; set; }
 
         protected override void InitVM()
         {

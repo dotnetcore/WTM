@@ -6,10 +6,10 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using WalkingTec.Mvvm.BlazorDemo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.SchoolVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public class SchoolListVM2 : BasePagedListVM<School, SchoolSearcher>
     {

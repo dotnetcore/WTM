@@ -152,7 +152,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 vm.DoChange();
-                return FFResult().CloseDialog().Alert(Localizer["ChangePasswordSuccess"]);
+                return FFResult().CloseDialog().Alert(Localizer["Login.ChangePasswordSuccess"]);
             }
         }
 

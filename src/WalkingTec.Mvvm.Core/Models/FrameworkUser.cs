@@ -18,18 +18,18 @@ namespace WalkingTec.Mvvm.Core
     public  class FrameworkUserBase : BasePoco
     {
         [Display(Name = "Account")]
-        [Required(ErrorMessage = "{0}required")]
-        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [StringLength(50,ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ITCode { get; set; }
 
         [Display(Name = "Password")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "{0}required")]
-        [StringLength(32, ErrorMessage = "{0}stringmax{1}")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Validate.{0}required")]
+        [StringLength(32, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Password { get; set; }
 
         [Display(Name = "Name")]
-        [Required(ErrorMessage = "{0}required")]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Name { get; set; }
 
         [Display(Name = "IsValid")]

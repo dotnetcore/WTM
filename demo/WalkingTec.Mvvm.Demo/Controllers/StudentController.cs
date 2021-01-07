@@ -154,7 +154,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["OprationSuccess"]);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.OprationSuccess"]);
             }
         }
         #endregion
@@ -178,7 +178,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["OprationSuccess"]);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.OprationSuccess"]);
             }
         }
         #endregion
@@ -201,7 +201,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["ImportSuccess", vm.EntityList.Count.ToString()]);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
         #endregion

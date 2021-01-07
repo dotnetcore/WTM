@@ -89,18 +89,15 @@ namespace WalkingTec.Mvvm.Admin.Test
             FrameworkUserVM vm = rv.Model as FrameworkUserVM;
             v = new FrameworkUser();
             v.ID = vm.Entity.ID;
-            v.ITCode = "itcode1";
             v.Name = "name1";
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
-            vm.FC.Add("Entity.ITCode", "");
             vm.FC.Add("Entity.Name", "");
             _controller.Edit(vm).Wait();
 
             using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
                 var data = context.Set<FrameworkUser>().FirstOrDefault();
-                Assert.AreEqual(data.ITCode, "itcode1");
                 Assert.AreEqual(data.Name, "name1");
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);

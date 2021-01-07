@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.StudentVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
     public class StudentSearchVM : BaseVM
     {

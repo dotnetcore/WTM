@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.BlazorDemo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.不要用中文模型名VMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
 {
     public partial class 不要用中文模型名VM : BaseCRUDVM<不要用中文模型名>
     {

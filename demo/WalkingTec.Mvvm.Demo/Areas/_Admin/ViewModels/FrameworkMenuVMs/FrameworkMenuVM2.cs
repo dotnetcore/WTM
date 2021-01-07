@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
                 {
-                    MSD.AddModelError(" error", Localizer["ModuleHasSet"]);
+                    MSD.AddModelError(" error", Localizer["_Admin.ModuleHasSet"]);
                 }
             }
             base.Validate();
@@ -84,7 +84,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", Localizer["SelectModule"]);
+                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
                     return;
                 }
 
@@ -177,7 +177,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", Localizer["SelectModule"]);
+                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
                     return;
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)

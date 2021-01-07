@@ -6,10 +6,10 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using WalkingTec.Mvvm.BlazorDemo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.不要用中文模型名VMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
 {
     public partial class 不要用中文模型名ListVM : BasePagedListVM<不要用中文模型名_View, 不要用中文模型名Searcher>
     {

@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Core
         public FrameworkMenu MenuItem { get; set; }
 
         [Display(Name = "Allowed")]
-        [Required(ErrorMessage ="{0}required")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public bool? Allowed { get; set; }
     }
 }

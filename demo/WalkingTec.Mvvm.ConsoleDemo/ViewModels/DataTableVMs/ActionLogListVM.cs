@@ -6,7 +6,7 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
 {
-    public class ActionLogListVM : BasePagedListVM<CustomView, BaseSearcher>
+    public class DatatableListVM : BasePagedListVM<CustomView, BaseSearcher>
     {
         protected override List<GridAction> InitGridAction()
         {
@@ -64,11 +64,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
                 case DBTypeEnum.MySql:
                 case DBTypeEnum.PgSql:
                 case DBTypeEnum.SQLite:
-                    sql = string.Format("SELECT id, itcode as test1, modulename as test2 from actionlogs limit 10"); break;
+                    sql = string.Format("SELECT id, itcode as test1, logtype as test2 from actionlogs limit 10"); break;
                 case DBTypeEnum.SqlServer:
-                    sql = string.Format("SELECT top 10 id, itcode as test1, modulename as test2 from actionlogs"); break;
+                    sql = string.Format("SELECT top 10 id, itcode as test1, logtype as test2 from actionlogs"); break;
                 case DBTypeEnum.Oracle:
-                    sql = string.Format("SELECT id, itcode as test1, modulename as test2 from actionlogs fetch next 10 rows only"); break;
+                    sql = string.Format("SELECT id, itcode as test1, logtype as test2 from actionlogs fetch next 10 rows only"); break;
             }
             var cmd = DC.Database.GetDbConnection().CreateCommand();
             cmd.CommandText = sql;
@@ -84,7 +84,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
     public class CustomView : TopBasePoco
     {
         public string test1 { get; set; }
-        public string test2 { get; set; }
+        public ActionLogTypesEnum test2 { get; set; }
         public string test3 { get; set; }
         public string test4 { get; set; }
     }

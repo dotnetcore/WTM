@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (string.IsNullOrEmpty(Text))
             {
-                Text = THProgram._localizer["Submit"];
+                Text = THProgram._localizer["Sys.Submit"];
             }
             if (string.IsNullOrEmpty(Click) == false || string.IsNullOrEmpty(ConfirmTxt) == false)
             {

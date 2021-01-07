@@ -203,7 +203,7 @@ namespace WalkingTec.Mvvm.Core
                 //【CHECK】上传附件的ID为空
                 if (UploadFileId == null)
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["PleaseUploadTemplate"] });
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["Sys.PleaseUploadTemplate"] });
                     return;
                 }
 
@@ -211,7 +211,7 @@ namespace WalkingTec.Mvvm.Core
                 var file = fp.GetFile(UploadFileId, true, DC);
                 if (file == null)
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["WrongTemplate"] });
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["Sys.WrongTemplate"] });
                     return;
                 }
 
@@ -224,7 +224,7 @@ namespace WalkingTec.Mvvm.Core
                 string TemplateHiddenName = xssfworkbook.GetSheetAt(1).GetRow(0).Cells[2].ToString();
                 if (ValidityTemplateType && !TemplateHiddenName.Equals(typeof(T).Name))
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["WrongTemplate"] });
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["Sys.WrongTemplate"] });
                     return;
                 }
 
@@ -249,7 +249,7 @@ namespace WalkingTec.Mvvm.Core
                 int columnCount = dynamicColumn == null ? ListTemplateProptetys.Count : (ListTemplateProptetys.Count + dynamicColumn.DynamicColumns.Count - 1);
                 if (columnCount != cells.Count)
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["WrongTemplate"] });
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["Sys.WrongTemplate"] });
                     return;
                 }
 
@@ -264,7 +264,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         if (cells[i].ToString().Trim('*') != ListTemplateProptetys[pIndex].ColumnName)
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["WrongTemplate"] });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["Sys.WrongTemplate"] });
                             return;
                         }
                         pIndex++;
@@ -277,7 +277,7 @@ namespace WalkingTec.Mvvm.Core
                         {
                             if (cells[i].ToString().Trim('*') != listDynamicColumns[dclIndex].ColumnName)
                             {
-                                ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["WrongTemplate"] });
+                                ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["Sys.WrongTemplate"] });
                                 break;
                             }
                             i = i + 1;
@@ -353,7 +353,7 @@ namespace WalkingTec.Mvvm.Core
             }
             catch
             {
-                ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["WrongTemplate"] });
+                ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["Sys.WrongTemplate"] });
             }
         }
 
@@ -784,12 +784,12 @@ namespace WalkingTec.Mvvm.Core
                         //如果只有一个字段重复，则拼接形成 xxx字段重复 这种提示
                         if (props.Count == 1)
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["DuplicateError", AllName], Index = entity.ExcelIndex });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["Sys.DuplicateError", AllName], Index = entity.ExcelIndex });
                         }
                         //如果多个字段重复，则拼接形成 xx，yy，zz组合字段重复 这种提示
                         else if (props.Count > 1)
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["DuplicateGroupError", AllName], Index = entity.ExcelIndex });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer["Sys.DuplicateGroupError", AllName], Index = entity.ExcelIndex });
                         }
                     }
                 }
@@ -1072,11 +1072,11 @@ namespace WalkingTec.Mvvm.Core
                         //根据State判断修改或删除操作，输出不同的错误信息
                         if (ent.State == EntityState.Deleted)
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Index = errorId, Message = CoreProgram._localizer["DataCannotDelete"] });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Index = errorId, Message = CoreProgram._localizer["Sys.DataCannotDelete"] });
                         }
                         else if (ent.State == EntityState.Modified)
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Index = errorId, Message = CoreProgram._localizer["EditFailed"] });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Index = errorId, Message = CoreProgram._localizer["Sys.EditFailed"] });
                         }
                         else
                         {

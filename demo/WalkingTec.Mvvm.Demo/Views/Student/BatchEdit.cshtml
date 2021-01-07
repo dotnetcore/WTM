@@ -1,8 +1,8 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentBatchVM
+@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentBatchVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
-    <div style="margin-bottom:10px">@Model.Localizer["BatchEditConfirm"] </div>
+    <div style="margin-bottom:10px">@Model.Localizer["Sys.BatchEditConfirm"] </div>
 <wt:row items-per-row="ItemsPerRowEnum.Two">
 </wt:row>
     <wt:hidden field="Ids" />

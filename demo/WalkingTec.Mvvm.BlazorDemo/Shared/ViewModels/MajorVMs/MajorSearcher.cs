@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.BlazorDemo.Models;
-using System.Linq;
+using WalkingTec.Mvvm.Demo.Models;
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.MajorVMs
+
+namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 {
     public class MajorSearcher : BaseSearcher
     {

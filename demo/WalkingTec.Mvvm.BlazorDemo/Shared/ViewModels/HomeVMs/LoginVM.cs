@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.HomeVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 {
     public class LoginVM : BaseVM
     {
@@ -34,18 +34,27 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.HomeVMs
         /// </summary>
         /// <param name="ignorePris">外部传递的页面权限</param>
         /// <returns>登录用户的信息</returns>
-        public LoginUserInfo DoLogin(bool ignorePris = false)
+        public async System.Threading.Tasks.Task<LoginUserInfo> DoLoginAsync(bool ignorePris = false)
         {
             //根据用户名和密码查询用户
-            var user = Wtm.LoadUserFromDB(null, ITCode, Password).Result;
+            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password == Utils.GetMD5String(Password)).Select(x => x.ITCode).SingleOrDefaultAsync();
 
             //如果没有找到则输出错误
-            if (user == null)
+            if (string.IsNullOrEmpty(code))
             {
-                MSD.AddModelError("", Localizer["LoginFail"]);
+                MSD.AddModelError("", Localizer["Sys.LoginFailed"]);
                 return null;
             }
-            return user;
+            else
+            {
+                LoginUserInfo user = new LoginUserInfo
+                {
+                    ITCode = code
+                };
+                //读取角色，用户组，页面权限，数据权限等框架配置信息
+                await user.LoadBasicInfoAsync(Wtm);
+                return user;
+            }
         }
 
 

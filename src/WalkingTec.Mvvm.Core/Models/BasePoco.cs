@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Core
         /// CreateBy
         /// </summary>
         [Display(Name = "CreateBy")]
-        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [StringLength(50,ErrorMessage = "Validate.{0}stringmax{1}")]
         [JsonIgnore]
         public string CreateBy { get; set; }
         /// <summary>
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Core
         /// UpdateBy
         /// </summary>
         [Display(Name = "UpdateBy")]
-        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [StringLength(50,ErrorMessage = "Validate.{0}stringmax{1}")]
         [JsonIgnore]
         public string UpdateBy { get; set; }
     }

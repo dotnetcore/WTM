@@ -34,10 +34,10 @@ namespace WalkingTec.Mvvm.Mvc
 
         public UIEnum UI { get; set; }
 
-        [Display(Name = "GenApi")]
+        [Display(Name = "Codegen.GenApi")]
         public bool IsApi { get; set; }
 
-        [Display(Name = "AuthMode")]
+        [Display(Name = "Codegen.AuthMode")]
         public ApiAuthMode AuthMode { get; set; }
 
         public string ModelName
@@ -47,19 +47,19 @@ namespace WalkingTec.Mvvm.Mvc
                 return SelectedModel?.Split(',').FirstOrDefault()?.Split('.').LastOrDefault() ?? "";
             }
         }
-        [Display(Name = "ModelNS")]
+        [Display(Name = "Codegen.ModelNS")]
         [ValidateNever()]
         public string ModelNS => SelectedModel?.Split(',').FirstOrDefault()?.Split('.').SkipLast(1).ToSepratedString(seperator: ".");
-        [Display(Name = "ModuleName")]
-        [Required(ErrorMessage = "{0}required")]
+        [Display(Name = "Codegen.ModuleName")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         public string ModuleName { get; set; }
-        [RegularExpression("^[A-Za-z_]+", ErrorMessage = "EnglishOnly")]
+        [RegularExpression("^[A-Za-z_]+", ErrorMessage = "Codegen.EnglishOnly")]
         public string Area { get; set; }
         [ValidateNever()]
         [BindNever()]
         public List<ComboSelectListItem> AllModels { get; set; }
-        [Required(ErrorMessage = "{0}required")]
-        [Display(Name = "SelectedModel")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [Display(Name = "Codegen.SelectedModel")]
         public string SelectedModel { get; set; }
         [ValidateNever()]
         public string EntryDir { get; set; }
@@ -212,7 +212,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         private string _controllerNs;
-        [Display(Name = "ControllerNs")]
+        [Display(Name = "Codegen.ControllerNs")]
         [ValidateNever()]
         public string ControllerNs
         {
@@ -231,7 +231,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         private string _testNs;
-        [Display(Name = "TestNs")]
+        [Display(Name = "Codegen.TestNs")]
         [ValidateNever()]
         public string TestNs
         {
@@ -250,7 +250,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         private string _dataNs;
-        [Display(Name = "DataNs")]
+        [Display(Name = "Codegen.DataNs")]
         [ValidateNever()]
         public string DataNs
         {
@@ -279,7 +279,7 @@ namespace WalkingTec.Mvvm.Mvc
 
 
         private string _vmNs;
-        [Display(Name = "VMNs")]
+        [Display(Name = "Codegen.VMNs")]
         [ValidateNever()]
         public string VMNs
         {
@@ -658,14 +658,14 @@ namespace WalkingTec.Mvvm.Mvc
         {{
             return new List<GridAction>
             {{
-                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Create, Localizer[""Create""],""{Area ?? ""}"", dialogWidth: 800),
-                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Edit, Localizer[""Edit""], ""{Area ?? ""}"", dialogWidth: 800),
-                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Delete, Localizer[""Delete""], ""{Area ?? ""}"", dialogWidth: 800),
-                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Details, Localizer[""Details""], ""{Area ?? ""}"", dialogWidth: 800),
-                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.BatchEdit, Localizer[""BatchEdit""], ""{Area ?? ""}"", dialogWidth: 800),
-                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.BatchDelete, Localizer[""BatchDelete""], ""{Area ?? ""}"", dialogWidth: 800),
-                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Import, Localizer[""Import""], ""{Area ?? ""}"", dialogWidth: 800),
-                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.ExportExcel, Localizer[""Export""], ""{Area ?? ""}""),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Create, Localizer[""Sys.Create""],""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Edit, Localizer[""Sys.Edit""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Delete, Localizer[""Sys.Delete""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Details, Localizer[""Sys.Details""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.BatchEdit, Localizer[""Sys.BatchEdit""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.BatchDelete, Localizer[""Sys.BatchDelete""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Import, Localizer[""Sys.Import""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.ExportExcel, Localizer[""Sys.Export""], ""{Area ?? ""}""),
             }};
         }}
 ";
@@ -1035,7 +1035,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             fk = $@"Selected{item.FieldName}IDs";
                         }
-                        fieldstr.Append($@"<wt:combobox field=""Searcher.{fk}"" items=""Searcher.{fname}"" empty-text=""@Localizer[""All""]"" />");
+                        fieldstr.Append($@"<wt:combobox field=""Searcher.{fk}"" items=""Searcher.{fname}"" empty-text=""@Localizer[""Sys.All""]"" />");
                     }
                     else
                     {
@@ -1055,7 +1055,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype.IsEnum() || checktype.IsBool())
                         {
-                            fieldstr.Append($@"<wt:combobox field=""Searcher.{item.FieldName}"" empty-text=""@Localizer[""All""]"" />");
+                            fieldstr.Append($@"<wt:combobox field=""Searcher.{item.FieldName}"" empty-text=""@Localizer[""Sys.All""]"" />");
                         }
                     }
                     fieldstr.Append(Environment.NewLine);

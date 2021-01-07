@@ -227,24 +227,24 @@ namespace WalkingTec.Mvvm.Core
             switch (boolType)
             {
                 case BoolComboTypes.YesNo:
-                    yesText = CoreProgram._localizer["Yes"];
-                    noText = CoreProgram._localizer["No"];
+                    yesText = CoreProgram._localizer["Sys.Yes"];
+                    noText = CoreProgram._localizer["Sys.No"];
                     break;
                 case BoolComboTypes.ValidInvalid:
-                    yesText = CoreProgram._localizer["Valid"];
-                    noText = CoreProgram._localizer["Invalid"];
+                    yesText = CoreProgram._localizer["Sys.Valid"];
+                    noText = CoreProgram._localizer["Sys.Invalid"];
                     break;
                 case BoolComboTypes.MaleFemale:
-                    yesText = CoreProgram._localizer["Male"];
-                    noText = CoreProgram._localizer["Female"];
+                    yesText = CoreProgram._localizer["Sys.Male"];
+                    noText = CoreProgram._localizer["Sys.Female"];
                     break;
                 case BoolComboTypes.HaveNotHave:
-                    yesText = CoreProgram._localizer["Have"];
-                    noText = CoreProgram._localizer["NotHave"];
+                    yesText = CoreProgram._localizer["Sys.Have"];
+                    noText = CoreProgram._localizer["Sys.NotHave"];
                     break;
                 case BoolComboTypes.Custom:
-                    yesText = trueText ?? CoreProgram._localizer["Yes"];
-                    noText = falseText ?? CoreProgram._localizer["No"];
+                    yesText = trueText ?? CoreProgram._localizer["Sys.Yes"];
+                    noText = falseText ?? CoreProgram._localizer["Sys.No"];
                     break;
                 default:
                     break;

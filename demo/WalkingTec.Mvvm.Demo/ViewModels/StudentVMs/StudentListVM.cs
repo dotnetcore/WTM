@@ -17,14 +17,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Create, Localizer["Create"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Edit, Localizer["Edit"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Delete, Localizer["Delete"], "",dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Details, Localizer["Details"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchEdit, Localizer["BatchEdit"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchDelete, Localizer["BatchDelete"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Import, Localizer["Import"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.ExportExcel, Localizer["Export"],""),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Delete, Localizer["Sys.Delete"], "",dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Details, Localizer["Sys.Details"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchEdit, Localizer["Sys.BatchEdit"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"],""),
             };
         }
 

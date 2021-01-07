@@ -12,17 +12,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         [Display(Name = "OldPassword")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string OldPassword { get; set; }
 
         [Display(Name = "NewPassword")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string NewPassword { get; set; }
 
         [Display(Name = "NewPasswordComfirm")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string NewPasswordComfirm { get; set; }
 
         /// <summary>
@@ -35,12 +35,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             //检查原密码是否正确，如不正确则输出错误
             if (DC.Set<FrameworkUserBase>().Where(x => x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword)).SingleOrDefault() == null)
             {
-                MSD.AddModelError("OldPassword", Localizer["OldPasswrodWrong"]);
+                MSD.AddModelError("OldPassword", Localizer["Login.OldPasswrodWrong"]);
             }
             //检查两次新密码是否输入一致，如不一致则输出错误
             if (NewPassword != NewPasswordComfirm)
             {
-                MSD.AddModelError("NewPasswordComfirm", Localizer["PasswordNotSame"]);
+                MSD.AddModelError("NewPasswordComfirm", Localizer["Login.PasswordNotSame"]);
             }
         }
 

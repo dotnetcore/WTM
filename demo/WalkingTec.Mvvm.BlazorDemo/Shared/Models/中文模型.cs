@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.BlazorDemo.Models
+namespace WalkingTec.Mvvm.Demo.Models
 {
     public class 不要用中文模型名 : TopBasePoco
     {

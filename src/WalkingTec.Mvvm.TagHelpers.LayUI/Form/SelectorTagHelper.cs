@@ -259,7 +259,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 var searchPanelTemplate = $@"<script type=""text/template"" id=""Temp{Id}"">{content}</script>";
 
                 output.Attributes.Add("value", string.Join(",", value));
-                output.Attributes.Add("placeholder", EmptyText ?? THProgram._localizer["PleaseSelect"]);
+                output.Attributes.Add("placeholder", EmptyText ?? THProgram._localizer["Sys.PleaseSelect"]);
                 output.Attributes.Add("class", "layui-input");
                 this.Disabled = true;
                 var vmQualifiedName = ListVM.Metadata.ModelType.AssemblyQualifiedName;
@@ -342,7 +342,7 @@ $('#{Id}_Select').on('click',function(){{
     filter.Ids.push(vals[i].value);
   }};
   var ffilter = $.extend(filter, {Id}filter)
-  ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? THProgram._localizer["PleaseSelect"]}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "600"},'#Temp{Id}', ffilter);
+  ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? THProgram._localizer["Sys.PleaseSelect"]}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "600"},'#Temp{Id}', ffilter);
 }});
 </script>
 {searchPanelTemplate}

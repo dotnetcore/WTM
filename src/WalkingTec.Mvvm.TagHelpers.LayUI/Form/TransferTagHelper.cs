@@ -43,12 +43,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <summary>
         /// 没有数据时的文案
         /// </summary>
-        public string NonePlaceholder { get; set; } = THProgram._localizer["NoData"];
+        public string NonePlaceholder { get; set; } = THProgram._localizer["Sys.NoData"];
 
         /// <summary>
         /// 搜索无匹配数据时的文案
         /// </summary>
-        public string SearchNonePlaceholder { get; set; } = THProgram._localizer["NoMatchingData"];
+        public string SearchNonePlaceholder { get; set; } = THProgram._localizer["Sys.NoMatchingData"];
 
         /// <summary>
         /// 当数据在左右穿梭时触发，回调返回当前被穿梭的数据
@@ -123,7 +123,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             DefaultValue = $"[{string.Join(",", selectVal.Select(x=> "'"+x+"'"))}]";
 
-            var title = $"['{(string.IsNullOrEmpty(LeftTitle) ? THProgram._localizer["ForSelect"] : LeftTitle)}','{(string.IsNullOrEmpty(RightTitle) ? THProgram._localizer["Selected"] : RightTitle)}']";
+            var title = $"['{(string.IsNullOrEmpty(LeftTitle) ? THProgram._localizer["Sys.ForSelect"] : LeftTitle)}','{(string.IsNullOrEmpty(RightTitle) ? THProgram._localizer["Sys.Selected"] : RightTitle)}']";
             var content = $@"
 <script>
 layui.use(['transfer'],function(){{

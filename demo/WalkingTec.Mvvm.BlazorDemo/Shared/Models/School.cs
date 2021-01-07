@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.BlazorDemo.Models
+namespace WalkingTec.Mvvm.Demo.Models
 {
     public enum SchoolTypeEnum
     {

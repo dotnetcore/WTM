@@ -257,7 +257,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (Lang == null)
             {
-                if (Enum.TryParse<DateTimeLangEnum>(THProgram._localizer["LayuiDateLan"], true, out var testlang))
+                if (Enum.TryParse<DateTimeLangEnum>(THProgram._localizer["Sys.LayuiDateLan"], true, out var testlang))
                 {
                     Lang = testlang;
                 }

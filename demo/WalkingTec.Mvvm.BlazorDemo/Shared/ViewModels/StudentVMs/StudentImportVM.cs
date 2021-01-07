@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.BlazorDemo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.StudentVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
     public partial class StudentTemplateVM : BaseTemplateVM
     {
@@ -41,6 +41,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.StudentVMs
 
     public class StudentImportVM : BaseImportVM<StudentTemplateVM, Student>
     {
+
     }
 
 }

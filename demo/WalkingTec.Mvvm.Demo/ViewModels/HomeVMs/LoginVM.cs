@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             //如果没有找到则输出错误
             if (string.IsNullOrEmpty(code))
             {
-                MSD.AddModelError("", Localizer["LoginFail"]);
+                MSD.AddModelError("", Localizer["Sys.LoginFailed"]);
                 return null;
             }
             else
