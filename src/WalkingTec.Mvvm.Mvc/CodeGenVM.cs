@@ -333,7 +333,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             if (string.IsNullOrEmpty(SelectedModel) == false)
             {
-                foreach (var item in ConfigInfo.ConnectionStrings)
+                foreach (var item in ConfigInfo.Connections)
                 {
                     var dc = item.CreateDC();
                     Type t = typeof(DbSet<>).MakeGenericType(Type.GetType(SelectedModel));

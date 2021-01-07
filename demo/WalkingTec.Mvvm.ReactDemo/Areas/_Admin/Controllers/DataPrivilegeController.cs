@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [Route("api/_[controller]")]
     public class DataPrivilegeController : BaseApiController
     {
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
         public string Search(DataPrivilegeSearcher searcher)
         {
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-        [ActionDescription("Get")]
+        [ActionDescription("Sys.Get")]
         [HttpGet("[action]")]
         public DataPrivilegeVM Get(string TableName, string TargetId, DpTypeEnum DpType)
         {
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         [HttpPost("[action]")]
         public async Task<IActionResult> Add(DataPrivilegeVM vm)
         {
@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [HttpPut("[action]")]
         public async Task<IActionResult> Edit(DataPrivilegeVM vm)
         {
@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [HttpPost("[action]")]
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public async Task<ActionResult> Delete(SimpleDpModel dp)
         {
             DataPrivilegeVM vm = null;

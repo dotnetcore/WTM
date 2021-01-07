@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwtWithCookie]
     [ApiController]
     [Route("api/_[controller]")]
-    [ActionDescription("Login")]
+    [ActionDescription("_Admin.LoginApi")]
     [AllRights]
     public class AccountController : BaseApiController
     {

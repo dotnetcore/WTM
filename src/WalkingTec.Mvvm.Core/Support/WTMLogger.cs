@@ -30,14 +30,14 @@ namespace WalkingTec.Mvvm.Core
         {
             if (_configs.CurrentValue != null)
             {
-                cs = _configs.CurrentValue.ConnectionStrings.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault();
+                cs = _configs.CurrentValue.Connections.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault();
                 if (cs == null)
                 {
-                    cs = _configs.CurrentValue.ConnectionStrings.Where(x => x.Key.ToLower() == "default").FirstOrDefault();
+                    cs = _configs.CurrentValue.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault();
                 }
                 if (cs == null)
                 {
-                    cs = _configs.CurrentValue.ConnectionStrings.FirstOrDefault();
+                    cs = _configs.CurrentValue.Connections.FirstOrDefault();
                 }
                 logConfig = _logConfig.CurrentValue;
             }

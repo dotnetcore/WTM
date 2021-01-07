@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Delete, "", "_Admin",dialogWidth: 800),
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
-                this.MakeAction("FrameworkGroup","DataFunction",Localizer["_Admin.DataPrivilege"],Localizer["_Admin.DataPrivilege"], GridActionParameterTypesEnum.SingleId,"_Admin",800,null,null,x=>x.GroupCode).SetShowInRow(),
+                this.MakeAction("FrameworkGroup","DataFunction",Localizer["DataPrivilege"],Localizer["_Admin.DataPrivilege"], GridActionParameterTypesEnum.SingleId,"_Admin",800,null,null,x=>x.GroupCode).SetShowInRow(),
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
             };
         }

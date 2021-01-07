@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// ConnectionStrings
         /// </summary>
-        public List<CS> ConnectionStrings
+        public List<CS> Connections
         {
             get
             {
@@ -492,7 +492,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 csName = "default";
             }
-            var cs = ConnectionStrings.Where(x => x.Key.ToLower() == csName.ToLower()).SingleOrDefault();
+            var cs = Connections.Where(x => x.Key.ToLower() == csName.ToLower()).SingleOrDefault();
             return cs?.CreateDC();
         }
 

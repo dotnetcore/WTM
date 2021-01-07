@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
         private IDataContext CreateDC()
         {
             string cs = "default";
-            return _configs.ConnectionStrings.Where(x=>x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
+            return _configs.Connections.Where(x=>x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
         }
 
 

@@ -62,7 +62,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                         10,
                         Wtm.GlobaInfo.AllAssembly.Count(),
                         Wtm.DataPrivilegeSettings.Count(),
-                        Wtm.ConfigInfo.ConnectionStrings.Count(),
+                        Wtm.ConfigInfo.Connections.Count(),
                         Wtm.ConfigInfo.AppSettings.Count()
                     },
                 }

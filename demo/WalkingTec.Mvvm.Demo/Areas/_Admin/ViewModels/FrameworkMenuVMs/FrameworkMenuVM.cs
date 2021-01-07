@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         [JsonIgnore]
         public FrameworkRoleListVM RoleListVM { get; set; }
 
-        public List<ComboSelectListItem> IConSelectItems { get; set; }
+        public List<ComboSelectListItem> IconSelectItems { get; set; }
 
         public FrameworkMenuVM()
         {
@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 IconFont = res[0];
                 IconFontItem = res[1];
             }
-            IConSelectItems = !string.IsNullOrEmpty(IconFont) && IconFontsHelper
+            IconSelectItems = !string.IsNullOrEmpty(IconFont) && IconFontsHelper
                                 .IconFontDicItems
                                 .ContainsKey(IconFont)
                                 ? IconFontsHelper
@@ -227,6 +227,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 FC.Add("Entity.Children", 0);
             }
+            FC.Add("Entity.ModuleName",0);
             base.DoEdit();
             AddPrivilege(guids);
         }

@@ -8,7 +8,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
     public class THProgram
     {
-        public static IStringLocalizer _localizer =
-            new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(Core.CoreProgram));
+        public static IStringLocalizer _localizer = Core.CoreProgram._localizer;
     }
 }

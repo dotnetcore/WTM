@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [Route("api/_[controller]")]
     public class ActionLogController : BaseApiController
     {
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
         public IActionResult Search(ActionLogSearcher searcher)
         {
@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("Get")]
+        [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
         public ActionLogVM Get(Guid id)
         {
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpPost("[action]")]
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<ActionLogBatchVM>();
@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
         public IActionResult ExportExcel(ActionLogSearcher searcher)
         {
@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetExportData();
         }
 
-        [ActionDescription("ExportByIds")]
+        [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {

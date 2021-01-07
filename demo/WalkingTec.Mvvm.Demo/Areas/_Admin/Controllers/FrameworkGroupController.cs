@@ -12,18 +12,18 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("GroupManagement")]
+    [ActionDescription("MenuKey.GroupManagement")]
     public class FrameworkGroupController : BaseController
     {
         #region 查询
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<FrameworkGroupListVM>();
             return PartialView(vm);
         }
 
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost]
         public string Search(FrameworkGroupSearcher searcher)
         {
@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 新建
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
             var vm = Wtm.CreateVM<FrameworkGroupVM>();
@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create(FrameworkGroupVM vm)
         {
             if (!ModelState.IsValid)
@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 修改
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         public ActionResult Edit(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [ValidateFormItemOnly]
         public ActionResult Edit(FrameworkGroupVM vm)
         {
@@ -90,7 +90,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 删除
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public ActionResult Delete(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
@@ -98,7 +98,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public async Task<ActionResult> Delete(Guid id, IFormCollection noUse)
         {
             var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region 批量删除
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(Guid[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkGroupBatchVM>(Ids: ids);
@@ -126,7 +126,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public async Task<ActionResult> DoBatchDelete(FrameworkGroupBatchVM vm, IFormCollection noUse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 导入
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
             var vm = Wtm.CreateVM<FrameworkGroupImportVM>();
@@ -157,7 +157,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         public ActionResult Import(FrameworkGroupImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -172,23 +172,23 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 页面权限
-        [ActionDescription("DataPrivilege")]
+        [ActionDescription("_Admin.DataPrivilege")]
         public PartialViewResult DataFunction(string groupcode)
         {
             var role = Wtm.CreateVM<FrameworkGroupMDVM>(values: x=>x.GroupCode == groupcode);
             return PartialView(role);
         }
 
-        [ActionDescription("DataPrivilege")]
+        [ActionDescription("_Admin.DataPrivilege")]
         [HttpPost]
         public ActionResult DataFunction(FrameworkGroupMDVM vm, IFormCollection noUse)
         {
             vm.DoChange();
-            return FFResult().CloseDialog().Alert("操作成功");
+            return FFResult().CloseDialog().Alert(Localizer["Sys.OprationSuccess"]);
         }
         #endregion
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost]
         public IActionResult ExportExcel(FrameworkGroupListVM vm)
         {

@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("DataPrivilege")]
+    [ActionDescription("MenuKey.DataPrivilege")]
     public class DataPrivilegeController : BaseController
     {
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<DataPrivilegeListVM>();
@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
 
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost]
         public string Search(DataPrivilegeSearcher searcher)
         {
@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
         }
 
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create(DpTypeEnum Type)
         {
             var vm = Wtm.CreateVM<DataPrivilegeVM>(values:x=>x.DpType == Type);
@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public async Task<ActionResult> Create(DataPrivilegeVM vm)
         {
             if (!ModelState.IsValid)
@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         public ActionResult Edit(string ModelName, string Id, DpTypeEnum Type)
         {
             DataPrivilegeVM vm = null;
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [HttpPost]
         public async Task<ActionResult> Edit(DataPrivilegeVM vm)
         {
@@ -98,7 +98,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
         }
 
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public async Task<ActionResult> Delete(string ModelName, string Id, DpTypeEnum Type)
         {
             DataPrivilegeVM vm = null;
@@ -126,7 +126,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return JsonMore(AllItems);
         }
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost]
         public IActionResult ExportExcel(DataPrivilegeListVM vm)
         {

@@ -13,18 +13,18 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("MenuMangement")]
+    [ActionDescription("MenuKey.MenuMangement")]
     public class FrameworkMenuController : BaseController
     {
         #region 搜索
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<FrameworkMenuListVM>();
             return PartialView(vm);
         }
 
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost]
         public string Search(FrameworkMenuSearcher searcher)
         {
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 新建
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create(Guid? id)
         {
             var vm = Wtm.CreateVM<FrameworkMenuVM>();
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [Public]
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create(FrameworkMenuVM vm)
         {
             if (!ModelState.IsValid)
@@ -83,14 +83,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 修改
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         public ActionResult Edit(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [HttpPost]
         public ActionResult Edit(FrameworkMenuVM vm)
         {
@@ -115,14 +115,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 删除
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public ActionResult Delete(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         [HttpPost]
         public ActionResult Delete(Guid id, IFormCollection noUser)
         {
@@ -140,7 +140,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 详细
-        [ActionDescription("Details")]
+        [ActionDescription("Sys.Details")]
         public PartialViewResult Details(Guid id)
         {
             var v = Wtm.CreateVM<FrameworkMenuVM>(id);
@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 未设置页面
-        [ActionDescription("UnsetPages")]
+        [ActionDescription("_Admin.UnsetPages")]
         public ActionResult UnsetPages()
         {
             var vm = Wtm.CreateVM<FrameworkActionListVM>();
@@ -158,7 +158,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 刷新菜单
-        [ActionDescription("RefreshMenu")]
+        [ActionDescription("_Admin.RefreshMenu")]
         public async Task<ActionResult> RefreshMenu()
         {
             Cache.Delete("FFMenus");
@@ -169,6 +169,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         [ActionDescription("GetActionsByModelId")]
+        [AllRights]
         public JsonResult GetActionsByModelId(string Id)
         {
             var modules = Wtm.GlobaInfo.AllModule;

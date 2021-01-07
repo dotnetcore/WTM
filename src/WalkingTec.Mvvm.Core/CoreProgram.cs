@@ -5,10 +5,8 @@ namespace WalkingTec.Mvvm.Core
 {
     public class CoreProgram
     {
-        public static IStringLocalizer _localizer =
-            new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(CoreProgram));
+        public static IStringLocalizer _localizer { get; set; }
 
-        public static IStringLocalizer _Callerlocalizer { get; set; }
 
         public static string[] Buildindll = new string[]
             {

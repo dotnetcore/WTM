@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentListVM
+@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentListVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:searchpanel vm="@Model" reset-btn="true">
@@ -8,7 +8,7 @@
 <wt:textbox field="Searcher.ZipCode" />
 <wt:combobox field="Searcher.IsValid" empty-text="@Localizer["All"]" />
 <wt:datetime field="Searcher.EnRollDate" range="true" />
-<wt:combobox field="Searcher.SelectedStudentMajorIDs" items="Searcher.AllStudentMajors" empty-text="@Localizer["All"]" />
+<wt:combobox field="Searcher.SelectedStudentMajorIDs" items="Searcher.AllStudentMajors" empty-text="@Localizer["Sys.All"]" />
 </wt:row>
 </wt:searchpanel>
 <wt:grid vm="@Model" url="/Student/Search"/>

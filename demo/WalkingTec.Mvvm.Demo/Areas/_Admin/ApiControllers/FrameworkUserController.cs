@@ -12,12 +12,12 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("UserManagement")]
+    [ActionDescription("_Admin.UserApi")]
     [ApiController]
-    [Route("api/_FrameworkUserBase")]
+    [Route("api/_FrameworkUser")]
     public class FrameworkUserController : BaseApiController
     {
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
         public string Search(FrameworkUserSearcher searcher)
         {
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-        [ActionDescription("Get")]
+        [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
         public FrameworkUserVM Get(Guid id)
         {
@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         [HttpPost("[action]")]
         public async Task<IActionResult> Add(FrameworkUserVM vm)
         {
@@ -57,7 +57,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [HttpPut("[action]")]
         public async Task<IActionResult> Edit(FrameworkUserVM vm)
         {
@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpPost("BatchDelete")]
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkUserBatchVM>();
@@ -110,7 +110,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkUserSearcher searcher)
         {
@@ -120,7 +120,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetExportData();
         }
 
-        [ActionDescription("ExportByIds")]
+        [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
@@ -133,7 +133,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetExportData();
         }
 
-        [ActionDescription("DownloadTemplate")]
+        [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         [HttpPost("[action]")]
         public ActionResult Import(FrameworkUserImportVM vm)
         {
@@ -168,6 +168,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("GetFrameworkRoles")]
         [ActionDescription("GetRoles")]
+        [AllRights]
         public ActionResult GetFrameworkRoles()
         {
             return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName));
@@ -175,6 +176,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("GetFrameworkGroups")]
         [ActionDescription("GetGroups")]
+        [AllRights]
         public ActionResult GetFrameworkGroups()
         {
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName));

@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ApiController]
     [Route("api/_file")]
     [AllRights]
-    [ActionDescription("File")]
+    [ActionDescription("_Admin.FileApi")]
     public class FileApiController : BaseApiController
     {
         [HttpPost("[action]")]

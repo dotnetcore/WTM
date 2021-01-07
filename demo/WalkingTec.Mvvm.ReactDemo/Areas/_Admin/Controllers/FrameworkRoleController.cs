@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [Route("api/_[controller]")]
     public class FrameworkRoleController : BaseApiController
     {
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
         public string Search(FrameworkRoleSearcher searcher)
         {
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-        [ActionDescription("Get")]
+        [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
         public FrameworkRoleVM Get(Guid id)
         {
@@ -36,13 +36,14 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("GetPageActions")]
         [HttpGet("[action]/{id}")]
+        [AllRights]
         public FrameworkRoleMDVM2 GetPageActions(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkRoleMDVM2>(id);
             return vm;
         }
 
-        [ActionDescription("PageFunction")]
+        [ActionDescription("_Adminn.PageFunction")]
         [HttpPut("[action]")]
         public async Task<IActionResult> EditPrivilege(FrameworkRoleMDVM2 vm)
         {
@@ -64,7 +65,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         [HttpPost("[action]")]
         public IActionResult Add(FrameworkRoleVM vm)
         {
@@ -87,7 +88,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [HttpPut("[action]")]
         public IActionResult Edit(FrameworkRoleVM vm)
         {
@@ -110,7 +111,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpPost("BatchDelete")]
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkRoleBatchVM>();
@@ -139,7 +140,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
         {
@@ -149,7 +150,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetExportData();
         }
 
-        [ActionDescription("ExportByIds")]
+        [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
@@ -162,7 +163,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetExportData();
         }
 
-        [ActionDescription("DownloadTemplate")]
+        [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
@@ -177,7 +178,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         [HttpPost("[action]")]
         public ActionResult Import(FrameworkRoleImportVM vm)
         {

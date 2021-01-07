@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [Route("api/_[controller]")]
     public class FrameworkMenuController : BaseApiController
     {
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
         public string Search(BaseSearcher searcher)
         {
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-        [ActionDescription("Get")]
+        [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
         public FrameworkMenuVM2 Get(Guid id)
         {
@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         [HttpPost("[action]")]
         public IActionResult Add(FrameworkMenuVM2 vm)
         {
@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [HttpPut("[action]")]
         public IActionResult Edit(FrameworkMenuVM2 vm)
         {
@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpPost("BatchDelete")]
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkMenuBatchVM>();
@@ -103,7 +103,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
         public IActionResult ExportExcel(BaseSearcher searcher)
         {
@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetExportData();
         }
 
-        [ActionDescription("ExportByIds")]
+        [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
@@ -127,7 +127,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         #region 未设置页面
-        [ActionDescription("UnsetPages")]
+        [ActionDescription("_Admin.UnsetPages")]
         [HttpGet("[action]")]
         public string UnsetPages()
         {
@@ -137,7 +137,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         #endregion
 
         #region 刷新菜单
-        [ActionDescription("RefreshMenu")]
+        [ActionDescription("_Admin.RefreshMenu")]
         [HttpGet("[action]")]
         public async Task<ActionResult> RefreshMenu()
         {
@@ -150,6 +150,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("GetActionsByModelId")]
         [HttpGet("GetActionsByModel")]
+        [AllRights]
         public ActionResult GetActionsByModel(string ModelName)
         {
             var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.FullName.ToLower() == ModelName.ToLower()).SelectMany(x => x.Actions).ToList();
@@ -169,6 +170,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("GetFolders")]
         [HttpGet("GetFolders")]
+        [AllRights]
         public ActionResult GetFolders()
         {
             var AllParents = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(Wtm, x => x.PageName);

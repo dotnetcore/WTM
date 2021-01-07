@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 try
                 {
-                    using (var dc = ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
+                    using (var dc = ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                     {
                         menus.AddRange(dc?.Set<FrameworkMenu>()
                                 .OrderBy(x => x.DisplayOrder)
@@ -683,7 +683,7 @@ namespace WalkingTec.Mvvm.Mvc
                                             , new Microsoft.Extensions.Logging.LoggerFactory()
                                         )
                                         .Create(programType);
-            coredll.GetType("WalkingTec.Mvvm.Core.CoreProgram").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
+            coredll.GetType("WalkingTec.Mvvm.Core.CoreProgram").GetProperty("_localizer").SetValue(null, programLocalizer);
 
 
             var controllers = gd.GetTypesAssignableFrom <IBaseController>();
@@ -739,7 +739,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var fixdc = scope.ServiceProvider.GetRequiredService<IDataContext>();
                 if (fixdc is NullContext)
                 {
-                    var cs = configs.ConnectionStrings;
+                    var cs = configs.Connections;
                     foreach (var item in cs)
                     {
                         var dc = item.CreateDC();

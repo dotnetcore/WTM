@@ -323,7 +323,7 @@ namespace WalkingTec.Mvvm.Core
             string cs = cskey ?? CurrentCS;
             if (isLog == true)
             {
-                if (ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
+                if (ConfigInfo.Connections?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
                 {
                     cs = "defaultlog";
                 }
@@ -336,7 +336,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 cs = "default";
             }
-            var rv = ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
+            var rv = ConfigInfo.Connections.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
             rv.IsDebug = ConfigInfo.IsQuickDebug;
             rv.SetLoggerFactory(_loggerFactory);
             return rv;

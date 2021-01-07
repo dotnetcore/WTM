@@ -525,7 +525,7 @@ namespace WalkingTec.Mvvm.Core
 
         public static string GetCS(string cs, string mode, Configs config)
         {
-            if (string.IsNullOrEmpty(cs) || config.ConnectionStrings.Any(x=>x.Key.ToLower() == cs.ToLower()) == false)
+            if (string.IsNullOrEmpty(cs) || config.Connections.Any(x=>x.Key.ToLower() == cs.ToLower()) == false)
             {
                 cs = "default";
             }
@@ -536,7 +536,7 @@ namespace WalkingTec.Mvvm.Core
             }
             if (mode?.ToLower() == "read")
             {
-                var reads = config.ConnectionStrings.Where(x => x.Key.StartsWith(cs + "_")).Select(x=>x.Key).ToList();
+                var reads = config.Connections.Where(x => x.Key.StartsWith(cs + "_")).Select(x=>x.Key).ToList();
                 if (reads.Count > 0)
                 {
                     Random r = new Random();

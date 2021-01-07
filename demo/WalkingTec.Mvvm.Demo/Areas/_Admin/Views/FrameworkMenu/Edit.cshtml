@@ -24,12 +24,12 @@
   </wt:row>
   <wt:row items-per-row="ItemsPerRowEnum.Two">
     <wt:combobox field="IconFont" items="@IconFontsHelper.IconFontItems" enable-search="true" link-field="IconFontItem" trigger-url="/_Admin/FrameworkMenu/GetIconFontItems" />
-    <wt:combobox field="IconFontItem" items="IConSelectItems" enable-search="true" />
+    <wt:combobox field="IconFontItem" items="IconSelectItems" enable-search="true" />
   </wt:row>
   <wt:row items-per-row="ItemsPerRowEnum.Four">
-    <wt:switch field="Entity.ShowOnMenu" lay-text="@Localizer["Yes"]|@Localizer["No"]" />
-    <wt:switch field="Entity.FolderOnly" lay-text="@Localizer["Yes"]|@Localizer["No"]" />
-    <wt:switch field="Entity.IsPublic" lay-text="@Localizer["Yes"]|@Localizer["No"]" />
+    <wt:switch field="Entity.ShowOnMenu" lay-text="@Localizer["Sys.Yes"]|@Localizer["Sys.No"]" />
+    <wt:switch field="Entity.FolderOnly" lay-text="@Localizer["Sys.Yes"]|@Localizer["Sys.No"]" />
+    <wt:switch field="Entity.IsPublic" lay-text="@Localizer["Sys.Yes"]|@Localizer["Sys.No"]" />
   </wt:row>
   <wt:hidden field="SelectedRolesCodes" />
   <wt:hidden field="Entity.ID" />

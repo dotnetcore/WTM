@@ -11,11 +11,11 @@ using System.Collections.Generic;
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("UserManagement")]
+    [ActionDescription("MenuKey.UserManagement")]
     public class FrameworkUserController : BaseController
     {
         #region 搜索
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<FrameworkUserListVM>();
@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost]
         public string Search(FrameworkUserSearcher searcher)
         {
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 新建
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
             var vm = Wtm.CreateVM<FrameworkUserVM>();
@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public async Task<ActionResult> Create(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 修改
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         public ActionResult Edit(string id)
         {
             var vm = Wtm.CreateVM<FrameworkUserVM>(id);
@@ -82,7 +82,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
         public async Task<ActionResult> Edit(FrameworkUserVM vm)
@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 修改密码
-        [ActionDescription("ChangePassword")]
+        [ActionDescription("Login.ChangePassword")]
         public ActionResult Password(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkUserVM>(id,passInit:true);
@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("ChangePassword")]
+        [ActionDescription("Login.ChangePassword")]
         [HttpPost]
         public ActionResult Password(FrameworkUserVM vm)
         {
@@ -151,14 +151,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
 
         #region 删除
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public ActionResult Delete(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkUserVM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         [HttpPost]
         public async Task<ActionResult> Delete(Guid id, IFormCollection nouse)
         {
@@ -176,7 +176,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 详细
-        [ActionDescription("Details")]
+        [ActionDescription("Sys.Details")]
         public PartialViewResult Details(Guid id)
         {
             var v = Wtm.CreateVM<FrameworkUserVM>(id);
@@ -186,7 +186,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region 批量删除
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
             var vm = Wtm.CreateVM<FrameworkUserBatchVM>(Ids: IDs);
@@ -194,7 +194,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public async Task<ActionResult> DoBatchDelete(FrameworkUserBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
@@ -216,7 +216,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 导入
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
             var vm = Wtm.CreateVM<FrameworkUserImportVM>();
@@ -224,7 +224,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         public ActionResult Import(FrameworkUserImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -238,7 +238,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
         #endregion
 
-        [ActionDescription("Enable")]
+        [ActionDescription("Sys.Enable")]
         public ActionResult Enable(Guid id, bool enable)
         {
             FrameworkUser user = new FrameworkUser { ID = id };
@@ -256,7 +256,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         }
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost]
         public IActionResult ExportExcel(FrameworkUserListVM vm)
         {

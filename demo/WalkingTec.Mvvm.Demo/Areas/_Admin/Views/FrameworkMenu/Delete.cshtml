@@ -2,7 +2,7 @@
 @using Microsoft.Extensions.Localization;
 @inject IStringLocalizer<Program> Localizer;
   <wt:form vm="@Model">
-    <wt:quote>@Localizer["DeleteConfirm"]</wt:quote>
+    <wt:quote>@Localizer["Sys.DeleteConfirm"]</wt:quote>
     <wt:row items-per-row=" ItemsPerRowEnum.Two">
       <wt:display field="Entity.PageName" />
       <wt:display field="Entity.ModuleName" />

@@ -11,17 +11,17 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("RoleManagement")]
+    [ActionDescription("MenuKey.RoleManagement")]
     public class FrameworkRoleController : BaseController
     {
         #region 查询
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             return PartialView(vm);
         }
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost]
         public string Search(FrameworkRoleSearcher searcher)
         {
@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 新建
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
             var vm = Wtm.CreateVM<FrameworkRoleVM>();
@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create(FrameworkRoleVM vm)
         {
             if (!ModelState.IsValid)
@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 修改
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         public ActionResult Edit(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkRoleVM>(id);
@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [ValidateFormItemOnly]
         public ActionResult Edit(FrameworkRoleVM vm)
         {
@@ -88,7 +88,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 删除
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public ActionResult Delete(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkRoleVM>(id);
@@ -96,7 +96,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public async Task<ActionResult> Delete(Guid id, IFormCollection noUse)
         {
             var vm = Wtm.CreateVM<FrameworkRoleVM>(id);
@@ -116,7 +116,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region 批量删除
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(Guid[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkRoleBatchVM>(Ids: ids);
@@ -124,7 +124,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public async Task<ActionResult> DoBatchDelete(FrameworkRoleBatchVM vm, IFormCollection noUse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
@@ -146,7 +146,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 导入
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
             var vm = Wtm.CreateVM<FrameworkRoleImportVM>();
@@ -154,7 +154,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         public ActionResult Import(FrameworkRoleImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -169,7 +169,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 详细
-        [ActionDescription("Details")]
+        [ActionDescription("Sys.Details")]
         public PartialViewResult Details(Guid id)
         {
             var role = Wtm.CreateVM<FrameworkRoleMDVM>(id);
@@ -179,7 +179,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 页面权限
-        [ActionDescription("PageFunction")]
+        [ActionDescription("_Admin.PageFunction")]
         public PartialViewResult PageFunction(Guid id)
         {
             var role = Wtm.CreateVM<FrameworkRoleMDVM>(id);
@@ -187,7 +187,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(role);
         }
 
-        [ActionDescription("PageFunction")]
+        [ActionDescription("_Admin.PageFunction")]
         [HttpPost]
         public async Task<ActionResult> PageFunction(FrameworkRoleMDVM vm, IFormCollection noUse)
         {
@@ -196,7 +196,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
         #endregion
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost]
         public IActionResult ExportExcel(FrameworkRoleListVM vm)
         {
