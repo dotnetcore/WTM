@@ -24,6 +24,10 @@ module.exports = merge(baseConfig, {
       "/api": {
         target: "http://localhost:7598/",
         changeOrigin: true
+      },
+      "/_framework": {
+        target: "http://localhost:7598/",
+        changeOrigin: true
       }
     }
   },
