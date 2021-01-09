@@ -89,12 +89,12 @@ export default {
                 formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkuser.Name') })} />
             },
             /** 性别 */
-            "Entity.Sex": {
+            "Entity.Gender": {
                 label: <FormattedMessage id='frameworkuser.Sex' />,
                 rules: [],
                 formItem: <WtmSelect placeholder={getLocalesTemplate('tips.placeholder.choose', { txt: getLocalesValue('frameworkuser.Sex') })} dataSource={[
-                    { Text: <FormattedMessage id='frameworkuser.Sex.0' />, Value: 0 },
-                    { Text: <FormattedMessage id='frameworkuser.Sex.1' />, Value: 1 }
+                    { Text: <FormattedMessage id='frameworkuser.Sex.0' />, Value: 'Male' },
+                    { Text: <FormattedMessage id='frameworkuser.Sex.1' />, Value: 'Female' }
                 ]} />
             },
             /** 手机 */

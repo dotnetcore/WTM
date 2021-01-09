@@ -52,7 +52,7 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Entity.Password" />
             <FormItem {...props} fieId="Entity.Email" />
             <FormItem {...props} fieId="Entity.Name" />
-            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.Gender" />
             <FormItem {...props} fieId="Entity.CellPhone" />
             <FormItem {...props} fieId="Entity.HomePhone" />
             <FormItem {...props} fieId="Entity.Address" />
@@ -96,7 +96,7 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.ITCode" />
             <FormItem {...props} fieId="Entity.Email" />
             <FormItem {...props} fieId="Entity.Name" />
-            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.Gender" />
             <FormItem {...props} fieId="Entity.CellPhone" />
             <FormItem {...props} fieId="Entity.HomePhone" />
             <FormItem {...props} fieId="Entity.Address" />
@@ -138,7 +138,7 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.ITCode" />
             <FormItem {...props} fieId="Entity.Email" />
             <FormItem {...props} fieId="Entity.Name" />
-            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.Gender" />
             <FormItem {...props} fieId="Entity.CellPhone" />
             <FormItem {...props} fieId="Entity.HomePhone" />
             <FormItem {...props} fieId="Entity.Address" />

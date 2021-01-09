@@ -104,9 +104,9 @@ export default {
                 label: <FormattedMessage id='actionlog.LogType' />,
                 rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('actionlog.LogType') }} />}],
                 formItem: <WtmSelect placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.LogType') })} dataSource={[  
-                    { Text: <FormattedMessage id='actionlog.LogType.0' />, Value: 0 },
-                    { Text: <FormattedMessage id='actionlog.LogType.1' />, Value: 1 },
-                    { Text: <FormattedMessage id='actionlog.LogType.2' />, Value: 2 }
+                    { Text: <FormattedMessage id='actionlog.LogType.0' />, Value: 'Normal' },
+                    { Text: <FormattedMessage id='actionlog.LogType.1' />, Value: 'Exception' },
+                    { Text: <FormattedMessage id='actionlog.LogType.2' />, Value: 'Debug' }
                 ]}/>
             }
 

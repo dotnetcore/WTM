@@ -22,6 +22,7 @@ using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.Hosting;
+using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.VueDemo
 {
@@ -138,6 +139,8 @@ namespace WalkingTec.Mvvm.VueDemo
             pris.Add(new DataPrivilegeInfo<FrameworkRole>("角色权限", m => m.RoleName));
             //Add data privilege to specific type
             //指定哪些模型需要数据权限
+            pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
+            pris.Add(new DataPrivilegeInfo<Major>("专业权限", m => m.MajorName));
             return pris;
         }
 
