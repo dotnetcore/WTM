@@ -24,20 +24,22 @@ class requestBase {
   constructor() {}
   /**
    * 请求参数类型
-   * @param originalData
+   * @param params
    */
-  requestData(originalData = {}) {
-    const data = originalData;
-    if (!_.isArray(originalData)) {
-      for (const key in originalData || {}) {
+  requestData(params = {}) {
+    let data = {};
+    if (!_.isArray(params)) {
+      for (const key in params || {}) {
+        const item = params[key]
         if (
-          originalData[key] !== null &&
-          originalData[key] !== undefined &&
-          originalData[key] !== ""
+          item !== undefined &&
+          item !== ""
         ) {
-          data[key] = originalData[key];
+          data[key] = _.isObject(item) ? this.requestData(item) : item;
         }
       }
+    } else {
+      data = params;
     }
     return data;
   }
@@ -154,6 +156,7 @@ const _request = (option, serverHost?) => {
     }
   };
   const data = rBase.requestData(option.data);
+  console.log('data', data)
   if (["POST", "PUT"].includes(option.method.toUpperCase())) {
     axiosReq.data = data;
   } else {
