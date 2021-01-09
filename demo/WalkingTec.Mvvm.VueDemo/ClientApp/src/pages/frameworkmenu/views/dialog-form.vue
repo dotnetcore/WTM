@@ -167,8 +167,8 @@ export default class Index extends Vue {
      */
     afterOpen(data) {
         this.getFolders();
-        this.onSelectedAction(data && data.SelectedModule);
         if (data) {
+            data.SelectedModule && this.getActionsByModel({ ModelName: data.SelectedModule });
             const icon = _.findLast(fonts, item =>
                 item.icons.includes(data.Entity.ICon)
             );
@@ -179,8 +179,9 @@ export default class Index extends Vue {
      * 动作名称
      */
     onSelectedAction(SelectedModule?: string) {
-        this.getActionsByModel({
-            ModelName: SelectedModule || ""
+        this.formData.SelectedActionIDs = [];
+        SelectedModule && this.getActionsByModel({
+            ModelName: SelectedModule
         });
     }
 

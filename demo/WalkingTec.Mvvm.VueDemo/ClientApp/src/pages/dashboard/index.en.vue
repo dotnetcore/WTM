@@ -133,7 +133,7 @@
                                     </el-link>
                                 </el-col>
                                 <el-col :span="6">
-                                    <el-link target="_blank" href="/_codegen?ui=vue" :underline="false"><i class="el-icon-s-platform"></i>
+                                    <el-link target="_blank" href="http://localhost:7598/_codegen?ui=vue" :underline="false"><i class="el-icon-s-platform"></i>
                                         <div class="link-ctx">CodeGen</div>
                                     </el-link>
                                 </el-col>

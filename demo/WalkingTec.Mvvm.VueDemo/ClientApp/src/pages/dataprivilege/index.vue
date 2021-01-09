@@ -57,11 +57,11 @@ export default class Index extends Vue {
                     span: 12,
                     children: [
                         {
-                            Value: 0,
+                            Value: "UserGroup",
                             Text: this.$t("dataprivilege.UserGroup")
                         },
                         {
-                            Value: 1,
+                            Value: "User",
                             Text: this.$t("dataprivilege.UserRights")
                         }
                     ]

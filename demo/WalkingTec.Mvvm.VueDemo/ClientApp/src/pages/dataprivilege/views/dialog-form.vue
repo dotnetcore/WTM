@@ -43,13 +43,13 @@ export default class Index extends Vue {
                     type: "radioGroup",
                     label: this.$t("dataprivilege.DpType"),
                     span: 24,
-                    defaultValue: 0,
+                    defaultValue: "UserGroup",
                     children: [
-                        { Value: 0, Text: this.$t("dataprivilege.UserGroup") },
-                        { Value: 1, Text: this.$t("dataprivilege.UserRights") }
+                        { Value: "UserGroup", Text: this.$t("dataprivilege.UserGroup") },
+                        { Value: "User", Text: this.$t("dataprivilege.UserRights") }
                     ],
                     rules: {
-                        type: "number",
+                        type: "string",
                         required: true,
                         message: this.$t(
                             "dataprivilege.PleaseSelectPermissionType"
@@ -57,21 +57,21 @@ export default class Index extends Vue {
                         trigger: "change"
                     }
                 },
-                "Entity.GroupId": {
+                "Entity.GroupCode": {
                     type: "select",
                     label: this.$t("dataprivilege.UserGroupList"),
                     children: this.getUserGroupsData,
-                    isHidden: data => data.DpType === 1,
+                    isHidden: data => data.DpType === "User",
                     rules: {
                         required: true,
                         message: this.$t("dataprivilege.PleaseSelectUserGroup"),
                         trigger: "change"
                     }
                 },
-                UserItCode: {
+                "Entity.UserCode": {
                     type: "input",
                     label: this.$t("dataprivilege.UserID"),
-                    isHidden: data => data.DpType === 0,
+                    isHidden: data => data.DpType === "UserGroup",
                     rules: {
                         required: true,
                         message: this.$t("dataprivilege.pleaseEnterUserID"),
