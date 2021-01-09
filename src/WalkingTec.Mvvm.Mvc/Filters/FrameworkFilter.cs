@@ -274,12 +274,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             var pmenu = ctrl.GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
                             if (pmenu != null)
                             {
-                                    pmenu.PageName = Core.CoreProgram._localizer[pmenu.PageName];
+                                    pmenu.PageName = Core.CoreProgram._localizer?[pmenu.PageName];
 
                                 pagetitle = pmenu.PageName + " - ";
                             }
                         }
-                            menu.PageName = Core.CoreProgram._localizer[menu.PageName];
+                            menu.PageName = Core.CoreProgram._localizer?[menu.PageName];
                         pagetitle += menu.PageName;
                     }
                     if (string.IsNullOrEmpty(pagetitle) == false)

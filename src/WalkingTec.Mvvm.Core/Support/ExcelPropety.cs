@@ -280,7 +280,7 @@ namespace WalkingTec.Mvvm.Core
                         DateTime tryDateTimeResult;
                         if (!DateTime.TryParse(value, out tryDateTimeResult))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}formaterror", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer?["Sys.{0}formaterror", this.ColumnName] };
                         }
                         this.Value = tryDateTimeResult;
                         break;
@@ -288,7 +288,7 @@ namespace WalkingTec.Mvvm.Core
                         int tryIntResult;
                         if (!int.TryParse(value, out tryIntResult))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}formaterror", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer?["Sys.{0}formaterror", this.ColumnName] };
                         }
                         this.Value = tryIntResult;
                         break;
@@ -296,22 +296,22 @@ namespace WalkingTec.Mvvm.Core
                         decimal tryDecimalResult;
                         if (!decimal.TryParse(value, out tryDecimalResult))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}formaterror", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer?["Sys.{0}formaterror", this.ColumnName] };
                         }
                         this.Value = tryDecimalResult;
                         break;
                     case ColumnDataType.Bool:
-                        if (value == CoreProgram._localizer["Sys.Yes"])
+                        if (value == CoreProgram._localizer?["Sys.Yes"])
                         {
                             this.Value = true;
                         }
-                        else if (value == CoreProgram._localizer["Sys.No"])
+                        else if (value == CoreProgram._localizer?["Sys.No"])
                         {
                             this.Value = false;
                         }
                         else
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}formaterror", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer?["Sys.{0}formaterror", this.ColumnName] };
                         }
                         break;
                     case ColumnDataType.Text:
@@ -321,7 +321,7 @@ namespace WalkingTec.Mvvm.Core
                     case ColumnDataType.Enum:
                         if (!this.ListItems.Any(x => x.Text == value))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}ValueNotExist", this.ColumnName] };
+                            err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer?["Sys.{0}ValueNotExist", this.ColumnName] };
                         }
                         else
                         {
@@ -329,7 +329,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         break;
                     default:
-                        err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}ValueTypeNotAllowed", this.ColumnName] };
+                        err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer?["Sys.{0}ValueTypeNotAllowed", this.ColumnName] };
                         break;
                 }
 

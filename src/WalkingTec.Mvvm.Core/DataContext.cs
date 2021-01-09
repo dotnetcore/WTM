@@ -99,7 +99,7 @@ namespace WalkingTec.Mvvm.Core
                 var AllModules = allModules as List<SimpleModule>;
                 var roles = new FrameworkRole[]
                 {
-                    new FrameworkRole{ ID = Guid.NewGuid(), RoleCode = "001", RoleName = CoreProgram._localizer["Sys.Admin"]}
+                    new FrameworkRole{ ID = Guid.NewGuid(), RoleCode = "001", RoleName = CoreProgram._localizer?["Sys.Admin"]}
                 };
 
                 var adminRole = roles[0];

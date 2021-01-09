@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("name", Field.Name);
             output.Attributes.Add("lay-skin", "switch");
             output.Attributes.Add("value", Value);
-            output.Attributes.Add("lay-text", string.IsNullOrEmpty(LayText) ? $"{Core.CoreProgram._localizer["Sys.Yes"]}|{Core.CoreProgram._localizer["Sys.No"]}" : LayText);
+            output.Attributes.Add("lay-text", string.IsNullOrEmpty(LayText) ? $"{Core.CoreProgram._localizer?["Sys.Yes"]}|{Core.CoreProgram._localizer?["Sys.No"]}" : LayText);
             bool? Checked = null;
             if (string.IsNullOrEmpty(DefaultValue))
             {
