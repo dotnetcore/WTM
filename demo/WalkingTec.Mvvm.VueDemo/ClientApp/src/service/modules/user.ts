@@ -1,13 +1,13 @@
 import config from "@/config/index";
-const reqPath = config.headerApi + "/_login/";
+const reqPath = config.headerApi + "/_Account/";
 // 验证登陆
 const loginCheckLogin = {
-  url: reqPath + "CheckLogin/{ID}",
+  url: reqPath + "CheckUserInfo",
   method: "get"
 };
 // 验证登出
 const loginLogout = {
-  url: reqPath + "Logout/{ID}",
+  url: reqPath + "Logout",
   method: "get"
 };
 
