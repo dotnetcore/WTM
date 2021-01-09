@@ -13,14 +13,14 @@ namespace $namespace$
     public partial class $modelname$Controller : BaseController
     {
         #region Search
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<$modelname$ListVM>();
             return PartialView(vm);
         }
 
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost]
         public string Search($modelname$Searcher searcher)
         {
@@ -39,7 +39,7 @@ namespace $namespace$
         #endregion
 
         #region Create
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
             var vm = Wtm.CreateVM<$modelname$VM>();
@@ -47,7 +47,7 @@ namespace $namespace$
         }
 
         [HttpPost]
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create($modelname$VM vm)
         {
             if (!ModelState.IsValid)
@@ -71,14 +71,14 @@ namespace $namespace$
         #endregion
 
         #region Edit
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         public ActionResult Edit(string id)
         {
             var vm = Wtm.CreateVM<$modelname$VM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
         public ActionResult Edit($modelname$VM vm)
@@ -104,14 +104,14 @@ namespace $namespace$
         #endregion
 
         #region Delete
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public ActionResult Delete(string id)
         {
             var vm = Wtm.CreateVM<$modelname$VM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         [HttpPost]
         public ActionResult Delete(string id, IFormCollection nouse)
         {
@@ -129,7 +129,7 @@ namespace $namespace$
         #endregion
 
         #region Details
-        [ActionDescription("Details")]
+        [ActionDescription("Sys.Details")]
         public ActionResult Details(string id)
         {
             var vm = Wtm.CreateVM<$modelname$VM>(id);
@@ -139,7 +139,7 @@ namespace $namespace$
 
         #region BatchEdit
         [HttpPost]
-        [ActionDescription("BatchEdit")]
+        [ActionDescription("Sys.BatchEdit")]
         public ActionResult BatchEdit(string[] IDs)
         {
             var vm = Wtm.CreateVM<$modelname$BatchVM>(Ids: IDs);
@@ -147,7 +147,7 @@ namespace $namespace$
         }
 
         [HttpPost]
-        [ActionDescription("BatchEdit")]
+        [ActionDescription("Sys.BatchEdit")]
         public ActionResult DoBatchEdit($modelname$BatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
@@ -156,14 +156,14 @@ namespace $namespace$
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert(WalkingTec.Mvvm.Core.Program._localizer?["OprationSuccess"]);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.BatchEditSuccess", vm.Ids.Length]);
             }
         }
         #endregion
 
         #region BatchDelete
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
             var vm = Wtm.CreateVM<$modelname$BatchVM>(Ids: IDs);
@@ -171,7 +171,7 @@ namespace $namespace$
         }
 
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public ActionResult DoBatchDelete($modelname$BatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
@@ -180,13 +180,13 @@ namespace $namespace$
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert(WalkingTec.Mvvm.Core.Program._localizer?["OprationSuccess"]);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.BatchDeleteSuccess", vm.Ids.Length]);
             }
         }
         #endregion
 
         #region Import
-		[ActionDescription("Import")]
+		[ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
             var vm = Wtm.CreateVM<$modelname$ImportVM>();
@@ -194,7 +194,7 @@ namespace $namespace$
         }
 
         [HttpPost]
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         public ActionResult Import($modelname$ImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -203,12 +203,12 @@ namespace $namespace$
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert(WalkingTec.Mvvm.Core.Program._localizer["ImportSuccess", vm.EntityList.Count.ToString()]);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
         #endregion
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost]
         public IActionResult ExportExcel($modelname$ListVM vm)
         {

@@ -134,9 +134,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     //    }
                     //}
                     //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
-                    if (model is IBaseBatchVM<BaseVM>)
+                    if (model is IBaseBatchVM<BaseVM> temp)
                     {
-                        var temp = model as IBaseBatchVM<BaseVM>;
                         if (temp.ListVM != null)
                         {
                             temp.ListVM.CopyContext(model);
@@ -166,13 +165,15 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
                         temp.LinkedVM?.DoInit();
                     }
-                    if (model is IBaseImport<BaseTemplateVM>)
+                    if (model is IBaseImport<BaseTemplateVM> tvm)
                     {
-                        var template = (model as IBaseImport<BaseTemplateVM>).Template;
+                        var template = tvm.Template;
                         template.CopyContext(model);
                         template.DoReInit();
+                        var errorlist = tvm.ErrorListVM;
+                        errorlist.CopyContext(model);
                     }
-                    if(model is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
+                    if (model is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
                     {
                         var searcher = lvm.Searcher;
                         searcher.CopyContext(lvm);                        

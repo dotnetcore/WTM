@@ -29,6 +29,7 @@ namespace WalkingTec.Mvvm.Core
         T Template { get; }
         byte[] GenerateTemplate(out string displayName);
         void SetParms(Dictionary<string, string> parms);
+        TemplateErrorListVM ErrorListVM { get; set; }
     }
 
     /// <summary>

@@ -582,6 +582,8 @@ namespace WalkingTec.Mvvm.Core
                 var template = tvm.Template;
                 template.CopyContext(rv);
                 template.DoInit();
+                var errorlist = tvm.ErrorListVM;
+                errorlist.CopyContext(rv);
             }
 
             //if passinit is not set, call the viewmodel's DoInit method

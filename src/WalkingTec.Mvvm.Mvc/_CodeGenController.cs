@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult DoGen(CodeGenVM vm)
         {
             vm.DoGen();
-            return FFResult().Alert(MvcProgram._localizer["Codegen.CodeGenSuccess"]);
+            return FFResult().Alert(MvcProgram._localizer["Codegen.Success"]);
         }
 
         [ActionDescription("预览")]

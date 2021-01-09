@@ -548,7 +548,7 @@ namespace WalkingTec.Mvvm.Mvc
         [HttpGet(""Get{subtype.Name}s"")]
         public ActionResult Get{subtype.Name}s()
         {{
-            return Ok(DC.Set<{subtype.Name}>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.{item.SubField}));
+            return Ok(DC.Set<{subtype.Name}>().GetSelectListItems(Wtm, x => x.{item.SubField}));
         }}");
                         }
                     }
@@ -591,7 +591,7 @@ namespace WalkingTec.Mvvm.Mvc
                             prostring += $@"
         public List<ComboSelectListItem> {fname} {{ get; set; }}";
                             initstr += $@"
-            {fname} = DC.Set<{subtype.Name}>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.{pro.SubField});";
+            {fname} = DC.Set<{subtype.Name}>().GetSelectListItems(Wtm, y => y.{pro.SubField});";
                         }
                     }
 
@@ -805,7 +805,7 @@ namespace WalkingTec.Mvvm.Mvc
                     prostr += $@"
         public List<ComboSelectListItem> {fname} {{ get; set; }}";
                     initstr += $@"
-            {fname} = DC.Set<{subtype.Name}>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.{pro.SubField});";
+            {fname} = DC.Set<{subtype.Name}>().GetSelectListItems(Wtm, y => y.{pro.SubField});";
                     includestr += $@"
             SetInclude(x => x.{pro.FieldName});";
 
@@ -869,7 +869,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         initstr += $@"
             {pro.FieldName + "_Excel"}.DataType = ColumnDataType.ComboBox;
-            {pro.FieldName + "_Excel"}.ListItems = DC.Set<{subtype.Name}>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.{pro.SubField});";
+            {pro.FieldName + "_Excel"}.ListItems = DC.Set<{subtype.Name}>().GetSelectListItems(Wtm, y => y.{pro.SubField});";
                     }
                     var proType = modelType.GetSingleProperty(pro.FieldName);
                     var display = proType.GetCustomAttribute<DisplayAttribute>();
