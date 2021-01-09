@@ -126,13 +126,13 @@ namespace WalkingTec.Mvvm.Core
 
                         if (IsSpa == false)
                         {
-                            systemManagement.ICon = "layui-icon layui-icon-set";
-                            logList.ICon = "layui-icon layui-icon-form";
-                            userList.ICon = "layui-icon layui-icon-friends";
-                            roleList.ICon = "layui-icon layui-icon-user";
-                            groupList.ICon = "layui-icon layui-icon-group";
-                            menuList.ICon = "layui-icon layui-icon-menu-fill";
-                            dpList.ICon = "layui-icon layui-icon-auz";
+                            systemManagement.Icon = "layui-icon layui-icon-set";
+                            logList.Icon = "layui-icon layui-icon-form";
+                            userList.Icon = "layui-icon layui-icon-friends";
+                            roleList.Icon = "layui-icon layui-icon-user";
+                            groupList.Icon = "layui-icon layui-icon-group";
+                            menuList.Icon = "layui-icon layui-icon-menu-fill";
+                            dpList.Icon = "layui-icon layui-icon-auz";
 
                             var apifolder = GetFolderMenu("Api", new List<FrameworkRole> { adminRole });
                             apifolder.ShowOnMenu = false;
@@ -157,13 +157,13 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else
                         {
-                            systemManagement.ICon = " _wtmicon _wtmicon-icon_shezhi";
-                            logList.ICon = " _wtmicon _wtmicon-chaxun";
-                            userList.ICon = " _wtmicon _wtmicon-zhanghaoquanxianguanli";
-                            roleList.ICon = " _wtmicon _wtmicon-quanxianshenpi";
-                            groupList.ICon = " _wtmicon _wtmicon-zuzhiqunzu";
-                            menuList.ICon = " _wtmicon _wtmicon--lumingpai";
-                            dpList.ICon = " _wtmicon _wtmicon-anquan";
+                            systemManagement.Icon = " _wtmicon _wtmicon-icon_shezhi";
+                            logList.Icon = " _wtmicon _wtmicon-chaxun";
+                            userList.Icon = " _wtmicon _wtmicon-zhanghaoquanxianguanli";
+                            roleList.Icon = " _wtmicon _wtmicon-quanxianshenpi";
+                            groupList.Icon = " _wtmicon _wtmicon-zuzhiqunzu";
+                            menuList.Icon = " _wtmicon _wtmicon--lumingpai";
+                            dpList.Icon = " _wtmicon _wtmicon-anquan";
 
                         }
                     }

@@ -226,9 +226,9 @@ namespace WalkingTec.Mvvm.Core
 
     public enum GenderEnum
     {
-        [Display(Name = "Male")]
+        [Display(Name = "Sys.Male")]
         Male = 0,
-        [Display(Name = "Female")]
+        [Display(Name = "Sys.Female")]
         Female = 1
     }
 

@@ -66,7 +66,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 DisplayOrder = x.DisplayOrder,
                 ExtraOrder = order++,
                 ParentID = x.ParentId,
-                ICon = x.ICon,
+                ICon = x.Icon,
                 HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
             }).OrderBy(x => x.ExtraOrder).ToList();
 

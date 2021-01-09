@@ -10,17 +10,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     public enum FrameworkMenuMode { Normal = 0, RoleMode = 1, RoleSetMode = 2 }
     public class FrameworkMenuSearcher : BaseSearcher
     {
-        [Display(Name = "PageName")]
+        [Display(Name = "_Admin.PageName")]
         public string PageName { get; set; }
-        [Display(Name = "ModuleName")]
+        [Display(Name = "_Admin.ModuleName")]
         public string ModuleName { get; set; }
-        [Display(Name = "ActionName")]
+        [Display(Name = "_Admin.ActionName")]
         public string ActionName { get; set; }
-        [Display(Name = "ShowOnMenu")]
+        [Display(Name = "_Admin.ShowOnMenu")]
         public bool? ShowOnMenu { get; set; }
-        [Display(Name = "IsPublic")]
+        [Display(Name = "_Admin.IsPublic")]
         public bool? IsPublic { get; set; }
-        [Display(Name = "FolderOnly")]
+        [Display(Name = "_Admin.FolderOnly")]
         public bool? FolderOnly { get; set; }
 
         public Guid? RoleID { get; set; }

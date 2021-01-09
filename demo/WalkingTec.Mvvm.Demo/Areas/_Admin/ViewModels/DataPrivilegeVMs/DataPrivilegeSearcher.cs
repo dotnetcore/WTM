@@ -7,21 +7,21 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 {
     public enum DpTypeEnum
     {
-        [Display(Name = "GroupDp")]
+        [Display(Name = "_Admin.GroupDp")]
         UserGroup,
-        [Display(Name = "UserDp")]
+        [Display(Name = "_Admin.UserDp")]
         User
     }
 
     public class DataPrivilegeSearcher : BaseSearcher
     {
-        [Display(Name = "Account")]
+        [Display(Name = "_Admin.Account")]
         public string Name { get; set; }
-        [Display(Name = "Privileges")]
+        [Display(Name = "_Admin.Privileges")]
         public string TableName { get; set; }
         public List<ComboSelectListItem> TableNames { get; set; }
 
-        [Display(Name = "DpType")]
+        [Display(Name = "_Admin.DpType")]
         public DpTypeEnum DpType { get; set; }
         public Guid? DomainID { get; set; }
         public List<ComboSelectListItem> AllDomains { get; set; }

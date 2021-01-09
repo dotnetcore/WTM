@@ -7,11 +7,11 @@ namespace WalkingTec.Mvvm.Core
 {
     public enum ActionLogTypesEnum
     {
-        [Display(Name = "Normal")]
+        [Display(Name = "_Admin.Normal")]
         Normal,
-        [Display(Name = "Exception")]
+        [Display(Name = "_Admin.Exception")]
         Exception,
-        [Display(Name = "Debug")]
+        [Display(Name = "_Admin.Debug")]
         Debug
     };
 
@@ -21,15 +21,15 @@ namespace WalkingTec.Mvvm.Core
     [Table("ActionLogs")]
     public class ActionLog : BasePoco, ICloneable
     {
-        [Display(Name = "Module")]
+        [Display(Name = "_Admin.Module")]
         [StringLength(255, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ModuleName { get; set; }
 
-        [Display(Name = "Action")]
+        [Display(Name = "_Admin.Action")]
         [StringLength(255, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ActionName { get; set; }
 
-        [Display(Name = "Account")]
+        [Display(Name = "_Admin.Account")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ITCode { get; set; }
 
@@ -37,20 +37,20 @@ namespace WalkingTec.Mvvm.Core
         [StringLength(250, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ActionUrl { get; set; }
 
-        [Display(Name = "ActionTime")]
+        [Display(Name = "_Admin.ActionTime")]
         public DateTime ActionTime { get; set; }
 
-        [Display(Name = "Duration")]
+        [Display(Name = "_Admin.Duration")]
         public double Duration { get; set; }
 
-        [Display(Name = "Remark")]
+        [Display(Name = "_Admin.Remark")]
         public string Remark { get; set; }
 
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         [Display(Name = "IP")]
         public string IP { get; set; }
 
-        [Display(Name = "LogType")]
+        [Display(Name = "_Admin.LogType")]
         public ActionLogTypesEnum LogType { get; set; }
 
         public object Clone()

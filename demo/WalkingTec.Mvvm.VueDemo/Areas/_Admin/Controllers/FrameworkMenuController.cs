@@ -13,7 +13,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("MenuMangement")]
+    [ActionDescription("MenuKey.MenuMangement")]
     [ApiController]
     [Route("api/_[controller]")]
     public class FrameworkMenuController : BaseApiController

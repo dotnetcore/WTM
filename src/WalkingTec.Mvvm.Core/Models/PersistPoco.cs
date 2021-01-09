@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// IsValid
         /// </summary>
-        [Display(Name = "IsValid")]
+        [Display(Name = "_Admin.IsValid")]
         public bool IsValid { get; set; } = true;
     }
 }

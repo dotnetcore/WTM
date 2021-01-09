@@ -1248,7 +1248,7 @@ namespace WalkingTec.Mvvm.Core
                 var newfile = fh.Upload("Error-" + fa.FileName, ms.Length, ms);
                 ms.Close();
                 ms.Dispose();
-                err = "导入时发生错误";
+                err = CoreProgram._localizer["Sys.ImportError"];
                 mse.Form.Add("Entity.Import", err);
                 mse.Form.Add("Entity.ErrorFileId", newfile.GetID());
             }
@@ -1263,12 +1263,12 @@ namespace WalkingTec.Mvvm.Core
     #region 辅助类
     public class ErrorMessage : TopBasePoco
     {
-        [Display(Name = "RowIndex")]
+        [Display(Name = "Sys.RowIndex")]
         public long Index { get; set; }
 
-        [Display(Name = "CellIndex")]
+        [Display(Name = "Sys.CellIndex")]
         public long Cell { get; set; }
-        [Display(Name = "ErrorMsg")]
+        [Display(Name = "Sys.ErrorMsg")]
         public string Message { get; set; }
     }
 

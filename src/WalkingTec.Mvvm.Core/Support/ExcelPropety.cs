@@ -329,7 +329,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         break;
                     default:
-                        err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["{0}ValueTypeNotAllowed", this.ColumnName] };
+                        err = new ErrorMessage { Index = rowIndex, Message = CoreProgram._localizer["Sys.{0}ValueTypeNotAllowed", this.ColumnName] };
                         break;
                 }
 

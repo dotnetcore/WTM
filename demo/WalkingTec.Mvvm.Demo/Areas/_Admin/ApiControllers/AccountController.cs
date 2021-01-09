@@ -85,7 +85,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     ParentId = x.ParentId.ToString().ToLower(),
                     Text = x.PageName,
                     Url = x.Url,
-                    Icon = x.ICon
+                    Icon = x.Icon
                 }).ToList();
             LocalizeMenu(menus);
             ms.AddRange(menus);
@@ -196,7 +196,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                             ParentId = item.ParentId?.ToString()?.ToLower(),
                             Text = item.PageName,
                             Url = item.Url,
-                            Icon = item.ICon
+                            Icon = item.Icon
                         });
                     }
                 }

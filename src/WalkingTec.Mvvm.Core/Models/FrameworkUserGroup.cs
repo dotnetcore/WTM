@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Core
     {
         [Required]
         public string UserCode { get; set; }
-        [Display(Name = "Group")]
+        [Display(Name = "_Admin.Group")]
         [Required]
         public string GroupCode { get; set; }
     }

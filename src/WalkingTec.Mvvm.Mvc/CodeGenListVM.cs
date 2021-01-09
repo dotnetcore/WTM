@@ -205,37 +205,37 @@ namespace WalkingTec.Mvvm.Mvc
 
     public class CodeGenListView : BasePoco
     {
-        [Display(Name = "FieldName")]
+        [Display(Name = "Codegen.FieldName")]
         public string FieldName { get; set; }
 
-        [Display(Name = "FieldDes")]
+        [Display(Name = "Codegen.FieldDes")]
         public string FieldDes { get; set; }
 
 
-        [Display(Name = "IsSearcherField")]
+        [Display(Name = "Codegen.IsSearcherField")]
         public bool IsSearcherField { get; set; }
 
-        [Display(Name = "IsListField")]
+        [Display(Name = "Codegen.IsListField")]
         public bool IsListField { get; set; }
 
-        [Display(Name = "IsFormField")]
+        [Display(Name = "Codegen.IsFormField")]
         public bool IsFormField { get; set; }
 
 
-        [Display(Name = "SubField")]
+        [Display(Name = "Codegen.SubField")]
         public string SubField { get; set; }
 
         public string SubIdField { get; set; }
 
-        [Display(Name = "IsImportField")]
+        [Display(Name = "Codegen.IsImportField")]
         public bool IsImportField { get; set; }
 
-        [Display(Name = "IsBatchField")]
+        [Display(Name = "Codegen.IsBatchField")]
         public bool IsBatchField { get; set; }
 
         public int Index { get; set; }
 
-        [Display(Name = "LinkedType")]
+        [Display(Name = "Codegen.LinkedType")]
         public string LinkedType { get; set; }
 
     }

@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
 {
     public abstract class TreePoco : TopBasePoco
     {
-        [Display(Name = "Parent")]
+        [Display(Name = "_Admin.Parent")]
         public Guid? ParentId { get; set; }
 
     }
@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Core
     public class TreePoco<T> : TreePoco where T:TreePoco<T>
     {
 
-        [Display(Name = "Parent")]
+        [Display(Name = "_Admin.Parent")]
         [JsonIgnore]
         public T Parent { get; set; }
         public List<T> Children { get; set; }

@@ -14,10 +14,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
     public class FrameworkMenuVM : BaseCRUDVM<FrameworkMenu>
     {
-        [Display(Name = "IconFont")]
+        [Display(Name = "_Admin.IconFont")]
         public string IconFont { get; set; }
 
-        [Display(Name = "ICon")]
+        [Display(Name = "_Admin.Icon")]
         public string IconFontItem { get; set; }
 
         [JsonIgnore]
@@ -27,13 +27,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         [JsonIgnore]
         public List<ComboSelectListItem> AllActions { get; set; }
 
-        [Display(Name = "Action")]
+        [Display(Name = "_Admin.Action")]
         public List<string> SelectedActionIDs { get; set; }
 
-        [Display(Name = "Module")]
+        [Display(Name = "_Admin.Module")]
         public string SelectedModule { get; set; }
 
-        [Display(Name = "AllowedRole")]
+        [Display(Name = "_Admin.AllowedRole")]
         public List<string> SelectedRolesCodes { get; set; }
 
         [JsonIgnore]
@@ -52,9 +52,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         protected override void InitVM()
         {
-            if (!string.IsNullOrEmpty(Entity.ICon))
+            if (!string.IsNullOrEmpty(Entity.Icon))
             {
-                var res = Entity.ICon.Split(' ');
+                var res = Entity.Icon.Split(' ');
                 IconFont = res[0];
                 IconFontItem = res[1];
             }
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override void DoEdit(bool updateAllFields = false)
         {
-            Entity.ICon = $"{IconFont} {IconFontItem}";
+            Entity.Icon = $"{IconFont} {IconFontItem}";
             FC.Add("Entity.ICon", " ");
             List<Guid> guids = new List<Guid>();
             if (Entity.IsInside == false)
@@ -234,7 +234,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override void DoAdd()
         {
-            Entity.ICon = $"{IconFont} {IconFontItem}";
+            Entity.Icon = $"{IconFont} {IconFontItem}";
             if (Entity.IsInside == false)
             {
                 if (Entity.Url != null && Entity.Url != "" && Entity.Url.StartsWith("/") == false)

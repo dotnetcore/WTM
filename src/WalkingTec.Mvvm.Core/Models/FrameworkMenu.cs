@@ -13,26 +13,26 @@ namespace WalkingTec.Mvvm.Core
     public class FrameworkMenu : TreePoco<FrameworkMenu>
     {
 
-        [Display(Name = "PageName")]
+        [Display(Name = "_Admin.PageName")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public string PageName { get; set; }
 
-        [Display(Name = "ActionName")]
+        [Display(Name = "_Admin.ActionName")]
         public string ActionName { get; set; }
 
-        [Display(Name = "ModuleName")]
+        [Display(Name = "_Codegen.ModuleName")]
         public string ModuleName { get; set; }
 
-        [Display(Name = "FolderOnly")]
+        [Display(Name = "_Admin.FolderOnly")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool FolderOnly { get; set; }
 
-        [Display(Name = "IsInherit")]
+        [Display(Name = "_Admin.IsInherit")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool IsInherit { get; set; }
 
-        [Display(Name = "Privileges")]
+        [Display(Name = "_Admin.Privileges")]
         public List<FunctionPrivilege> Privileges { get; set; }
 
         /// <summary>
@@ -47,22 +47,22 @@ namespace WalkingTec.Mvvm.Core
         /// <value></value>
         public string MethodName { get; set; }
 
-        [Display(Name = "Domain")]
+        [Display(Name = "_Admin.Domain")]
         public string Domain { get; set; }
 
-        [Display(Name = "ShowOnMenu")]
+        [Display(Name = "_Admin.ShowOnMenu")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool ShowOnMenu { get; set; }
 
-        [Display(Name = "IsPublic")]
+        [Display(Name = "_Admin.IsPublic")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool IsPublic { get; set; }
 
-        [Display(Name = "DisplayOrder")]
+        [Display(Name = "_Admin.DisplayOrder")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public int? DisplayOrder { get; set; }
 
-        [Display(Name = "IsInside")]
+        [Display(Name = "_Admin.IsInside")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool? IsInside { get; set; }
 
@@ -72,9 +72,9 @@ namespace WalkingTec.Mvvm.Core
         /// <value></value>
         public string Url { get; set; }
 
-        [Display(Name = "ICon")]
+        [Display(Name = "_Admin.Icon")]
         [StringLength(50)]
-        public string ICon { get; set; }
+        public string Icon { get; set; }
 
     }
 }

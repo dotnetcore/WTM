@@ -95,13 +95,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     {
         public Guid? ModuleID { get; set; }
 
-        [Display(Name = "ModuleName")]
+        [Display(Name = "_Admin.ModuleName")]
         public string ModuleName { get; set; }
-        [Display(Name = "ActionName")]
+        [Display(Name = "_Admin.ActionName")]
         public string ActionName { get; set; }
-        [Display(Name = "ClassName")]
+        [Display(Name = "_Admin.ClassName")]
         public string ClassName { get; set; }
-        [Display(Name = "MethodName")]
+        [Display(Name = "_Admin.MethodName")]
         public string MethodName { get; set; }
 
         public string AreaName { get; set; }

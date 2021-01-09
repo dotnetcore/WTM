@@ -225,7 +225,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         [AllowAnonymous]
-        [ActionDescription("ErrorHandle")]
+        [ActionDescription("Sys.ErrorHandle")]
         public IActionResult Error()
         {
             var ex = HttpContext.Features.Get<IExceptionHandlerPathFeature>();

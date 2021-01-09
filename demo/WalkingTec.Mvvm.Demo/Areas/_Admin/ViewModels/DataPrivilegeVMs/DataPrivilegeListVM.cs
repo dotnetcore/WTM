@@ -126,12 +126,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     /// </summary>
     public class DataPrivilege_ListView : BasePoco
     {
-        [Display(Name = "DpTargetName")]
+        [Display(Name = "_Admin.DpTargetName")]
         public string Name { get; set; }
         public string TargetId { get; set; }
-        [Display(Name = "DataPrivilegeName")]
+        [Display(Name = "_Admin.DataPrivilegeName")]
         public string TableName { get; set; }
-        [Display(Name = "DataPrivilegeCount")]
+        [Display(Name = "_Admin.DataPrivilegeCount")]
         public int RelateIDs { get; set; }
         public int DpType { get; set; }
         public string DomainName { get; set; }
