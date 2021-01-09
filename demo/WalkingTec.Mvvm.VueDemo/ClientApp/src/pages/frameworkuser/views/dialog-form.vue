@@ -103,10 +103,9 @@ export default class Index extends Vue {
                     label: this.$t("frameworkuser.IsValid"),
                     defaultValue: true
                 },
-                "Entity.UserRoles": {
+                "Entity.SelectedRolesCodes": {
                     type: "transfer",
-                    label: this.$t("frameworkuser.UserRoles"),
-                    mapKey: "RoleId",
+                    label: this.$t("frameworkuser.SelectedRolesCodes"),
                     props: {
                         data: this.getFrameworkRolesData.map(item => ({
                             key: item.Value,
@@ -125,10 +124,9 @@ export default class Index extends Vue {
                     span: 24,
                     defaultValue: []
                 },
-                "Entity.UserGroups": {
+                "Entity.SelectedGroupCodes": {
                     type: "transfer",
-                    label: this.$t("frameworkuser.UserGroups"),
-                    mapKey: "GroupId",
+                    label: this.$t("frameworkuser.SelectedGroupCodes"),
                     props: {
                         data: this.getFrameworkGroupsData.map(item => ({
                             key: item.Value,
