@@ -519,13 +519,32 @@ namespace WalkingTec.Mvvm.Mvc
         {
             services.AddSingleton<ITokenService, TokenService>();
 
-            var jwtOptions = WtmConfigs.JwtOption;
+            var jwtOptions = WtmConfigs.JwtOptions;
 
-            var cookieOptions = WtmConfigs.CookieOption;
+            var cookieOptions = WtmConfigs.CookieOptions;
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                     {
+                         options.TokenValidationParameters = new TokenValidationParameters
+                         {
+                             NameClaimType = AuthConstants.JwtClaimTypes.Name,
+                             RoleClaimType = AuthConstants.JwtClaimTypes.Role,
+
+                             ValidateIssuer = true,
+                             ValidIssuer = jwtOptions.Issuer,
+
+                             ValidateAudience = true,
+                             ValidAudience = jwtOptions.Audience,
+
+                             ValidateIssuerSigningKey = true,
+                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey)),
+
+                             ValidateLifetime = true
+                         };
+                     })
+                   .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                     {
                         options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
                         options.Cookie.HttpOnly = true;
@@ -540,25 +559,6 @@ namespace WalkingTec.Mvvm.Mvc
                         options.LogoutPath = cookieOptions.LogoutPath;
                         options.ReturnUrlParameter = cookieOptions.ReturnUrlParameter;
                         options.AccessDeniedPath = cookieOptions.AccessDeniedPath;
-                    })
-                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-                    {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            NameClaimType = AuthConstants.JwtClaimTypes.Name,
-                            RoleClaimType = AuthConstants.JwtClaimTypes.Role,
-
-                            ValidateIssuer = true,
-                            ValidIssuer = jwtOptions.Issuer,
-
-                            ValidateAudience = true,
-                            ValidAudience = jwtOptions.Audience,
-
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey)),
-
-                            ValidateLifetime = true
-                        };
                     });
             return services;
         }

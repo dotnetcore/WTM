@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
         )
         {
             _configs = configs.CurrentValue;
-            _jwtOptions = _configs.JwtOption;
+            _jwtOptions = _configs.JwtOptions;
             _logger = logger;
             _dc = CreateDC();
         }

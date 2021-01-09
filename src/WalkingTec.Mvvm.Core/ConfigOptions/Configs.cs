@@ -443,7 +443,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         ///  Cors configs
         /// </summary>
-        public CookieOption CookieOption
+        public CookieOption CookieOptions
         {
             get
             {
@@ -468,7 +468,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         ///  Cors configs
         /// </summary>
-        public JwtOption JwtOption
+        public JwtOption JwtOptions
         {
             get
             {

@@ -8,7 +8,7 @@ namespace WalkingTec.Mvvm.Mvc
     {
         public AuthorizeJwtWithCookieAttribute()
         {
-            AuthenticationSchemes = $"{JwtBearerDefaults.AuthenticationScheme},{CookieAuthenticationDefaults.AuthenticationScheme}";
+            AuthenticationSchemes = $"{CookieAuthenticationDefaults.AuthenticationScheme},{JwtBearerDefaults.AuthenticationScheme}";
         }
     }
 }

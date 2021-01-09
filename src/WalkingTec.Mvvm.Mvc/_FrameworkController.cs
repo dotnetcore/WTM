@@ -821,6 +821,14 @@ namespace WalkingTec.Mvvm.Mvc
 
             return FFResult().AddCustomScript("location.reload();");
         }
+
+        [Public]
+        [HttpGet]
+        public IActionResult Redirect401()
+        {
+            return this.Unauthorized();
+        }
+
     }
 
 }
