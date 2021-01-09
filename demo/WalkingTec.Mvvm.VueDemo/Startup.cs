@@ -135,6 +135,7 @@ namespace WalkingTec.Mvvm.VueDemo
         public List<IDataPrivilege> DataPrivilegeSettings()
         {
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
+            pris.Add(new DataPrivilegeInfo<FrameworkRole>("角色权限", m => m.RoleName));
             //Add data privilege to specific type
             //指定哪些模型需要数据权限
             return pris;

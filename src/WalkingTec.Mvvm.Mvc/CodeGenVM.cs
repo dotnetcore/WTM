@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc
         [BindNever()]
         public List<ComboSelectListItem> AllModels { get; set; }
         [Required(ErrorMessage = "Validate.{0}required")]
-        [Display(Name = "Codegen.SelectedModel")]
+        [Display(Name = "_Admin.SelectedModel")]
         public string SelectedModel { get; set; }
         [ValidateNever()]
         public string EntryDir { get; set; }

@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Core.Json
             int depth = 0;
             string lastObjecName = "";
             int insideArray = 0;
-            while(reader.TokenType != JsonTokenType.Null )
+            while(true)
             {
                 if(reader.TokenType == JsonTokenType.StartArray)
                 {
