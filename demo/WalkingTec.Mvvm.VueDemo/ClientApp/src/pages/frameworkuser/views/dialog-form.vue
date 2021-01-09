@@ -69,9 +69,9 @@ export default class Index extends Vue {
                         trigger: "blur"
                     }
                 },
-                "Entity.Sex": {
+                "Entity.Gender": {
                     type: "select",
-                    label: this.$t("frameworkuser.Sex"),
+                    label: this.$t("frameworkuser.Gender"),
                     children: sexList
                 },
                 "Entity.CellPhone": {

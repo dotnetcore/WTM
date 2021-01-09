@@ -3,7 +3,7 @@ export default {
         frameworkuser: {
             ITCode: "账号",
             Name: "姓名",
-            Sex: "性别",
+            Gender: "性别",
             PhotoId: "照片",
             IsValid: "是否生效",
             RoleName_view: "角色",
@@ -30,7 +30,7 @@ export default {
         frameworkuser: {
             ITCode: "ITCode",
             Name: "Name",
-            Sex: "Sex",
+            Gender: "Sex",
             PhotoId: "Photo",
             IsValid: "IsValid",
             RoleName_view: "Roles",
