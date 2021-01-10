@@ -416,7 +416,13 @@ export default class Utils {
 
   private generateDatePickerComponent(h, option, vm?) {
     const _t = vm || this;
-    const { directives, props, style, key } = option;
+    let { directives, props, style, key } = option;
+    if (!props) {
+      props = {
+        type: 'date',
+        "value-format": "yyyy-MM-dd"
+      }
+    }
     const on = translateEvents(option.events, _t);
     const compData = {
       directives: [...(directives || []), vEdit(_t)],
