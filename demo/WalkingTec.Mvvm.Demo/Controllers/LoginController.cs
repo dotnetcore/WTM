@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public IActionResult Login()
         {
             LoginVM vm = Wtm.CreateVM<LoginVM>();
-            vm.Redirect = HttpContext.Request.Query["Redirect"];
+            vm.Redirect = HttpContext.Request.Query["ReturnUrl"];
             if (Wtm.ConfigInfo.IsQuickDebug == true)
             {
                 vm.ITCode = "admin";

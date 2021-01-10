@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 for(int i=0;i<names.Length;i++)
                 {
                     var name = names[i];
-                    var newitem = new ComboSelectListItem { Text = PropertyHelper.GetEnumDisplayName(self, name), Value = ((int)values.GetValue(i)).ToString() };
+                    var newitem = new ComboSelectListItem { Text = PropertyHelper.GetEnumDisplayName(self, name), Value = values.GetValue(i).ToString() };
                     if(value is string)
                     {
                         if (value != null)
@@ -82,7 +82,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             if (pleaseSelect == true)
             {
-                rv.Insert(0, new ComboSelectListItem { Text = CoreProgram._localizer["Sys.PleaseSelect"], Value = "" });
+                rv.Insert(0, new ComboSelectListItem { Text = CoreProgram._localizer?["Sys.PleaseSelect"], Value = "" });
             }
             return rv;
         }

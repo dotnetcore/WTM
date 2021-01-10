@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
+using System.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -154,7 +155,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 }
                                 ContentResult cr = new ContentResult()
                                 {
-                                    Content = $"<script>window.location.href='{lp}';</script>",
+                                    Content = $"<script>var redirect='{u}'+ window.location.hash; if(redirect=='/'){{window.location.href='{lp}'; }}  else{{window.location.href='{lp}?ReturnUrl='+encodeURIComponent(redirect);}}</script>",
                                     ContentType = "text/html",                                    
                                     StatusCode = 200
                                 };

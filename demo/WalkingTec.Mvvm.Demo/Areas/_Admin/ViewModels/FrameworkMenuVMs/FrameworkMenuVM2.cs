@@ -11,13 +11,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     public class FrameworkMenuVM2 : BaseCRUDVM<FrameworkMenu>
     {
 
-        [Display(Name = "Action")]
+        [Display(Name = "_Admin.Action")]
         public List<string> SelectedActionIDs { get; set; }
 
-        [Display(Name = "Module")]
+        [Display(Name = "_Admin.Module")]
         public string SelectedModule { get; set; }
 
-        [Display(Name = "AllowedRole")]
+        [Display(Name = "_Admin.AllowedRole")]
         public List<string> SelectedRolesCodes { get; set; }
 
 

@@ -12,7 +12,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("DataPrivilege")]
+    [ActionDescription("MenuKey.DataPrivilege")]
     [ApiController]
     [Route("api/_[controller]")]
     public class DataPrivilegeController : BaseApiController

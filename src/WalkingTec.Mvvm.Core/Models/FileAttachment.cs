@@ -15,19 +15,19 @@ namespace WalkingTec.Mvvm.Core
     [Table("FileAttachments")]
     public class FileAttachment : TopBasePoco, IWtmFile, IDisposable
     {
-        [Display(Name = "FileName")]
+        [Display(Name = "_Admin.FileName")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public string FileName { get; set; }
 
-        [Display(Name = "FileExt")]
+        [Display(Name = "_Admin.FileExt")]
         [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(10)]
         public string FileExt { get; set; }
 
-        [Display(Name = "Path")]
+        [Display(Name = "_Admin.Path")]
         public string Path { get; set; }
 
-        [Display(Name = "Length")]
+        [Display(Name = "_Admin.Length")]
         public long Length { get; set; }
 
         public DateTime UploadTime { get; set; }

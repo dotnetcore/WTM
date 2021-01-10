@@ -654,7 +654,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 catch (DbUpdateException)
                 {
-                    MSD.AddModelError("", CoreProgram._localizer["Sys.DeleteFailed"]);
+                    MSD.AddModelError("", CoreProgram._localizer?["Sys.DeleteFailed"]);
                 }
             }
             //如果是普通的TopBasePoco，则进行物理删除
@@ -718,7 +718,7 @@ namespace WalkingTec.Mvvm.Core
             }
             catch (Exception)
             {
-                MSD.AddModelError("", CoreProgram._localizer["Sys.DeleteFailed"]);
+                MSD.AddModelError("", CoreProgram._localizer?["Sys.DeleteFailed"]);
             }
         }
 
@@ -771,7 +771,7 @@ namespace WalkingTec.Mvvm.Core
             }
             catch (Exception)
             {
-                MSD.AddModelError("", CoreProgram._localizer["Sys.DeleteFailed"]);
+                MSD.AddModelError("", CoreProgram._localizer?["Sys.DeleteFailed"]);
             }
         }
 
@@ -954,12 +954,12 @@ namespace WalkingTec.Mvvm.Core
                         //如果只有一个字段重复，则拼接形成 xxx字段重复 这种提示
                         if (props.Count == 1)
                         {
-                            MSD.AddModelError(GetValidationFieldName(props[0])[0], CoreProgram._localizer["Sys.DuplicateError", AllName]);
+                            MSD.AddModelError(GetValidationFieldName(props[0])[0], CoreProgram._localizer?["Sys.DuplicateError", AllName]);
                         }
                         //如果多个字段重复，则拼接形成 xx，yy，zz组合字段重复 这种提示
                         else if (props.Count > 1)
                         {
-                             MSD.AddModelError(GetValidationFieldName(props.First())[0], CoreProgram._localizer["Sys.DuplicateGroupError", AllName]);
+                             MSD.AddModelError(GetValidationFieldName(props.First())[0], CoreProgram._localizer?["Sys.DuplicateGroupError", AllName]);
                         }
                     }
                 }

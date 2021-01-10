@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Core
         [Required]
         public string UserCode { get; set; }
         [Required]
-        [Display(Name = "Role")]
+        [Display(Name = "_Admin.Role")]
         public string RoleCode { get; set; }
     }
 }

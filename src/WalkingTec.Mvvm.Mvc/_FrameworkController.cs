@@ -225,7 +225,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         [AllowAnonymous]
-        [ActionDescription("ErrorHandle")]
+        [ActionDescription("Sys.ErrorHandle")]
         public IActionResult Error()
         {
             var ex = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
@@ -450,12 +450,12 @@ namespace WalkingTec.Mvvm.Mvc
                     var pmenu = GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
                     if (pmenu != null)
                     {
-                            pmenu.PageName = Core.CoreProgram._localizer[pmenu.PageName];
+                            pmenu.PageName = Core.CoreProgram._localizer?[pmenu.PageName];
 
                         pagetitle = pmenu.PageName + " - ";
                     }
                 }
-                    menu.PageName = Core.CoreProgram._localizer[menu.PageName];
+                    menu.PageName = Core.CoreProgram._localizer?[menu.PageName];
 
                 pagetitle += menu.PageName;
             }
@@ -550,7 +550,7 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var menu in menus)
             {
                 LocalizeMenu(menu.Children);
-                    menu.Title = Core.CoreProgram._localizer[menu.Title];
+                    menu.Title = Core.CoreProgram._localizer?[menu.Title];
             }
         }
 

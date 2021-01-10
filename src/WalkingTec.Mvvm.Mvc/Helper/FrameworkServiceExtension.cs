@@ -88,7 +88,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var modelmenu = new SimpleMenu
                     {
                         ID = Guid.NewGuid(),
-                        PageName = area ?? localizer["DefaultArea"]
+                        PageName = area ?? localizer["Sys.DefaultArea"]
                     };
                     menus.Add(modelmenu);
                     var pages = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api" && x.Area?.AreaName == area).SelectMany(x => x.Actions).Where(x => x.MethodName.ToLower() == "index").ToList();
@@ -121,7 +121,7 @@ namespace WalkingTec.Mvvm.Mvc
                                     Url = x.Url,
                                     DisplayOrder = x.DisplayOrder,
                                     ShowOnMenu = x.ShowOnMenu,
-                                    Icon = x.ICon,
+                                    Icon = x.Icon,
                                 })
                                 .ToList());
                     }

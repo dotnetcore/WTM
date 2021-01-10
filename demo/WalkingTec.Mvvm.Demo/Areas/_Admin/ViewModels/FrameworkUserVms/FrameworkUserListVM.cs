@@ -77,10 +77,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
     public class FrameworkUser_View : FrameworkUser
     {
-        [Display(Name = "Role")]
+        [Display(Name = "_Admin.Role")]
         public string RoleName_view { get; set; }
 
-        [Display(Name = "Group")]
+        [Display(Name = "_Admin.Group")]
         public string GroupName_view { get; set; }
     }
 }

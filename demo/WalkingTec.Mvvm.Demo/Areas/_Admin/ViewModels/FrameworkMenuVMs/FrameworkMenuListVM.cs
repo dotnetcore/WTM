@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.FolderOnly),
                         this.MakeGridHeader(x => x.IsPublic),
                         this.MakeGridHeader(x => x.DisplayOrder),
-                        this.MakeGridHeader(x => x.ICon, 100).SetFormat(PhotoIdFormat),
+                        this.MakeGridHeader(x => x.Icon, 100).SetFormat(PhotoIdFormat),
                         this.MakeGridHeaderAction(width: 270)
                     });
                     break;
@@ -113,9 +113,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         private string PhotoIdFormat(FrameworkMenu_ListView entity, object val)
         {
-            if (entity.ICon != null)
+            if (entity.Icon != null)
             {
-                return $"<i class='{entity.ICon}'></i>";
+                return $"<i class='{entity.Icon}'></i>";
             }
             else
             {
@@ -193,7 +193,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     ExtraOrder = order++,
 
                     ParentID = x.ParentId,
-                    ICon = x.ICon,
+                    Icon = x.Icon,
                     HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
                 }).OrderBy(x => x.ExtraOrder);
 
@@ -209,29 +209,29 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     /// </summary>
     public class FrameworkMenu_ListView : BasePoco
     {
-        [Display(Name = "PageName")]
+        [Display(Name = "_Admin.PageName")]
         public string PageName { get; set; }
 
-        [Display(Name = "ModuleName")]
+        [Display(Name = "_Admin.ModuleName")]
         public string ModuleName { get; set; }
 
-        [Display(Name = "ActionName")]
+        [Display(Name = "_Admin.ActionName")]
         public string ActionName { get; set; }
 
-        [Display(Name = "ShowOnMenu")]
+        [Display(Name = "_Admin.ShowOnMenu")]
         public bool? ShowOnMenu { get; set; }
 
-        [Display(Name = "FolderOnly")]
+        [Display(Name = "_Admin.FolderOnly")]
         public bool? FolderOnly { get; set; }
 
-        [Display(Name = "IsPublic")]
+        [Display(Name = "_Admin.IsPublic")]
         public bool? IsPublic { get; set; }
 
-        [Display(Name = "DisplayOrder")]
+        [Display(Name = "_Admin.DisplayOrder")]
         public int? DisplayOrder { get; set; }
 
-        [Display(Name = "ICon")]
-        public string ICon { get; set; }
+        [Display(Name = "_Admin.Icon")]
+        public string Icon { get; set; }
 
         public bool Allowed { get; set; }
 

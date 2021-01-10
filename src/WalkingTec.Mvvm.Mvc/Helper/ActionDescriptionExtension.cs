@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc
             string rv = "";
             if (string.IsNullOrEmpty(self.Description) == false)
             {
-                    rv = Core.CoreProgram._localizer[self.Description];
+                    rv = Core.CoreProgram._localizer?[self.Description];
             }
             return rv;
 

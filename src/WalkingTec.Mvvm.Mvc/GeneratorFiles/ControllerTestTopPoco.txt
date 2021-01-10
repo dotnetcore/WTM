@@ -21,7 +21,7 @@ namespace $tns$
         public $model$ControllerTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateController<$model$Controller>(_seed, "user");
+            _controller = MockController.CreateController<$model$Controller>(new DataContext(_seed, DBTypeEnum.Memory), "user");
         }
 
         [TestMethod]

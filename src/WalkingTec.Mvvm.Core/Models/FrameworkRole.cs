@@ -12,22 +12,22 @@ namespace WalkingTec.Mvvm.Core
     [Table("FrameworkRoles")]
     public class FrameworkRole : BasePoco
     {
-        [Display(Name = "RoleCode")]
+        [Display(Name = "_Admin.RoleCode")]
         [Required(ErrorMessage = "Validate.{0}required")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Validate.{0}number")]
         [StringLength(100, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string RoleCode { get; set; }
 
-        [Display(Name = "RoleName")]
+        [Display(Name = "_Admin.RoleName")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public string RoleName { get; set; }
 
-        [Display(Name = "Remark")]
+        [Display(Name = "_Admin.Remark")]
         public string RoleRemark { get; set; }
 
         [NotMapped]
-        [Display(Name = "UserCount")]
+        [Display(Name = "_Admin.UserCount")]
         public int UserCount { get; set; }
     }
 }

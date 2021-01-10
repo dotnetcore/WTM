@@ -6,12 +6,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 {
     public class FrameworkUserSearcher : BaseSearcher
     {
-        [Display(Name = "Account")]
+        [Display(Name = "_Admin.Account")]
         public string ITCode { get; set; }
 
-        [Display(Name = "Name")]
+        [Display(Name = "_Admin.Name")]
         public string Name { get; set; }
-        [Display(Name = "IsValid")]
+        [Display(Name = "_Admin.IsValid")]
         public bool? IsValid { get; set; }
 
     }
