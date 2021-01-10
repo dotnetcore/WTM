@@ -205,7 +205,7 @@ namespace WalkingTec.Mvvm.Mvc
 
     public class CodeGenListView : BasePoco
     {
-        [Display(Name = "Codegen.FieldName")]
+        [Display(Name = "_Admin.FieldName")]
         public string FieldName { get; set; }
 
         [Display(Name = "Codegen.FieldDes")]

@@ -894,6 +894,9 @@
   <data name="_Admin.TableName" xml:space="preserve">
     <value>Privilege name</value>
   </data>
+  <data name="_Admin.Tenant" xml:space="preserve">
+    <value>Tenant</value>
+  </data>
   <data name="_Admin.UnsetPages" xml:space="preserve">
     <value>Unset pages</value>
   </data>

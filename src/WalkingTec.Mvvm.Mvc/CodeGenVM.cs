@@ -1389,7 +1389,7 @@ namespace WalkingTec.Mvvm.Mvc
                             for (int a = 0; a < es.Count; a++)
                             {
                                 var e = es[a];
-                                fieldstr.Append($@"                    {{ Text: ""{e.Text}"", Value: “”{e.Value}“” }}");
+                                fieldstr.Append($@"                    {{ Text: ""{e.Text}"", Value: ""{e.Value}"" }}");
                                 if (a < es.Count - 1)
                                 {
                                     fieldstr.Append(",");
@@ -1488,7 +1488,7 @@ namespace WalkingTec.Mvvm.Mvc
                             for (int a = 0; a < es.Count; a++)
                             {
                                 var e = es[a];
-                                fieldstr2.Append($@"                    {{ Text: ""{e.Text}"", Value: ““{e.Value}”” }}");
+                                fieldstr2.Append($@"                    {{ Text: ""{e.Text}"", Value: ""{e.Value}"" }}");
                                 if (a < es.Count - 1)
                                 {
                                     fieldstr2.Append(",");
@@ -1636,7 +1636,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 for (int a = 0; a < es.Count; a++)
                                 {
                                     var e = es[a];
-                                    enumstr.Append($@"  {{ Text: ""{e.Text}"", Value: “”{e.Value}“” }}");
+                                    enumstr.Append($@"  {{ Text: ""{e.Text}"", Value: ""{e.Value}"" }}");
                                     if (a < es.Count - 1)
                                     {
                                         enumstr.Append(",");
