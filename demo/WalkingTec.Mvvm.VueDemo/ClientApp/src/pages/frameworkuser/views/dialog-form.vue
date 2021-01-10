@@ -103,7 +103,7 @@ export default class Index extends Vue {
                     label: this.$t("frameworkuser.IsValid"),
                     defaultValue: true
                 },
-                "Entity.SelectedRolesCodes": {
+                "SelectedRolesCodes": {
                     type: "transfer",
                     label: this.$t("frameworkuser.SelectedRolesCodes"),
                     props: {
@@ -124,7 +124,7 @@ export default class Index extends Vue {
                     span: 24,
                     defaultValue: []
                 },
-                "Entity.SelectedGroupCodes": {
+                "SelectedGroupCodes": {
                     type: "transfer",
                     label: this.$t("frameworkuser.SelectedGroupCodes"),
                     props: {

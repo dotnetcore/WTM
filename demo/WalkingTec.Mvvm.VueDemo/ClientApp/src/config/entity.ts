@@ -1,11 +1,11 @@
 // 性别
 export const sexList: Array<any> = [
   {
-    Value: 0,
+    Value: 'Male',
     Text: "男"
   },
   {
-    Value: 1,
+    Value: 'Female',
     Text: "女"
   }
 ];
