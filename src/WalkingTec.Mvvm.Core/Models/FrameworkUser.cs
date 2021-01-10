@@ -35,12 +35,14 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.IsValid")]
         public bool IsValid { get; set; }
 
-        [Display(Name = "Photo")]
+        [Display(Name = "_Admin.Photo")]
         public Guid? PhotoId { get; set; }
 
-        [Display(Name = "Photo")]
+        [Display(Name = "_Admin.Photo")]
         [JsonIgnore]
         public FileAttachment Photo { get; set; }
 
+        [Display(Name = "_Admin.Tenant")]
+        public string TenantCode { get; set; }
     }
 }

@@ -26,8 +26,14 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Remark")]
         public string RoleRemark { get; set; }
 
+        [Display(Name = "_Admin.Tenant")]
+        public string TenantCode { get; set; }
+
+
         [NotMapped]
         [Display(Name = "_Admin.UserCount")]
         public int UserCount { get; set; }
+
+
     }
 }

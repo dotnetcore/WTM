@@ -20,6 +20,8 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public string ITCode { get; set; }
 
+        public string TenantCode { get; set; }
+
         public string Name { get; set; }
 
         public string Memo { get; set; }
@@ -85,6 +87,10 @@ namespace WalkingTec.Mvvm.Core
                 if (this.PhotoId == null)
                 {
                     this.PhotoId = userInfo.user.PhotoId;
+                }
+                if (string.IsNullOrEmpty(this.TenantCode))
+                {
+                    this.TenantCode = userInfo.user.TenantCode;
                 }
                 this.Roles = roles.Select(x => new SimpleRole { ID = x.ID, RoleCode = x.RoleCode, RoleName = x.RoleName }).ToList();
                 this.Groups = groups.Select(x => new SimpleGroup { ID = x.ID, GroupCode = x.GroupCode, GroupName = x.GroupName }).ToList();
