@@ -23,7 +23,7 @@ const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
     console.error(`dirEdit指令接收参数：v-model或value错误`);
   }
   // 内容value
-  let htmlVal: string = modelVal;
+  let htmlVal: string = modelVal || '';
   // el前dom，insert添加的dom
   let elPre = el.previousSibling || {};
   // 添加&修改 展示组件
