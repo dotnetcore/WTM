@@ -24,10 +24,10 @@ export default class UserMenu extends React.Component<any, any> {
       <Dropdown overlayClassName={classNames(styles.userDropdown)} overlay={
         <Menu>
           {globalConfig.development && <Menu.Item>
-            <a href={`${globalConfig.serverTarget}/_codegen?ui=react`} target="_blank">  <Icon type='code' /> <FormattedMessage id='action.user.codeGenerator' /></a>
+            <a href="http://localhost:5555/_codegen?ui=react" target="_blank">  <Icon type='code' /> <FormattedMessage id='action.user.codeGenerator' /></a>
           </Menu.Item>}
           {globalConfig.development && <Menu.Item>
-            <a href={`${globalConfig.serverTarget}/swagger`} target="_blank">  <Icon type='bars' /> <FormattedMessage id='action.user.apiDocument' /></a>
+            <a href="http://localhost:5555/swagger" target="_blank">  <Icon type='bars' /> <FormattedMessage id='action.user.apiDocument' /></a>
           </Menu.Item>}
           <Menu.Item>
             <DialogForm
