@@ -560,7 +560,7 @@ layui.use(['table'], function(){{
         : string.Empty)}
     {(!Width.HasValue ? string.Empty : $",width: {Width.Value}")}
     {(!Height.HasValue ? string.Empty : (Height.Value >= 0 ? $",height: {Height.Value}" : $",height: 'full{Height.Value}'"))}
-    ,cols:{JsonSerializer.Serialize(layuiCols, joption).Replace("\"_raw_", "").Replace("_raw_\"", "").Replace("\\r\\n",Environment.NewLine).Replace("\\\"","\"")}
+    ,cols:{JsonSerializer.Serialize(layuiCols, joption).Replace("\"_raw_", "").Replace("_raw_\"", "").Replace("\\r\\n","").Replace("\\\"","\"")}
     {(!Skin.HasValue ? string.Empty : $",skin: '{Skin.Value.ToString().ToLower()}'")}
     {(Even.HasValue && !Even.Value ? $",even: false" : string.Empty)}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
