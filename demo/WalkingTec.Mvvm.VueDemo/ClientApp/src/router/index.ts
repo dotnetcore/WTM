@@ -31,6 +31,11 @@ export const constantRoutes: RouteConfig[] = [
         path: "/404",
         component: () => import("@/pages/error-page/404.vue"),
         meta: { hidden: true }
+    },
+    {
+        path: "/demo",
+        component: () => import("@/pages/demo/index.vue"),
+        meta: { hidden: true }
     }
 ];
 
