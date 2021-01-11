@@ -105,6 +105,11 @@ class ConfigStore {
      */
     target = "/api";
     /**
+     * 后台 地址
+     * @memberof ConfigStore
+     */
+    serverTarget = "http://localhost:5555/";
+    /**
      * 请求头
      */
     getHeaders(headers?) {
