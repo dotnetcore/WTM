@@ -89,6 +89,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
         /// <param name="url">调用地址</param>
         /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
         /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
@@ -108,6 +109,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
         /// <param name="url">调用地址</param>
         /// <param name="method">调用方式</param>
         /// <param name="postdata">提交字段</param>
@@ -137,6 +139,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
         /// <param name="url">调用地址</param>
         /// <param name="method">调用方式</param>
         /// <param name="postdata">提交的object，会被转成json提交</param>
@@ -232,6 +235,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// 使用Get方法调用api
         /// </summary>
         /// <param name="self"></param>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
         /// <param name="url">调用地址</param>
         /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
         /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
@@ -250,6 +254,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// 
         /// </summary>
         /// <param name="self"></param>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
         /// <param name="url">调用地址</param>
         /// <param name="method">调用方式</param>
         /// <param name="postdata">提交字段</param>
@@ -278,6 +283,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// 
         /// </summary>
         /// <param name="self"></param>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
         /// <param name="url">调用地址</param>
         /// <param name="method">调用方式</param>
         /// <param name="postdata">提交的object，会被转成json提交</param>
