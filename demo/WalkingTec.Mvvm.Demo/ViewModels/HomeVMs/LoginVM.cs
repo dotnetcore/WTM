@@ -7,22 +7,22 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 {
     public class LoginVM : BaseVM
     {
-        [Display(Name = "账号")]
+        [Display(Name = "_Admin.Account")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50)]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ITCode { get; set; }
 
-        [Display(Name = "密码")]
+        [Display(Name = "Login.Password")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Password { get; set; }
 
-        [Display(Name = "记录我的登录")]
+        [Display(Name = "Login.RememberMe")]
         public bool RememberLogin { get; set; }
 
         public string Redirect { get; set; }
 
-        [Display(Name = "验证码")]
+        [Display(Name = "Login.InputValidation")]
         public string VerifyCode { get; set; }
 
         /// <summary>

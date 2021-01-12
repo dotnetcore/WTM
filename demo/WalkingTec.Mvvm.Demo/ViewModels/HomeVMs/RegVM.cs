@@ -6,32 +6,32 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 {
     public class RegVM : BaseVM
     {
-        [Display(Name = "Account")]
+        [Display(Name = "_Admin.Account")]
         [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ITCode { get; set; }
 
-        [Display(Name = "Name")]
+        [Display(Name = "_Admin.Name")]
         [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Name { get; set; }
 
-        [Display(Name = "Password")]
+        [Display(Name = "Login.Password")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Password { get; set; }
 
-        [Display(Name = "NewPasswordComfirm")]
+        [Display(Name = "Login.NewPasswordComfirm")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string NewPasswordComfirm { get; set; }
 
-        [Display(Name = "Email")]
+        [Display(Name = "_Admin.Email")]
         [RegularExpression("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", ErrorMessage = "Validate.{0}formaterror")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Email { get; set; }
 
-        [Display(Name = "CellPhone")]
+        [Display(Name = "_Admin.CellPhone")]
         [RegularExpression("^[1][3-9]\\d{9}$", ErrorMessage = "Validate.{0}formaterror")]
         public string CellPhone { get; set; }
 

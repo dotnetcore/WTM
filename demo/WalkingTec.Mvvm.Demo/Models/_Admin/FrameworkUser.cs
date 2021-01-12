@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -14,7 +9,6 @@ namespace WalkingTec.Mvvm.Core
     [Table("FrameworkUsers")]
     public class FrameworkUser : FrameworkUserBase
     {
-
         [Display(Name = "_Admin.Email")]
         [RegularExpression("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", ErrorMessage = "Validate.{0}formaterror")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
@@ -39,8 +33,5 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.ZipCode")]
         [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "Validate.{0}formaterror")]
         public string ZipCode { get; set; }
-
-
-
     }
 }

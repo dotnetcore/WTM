@@ -44,6 +44,7 @@ using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Helper;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 using Microsoft.AspNetCore.SpaServices.Extensions;
+using Microsoft.Extensions.FileProviders;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -793,6 +794,20 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return app;
         }
+
+        public static IApplicationBuilder UseWtmStaticFiles(this IApplicationBuilder app)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = new PathString("/_js"),
+                FileProvider = new EmbeddedFileProvider(
+                    typeof(_CodeGenController).GetTypeInfo().Assembly,
+                    "WalkingTec.Mvvm.Mvc")
+            });
+            return app;
+        }
+
+
         public static IApplicationBuilder UseWtmSwagger(this IApplicationBuilder app, bool showInDebugOnly = true)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
