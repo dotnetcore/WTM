@@ -23,6 +23,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.Hosting;
 using WalkingTec.Mvvm.Demo.Models;
+using VueCliMiddleware;
 
 namespace WalkingTec.Mvvm.VueDemo
 {
@@ -80,7 +81,7 @@ namespace WalkingTec.Mvvm.VueDemo
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs)
+        public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs, IHostEnvironment env)
         {
             app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
             app.UseStaticFiles();
@@ -109,9 +110,22 @@ namespace WalkingTec.Mvvm.VueDemo
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapToVueCliProxy(
+                        "{*path}",
+                        new SpaOptions { SourcePath = "ClientApp" },
+                        npmScript: "start",
+                        regex: "Compiled successfully");
+                }
             });
             
             app.UseWtmContext();
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+            });
         }
 
         /// <summary>
