@@ -1,8 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-
-using Microsoft.EntityFrameworkCore;
-
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs

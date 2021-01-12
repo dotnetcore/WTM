@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Demo
 {

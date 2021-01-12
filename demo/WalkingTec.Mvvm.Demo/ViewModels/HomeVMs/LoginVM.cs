@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
@@ -56,7 +52,5 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 return user;
             }
         }
-
-
     }
 }

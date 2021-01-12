@@ -1,15 +1,7 @@
-using Microsoft.AspNetCore.Http;
-using Moq;
 using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
+using Moq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.TagHelpers.LayUI.Common;
-using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
 namespace WalkingTec.Mvvm.Test.Mock
 {
