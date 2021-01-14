@@ -1,19 +1,14 @@
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Core.Json;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.ReactDemo.Models;
@@ -43,22 +38,15 @@ namespace WalkingTec.Mvvm.ReactDemo
 
             services.AddMvc(options =>
             {
-                options.UseWtmDefaultOptions();
+                options.UseWtmMvcOptions();
             })
             .AddJsonOptions(options => {
-                options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                options.JsonSerializerOptions.IgnoreNullValues = true;
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
+                options.UseWtmJsonOptions();
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
             {
-                options.SuppressModelStateInvalidFilter = true;
-                options.InvalidModelStateResponseFactory = (a) =>
-                {
-                    return new BadRequestObjectResult(a.ModelState.GetErrorJson());
-                };
+                options.UseWtmApiOptions();
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddWtmDataAnnotationsLocalization(typeof(Program));
@@ -84,14 +72,7 @@ namespace WalkingTec.Mvvm.ReactDemo
 
             app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
             app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                RequestPath = new PathString("/_js"),
-                FileProvider = new EmbeddedFileProvider(
-                    typeof(_CodeGenController).GetTypeInfo().Assembly,
-                    "WalkingTec.Mvvm.Mvc")
-            });
-
+            app.UseWtmStaticFiles();
             app.UseRouting();
             app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
@@ -112,9 +93,7 @@ namespace WalkingTec.Mvvm.ReactDemo
             });
 
             app.UseWtmContext();
-
             app.UseReact();
-
         }
 
         /// <summary>

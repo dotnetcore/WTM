@@ -12,8 +12,6 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public class TopBasePoco
     {
-        private Guid _id;
-
         /// <summary>
         /// Id
         /// </summary>

@@ -27,7 +27,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <typeparam name="T">数据源类型</typeparam>
         /// <param name="baseQuery">基础查询</param>
         /// <param name="wtmcontext">wtm context</param>
-        /// <param name="whereCondition">条件语句</param>
         /// <param name="textField">表达式用来获取Text字段对应的值</param>
         /// <param name="valueField">表达式用来获取Value字段对应的值，不指定则默认使用Id字段</param>
         /// <param name="iconField">表达式用来获取icon字段对应的值</param>

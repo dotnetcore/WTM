@@ -1,9 +1,6 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Demo.Models;
 

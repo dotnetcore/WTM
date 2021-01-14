@@ -1,20 +1,17 @@
 
 using System;
-using System.Web;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
 using WalkingTec.Mvvm.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
+using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -119,7 +116,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
             }
         }
-
 
         [AllRights]
         [ActionDescription("Logout")]

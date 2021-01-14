@@ -53,6 +53,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="wtmcontext">wtm context</param>
         /// <param name="filter">filter</param>
+        /// <param name="ids">ids</param>
         /// <returns>数据权限关联表的下拉菜单</returns>
         public List<ComboSelectListItem> GetItemList(WTMContext wtmcontext, string filter = null,List<string> ids= null)
         {
