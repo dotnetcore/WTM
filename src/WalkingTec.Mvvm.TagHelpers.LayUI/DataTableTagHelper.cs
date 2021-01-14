@@ -328,11 +328,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (NeedShowPrint == null)
                 {
-                    NeedShowPrint = config?.UiOptions.DataTable.ShowPrint;
+                    NeedShowPrint = config?.UIOptions.DataTable.ShowPrint;
                 }
                 if (NeedShowFilter == null)
                 {
-                    NeedShowFilter = config?.UiOptions.DataTable.ShowFilter;
+                    NeedShowFilter = config?.UIOptions.DataTable.ShowFilter;
                 }
             }
             var righttoolbar = ",defaultToolbar: []";
@@ -358,7 +358,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (Limit == null)
             {
-                Limit = config?.UiOptions.DataTable.RPP;
+                Limit = config?.UIOptions.DataTable.RPP;
             }
             if (Limits == null)
             {
@@ -967,10 +967,7 @@ var isPost = false;
 
         private string getTemplate(string field)
         {
-            return $@"function(d){{
-                var sty = '';var bg = '';var did = '{field}_'+d.LAY_INDEX;if(d.{field}__bgcolor != undefined) bg = ""<script>$('#""+did+""').closest('td').css('background-color','""+d.{field}__bgcolor+""');</s""+""cript>""; if(d.{field}__forecolor != undefined) sty = 'color:'+d.{field}__forecolor+';'; return '<div style=""'+sty+'"" id=""'+did+'"">'+d.{field}.replace(/\""/g,""'"")+bg+'</div>';
-            }}
-            ";
+            return $@"function(d){{var sty = '';var bg = '';var did = '{field}_'+d.LAY_INDEX;if(d.{field}__bgcolor != undefined) bg = ""<script>$('#""+did+""').closest('td').css('background-color','""+d.{field}__bgcolor+""');</s""+""cript>""; if(d.{field}__forecolor != undefined) sty = 'color:'+d.{field}__forecolor+';'; return '<div style=""'+sty+'"" id=""'+did+'"">'+d.{field}.replace(/\""/g,""'"")+bg+'</div>';}}";
         }
     }
 }

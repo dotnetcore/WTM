@@ -93,7 +93,7 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
         }
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.ID" hidden />
-            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.ITCode" display/>
             <FormItem {...props} fieId="Entity.Email" />
             <FormItem {...props} fieId="Entity.Name" />
             <FormItem {...props} fieId="Entity.Gender" />

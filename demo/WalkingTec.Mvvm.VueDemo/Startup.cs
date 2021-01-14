@@ -1,29 +1,20 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using VueCliMiddleware;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Mvc.Binders;
-using WalkingTec.Mvvm.Mvc.Filters;
-using WalkingTec.Mvvm.Core.Json;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.SpaServices;
-using Microsoft.Extensions.Hosting;
 using WalkingTec.Mvvm.Demo.Models;
-using VueCliMiddleware;
+using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.VueDemo
 {
@@ -51,22 +42,15 @@ namespace WalkingTec.Mvvm.VueDemo
 
             services.AddMvc(options =>
             {
-                options.UseWtmDefaultOptions();
+                options.UseWtmMvcOptions();
             })
             .AddJsonOptions(options => {
-                options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                options.JsonSerializerOptions.IgnoreNullValues = true;
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
+                options.UseWtmJsonOptions();
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
             {
-                options.SuppressModelStateInvalidFilter = true;
-                options.InvalidModelStateResponseFactory = (a) =>
-                {
-                    return new BadRequestObjectResult(a.ModelState.GetErrorJson());
-                };
+                options.UseWtmApiOptions();
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddWtmDataAnnotationsLocalization(typeof(Program));
@@ -77,7 +61,11 @@ namespace WalkingTec.Mvvm.VueDemo
                 options.FileSubDirSelector = SubDirSelector;
                 options.ReloadUserFunc = ReloadUser;
             });
-            services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
+
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,15 +73,8 @@ namespace WalkingTec.Mvvm.VueDemo
         {
             app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
             app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                RequestPath = new PathString("/_js"),
-                FileProvider = new EmbeddedFileProvider(
-                    typeof(_CodeGenController).GetTypeInfo().Assembly,
-                    "WalkingTec.Mvvm.Mvc")
-            });
+            app.UseWtmStaticFiles();
             app.UseWtmSwagger();
-
             app.UseRouting();
             app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
@@ -179,7 +160,5 @@ namespace WalkingTec.Mvvm.VueDemo
         {
             return null;
         }
-
-
     }
 }
