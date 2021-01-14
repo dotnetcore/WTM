@@ -25,5 +25,7 @@ namespace WalkingTec.Mvvm.Core.Test
         [Display(Name = "备注")]
         [StringLength(200, ErrorMessage = "{0}最多输入{1}个字符")]
         public string Remark { get; set; }
+
+        public List<GoodsSpecification> GoodsSpecifications { get; set; }
     }
 }

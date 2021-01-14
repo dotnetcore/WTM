@@ -1,4 +1,4 @@
-﻿import { Col } from 'antd';
+import { Col } from 'antd';
 import { DialogForm, DialogFormDes, DialogFormSubmit, FormItem, InfoShellLayout, DialogLoadData, } from 'components/dataView';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
@@ -52,7 +52,7 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
         }
         return <InfoShellLayout>
                 <FormItem {...props} fieId="Entity.ID" hidden />
-                <FormItem {...props} fieId="Entity.GroupCode" />
+            <FormItem {...props} fieId="Entity.GroupCode" display/>
                 <FormItem {...props} fieId="Entity.GroupName" />
                 <FormItem {...props} fieId="Entity.GroupRemark" />
         </InfoShellLayout>

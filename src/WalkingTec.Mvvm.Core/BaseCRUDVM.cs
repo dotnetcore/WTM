@@ -627,6 +627,15 @@ namespace WalkingTec.Mvvm.Core
             {
                 FC.Add("Entity.IsValid", 0);
                 (Entity as PersistPoco).IsValid = false;
+
+                var pros = typeof(TModel).GetAllProperties();
+                //如果包含List<PersistPoco>，将子表IsValid也设置为false
+                var fas = pros.Where(x => typeof(IEnumerable<PersistPoco>).IsAssignableFrom(x.PropertyType)).ToList();
+                foreach (var f in fas)
+                {
+                    f.SetValue(Entity, f.PropertyType.GetConstructor(Type.EmptyTypes).Invoke(null));
+                }
+
                 DoEditPrepare(false);
                 DC.SaveChanges();
             }
@@ -642,12 +651,16 @@ namespace WalkingTec.Mvvm.Core
             //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
             if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(PersistPoco)))
             {
+                FC.Add("Entity.IsValid", 0);
                 (Entity as PersistPoco).IsValid = false;
-                (Entity as PersistPoco).UpdateTime = DateTime.Now;
-                (Entity as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
-                DC.UpdateProperty(Entity, "IsValid");
-                DC.UpdateProperty(Entity, "UpdateTime");
-                DC.UpdateProperty(Entity, "UpdateBy");
+                var pros = typeof(TModel).GetAllProperties();
+                //如果包含List<PersistPoco>，将子表IsValid也设置为false
+                var fas = pros.Where(x => typeof(IEnumerable<PersistPoco>).IsAssignableFrom(x.PropertyType)).ToList();
+                foreach (var f in fas)
+                {
+                    f.SetValue(Entity, f.PropertyType.GetConstructor(Type.EmptyTypes).Invoke(null));
+                }
+                DoEditPrepare(false);
                 try
                 {
                     await DC.SaveChangesAsync();

@@ -20,6 +20,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         private BaseCRUDVM<Major> _majorvm = new BaseCRUDVM<Major>();
         private BaseCRUDVM<Student> _studentvm = new BaseCRUDVM<Student>();
         private BaseCRUDVM<GoodsSpecification> _goodsvm = new BaseCRUDVM<GoodsSpecification>();
+        private BaseCRUDVM<GoodsCatalog> _goodsCatalogvm = new BaseCRUDVM<GoodsCatalog>();
         private string _seed;
 
         public BaseCRUDVMTest()
@@ -30,6 +31,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
             _studentvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "studentuser");
             _goodsvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "goodsuser");
+            _goodsCatalogvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "goodcatalogsuser");
 
         }
 
@@ -241,6 +243,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _goodsvm.Entity = g;
             _goodsvm.DoAdd();
 
+            //删除子表数据，主表应该无变化
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 Assert.AreEqual(1, context.Set<GoodsSpecification>().Count());
@@ -255,6 +258,59 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 var rv = context.Set<GoodsSpecification>().ToList()[0];
                 Assert.AreEqual(false, rv.IsValid);
                 Assert.AreEqual("goodsuser", rv.UpdateBy);
+
+                var rv2 = context.Set<GoodsCatalog>().ToList()[0];
+                Assert.AreEqual(true, rv2.IsValid);
+
+                Assert.IsTrue(DateTime.Now.Subtract(rv.UpdateTime.Value).Seconds < 10);
+            }
+
+        }
+
+        [TestMethod]
+        [Description("Persist外键删除2")]
+        public void One2ManyTablePersistDelete2()
+        {
+            GoodsCatalog gc = new GoodsCatalog
+            {
+                IsValid = true,
+                Name = "c1",
+                OrderNum = 2
+            };
+            _goodsvm.DC.AddEntity(gc);
+            _goodsvm.DC.SaveChanges();
+
+            GoodsSpecification g = new GoodsSpecification
+            {
+                Name = "g1",
+                OrderNum = 1,
+                IsValid = true,
+                CatalogId = gc.ID
+            };
+            _goodsvm.Entity = g;
+            _goodsvm.DoAdd();
+
+            //删除主表数据，子表IsValid也应该设置为False
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(1, context.Set<GoodsCatalog>().Count());
+                _goodsCatalogvm.DC = context;
+                _goodsCatalogvm.Entity = context.Set<GoodsCatalog>().Where(x => x.ID == g.ID).FirstOrDefault();
+                _goodsCatalogvm.DoDelete();
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var rv2 = context.Set<GoodsCatalog>().ToList()[0];
+                Assert.AreEqual(false, rv2.IsValid);
+                Assert.AreEqual("goodcatalogsuser", rv2.UpdateBy);
+
+                Assert.AreEqual(1, context.Set<GoodsSpecification>().Count());
+                var rv = context.Set<GoodsSpecification>().ToList()[0];
+                Assert.AreEqual(false, rv.IsValid);
+                Assert.AreEqual("goodcatalogsuser", rv.UpdateBy);
+
+
                 Assert.IsTrue(DateTime.Now.Subtract(rv.UpdateTime.Value).Seconds < 10);
             }
 

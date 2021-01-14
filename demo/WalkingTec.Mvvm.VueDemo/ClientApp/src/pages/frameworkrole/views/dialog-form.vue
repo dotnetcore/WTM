@@ -34,6 +34,9 @@ export default class extends Vue {
                         required: true,
                         message: this.$t("frameworkrole.pleaseEnterRoleCode"),
                         trigger: "blur"
+                    },
+                    props: {
+                        disabled: this['status'] !== 'add'
                     }
                 },
                 "Entity.RoleName": {
