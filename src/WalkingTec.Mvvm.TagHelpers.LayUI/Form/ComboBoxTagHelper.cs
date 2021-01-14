@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 EmptyText = THProgram._localizer["Sys.PleaseSelect"];
             }
-            EnableSearch = configs.CurrentValue.UiOptions.ComboBox.DefaultEnableSearch;
+            EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)

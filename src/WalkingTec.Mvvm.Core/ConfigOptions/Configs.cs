@@ -113,27 +113,6 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region Auto sync db
-
-        private bool? _syncdb;
-
-        /// <summary>
-        /// Auto sync db(not supportted)
-        /// </summary>
-        public bool SyncDB
-        {
-            get
-            {
-                return _syncdb ?? false;
-            }
-            set
-            {
-                _syncdb = value;
-            }
-        }
-
-        #endregion
-
         #region PageMode
 
         private PageModeEnum? _pageMode;
@@ -180,57 +159,6 @@ namespace WalkingTec.Mvvm.Core
                 _tabMode = value;
             }
         }
-        #endregion
-
-
-        #region OrmTypeMode
-
-        private OrmTypeEnum? _ormtype;
-
-        /// <summary>
-        /// TabMode
-        /// </summary>
-        public OrmTypeEnum OrmType
-        {
-            get
-            {
-                if (_ormtype == null)
-                {
-                    _ormtype = OrmTypeEnum.EF;
-                }
-                return _ormtype.Value;
-            }
-            set
-            {
-                _ormtype = value;
-            }
-        }
-        #endregion
-
-
-        #region EncryptKey
-
-        private string _encryptKey;
-
-        /// <summary>
-        /// EncryptKey
-        /// </summary>
-        public string EncryptKey
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_encryptKey))
-                {
-                    _encryptKey = string.Empty;
-                }
-                return _encryptKey;
-            }
-            set
-            {
-                _encryptKey = value;
-            }
-        }
-
         #endregion
 
         #region Custom settings
@@ -295,7 +223,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// UIOptions
         /// </summary>
-        public UIOptions UiOptions
+        public UIOptions UIOptions
         {
             get
             {

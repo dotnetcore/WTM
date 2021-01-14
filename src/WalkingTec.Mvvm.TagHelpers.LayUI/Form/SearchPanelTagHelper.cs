@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else
             {
-                show =_configs.UiOptions.SearchPanel.DefaultExpand;
+                show =_configs.UIOptions.SearchPanel.DefaultExpand;
             }
             var layuiShow = show ? " layui-show" : string.Empty;
             output.PreContent.AppendHtml($@"

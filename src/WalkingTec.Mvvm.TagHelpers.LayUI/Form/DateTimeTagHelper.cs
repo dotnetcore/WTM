@@ -229,7 +229,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");
-            if (_configInfo.UiOptions.DateTime.DefaultReadonly)
+            if (_configInfo.UIOptions.DateTime.DefaultReadonly)
                 output.Attributes.Add("readonly", "readonly");
 
             if (!string.IsNullOrEmpty(Min))

@@ -328,11 +328,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (NeedShowPrint == null)
                 {
-                    NeedShowPrint = config?.UiOptions.DataTable.ShowPrint;
+                    NeedShowPrint = config?.UIOptions.DataTable.ShowPrint;
                 }
                 if (NeedShowFilter == null)
                 {
-                    NeedShowFilter = config?.UiOptions.DataTable.ShowFilter;
+                    NeedShowFilter = config?.UIOptions.DataTable.ShowFilter;
                 }
             }
             var righttoolbar = ",defaultToolbar: []";
@@ -358,7 +358,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (Limit == null)
             {
-                Limit = config?.UiOptions.DataTable.RPP;
+                Limit = config?.UIOptions.DataTable.RPP;
             }
             if (Limits == null)
             {
