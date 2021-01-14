@@ -401,7 +401,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="menu">菜单项</param>
         /// <param name="menus">所有系统菜单</param>
         /// <returns>true代表可以访问，false代表不能访问</returns>
-        public bool IsAccessable(SimpleMenu menu, List<SimpleMenu> menus)
+        protected bool IsAccessable(SimpleMenu menu, List<SimpleMenu> menus)
         {
             //寻找当前菜单的页面权限
             var find = LoginUserInfo?.FunctionPrivileges.Where(x => x.MenuItemId == menu.ID && x.Allowed == true).FirstOrDefault();
