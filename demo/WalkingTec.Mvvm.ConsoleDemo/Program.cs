@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.ConsoleDemo
 
             WtmFileProvider fp = new WtmFileProvider(vm.Wtm.ConfigInfo);
             var fh = fp.CreateFileHandler();
-            var fs = File.OpenRead("C:\\Users\\michael\\Pictures\\QQ截图20201104025651.png");
+            var fs = File.OpenRead("../../../");
             var file = fh.Upload("vue1.png", fs.Length, fs);
 
             vm.Entity = new Demo.Models.School

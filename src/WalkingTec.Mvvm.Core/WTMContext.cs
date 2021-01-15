@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -413,8 +415,6 @@ namespace WalkingTec.Mvvm.Core
             return false;
         }
 
-
-
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Normal)
         {
             var log = this.Log?.GetActionLog();
@@ -712,7 +712,360 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
+        #region CallApi
+        public  async Task<T> CallAPI<T>(string domainName, string url, HttpMethodEnum method, HttpContent content, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            try
+            {
+                var factory = this.ServiceProvider.GetRequiredService<IHttpClientFactory>();
+                if (string.IsNullOrEmpty(url))
+                {
+                    return default(T);
+                }
+                //新建http请求
+                HttpClient client = null;
+                if (string.IsNullOrEmpty(domainName))
+                {
+                    client = factory.CreateClient();
+                }
+                else
+                {
+                    client = factory.CreateClient(domainName);
+                }
+                //如果配置了代理，则使用代理
+                //设置超时
+                if (timeout.HasValue)
+                {
+                    client.Timeout = new TimeSpan(0, 0, 0, timeout.Value, 0);
+                }
+                //填充表单数据
+                HttpResponseMessage res = null;
+                switch (method)
+                {
+                    case HttpMethodEnum.GET:
+                        res = await client.GetAsync(url);
+                        break;
+                    case HttpMethodEnum.POST:
+                        res = await client.PostAsync(url, content);
+                        break;
+                    case HttpMethodEnum.PUT:
+                        res = await client.PutAsync(url, content);
+                        break;
+                    case HttpMethodEnum.DELETE:
+                        res = await client.DeleteAsync(url);
+                        break;
+                    default:
+                        break;
+                }
+                T rv = default(T);
+                if (res == null)
+                {
+                    return rv;
+                }
+                if (res.IsSuccessStatusCode == true)
+                {
+                    rv = JsonSerializer.Deserialize<T>(await res.Content.ReadAsStringAsync());
+                }
+                else
+                {
+                    if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        error = JsonSerializer.Deserialize<ErrorObj>(await res.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        errormsg = await res.Content.ReadAsStringAsync();
+                    }
+                }
 
+                return rv;
+            }
+            catch (Exception ex)
+            {
+                errormsg = ex.ToString();
+                return default(T);
+            }
+        }
+
+        /// <summary>
+        /// 使用Get方法调用api
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
+        /// <param name="url">调用地址</param>
+        /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
+        /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
+        /// <param name="timeout">超时时间，单位秒</param>
+        /// <param name="proxy">代理地址</param>
+        /// <returns></returns>
+        public  async Task<T> CallAPI<T>(string domainName, string url, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            HttpContent content = null;
+            //填充表单数据
+            return await CallAPI<T>(domainName, url, HttpMethodEnum.GET, content, error, errormsg, timeout, proxy);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
+        /// <param name="url">调用地址</param>
+        /// <param name="method">调用方式</param>
+        /// <param name="postdata">提交字段</param>
+        /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
+        /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
+        /// <param name="timeout">超时时间，单位秒</param>
+        /// <param name="proxy">代理地址</param>
+        /// <returns></returns>
+        public  async Task<T> CallAPI<T>(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            HttpContent content = null;
+            //填充表单数据
+            if (!(postdata == null || postdata.Count == 0))
+            {
+                List<KeyValuePair<string, string>> paras = new List<KeyValuePair<string, string>>();
+                foreach (string key in postdata.Keys)
+                {
+                    paras.Add(new KeyValuePair<string, string>(key, postdata[key]));
+                }
+                content = new FormUrlEncodedContent(paras);
+            }
+            return await CallAPI<T>(domainName, url, method, content, error, errormsg, timeout, proxy);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
+        /// <param name="url">调用地址</param>
+        /// <param name="method">调用方式</param>
+        /// <param name="postdata">提交的object，会被转成json提交</param>
+        /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
+        /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
+        /// <param name="timeout">超时时间，单位秒</param>
+        /// <param name="proxy">代理地址</param>
+        /// <returns></returns>
+        public  async Task<T> CallAPI<T>(string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
+            return await CallAPI<T>(domainName, url, method, content, error, errormsg, timeout, proxy);
+        }
+
+        public  async Task<string> CallAPI(string domainName, string url, HttpMethodEnum method, HttpContent content, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            try
+            {
+                var factory = this.ServiceProvider.GetRequiredService<IHttpClientFactory>();
+                if (string.IsNullOrEmpty(url))
+                {
+                    return "";
+                }
+                //新建http请求
+                HttpClient client = null;
+                if (string.IsNullOrEmpty(domainName))
+                {
+                    client = factory.CreateClient();
+                }
+                else
+                {
+                    client = factory.CreateClient(domainName);
+                }
+                //如果配置了代理，则使用代理
+                //设置超时
+                if (timeout.HasValue)
+                {
+                    client.Timeout = new TimeSpan(0, 0, 0, timeout.Value, 0);
+                }
+                //填充表单数据
+                HttpResponseMessage res = null;
+                switch (method)
+                {
+                    case HttpMethodEnum.GET:
+                        res = await client.GetAsync(url);
+                        break;
+                    case HttpMethodEnum.POST:
+                        res = await client.PostAsync(url, content);
+                        break;
+                    case HttpMethodEnum.PUT:
+                        res = await client.PutAsync(url, content);
+                        break;
+                    case HttpMethodEnum.DELETE:
+                        res = await client.DeleteAsync(url);
+                        break;
+                    default:
+                        break;
+                }
+                string rv = "";
+                if (res == null)
+                {
+                    return rv;
+                }
+                if (res.IsSuccessStatusCode == true)
+                {
+                    rv = await res.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        error = JsonSerializer.Deserialize<ErrorObj>(await res.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        errormsg = await res.Content.ReadAsStringAsync();
+                    }
+                }
+
+                return rv;
+            }
+            catch (Exception ex)
+            {
+                errormsg = ex.ToString();
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// 使用Get方法调用api
+        /// </summary>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
+        /// <param name="url">调用地址</param>
+        /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
+        /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
+        /// <param name="timeout">超时时间，单位秒</param>
+        /// <param name="proxy">代理地址</param>
+        /// <returns></returns>
+        public  async Task<string> CallAPI(string domainName, string url, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            HttpContent content = null;
+            //填充表单数据
+            return await CallAPI(domainName, url, HttpMethodEnum.GET, content, error, errormsg, timeout, proxy);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
+        /// <param name="url">调用地址</param>
+        /// <param name="method">调用方式</param>
+        /// <param name="postdata">提交字段</param>
+        /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
+        /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
+        /// <param name="timeout">超时时间，单位秒</param>
+        /// <param name="proxy">代理地址</param>
+        /// <returns></returns>
+        public  async Task<string> CallAPI(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            HttpContent content = null;
+            //填充表单数据
+            if (!(postdata == null || postdata.Count == 0))
+            {
+                List<KeyValuePair<string, string>> paras = new List<KeyValuePair<string, string>>();
+                foreach (string key in postdata.Keys)
+                {
+                    paras.Add(new KeyValuePair<string, string>(key, postdata[key]));
+                }
+                content = new FormUrlEncodedContent(paras);
+            }
+            return await CallAPI(domainName, url, method, content, error, errormsg, timeout, proxy);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
+        /// <param name="url">调用地址</param>
+        /// <param name="method">调用方式</param>
+        /// <param name="postdata">提交的object，会被转成json提交</param>
+        /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
+        /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
+        /// <param name="timeout">超时时间，单位秒</param>
+        /// <param name="proxy">代理地址</param>
+        /// <returns></returns>
+        public  async Task<string> CallAPI(string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
+            return await CallAPI(domainName, url, method, content, error, errormsg, timeout, proxy);
+        }
+
+        public  async Task<byte[]> CallStreamAPI(string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        {
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
+            var factory = this.ServiceProvider.GetRequiredService<IHttpClientFactory>();
+            try
+            {
+                if (string.IsNullOrEmpty(url))
+                {
+                    return null;
+                }
+                //新建http请求
+                HttpClient client = null;
+                if (string.IsNullOrEmpty(domainName))
+                {
+                    client = factory.CreateClient();
+                }
+                else
+                {
+                    client = factory.CreateClient(domainName);
+                }
+                //如果配置了代理，则使用代理
+                //设置超时
+                if (timeout.HasValue)
+                {
+                    client.Timeout = new TimeSpan(0, 0, 0, timeout.Value, 0);
+                }
+                //填充表单数据
+                HttpResponseMessage res = null;
+                switch (method)
+                {
+                    case HttpMethodEnum.GET:
+                        res = await client.GetAsync(url);
+                        break;
+                    case HttpMethodEnum.POST:
+                        res = await client.PostAsync(url, content);
+                        break;
+                    case HttpMethodEnum.PUT:
+                        res = await client.PutAsync(url, content);
+                        break;
+                    case HttpMethodEnum.DELETE:
+                        res = await client.DeleteAsync(url);
+                        break;
+                    default:
+                        break;
+                }
+                byte[] rv = null;
+                if (res == null)
+                {
+                    return rv;
+                }
+                if (res.IsSuccessStatusCode == true)
+                {
+                    rv = await res.Content.ReadAsByteArrayAsync();
+                }
+                else
+                {
+                    if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        error = JsonSerializer.Deserialize<ErrorObj>(await res.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        errormsg = await res.Content.ReadAsStringAsync();
+                    }
+                }
+
+                return rv;
+            }
+            catch (Exception ex)
+            {
+                errormsg = ex.ToString();
+                return null;
+            }
+
+        }
+        #endregion
     }
 
 }
