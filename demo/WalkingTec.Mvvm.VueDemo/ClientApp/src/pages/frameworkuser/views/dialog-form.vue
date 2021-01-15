@@ -43,6 +43,9 @@ export default class Index extends Vue {
                         required: true,
                         message: this.$t("frameworkuser.pleaseEnterITCode"),
                         trigger: "blur"
+                    },
+                    props: {
+                        disabled: this['status'] !== 'add'
                     }
                 },
                 "Entity.Password": {

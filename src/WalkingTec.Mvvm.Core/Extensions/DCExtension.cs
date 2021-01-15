@@ -648,6 +648,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 return baseQuery;
             }
+            else if(val is string s && string.IsNullOrEmpty(s))
+            {
+                return baseQuery;
+            }
             else
             {
                 if (typeof(IList).IsAssignableFrom(val.GetType()))
@@ -669,6 +673,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             else
             {
+                val = val.Trim();
                 var equal = Expression.Equal(field.Body, Expression.Constant(val));
                 var where = Expression.Lambda<Func<T, bool>>(equal, field.Parameters[0]);
                 return baseQuery.Where(where);
@@ -754,6 +759,7 @@ where S : struct
             }
             else
             {
+                val = val.Trim();
                 Expression exp = null;
                 if (ignoreCase == true)
                 {

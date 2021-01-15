@@ -26,6 +26,9 @@ export default class Index extends Vue {
                         required: true,
                         message: this.$t("frameworkgroup.pleaseEnterGroupCode"),
                         trigger: "blur"
+                    },
+                    props: {
+                        disabled: this['status'] !== 'add'
                     }
                 },
                 "Entity.GroupName": {
