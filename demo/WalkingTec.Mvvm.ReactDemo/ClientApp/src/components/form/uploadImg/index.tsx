@@ -29,6 +29,7 @@ export class WtmUploadImg extends React.Component<any, any> {
                 name: 'xxx.png',
                 status: 'done',
                 url: RequestFiles.onFileUrl(this.props.value),
+                // response:{Id:this.props.value}
             }
         ] : [],
     };
@@ -79,9 +80,7 @@ export class WtmUploadImg extends React.Component<any, any> {
         });
         const fileId = response && response.Id //|| this.props.value
         if (typeof fileId === "string") {
-            setTimeout(() => {
-                RequestFiles.onFileDelete(fileId)
-            });
+            RequestFiles.onFileDelete(fileId)
         }
     }
     render() {
