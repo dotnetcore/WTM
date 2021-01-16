@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,18 +14,20 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     public class WtmFileProvider
     {
         public string SaveMode { get; set; }
-        private Dictionary<string, ConstructorInfo> _handlers;
-        private ConstructorInfo _defaultHandler;
-        private Configs _configs;
-        private GlobalData _gd;
+        private static Dictionary<string, ConstructorInfo> _handlers;
+        private  static ConstructorInfo _defaultHandler;
+        private WTMContext _wtm;
         public static Func<IWtmFileHandler, string> _subDirFunc;
 
-        public WtmFileProvider(IOptionsMonitor<Configs> configs, GlobalData gd)
+        public WtmFileProvider(WTMContext wtm)
         {
-            _configs = configs.CurrentValue;
-            _gd = gd;
+            _wtm = wtm;
+        }
+
+        public static void Init(Configs config, GlobalData gd)
+        {
             _handlers = new Dictionary<string, ConstructorInfo>();
-            var types = _gd.GetTypesAssignableFrom<IWtmFileHandler>();
+            var types = gd.GetTypesAssignableFrom<IWtmFileHandler>();
             int count = 1;
             foreach (var item in types)
             {
@@ -41,7 +44,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                     name = nameattr.Name;
                 }
                 name = name.ToLower();
-                if (name == _configs.FileUploadOptions.SaveFileMode.ToString().ToLower())
+                if (name == config.FileUploadOptions.SaveFileMode.ToString().ToLower())
                 {
                     _defaultHandler = cons;
                 }
@@ -51,48 +54,16 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             {
                 _defaultHandler = types[0].GetConstructor(new Type[] { typeof(Configs), typeof(IDataContext) });
             }
-        }
 
-        public WtmFileProvider(Configs configs)
-        {
-            _configs = configs;
-            _gd = new GlobalData();
-            _gd.AllAssembly = Utils.GetAllAssembly();
-            _handlers = new Dictionary<string, ConstructorInfo>();
-            var types = _gd.GetTypesAssignableFrom<IWtmFileHandler>();
-            int count = 1;
-            foreach (var item in types)
-            {
-                var cons = item.GetConstructor(new Type[] { typeof(Configs), typeof(IDataContext) });
-                var nameattr = item.GetCustomAttribute<DisplayAttribute>();
-                string name = "";
-                if (nameattr == null)
-                {
-                    name = "FileHandler" + count;
-                    count++;
-                }
-                else
-                {
-                    name = nameattr.Name;
-                }
-                name = name.ToLower();
-                if (name == _configs.FileUploadOptions.SaveFileMode.ToString().ToLower())
-                {
-                    _defaultHandler = cons;
-                }
-                _handlers.Add(name, cons);
-            }
-            if (_defaultHandler == null && types.Count > 0)
-            {
-                _defaultHandler = types[0].GetConstructor(new Type[] { typeof(Configs), typeof(IDataContext) });
-            }
         }
-
 
         public IWtmFileHandler CreateFileHandler(string saveMode = null, IDataContext dc = null)
         {
             ConstructorInfo ci = null;
-
+            if(dc == null)
+            {
+                dc = _wtm.CreateDC();
+            }
             if (string.IsNullOrEmpty(saveMode))
             {
                 ci = _defaultHandler;
@@ -107,11 +78,53 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             if (ci == null)
             {
-                return new WtmDataBaseFileHandler(_configs, dc);
+                return new WtmDataBaseFileHandler(_wtm.ConfigInfo, dc);
             }
             else
             {
-                return ci.Invoke(new object[] { _configs, dc }) as IWtmFileHandler;
+                return ci.Invoke(new object[] { _wtm.ConfigInfo, dc }) as IWtmFileHandler;
+            }
+        }
+
+        public  IWtmFile Upload(string fileName, long fileLength, Stream data, string group = null, string subdir = null, string extra = null, string saveMode = null, IDataContext dc =null)
+        {
+            if (dc == null)
+            {
+                dc = _wtm.CreateDC();
+            }
+            var fh = CreateFileHandler(saveMode, dc);
+            if (fh is WtmDataBaseFileHandler lfh)
+            {
+                return lfh.UploadToDB(fileName, fileLength, data, group, subdir, extra);
+            }
+            else
+            {
+                var rv = fh.Upload(fileName, fileLength, data, group, subdir, extra);
+                if (string.IsNullOrEmpty(rv.path) == false)
+                {
+                    FileAttachment file = new FileAttachment();
+                    file.FileName = fileName;
+                    file.Length = fileLength;
+                    file.UploadTime = DateTime.Now;
+                    file.SaveMode = string.IsNullOrEmpty(saveMode) == true ? _wtm.ConfigInfo.FileUploadOptions.SaveFileMode : saveMode;
+                    file.ExtraInfo = extra;
+                    var ext = string.Empty;
+                    if (string.IsNullOrEmpty(fileName) == false)
+                    {
+                        var dotPos = fileName.LastIndexOf('.');
+                        ext = fileName.Substring(dotPos + 1);
+                    }
+                    file.FileExt = ext;
+                    file.Path = rv.path;
+                    file.HandlerInfo = rv.handlerInfo;
+                    dc.AddEntity(file);
+                    dc.SaveChanges();
+                    return file;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -120,7 +133,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             IWtmFile rv;
             if (dc == null)
             {
-                dc = _configs.CreateDC();
+                dc = _wtm.CreateDC();
             }
             rv = dc.Set<FileAttachment>().CheckID(id).Select(x => new FileAttachment
             {
@@ -147,7 +160,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             FileAttachment file = null;
             if (dc == null)
             {
-                dc = _configs.CreateDC();
+                dc = _wtm.CreateDC();
             }
             file = dc.Set<FileAttachment>().CheckID(id)
                 .Select(x => new FileAttachment
@@ -178,7 +191,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             string rv;
             if (dc == null)
             {
-                dc = _configs.CreateDC();
+                dc = _wtm.CreateDC();
             }
             rv = dc.Set<FileAttachment>().CheckID(id).Select(x => x.FileName).FirstOrDefault();
             return rv;

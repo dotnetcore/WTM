@@ -279,21 +279,20 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, bool IsTemprory = true, string _DONOT_USE_CS = "default")
+        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, bool IsTemprory = true, string _DONOT_USE_CS = "default")
         {
-            var fh = fp.CreateFileHandler(sm, ConfigInfo.CreateDC(_DONOT_USE_CS));
             var FileData = Request.Form.Files[0];
-            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir);
+            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, extra, sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
             return JsonMore(new { Id = file.GetID(), Name = file.FileName});
         }
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult UploadImage([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, bool IsTemprory = true, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
+        public IActionResult UploadImage([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, bool IsTemprory = true, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
             if (width == null && height == null)
             {
-                return Upload(fp, sm, groupName, subdir, IsTemprory, _DONOT_USE_CS);
+                return Upload(fp, sm, groupName, subdir, extra, IsTemprory, _DONOT_USE_CS);
             }
             var FileData = Request.Form.Files[0];
 
@@ -314,8 +313,7 @@ namespace WalkingTec.Mvvm.Mvc
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             ms.Position = 0;
 
-            var fh = fp.CreateFileHandler(sm?.ToString(), ConfigInfo.CreateDC(_DONOT_USE_CS));
-            var file = fh.Upload(FileData.FileName, ms.Length, ms);
+            var file = fp.Upload(FileData.FileName, ms.Length, ms, groupName,subdir,extra,sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
             oimage.Dispose();
             ms.Dispose();
             return JsonMore(new { Id = file.GetID(), Name = file.FileName });
@@ -325,9 +323,8 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadForLayUIRichTextBox")]
         public IActionResult UploadForLayUIRichTextBox([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = "default", string groupName = null, string subdir = null)
         {
-            var fh = fp.CreateFileHandler(null, ConfigInfo.CreateDC(_DONOT_USE_CS));
             var FileData = Request.Form.Files[0];
-            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir);
+            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
             if (file != null)
             {
                 string url = $"/_Framework/GetFile?id={file.GetID()}&stream=true&_DONOT_USE_CS={CurrentCS}";
@@ -765,20 +762,19 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadForLayUIUEditor")]
         public IActionResult UploadForLayUIUEditor([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = "default", string groupName = null, string subdir = null)
         {
-            var fh = fp.CreateFileHandler(null, ConfigInfo.CreateDC(_DONOT_USE_CS));
             IWtmFile file = null;
             if (Request.Form.Files != null && Request.Form.Files.Count() > 0)
             {
                 //通过文件流方式上传附件
                 var FileData = Request.Form.Files[0];
-                file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir);
+                file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
             }
             else if (Request.Form.Keys != null && Request.Form.ContainsKey("FileID"))
             {
                 //通过Base64方式上传附件
                 var FileData = Convert.FromBase64String(Request.Form["FileID"]);
                 MemoryStream MS = new MemoryStream(FileData);
-                file = fh.Upload("SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg", FileData.Length, MS, groupName, subdir);
+                file = fp.Upload("SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg", FileData.Length, MS, groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
                 MS.Dispose();
             }
 

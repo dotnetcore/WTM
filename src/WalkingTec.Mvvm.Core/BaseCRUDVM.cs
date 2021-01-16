@@ -365,7 +365,7 @@ namespace WalkingTec.Mvvm.Core
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fp.DeleteFile(item.ToString(),DC.ReCreate());
+                    fp.DeleteFile(item.ToString(),DC);
                 }
             }
         }

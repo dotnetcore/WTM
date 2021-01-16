@@ -51,21 +51,14 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         }
 
 
-        public override IWtmFile Upload(string fileName, long fileLength, Stream data, string group = null, string subdir = null, string extra = null)
+        public override (string path, string handlerInfo) Upload(string fileName, long fileLength, Stream data, string group = null, string subdir = null, string extra = null)
         {
-            FileAttachment file = new FileAttachment();
-            file.FileName = fileName;
-            file.Length = fileLength;
-            file.UploadTime = DateTime.Now;
-            file.SaveMode = _modeName;
-            file.ExtraInfo = extra;
             var ext = string.Empty;
             if (string.IsNullOrEmpty(fileName) == false)
             {
                 var dotPos = fileName.LastIndexOf('.');
                 ext = fileName.Substring(dotPos + 1);
             }
-            file.FileExt = ext;
 
             var ossSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "oss").Select(x => x.Value).FirstOrDefault();
             FileHandlerOptions groupInfo = null;
@@ -83,7 +76,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             if (groupInfo == null)
             {
-                return null;
+                return (null,null);
             }
 
 
@@ -100,21 +93,17 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                     pathHeader = Path.Combine(pathHeader, sub);
                 }
             }
-            var fullPath = Path.Combine(pathHeader, $"{Guid.NewGuid().ToNoSplitString()}.{file.FileExt}");
+            var fullPath = Path.Combine(pathHeader, $"{Guid.NewGuid().ToNoSplitString()}.{ext}");
             fullPath = fullPath.Replace("\\", "/");
             OssClient client = new OssClient(groupInfo.ServerUrl, groupInfo.Key, groupInfo.Secret);
             var result = client.PutObject(groupInfo.GroupLocation, fullPath, data);
             if (result.HttpStatusCode == System.Net.HttpStatusCode.OK)
             {
-                file.Path = fullPath;
-                file.ExtraInfo = groupInfo.GroupName;
-                _dc.AddEntity(file);
-                _dc.SaveChanges();
-                return file;
+                return (fullPath, groupInfo.GroupName);
             }
             else
             {
-                return null;
+                return (null, null);
             }
         }
 

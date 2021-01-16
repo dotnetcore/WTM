@@ -1,4 +1,5 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -24,6 +25,9 @@ namespace WalkingTec.Mvvm.Core
                        .AddDebug()
                        .AddWTMLogger();
             });
+            var gd = GetGlobalData();
+            services.AddHttpContextAccessor();
+            services.AddSingleton(gd);
             WtmFileProvider._subDirFunc = fileSubDirSelector;
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
@@ -42,8 +46,21 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
             services.AddDistributedMemoryCache();
+            var cs = WtmConfigs.Connections;
+            foreach (var item in cs)
+            {
+                var dc = item.CreateDC();
+                dc.Database.EnsureCreated();
+            }
+            WtmFileProvider.Init(WtmConfigs, gd);
             return services;
         }
 
+        private static GlobalData GetGlobalData()
+        {
+            GlobalData gd = new GlobalData();
+            gd.AllAssembly = Utils.GetAllAssembly();
+            return gd;
+        }
     }
 }

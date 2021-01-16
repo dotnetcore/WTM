@@ -29,7 +29,6 @@ namespace WalkingTec.Mvvm.Test.Mock
             MockHttpSession mockSession = new MockHttpSession();
             mockHttpRequest.Setup(x => x.Cookies).Returns(new MockCookie());
             mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions())));
-            mockService.Setup(x => x.GetService(typeof(WtmFileProvider))).Returns(new WtmFileProvider(new Configs()));
             mockHttpContext.Setup(x => x.Request).Returns(mockHttpRequest.Object);
             mockHttpContext.Setup(x => x.RequestServices).Returns(mockService.Object);
             var httpa = new HttpContextAccessor();
@@ -49,6 +48,7 @@ namespace WalkingTec.Mvvm.Test.Mock
             wtmcontext.GlobaInfo.AllAccessUrls = new List<string>();
             wtmcontext.GlobaInfo.AllAssembly = new List<System.Reflection.Assembly>();
             wtmcontext.GlobaInfo.AllModule = new List<Core.Support.Json.SimpleModule>();
+            mockService.Setup(x => x.GetService(typeof(WtmFileProvider))).Returns(new WtmFileProvider(wtmcontext));
             return wtmcontext;
         }
     }

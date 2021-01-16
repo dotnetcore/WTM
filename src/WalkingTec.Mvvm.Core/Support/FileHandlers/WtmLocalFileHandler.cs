@@ -25,22 +25,8 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         }
 
 
-        public override IWtmFile Upload(string fileName, long fileLength, Stream data, string group = null, string subdir = null, string extra = null)
+        public override (string path, string handlerInfo) Upload(string fileName, long fileLength, Stream data, string group = null, string subdir = null, string extra = null)
         {
-            FileAttachment file = new FileAttachment();
-            file.FileName = fileName;
-            file.Length = fileLength;
-            file.UploadTime = DateTime.Now;
-            file.SaveMode = _modeName;
-            file.ExtraInfo = extra;
-            var ext = string.Empty;
-            if (string.IsNullOrEmpty(fileName) == false)
-            {
-                var dotPos = fileName.LastIndexOf('.');
-                ext = fileName.Substring(dotPos + 1);
-            }
-            file.FileExt = ext;
-
             var localSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "local").Select(x => x.Value).FirstOrDefault();
 
             var groupdir = "";
@@ -76,15 +62,20 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             {
                 Directory.CreateDirectory(pathHeader);
             }
-            var fullPath = Path.Combine(pathHeader, $"{Guid.NewGuid().ToNoSplitString()}.{file.FileExt}");
-            file.Path = Path.GetFullPath(fullPath);
+            var ext = string.Empty;
+            if (string.IsNullOrEmpty(fileName) == false)
+            {
+                var dotPos = fileName.LastIndexOf('.');
+                ext = fileName.Substring(dotPos + 1);
+            }
+
+            var fullPath = Path.Combine(pathHeader, $"{Guid.NewGuid().ToNoSplitString()}.{ext}");
+            var path = Path.GetFullPath(fullPath);
             using (var fileStream = File.Create(fullPath))
             {
                 data.CopyTo(fileStream);
             }
-                _dc.AddEntity(file);
-                _dc.SaveChanges();
-            return file;
+            return (path, "");
         }
 
         public override void DeleteFile(IWtmFile file)

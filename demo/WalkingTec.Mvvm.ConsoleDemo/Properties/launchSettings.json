@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "WalkingTec.Mvvm.ConsoleDemo": {
+      "commandName": "Project",
+      "sqlDebugging": false,
+      "nativeDebugging": false
+    }
+  }
+}

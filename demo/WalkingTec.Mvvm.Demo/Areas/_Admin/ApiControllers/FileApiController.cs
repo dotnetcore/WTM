@@ -18,23 +18,21 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [HttpPost("[action]")]
         [ActionDescription("UploadFile")]
-        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir=null,string csName= null)
+        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir=null,string extra = null,string csName= null)
         {
-            var fh = fp.CreateFileHandler(sm, ConfigInfo.CreateDC(csName));
             var FileData = Request.Form.Files[0];
-            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName,subdir);
+            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName,subdir,extra,sm,Wtm.CreateDC(cskey:csName));
             return Ok(new { Id = file.GetID(), Name = file.FileName });
         }
 
         [HttpPost("[action]")]
         [ActionDescription("UploadPic")]
-        public IActionResult UploadImage([FromServices] WtmFileProvider fp,int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string csName = null)
+        public IActionResult UploadImage([FromServices] WtmFileProvider fp,int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
         {
             if (width == null && height == null)
             {
                 return Upload(fp,sm,groupName,csName);
             }
-            var fh = fp.CreateFileHandler(sm, ConfigInfo.CreateDC(csName));
             var FileData = Request.Form.Files[0];
 
             Image oimage = Image.FromStream(FileData.OpenReadStream());
@@ -53,7 +51,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             MemoryStream ms = new MemoryStream();
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             ms.Position = 0;
-            var file = fh.Upload(FileData.FileName, FileData.Length, ms, groupName,subdir);
+            var file = fp.Upload(FileData.FileName, FileData.Length, ms, groupName,subdir, extra, sm, Wtm.CreateDC(cskey: csName));
             oimage.Dispose();
             ms.Dispose();
 

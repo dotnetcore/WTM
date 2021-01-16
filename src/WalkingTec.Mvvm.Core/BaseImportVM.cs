@@ -1208,7 +1208,6 @@ namespace WalkingTec.Mvvm.Core
             if (string.IsNullOrEmpty(err))
             {
                 var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var fh = fp.CreateFileHandler();
                 var fa = fp.GetFile(UploadFileId, true, DC);
                 xssfworkbook = new XSSFWorkbook(fa.DataStream);
 
@@ -1245,7 +1244,7 @@ namespace WalkingTec.Mvvm.Core
                 xssfworkbook.Write(ms);
                 ms.Position = 0;
 
-                var newfile = fh.Upload("Error-" + fa.FileName, ms.Length, ms);
+                var newfile = fp.Upload("Error-" + fa.FileName, ms.Length, ms);
                 ms.Close();
                 ms.Dispose();
                 err = CoreProgram._localizer?["Sys.ImportError"];

@@ -465,7 +465,7 @@ namespace WalkingTec.Mvvm.Mvc
             WTMContext.ReloadUserFunc = op.ReloadUserFunc;
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
-            services.AddSingleton<WtmFileProvider>();
+            services.AddScoped<WtmFileProvider>();
             return services;
         }
         public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services)
@@ -734,7 +734,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
             var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-            var test2 = app.ApplicationServices.GetService<WtmFileProvider>();
+            WtmFileProvider.Init(configs, gd);
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var fixdc = scope.ServiceProvider.GetRequiredService<IDataContext>();

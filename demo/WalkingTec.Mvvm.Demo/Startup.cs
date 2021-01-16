@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -129,6 +130,10 @@ namespace WalkingTec.Mvvm.Demo
         /// <returns>subdir name</returns>
         public string SubDirSelector(IWtmFileHandler fh)
         {
+            if(fh is WtmLocalFileHandler)
+            {
+                return DateTime.Now.ToString("yyyy-MM-dd");
+            }
             return null;
         }
 

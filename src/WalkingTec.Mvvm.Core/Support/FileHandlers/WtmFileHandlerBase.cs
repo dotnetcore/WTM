@@ -34,9 +34,9 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             return null;
         }
 
-        public virtual IWtmFile Upload(string fileName, long fileLength, Stream data, string group=null, string subdir = null, string extra = null)
+        public virtual (string path, string handlerInfo) Upload(string fileName, long fileLength, Stream data, string group=null, string subdir = null, string extra=null)
         {
-            return null;
+            return ("", "");
         }
 
     }
