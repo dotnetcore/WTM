@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                     {
                                         Text = x.Text,
                                         Value = x.Value,
-                                        ICon = x.ICon
+                                        Icon = x.Icon
                                     }).ToList()
                                 : new List<ComboSelectListItem>();
 
@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public override void DoEdit(bool updateAllFields = false)
         {
             Entity.Icon = $"{IconFont} {IconFontItem}";
-            FC.Add("Entity.ICon", " ");
+            FC.Add("Entity.Icon", " ");
             List<Guid> guids = new List<Guid>();
             if (Entity.IsInside == false)
             {

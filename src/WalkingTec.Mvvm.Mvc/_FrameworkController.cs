@@ -566,7 +566,7 @@ namespace WalkingTec.Mvvm.Mvc
                 Title = x.PageName,
                 Url = x.Url,
                 Order = x.DisplayOrder,
-                ICon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
+                Icon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
             })
             .OrderBy(x => x.Order)
             .ToList());
@@ -579,7 +579,7 @@ namespace WalkingTec.Mvvm.Mvc
                     Title = x.PageName,
                     Url = x.Url,
                     Order = x.DisplayOrder,
-                    ICon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
+                    Icon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
                 })
                 .OrderBy(x => x.Order)
                 .ToList();
@@ -593,7 +593,7 @@ namespace WalkingTec.Mvvm.Mvc
                             Title = x.PageName,
                             Url = x.Url,
                             Order = x.DisplayOrder,
-                            ICon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
+                            Icon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
                         })
                         .OrderBy(x => x.Order)
                         .ToList();

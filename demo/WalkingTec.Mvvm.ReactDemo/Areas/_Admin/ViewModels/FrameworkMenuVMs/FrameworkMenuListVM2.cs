@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.FolderOnly, 60),
                         this.MakeGridHeader(x => x.IsPublic, 60),
                         this.MakeGridHeader(x => x.DisplayOrder, 60),
-                        this.MakeGridHeader(x => x.ICon, 100),
+                        this.MakeGridHeader(x => x.Icon, 100),
                         this.MakeGridHeader(x => x.Children, 100),
                         this.MakeGridHeader(x=>x.ParentID).SetHide(),
                         this.MakeGridHeaderAction(width: 290)
@@ -66,7 +66,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 DisplayOrder = x.DisplayOrder,
                 ExtraOrder = order++,
                 ParentID = x.ParentId,
-                ICon = x.Icon,
+                Icon = x.Icon,
                 HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
             }).OrderBy(x => x.ExtraOrder).ToList();
 
@@ -99,8 +99,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         [Display(Name = "DisplayOrder")]
         public int? DisplayOrder { get; set; }
 
-        [Display(Name = "ICon")]
-        public string ICon { get; set; }
+        [Display(Name = "Icon")]
+        public string Icon { get; set; }
 
         public bool Allowed { get; set; }
 

@@ -161,7 +161,7 @@ export default {
             "Entity.Icon": {
                 label: <FormattedMessage id='frameworkmenu.Icon' />,
                 rules: [],
-                formItem: <IConId />
+                formItem: <IconId />
             },
             /** 父目录 */
             "Entity.ParentId": {
@@ -201,7 +201,7 @@ export default {
     }
 }
 @BindAll()
-class IConId extends React.Component<any, any> {
+class IconId extends React.Component<any, any> {
     state = {
         // 自定义
         // custom: false,

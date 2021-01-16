@@ -8,11 +8,11 @@ import Action from './action';
 mergeLocales({
     "zh-CN": {
         'frameworkmenu.DisplayOrder': '顺序',
-        'frameworkmenu.ICon': '图标',
+        'frameworkmenu.Icon': '图标',
     },
     "en-US": {
         'frameworkmenu.DisplayOrder': 'DisplayOrder',
-        'frameworkmenu.ICon': 'ICon',
+        'frameworkmenu.Icon': 'Icon',
     }
 });
 // 列配置
@@ -24,7 +24,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
         headerName: "frameworkmenu.DisplayOrder", field: "DisplayOrder",
     },
     {
-        headerName: "frameworkmenu.ICon", field: "ICon", cellRenderer: "renderIcon"
+        headerName: "frameworkmenu.Icon", field: "Icon", cellRenderer: "renderIcon"
     },
 ]
 /**
@@ -51,9 +51,9 @@ export default class extends React.Component<any, any> {
             frameworkComponents={{
                 // 注册一个 图标渲染组件
                 renderIcon: ({ value, data }) => {
-                    if (data.ICon) {
+                    if (data.Icon) {
                         return <div  >
-                            <Icon type={data.ICon} style={{ fontSize: 20 }} />
+                            <Icon type={data.Icon} style={{ fontSize: 20 }} />
                         </div>
                     }
                     return null

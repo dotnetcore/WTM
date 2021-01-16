@@ -1,6 +1,6 @@
 <template>
   <span>
-    <i :class="ICons"></i>
+    <i :class="Icons"></i>
   </span>
 </template>
 
@@ -8,7 +8,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import fonts from "@/assets/font/font.ts";
 /**
- * 图片 ICon
+ * 图片 Icon
  */
 @Component
 export default class EditBox extends Vue {
@@ -17,7 +17,7 @@ export default class EditBox extends Vue {
     @Prop({ type: String, default: "" })
     iconFontClass;
 
-    get ICons() {
+    get Icons() {
       let iconClass = [this.icon];
       if (this.icon) {
           for (const item of fonts) {

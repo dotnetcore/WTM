@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     {
         [Display(Name = "_Admin.PageName")]
         public string PageName { get; set; }
-        [Display(Name = "_Admin.ModuleName")]
+        [Display(Name = "Codegen.ModuleName")]
         public string ModuleName { get; set; }
         [Display(Name = "_Admin.ActionName")]
         public string ActionName { get; set; }

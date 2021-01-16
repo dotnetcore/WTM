@@ -20,10 +20,10 @@ namespace WalkingTec.Mvvm.Core
     public class MenuItem : ListItem
     {
         /// <summary>
-        /// ICon
+        /// Icon
         /// </summary>
         /// <value></value>
-        public string ICon { get; set; }
+        public string Icon { get; set; }
     }
 
     /// <summary>
@@ -47,10 +47,10 @@ namespace WalkingTec.Mvvm.Core
         public string ParentId { get; set; }
 
         /// <summary>
-        /// ICon
+        /// Icon
         /// </summary>
         /// <value></value>
-        public string ICon { get; set; }
+        public string Icon { get; set; }
 
     }
 
@@ -64,7 +64,7 @@ namespace WalkingTec.Mvvm.Core
         public string Text { get; set; }
         public bool Expended { get; set; }
         public string Url { get; set; }
-        public string ICon { get; set; }
+        public string Icon { get; set; }
         public string Tag { get; set; }
         public bool Leaf => Children == null || Children.Count() == 0;
         public bool Selected { get; set; }

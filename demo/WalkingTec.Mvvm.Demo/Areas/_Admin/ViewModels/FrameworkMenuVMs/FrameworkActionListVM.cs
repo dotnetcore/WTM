@@ -95,7 +95,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     {
         public Guid? ModuleID { get; set; }
 
-        [Display(Name = "_Admin.ModuleName")]
+        [Display(Name = "Codegen.ModuleName")]
         public string ModuleName { get; set; }
         [Display(Name = "_Admin.ActionName")]
         public string ActionName { get; set; }

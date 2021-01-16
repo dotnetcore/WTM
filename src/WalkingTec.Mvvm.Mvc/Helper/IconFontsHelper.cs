@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     Text = x,
                     Value = x,
-                    ICon = $"{key} {x}"
+                    Icon = $"{key} {x}"
                 }).ToList());
             }
         }

@@ -17,7 +17,7 @@ import CreateForm from "@/components/page/CreateForm";
 // string 转 函数式组件
 import RenderView from "@/components/page/RenderView";
 // icon
-import ICon from "@/components/page/ICon/index.vue";
+import Icon from "@/components/page/Icon/index.vue";
 
 export default [
   { key: "Card", value: Card },
@@ -29,5 +29,5 @@ export default [
   { key: "WtmFlexBox", value: FlexBox },
   { key: "WtmCreateForm", value: CreateForm },
   { key: "WtmRenderView", value: RenderView },
-  { key: "WtmIcon", value: ICon }
+  { key: "WtmIcon", value: Icon }
 ];

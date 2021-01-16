@@ -1,15 +1,15 @@
 <template>
     <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
         <wtm-create-form :ref="refName" :status="status" :options="formOptions" :sourceFormData="formData">
-            <template #ICon="data">
+            <template #Icon="data">
                 <wtm-icon v-if="data.status === $actionType.detail" :icon="data.data" />
                 <template v-else>
-                    <el-select v-model="formData.Entity.IConType" clearable class="icon-select-type" @change="formData.Entity.ICon = ''">
+                    <el-select v-model="formData.Entity.IconType" clearable class="icon-select-type" @change="formData.Entity.Icon = ''">
                         <el-option v-for="(item, index) in iconList" :key="index" :label="item.name" :value="item.name"></el-option>
                     </el-select>
-                    <el-select v-model="formData.Entity.ICon" filterable clearable>
+                    <el-select v-model="formData.Entity.Icon" filterable clearable>
                         <template v-for="fontItem in iconList">
-                            <el-option v-if="formData.Entity.IConType === fontItem.name || !formData.Entity.IConType" v-for="(item, index) in fontItem.icons" :key="fontItem.name + index" :label="item" :value="item">
+                            <el-option v-if="formData.Entity.IconType === fontItem.name || !formData.Entity.IconType" v-for="(item, index) in fontItem.icons" :key="fontItem.name + index" :label="item" :value="item">
                                 <span style="float: left">{{ item }}</span>
                                 <span style="float: right; font-size: 14px"><i :class="[fontItem.class, item]"></i></span>
                             </el-option>
@@ -54,8 +54,8 @@ export default class Index extends Vue {
             ShowOnMenu: true,
             IsPublic: false,
             DisplayOrder: 0,
-            IConType: "",
-            ICon: ""
+            IconType: "",
+            Icon: ""
         }
     };
 
@@ -152,11 +152,11 @@ export default class Index extends Vue {
                         trigger: "blur"
                     }
                 },
-                "Entity.ICon": {
+                "Entity.Icon": {
                     type: "wtmSlot",
-                    label: this.$t("frameworkmenu.ICon"),
+                    label: this.$t("frameworkmenu.Icon"),
                     span: 12,
-                    slotKey: "ICon"
+                    slotKey: "Icon"
                 }
             }
         };
@@ -170,9 +170,9 @@ export default class Index extends Vue {
         if (data) {
             data.SelectedModule && this.getActionsByModel({ ModelName: data.SelectedModule });
             const icon = _.findLast(fonts, item =>
-                item.icons.includes(data.Entity.ICon)
+                item.icons.includes(data.Entity.Icon)
             );
-            this.formData.Entity.IConType = icon ? icon.name : "";
+            this.formData.Entity.IconType = icon ? icon.name : "";
         }
     }
     /**

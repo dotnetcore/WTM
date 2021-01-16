@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Mvc.Model
         /// </summary>
         /// <value></value>
         [JsonPropertyName("icon")]
-        public string ICon { get; set; }
+        public string Icon { get; set; }
 
         /// <summary>
         /// 是否展开节点

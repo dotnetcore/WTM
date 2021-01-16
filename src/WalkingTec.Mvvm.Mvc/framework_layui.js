@@ -621,7 +621,7 @@ window.ff = {
                     if (data.Data !== undefined && data.Data !== null) {
                         for (i = 0; i < data.Data.length; i++) {
                             item = data.Data[i];
-                            var icon = item.ICon !== undefined && item.ICon != null && item.ICon.length > 0 ? ' icon="' + item.ICon + '"' : '';
+                            var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
                             if (item.Selected === true) {
                                 $('#' + target).append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
                             }
@@ -730,7 +730,7 @@ window.ff = {
                         if (data.Data !== undefined && data.Data !== null) {
                             for (i = 0; i < data.Data.length; i++) {
                                 item = data.Data[i];
-                                var icon = item.ICon !== undefined && item.ICon != null && item.ICon.length > 0 ? ' icon="' + item.ICon + '"' : '';
+                                var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
                                 if (item.Selected === true) {
                                     target.append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
                                 }

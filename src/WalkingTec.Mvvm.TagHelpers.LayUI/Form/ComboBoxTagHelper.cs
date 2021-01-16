@@ -209,7 +209,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 foreach (var item in listItems)
                 {
-                    contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")}>{item.Text}</option>");
+                    contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")}>{item.Text}</option>");
                 }
 
                 // 添加默认选中项
@@ -229,11 +229,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             output.PostElement.AppendHtml($"<input name='{Field.Name}' value='{item.Value}' text='{item.Text}' type='hidden' />");
                         }
-                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} selected>{item.Text}</option>");
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")} selected>{item.Text}</option>");
                     }
                     else
                     {
-                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} {(Disabled && listItems.Count > 1 && Field.Model != null ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")} {(Disabled && listItems.Count > 1 && Field.Model != null ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
                     }
                 }
             }

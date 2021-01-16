@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         [Display(Name = "ParentFolder")]
         public Guid? ParentID { get; set; }
         public List<ComboSelectListItem> AllParents { get; set; }
-        [Display(Name = "ICon")]
-        public string ICon { get; set; }
+        [Display(Name = "Icon")]
+        public string Icon { get; set; }
     }
 }

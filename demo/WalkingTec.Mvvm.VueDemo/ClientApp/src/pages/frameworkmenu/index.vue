@@ -8,8 +8,8 @@
         </wtm-but-box>
         <!-- 列表 -->
         <wtm-table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :data="treeData" :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
-            <template #ICon="rowData">
-                <wtm-icon :icon="rowData.row.ICon" />
+            <template #Icon="rowData">
+                <wtm-icon :icon="rowData.row.Icon" />
             </template>
         </wtm-table-box>
         <!-- 弹出框 -->

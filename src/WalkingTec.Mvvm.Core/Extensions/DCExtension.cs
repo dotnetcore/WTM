@@ -95,9 +95,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 urlBind = Expression.Bind(urlMI, Expression.Constant(string.Empty));
             }
 
-            //绑定icon字段，形成类似 ICon = iconField 的表达式
+            //绑定icon字段，形成类似 Icon = iconField 的表达式
             MemberBinding iconBind = null;
-            var iconMI = typeof(TreeSelectListItem).GetMember("ICon")[0];
+            var iconMI = typeof(TreeSelectListItem).GetMember("Icon")[0];
             if (iconField != null)
             {
                 iconBind = Expression.Bind(iconMI, cp.Change(iconField.Body, pe));

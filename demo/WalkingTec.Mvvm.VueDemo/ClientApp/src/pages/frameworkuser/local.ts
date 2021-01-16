@@ -30,7 +30,7 @@ export default {
         frameworkuser: {
             ITCode: "ITCode",
             Name: "Name",
-            Gender: "Sex",
+            Gender: "Gender",
             PhotoId: "Photo",
             IsValid: "IsValid",
             RoleName_view: "Roles",

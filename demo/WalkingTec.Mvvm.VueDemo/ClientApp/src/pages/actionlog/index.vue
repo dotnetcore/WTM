@@ -41,7 +41,7 @@ export default class Index extends Vue {
             formItem: {
                 ITCode: {
                     type: "input",
-                    label: "ITCode"
+                    label: this.$t("actionlog.ITCode")
                 },
                 ActionUrl: {
                     type: "input",
