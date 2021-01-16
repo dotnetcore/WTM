@@ -350,7 +350,9 @@ export class Request {
                 return lodash.includes([null, undefined, "", "null", "undefined"], item) ? null : item
             })
         }
-        body = toNull(body)
+        if (lodash.isObject(body) && !lodash.isArray(body)) {
+            body = toNull(body)
+        }
         if (type === "url") {
             let param = "";
             if (typeof body != 'string') {
