@@ -217,7 +217,7 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 xssfworkbook = new XSSFWorkbook(file.DataStream);
-
+                file.DataStream.Dispose();
                 Template.InitExcelData();
                 Template.InitCustomFormat();
 
@@ -1210,7 +1210,7 @@ namespace WalkingTec.Mvvm.Core
                 var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                 var fa = fp.GetFile(UploadFileId, true, DC);
                 xssfworkbook = new XSSFWorkbook(fa.DataStream);
-
+                fa.DataStream.Dispose();
                 var propetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
                 List<ExcelPropety> excelPropetys = new List<ExcelPropety>();
                 for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)

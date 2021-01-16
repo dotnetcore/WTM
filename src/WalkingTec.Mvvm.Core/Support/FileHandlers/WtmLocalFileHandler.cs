@@ -13,7 +13,6 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     [Display(Name = "local")]
     public class WtmLocalFileHandler : WtmFileHandlerBase
     {
-        private static string _modeName = "local";
 
         public WtmLocalFileHandler(Configs config, IDataContext dc) : base(config, dc)
         {
@@ -75,6 +74,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             {
                 data.CopyTo(fileStream);
             }
+            data.Dispose();
             return (path, "");
         }
 

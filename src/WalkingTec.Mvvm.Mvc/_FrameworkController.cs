@@ -401,6 +401,7 @@ namespace WalkingTec.Mvvm.Mvc
             else
             {
                 rv.CopyToAsync(Response.Body);
+                rv.Dispose();
                 return new EmptyResult();
             }
         }
@@ -408,7 +409,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("ViewFile")]
         public IActionResult ViewFile([FromServices] WtmFileProvider fp, string id, string width, string _DONOT_USE_CS = "default")
         {
-            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(_DONOT_USE_CS));
+            var file = fp.GetFile(id, false, ConfigInfo.CreateDC(_DONOT_USE_CS));
             string html = string.Empty;
             if (file.FileExt.ToLower() == "pdf")
             {

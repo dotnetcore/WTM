@@ -30,7 +30,7 @@ mergeLocales({
         'frameworkmenu.IsInside.0': '内部地址',
         'frameworkmenu.IsInside.1': '外部地址',
         'frameworkmenu.Url': 'Url',
-        'frameworkmenu.ICon': '图标',
+        'frameworkmenu.Icon': '图标',
         'frameworkmenu.ParentId': '父目录',
     },
     "en-US": {
@@ -45,7 +45,7 @@ mergeLocales({
         'frameworkmenu.IsInside.0': 'Inside Url',
         'frameworkmenu.IsInside.1': 'Ourside Url',
         'frameworkmenu.Url': 'Url',
-        'frameworkmenu.ICon': 'Icon',
+        'frameworkmenu.Icon': 'Icon',
         'frameworkmenu.ParentId': 'ParentFolder',
     }
 });

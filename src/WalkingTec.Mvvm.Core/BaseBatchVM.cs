@@ -145,9 +145,19 @@ namespace WalkingTec.Mvvm.Core
 
                         foreach (var f in fa)
                         {
-                            if (f.GetValue(Entity) is FileAttachment file)
+                            if (f.PropertyType == typeof(FileAttachment))
                             {
-                                fileids.Add(file.ID);
+                                string fidfield =  DC.GetFKName2(modelType, f.Name);
+                                var fidpro = pros.Where(x => x.Name == fidfield).FirstOrDefault();
+                                var idresult = fidpro.GetValue(Entity);
+                                if(idresult != null)
+                                {
+                                    Guid fid = Guid.Empty;
+                                    if(Guid.TryParse(idresult.ToString(), out fid) == true)
+                                    {
+                                        fileids.Add(fid);
+                                    }
+                                }
                             }
                             f.SetValue(Entity, null);
                         }

@@ -1,4 +1,4 @@
-﻿import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AgGrid } from 'components/dataView';
 import { mergeLocales } from 'locale';
 import React from 'react';
@@ -9,7 +9,7 @@ mergeLocales({
         'actionlog.LogType': '类型',
         'actionlog.ModuleName': '模块',
         'actionlog.ActionName': '动作',
-        'actionlog.ITCode': 'ITCode',
+        'actionlog.ITCode': '账号',
         'actionlog.ActionUrl': 'Url',
         'actionlog.ActionTime': '操作时间',
         'actionlog.Duration': '时长',
@@ -20,7 +20,7 @@ mergeLocales({
         'actionlog.LogType': 'LogType',
         'actionlog.ModuleName': 'Module',
         'actionlog.ActionName': 'Action',
-        'actionlog.ITCode': 'ITCode',
+        'actionlog.ITCode': 'Account',
         'actionlog.ActionUrl': 'Url',
         'actionlog.ActionTime': 'ActionTime',
         'actionlog.Duration': 'Duration',

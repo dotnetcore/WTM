@@ -82,6 +82,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return BadRequest(Localizer["Sys.FileNotFound"]);
             }
             file.DataStream?.CopyToAsync(Response.Body);
+            file.DataStream.Dispose();
             return new EmptyResult();
         }
 
