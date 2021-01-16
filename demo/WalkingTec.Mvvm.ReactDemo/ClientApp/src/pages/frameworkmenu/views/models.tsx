@@ -158,8 +158,8 @@ export default {
                 rules: [],
                 formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkmenu.Url') })} />
             },
-            "Entity.ICon": {
-                label: <FormattedMessage id='frameworkmenu.ICon' />,
+            "Entity.Icon": {
+                label: <FormattedMessage id='frameworkmenu.Icon' />,
                 rules: [],
                 formItem: <IConId />
             },
