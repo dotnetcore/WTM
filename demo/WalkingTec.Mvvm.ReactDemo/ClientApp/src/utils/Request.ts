@@ -13,6 +13,7 @@ import { interval, Observable, of, TimeoutError } from "rxjs";
 import { ajax, AjaxError, AjaxResponse, AjaxRequest } from "rxjs/ajax";
 import { catchError, filter, map, timeout } from "rxjs/operators";
 import { getLocalesValue } from "locale";
+import { unwatchFile } from "fs";
 interface Preview {
     data: any
     message: string
@@ -341,7 +342,15 @@ export class Request {
         type: "url" | "body" = "url",
         headers?: Object
     ): any {
-
+        const toNull = (attribute) => {
+            return lodash.mapValues(attribute, item => {
+                if (lodash.isObject(item)) {
+                    return lodash.isArray(item) ? item : toNull(item)
+                }
+                return lodash.includes([null, undefined, "", "null", "undefined"], item) ? null : item
+            })
+        }
+        body = toNull(body)
         if (type === "url") {
             let param = "";
             if (typeof body != 'string') {

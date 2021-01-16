@@ -13,19 +13,19 @@ import { Request } from "./Request";
 /** 文件服务器 */
 const files = {
     fileUpload: {
-        src: "/api/_file/upload",
+        url: "/api/_file/upload",
         method: "post"
     },
     fileDelete: {
-        src: "/api/_file/deleteFile/{id}",
+        url: "/api/_file/DeletedFile/{id}",
         method: "get"
     },
     fileGet: {
-        src: "/api/_file/getFile",
+        url: "/api/_file/getFile",
         method: "get"
     },
     fileDownload: {
-        src: "/api/_file/downloadFile",
+        url: "/api/_file/downloadFile",
         method: "get"
     }
 };
@@ -41,15 +41,13 @@ export class RequestFiles extends Request {
     /**
      * 文件服务器地址
      */
-    FileTarget = Request.compatibleUrl(this.target, files.fileUpload.src);
+    FileTarget = Request.compatibleUrl(this.target, files.fileUpload.url);
     /**
      * 删除文件
      * @param id
      */
     async onFileDelete(id) {
-        const res = await this.ajax({ ...files.fileDelete, body: { id } });
-        if (res) {
-        }
+        const res = await this.ajax({ ...files.fileDelete, body: { id } }).toPromise();
         return res;
     }
     /**
@@ -58,7 +56,7 @@ export class RequestFiles extends Request {
      */
     onFileUrl(id, target = this.target) {
         if (id) {
-            const src = files.fileGet.src;
+            const src = files.fileGet.url;
             return `${Request.compatibleUrl(target, src)}/${id}`;
         }
     }
@@ -68,7 +66,7 @@ export class RequestFiles extends Request {
      */
     onFileDownload(id, target = this.target) {
         if (id) {
-            const src = files.fileDownload.src;
+            const src = files.fileDownload.url;
             return `${Request.compatibleUrl(target, src)}/${id}`;
         }
     }
