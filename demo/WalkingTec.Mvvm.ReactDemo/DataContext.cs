@@ -31,7 +31,15 @@ namespace WalkingTec.Mvvm.ReactDemo
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {
             var state = await base.DataInit(allModules, IsSpa);
-            if (state == true)
+            bool emptydb = false;
+
+            try
+            {
+                emptydb = Set<FrameworkUser>().Count() == 0 && Set<FrameworkUserRole>().Count() == 0;
+            }
+            catch { }
+
+            if (state == true || emptydb == true)
             {
                 //when state is true, means it's the first time EF create database, do data init here
                 //当state是true的时候，表示这是第一次创建数据库，可以在这里进行数据初始化
