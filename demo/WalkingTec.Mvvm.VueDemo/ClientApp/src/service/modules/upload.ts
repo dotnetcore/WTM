@@ -12,8 +12,8 @@ const fileApi = "/api/_file/downloadFile/";
 
 // 删除file
 const deletedFile = {
-    url: config.headerApi + "/api/_file/DeletedFile/{id}",
-    method: "post",
+    url: config.headerApi + "/_file/DeletedFile/{id}",
+    method: "get",
     blockError: true
 };;
 
