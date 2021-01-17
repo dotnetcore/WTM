@@ -87,6 +87,19 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public ActionResult Edit(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
+            vm.IconSelectItems = !string.IsNullOrEmpty(vm.IconFont) && IconFontsHelper
+                    .IconFontDicItems
+                    .ContainsKey(vm.IconFont)
+                    ? IconFontsHelper
+                        .IconFontDicItems[vm.IconFont]
+                        .Select(x => new ComboSelectListItem()
+                        {
+                            Text = x.Text,
+                            Value = x.Value,
+                            Icon = x.Icon
+                        }).ToList()
+                    : new List<ComboSelectListItem>();
+
             return PartialView(vm);
         }
 
@@ -96,6 +109,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                vm.IconSelectItems = !string.IsNullOrEmpty(vm.IconFont) && IconFontsHelper
+                        .IconFontDicItems
+                        .ContainsKey(vm.IconFont)
+                        ? IconFontsHelper
+                            .IconFontDicItems[vm.IconFont]
+                            .Select(x => new ComboSelectListItem()
+                            {
+                                Text = x.Text,
+                                Value = x.Value,
+                                Icon = x.Icon
+                            }).ToList()
+                        : new List<ComboSelectListItem>();
                 return PartialView(vm);
             }
             else

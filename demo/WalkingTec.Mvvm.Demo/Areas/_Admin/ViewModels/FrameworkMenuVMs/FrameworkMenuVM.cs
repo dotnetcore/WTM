@@ -8,7 +8,6 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
-using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
@@ -58,18 +57,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 IconFont = res[0];
                 IconFontItem = res[1];
             }
-            IconSelectItems = !string.IsNullOrEmpty(IconFont) && IconFontsHelper
-                                .IconFontDicItems
-                                .ContainsKey(IconFont)
-                                ? IconFontsHelper
-                                    .IconFontDicItems[IconFont]
-                                    .Select(x => new ComboSelectListItem()
-                                    {
-                                        Text = x.Text,
-                                        Value = x.Value,
-                                        Icon = x.Icon
-                                    }).ToList()
-                                : new List<ComboSelectListItem>();
 
             SelectedRolesCodes.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToList());
 

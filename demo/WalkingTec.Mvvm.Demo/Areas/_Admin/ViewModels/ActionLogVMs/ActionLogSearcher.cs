@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
