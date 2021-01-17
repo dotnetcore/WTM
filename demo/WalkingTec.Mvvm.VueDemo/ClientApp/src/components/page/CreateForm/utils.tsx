@@ -149,7 +149,7 @@ export default class Utils {
     const compData = {
       directives: [...(option.directives || []), vEdit(_t, option.children)],
       on: translateEvents(option.events, _t),
-      props: { ...displayProp(_t), ...props },
+      props: { ...displayProp(_t), clearable: true, ...props },
       style,
     };
     // mapkey && 多选

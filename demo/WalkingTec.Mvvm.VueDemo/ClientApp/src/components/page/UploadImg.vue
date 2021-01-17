@@ -24,6 +24,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { actionApi, fileApi } from "@/service/modules/upload";
+import UploadModule from "@/store/modules/upload";
 
 @Component
 export default class UploadImg extends Vue {
@@ -64,6 +65,7 @@ export default class UploadImg extends Vue {
     }
 
     handleRemove() {
+        UploadModule.dispatch('deletedFile', {id: this.imgId})
         this.$emit("onBackImgId", "");
     }
     handlePictureCardPreview() {

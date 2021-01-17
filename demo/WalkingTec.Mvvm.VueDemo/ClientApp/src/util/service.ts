@@ -36,6 +36,8 @@ class requestBase {
           item !== ""
         ) {
           data[key] = _.isObject(item) ? this.requestData(item) : item;
+        } else {
+          data[key] = null;
         }
       }
     } else {
@@ -156,7 +158,6 @@ const _request = (option, serverHost?) => {
     }
   };
   const data = rBase.requestData(option.data);
-  console.log('data', data)
   if (["POST", "PUT"].includes(option.method.toUpperCase())) {
     axiosReq.data = data;
   } else {
@@ -180,7 +181,9 @@ const _request = (option, serverHost?) => {
       return res.data;
     })
     .catch(error => {
-      rBase.requestError(error);
+      if (!option.blockError) {
+        rBase.requestError(error);
+      }
       throw error;
     });
 };
