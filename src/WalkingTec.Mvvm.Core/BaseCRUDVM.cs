@@ -460,9 +460,10 @@ namespace WalkingTec.Mvvm.Core
                             List<string> setnames = new List<string>();
                             foreach (var field in FC.Keys)
                             {
-                                if (field.StartsWith("Entity." + pro.Name + "[0]."))
+                                var f = field.ToLower();
+                                if (f.StartsWith("entity." + pro.Name.ToLower() + "[0]."))
                                 {
-                                    string name = field.Replace("Entity." + pro.Name + "[0].", "");
+                                    string name = f.Replace("entity." + pro.Name.ToLower() + "[0].", "");
                                     setnames.Add(name);
                                 }
                             }
@@ -480,7 +481,7 @@ namespace WalkingTec.Mvvm.Core
                                         var newitemType = item.GetType();
                                         foreach (var itempro in itemPros)
                                         {
-                                            if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && (updateAllFields == true || setnames.Contains(itempro.Name)))
+                                            if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && (updateAllFields == true || setnames.Contains(itempro.Name.ToLower())))
                                             {
                                                 var notmapped = itempro.GetCustomAttribute<NotMappedAttribute>();
                                                 if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false)
@@ -587,12 +588,13 @@ namespace WalkingTec.Mvvm.Core
             {
                 foreach (var field in FC.Keys)
                 {
-                    if (field.StartsWith("Entity.") && !field.Contains("["))
+                    var f = field.ToLower();
+                    if (f.StartsWith("entity.") && !f.Contains("["))
                     {
-                        string name = field.Replace("Entity.", "");
+                        string name = f.Replace("entity.", "");
                         try
                         {
-                            DC.UpdateProperty(Entity, name);
+                            DC.UpdateProperty(Entity, pros.Where(x=>x.Name.ToLower() == name).Select(x=>x.Name).FirstOrDefault());
                         }
                         catch (Exception)
                         {
