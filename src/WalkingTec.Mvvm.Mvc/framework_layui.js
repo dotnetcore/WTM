@@ -178,7 +178,7 @@ window.ff = {
                             setTimeout(function () {
                                 $('#LAY_app_body', child.document).html(data);
                                 $(child.document).attr("title", title);
-                            }, 100);
+                            }, 500);
                         });
                     }
                     layer.close(index);
