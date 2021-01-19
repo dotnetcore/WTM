@@ -8,4 +8,22 @@
         </LayoutView>
     </NotFound>
 </Router>
-<AntContainer />   
+@code{
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="firstRender"></param>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("$.loading");
+        }
+    }
+
+}

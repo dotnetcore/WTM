@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.ActionName")]
         public string ActionName { get; set; }
 
-        [Display(Name = "_Codegen.ModuleName")]
+        [Display(Name = "Codegen.ModuleName")]
         public string ModuleName { get; set; }
 
         [Display(Name = "_Admin.FolderOnly")]

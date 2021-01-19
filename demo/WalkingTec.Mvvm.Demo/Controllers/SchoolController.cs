@@ -12,7 +12,6 @@ using WalkingTec.Mvvm.Mvc.Binders;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("学校管理（单表）")]
     public class SchoolController : BaseController
     {
         #region 搜索
