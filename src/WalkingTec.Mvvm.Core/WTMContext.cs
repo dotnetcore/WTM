@@ -190,22 +190,9 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
         }
-
-        private IStringLocalizerFactory _stringLocalizerFactory;
-        private IStringLocalizer _localizer;
         private ILoggerFactory _loggerFactory;
-        public IStringLocalizer Localizer
-        {
-            get
-            {
-                if (_localizer == null && _stringLocalizerFactory != null)
-                {
-                    var programtype = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-                    _localizer = _stringLocalizerFactory.Create(programtype);
-                }
-                return _localizer ?? WalkingTec.Mvvm.Core.CoreProgram._localizer;
-            }
-        }
+
+        public IStringLocalizer Localizer { get; set; }
 
         /// <summary>
         /// 从数据库读取用户
@@ -250,12 +237,12 @@ namespace WalkingTec.Mvvm.Core
 
         protected ILogger<ActionLog> Logger { get; set; }
 
-        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null)
+        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizer stringLocalizer = null, ILoggerFactory loggerFactory = null)
         {
             _configInfo = _config?.CurrentValue ?? new Configs();
             _globaInfo = _gd ?? new GlobalData();
             _httpContext = _http?.HttpContext;
-            _stringLocalizerFactory = stringLocalizer;
+            Localizer = stringLocalizer;
             _loggerFactory = loggerFactory;
             this.Logger = loggerFactory?.CreateLogger<ActionLog>();
             if (_httpContext == null)

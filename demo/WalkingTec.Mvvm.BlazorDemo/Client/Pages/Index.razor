@@ -1,6 +1,14 @@
 @page "/"
+@using WalkingTec.Mvvm.Core;
+@inject IStringLocalizer Localizer;
 
-<h1>Hello, world!</h1>
+<EditorForm Model="@Model">
+</EditorForm>
 
-Welcome to your new app.123123
-<Button Type="primary">Hello World!</Button>
+<div>
+    test: @Localizer["_Admin.Account"]
+</div>
+
+@code{
+    FrameworkUser Model = new FrameworkUser();
+}

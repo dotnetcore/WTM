@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Json;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
+using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
@@ -33,8 +35,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Configs>(ConfigRoot);
-            // services.AddControllersWithViews();
             services.AddDistributedMemoryCache();
             services.AddWtmSession(3600);
             services.AddWtmCrossDomain();
@@ -45,36 +45,27 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
 
             services.AddMvc(options =>
             {
-                // ModelBinderProviders
-                options.ModelBinderProviders.Insert(0, new StringBinderProvider());
-
-                // Filters
-                options.Filters.Add(new DataContextFilter());
-                options.Filters.Add(new PrivilegeFilter());
-                options.Filters.Add(new FrameworkFilter());
-                options.EnableEndpointRouting = true;
+                options.UseWtmMvcOptions();
             })
             .AddJsonOptions(options => {
-                options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
-                options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
-                options.JsonSerializerOptions.Converters.Add(new BodyConverter());
+                options.UseWtmJsonOptions();
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
             {
-                options.SuppressModelStateInvalidFilter = true;
-                options.InvalidModelStateResponseFactory = (a) =>
-                {
-                    return new BadRequestObjectResult(a.ModelState.GetErrorJson());
-                };
+                options.UseWtmApiOptions();
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddWtmDataAnnotationsLocalization(typeof(Program));
-            //services.AddScoped<IDataContext>(x => Configuration.Get<Configs>().ConnectionStrings[1].CreateDC());
-            services.AddWtmContext(ConfigRoot);
 
-            //services.AddControllersWithViews();
-            //services.AddRazorPages();
+            services.AddWtmContext(ConfigRoot, (options) => {
+                options.DataPrivileges = DataPrivilegeSettings();
+                options.CsSelector = CSSelector;
+                options.FileSubDirSelector = SubDirSelector;
+                options.ReloadUserFunc = ReloadUser;
+                options.ResourceType = typeof(Shared.Program);
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -146,20 +137,61 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             //});
         }
 
+        /// <summary>
+        /// Wtm will call this function to dynamiclly set connection string
+        /// 框架会调用这个函数来动态设定每次访问需要链接的数据库
+        /// </summary>
+        /// <param name="context">ActionContext</param>
+        /// <returns>Connection string key name</returns>
         public string CSSelector(ActionExecutingContext context)
         {
             //To override the default logic of choosing connection string,
-            //change this function to return different connection string key            
+            //change this function to return different connection string key
+            //根据context返回不同的连接字符串的名称
             return null;
         }
 
+        /// <summary>
+        /// Set data privileges that system supports
+        /// 设置系统支持的数据权限
+        /// </summary>
+        /// <returns>data privileges list</returns>
         public List<IDataPrivilege> DataPrivilegeSettings()
         {
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
-            //pris.Add(new DataPrivilegeInfo<typea>("aaaPrivilege", m => m.Name));
-            //pris.Add(new DataPrivilegeInfo<typeb>("bbbPrivilege", m => m.Name));
+            //指定哪些模型需要数据权限
+            pris.Add(new DataPrivilegeInfo<City>("城市权限", m => m.Name));
+            pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
+            pris.Add(new DataPrivilegeInfo<Major>("专业权限", m => m.MajorName));
             return pris;
+        }
+
+        /// <summary>
+        /// Set sub directory of uploaded files
+        /// 动态设置上传文件的子目录
+        /// </summary>
+        /// <param name="fh">IWtmFileHandler</param>
+        /// <returns>subdir name</returns>
+        public string SubDirSelector(IWtmFileHandler fh)
+        {
+            if (fh is WtmLocalFileHandler)
+            {
+                return DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Custom Reload user process when cache is not available
+        /// 设置自定义的方法重新读取用户信息，这个方法会在用户缓存失效的时候调用
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public LoginUserInfo ReloadUser(WTMContext context, string account)
+        {
+            return null;
         }
 
     }

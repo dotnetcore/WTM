@@ -463,6 +463,20 @@ namespace WalkingTec.Mvvm.Mvc
             DataContextFilter._csfunc = op.CsSelector;
             WtmFileProvider._subDirFunc = op.FileSubDirSelector;
             WTMContext.ReloadUserFunc = op.ReloadUserFunc;
+            if(op.ResourceType == null)
+            {
+                op.ResourceType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+            }
+            var programLocalizer = new ResourceManagerStringLocalizerFactory(
+                                        Options.Create(
+                                            new LocalizationOptions
+                                            {
+                                                ResourcesPath = "Resources"
+                                            })
+                                            , new Microsoft.Extensions.Logging.LoggerFactory()
+                                        )
+                                        .Create(op.ResourceType);
+            services.TryAddSingleton<IStringLocalizer>(programLocalizer);
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
             services.AddScoped<WtmFileProvider>();
@@ -654,6 +668,7 @@ namespace WalkingTec.Mvvm.Mvc
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
             var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
+            var programLocalizer = app.ApplicationServices.GetRequiredService<IStringLocalizer>();
             //获取所有程序集
             gd.AllAssembly = Utils.GetAllAssembly();
             //var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
@@ -673,17 +688,7 @@ namespace WalkingTec.Mvvm.Mvc
             //}
 
             //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
-            var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
             var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
-            var programLocalizer = new ResourceManagerStringLocalizerFactory(
-                                        Options.Create(
-                                            new LocalizationOptions
-                                            {
-                                                ResourcesPath = "Resources"
-                                            })
-                                            , new Microsoft.Extensions.Logging.LoggerFactory()
-                                        )
-                                        .Create(programType);
             coredll.GetType("WalkingTec.Mvvm.Core.CoreProgram").GetProperty("_localizer").SetValue(null, programLocalizer);
 
 
