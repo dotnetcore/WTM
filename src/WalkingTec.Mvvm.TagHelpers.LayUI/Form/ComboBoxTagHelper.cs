@@ -199,7 +199,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             Text = item?.ToString(),
                             Value = item?.ToString(),
-                            Selected = selectVal.Contains(item?.ToString())
+                            Selected = selectVal.Contains(item?.ToString().ToLower())
                         });
                     }
                 }
