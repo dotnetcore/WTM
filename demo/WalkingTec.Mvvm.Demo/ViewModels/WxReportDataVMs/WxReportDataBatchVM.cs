@@ -25,10 +25,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
     /// </summary>
     public class WxReportData_BatchEdit : BaseVM
     {
-        [Display(Name = "数据类别")]
-        public ReportDataType? DataType { get; set; }
-        [Display(Name = "加油1:升")]
-        public Double? JiaYou1 { get; set; }
         [Display(Name = "扩展字段")]
         public String Extend04 { get; set; }
         [Display(Name = "扩展字段")]
@@ -39,8 +35,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
         public Int32? Extend08 { get; set; }
         [Display(Name = "扩展字段")]
         public Double? Extend09 { get; set; }
-        [Display(Name = "扩展字段")]
-        public Double? Extend10 { get; set; }
 
         protected override void InitVM()
         {

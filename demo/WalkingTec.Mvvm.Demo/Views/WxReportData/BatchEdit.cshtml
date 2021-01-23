@@ -4,14 +4,11 @@
 <wt:form vm="@Model">
     <div style="margin-bottom:10px">@Localizer["Sys.BatchEditConfirm"] </div>
 <wt:row items-per-row="ItemsPerRowEnum.Two">
-<wt:combobox field="LinkedVM.DataType" />
-<wt:textbox field="LinkedVM.JiaYou1" />
 <wt:textbox field="LinkedVM.Extend04" />
 <wt:textbox field="LinkedVM.Extend05" />
 <wt:textbox field="LinkedVM.Extend07" />
 <wt:textbox field="LinkedVM.Extend08" />
 <wt:textbox field="LinkedVM.Extend09" />
-<wt:textbox field="LinkedVM.Extend10" />
 </wt:row>
     <wt:hidden field="Ids" />
     <wt:grid vm="ListVM" use-local-data="true" height="300"  hidden-checkbox="true" hidden-panel="true"/>

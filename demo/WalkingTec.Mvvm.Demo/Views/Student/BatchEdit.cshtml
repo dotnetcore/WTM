@@ -4,17 +4,10 @@
 <wt:form vm="@Model">
     <div style="margin-bottom:10px">@Localizer["Sys.BatchEditConfirm"] </div>
 <wt:row items-per-row="ItemsPerRowEnum.Two">
-<wt:textbox field="LinkedVM.ID" />
 <wt:textbox field="LinkedVM.Password" />
-<wt:textbox field="LinkedVM.Email" />
-<wt:textbox field="LinkedVM.Name" />
 <wt:combobox field="LinkedVM.Sex" />
-<wt:textbox field="LinkedVM.CellPhone" />
-<wt:textbox field="LinkedVM.Address" />
 <wt:textbox field="LinkedVM.ZipCode" />
 
-<wt:switch field="LinkedVM.IsValid" />
-<wt:datetime field="LinkedVM.EnRollDate" />
 <wt:checkbox field="LinkedVM.SelectedStudentMajorIDs" items="LinkedVM.AllStudentMajors"/>
 </wt:row>
     <wt:hidden field="Ids" />

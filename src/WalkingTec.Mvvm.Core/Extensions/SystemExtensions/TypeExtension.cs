@@ -255,7 +255,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     if (val != "")
                     {
-                        rv.Add(key, val);
+                        if (rv.ContainsKey(key) == false)
+                        {
+                            rv.Add(key, val);
+                        }
                     }
                 }
             }

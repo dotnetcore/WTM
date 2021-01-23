@@ -833,55 +833,55 @@ namespace WalkingTec.Mvvm.Core
             if (ByPassBaseValidation == false)
             {
                 base.Validate();
-                //如果msd是BasicMSD，则认为他是手动创建的，也就是说并没有走asp.net core默认的模型验证
-                //那么手动验证模型
-                if (Wtm?.MSD is BasicMSD)
-                {
-                    var valContext = new ValidationContext(this.Entity);
-                    List<ValidationResult> error = new List<ValidationResult>();
-                    if (!Validator.TryValidateObject(Entity, valContext, error, true))
-                    {
-                        foreach (var item in error)
-                        {
-                            string key = item.MemberNames.FirstOrDefault();
-                            if (MSD.Keys.Contains(key) == false)
-                            {
-                                MSD.AddModelError($"Entity.{key}", item.ErrorMessage);
-                            }
-                        }
-                    }
-                    var list = typeof(TModel).GetAllProperties().Where(x => x.PropertyType.IsListOf<TopBasePoco>());
-                    foreach (var item in list)
-                    {
-                        var it = item.GetValue(Entity) as IEnumerable;
-                        if(it == null)
-                        {
-                            continue;
-                        }
-                        var contextset = false;
-                        foreach (var e in it)
-                        {
-                            if(contextset == false)
-                            {
-                                valContext = new ValidationContext(e);
-                                contextset = true;
-                            }
+                ////如果msd是BasicMSD，则认为他是手动创建的，也就是说并没有走asp.net core默认的模型验证
+                ////那么手动验证模型
+                //if (Wtm?.MSD is BasicMSD)
+                //{
+                //    var valContext = new ValidationContext(this.Entity);
+                //    List<ValidationResult> error = new List<ValidationResult>();
+                //    if (!Validator.TryValidateObject(Entity, valContext, error, true))
+                //    {
+                //        foreach (var item in error)
+                //        {
+                //            string key = item.MemberNames.FirstOrDefault();
+                //            if (MSD.Keys.Contains(key) == false)
+                //            {
+                //                MSD.AddModelError($"Entity.{key}", item.ErrorMessage);
+                //            }
+                //        }
+                //    }
+                //    var list = typeof(TModel).GetAllProperties().Where(x => x.PropertyType.IsListOf<TopBasePoco>());
+                //    foreach (var item in list)
+                //    {
+                //        var it = item.GetValue(Entity) as IEnumerable;
+                //        if(it == null)
+                //        {
+                //            continue;
+                //        }
+                //        var contextset = false;
+                //        foreach (var e in it)
+                //        {
+                //            if(contextset == false)
+                //            {
+                //                valContext = new ValidationContext(e);
+                //                contextset = true;
+                //            }
 
-                            if (!Validator.TryValidateObject(e, valContext, error, true))
-                            {
-                                foreach (var err in error)
-                                {
-                                    string key = err.MemberNames.FirstOrDefault();
-                                    if (MSD.Keys.Contains(key) == false)
-                                    {
-                                        MSD.AddModelError($"Entity.{item.Name}.{key}", err.ErrorMessage);
-                                    }
-                                }
-                            }
+                //            if (!Validator.TryValidateObject(e, valContext, error, true))
+                //            {
+                //                foreach (var err in error)
+                //                {
+                //                    string key = err.MemberNames.FirstOrDefault();
+                //                    if (MSD.Keys.Contains(key) == false)
+                //                    {
+                //                        MSD.AddModelError($"Entity.{item.Name}.{key}", err.ErrorMessage);
+                //                    }
+                //                }
+                //            }
 
-                        }
-                    }
-                }
+                //        }
+                //    }
+                //}
 
                 //验证重复数据
                 ValidateDuplicateData();

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 {
-    public class MajorTemplateVM : BaseTemplateVM
+    public partial class MajorTemplateVM : BaseTemplateVM
     {
         [Display(Name = "专业编码")]
         public ExcelPropety MajorCode_Excel = ExcelPropety.CreateProperty<Major>(x => x.MajorCode);
@@ -21,12 +21,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
         [Display(Name = "备注")]
         public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty<Major>(x => x.Remark);
         [Display(Name = "所属学校")]
-        public ExcelPropety SchoolId_Excel = ExcelPropety.CreateProperty<Major>(x => x.SchoolId);
+        public ExcelPropety School_Excel = ExcelPropety.CreateProperty<Major>(x => x.SchoolId);
 
 	    protected override void InitVM()
         {
-            SchoolId_Excel.DataType = ColumnDataType.ComboBox;
-            SchoolId_Excel.ListItems = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
+            School_Excel.DataType = ColumnDataType.ComboBox;
+            School_Excel.ListItems = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
         }
 
     }

@@ -79,9 +79,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
             var query = DC.Set<WxReportData>()
                 .CheckEqual(Searcher.FrameworkUserId, x=>x.FrameworkUserId)
                 .CheckEqual(Searcher.JiaYou1, x=>x.JiaYou1)
-                .CheckContain(Searcher.Extend04, x=>x.Extend04)
-                .CheckContain(Searcher.Extend05, x=>x.Extend05)
-                .CheckEqual(Searcher.Extend08, x=>x.Extend08)
+                .CheckEqual(Searcher.JiaYou2, x=>x.JiaYou2)
+                .CheckEqual(Searcher.Extend09, x=>x.Extend09)
+                .CheckEqual(Searcher.Extend10, x=>x.Extend10)
                 .Select(x => new WxReportData_View
                 {
 				    ID = x.ID,

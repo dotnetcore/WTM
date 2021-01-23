@@ -47,7 +47,7 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data = context.Set<$model$>().FirstOrDefault();
+                var data = context.Set<$model$>().Find(v.ID);
 				$assert$
                 Assert.AreEqual(data.CreateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
@@ -70,6 +70,7 @@ namespace $tns$
             Assert.IsInstanceOfType(rv.Model, typeof($model$VM));
 
             $model$VM vm = rv.Model as $model$VM;
+            vm.Wtm.DC = new DataContext(_seed, DBTypeEnum.Memory);
             v = new $model$();
             v.ID = vm.Entity.ID;
        		$epros$
@@ -80,7 +81,7 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data = context.Set<$model$>().FirstOrDefault();
+                var data = context.Set<$model$>().Find(v.ID);
  				$eassert$
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
@@ -111,7 +112,7 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                $del$
+                var data = context.Set<$model$>().Find(v.ID);
             }
 
         }
@@ -190,6 +191,8 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
+                var data1 = context.Set<$model$>().Find(v1.ID);
+                var data2 = context.Set<$model$>().Find(v2.ID);
                 $mdel$
             }
         }

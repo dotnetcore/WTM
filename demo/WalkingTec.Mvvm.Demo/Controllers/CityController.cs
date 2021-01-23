@@ -9,28 +9,37 @@ using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("城市")]
+    [ActionDescription("city")]
     public partial class CityController : BaseController
     {
         #region Search
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<CityListVM>();
             return PartialView(vm);
         }
 
-        [ActionDescription("Search")]
+        [ActionDescription("Sys.Search")]
         [HttpPost]
-        public string Search(CityListVM vm)
+        public string Search(CitySearcher searcher)
         {
-            return vm.GetJson(false);
+            var vm = Wtm.CreateVM<CityListVM>(passInit: true);
+            if (ModelState.IsValid)
+            {
+                vm.Searcher = searcher;
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
 
         #endregion
 
         #region Create
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
             var vm = Wtm.CreateVM<CityVM>();
@@ -38,7 +47,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Create")]
+        [ActionDescription("Sys.Create")]
         public ActionResult Create(CityVM vm)
         {
             if (!ModelState.IsValid)
@@ -62,14 +71,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #endregion
 
         #region Edit
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         public ActionResult Edit(string id)
         {
             var vm = Wtm.CreateVM<CityVM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("Edit")]
+        [ActionDescription("Sys.Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
         public ActionResult Edit(CityVM vm)
@@ -95,14 +104,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #endregion
 
         #region Delete
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         public ActionResult Delete(string id)
         {
             var vm = Wtm.CreateVM<CityVM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("Delete")]
+        [ActionDescription("Sys.Delete")]
         [HttpPost]
         public ActionResult Delete(string id, IFormCollection nouse)
         {
@@ -120,7 +129,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #endregion
 
         #region Details
-        [ActionDescription("Details")]
+        [ActionDescription("Sys.Details")]
         public ActionResult Details(string id)
         {
             var vm = Wtm.CreateVM<CityVM>(id);
@@ -130,7 +139,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region BatchEdit
         [HttpPost]
-        [ActionDescription("BatchEdit")]
+        [ActionDescription("Sys.BatchEdit")]
         public ActionResult BatchEdit(string[] IDs)
         {
             var vm = Wtm.CreateVM<CityBatchVM>(Ids: IDs);
@@ -138,7 +147,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("BatchEdit")]
+        [ActionDescription("Sys.BatchEdit")]
         public ActionResult DoBatchEdit(CityBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
@@ -147,14 +156,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.BatchEditSuccess", vm.Ids.Length]);
             }
         }
         #endregion
 
         #region BatchDelete
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
             var vm = Wtm.CreateVM<CityBatchVM>(Ids: IDs);
@@ -162,7 +171,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("BatchDelete")]
+        [ActionDescription("Sys.BatchDelete")]
         public ActionResult DoBatchDelete(CityBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
@@ -171,13 +180,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.BatchDeleteSuccess", vm.Ids.Length]);
             }
         }
         #endregion
 
         #region Import
-		[ActionDescription("Import")]
+		[ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
             var vm = Wtm.CreateVM<CityImportVM>();
@@ -185,7 +194,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("Import")]
+        [ActionDescription("Sys.Import")]
         public ActionResult Import(CityImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -194,18 +203,16 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
         #endregion
 
-        [ActionDescription("Export")]
+        [ActionDescription("Sys.Export")]
         [HttpPost]
         public IActionResult ExportExcel(CityListVM vm)
         {
-            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_City_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
     }

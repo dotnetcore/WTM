@@ -276,7 +276,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 主子表修改
         [ActionDescription("主子表修改")]
-        public ActionResult Edit2(long id)
+        public ActionResult Edit2(int id)
         {
             var vm = Wtm.CreateVM<SchoolVM>(id);
             vm.MajorList.DetailGridPrix = "Entity.Majors";

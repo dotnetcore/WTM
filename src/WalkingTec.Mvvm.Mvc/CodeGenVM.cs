@@ -1197,12 +1197,14 @@ namespace WalkingTec.Mvvm.Mvc
                 }
 
 
-                string del = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 0);";
-                string mdel = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 0);";
+                string del = $"Assert.AreEqual(data, null);";
+                string mdel = @"Assert.AreEqual(data1, null);
+            Assert.AreEqual(data2, null);";
                 if (modelType.IsSubclassOf(typeof(PersistPoco)))
                 {
-                    del = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 1);";
-                    mdel = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 2);";
+                    del = $"Assert.AreEqual(data.IsValid, false);";
+                    mdel = @"Assert.AreEqual(data1.IsValid, false);
+            Assert.AreEqual(data2.IsValid, false);";
                 }
 
                 rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros)
@@ -1223,7 +1225,10 @@ namespace WalkingTec.Mvvm.Mvc
                 if (pro.Value == "$fk$")
                 {
                     var fktype = t.GetSingleProperty(pro.Key.Substring(0, pro.Key.Length - 2))?.PropertyType;
-                    rv += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
+                    if (fktype != t)
+                    {
+                        rv += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
+                    }
                 }
             }
 
@@ -1232,8 +1237,12 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (pro.Value == "$fk$")
                 {
-                    cpros += $@"
+                    var fktype = t.GetSingleProperty(pro.Key.Substring(0, pro.Key.Length - 2))?.PropertyType;
+                    if (fktype != t)
+                    {
+                        cpros += $@"
                 v.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
+                    }
                 }
                 else
                 {

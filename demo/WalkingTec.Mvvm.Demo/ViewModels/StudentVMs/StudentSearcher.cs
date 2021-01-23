@@ -12,15 +12,19 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
     public partial class StudentSearcher : BaseSearcher
     {
-        [Display(Name = "账号")]
-        public String ID { get; set; }
-        [Display(Name = "是否有效")]
-        public Boolean? IsValid { get; set; }
-        [Display(Name = "日期")]
-        public DateRange EnRollDate { get; set; }
+        [Display(Name = "密码")]
+        public String Password { get; set; }
+        [Display(Name = "性别")]
+        public GenderEnum? Sex { get; set; }
+        [Display(Name = "邮编")]
+        public String ZipCode { get; set; }
+        public List<ComboSelectListItem> AllStudentMajors { get; set; }
+        [Display(Name = "专业")]
+        public List<Guid> SelectedStudentMajorIDs { get; set; }
 
         protected override void InitVM()
         {
+            AllStudentMajors = DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
         }
 
     }

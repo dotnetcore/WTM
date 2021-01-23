@@ -25,9 +25,17 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
     /// </summary>
     public class City_BatchEdit : BaseVM
     {
+        [Display(Name = "名称")]
+        public String Name { get; set; }
+        [Display(Name = "test")]
+        public String Test { get; set; }
+        public List<ComboSelectListItem> AllParents { get; set; }
+        [Display(Name = "_Admin.Parent")]
+        public Guid? ParentId { get; set; }
 
         protected override void InitVM()
         {
+            AllParents = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

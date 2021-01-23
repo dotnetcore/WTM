@@ -11,11 +11,11 @@ namespace WalkingTec.Mvvm.Demo.Models
     [Table("Cities")]
     public class City : TreePoco<City>
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public new int ID { get; set; }
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //public new int ID { get; set; }
 
-        public new int? ParentId { get; set; }
+        //public new int? ParentId { get; set; }
 
         [Display(Name = "名称")]
         [Required(ErrorMessage = "名称是必填项")]

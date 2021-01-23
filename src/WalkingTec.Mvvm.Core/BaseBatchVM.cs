@@ -251,8 +251,17 @@ namespace WalkingTec.Mvvm.Core
             var pros = LinkedVM.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly);
             bool rv = true;
             List<string> idsData = Ids.ToList();
+            string currentvmname = this.GetType().Name;
+            Type vmtype = null;
             //找到对应的BaseCRUDVM，并初始化
-            var vmtype = this.GetType().Assembly.GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<TModel>))).FirstOrDefault();
+            if (currentvmname.ToLower().Contains("apibatchvm"))
+            {
+                vmtype = this.GetType().Assembly.GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<TModel>)) && x.Name.ToLower().Contains("apivm") == true).FirstOrDefault();
+            }
+            else
+            {
+                vmtype = this.GetType().Assembly.GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<TModel>)) && x.Name.ToLower().Contains("apivm") == false).FirstOrDefault();
+            }
             IBaseCRUDVM<TModel> vm = null;
             if (vmtype != null)
             {
@@ -281,7 +290,7 @@ namespace WalkingTec.Mvvm.Core
                     foreach (var pro in pros)
                     {
                         var proToSet = entity.GetType().GetSingleProperty(pro.Name);
-                        var val = FC.ContainsKey("LinkedVM." + pro.Name) ? pro.GetValue(LinkedVM) : null;
+                        var val = FC.ContainsKey("LinkedVM." + pro.Name) ? FC["LinkedVM." + pro.Name] : null;
                         if (proToSet != null && val != null)
                         {
                             var hasvalue = true;

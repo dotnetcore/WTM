@@ -1,16 +1,19 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorVM
+@inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
-	<wt:quote>确定要删除这条数据么：</wt:quote>
+	<wt:quote>@Localizer["Sys.DeleteConfirm"]</wt:quote>
 <wt:row items-per-row="ItemsPerRowEnum.Two">
 <wt:display field="Entity.MajorCode" />
 <wt:display field="Entity.MajorName" />
+<wt:display field="Entity.MajorType" />
 <wt:display field="Entity.Remark" />
 <wt:display field="Entity.School.SchoolName" />
+
 </wt:row>
     <wt:hidden field="Entity.ID" />
-    <wt:row align=" AlignEnum.Right">
-        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除"/>
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@Localizer["Sys.Delete"]"/>
         <wt:closebutton />
     </wt:row>
 </wt:form>
