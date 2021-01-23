@@ -180,11 +180,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 string key = pro.Name;
                 string val = "";
                 var notmapped = pro.GetCustomAttribute<NotMappedAttribute>();
-                if (pro.IsPropertyRequired() && notmapped == null &&
-                    pro.PropertyType.IsBoolOrNullableBool() == false &&
-                    pro.PropertyType.IsEnumOrNullableEnum() == false &&
+                if (notmapped == null &&
                     pro.PropertyType.IsList() == false &&
-                    pro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) == false)
+                    pro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) == false &&
+                    pro.DeclaringType != typeof(BasePoco) &&
+                    pro.DeclaringType != typeof(PersistPoco) 
+                    )
                 {
                     if (pro.PropertyType.IsNumber())
                     {
@@ -202,6 +203,35 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         }
                         Random r = new Random();
                         val = r.Next(start, end).ToString();
+                    }
+                    else if (pro.PropertyType.IsBoolOrNullableBool())
+                    {
+                        List<string> boolvalues = new List<string> { "true", "false" };
+                        if (pro.PropertyType.IsNullable())
+                        {
+                            boolvalues.Add("null");
+                        }
+                        Random r = new Random();
+                        var index = r.Next(0, boolvalues.Count);
+                        val = boolvalues[index];
+                    }
+                    else if (pro.PropertyType.IsEnumOrNullableEnum())
+                    {
+                        List<string> enumvalues = new List<string>();
+                        Type enumtype = null;
+                        if (pro.PropertyType.IsNullable())
+                        {
+                            enumtype = pro.PropertyType.GenericTypeArguments[0];
+                            enumvalues.Add("null");
+                        }
+                        else
+                        {
+                            enumtype = pro.PropertyType;
+                        }
+                        var vs = Enum.GetValues(enumtype);
+                        Random r = new Random();
+                        var index = r.Next(0, vs.Length);
+                        val = enumtype.FullName+"."+ vs.GetValue(index).ToString();
                     }
                     else if (pro.PropertyType == typeof(string))
                     {

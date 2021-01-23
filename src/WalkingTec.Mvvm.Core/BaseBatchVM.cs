@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -115,9 +116,10 @@ namespace WalkingTec.Mvvm.Core
             List<Guid> fileids = new List<Guid>();
             var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
             var isPersist = modelType.IsSubclassOf(typeof(PersistPoco));
+            var entityList = DC.Set<TModel>().AsNoTracking().CheckIDs(idsData).ToList();
 
 
-            for (int i = 0; i < idsData.Count; i++)
+            for (int i = 0; i < entityList.Count; i++)
             {
                 string checkErro = null;
                 //检查是否可以删除，如不能删除则直接跳过
@@ -130,7 +132,7 @@ namespace WalkingTec.Mvvm.Core
                 //进行删除
                 try
                 {
-                    var Entity = DC.Set<TModel>().CheckID(idsData[i]).FirstOrDefault();
+                    var Entity = entityList[i];
                     if (isPersist)
                     {
                         (Entity as PersistPoco).IsValid = false;
@@ -257,14 +259,14 @@ namespace WalkingTec.Mvvm.Core
                 vm = vmtype.GetConstructor(System.Type.EmptyTypes).Invoke(null) as IBaseCRUDVM<TModel>;
                 vm.CopyContext(this);
             }
+            var entityList = DC.Set<TModel>().CheckIDs(idsData).ToList();
             //循环所有数据
-            for (int i = 0; i < idsData.Count; i++)
+            for (int i = 0; i < entityList.Count; i++)
             {
                 try
                 {
                     //如果找不到对应数据，则输出错误
-                    TModel entity = null;
-                    entity = DC.Set<TModel>().CheckID(idsData[i]).FirstOrDefault();
+                    TModel entity = entityList[i];
                     if (vm != null)
                     {
                         vm.SetEntity(entity);
@@ -279,7 +281,7 @@ namespace WalkingTec.Mvvm.Core
                     foreach (var pro in pros)
                     {
                         var proToSet = entity.GetType().GetSingleProperty(pro.Name);
-                        var val = FC.ContainsKey("LinkedVM." + pro.Name) ? FC["LinkedVM." + pro.Name] : null;
+                        var val = FC.ContainsKey("LinkedVM." + pro.Name) ? pro.GetValue(LinkedVM) : null;
                         if (proToSet != null && val != null)
                         {
                             var hasvalue = true;
@@ -370,13 +372,19 @@ namespace WalkingTec.Mvvm.Core
                         }
                     }
                 }
-                ListVM.DoSearch();
-                foreach (var item in ListVM.GetEntityList())
-                {
-                    item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
-                }
+                RefreshErrorList();
             }
             return rv;
+        }
+
+        protected void RefreshErrorList()
+        {
+            ListVM.DoSearch();
+            foreach (var item in ListVM.GetEntityList())
+            {
+                item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
+            }
+
         }
     }
 }

@@ -4,27 +4,27 @@ using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Demo.ViewModels.StudentVMs;
+using WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("学生管理")]
-    public partial class StudentController : BaseController
+    [ActionDescription("wxreport")]
+    public partial class WxReportDataController : BaseController
     {
         #region Search
         [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
-            var vm = Wtm.CreateVM<StudentListVM>();
+            var vm = Wtm.CreateVM<WxReportDataListVM>();
             return PartialView(vm);
         }
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public string Search(StudentSearcher searcher)
+        public string Search(WxReportDataSearcher searcher)
         {
-            var vm = Wtm.CreateVM<StudentListVM>(passInit: true);
+            var vm = Wtm.CreateVM<WxReportDataListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
@@ -42,13 +42,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
-            var vm = Wtm.CreateVM<StudentVM>();
+            var vm = Wtm.CreateVM<WxReportDataVM>();
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("Sys.Create")]
-        public ActionResult Create(StudentVM vm)
+        public ActionResult Create(WxReportDataVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -74,14 +74,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Edit")]
         public ActionResult Edit(string id)
         {
-            var vm = Wtm.CreateVM<StudentVM>(id);
+            var vm = Wtm.CreateVM<WxReportDataVM>(id);
             return PartialView(vm);
         }
 
         [ActionDescription("Sys.Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
-        public ActionResult Edit(StudentVM vm)
+        public ActionResult Edit(WxReportDataVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Delete")]
         public ActionResult Delete(string id)
         {
-            var vm = Wtm.CreateVM<StudentVM>(id);
+            var vm = Wtm.CreateVM<WxReportDataVM>(id);
             return PartialView(vm);
         }
 
@@ -115,7 +115,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Delete(string id, IFormCollection nouse)
         {
-            var vm = Wtm.CreateVM<StudentVM>(id);
+            var vm = Wtm.CreateVM<WxReportDataVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Details")]
         public ActionResult Details(string id)
         {
-            var vm = Wtm.CreateVM<StudentVM>(id);
+            var vm = Wtm.CreateVM<WxReportDataVM>(id);
             return PartialView(vm);
         }
         #endregion
@@ -142,13 +142,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchEdit")]
         public ActionResult BatchEdit(string[] IDs)
         {
-            var vm = Wtm.CreateVM<StudentBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<WxReportDataBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult DoBatchEdit(StudentBatchVM vm, IFormCollection nouse)
+        public ActionResult DoBatchEdit(WxReportDataBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
             {
@@ -166,13 +166,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
-            var vm = Wtm.CreateVM<StudentBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<WxReportDataBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult DoBatchDelete(StudentBatchVM vm, IFormCollection nouse)
+        public ActionResult DoBatchDelete(WxReportDataBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
@@ -189,13 +189,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 		[ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
-            var vm = Wtm.CreateVM<StudentImportVM>();
+            var vm = Wtm.CreateVM<WxReportDataImportVM>();
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("Sys.Import")]
-        public ActionResult Import(StudentImportVM vm, IFormCollection nouse)
+        public ActionResult Import(WxReportDataImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
@@ -210,7 +210,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost]
-        public IActionResult ExportExcel(StudentListVM vm)
+        public IActionResult ExportExcel(WxReportDataListVM vm)
         {
             return vm.GetExportData();
         }

@@ -10,12 +10,12 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
-    public partial class StudentSearcher : BaseSearcher
+    public partial class StudentApiSearcher : BaseSearcher
     {
         [Display(Name = "账号")]
         public String ID { get; set; }
-        [Display(Name = "是否有效")]
-        public Boolean? IsValid { get; set; }
+        [Display(Name = "邮箱")]
+        public String Email { get; set; }
         [Display(Name = "日期")]
         public DateRange EnRollDate { get; set; }
 

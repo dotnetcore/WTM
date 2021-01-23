@@ -11,27 +11,12 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
-    public partial class StudentListVM : BasePagedListVM<Student_View, StudentSearcher>
+    public partial class StudentApiListVM : BasePagedListVM<StudentApi_View, StudentApiSearcher>
     {
-        protected override List<GridAction> InitGridAction()
-        {
-            return new List<GridAction>
-            {
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Delete, Localizer["Sys.Delete"], "", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Details, Localizer["Sys.Details"], "", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchEdit, Localizer["Sys.BatchEdit"], "", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], ""),
-            };
-        }
 
-
-        protected override IEnumerable<IGridColumn<Student_View>> InitGridHeader()
+        protected override IEnumerable<IGridColumn<StudentApi_View>> InitGridHeader()
         {
-            return new List<GridColumn<Student_View>>{
+            return new List<GridColumn<StudentApi_View>>{
                 this.MakeGridHeader(x => x.ID),
                 this.MakeGridHeader(x => x.Password),
                 this.MakeGridHeader(x => x.Email),
@@ -47,7 +32,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
                 this.MakeGridHeaderAction(width: 200)
             };
         }
-        private List<ColumnFormatInfo> PhotoIdFormat(Student_View entity, object val)
+        private List<ColumnFormatInfo> PhotoIdFormat(StudentApi_View entity, object val)
         {
             return new List<ColumnFormatInfo>
             {
@@ -57,13 +42,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         }
 
 
-        public override IOrderedQueryable<Student_View> GetSearchQuery()
+        public override IOrderedQueryable<StudentApi_View> GetSearchQuery()
         {
             var query = DC.Set<Student>()
                 .CheckContain(Searcher.ID, x=>x.ID)
-                .CheckEqual(Searcher.IsValid, x=>x.IsValid)
+                .CheckContain(Searcher.Email, x=>x.Email)
                 .CheckBetween(Searcher.EnRollDate?.GetStartTime(), Searcher.EnRollDate?.GetEndTime(), x => x.EnRollDate, includeMax: false)
-                .Select(x => new Student_View
+                .Select(x => new StudentApi_View
                 {
 				    ID = x.ID,
                     Password = x.Password,
@@ -84,7 +69,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 
     }
 
-    public class Student_View : Student{
+    public class StudentApi_View : Student{
         [Display(Name = "专业名称")]
         public String MajorName_view { get; set; }
 

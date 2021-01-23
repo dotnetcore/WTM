@@ -133,6 +133,42 @@ namespace $tns$
         }
 
         [TestMethod]
+        public void BatchEditTest()
+        {
+            $model$ v1 = new $model$();
+            $model$ v2 = new $model$();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+				$mpros$
+                context.Set<$model$>().Add(v1);
+                context.Set<$model$>().Add(v2);
+                context.SaveChanges();
+            }
+
+            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
+            Assert.IsInstanceOfType(rv.Model, typeof($model$BatchVM));
+
+            $model$BatchVM vm = rv.Model as $model$BatchVM;
+            vm.Ids = new string[] { v1.ID.ToString(), v2.ID.ToString() };
+            $linkedpros$
+            vm.FC = new Dictionary<string, object>();
+			$linkedfc$
+            _controller.DoBatchEdit(vm, null);
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var data1 = context.Set<$model$>().Find(v1.ID);
+                var data2 = context.Set<$model$>().Find(v2.ID);
+ 				$meassert$
+                Assert.AreEqual(data1.UpdateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data1.UpdateTime.Value).Seconds < 10);
+                Assert.AreEqual(data2.UpdateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data2.UpdateTime.Value).Seconds < 10);
+            }
+        }
+
+
+        [TestMethod]
         public void BatchDeleteTest()
         {
             $model$ v1 = new $model$();

@@ -1,0 +1,13 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs.WxReportDataListVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:combobox field="Searcher.FrameworkUserId" items="Searcher.AllFrameworkUsers" empty-text="@Localizer["Sys.All"]" />
+<wt:textbox field="Searcher.JiaYou1" />
+<wt:textbox field="Searcher.Extend04" />
+<wt:textbox field="Searcher.Extend05" />
+<wt:textbox field="Searcher.Extend08" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" url="/WxReportData/Search"/>

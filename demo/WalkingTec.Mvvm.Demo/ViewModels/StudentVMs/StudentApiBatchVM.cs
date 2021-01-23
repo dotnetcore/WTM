@@ -10,12 +10,27 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
-    public partial class StudentSearcher : BaseSearcher
+    public partial class StudentApiBatchVM : BaseBatchVM<Student, StudentApi_BatchEdit>
+    {
+        public StudentApiBatchVM()
+        {
+            ListVM = new StudentApiListVM();
+            LinkedVM = new StudentApi_BatchEdit();
+        }
+
+    }
+
+	/// <summary>
+    /// Class to define batch edit fields
+    /// </summary>
+    public class StudentApi_BatchEdit : BaseVM
     {
         [Display(Name = "账号")]
         public String ID { get; set; }
-        [Display(Name = "是否有效")]
-        public Boolean? IsValid { get; set; }
+        [Display(Name = "邮箱")]
+        public String Email { get; set; }
+        [Display(Name = "住址")]
+        public String Address { get; set; }
         [Display(Name = "日期")]
         public DateRange EnRollDate { get; set; }
 
@@ -24,4 +39,5 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         }
 
     }
+
 }
