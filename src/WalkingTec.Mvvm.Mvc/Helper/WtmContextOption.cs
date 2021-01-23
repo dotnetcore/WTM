@@ -27,7 +27,6 @@ namespace WalkingTec.Mvvm.Mvc.Helper
 
         public Func<WTMContext,string,LoginUserInfo> ReloadUserFunc { get; set; }
 
-        public Type ResourceType { get; set; }
     }
 
 }

@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorVM
+@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorVM
 
 <wt:form vm="@Model">
     <wt:row items-per-row="ItemsPerRowEnum.Two">
@@ -6,6 +6,7 @@
         <wt:textbox field="Entity.MajorName" />
         <wt:combobox field="Entity.SchoolId" items="AllSchools" />
         <wt:combobox field="Entity.MajorType" />
+      <wt:transfer field="TransferValues" items="TransferList" colspan="2"/>
         <wt:textbox field="Entity.Remark" colspan="2"/>
     </wt:row>
 

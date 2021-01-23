@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     foreach (var item in Field.Model as dynamic)
                     {
-                        selectVal.Add($"'{item.ToString().ToLower()}'");
+                        selectVal.Add($"{item.ToString().ToLower()}");
                     }
                 }
                 else

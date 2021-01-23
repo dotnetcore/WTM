@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Core
             WtmFileProvider._subDirFunc = fileSubDirSelector;
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
-            services.AddSingleton<WtmFileProvider>();
+            services.AddScoped<WtmFileProvider>();
             services.AddHttpClient();
             if (WtmConfigs.Domains != null)
             {

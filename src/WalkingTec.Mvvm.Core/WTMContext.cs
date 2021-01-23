@@ -121,7 +121,7 @@ namespace WalkingTec.Mvvm.Core
 
         public IModelStateService MSD { get; set; }
 
-        public static Func<WTMContext,string,LoginUserInfo> ReloadUserFunc { get; set; }
+        public static Func<WTMContext, string, LoginUserInfo> ReloadUserFunc { get; set; }
 
         #region DataContext
 
@@ -190,9 +190,22 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
         }
-        private ILoggerFactory _loggerFactory;
 
-        public IStringLocalizer Localizer { get; set; }
+        private IStringLocalizerFactory _stringLocalizerFactory;
+        private IStringLocalizer _localizer;
+        private ILoggerFactory _loggerFactory;
+        public IStringLocalizer Localizer
+        {
+            get
+            {
+                if (_localizer == null && _stringLocalizerFactory != null)
+                {
+                    var programtype = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                    _localizer = _stringLocalizerFactory.Create(programtype);
+                }
+                return _localizer ?? WalkingTec.Mvvm.Core.CoreProgram._localizer;
+            }
+        }
 
         /// <summary>
         /// 从数据库读取用户
@@ -202,10 +215,10 @@ namespace WalkingTec.Mvvm.Core
         public virtual async Task<LoginUserInfo>
             ReloadUser(string itcode)
         {
-            if(ReloadUserFunc != null)
+            if (ReloadUserFunc != null)
             {
                 var reload = ReloadUserFunc.Invoke(this, itcode);
-                if(reload != null)
+                if (reload != null)
                 {
                     return reload;
                 }
@@ -237,12 +250,12 @@ namespace WalkingTec.Mvvm.Core
 
         protected ILogger<ActionLog> Logger { get; set; }
 
-        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizer stringLocalizer = null, ILoggerFactory loggerFactory = null)
+        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null)
         {
             _configInfo = _config?.CurrentValue ?? new Configs();
             _globaInfo = _gd ?? new GlobalData();
             _httpContext = _http?.HttpContext;
-            Localizer = stringLocalizer;
+            _stringLocalizerFactory = stringLocalizer;
             _loggerFactory = loggerFactory;
             this.Logger = loggerFactory?.CreateLogger<ActionLog>();
             if (_httpContext == null)
@@ -700,7 +713,7 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region CallApi
-        public  async Task<T> CallAPI<T>(string domainName, string url, HttpMethodEnum method, HttpContent content, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public async Task<T> CallAPI<T>(string domainName, string url, HttpMethodEnum method, HttpContent content, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             try
             {
@@ -785,7 +798,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public  async Task<T> CallAPI<T>(string domainName, string url, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public async Task<T> CallAPI<T>(string domainName, string url, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = null;
             //填充表单数据
@@ -805,7 +818,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public  async Task<T> CallAPI<T>(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public async Task<T> CallAPI<T>(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = null;
             //填充表单数据
@@ -834,13 +847,13 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public  async Task<T> CallAPI<T>(string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public async Task<T> CallAPI<T>(string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
             return await CallAPI<T>(domainName, url, method, content, error, errormsg, timeout, proxy);
         }
 
-        public  async Task<string> CallAPI(string domainName, string url, HttpMethodEnum method, HttpContent content, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public async Task<string> CallAPI(string domainName, string url, HttpMethodEnum method, HttpContent content, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             try
             {
@@ -924,7 +937,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public  async Task<string> CallAPI(string domainName, string url, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public async Task<string> CallAPI(string domainName, string url, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = null;
             //填充表单数据
@@ -943,7 +956,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public  async Task<string> CallAPI(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public async Task<string> CallAPI(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = null;
             //填充表单数据
@@ -971,13 +984,13 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public  async Task<string> CallAPI(string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public async Task<string> CallAPI(string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
             return await CallAPI(domainName, url, method, content, error, errormsg, timeout, proxy);
         }
 
-        public  async Task<byte[]> CallStreamAPI(string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public async Task<byte[]> CallStreamAPI(string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
             var factory = this.ServiceProvider.GetRequiredService<IHttpClientFactory>();

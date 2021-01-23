@@ -13,6 +13,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
     {
         public List<ComboSelectListItem> AllSchools { get; set; }
 
+        public List<int> TransferValues { get; set; }
+        public List<ComboSelectListItem> TransferList { get; set; }
         public MajorVM()
         {
             SetInclude(x => x.School);
@@ -21,6 +23,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
         protected override void InitVM()
         {
             AllSchools = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
+            TransferList = new List<ComboSelectListItem>();
+            TransferList.Add(new ComboSelectListItem { Text = "aaa", Value = 1 });
+            TransferValues = new List<int> { 1};
         }
 
     }

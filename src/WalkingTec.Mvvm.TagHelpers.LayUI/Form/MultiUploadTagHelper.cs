@@ -194,12 +194,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     }}
   }}
   function {Id}DoDelete(fileid){{
-    $('#{Id}').parents('form').append(""<input type='hidden' name='DeletedFileIds' value='""+fileid+""' />"");
-    $('#label'+fileid).remove();
-    {Id}selected = {Id}selected.filter(function(item) {{
-        return item != fileid;
-     }});
-    {Id}SetValues();
+    $.ajax({{
+            type: 'get',
+            url: '/api/_file/DeletedFile/' + fileid,
+            success: function () {{
+                $('#label'+fileid).remove();
+                {Id}selected = {Id}selected.filter(function(item) {{
+                    return item != fileid;
+                 }});
+                {Id}SetValues();
+            }},
+            error: function () {{
+                console.log('failed');
+            }}
+        }});
 }}
   var index = 0;
   var {Id}preview;
