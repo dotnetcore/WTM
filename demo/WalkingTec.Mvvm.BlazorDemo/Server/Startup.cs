@@ -60,6 +60,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddWtmDataAnnotationsLocalization(typeof(Program));
 
+            services.AddServerSideBlazor();
+            services.AddBootstrapBlazor();
             services.AddWtmContext(ConfigRoot, (options) => {
                 options.DataPrivileges = DataPrivilegeSettings();
                 options.CsSelector = CSSelector;
@@ -104,14 +106,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
-                endpoints.MapControllerRoute(
-                   name: "areaRoute",
-                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapFallbackToFile("index.html");
+                endpoints.MapBlazorHub();
+                //endpoints.MapRazorPages();
+                //endpoints.MapControllerRoute(
+                //   name: "areaRoute",
+                //   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapFallbackToPage("/_Host");
             });
 
             app.UseWtmContext();

@@ -32,16 +32,14 @@
     </Main>
     <Footer>
         <div class="text-center flex-fill">
-            <a class="page-layout-demo-footer-link" href="https://gitee.com/LongbowEnterprise/BootstrapAdmin" target="_blank">Bootstrap Admin</a>
         </div>
     </Footer>
 </Layout>
 
 <Drawer Placement="Placement.Right" @bind-IsOpen="@IsOpen" IsBackdrop="true">
     <div class="layout-drawer-body">
-        <div class="btn btn-info w-100" @onclick="@(e => IsOpen = false)">点击关闭</div>
-        <div class="page-layout-demo-option">
-            <p>布局调整</p>
+        <div class="btn btn-info w-100" @onclick="@(e => IsOpen = false)" >点击关闭</div>
+        <GroupBox Title="布局调整">
             <div class="row">
                 <div class="col-6">
                     <div class="layout-item @(IsFullSide ? "active d-flex" : "d-flex")" @onclick="@(e => IsFullSide = true)" data-toggle="tooltip" title="左右结构">
@@ -71,10 +69,10 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="page-layout-demo-option">
-            <p>固定调整</p>
+        </GroupBox>
+
+        <GroupBox Title="固定调整">
             <div class="row">
                 <div class="col-6 d-flex align-items-center">
                     <Switch @bind-Value="@IsFixedHeader" OnColor="@Color.Success" OffColor="@Color.Secondary"></Switch>
@@ -99,10 +97,9 @@
                     <span>显示页脚</span>
                 </div>
             </div>
-        </div>
+        </GroupBox>
 
-        <div class="page-layout-demo-option">
-            <p>主题配色</p>
+        <GroupBox Title="主题配色">
             <div class="row">
                 <div class="col-2">
                     <span class="color color1" @onclick="@(e => Theme = "color1")"></span>
@@ -123,10 +120,9 @@
                     <span class="color color6" @onclick="@(e => Theme = "color6")"></span>
                 </div>
             </div>
-        </div>
+        </GroupBox>
 
-        <div class="page-layout-demo-option">
-            <p>更多设置</p>
+        <GroupBox Title="更多设置">
             <div class="row">
                 <div class="col-6 d-flex align-items-center">
                     <Switch @bind-Value="@UseTabSet" OnColor="@Color.Success" OffColor="@Color.Primary"></Switch>
@@ -135,7 +131,7 @@
                     <span>@(UseTabSet ? "多标签" : "单页")</span>
                 </div>
             </div>
-        </div>
+        </GroupBox>
     </div>
 </Drawer>
 
@@ -177,7 +173,7 @@
     private static List<MenuItem> GetIconSideMenuItems()
     {
         var menus = new List<MenuItem>
-            {
+        {
                 new MenuItem() { Text = "返回组件库", Icon = "fa fa-fw fa-home", Url = "https://www.blazor.zone/components" },
                 new MenuItem() { Text = "Index", Icon = "fa fa-fw fa-fa", Url = "" },
                 new MenuItem() { Text = "Counter", Icon = "fa fa-fw fa-check-square-o", Url = "counter" },
