@@ -1,4 +1,6 @@
 @inherits LayoutComponentBase
+@inject IJSRuntime JS
+@inject NavigationManager navigationManager
 
 <Layout SideWidth="0" IsPage="true" ShowGotoTop="true" ShowCollapseBar="true"
         IsFullSide="@IsFullSide" IsFixedHeader="@IsFixedHeader" IsFixedFooter="@IsFixedFooter" ShowFooter="@ShowFooter"
@@ -38,7 +40,7 @@
 
 <Drawer Placement="Placement.Right" @bind-IsOpen="@IsOpen" IsBackdrop="true">
     <div class="layout-drawer-body">
-        <div class="btn btn-info w-100" @onclick="@(e => IsOpen = false)" >点击关闭</div>
+        <div class="btn btn-info w-100" @onclick="@(e => IsOpen = false)">点击关闭</div>
         <GroupBox Title="布局调整">
             <div class="row">
                 <div class="col-6">
@@ -140,9 +142,9 @@
 <PopoverConfirm />
 <Message />
 <SweetAlert />
-
 @code
 {
+
     private bool UseTabSet { get; set; } = true;
 
     private string Theme { get; set; } = "";
@@ -157,27 +159,38 @@
 
     private bool ShowFooter { get; set; } = true;
 
-    private List<MenuItem> Menus { get; set; }
+    private List<BootstrapBlazor.Components.MenuItem> Menus { get; set; }
+
 
     /// <summary>
     /// OnInitialized 方法
     /// </summary>
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
 
-        // TODO: 菜单获取可以通过数据库获取，此处为示例直接拼装的菜单集合
-        Menus = GetIconSideMenuItems();
+        var token = await JS.InvokeAsync<string>(
+                "localStorageFuncs.get");
+        if (string.IsNullOrEmpty(token))
+        {
+            navigationManager.NavigateTo("Login");
+        }
+        else
+        {
+            base.OnInitialized();
+
+            // TODO: 菜单获取可以通过数据库获取，此处为示例直接拼装的菜单集合
+            Menus = GetIconSideMenuItems();
+        }
     }
 
-    private static List<MenuItem> GetIconSideMenuItems()
+    private static List<BootstrapBlazor.Components.MenuItem> GetIconSideMenuItems()
     {
-        var menus = new List<MenuItem>
-        {
-                new MenuItem() { Text = "返回组件库", Icon = "fa fa-fw fa-home", Url = "https://www.blazor.zone/components" },
-                new MenuItem() { Text = "Index", Icon = "fa fa-fw fa-fa", Url = "" },
-                new MenuItem() { Text = "Counter", Icon = "fa fa-fw fa-check-square-o", Url = "counter" },
-                new MenuItem() { Text = "FetchData", Icon = "fa fa-fw fa-database", Url = "fetchdata" }
+        var menus = new List<BootstrapBlazor.Components.MenuItem>
+    {
+                new BootstrapBlazor.Components.MenuItem() { Text = "返回组件库", Icon = "fa fa-fw fa-home", Url = "https://www.blazor.zone/components" },
+                new BootstrapBlazor.Components.MenuItem() { Text = "Index", Icon = "fa fa-fw fa-fa", Url = "" },
+                new BootstrapBlazor.Components.MenuItem() { Text = "Counter", Icon = "fa fa-fw fa-check-square-o", Url = "counter" },
+                new BootstrapBlazor.Components.MenuItem() { Text = "FetchData", Icon = "fa fa-fw fa-database", Url = "fetchdata" }
             };
 
         return menus;

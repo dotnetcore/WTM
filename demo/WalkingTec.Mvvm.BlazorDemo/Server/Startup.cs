@@ -60,8 +60,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddWtmDataAnnotationsLocalization(typeof(Program));
 
-            //services.AddServerSideBlazor();
-            //services.AddBootstrapBlazor();
+            services.AddServerSideBlazor();
+            services.AddBootstrapBlazor();
             services.AddWtmContext(ConfigRoot, (options) => {
                 options.DataPrivileges = DataPrivilegeSettings();
                 options.CsSelector = CSSelector;
@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.ReloadUserFunc = ReloadUser;
             });
 
-            //services.AddSingleton<IStringLocalizerFactory, BlazorStringLocalizerFactory>();
+            services.AddSingleton<IStringLocalizerFactory, BlazorStringLocalizerFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             app.UseBlazorFrameworkFiles();
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapBlazorHub();
+                endpoints.MapBlazorHub();
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute(
                    name: "areaRoute",
@@ -114,8 +114,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                //endpoints.MapFallbackToPage("/_Host");
-                endpoints.MapFallbackToFile("index.html");
+                endpoints.MapFallbackToPage("/_Host");
+                //endpoints.MapFallbackToFile("index.html");
             });
 
             app.UseWtmContext();
