@@ -802,7 +802,10 @@ window.ff = {
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) {
-                return;
+                if (item.value === "true") {
+                    filter[item.name] = false;
+                }
+               return;
             }
             if (/_DONOTUSE_(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
                 var name1 = RegExp.$1;
@@ -851,7 +854,7 @@ window.ff = {
 
         for (item in filterback) {
             if (filterback[item] !== undefined) {
-                filter[item+".length"] = "0";
+                filter[item + ".length"] = "0";
             }
         }
         return filter;
