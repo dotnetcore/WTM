@@ -1,28 +1,28 @@
 @model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeVM
 <wt:form vm="@Model">
-    <wt:radio field="DpType" change-func="DbTypeChange" />
-    <wt:combobox field="Entity.TableName" items="TableNames" change-func="PriTypeChange" />
-    <wt:combobox field="IsAll" change-func="IsAllChange" />
-    <wt:row id="selector">
-      <wt:selector list-vm="DpList" field="SelectedItemsID" text-bind="DpList.EntityList[0].Name" before-onpen-dialog-func="SetTableName" label-text="">
-        <wt:searchpanel vm="DpList">
-          <wt:row items-per-row=" ItemsPerRowEnum.Two">
-            <wt:textbox field="DpList.Searcher.Filter" />
-          </wt:row>
-        </wt:searchpanel>
-      </wt:selector>
-    </wt:row>
-    <wt:row id="userrow">
-        <wt:textbox field="Entity.UserCode" search-url="/_Admin/FrameworkUser/GetUserById" />
-    </wt:row>
-    <wt:row id="grouprow">
-        <wt:combobox field="Entity.GroupCode" items="AllGroups" />
-    </wt:row>
-    <br /><br />
-    <wt:row align="AlignEnum.Right">
-        <wt:submitbutton />
-        <wt:closebutton />
-    </wt:row>
+  <wt:radio field="DpType" change-func="DbTypeChange" />
+  <wt:combobox field="Entity.TableName" items="TableNames" change-func="PriTypeChange" />
+  <wt:combobox field="IsAll" change-func="IsAllChange" />
+  <wt:row id="selector">
+    <wt:selector list-vm="DpList" field="SelectedItemsID" text-bind="DpList.EntityList[0].Name" before-onpen-dialog-func="SetTableName" label-text="">
+      <wt:searchpanel vm="DpList">
+        <wt:row items-per-row=" ItemsPerRowEnum.Two">
+          <wt:textbox field="DpList.Searcher.Filter" />
+        </wt:row>
+      </wt:searchpanel>
+    </wt:selector>
+  </wt:row>
+  <wt:row id="userrow">
+    <wt:textbox field="Entity.UserCode" search-url="/_Admin/FrameworkUser/GetUserById" />
+  </wt:row>
+  <wt:row id="grouprow">
+    <wt:combobox field="Entity.GroupCode" items="AllGroups" />
+  </wt:row>
+  <br /><br />
+  <wt:row align="AlignEnum.Right">
+    <wt:submitbutton />
+    <wt:closebutton />
+  </wt:row>
 </wt:form>
 <script>
   DbTypeChange({ value: $("[name='DpType'][checked]").val() });
@@ -54,3 +54,5 @@
         ff.setSelectorPara("DataPrivilegeVM_SelectedItemsID", { "Searcher.TableName": selectedtablename})
     }
 </script>
+
+<!-- WTM默认页面 Wtm buidin page-->

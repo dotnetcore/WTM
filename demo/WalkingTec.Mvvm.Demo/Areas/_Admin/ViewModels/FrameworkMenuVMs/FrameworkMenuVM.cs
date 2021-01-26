@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -309,18 +310,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public void AddPrivilege(List<Guid> menuids)
         {
-            //var oldIDs = DC.Set<FunctionPrivilege>().Where(x => menuids.Contains(x.MenuItemId)).Select(x => x.ID).ToList();
             var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").FirstOrDefault();
-            //foreach (var oldid in oldIDs)
-            //{
-            //    try
-            //    {
-            //        FunctionPrivilege fp = new FunctionPrivilege { ID = oldid };
-            //        DC.Set<FunctionPrivilege>().Attach(fp);
-            //        DC.DeleteEntity(fp);
-            //    }
-            //    catch { }
-            //}
             if (admin != null && SelectedRolesCodes.Contains(admin.RoleCode) == false)
             {
                 SelectedRolesCodes.Add(admin.RoleCode);
@@ -349,7 +339,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             try
             {
-                //级联删除所有子集
                 DC.CascadeDelete(Entity);
                 DC.SaveChanges();
             }

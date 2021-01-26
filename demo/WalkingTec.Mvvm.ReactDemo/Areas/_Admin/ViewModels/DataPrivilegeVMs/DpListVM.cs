@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -53,14 +54,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     {
         public new string ID { get; set; }
 
-        [Display(Name = "DataPrivilegeName")]
+        [Display(Name = "_Admin.DataPrivilegeName")]
         public string Name { get; set; }
     }
 
     public class DpSearcher : BaseSearcher
     {
         public string TableName { get; set; }
-        [Display(Name = "DataPrivilegeName")]
+        [Display(Name = "_Admin.DataPrivilegeName")]
         public string Filter { get; set; }
     }
 

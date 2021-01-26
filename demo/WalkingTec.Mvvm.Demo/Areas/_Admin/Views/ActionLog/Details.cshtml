@@ -1,24 +1,26 @@
 @model WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs.ActionLogVM
 
 <wt:form vm="@Model">
-    <wt:row items-per-row="ItemsPerRowEnum.Two">
-        <wt:display field="Entity.ModuleName" />
-        <wt:display field="Entity.ActionName" />
-    </wt:row>
-    <wt:row items-per-row="ItemsPerRowEnum.Two">
-        <wt:display field="Entity.ITCode" />
-        <wt:display field="Entity.ActionUrl" />
-    </wt:row>
-    <wt:row items-per-row="ItemsPerRowEnum.Two">
-        <wt:display field="Entity.ActionTime" />
-        <wt:display field="Entity.Duration" />
-    </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:display field="Entity.ModuleName" />
+    <wt:display field="Entity.ActionName" />
+  </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:display field="Entity.ITCode" />
+    <wt:display field="Entity.ActionUrl" />
+  </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:display field="Entity.ActionTime" />
+    <wt:display field="Entity.Duration" />
+  </wt:row>
 
-    <wt:row items-per-row="ItemsPerRowEnum.Two">
-        <wt:display field="Entity.IP" />
-        <wt:display field="Entity.LogType" />
-    </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:display field="Entity.IP" />
+    <wt:display field="Entity.LogType" />
+  </wt:row>
 
-    <wt:textarea  field="Entity.Remark" height="200" />
+  <wt:textarea field="Entity.Remark" height="200" />
 
 </wt:form>
+
+<!-- WTM默认页面 Wtm buidin page-->

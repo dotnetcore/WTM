@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,9 +10,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
     public class FrameworkMenuListVM : BasePagedListVM<FrameworkMenu_ListView, FrameworkMenuSearcher>
     {
-        /// <summary>
-        /// 页面显示按钮方案，如果需要增加Action类型则将按钮添加到此类中
-        /// </summary>
         public FrameworkMenuListVM()
         {
             this.NeedPage = false;
@@ -107,9 +105,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
         }
 
-        /// <summary>
-        /// 页面显示列表
-        /// </summary>
 
         private string PhotoIdFormat(FrameworkMenu_ListView entity, object val)
         {
@@ -123,9 +118,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
         }
 
-        /// <summary>
-        /// 查询结果
-        /// </summary>
         public override IOrderedQueryable<FrameworkMenu_ListView> GetSearchQuery()
         {
 
@@ -204,9 +196,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
     }
 
-    /// <summary>
-    /// 如果需要显示树类型的列表需要继承ITreeData`T`接口，并实现Children,Parent,ParentID属性
-    /// </summary>
     public class FrameworkMenu_ListView : BasePoco
     {
         [Display(Name = "_Admin.PageName")]

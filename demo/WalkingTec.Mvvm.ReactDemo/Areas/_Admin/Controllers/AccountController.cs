@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,6 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => x.ITCode).SingleOrDefaultAsync();
 
-            //如果没有找到则输出错误
             if (string.IsNullOrEmpty(code))
             {
                 ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"].Value);
@@ -52,7 +52,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 ITCode = code
             };
-            //读取角色，用户组，页面权限，数据权限等框架配置信息
             await user.LoadBasicInfoAsync(Wtm);
             Wtm.LoginUserInfo = user;
 
@@ -114,7 +113,6 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password.ToLower())).Select(x => x.ITCode).SingleOrDefaultAsync();
 
-            //如果没有找到则输出错误
             if (string.IsNullOrEmpty(code))
             {
                 return BadRequest(Localizer["Sys.LoginFailed"].Value);
@@ -123,7 +121,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 ITCode = code
             };
-            //读取角色，用户组，页面权限，数据权限等框架配置信息
             await user.LoadBasicInfoAsync(Wtm);
             Wtm.LoginUserInfo = user;
 
@@ -140,7 +137,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return;
             }
-            //循环所有菜单项
             foreach (var menu in menus)
             {
                 if (menu.Text?.StartsWith("MenuKey.") == true)

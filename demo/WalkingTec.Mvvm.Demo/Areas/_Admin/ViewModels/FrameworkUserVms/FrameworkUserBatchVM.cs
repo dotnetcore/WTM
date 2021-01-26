@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -45,9 +46,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         }
     }
 
-	/// <summary>
-    /// 批量编辑字段类
-    /// </summary>
     public class FrameworkUser_BatchEdit : BaseVM
     {
         [Display(Name = "_Admin.Role")]

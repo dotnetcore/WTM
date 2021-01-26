@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,10 +28,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         {
         }
 
-        /// <summary>
-        /// 验证重复字段
-        /// </summary>
-        /// <returns></returns>
         public override DuplicatedInfo<FrameworkUser> SetDuplicatedCheck()
         {
             var rv = CreateFieldsInfo(SimpleField(x => x.ITCode));

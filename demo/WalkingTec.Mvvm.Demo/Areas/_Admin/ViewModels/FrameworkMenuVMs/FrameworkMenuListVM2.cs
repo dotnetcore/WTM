@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
@@ -7,9 +8,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
     public class FrameworkMenuListVM2 : BasePagedListVM<FrameworkMenu_ListView, BaseSearcher>
     {
-        /// <summary>
-        /// 页面显示按钮方案，如果需要增加Action类型则将按钮添加到此类中
-        /// </summary>
         public FrameworkMenuListVM2()
         {
             this.NeedPage = false;
@@ -33,9 +31,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             return rv;
         }
 
-        /// <summary>
-        /// 查询结果
-        /// </summary>
         public override IOrderedQueryable<FrameworkMenu_ListView> GetSearchQuery()
         {
             var data = DC.Set<FrameworkMenu>().ToList();

@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -53,7 +54,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return vm.GetExportData();
         }
 
-        #region 批量删除
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
@@ -75,7 +75,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.BatchDeleteSuccess", vm.Ids.Length]);
             }
         }
-        #endregion
 
     }
 }

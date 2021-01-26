@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
@@ -34,10 +35,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         public override IOrderedQueryable<FrameworkRole> GetSearchQuery()
         {
-            //var query = DC.Set<FrameworkRole>()
-            //    .CheckWhere(Searcher.RoleCode, x => x.RoleCode.Contains(Searcher.RoleCode))
-            //    .CheckWhere(Searcher.RoleName, x => x.RoleName.ToLower().Contains(Searcher.RoleName.ToLower()))
-            //    .OrderBy(x => x.RoleCode);
             var query = DC.Set<FrameworkRole>()
                 .CheckContain(Searcher.RoleCode,x=>x.RoleCode)
                 .CheckContain(Searcher.RoleName,x=>x.RoleName)
