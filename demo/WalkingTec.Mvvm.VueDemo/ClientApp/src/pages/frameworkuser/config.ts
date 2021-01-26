@@ -11,7 +11,7 @@ export const ASSEMBLIES: Array<string> = [
 export const TABLE_HEADER: Array<object> = [
   { key: "ITCode", sortable: true, label: i18n.t(`frameworkuser.ITCode`) },
   { key: "Name", sortable: true, label: i18n.t(`frameworkuser.Name`) },
-  { key: "Sex", sortable: true, label: i18n.t(`frameworkuser.Gender`) },
+  { key: "Gender", sortable: true, label: i18n.t(`frameworkuser.Gender`) },
   { key: "PhotoId", label: i18n.t(`frameworkuser.PhotoId`), isSlot: true },
   { key: "IsValid", label: i18n.t(`frameworkuser.IsValid`), isSlot: true },
   { key: "RoleName_view", label: i18n.t(`frameworkuser.RoleName_view`) },
