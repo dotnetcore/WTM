@@ -116,9 +116,14 @@ namespace WalkingTec.Mvvm.Core
             List<Guid> fileids = new List<Guid>();
             var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
             var isPersist = modelType.IsSubclassOf(typeof(PersistPoco));
-            var entityList = DC.Set<TModel>().AsNoTracking().CheckIDs(idsData).ToList();
-
-
+            var query = DC.Set<TModel>().AsQueryable();
+            var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
+            foreach (var f in fas)
+            {
+                query = query.Include(f.Name);
+            }
+            query = query.AsNoTracking().CheckIDs(idsData);
+            var entityList = query.ToList();
             for (int i = 0; i < entityList.Count; i++)
             {
                 string checkErro = null;
@@ -164,7 +169,6 @@ namespace WalkingTec.Mvvm.Core
                             f.SetValue(Entity, null);
                         }
 
-                        var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
                         foreach (var f in fas)
                         {
                             var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
@@ -175,6 +179,10 @@ namespace WalkingTec.Mvvm.Core
                                     fileids.Add(sub.FileId);
                                 }
                                 f.SetValue(Entity, null);
+                            }
+                            else
+                            {
+
                             }
                         }
                         if (typeof(TModel) != typeof(FileAttachment))

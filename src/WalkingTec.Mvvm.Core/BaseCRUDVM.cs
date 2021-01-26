@@ -704,6 +704,11 @@ namespace WalkingTec.Mvvm.Core
                 foreach (var f in fas)
                 {
                     var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
+                    if(subs == null)
+                    {
+                        var fullEntity = DC.Set<TModel>().AsQueryable().Include(f.Name).AsNoTracking().CheckID(Entity.ID).FirstOrDefault();
+                        subs = f.GetValue(fullEntity) as IEnumerable<ISubFile>;
+                    }
                     if (subs != null)
                     {
                         foreach (var sub in subs)
