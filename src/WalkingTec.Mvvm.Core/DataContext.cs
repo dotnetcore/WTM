@@ -206,9 +206,9 @@ namespace WalkingTec.Mvvm.Core
             var act = acts.Where(x => x.MethodName == actionName).SingleOrDefault();
             var rest = acts.Where(x => x.MethodName != actionName && x.IgnorePrivillege == false).ToList();
             FrameworkMenu menu = GetMenuFromAction(act, true, allowedRoles, displayOrder);
-            menu.PageName = pageKey;
             if (menu != null)
             {
+                menu.PageName = pageKey;
                 for (int i = 0; i < rest.Count; i++)
                 {
                     if (rest[i] != null)
@@ -232,9 +232,9 @@ namespace WalkingTec.Mvvm.Core
                 act = acts[0];
             }
             FrameworkMenu menu = GetMenuFromAction(act, true, allowedRoles, displayOrder);
-            menu.PageName = pageKey;
             if (menu != null)
             {
+                menu.PageName = pageKey;
                 menu.Url = "/" + acts[0].Module.ClassName.ToLower();
                 menu.ActionName = "MainPage";
                 menu.ClassName = acts[0].Module.FullName;

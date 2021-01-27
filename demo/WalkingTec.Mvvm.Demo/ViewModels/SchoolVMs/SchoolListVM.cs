@@ -9,12 +9,18 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
     {
+        public List<TreeSelectListItem> CityTree { get; set; }
+
 
         public SchoolListVM()
         {
             NeedPage = false;
         }
 
+        protected override void InitVM()
+        {
+            CityTree = DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name);
+        }
 
         public override string SetFullRowBgColor(object entity)
         {

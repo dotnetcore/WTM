@@ -162,24 +162,24 @@
     private List<BootstrapBlazor.Components.MenuItem> Menus { get; set; }
 
 
-    /// <summary>
-    /// OnInitialized 方法
-    /// </summary>
-    protected override async Task OnInitializedAsync()
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
-        var token = await JS.InvokeAsync<string>(
-                "localStorageFuncs.get");
-        if (string.IsNullOrEmpty(token))
+        if (firstRender)
         {
-            navigationManager.NavigateTo("Login");
-        }
-        else
-        {
-            base.OnInitialized();
+            var token = await JS.InvokeAsync<string>(
+                    "localStorageFuncs.get");
+            if (string.IsNullOrEmpty(token))
+            {
+                navigationManager.NavigateTo("Login");
+            }
+            else
+            {
 
-            // TODO: 菜单获取可以通过数据库获取，此处为示例直接拼装的菜单集合
-            Menus = GetIconSideMenuItems();
+                // TODO: 菜单获取可以通过数据库获取，此处为示例直接拼装的菜单集合
+                Menus = GetIconSideMenuItems();
+            }
         }
     }
 

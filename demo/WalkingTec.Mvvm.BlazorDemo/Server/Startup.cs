@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.ReloadUserFunc = ReloadUser;
             });
 
-            services.AddSingleton<IStringLocalizerFactory, BlazorStringLocalizerFactory>();
+            //services.AddSingleton<IStringLocalizerFactory, BlazorStringLocalizerFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -104,20 +104,36 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             app.UseWtm();
 
             app.UseBlazorFrameworkFiles();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapBlazorHub();
-                endpoints.MapRazorPages();
-                endpoints.MapControllerRoute(
-                   name: "areaRoute",
-                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapFallbackToPage("/_Host");
-                //endpoints.MapFallbackToFile("index.html");
-            });
 
+            if (configs.BlazorMode == BlazorModeEnum.Server)
+            {
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapBlazorHub();
+                    endpoints.MapRazorPages();
+                    endpoints.MapControllerRoute(
+                       name: "areaRoute",
+                       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+                    endpoints.MapFallbackToPage("/_Host");
+            });
+            }
+            else
+            {
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapRazorPages();
+                    endpoints.MapControllerRoute(
+                       name: "areaRoute",
+                       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+                    endpoints.MapFallbackToFile("index.html");
+                });
+            }
             app.UseWtmContext();
 
 
