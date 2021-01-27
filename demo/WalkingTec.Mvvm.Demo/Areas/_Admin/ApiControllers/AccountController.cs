@@ -41,15 +41,16 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] bool rememberLogin = false)
         {
 
-            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => x.ITCode).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => new { itcode = x.ITCode, id = x.ID }).SingleOrDefaultAsync();
 
-            if (string.IsNullOrEmpty(code))
+            if (rv == null)
             {
                 return BadRequest(Localizer["Sys.LoginFailed"].Value);
             }
             LoginUserInfo user = new LoginUserInfo
             {
-                ITCode = code
+                ITCode = rv.itcode,
+                UserId = rv.id.ToString()
             };
 
             await user.LoadBasicInfoAsync(Wtm);
@@ -111,15 +112,16 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
 
-            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password.ToLower())).Select(x => x.ITCode).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password.ToLower())).Select(x => new { itcode = x.ITCode, id = x.ID }).SingleOrDefaultAsync();
 
-            if (string.IsNullOrEmpty(code))
+            if (rv == null)
             {
                 return BadRequest(Localizer["Sys.LoginFailed"].Value);
             }
             LoginUserInfo user = new LoginUserInfo
             {
-                ITCode = code
+                ITCode = rv.itcode,
+                UserId = rv.id.ToString()
             };
             await user.LoadBasicInfoAsync(Wtm);
             Wtm.LoginUserInfo = user;

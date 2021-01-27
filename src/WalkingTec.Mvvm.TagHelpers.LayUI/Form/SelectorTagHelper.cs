@@ -252,9 +252,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 content = regEnd.Replace(content, string.Empty);
 
                 #endregion
-
-                var reg = new Regex("(name=\")([0-9a-zA-z]{0,}[.]?)(Searcher[.]?[0-9a-zA-z]{0,}\")", RegexOptions.Multiline | RegexOptions.IgnoreCase);
-                content = reg.Replace(content, "$1$3");
+                var reg = new Regex("(name=\")(_DONOTUSE_)?([0-9a-zA-z]{0,}[.]?)(Searcher[.]?[0-9a-zA-z]{0,}\")", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                content = reg.Replace(content, "$1$2$4");
+                //reg = new Regex("(name=\")([0-9a-zA-z]{0,}[.]?)(Searcher[.]?[0-9a-zA-z]{0,}\")", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                //content = reg.Replace(content, "$1$3");
                 content = content.Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$");
                 var searchPanelTemplate = $@"<script type=""text/template"" id=""Temp{Id}"">{content}</script>";
 
