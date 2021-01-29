@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Demo.Test
             ViewResult rv = (ViewResult)_controller.Login();
             Assert.IsInstanceOfType(rv.Model, typeof(LoginVM));
 
-            FrameworkUserBase v = new FrameworkUserBase();
+            FrameworkUser v = new FrameworkUser();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 v.ITCode = "itcode";

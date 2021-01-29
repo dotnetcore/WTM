@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -42,8 +42,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             CityVM vm = rv.Model as CityVM;
             City v = new City();
 			
-            v.Name = "wdb1";
-            v.Test = "dcc";
+            v.Name = "NDS1wVfN";
+            v.Test = "0cZlNfH";
             v.ParentId = AddParent();
             vm.Entity = v;
             _controller.Create(vm);
@@ -52,8 +52,10 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data = context.Set<City>().Find(v.ID);
 				
-                Assert.AreEqual(data.Name, "wdb1");
-                Assert.AreEqual(data.Test, "dcc");
+                Assert.AreEqual(data.Name, "NDS1wVfN");
+                Assert.AreEqual(data.Test, "0cZlNfH");
+                Assert.AreEqual(data.CreateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
             }
 
         }
@@ -65,8 +67,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.Name = "wdb1";
-                v.Test = "dcc";
+                v.Name = "NDS1wVfN";
+                v.Test = "0cZlNfH";
                 v.ParentId = AddParent();
                 context.Set<City>().Add(v);
                 context.SaveChanges();
@@ -80,8 +82,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             v = new City();
             v.ID = vm.Entity.ID;
        		
-            v.Name = "w3o";
-            v.Test = "ZWNY";
+            v.Name = "oaARaowz";
+            v.Test = "38928";
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
 			
@@ -94,8 +96,10 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data = context.Set<City>().Find(v.ID);
  				
-                Assert.AreEqual(data.Name, "w3o");
-                Assert.AreEqual(data.Test, "ZWNY");
+                Assert.AreEqual(data.Name, "oaARaowz");
+                Assert.AreEqual(data.Test, "38928");
+                Assert.AreEqual(data.UpdateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
             }
 
         }
@@ -108,8 +112,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.Name = "wdb1";
-                v.Test = "dcc";
+                v.Name = "NDS1wVfN";
+                v.Test = "0cZlNfH";
                 v.ParentId = AddParent();
                 context.Set<City>().Add(v);
                 context.SaveChanges();
@@ -127,8 +131,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 var data = context.Set<City>().Find(v.ID);
-                Assert.AreEqual(data, null);
-            }
+                Assert.AreEqual(data.IsValid, false);
+          }
 
         }
 
@@ -140,8 +144,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v.Name = "wdb1";
-                v.Test = "dcc";
+                v.Name = "NDS1wVfN";
+                v.Test = "0cZlNfH";
                 v.ParentId = AddParent();
                 context.Set<City>().Add(v);
                 context.SaveChanges();
@@ -159,11 +163,11 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.Name = "wdb1";
-                v1.Test = "dcc";
+                v1.Name = "NDS1wVfN";
+                v1.Test = "0cZlNfH";
                 v1.ParentId = AddParent();
-                v2.Name = "w3o";
-                v2.Test = "ZWNY";
+                v2.Name = "oaARaowz";
+                v2.Test = "38928";
                 v2.ParentId = v1.ParentId; 
                 context.Set<City>().Add(v1);
                 context.Set<City>().Add(v2);
@@ -176,8 +180,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             CityBatchVM vm = rv.Model as CityBatchVM;
             vm.Ids = new string[] { v1.ID.ToString(), v2.ID.ToString() };
             
-            vm.LinkedVM.Name = "fE8hF";
-            vm.LinkedVM.Test = "ictWX";
+            vm.LinkedVM.Name = "3NGL9";
+            vm.LinkedVM.Test = "pvj8SCCPB";
             vm.FC = new Dictionary<string, object>();
 			
             vm.FC.Add("LinkedVM.Name", "");
@@ -189,10 +193,14 @@ namespace WalkingTec.Mvvm.Demo.Test
                 var data1 = context.Set<City>().Find(v1.ID);
                 var data2 = context.Set<City>().Find(v2.ID);
  				
-                Assert.AreEqual(data1.Name, "fE8hF");
-                Assert.AreEqual(data2.Name, "fE8hF");
-                Assert.AreEqual(data1.Test, "ictWX");
-                Assert.AreEqual(data2.Test, "ictWX");
+                Assert.AreEqual(data1.Name, "3NGL9");
+                Assert.AreEqual(data2.Name, "3NGL9");
+                Assert.AreEqual(data1.Test, "pvj8SCCPB");
+                Assert.AreEqual(data2.Test, "pvj8SCCPB");
+                Assert.AreEqual(data1.UpdateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data1.UpdateTime.Value).Seconds < 10);
+                Assert.AreEqual(data2.UpdateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data2.UpdateTime.Value).Seconds < 10);
             }
         }
 
@@ -205,11 +213,11 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.Name = "wdb1";
-                v1.Test = "dcc";
+                v1.Name = "NDS1wVfN";
+                v1.Test = "0cZlNfH";
                 v1.ParentId = AddParent();
-                v2.Name = "w3o";
-                v2.Test = "ZWNY";
+                v2.Name = "oaARaowz";
+                v2.Test = "38928";
                 v2.ParentId = v1.ParentId; 
                 context.Set<City>().Add(v1);
                 context.Set<City>().Add(v2);
@@ -227,9 +235,18 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data1 = context.Set<City>().Find(v1.ID);
                 var data2 = context.Set<City>().Find(v2.ID);
-                Assert.AreEqual(data1, null);
-                Assert.AreEqual(data2, null);
+                Assert.AreEqual(data1.IsValid, false);
+            Assert.AreEqual(data2.IsValid, false);
             }
+        }
+
+        [TestMethod]
+        public void ExportTest()
+        {
+            PartialViewResult rv = (PartialViewResult)_controller.Index();
+            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+            IActionResult rv2 = _controller.ExportExcel(rv.Model as CityListVM);
+            Assert.IsTrue((rv2 as FileContentResult).FileContents.Length > 0);
         }
 
         private Guid AddParent()
@@ -238,8 +255,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 
-                v.Name = "gsTRXA5";
-                v.Test = "37hcTy";
+                v.Name = "13ZhPNAb";
+                v.Test = "5vBOx";
                 context.Set<City>().Add(v);
                 context.SaveChanges();
             }

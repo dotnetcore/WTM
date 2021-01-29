@@ -175,6 +175,26 @@ namespace WalkingTec.Mvvm.Core.Extensions
             Dictionary<string, string> rv = new Dictionary<string, string>();
             string pat = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
             var pros = self.GetAllProperties();
+            List<string> skipFields = new List<string>()
+            {
+               nameof(TopBasePoco.BatchError),
+               nameof(TopBasePoco.Checked),
+               nameof(TopBasePoco.ExcelIndex),
+            };
+            if (typeof(IBasePoco).IsAssignableFrom(self))
+            {
+                skipFields.AddRange(
+                    new string[]{
+               nameof(IBasePoco.CreateBy),
+               nameof(IBasePoco.CreateTime),
+               nameof(IBasePoco.UpdateBy),
+               nameof(IBasePoco.UpdateTime) }
+                    );
+            }
+            if (typeof(IPersistPoco).IsAssignableFrom(self))
+            {
+                skipFields.Add(nameof(IPersistPoco.IsValid));
+            }
             foreach (var pro in pros)
             {
                 string key = pro.Name;
@@ -183,8 +203,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 if (notmapped == null &&
                     pro.PropertyType.IsList() == false &&
                     pro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) == false &&
-                    pro.DeclaringType != typeof(BasePoco) &&
-                    pro.DeclaringType != typeof(PersistPoco) 
+                    skipFields.Contains(key) == false
                     )
                 {
                     if (pro.PropertyType.IsNumber())

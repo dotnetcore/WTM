@@ -115,7 +115,8 @@ namespace WalkingTec.Mvvm.Core
             //如果包含附件，则先删除附件
             List<Guid> fileids = new List<Guid>();
             var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
-            var isPersist = modelType.IsSubclassOf(typeof(PersistPoco));
+            var isPersist =typeof(IPersistPoco).IsAssignableFrom(modelType);
+            var isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelType);
             var query = DC.Set<TModel>().AsQueryable();
             var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
             foreach (var f in fas)
@@ -140,12 +141,15 @@ namespace WalkingTec.Mvvm.Core
                     var Entity = entityList[i];
                     if (isPersist)
                     {
-                        (Entity as PersistPoco).IsValid = false;
-                        (Entity as PersistPoco).UpdateTime = DateTime.Now;
-                        (Entity as PersistPoco).UpdateBy = LoginUserInfo.ITCode;
+                        (Entity as IPersistPoco).IsValid = false;
                         DC.UpdateProperty(Entity, "IsValid");
-                        DC.UpdateProperty(Entity, "UpdateTime");
-                        DC.UpdateProperty(Entity, "UpdateBy");
+                        if (isBasePoco)
+                        {
+                            (Entity as IBasePoco).UpdateTime = DateTime.Now;
+                            (Entity as IBasePoco).UpdateBy = LoginUserInfo.ITCode;
+                            DC.UpdateProperty(Entity, "UpdateTime");
+                            DC.UpdateProperty(Entity, "UpdateBy");
+                        }
                     }
                     else
                     {
@@ -342,9 +346,9 @@ namespace WalkingTec.Mvvm.Core
                             }
                         }
                     }
-                    if (typeof(TModel).IsSubclassOf(typeof(BasePoco)))
+                    if (typeof(IBasePoco).IsAssignableFrom( typeof(TModel)))
                     {
-                        BasePoco ent = entity as BasePoco;
+                        IBasePoco ent = entity as IBasePoco;
                         if (ent.UpdateTime == null)
                         {
                             ent.UpdateTime = DateTime.Now;

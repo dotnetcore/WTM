@@ -165,7 +165,7 @@ namespace WalkingTec.Mvvm.Core
                     query = query.Include(item);
                 }
             }
-            if (typeof(TModel).IsSubclassOf(typeof(PersistPoco)))
+            if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
             {
                 var mod = new IsValidModifier();
                 var newExp = mod.Modify(query.Expression);
@@ -245,9 +245,9 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
             //自动设定添加日期和添加人
-            if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(BasePoco)))
+            if (typeof(IBasePoco).IsAssignableFrom(typeof(TModel)))
             {
-                BasePoco ent = Entity as BasePoco;
+                IBasePoco ent = Entity as IBasePoco;
                 if (ent.CreateTime == null)
                 {
                     ent.CreateTime = DateTime.Now;
@@ -258,9 +258,9 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
 
-            if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(PersistPoco)))
+            if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
             {
-                (Entity as PersistPoco).IsValid = true;
+                (Entity as IPersistPoco).IsValid = true;
             }
 
             #region 更新子表
@@ -275,7 +275,7 @@ namespace WalkingTec.Mvvm.Core
                     if (ftype.IsSubclassOf(typeof(TopBasePoco)))
                     {
                         //界面传过来的子表数据
-                        IEnumerable<TopBasePoco> list = pro.GetValue(Entity) as IEnumerable<BasePoco>;
+                        IEnumerable<TopBasePoco> list = pro.GetValue(Entity) as IEnumerable<TopBasePoco>;
                         if (list != null && list.Count() > 0)
                         {
                             string fkname = DC.GetFKName<TModel>(pro.Name);
@@ -309,14 +309,17 @@ namespace WalkingTec.Mvvm.Core
                             foreach (var newitem in list)
                             {
                                 var subtype = newitem.GetType();
-                                BasePoco ent = newitem as BasePoco;
-                                if (ent.CreateTime == null)
+                                if (typeof(IBasePoco).IsAssignableFrom(subtype))
                                 {
-                                    ent.CreateTime = DateTime.Now;
-                                }
-                                if (string.IsNullOrEmpty(ent.CreateBy))
-                                {
-                                    ent.CreateBy = LoginUserInfo?.ITCode;
+                                    IBasePoco ent = newitem as IBasePoco;
+                                    if (ent.CreateTime == null)
+                                    {
+                                        ent.CreateTime = DateTime.Now;
+                                    }
+                                    if (string.IsNullOrEmpty(ent.CreateBy))
+                                    {
+                                        ent.CreateBy = LoginUserInfo?.ITCode;
+                                    }
                                 }
                             }
                         }
@@ -372,9 +375,9 @@ namespace WalkingTec.Mvvm.Core
 
         private void DoEditPrepare(bool updateAllFields)
         {
-            if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(BasePoco)))
+            if (typeof(IBasePoco).IsAssignableFrom(typeof(TModel)))
             {
-                BasePoco ent = Entity as BasePoco;
+                IBasePoco ent = Entity as IBasePoco;
                 if (ent.UpdateTime == null)
                 {
                     ent.UpdateTime = DateTime.Now;
@@ -409,9 +412,9 @@ namespace WalkingTec.Mvvm.Core
                             foreach (var newitem in list)
                             {
                                 var subtype = newitem.GetType();
-                                if (subtype.IsSubclassOf(typeof(BasePoco)))
+                                if (typeof(IBasePoco).IsAssignableFrom(subtype))
                                 {
-                                    BasePoco ent = newitem as BasePoco;
+                                    IBasePoco ent = newitem as IBasePoco;
                                     if (ent.UpdateTime == null)
                                     {
                                         ent.UpdateTime = DateTime.Now;
@@ -490,7 +493,7 @@ namespace WalkingTec.Mvvm.Core
                                                 }
                                             }
                                         }
-                                        if (item.GetType().IsSubclassOf(typeof(BasePoco)))
+                                        if (typeof(IBasePoco).IsAssignableFrom(item.GetType()))
                                         {
                                             DC.UpdateProperty(i, "UpdateTime");
                                             DC.UpdateProperty(i, "UpdateBy");
@@ -502,11 +505,14 @@ namespace WalkingTec.Mvvm.Core
                             foreach (var item in toremove)
                             {
                                 //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
-                                if (ftype.IsSubclassOf(typeof(PersistPoco)))
+                                if (typeof(IPersistPoco).IsAssignableFrom(ftype))
                                 {
-                                    (item as PersistPoco).IsValid = false;
-                                    (item as PersistPoco).UpdateTime = DateTime.Now;
-                                    (item as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
+                                    (item as IPersistPoco).IsValid = false;
+                                    if (typeof(IBasePoco).IsAssignableFrom(ftype))
+                                    {
+                                        (item as IBasePoco).UpdateTime = DateTime.Now;
+                                        (item as IBasePoco).UpdateBy = LoginUserInfo?.ITCode;
+                                    }
                                     dynamic i = item;
                                     DC.UpdateEntity(i);
                                 }
@@ -526,9 +532,9 @@ namespace WalkingTec.Mvvm.Core
                             //需要添加的数据
                             foreach (var item in toadd)
                             {
-                                if (item.GetType().IsSubclassOf(typeof(BasePoco)))
+                                if (typeof(IBasePoco).IsAssignableFrom(item.GetType()))
                                 {
-                                    BasePoco ent = item as BasePoco;
+                                    IBasePoco ent = item as IBasePoco;
                                     if (ent.CreateTime == null)
                                     {
                                         ent.CreateTime = DateTime.Now;
@@ -549,13 +555,16 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 IEnumerable<TopBasePoco> removeData = _entity.GetType().GetSingleProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
                                 //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
-                                if (removeData is IEnumerable<PersistPoco> removePersistPocoData)
+                                if (removeData is IEnumerable<IPersistPoco> removePersistPocoData)
                                 {
                                     foreach (var item in removePersistPocoData)
                                     {
-                                        (item as PersistPoco).IsValid = false;
-                                        (item as PersistPoco).UpdateTime = DateTime.Now;
-                                        (item as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
+                                        (item as IPersistPoco).IsValid = false;
+                                        if (typeof(IBasePoco).IsAssignableFrom(item.GetType()))
+                                        {
+                                            (item as IBasePoco).UpdateTime = DateTime.Now;
+                                            (item as IBasePoco).UpdateBy = LoginUserInfo?.ITCode;
+                                        }
                                         dynamic i = item;
                                         DC.UpdateEntity(i);
                                     }
@@ -601,7 +610,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                     }
                 }
-                if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(BasePoco)))
+                if (typeof(IBasePoco).IsAssignableFrom(typeof(TModel)))
                 {
                     try
                     {
@@ -625,14 +634,14 @@ namespace WalkingTec.Mvvm.Core
         public virtual void DoDelete()
         {
             //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
-            if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(PersistPoco)))
+            if (typeof(IPersistPoco).IsAssignableFrom( typeof(TModel)))
             {
                 FC.Add("Entity.IsValid", 0);
-                (Entity as PersistPoco).IsValid = false;
+                (Entity as IPersistPoco).IsValid = false;
 
                 var pros = typeof(TModel).GetAllProperties();
                 //如果包含List<PersistPoco>，将子表IsValid也设置为false
-                var fas = pros.Where(x => typeof(IEnumerable<PersistPoco>).IsAssignableFrom(x.PropertyType)).ToList();
+                var fas = pros.Where(x => typeof(IEnumerable<IPersistPoco>).IsAssignableFrom(x.PropertyType)).ToList();
                 foreach (var f in fas)
                 {
                     f.SetValue(Entity, f.PropertyType.GetConstructor(Type.EmptyTypes).Invoke(null));
@@ -651,16 +660,21 @@ namespace WalkingTec.Mvvm.Core
         public virtual async Task DoDeleteAsync()
         {
             //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
-            if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(PersistPoco)))
+            if (typeof(IPersistPoco).IsAssignableFrom( typeof(TModel)))
             {
                 FC.Add("Entity.IsValid", 0);
-                (Entity as PersistPoco).IsValid = false;
+                (Entity as IPersistPoco).IsValid = false;
                 var pros = typeof(TModel).GetAllProperties();
                 //如果包含List<PersistPoco>，将子表IsValid也设置为false
-                var fas = pros.Where(x => typeof(IEnumerable<PersistPoco>).IsAssignableFrom(x.PropertyType)).ToList();
+                var fas = pros.Where(x => typeof(IEnumerable<IPersistPoco>).IsAssignableFrom(x.PropertyType)).ToList();
                 foreach (var f in fas)
                 {
                     f.SetValue(Entity, f.PropertyType.GetConstructor(Type.EmptyTypes).Invoke(null));
+                }
+                fas = pros.Where(x => typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
+                foreach (var f in fas)
+                {
+                    f.SetValue(Entity, null);
                 }
                 DoEditPrepare(false);
                 try

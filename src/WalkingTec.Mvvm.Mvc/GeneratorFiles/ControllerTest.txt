@@ -113,7 +113,8 @@ namespace $tns$
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 var data = context.Set<$model$>().Find(v.ID);
-            }
+                $del$
+          }
 
         }
 

@@ -419,7 +419,7 @@ namespace WalkingTec.Mvvm.Mvc
             };
             try
             {
-                rv.Controller.Response.Headers.Add("IsScript", "true");
+                rv.Controller.Response?.Headers?.Add("IsScript", "true");
             }
             catch { }
             return rv;

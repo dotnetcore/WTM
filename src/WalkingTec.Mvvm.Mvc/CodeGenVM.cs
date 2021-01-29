@@ -1083,7 +1083,7 @@ namespace WalkingTec.Mvvm.Mvc
                 Type modelType = Type.GetType(SelectedModel);
                 if (UI == UIEnum.LayUI && IsApi == false)
                 {
-                    if (modelType.IsSubclassOf(typeof(BasePoco)))
+                    if (typeof(IBasePoco).IsAssignableFrom( modelType) || typeof(IPersistPoco).IsAssignableFrom(modelType))
                     {
                         rv = GetResource($"ControllerTest.txt").Replace("$cns$", ControllerNs).Replace("$tns$", TestNs).Replace("$vns$", VMNs).Replace("$model$", ModelName).Replace("$mns$", ModelNS).Replace("$dns$", DataNs);
                     }
@@ -1094,7 +1094,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 else
                 {
-                    if (modelType.IsSubclassOf(typeof(BasePoco)))
+                    if (typeof(IBasePoco).IsAssignableFrom(modelType) || typeof(IPersistPoco).IsAssignableFrom(modelType))
                     {
                         rv = GetResource($"ApiTest.txt").Replace("$cns$", ControllerNs).Replace("$tns$", TestNs).Replace("$vns$", VMNs).Replace("$model$", ModelName).Replace("$mns$", ModelNS).Replace("$dns$", DataNs).Replace("$classnamel$", $"{ModelName}{(IsApi == true ? "Api" : "")}");
                     }
@@ -1200,7 +1200,7 @@ namespace WalkingTec.Mvvm.Mvc
                 string del = $"Assert.AreEqual(data, null);";
                 string mdel = @"Assert.AreEqual(data1, null);
             Assert.AreEqual(data2, null);";
-                if (modelType.IsSubclassOf(typeof(PersistPoco)))
+                if (typeof(IPersistPoco).IsAssignableFrom( modelType))
                 {
                     del = $"Assert.AreEqual(data.IsValid, false);";
                     mdel = @"Assert.AreEqual(data1.IsValid, false);

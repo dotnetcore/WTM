@@ -79,11 +79,31 @@ namespace WalkingTec.Mvvm.Mvc
             var pros = modeltype.GetAllProperties();
             List<CodeGenListView> lv = new List<CodeGenListView>();
             int count = 0;
-            Type[] basetype = new Type[] { typeof(BasePoco), typeof(TopBasePoco), typeof(PersistPoco) };
+            List<string> skipFields = new List<string>()
+            {
+               nameof(TopBasePoco.BatchError),
+               nameof(TopBasePoco.Checked),
+               nameof(TopBasePoco.ExcelIndex),
+            };
+            if (typeof(IBasePoco).IsAssignableFrom(modeltype))
+            {
+                skipFields.AddRange(
+                    new string[]{
+               nameof(IBasePoco.CreateBy),
+               nameof(IBasePoco.CreateTime),
+               nameof(IBasePoco.UpdateBy),
+               nameof(IBasePoco.UpdateTime) }
+                    );
+            }
+            if (typeof(IPersistPoco).IsAssignableFrom(modeltype))
+            {
+                skipFields.Add(nameof(IPersistPoco.IsValid));
+            }
+
             List<string> ignoreField = new List<string>();
             foreach (var pro in pros)
             {
-                if (basetype.Contains(pro.DeclaringType) == false)
+                if (skipFields.Contains(pro.Name) == false)
                 {
                     if(pro.CanWrite == false)
                     {
@@ -151,7 +171,7 @@ namespace WalkingTec.Mvvm.Mvc
                             var subpros = checktype.GetAllProperties();
                             foreach (var spro in subpros)
                             {
-                                if (basetype.Contains(spro.DeclaringType) == false)
+                                if(skipFields.Contains(spro.Name) == false)
                                 {
                                     Type subchecktype = spro.PropertyType;
                                     if (spro.PropertyType.IsNullable())

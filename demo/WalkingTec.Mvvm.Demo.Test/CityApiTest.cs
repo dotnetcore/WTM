@@ -37,8 +37,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             CityApiVM vm = _controller.Wtm.CreateVM<CityApiVM>();
             City v = new City();
             
-            v.Name = "WiM8DeuY";
-            v.Test = "ukP11Hc6";
+            v.Name = "04W2";
+            v.Test = "xdtsoZ68";
             v.ParentId = AddParent();
             vm.Entity = v;
             var rv = _controller.Add(vm);
@@ -48,8 +48,10 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data = context.Set<City>().Find(v.ID);
                 
-                Assert.AreEqual(data.Name, "WiM8DeuY");
-                Assert.AreEqual(data.Test, "ukP11Hc6");
+                Assert.AreEqual(data.Name, "04W2");
+                Assert.AreEqual(data.Test, "xdtsoZ68");
+                Assert.AreEqual(data.CreateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
             }
         }
 
@@ -60,8 +62,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.Name = "WiM8DeuY";
-                v.Test = "ukP11Hc6";
+                v.Name = "04W2";
+                v.Test = "xdtsoZ68";
                 v.ParentId = AddParent();
                 context.Set<City>().Add(v);
                 context.SaveChanges();
@@ -72,8 +74,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             v = new City();
             v.ID = oldID;
        		
-            v.Name = "IWmXW";
-            v.Test = "YQ40IFQt4";
+            v.Name = "ifE0uV";
+            v.Test = "aDdwvFbFf";
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
 			
@@ -87,8 +89,10 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data = context.Set<City>().Find(v.ID);
  				
-                Assert.AreEqual(data.Name, "IWmXW");
-                Assert.AreEqual(data.Test, "YQ40IFQt4");
+                Assert.AreEqual(data.Name, "ifE0uV");
+                Assert.AreEqual(data.Test, "aDdwvFbFf");
+                Assert.AreEqual(data.UpdateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
             }
 
         }
@@ -100,8 +104,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.Name = "WiM8DeuY";
-                v.Test = "ukP11Hc6";
+                v.Name = "04W2";
+                v.Test = "xdtsoZ68";
                 v.ParentId = AddParent();
                 context.Set<City>().Add(v);
                 context.SaveChanges();
@@ -118,11 +122,11 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.Name = "WiM8DeuY";
-                v1.Test = "ukP11Hc6";
+                v1.Name = "04W2";
+                v1.Test = "xdtsoZ68";
                 v1.ParentId = AddParent();
-                v2.Name = "IWmXW";
-                v2.Test = "YQ40IFQt4";
+                v2.Name = "ifE0uV";
+                v2.Test = "aDdwvFbFf";
                 v2.ParentId = v1.ParentId; 
                 context.Set<City>().Add(v1);
                 context.Set<City>().Add(v2);
@@ -136,8 +140,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data1 = context.Set<City>().Find(v1.ID);
                 var data2 = context.Set<City>().Find(v2.ID);
-                Assert.AreEqual(data1, null);
-                Assert.AreEqual(data2, null);
+                Assert.AreEqual(data1.IsValid, false);
+            Assert.AreEqual(data2.IsValid, false);
             }
 
             rv = _controller.BatchDelete(new string[] {});
@@ -151,8 +155,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 
-                v.Name = "glAj";
-                v.Test = "l6zM";
+                v.Name = "O7c";
+                v.Test = "TCwO2bmTp";
                 context.Set<City>().Add(v);
                 context.SaveChanges();
             }

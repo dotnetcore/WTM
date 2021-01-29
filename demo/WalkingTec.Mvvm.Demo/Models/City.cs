@@ -11,7 +11,7 @@ using WalkingTec.Mvvm.Core;
 namespace WalkingTec.Mvvm.Demo.Models
 {
     [Table("Cities")]
-    public class City : TreePoco<City>
+    public class City : TreePoco<City>, IBasePoco,IPersistPoco
     {
         //[Key]
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -26,6 +26,10 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Display(Name = "test")]
         [JsonConverter(typeof(JsonStringConverter))]
         public string Test { get; set; }
-
+        public DateTime? CreateTime { get; set; }
+        public string CreateBy { get; set; }
+        public DateTime? UpdateTime { get; set; }
+        public string UpdateBy { get; set; }
+        public bool IsValid { get; set; } = true;
     }
 }
