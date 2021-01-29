@@ -1,14 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
-namespace System.Text.Json.Serialization
+namespace  System.Text.Json.Serialization
 {
-    /// <summary>
-    /// StringIgnoreLTGTConvert
-    /// 忽略客户端提交的 &lt;及&gt;字符
-    /// </summary>
-    public class StringIgnoreLTGTConverter : JsonConverter<string>
+    public class JsonStringConverter : JsonConverter<string>
     {
         public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -19,9 +19,8 @@ namespace System.Text.Json.Serialization
 
             if (reader.TokenType == JsonTokenType.String)
             {
-                return reader.GetString().Replace("<", string.Empty).Replace(">", string.Empty);
+                return reader.GetString();
             }
-
             return null;
         }
 
@@ -36,5 +35,6 @@ namespace System.Text.Json.Serialization
                 writer.WriteStringValue(value);
             }
         }
+
     }
 }
