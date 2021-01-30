@@ -309,55 +309,70 @@ export default class Utils {
 
   private generateUploadComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, directives, key, events, label, mapKey } = option;
+    const { style, props, directives, key, events, label, mapKey, isFileDataById = false } = option;
+    let { slot } = option;
     const compData = {
       directives,
-      on: events || {},
-      props: { ...displayProp(_t), action: actionApi, disabled: _t.status === _t.$actionType.detail, limit: 1, ...props },
-      style,
+      on: translateEvents(events || {}, _t),
+      props: {
+        ...displayProp(_t),
+        action: actionApi,
+        disabled: _t.status === _t.$actionType.detail,
+        ...props
+      },
+      style
     };
+
+    // 单个
+    if (props.multiple) {
+      compData.on["onBackImgId"] = (event) => {
+        _.set(_t.sourceFormData || _t.formData, key, event);
+      };
+      const imgID = _.get(_t.sourceFormData || _t.formData, key);
+      return (
+        <wtm-upload-img imgId={imgID} {...compData}>
+          {option.children}
+        </wtm-upload-img>
+      );
+    }
 
     // 上传钩子
     if (!compData.props.onSuccess) {
       compData.props.onSuccess = (res, file, fileList) => {
-        let fileIds = res.Id;
-        if (compData.props.limit > 1) {
-          fileIds = fileList.map(item => item.response ? item.response.Id : item.Id );
-        }
-        setMapKeyModel(_t, key, fileIds, mapKey);
-        // _.set(_t.sourceFormData || _t.formData, key, fileIds);
+        let fileData = isFileDataById ? fileList.map(item => item.response ? item.response.Id : item.Id) : fileList;
+        setMapKeyModel(_t, key, fileData, mapKey);
       };
     }
     // 删除钩子
     if (!compData.props.onRemove) {
       compData.props.onRemove = (file, fileList) => {
-        let fileIds = "";
-        if(compData.props.limit > 1) {
-          fileIds = fileList.map(item => item.response ? item.response.Id : item.Id )
-        }
-        setMapKeyModel(_t, key, fileIds, mapKey);
-        // _.set(_t.sourceFormData || _t.formData, key, fileIds);
+        let fileData = isFileDataById ? fileList.map(item => item.response ? item.response.Id : item.Id) : fileList;
+        setMapKeyModel(_t, key, fileData, mapKey);
       };
     }
-    // 赋值
-    // const value:any = _.get(_t.sourceFormData || _t.formData, key);
-    const value = getMapKeyModel(_t, key, mapKey);
-    let dataFiles:any = [];
-    if (value) {
-      if(_.isArray(value)) {
-        dataFiles = value.map(item => {
-          return { name: label, url: fileApi + item, Id: item };
-        });
-      } else {
-        dataFiles = [{ name: label, url: fileApi + value, Id: value }];
+    if (isFileDataById) {
+      // 赋值
+      const value = getMapKeyModel(_t, key, mapKey);
+      let dataFiles:any = [];
+      if (value) {
+        if(_.isArray(value)) {
+          dataFiles = value.map(item => ({ name: label, url: fileApi + item, Id: item }));
+        } else {
+          dataFiles = [{ name: label, url: fileApi + value, Id: value }];
+        }
       }
+      compData.props["file-list"] = dataFiles;
+    } else {
+      compData.props["file-list"] = sourceItem(_t.sourceFormData || _t.formData, key)[key];
     }
-    compData.props["file-list"] = dataFiles;
-    const defaultSlot = <el-button type="primary">{_t.$t('form.clickUpload')}</el-button>;
+
     if (slot) {
       slot = slotRender(h, slot);
+    } else {
+      slot = <el-button type="primary">{_t.$t('form.clickUpload')}</el-button>;
     }
-    return <el-upload {...compData}>{slot || defaultSlot}</el-upload>;
+
+    return <el-upload {...compData}>{slot}</el-upload>;
   }
 
   private generateWtmUploadImgComponent(h, option, vm?) {
@@ -517,14 +532,11 @@ export const sourceItem = (formData, keyPath) => {
  * @param hml
  * @param params
  */
-export const slotRender = (h, hml, params) => {
+export const slotRender = (h, hml, params = {}) => {
     let slot: any = undefined;
     if (_.isString(hml)) {
         slot = (
-            <wtm-render-view
-              hml={hml}
-              params={{ ...params }}
-            ></wtm-render-view>
+            <wtm-render-view hml={hml} params={{ ...params }} ></wtm-render-view>
           );
     }
     return slot;
