@@ -466,6 +466,12 @@ namespace WalkingTec.Mvvm.Mvc
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
             services.AddScoped<WtmFileProvider>();
+            services.Configure<FormOptions>(y =>
+            {
+                y.ValueCountLimit = 5000;
+                y.ValueLengthLimit = int.MaxValue - 20480;
+                y.MultipartBodyLengthLimit = WtmConfigs.FileUploadOptions.UploadLimit;
+            });
             return services;
         }
         public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services)
@@ -507,12 +513,6 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 options.Cookie.Name = WtmConfigs.CookiePre + ".Session";
                 options.IdleTimeout = TimeSpan.FromSeconds(timeout);
-            });
-            services.Configure<FormOptions>(y =>
-            {
-                y.ValueCountLimit = 5000;
-                y.ValueLengthLimit = int.MaxValue - 20480;
-                y.MultipartBodyLengthLimit = WtmConfigs.FileUploadOptions.UploadLimit;
             });
             return services;
         }
@@ -674,11 +674,10 @@ namespace WalkingTec.Mvvm.Mvc
             //}
 
             //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
-            var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-            var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
+            var programType = Assembly.GetCallingAssembly()?.GetTypes()?.Where(x => x.Name == "Program").FirstOrDefault();
+            var coredll = gd.AllAssembly.Where(x => x.GetName().Name == "WalkingTec.Mvvm.Core.dll" || x.GetName().Name == "WalkingTec.Mvvm.Core").FirstOrDefault();
             var programLocalizer = localfactory.Create(programType);
             coredll.GetType("WalkingTec.Mvvm.Core.CoreProgram").GetProperty("_localizer").SetValue(null, programLocalizer);
-
 
             var controllers = gd.GetTypesAssignableFrom <IBaseController>();
             gd.AllModule = GetAllModules(controllers);
