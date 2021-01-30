@@ -376,7 +376,7 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
         private Type _modelType;
         private bool _needAdd = true;
         private int _mode = 0; //0是搜素模式，1是添加模式
-        private Expression<Func<PersistPoco, bool>> _where;
+        private Expression<Func<IPersistPoco, bool>> _where;
 
         /// <summary>
         /// 构造函数
@@ -433,7 +433,7 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
             //获取源类型
             var checkType = GetDCModel(expression);
 
-            if (checkType != null && checkType.IsSubclassOf(typeof(PersistPoco)))
+            if (checkType != null && typeof(IPersistPoco).IsAssignableFrom( checkType))
             {
                 _modelType = checkType;
                 //先调用一次Visit，删除所有的where表达式

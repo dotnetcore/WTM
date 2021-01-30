@@ -1,6 +1,6 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using WalkingTec.Mvvm.Core;
-
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
 {
@@ -14,9 +14,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
 
     }
 
-	/// <summary>
-    /// 批量编辑字段类
-    /// </summary>
     public class ActionLog_BatchEdit : BaseVM
     {
 

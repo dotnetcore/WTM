@@ -1,0 +1,17 @@
+@inherits LayoutComponentBase
+
+<Layout SideWidth="0" IsPage="false" ShowGotoTop="false" ShowCollapseBar="false"
+        IsFullSide="true" IsFixedHeader="false" IsFixedFooter="false" ShowFooter="false" 
+        UseTabSet="false"  >
+    <Main>
+        <CascadingValue Value="this" IsFixed="true">
+            @Body
+        </CascadingValue>
+    </Main>
+</Layout>
+
+<Toast />
+<Dialog />
+<PopoverConfirm />
+<Message />
+<SweetAlert />

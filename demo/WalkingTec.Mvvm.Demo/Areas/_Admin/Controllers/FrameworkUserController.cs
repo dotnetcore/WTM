@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,7 +15,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     [ActionDescription("MenuKey.UserManagement")]
     public class FrameworkUserController : BaseController
     {
-        #region 搜索
         [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
@@ -39,9 +39,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
         }
 
-        #endregion
 
-        #region 新建
         [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
@@ -71,9 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 }
             }
         }
-        #endregion
 
-        #region 修改
         [ActionDescription("Sys.Edit")]
         public ActionResult Edit(string id)
         {
@@ -106,9 +102,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 }
             }
         }
-        #endregion
 
-        #region 修改密码
         [ActionDescription("Login.ChangePassword")]
         public ActionResult Password(Guid id)
         {
@@ -147,10 +141,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 }
             }
         }
-        #endregion
 
-
-        #region 删除
         [ActionDescription("Sys.Delete")]
         public ActionResult Delete(Guid id)
         {
@@ -173,18 +164,36 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
-        #endregion
 
-        #region 详细
         [ActionDescription("Sys.Details")]
         public PartialViewResult Details(Guid id)
         {
             var v = Wtm.CreateVM<FrameworkUserVM>(id);
             return PartialView("Details", v);
         }
-        #endregion
 
-        #region 批量删除
+        [HttpPost]
+        [ActionDescription("Sys.BatchEdit")]
+        public ActionResult BatchEdit(string[] IDs)
+        {
+            var vm = Wtm.CreateVM<FrameworkUserBatchVM>(Ids: IDs);
+            return PartialView(vm);
+        }
+
+        [HttpPost]
+        [ActionDescription("Sys.BatchEdit")]
+        public ActionResult DoBatchEdit(FrameworkUserBatchVM vm, IFormCollection nouse)
+        {
+            if (!ModelState.IsValid || !vm.DoBatchEdit())
+            {
+                return PartialView("BatchEdit", vm);
+            }
+            else
+            {
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.BatchEditSuccess", vm.Ids.Length]);
+            }
+        }
+
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
@@ -213,9 +222,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.OprationSuccess"]);
             }
         }
-        #endregion
 
-        #region 导入
         [ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
@@ -236,7 +243,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
-        #endregion
 
         [ActionDescription("Sys.Enable")]
         public ActionResult Enable(Guid id, bool enable)

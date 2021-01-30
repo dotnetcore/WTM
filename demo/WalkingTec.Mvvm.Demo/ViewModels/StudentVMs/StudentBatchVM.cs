@@ -25,9 +25,19 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
     /// </summary>
     public class Student_BatchEdit : BaseVM
     {
+        [Display(Name = "密码")]
+        public String Password { get; set; }
+        [Display(Name = "性别")]
+        public GenderEnum? Sex { get; set; }
+        [Display(Name = "邮编")]
+        public String ZipCode { get; set; }
+        public List<ComboSelectListItem> AllStudentMajors { get; set; }
+        [Display(Name = "专业")]
+        public List<Guid> SelectedStudentMajorIDs { get; set; }
 
         protected override void InitVM()
         {
+            AllStudentMajors = DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
         }
 
     }

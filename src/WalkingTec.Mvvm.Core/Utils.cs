@@ -38,9 +38,19 @@ namespace WalkingTec.Mvvm.Core
         {
             if (_allAssemblies == null)
             {
-
                 _allAssemblies = new List<Assembly>();
-                var path = Assembly.GetEntryAssembly().Location;
+                string path = null;
+                string singlefile = null;
+                try
+                {
+                    path = Assembly.GetEntryAssembly()?.Location;
+                }
+                catch { }
+                if (string.IsNullOrEmpty(path))
+                {
+                    singlefile = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                    path = Path.GetDirectoryName(singlefile);
+                }
                 var dir = new DirectoryInfo(Path.GetDirectoryName(path));
 
                 var dlls = dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
@@ -64,6 +74,9 @@ namespace WalkingTec.Mvvm.Core
                 "MySql.Data.",
                 "Npgsql.",
                 "NPOI.",
+                "netstandard",
+                "MySqlConnector",
+                "VueCliMiddleware"
                 };
 
                 var filtered = dlls.Where(x => systemdll.Any(y => x.Name.StartsWith(y)) == false);
@@ -71,10 +84,13 @@ namespace WalkingTec.Mvvm.Core
                 {
                     try
                     {
-                        _allAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(dll.FullName));
+                        AssemblyLoadContext.Default.LoadFromAssemblyPath(dll.FullName);
                     }
-                    catch { }
+                    catch {
+                    }
                 }
+                var dlllist = AssemblyLoadContext.Default.Assemblies.Where(x => systemdll.Any(y=>x.FullName.StartsWith(y)) == false).ToList();
+                _allAssemblies.AddRange(dlllist);
             }
             return _allAssemblies;
         }

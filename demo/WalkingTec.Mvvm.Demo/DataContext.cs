@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -25,13 +26,22 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<School> Schools { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<WxReportData> WxReportDatas { get; set; }
         public DbSet<不要用中文模型名> 不要中文 { get; set; }
 
 
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {
             var state = await base.DataInit(allModules, IsSpa);
-            if (state == true)
+            bool emptydb = false;
+
+            try
+            {
+                emptydb = Set<FrameworkUser>().Count() == 0 && Set<FrameworkUserRole>().Count() == 0;
+            }
+            catch { }
+
+            if (state == true || emptydb == true)
             {
                 //when state is true, means it's the first time EF create database, do data init here
                 //当state是true的时候，表示这是第一次创建数据库，可以在这里进行数据初始化

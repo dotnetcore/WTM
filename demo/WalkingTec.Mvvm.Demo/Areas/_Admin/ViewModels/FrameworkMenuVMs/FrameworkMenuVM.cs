@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,6 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
-using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
@@ -58,18 +58,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 IconFont = res[0];
                 IconFontItem = res[1];
             }
-            IconSelectItems = !string.IsNullOrEmpty(IconFont) && IconFontsHelper
-                                .IconFontDicItems
-                                .ContainsKey(IconFont)
-                                ? IconFontsHelper
-                                    .IconFontDicItems[IconFont]
-                                    .Select(x => new ComboSelectListItem()
-                                    {
-                                        Text = x.Text,
-                                        Value = x.Value,
-                                        Icon = x.Icon
-                                    }).ToList()
-                                : new List<ComboSelectListItem>();
 
             SelectedRolesCodes.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToList());
 
@@ -322,18 +310,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public void AddPrivilege(List<Guid> menuids)
         {
-            //var oldIDs = DC.Set<FunctionPrivilege>().Where(x => menuids.Contains(x.MenuItemId)).Select(x => x.ID).ToList();
             var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").FirstOrDefault();
-            //foreach (var oldid in oldIDs)
-            //{
-            //    try
-            //    {
-            //        FunctionPrivilege fp = new FunctionPrivilege { ID = oldid };
-            //        DC.Set<FunctionPrivilege>().Attach(fp);
-            //        DC.DeleteEntity(fp);
-            //    }
-            //    catch { }
-            //}
             if (admin != null && SelectedRolesCodes.Contains(admin.RoleCode) == false)
             {
                 SelectedRolesCodes.Add(admin.RoleCode);
@@ -362,7 +339,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             try
             {
-                //级联删除所有子集
                 DC.CascadeDelete(Entity);
                 DC.SaveChanges();
             }

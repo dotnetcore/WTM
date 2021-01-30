@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
@@ -14,9 +15,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
     }
 
-	/// <summary>
-    /// 批量编辑字段类
-    /// </summary>
     public class DataPrivilege_BatchEdit : BaseVM
     {
 

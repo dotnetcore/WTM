@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
@@ -11,8 +12,11 @@ namespace WalkingTec.Mvvm.Test.Mock
         {
             var _controller = new T();
             _controller.Wtm = MockWtmContext.CreateWtmContext(dataContext, usercode);
-            Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
-            mockService.Setup(x => x.GetService(typeof(WTMContext))).Returns(_controller.Wtm);
+            Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
+            MockHttpSession mockSession = new MockHttpSession();
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            mockHttpContext.Setup(x => x.Request).Returns(new DefaultHttpContext().Request);
+            _controller.ControllerContext.HttpContext = mockHttpContext.Object;
             return _controller;
         }
 
@@ -20,8 +24,11 @@ namespace WalkingTec.Mvvm.Test.Mock
         {
             var _controller = new T();
             _controller.Wtm = MockWtmContext.CreateWtmContext(dataContext, usercode);
-            Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
-            mockService.Setup(x => x.GetService(typeof(WTMContext))).Returns(_controller.Wtm);
+            Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
+            MockHttpSession mockSession = new MockHttpSession();
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            mockHttpContext.Setup(x => x.Request).Returns(new DefaultHttpContext().Request);
+            _controller.ControllerContext.HttpContext = mockHttpContext.Object;
             return _controller;
         }
 

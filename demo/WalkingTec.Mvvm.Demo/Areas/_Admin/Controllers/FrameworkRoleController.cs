@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,7 +15,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     [ActionDescription("MenuKey.RoleManagement")]
     public class FrameworkRoleController : BaseController
     {
-        #region 查询
         [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
@@ -36,9 +36,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return vm.GetError();
             }
         }
-        #endregion
 
-        #region 新建
         [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
@@ -60,9 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
-        #endregion
 
-        #region 修改
         [ActionDescription("Sys.Edit")]
         public ActionResult Edit(Guid id)
         {
@@ -85,9 +81,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
-        #endregion
 
-        #region 删除
         [ActionDescription("Sys.Delete")]
         public ActionResult Delete(Guid id)
         {
@@ -112,9 +106,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
-        #endregion
 
-        #region 批量删除
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(Guid[] ids)
@@ -143,9 +135,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
-        #endregion
 
-        #region 导入
         [ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
@@ -166,9 +156,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
-        #endregion
 
-        #region 详细
         [ActionDescription("Sys.Details")]
         public PartialViewResult Details(Guid id)
         {
@@ -176,9 +164,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             role.ListVM.SearcherMode = ListVMSearchModeEnum.Custom1;
             return PartialView(role);
         }
-        #endregion
 
-        #region 页面权限
         [ActionDescription("_Admin.PageFunction")]
         public PartialViewResult PageFunction(Guid id)
         {
@@ -194,7 +180,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             await vm.DoChangeAsync();
             return FFResult().CloseDialog().Alert(Localizer["Sys.OprationSuccess"]);
         }
-        #endregion
 
         [ActionDescription("Sys.Export")]
         [HttpPost]

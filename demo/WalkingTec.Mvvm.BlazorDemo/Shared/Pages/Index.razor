@@ -1,0 +1,12 @@
+@page "/"
+@using WalkingTec.Mvvm.Core;
+@inject IStringLocalizer Localizer;
+
+
+<div>
+    test: @Localizer["_Admin.Account"]
+</div>
+
+@code{
+    FrameworkUser Model = new FrameworkUser();
+}

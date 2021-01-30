@@ -33,10 +33,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         public async System.Threading.Tasks.Task<LoginUserInfo> DoLoginAsync(bool ignorePris = false)
         {
             //根据用户名和密码查询用户
-            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password == Utils.GetMD5String(Password)).Select(x => x.ITCode).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password == Utils.GetMD5String(Password)).Select(x => new { itcode = x.ITCode, id = x.ID }).SingleOrDefaultAsync();
 
             //如果没有找到则输出错误
-            if (string.IsNullOrEmpty(code))
+            if (rv == null)
             {
                 MSD.AddModelError("", Localizer["Sys.LoginFailed"]);
                 return null;
@@ -45,7 +45,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             {
                 LoginUserInfo user = new LoginUserInfo
                 {
-                    ITCode = code
+                    ITCode = rv.itcode,
+                    UserId = rv.id.ToString()
                 };
                 //读取角色，用户组，页面权限，数据权限等框架配置信息
                 await user.LoadBasicInfoAsync(Wtm);

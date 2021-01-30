@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,7 +14,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
     {
         [Display(Name = "名称")]
         public ExcelPropety Name_Excel = ExcelPropety.CreateProperty<City>(x => x.Name);
-        [Display(Name = "父级")]
+        [Display(Name = "test")]
+        public ExcelPropety Test_Excel = ExcelPropety.CreateProperty<City>(x => x.Test);
+        [Display(Name = "_Admin.Parent")]
         public ExcelPropety Parent_Excel = ExcelPropety.CreateProperty<City>(x => x.ParentId);
 
 	    protected override void InitVM()

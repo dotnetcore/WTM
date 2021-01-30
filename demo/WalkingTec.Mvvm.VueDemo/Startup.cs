@@ -74,6 +74,7 @@ namespace WalkingTec.Mvvm.VueDemo
             app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
             app.UseStaticFiles();
             app.UseWtmStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseWtmSwagger();
             app.UseRouting();
             app.UseWtmMultiLanguages();

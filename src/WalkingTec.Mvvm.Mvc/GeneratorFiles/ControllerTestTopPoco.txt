@@ -47,7 +47,7 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data = context.Set<$model$>().FirstOrDefault();
+                var data = context.Set<$model$>().Find(v.ID);
 				$assert$
             }
 
@@ -68,6 +68,7 @@ namespace $tns$
             Assert.IsInstanceOfType(rv.Model, typeof($model$VM));
 
             $model$VM vm = rv.Model as $model$VM;
+            vm.Wtm.DC = new DataContext(_seed, DBTypeEnum.Memory);
             v = new $model$();
             v.ID = vm.Entity.ID;
        		$epros$
@@ -78,7 +79,7 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data = context.Set<$model$>().FirstOrDefault();
+                var data = context.Set<$model$>().Find(v.ID);
  				$eassert$
             }
 
@@ -107,6 +108,7 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
+                var data = context.Set<$model$>().Find(v.ID);
                 $del$
             }
 
@@ -127,6 +129,38 @@ namespace $tns$
             Assert.IsInstanceOfType(rv.Model, typeof(IBaseCRUDVM<TopBasePoco>));
             Assert.AreEqual(v.ID, (rv.Model as IBaseCRUDVM<TopBasePoco>).Entity.GetID());
         }
+
+        [TestMethod]
+        public void BatchEditTest()
+        {
+            $model$ v1 = new $model$();
+            $model$ v2 = new $model$();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+				$mpros$
+                context.Set<$model$>().Add(v1);
+                context.Set<$model$>().Add(v2);
+                context.SaveChanges();
+            }
+
+            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
+            Assert.IsInstanceOfType(rv.Model, typeof($model$BatchVM));
+
+            $model$BatchVM vm = rv.Model as $model$BatchVM;
+            vm.Ids = new string[] { v1.ID.ToString(), v2.ID.ToString() };
+            $linkedpros$
+            vm.FC = new Dictionary<string, object>();
+			$linkedfc$
+            _controller.DoBatchEdit(vm, null);
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var data1 = context.Set<$model$>().Find(v1.ID);
+                var data2 = context.Set<$model$>().Find(v2.ID);
+ 				$meassert$
+            }
+        }
+
 
         [TestMethod]
         public void BatchDeleteTest()
@@ -150,6 +184,8 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
+                var data1 = context.Set<$model$>().Find(v1.ID);
+                var data2 = context.Set<$model$>().Find(v2.ID);
                 $mdel$
             }
         }

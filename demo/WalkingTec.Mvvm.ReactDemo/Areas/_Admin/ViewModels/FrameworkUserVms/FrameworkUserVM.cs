@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,9 +18,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         [JsonIgnore]
         public List<ComboSelectListItem> AllGroups { get; set; }
-        [Display(Name = "Role")]
+        [Display(Name = "_Admin.Role")]
         public List<string> SelectedRolesCodes { get; set; }
-        [Display(Name = "Group")]
+        [Display(Name = "_Admin.Group")]
         public List<string> SelectedGroupCodes { get; set; }
 
 

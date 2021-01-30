@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 {
-    public class MajorBatchVM : BaseBatchVM<Major, Major_BatchEdit>
+    public partial class MajorBatchVM : BaseBatchVM<Major, Major_BatchEdit>
     {
         public MajorBatchVM()
         {
@@ -21,17 +21,23 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
     }
 
 	/// <summary>
-    /// 批量编辑字段类
+    /// Class to define batch edit fields
     /// </summary>
     public class Major_BatchEdit : BaseVM
     {
+        [Display(Name = "备注")]
+        public String Remark { get; set; }
         public List<ComboSelectListItem> AllSchools { get; set; }
         [Display(Name = "所属学校")]
         public int? SchoolId { get; set; }
+        public List<ComboSelectListItem> AllStudentMajorss { get; set; }
+        [Display(Name = "学生")]
+        public List<string> SelectedStudentMajorsIDs { get; set; }
 
         protected override void InitVM()
         {
             AllSchools = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
+            AllStudentMajorss = DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

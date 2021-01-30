@@ -504,10 +504,10 @@ namespace WalkingTec.Mvvm.Core
                                         PropertyHelper.SetPropertyValue(SubTypeEntity, fk, entity.GetID());
                                     }
 
-                                    if (typeof(BasePoco).IsAssignableFrom(SubTypeEntity.GetType()))
+                                    if (typeof(IBasePoco).IsAssignableFrom(SubTypeEntity.GetType()))
                                     {
-                                        (SubTypeEntity as BasePoco).CreateTime = DateTime.Now;
-                                        (SubTypeEntity as BasePoco).CreateBy = LoginUserInfo?.ITCode;
+                                        (SubTypeEntity as IBasePoco).CreateTime = DateTime.Now;
+                                        (SubTypeEntity as IBasePoco).CreateBy = LoginUserInfo?.ITCode;
                                     }
 
                                     //将付好值得SubTableType实例添加到List中
@@ -856,17 +856,17 @@ namespace WalkingTec.Mvvm.Core
 
                         if (tempPros.Where(x => x.Name == "UpdateTime").SingleOrDefault() == null)
                         {
-                            if (typeof(BasePoco).IsAssignableFrom(exist.GetType()))
+                            if (typeof(IBasePoco).IsAssignableFrom(exist.GetType()))
                             {
-                                (exist as BasePoco).UpdateTime = DateTime.Now;
+                                (exist as IBasePoco).UpdateTime = DateTime.Now;
                             }
                         }
 
                         if (tempPros.Where(x => x.Name == "UpdateBy").SingleOrDefault() == null)
                         {
-                            if (typeof(BasePoco).IsAssignableFrom(exist.GetType()))
+                            if (typeof(IBasePoco).IsAssignableFrom(exist.GetType()))
                             {
-                                (exist as BasePoco).UpdateBy = LoginUserInfo.ITCode;
+                                (exist as IBasePoco).UpdateBy = LoginUserInfo.ITCode;
                             }
                         }
                         exist.ExcelIndex = item.ExcelIndex;
@@ -877,14 +877,14 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 //进行添加操作
-                if (typeof(BasePoco).IsAssignableFrom(item.GetType()))
+                if (typeof(IBasePoco).IsAssignableFrom(item.GetType()))
                 {
-                    (item as BasePoco).CreateTime = DateTime.Now;
-                    (item as BasePoco).CreateBy = LoginUserInfo?.ITCode;
+                    (item as IBasePoco).CreateTime = DateTime.Now;
+                    (item as IBasePoco).CreateBy = LoginUserInfo?.ITCode;
                 }
-                if (typeof(PersistPoco).IsAssignableFrom(item.GetType()))
+                if (typeof(IPersistPoco).IsAssignableFrom(item.GetType()))
                 {
-                    (item as PersistPoco).IsValid = true;
+                    (item as IPersistPoco).IsValid = true;
                 }
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
                 if (ConfigInfo.Connections.Where(x => x.Key == (CurrentCS ?? "default")).FirstOrDefault().DbType == DBTypeEnum.SqlServer && !HasSubTable && UseBulkSave == true)

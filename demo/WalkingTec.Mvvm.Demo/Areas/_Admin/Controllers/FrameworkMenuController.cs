@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     [ActionDescription("MenuKey.MenuMangement")]
     public class FrameworkMenuController : BaseController
     {
-        #region 搜索
         [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
@@ -39,9 +39,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return vm.GetError();
             }
         }
-        #endregion
 
-        #region 新建
         [ActionDescription("Sys.Create")]
         public ActionResult Create(Guid? id)
         {
@@ -80,13 +78,24 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 }
             }
         }
-        #endregion
 
-        #region 修改
         [ActionDescription("Sys.Edit")]
         public ActionResult Edit(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
+            vm.IconSelectItems = !string.IsNullOrEmpty(vm.IconFont) && IconFontsHelper
+                    .IconFontDicItems
+                    .ContainsKey(vm.IconFont)
+                    ? IconFontsHelper
+                        .IconFontDicItems[vm.IconFont]
+                        .Select(x => new ComboSelectListItem()
+                        {
+                            Text = x.Text,
+                            Value = x.Value,
+                            Icon = x.Icon
+                        }).ToList()
+                    : new List<ComboSelectListItem>();
+
             return PartialView(vm);
         }
 
@@ -96,6 +105,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                vm.IconSelectItems = !string.IsNullOrEmpty(vm.IconFont) && IconFontsHelper
+                        .IconFontDicItems
+                        .ContainsKey(vm.IconFont)
+                        ? IconFontsHelper
+                            .IconFontDicItems[vm.IconFont]
+                            .Select(x => new ComboSelectListItem()
+                            {
+                                Text = x.Text,
+                                Value = x.Value,
+                                Icon = x.Icon
+                            }).ToList()
+                        : new List<ComboSelectListItem>();
                 return PartialView(vm);
             }
             else
@@ -112,9 +133,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 }
             }
         }
-        #endregion
 
-        #region 删除
         [ActionDescription("Sys.Delete")]
         public ActionResult Delete(Guid id)
         {
@@ -137,27 +156,21 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
-        #endregion
 
-        #region 详细
         [ActionDescription("Sys.Details")]
         public PartialViewResult Details(Guid id)
         {
             var v = Wtm.CreateVM<FrameworkMenuVM>(id);
             return PartialView("Details", v);
         }
-        #endregion
 
-        #region 未设置页面
         [ActionDescription("_Admin.UnsetPages")]
         public ActionResult UnsetPages()
         {
             var vm = Wtm.CreateVM<FrameworkActionListVM>();
             return PartialView(vm);
         }
-        #endregion
 
-        #region 刷新菜单
         [ActionDescription("_Admin.RefreshMenu")]
         public async Task<ActionResult> RefreshMenu()
         {
@@ -166,7 +179,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             await Wtm.RemoveUserCache(userids);
             return FFResult().Alert(Localizer["Sys.OprationSuccess"]);
         }
-        #endregion
 
         [ActionDescription("GetActionsByModelId")]
         [AllRights]
@@ -179,11 +191,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return JsonMore(AllActions);
         }
 
-        /// <summary>
-        /// GetIconFontItems
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet]
         [ResponseCache(Duration = 3600)]
         [AllRights]

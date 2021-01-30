@@ -161,6 +161,31 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
+        #region BlazorMode
+
+        private BlazorModeEnum? _blazorMode;
+
+        /// <summary>
+        /// TabMode
+        /// </summary>
+        public BlazorModeEnum BlazorMode
+        {
+            get
+            {
+                if (_blazorMode == null)
+                {
+                    _blazorMode = BlazorModeEnum.Server;
+                }
+                return _blazorMode.Value;
+            }
+            set
+            {
+                _blazorMode = value;
+            }
+        }
+        #endregion
+
+
         #region Custom settings
 
         private Dictionary<string,string> _appSettings;

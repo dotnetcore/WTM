@@ -1,0 +1,13 @@
+@page "/login"
+@using  WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
+
+@layout EmptyLayout
+<ValidateForm Model="@Model" >
+    <BootstrapInput @bind-Value="@Model.ITCode" />
+    <BootstrapInput @bind-Value="@Model.Password" type="password" />
+     <Button ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="提交"  />
+</ValidateForm>
+@code {
+    private LoginVM Model = new LoginVM();
+
+}

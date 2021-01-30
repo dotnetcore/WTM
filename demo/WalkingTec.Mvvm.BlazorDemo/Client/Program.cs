@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using WalkingTec.Mvvm.BlazorDemo.Shared;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Client
 {
@@ -18,8 +21,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Client
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddAntDesign();
+            builder.Services.AddBootstrapBlazor();
+
             await builder.Build().RunAsync();
         }
+
     }
 }

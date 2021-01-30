@@ -1,0 +1,49 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs.WxReportDataVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:textbox field="Entity.ToWxUser" />
+<wt:combobox field="Entity.FrameworkUserId" items="AllFrameworkUsers"/>
+<wt:datetime field="Entity.Date" />
+<wt:combobox field="Entity.Type" />
+<wt:combobox field="Entity.DataType" />
+<wt:textbox field="Entity.TuFang1" />
+<wt:textbox field="Entity.KM1" />
+<wt:textbox field="Entity.TuFang2" />
+<wt:textbox field="Entity.KM2" />
+<wt:textbox field="Entity.TuFang3" />
+<wt:textbox field="Entity.KM3" />
+<wt:textbox field="Entity.TuFang4" />
+<wt:textbox field="Entity.KM4" />
+<wt:textbox field="Entity.TuFang5" />
+<wt:textbox field="Entity.KM5" />
+<wt:textbox field="Entity.TuFang6" />
+<wt:textbox field="Entity.KM6" />
+<wt:textbox field="Entity.YnNi1" />
+<wt:textbox field="Entity.YnNi1KM" />
+<wt:textbox field="Entity.YnNi2" />
+<wt:textbox field="Entity.YnNi2KM" />
+<wt:textbox field="Entity.YnNi3" />
+<wt:textbox field="Entity.YnNi3KM" />
+<wt:textbox field="Entity.YnNi4" />
+<wt:textbox field="Entity.YnNi4KM" />
+<wt:textbox field="Entity.JiaYou1" />
+<wt:textbox field="Entity.JiaYou2" />
+<wt:textbox field="Entity.CanFeiRen" />
+<wt:textbox field="Entity.JieZhiMoney" />
+<wt:textbox field="Entity.Extend01" />
+<wt:textbox field="Entity.Extend02" />
+<wt:textbox field="Entity.Extend03" />
+<wt:textbox field="Entity.Extend04" />
+<wt:textbox field="Entity.Extend05" />
+<wt:textbox field="Entity.Extend07" />
+<wt:textbox field="Entity.Extend08" />
+<wt:textbox field="Entity.Extend09" />
+<wt:textbox field="Entity.Extend10" />
+</wt:row>
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

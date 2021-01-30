@@ -6,6 +6,7 @@
     <AssemblyName>WalkingTec.Mvvm.Demo</AssemblyName>
     <Title>$(AssemblyName)</Title>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>b42c99ff-8994-49cd-9a66-5b513ed15a0a</UserSecretsId>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />

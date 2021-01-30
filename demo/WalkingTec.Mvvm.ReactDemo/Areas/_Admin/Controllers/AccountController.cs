@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwtWithCookie]
     [ApiController]
     [Route("api/_[controller]")]
-    [ActionDescription("MenuKey.Login")]
+    [ActionDescription("_Admin.LoginApi")]
     [AllRights]
     public class AccountController : BaseApiController
     {
@@ -40,19 +41,18 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] bool rememberLogin = false)
         {
 
-            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => x.ITCode).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => new { itcode = x.ITCode, id = x.ID }).SingleOrDefaultAsync();
 
-            //如果没有找到则输出错误
-            if (string.IsNullOrEmpty(code))
+            if (rv == null)
             {
-                ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"].Value);
-                return BadRequest(ModelState.GetErrorJson());
+                return BadRequest(Localizer["Sys.LoginFailed"].Value);
             }
             LoginUserInfo user = new LoginUserInfo
             {
-                ITCode = code
+                ITCode = rv.itcode,
+                UserId = rv.id.ToString()
             };
-            //读取角色，用户组，页面权限，数据权限等框架配置信息
+
             await user.LoadBasicInfoAsync(Wtm);
             Wtm.LoginUserInfo = user;
 
@@ -112,18 +112,17 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
 
-            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password.ToLower())).Select(x => x.ITCode).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password.ToLower())).Select(x => new { itcode = x.ITCode, id = x.ID }).SingleOrDefaultAsync();
 
-            //如果没有找到则输出错误
-            if (string.IsNullOrEmpty(code))
+            if (rv == null)
             {
                 return BadRequest(Localizer["Sys.LoginFailed"].Value);
             }
             LoginUserInfo user = new LoginUserInfo
             {
-                ITCode = code
+                ITCode = rv.itcode,
+                UserId = rv.id.ToString()
             };
-            //读取角色，用户组，页面权限，数据权限等框架配置信息
             await user.LoadBasicInfoAsync(Wtm);
             Wtm.LoginUserInfo = user;
 
@@ -140,7 +139,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return;
             }
-            //循环所有菜单项
             foreach (var menu in menus)
             {
                 if (menu.Text?.StartsWith("MenuKey.") == true)
@@ -149,7 +147,6 @@ namespace WalkingTec.Mvvm.Admin.Api
                 }
             }
         }
-
 
         [HttpPost("[action]")]
         [AllRights]

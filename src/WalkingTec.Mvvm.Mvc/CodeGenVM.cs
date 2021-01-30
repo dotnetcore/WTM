@@ -1083,7 +1083,7 @@ namespace WalkingTec.Mvvm.Mvc
                 Type modelType = Type.GetType(SelectedModel);
                 if (UI == UIEnum.LayUI && IsApi == false)
                 {
-                    if (modelType.IsSubclassOf(typeof(BasePoco)))
+                    if (typeof(IBasePoco).IsAssignableFrom( modelType) || typeof(IPersistPoco).IsAssignableFrom(modelType))
                     {
                         rv = GetResource($"ControllerTest.txt").Replace("$cns$", ControllerNs).Replace("$tns$", TestNs).Replace("$vns$", VMNs).Replace("$model$", ModelName).Replace("$mns$", ModelNS).Replace("$dns$", DataNs);
                     }
@@ -1094,7 +1094,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 else
                 {
-                    if (modelType.IsSubclassOf(typeof(BasePoco)))
+                    if (typeof(IBasePoco).IsAssignableFrom(modelType) || typeof(IPersistPoco).IsAssignableFrom(modelType))
                     {
                         rv = GetResource($"ApiTest.txt").Replace("$cns$", ControllerNs).Replace("$tns$", TestNs).Replace("$vns$", VMNs).Replace("$model$", ModelName).Replace("$mns$", ModelNS).Replace("$dns$", DataNs).Replace("$classnamel$", $"{ModelName}{(IsApi == true ? "Api" : "")}");
                     }
@@ -1104,6 +1104,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 }
                 var modelprops = modelType.GetRandomValues();
+                var batchpros = FieldInfos.Where(x => x.IsBatchField == true).ToList();
                 string cpros = "";
                 string epros = "";
                 string pros = "";
@@ -1112,7 +1113,9 @@ namespace WalkingTec.Mvvm.Mvc
                 string eassert = "";
                 string fc = "";
                 string add = "";
-
+                string linkedpros = "";
+                string linkedfc = "";
+                string meassert = "";
                 foreach (var pro in modelprops)
                 {
                     if (pro.Value == "$fk$")
@@ -1132,9 +1135,6 @@ namespace WalkingTec.Mvvm.Mvc
                 v.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
                         mpros += $@"
                 v1.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
-                        fc += $@"
-            vm.FC.Add(""Entity.{pro.Key}"", """");";
-
                     }
                     else
                     {
@@ -1146,18 +1146,19 @@ namespace WalkingTec.Mvvm.Mvc
                 v1.{pro.Key} = {pro.Value};";
                         assert += $@"
                 Assert.AreEqual(data.{pro.Key}, {pro.Value});";
-                        fc += $@"
-            vm.FC.Add(""Entity.{pro.Key}"", """");";
                     }
+                    fc += $@"
+            vm.FC.Add(""Entity.{pro.Key}"", """");";
+
                 }
 
                 var modelpros2 = modelType.GetRandomValues();
                 foreach (var pro in modelpros2)
                 {
-                    if (pro.Key.ToLower() == "id")
-                    {
-                        continue;
-                    }
+                    //if (pro.Key.ToLower() == "id")
+                    //{
+                    //    continue;
+                    //}
 
                     if (pro.Value == "$fk$")
                     {
@@ -1167,24 +1168,48 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     else
                     {
-                        epros += $@"
-            v.{pro.Key} = {pro.Value};";
                         mpros += $@"
                 v2.{pro.Key} = {pro.Value};";
-                        eassert += $@"
+                        if (pro.Key.ToLower() != "id")
+                        {
+                            epros += $@"
+            v.{pro.Key} = {pro.Value};";
+                            eassert += $@"
                 Assert.AreEqual(data.{pro.Key}, {pro.Value});";
+                        }
                     }
                 }
 
-                string del = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 0);";
-                string mdel = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 0);";
-                if (modelType.IsSubclassOf(typeof(PersistPoco)))
+                var modelpros3 = modelType.GetRandomValues();
+                foreach (var pro in modelpros3)
                 {
-                    del = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 1);";
-                    mdel = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 2);";
+                    if (batchpros.Any(x => x.FieldName == pro.Key) && pro.Key.ToLower() != "id")
+                    {
+                        linkedpros += $@"
+            vm.LinkedVM.{pro.Key} = {pro.Value};";
+                        linkedfc += $@"
+            vm.FC.Add(""LinkedVM.{pro.Key}"", """");";
+                        meassert += $@"
+                Assert.AreEqual(data1.{pro.Key}, {pro.Value});";
+                        meassert += $@"
+                Assert.AreEqual(data2.{pro.Key}, {pro.Value});";
+                    }
                 }
 
-                rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros).Replace("$assert$", assert).Replace("$eassert$", eassert).Replace("$fc$", fc).Replace("$add$", add).Replace("$del$", del).Replace("$mdel$", mdel);
+
+                string del = $"Assert.AreEqual(data, null);";
+                string mdel = @"Assert.AreEqual(data1, null);
+            Assert.AreEqual(data2, null);";
+                if (typeof(IPersistPoco).IsAssignableFrom( modelType))
+                {
+                    del = $"Assert.AreEqual(data.IsValid, false);";
+                    mdel = @"Assert.AreEqual(data1.IsValid, false);
+            Assert.AreEqual(data2.IsValid, false);";
+                }
+
+                rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros)
+                    .Replace("$assert$", assert).Replace("$eassert$", eassert).Replace("$fc$", fc).Replace("$add$", add).Replace("$del$", del).Replace("$mdel$", mdel)
+                    .Replace("$linkedpros$", linkedpros).Replace("$linkedfc$", linkedfc).Replace("$meassert$", meassert);
             }
             return rv;
         }
@@ -1200,7 +1225,10 @@ namespace WalkingTec.Mvvm.Mvc
                 if (pro.Value == "$fk$")
                 {
                     var fktype = t.GetSingleProperty(pro.Key.Substring(0, pro.Key.Length - 2))?.PropertyType;
-                    rv += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
+                    if (fktype != t)
+                    {
+                        rv += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
+                    }
                 }
             }
 
@@ -1209,8 +1237,12 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (pro.Value == "$fk$")
                 {
-                    cpros += $@"
+                    var fktype = t.GetSingleProperty(pro.Key.Substring(0, pro.Key.Length - 2))?.PropertyType;
+                    if (fktype != t)
+                    {
+                        cpros += $@"
                 v.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
+                    }
                 }
                 else
                 {
@@ -1220,7 +1252,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var idpro = t.GetSingleProperty("ID");
             rv += $@"
-        private {idpro.Name} Add{keyname}()
+        private {idpro.PropertyType.Name} Add{keyname}()
         {{
             {mname} v = new {mname}();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))

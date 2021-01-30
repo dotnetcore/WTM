@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,9 +10,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
     public class FrameworkMenuListVM2 : BasePagedListVM<FrameworkMenu_ListView, BaseSearcher>
     {
-        /// <summary>
-        /// 页面显示按钮方案，如果需要增加Action类型则将按钮添加到此类中
-        /// </summary>
         public FrameworkMenuListVM2()
         {
             this.NeedPage = false;
@@ -35,9 +33,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             return rv;
         }
 
-        /// <summary>
-        /// 查询结果
-        /// </summary>
         public override IOrderedQueryable<FrameworkMenu_ListView> GetSearchQuery()
         {
             var data = DC.Set<FrameworkMenu>().ToList();
@@ -78,28 +73,28 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     }
     public class FrameworkMenu_ListView : BasePoco
     {
-        [Display(Name = "PageName")]
+        [Display(Name = "_Admin.PageName")]
         public string PageName { get; set; }
 
-        [Display(Name = "ModuleName")]
+        [Display(Name = "Codegen.ModuleName")]
         public string ModuleName { get; set; }
 
-        [Display(Name = "ActionName")]
+        [Display(Name = "_Admin.ActionName")]
         public string ActionName { get; set; }
 
-        [Display(Name = "ShowOnMenu")]
+        [Display(Name = "_Admin.ShowOnMenu")]
         public bool? ShowOnMenu { get; set; }
 
-        [Display(Name = "FolderOnly")]
+        [Display(Name = "_Admin.FolderOnly")]
         public bool? FolderOnly { get; set; }
 
-        [Display(Name = "IsPublic")]
+        [Display(Name = "_Admin.IsPublic")]
         public bool? IsPublic { get; set; }
 
-        [Display(Name = "DisplayOrder")]
+        [Display(Name = "_Admin.DisplayOrder")]
         public int? DisplayOrder { get; set; }
 
-        [Display(Name = "Icon")]
+        [Display(Name = "_Admin.Icon")]
         public string Icon { get; set; }
 
         public bool Allowed { get; set; }

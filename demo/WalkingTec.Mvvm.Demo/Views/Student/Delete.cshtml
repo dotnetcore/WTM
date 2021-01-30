@@ -1,8 +1,8 @@
-@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
-	<wt:quote>@Model.Localizer["Sys.DeleteConfirm"]</wt:quote>
+	<wt:quote>@Localizer["Sys.DeleteConfirm"]</wt:quote>
 <wt:row items-per-row="ItemsPerRowEnum.Two">
 <wt:display field="Entity.ID" />
 <wt:display field="Entity.Password" />
@@ -19,7 +19,7 @@
 </wt:row>
     <wt:hidden field="Entity.ID" />
     <wt:row align="AlignEnum.Right">
-        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除"/>
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@Localizer["Sys.Delete"]"/>
         <wt:closebutton />
     </wt:row>
 </wt:form>

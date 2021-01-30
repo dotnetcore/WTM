@@ -1,3 +1,4 @@
+// WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -121,9 +122,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         }
     }
 
-    /// <summary>
-    /// 如果需要显示树类型的列表需要继承ITreeData`T`接口，并实现Children,Parent,ParentID属性
-    /// </summary>
     public class DataPrivilege_ListView : BasePoco
     {
         [Display(Name = "_Admin.DpTargetName")]

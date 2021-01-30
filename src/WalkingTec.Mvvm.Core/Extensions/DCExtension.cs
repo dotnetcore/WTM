@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             where T : TreePoco
         {
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
-            var query = baseQuery;
+            var query = baseQuery.AsNoTracking();
 
             //如果没有指定忽略权限，则拼接权限过滤的where条件
             if (ignorDataPrivilege == false)
@@ -57,11 +57,18 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 query = AppendSelfDPWhere(query, wtmcontext, dps);
             }
 
-            //处理后面要使用的expression
-            if (valueField == null)
+            if (typeof(IPersistPoco).IsAssignableFrom(typeof(T)))
             {
-                valueField = x => x.GetID().ToString().ToLower();
+                var mod = new IsValidModifier();
+                var newExp = mod.Modify(query.Expression);
+                query = query.Provider.CreateQuery<T>(newExp) as IOrderedQueryable<T>;
             }
+
+            //处理后面要使用的expression
+            //if (valueField == null)
+            //{
+            valueField = x => x.GetID().ToString().ToLower();
+            //}
             Expression<Func<T, string>> parentField = x => x.ParentId.ToString().ToLower();
 
             //定义PE
@@ -179,7 +186,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             where T : TopBasePoco
         {
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
-            var query = baseQuery;
+            var query = baseQuery.AsNoTracking();
 
             //如果value字段为空，则默认使用Id字段作为value值
             if (valueField == null)
@@ -193,7 +200,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 query = AppendSelfDPWhere(query,wtmcontext,dps);
             }
 
-            if (typeof(T).IsSubclassOf(typeof(PersistPoco)))
+            if (typeof(IPersistPoco).IsAssignableFrom( typeof(T)))
             {
                 var mod = new IsValidModifier();
                 var newExp = mod.Modify(query.Expression);

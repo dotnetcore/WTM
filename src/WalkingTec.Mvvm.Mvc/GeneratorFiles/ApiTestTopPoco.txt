@@ -27,8 +27,8 @@ namespace $tns$
         [TestMethod]
         public void SearchTest()
         {
-            string rv = _controller.Search(new $classnamel$Searcher());
-            Assert.IsTrue(string.IsNullOrEmpty(rv)==false);
+            ContentResult rv = _controller.Search(new $classnamel$Searcher()) as ContentResult;
+            Assert.IsTrue(string.IsNullOrEmpty(rv.Content)==false);
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data = context.Set<$model$>().FirstOrDefault();
+                var data = context.Set<$model$>().Find(v.ID);
                 $assert$
             }
         }
@@ -72,7 +72,7 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data = context.Set<$model$>().FirstOrDefault();
+                var data = context.Set<$model$>().Find(v.ID);
  				$eassert$
             }
 
@@ -110,6 +110,8 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
+                var data1 = context.Set<$model$>().Find(v1.ID);
+                var data2 = context.Set<$model$>().Find(v2.ID);
                 $mdel$
             }
 

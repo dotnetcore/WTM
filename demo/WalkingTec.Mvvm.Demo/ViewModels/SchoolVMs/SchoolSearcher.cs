@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +19,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         [Display(Name = "学校类型")]
         public SchoolTypeEnum? SchoolType { get; set; }
 
+        public Guid? CityId { get; set; }
         protected override void InitVM()
         {
         }

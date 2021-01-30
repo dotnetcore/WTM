@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,15 +18,16 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
             return new List<GridAction>
             {
                 this.MakeStandardAction("Student", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Delete, Localizer["Sys.Delete"], "",dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Details, Localizer["Sys.Details"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchEdit, Localizer["Sys.BatchEdit"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"],"", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"],""),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Delete, Localizer["Sys.Delete"], "", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Details, Localizer["Sys.Details"], "", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchEdit, Localizer["Sys.BatchEdit"], "", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], ""),
             };
         }
+
 
         protected override IEnumerable<IGridColumn<Student_View>> InitGridHeader()
         {
@@ -59,9 +60,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         public override IOrderedQueryable<Student_View> GetSearchQuery()
         {
             var query = DC.Set<Student>()
-                .CheckContain(Searcher.Name, x => x.Name)
-                .CheckEqual(Searcher.IsValid, x => x.IsValid)
-                //.DPWhere(WtmContext, x => x.StudentMajor[0].MajorId)
+                .CheckContain(Searcher.Password, x=>x.Password)
+                .CheckEqual(Searcher.Sex, x=>x.Sex)
+                .CheckContain(Searcher.ZipCode, x=>x.ZipCode)
+                .CheckWhere(Searcher.SelectedStudentMajorIDs,x=>DC.Set<StudentMajor>().Where(y=>Searcher.SelectedStudentMajorIDs.Contains(y.MajorId)).Select(z=>z.StudentId).Contains(x.ID))
                 .Select(x => new Student_View
                 {
 				    ID = x.ID,

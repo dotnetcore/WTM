@@ -330,7 +330,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
                     log.LogType = context.Exception == null ? ActionLogTypesEnum.Normal : ActionLogTypesEnum.Exception;
                     log.ActionTime = DateTime.Now;
-                    log.ITCode = ctrl.Wtm.LoginUserInfo?.ITCode ?? string.Empty;
+                    log.ITCode = ctrl.Wtm?.LoginUserInfo?.ITCode ?? string.Empty;
                     // 给日志的多语言属性赋值
                     log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
                     log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");

@@ -12,7 +12,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
     {
         public MajorDetailListVM MajorList { get; set; }
 
-
         public SchoolVM()
         {
             MajorList = new MajorDetailListVM();

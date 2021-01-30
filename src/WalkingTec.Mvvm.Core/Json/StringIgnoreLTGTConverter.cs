@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace WalkingTec.Mvvm.Core.Json
+namespace System.Text.Json.Serialization
 {
     /// <summary>
     /// StringIgnoreLTGTConvert
@@ -17,16 +17,11 @@ namespace WalkingTec.Mvvm.Core.Json
                 return null;
             }
 
-            try
+            if (reader.TokenType == JsonTokenType.String)
             {
-                if (reader.TokenType == JsonTokenType.String)
-                {
-                    return reader.GetString().Replace("<", string.Empty).Replace(">", string.Empty);
-                }
+                return reader.GetString().Replace("<", string.Empty).Replace(">", string.Empty);
             }
-            catch (Exception)
-            {
-            }
+
             return null;
         }
 

@@ -35,8 +35,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 vm.Password = "000000";
             }
            Wtm.DoLog("LogTest");
-            var logger = HttpContext.RequestServices.GetRequiredService<ILogger<ActionLog>>();
-            logger.LogInformation("test=======================test");
             return View(vm);
         }
 

@@ -1,5 +1,5 @@
 using System;
-
+using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Attributes;
 
@@ -13,6 +13,7 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         public Guid MajorId { get; set; }
 
+        [Required()]
         public string StudentId { get; set; }
     }
 }

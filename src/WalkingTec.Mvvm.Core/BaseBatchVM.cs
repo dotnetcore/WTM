@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -114,10 +115,17 @@ namespace WalkingTec.Mvvm.Core
             //如果包含附件，则先删除附件
             List<Guid> fileids = new List<Guid>();
             var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
-            var isPersist = modelType.IsSubclassOf(typeof(PersistPoco));
-
-
-            for (int i = 0; i < idsData.Count; i++)
+            var isPersist =typeof(IPersistPoco).IsAssignableFrom(modelType);
+            var isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelType);
+            var query = DC.Set<TModel>().AsQueryable();
+            var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
+            foreach (var f in fas)
+            {
+                query = query.Include(f.Name);
+            }
+            query = query.AsNoTracking().CheckIDs(idsData);
+            var entityList = query.ToList();
+            for (int i = 0; i < entityList.Count; i++)
             {
                 string checkErro = null;
                 //检查是否可以删除，如不能删除则直接跳过
@@ -130,15 +138,18 @@ namespace WalkingTec.Mvvm.Core
                 //进行删除
                 try
                 {
-                    var Entity = DC.Set<TModel>().CheckID(idsData[i]).FirstOrDefault();
+                    var Entity = entityList[i];
                     if (isPersist)
                     {
-                        (Entity as PersistPoco).IsValid = false;
-                        (Entity as PersistPoco).UpdateTime = DateTime.Now;
-                        (Entity as PersistPoco).UpdateBy = LoginUserInfo.ITCode;
+                        (Entity as IPersistPoco).IsValid = false;
                         DC.UpdateProperty(Entity, "IsValid");
-                        DC.UpdateProperty(Entity, "UpdateTime");
-                        DC.UpdateProperty(Entity, "UpdateBy");
+                        if (isBasePoco)
+                        {
+                            (Entity as IBasePoco).UpdateTime = DateTime.Now;
+                            (Entity as IBasePoco).UpdateBy = LoginUserInfo.ITCode;
+                            DC.UpdateProperty(Entity, "UpdateTime");
+                            DC.UpdateProperty(Entity, "UpdateBy");
+                        }
                     }
                     else
                     {
@@ -162,7 +173,6 @@ namespace WalkingTec.Mvvm.Core
                             f.SetValue(Entity, null);
                         }
 
-                        var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
                         foreach (var f in fas)
                         {
                             var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
@@ -173,6 +183,10 @@ namespace WalkingTec.Mvvm.Core
                                     fileids.Add(sub.FileId);
                                 }
                                 f.SetValue(Entity, null);
+                            }
+                            else
+                            {
+
                             }
                         }
                         if (typeof(TModel) != typeof(FileAttachment))
@@ -249,22 +263,31 @@ namespace WalkingTec.Mvvm.Core
             var pros = LinkedVM.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly);
             bool rv = true;
             List<string> idsData = Ids.ToList();
+            string currentvmname = this.GetType().Name;
+            Type vmtype = null;
             //找到对应的BaseCRUDVM，并初始化
-            var vmtype = this.GetType().Assembly.GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<TModel>))).FirstOrDefault();
+            if (currentvmname.ToLower().Contains("apibatchvm"))
+            {
+                vmtype = this.GetType().Assembly.GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<TModel>)) && x.Name.ToLower().Contains("apivm") == true).FirstOrDefault();
+            }
+            else
+            {
+                vmtype = this.GetType().Assembly.GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<TModel>)) && x.Name.ToLower().Contains("apivm") == false).FirstOrDefault();
+            }
             IBaseCRUDVM<TModel> vm = null;
             if (vmtype != null)
             {
                 vm = vmtype.GetConstructor(System.Type.EmptyTypes).Invoke(null) as IBaseCRUDVM<TModel>;
                 vm.CopyContext(this);
             }
+            var entityList = DC.Set<TModel>().CheckIDs(idsData).ToList();
             //循环所有数据
-            for (int i = 0; i < idsData.Count; i++)
+            for (int i = 0; i < entityList.Count; i++)
             {
                 try
                 {
                     //如果找不到对应数据，则输出错误
-                    TModel entity = null;
-                    entity = DC.Set<TModel>().CheckID(idsData[i]).FirstOrDefault();
+                    TModel entity = entityList[i];
                     if (vm != null)
                     {
                         vm.SetEntity(entity);
@@ -323,9 +346,9 @@ namespace WalkingTec.Mvvm.Core
                             }
                         }
                     }
-                    if (typeof(TModel).IsSubclassOf(typeof(BasePoco)))
+                    if (typeof(IBasePoco).IsAssignableFrom( typeof(TModel)))
                     {
-                        BasePoco ent = entity as BasePoco;
+                        IBasePoco ent = entity as IBasePoco;
                         if (ent.UpdateTime == null)
                         {
                             ent.UpdateTime = DateTime.Now;
@@ -370,13 +393,19 @@ namespace WalkingTec.Mvvm.Core
                         }
                     }
                 }
-                ListVM.DoSearch();
-                foreach (var item in ListVM.GetEntityList())
-                {
-                    item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
-                }
+                RefreshErrorList();
             }
             return rv;
+        }
+
+        protected void RefreshErrorList()
+        {
+            ListVM.DoSearch();
+            foreach (var item in ListVM.GetEntityList())
+            {
+                item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
+            }
+
         }
     }
 }

@@ -51,6 +51,10 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "照片")]
         public List<SchoolPhoto> Photos { get; set; }
+
+        public City Location { get; set; }
+
+        public Guid? CityId { get; set; }
     }
 
     public class SchoolPhoto : TopBasePoco, ISubFile

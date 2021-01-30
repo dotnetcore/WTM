@@ -1,8 +1,10 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.CityVMs.CityVM
+@inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
 <wt:row items-per-row="ItemsPerRowEnum.Two">
 <wt:display field="Entity.Name" />
+<wt:display field="Entity.Test" />
 <wt:display field="Entity.Parent.Name" />
 </wt:row>
     <wt:row align="AlignEnum.Right">

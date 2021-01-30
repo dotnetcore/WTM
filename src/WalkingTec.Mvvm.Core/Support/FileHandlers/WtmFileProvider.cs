@@ -177,10 +177,14 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 .FirstOrDefault();
             if (file != null)
             {
-                dc.Set<FileAttachment>().Remove(file);
-                dc.SaveChanges();
-                var fh = CreateFileHandler(file.SaveMode, dc);
-                fh.DeleteFile(file);
+                try
+                {
+                    dc.Set<FileAttachment>().Remove(file);
+                    dc.SaveChanges();
+                    var fh = CreateFileHandler(file.SaveMode, dc);
+                    fh.DeleteFile(file);
+                }
+                catch { }
             }
 
         }

@@ -26,6 +26,7 @@ namespace WalkingTec.Mvvm.Mvc.Helper
         public Func<IWtmFileHandler, string> FileSubDirSelector { get; set; }
 
         public Func<WTMContext,string,LoginUserInfo> ReloadUserFunc { get; set; }
+
     }
 
 }
