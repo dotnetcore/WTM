@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             services.AddWtmAuthentication();
             services.AddWtmHttpClient();
             services.AddWtmSwagger();
-            //services.AddWtmMultiLanguages();
+            services.AddWtmMultiLanguages();
 
             services.AddMvc(options =>
             {
@@ -68,8 +68,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.FileSubDirSelector = SubDirSelector;
                 options.ReloadUserFunc = ReloadUser;
             });
-
-            //services.AddSingleton<IStringLocalizerFactory, BlazorStringLocalizerFactory>();
+            services.AddTransient<ApiClient>();
+            services.AddSingleton<IStringLocalizerFactory, BlazorStringLocalizerFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,14 +95,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             app.UseStaticFiles();
 
             app.UseRouting();
-            //app.UseWtmMultiLanguages();
+            app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
-
+            app.UseAuthorization();
             app.UseSession();
             app.UseWtmSwagger();
             app.UseWtm();
-
             app.UseBlazorFrameworkFiles();
 
             if (configs.BlazorMode == BlazorModeEnum.Server)

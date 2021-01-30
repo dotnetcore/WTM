@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 {
     public class LoginVM : BaseVM
     {
-        [Display(Name = "账号")]
+        [Display(Name = "_Admin.Account")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50)]
         public string ITCode { get; set; }

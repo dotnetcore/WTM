@@ -19,9 +19,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
-
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddBootstrapBlazor();
+            builder.Services.AddTransient<ApiClient>();
+            builder.Services.AddBootstrapBlazor(null, op => { op.StringLocalizer = new BlazorStringLocalizerFactory().Create(); });
 
             await builder.Build().RunAsync();
         }
