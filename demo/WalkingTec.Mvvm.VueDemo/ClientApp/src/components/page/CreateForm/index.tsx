@@ -82,7 +82,16 @@ export default class CreateForm extends Vue {
    * 'Entity.ID' => Entity: { ID }
    */
   public getFormData(): object {
-    return this.sourceFormData || this.formData;
+    const deep = _.cloneDeep(this.sourceFormData || this.formData);
+    const formOptions = this.options.formItem;
+    for (const key in formOptions) {
+      const option = formOptions[key];
+      if (_.isBoolean(option['isFileDataById']) && !option['isFileDataById']) {
+        const value = _.get(deep, key) || [];
+        _.set(deep, key, value.map(item => item.response.Id || item.Id))
+      }
+    }
+    return deep;
   }
   /**
    *  Entity: { ID } => 'Entity.ID'
