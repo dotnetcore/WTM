@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.UseWtmApiOptions();
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddWtmDataAnnotationsLocalization(typeof(Program));
+            .AddWtmDataAnnotationsLocalization(typeof(Shared.Program));
 
             services.AddServerSideBlazor();
             services.AddBootstrapBlazor();
@@ -69,7 +69,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.ReloadUserFunc = ReloadUser;
             });
             services.AddTransient<ApiClient>();
-            services.AddSingleton<IStringLocalizerFactory, BlazorStringLocalizerFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

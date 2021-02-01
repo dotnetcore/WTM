@@ -736,29 +736,5 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
-        public static string GetNugetVersion(WTMContext context, string start = null, bool pre = false)
-        {
-            var Cache = context.Cache;
-            var config = context.ConfigInfo;
-            if (Cache.TryGetValue("nugetversion", out NugetInfo rv) == false || rv == null)
-            {
-                NugetInfo v = context.CallAPI<NugetInfo>("nuget",$"/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
-                var data = v;
-                    Cache.Add("nugetversion", data, new DistributedCacheEntryOptions()
-                    {
-                        SlidingExpiration = new TimeSpan(0, 0, 36000)
-                    });
-                rv = data;
-            }
-
-            if (string.IsNullOrEmpty(start))
-            {
-                return rv.data[0]?.version;
-            }
-            else
-            {
-                return rv.data[0].versions.Select(x => x.version).Where(x => x.StartsWith(start)).Last();
-            }
-        }
     }
 }

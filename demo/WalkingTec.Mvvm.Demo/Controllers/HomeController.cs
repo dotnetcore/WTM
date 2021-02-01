@@ -106,13 +106,12 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [AllowAnonymous]
-        [ResponseCache(Duration = 3600)]
         public github GetGithubInfo()
         {
             var rv = Wtm.ReadFromCache<github>("githubinfo", () =>
             {
-                var s = Wtm.CallAPI<github>("github", "repos/dotnetcore/wtm", null, null, 60).Result;
-                return s;
+                var s = Wtm.CallAPI<github>("github", "repos/dotnetcore/wtm", 60).Result;
+                return s.Data;
             }, 1800);
 
             return rv;

@@ -654,7 +654,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             return Wtm.ReadFromCache<string>("githubstar", () =>
             {
-                var s = Wtm.CallAPI<github>("github", "/repos/dotnetcore/wtm").Result;
+                var s = Wtm.CallAPI<github>("github", "/repos/dotnetcore/wtm").Result.Data;
                 return s == null ? "" : s.stargazers_count.ToString();
             }, 1800);
         }
