@@ -435,6 +435,7 @@ namespace WalkingTec.Mvvm.Mvc
             if (ext == "mp4")
             {
                 contenttype = $"video/mpeg4";
+                return File(data, contenttype, enableRangeProcessing: true);
             }
             if (stream == false)
             {
@@ -466,6 +467,10 @@ namespace WalkingTec.Mvvm.Mvc
             <param name=""SRC"" value=""/_Framework/GetFile?id={id}&stream=true"">
            </object>
             ";
+            }
+            else if (vm.Entity.FileExt.ToLower() == "mp4")
+            {
+                html = $@"<video id='FileObject' controls='controls' style='{(string.IsNullOrEmpty(width) ? "" : $"width:{width}px")}'  border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'></video>";
             }
             else
             {
