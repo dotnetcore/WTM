@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="displayName">模版文件名</param>
         /// <returns>生成的模版</returns>
-        public byte[] GenerateTemplate(out string displayName)
+        public virtual byte[] GenerateTemplate(out string displayName)
         {
             return Template.GenerateTemplate(out displayName);
         }
