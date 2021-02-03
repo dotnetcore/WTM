@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public List<string> AllAccessUrls { get; set; }
 
-
+        public Type CustomUserType { get; set; }
         /// <summary>
         /// 模块
         /// </summary>

@@ -87,7 +87,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             if (Searcher.DpType == DpTypeEnum.User)
             {
                 query = DC.Set<DataPrivilege>()
-                    .Join(DC.Set<FrameworkUserBase>(), ok => ok.UserCode, ik => ik.ITCode, (dp, user) => new { dp = dp, user = user })
+                    .Join(DC.Set<FrameworkUser>(), ok => ok.UserCode, ik => ik.ITCode, (dp, user) => new { dp = dp, user = user })
                     .CheckContain(Searcher.Name, x => x.user.Name)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
                     .GroupBy(x => new { x.user.Name, x.user.ITCode, x.dp.TableName }, x => x.dp.RelateId)

@@ -227,7 +227,9 @@ namespace WalkingTec.Mvvm.Core
             {
                 return null;
             }
-            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x => x.ITCode).SingleOrDefaultAsync();
+
+
+            string code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x => x.ITCode).SingleOrDefaultAsync();
             if (string.IsNullOrEmpty(code))
             {
                 return null;
@@ -249,6 +251,21 @@ namespace WalkingTec.Mvvm.Core
         public SimpleLog Log { get; set; }
 
         protected ILogger<ActionLog> Logger { get; set; }
+
+
+        private IQueryable<FrameworkUserBase> _baseUserQuery;
+        public IQueryable<FrameworkUserBase> BaseUserQuery
+        {
+            get
+            {
+                if(_baseUserQuery == null && this.GlobaInfo?.CustomUserType  != null && DC != null)
+                {
+                    var set = DC.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(GlobaInfo.CustomUserType);
+                    _baseUserQuery = set.Invoke(DC, null) as IQueryable<FrameworkUserBase>;
+                }
+                return _baseUserQuery;
+            }
+        }
 
         public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null)
         {

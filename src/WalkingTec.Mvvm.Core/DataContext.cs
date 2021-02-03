@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.Core
             base.OnModelCreating(modelBuilder);
             //菜单和菜单权限的级联删除
             modelBuilder.Entity<FunctionPrivilege>().HasOne(x => x.MenuItem).WithMany(x => x.Privileges).HasForeignKey(x => x.MenuItemId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<FrameworkUserBase>().HasIndex(x => x.ITCode).IsUnique();
+            //modelBuilder.Entity<FrameworkUserBase>().HasIndex(x => x.ITCode).IsUnique();
         }
 
 
@@ -87,10 +87,9 @@ namespace WalkingTec.Mvvm.Core
             bool rv = await Database.EnsureCreatedAsync();
             //判断是否存在初始数据
             bool emptydb = false;
-
             try
             {
-                emptydb = Set<FrameworkUserBase>().Count() == 0 && Set<FrameworkUserRole>().Count() == 0 && Set<FrameworkMenu>().Count() == 0;
+                emptydb = Set<FrameworkUserRole>().Count() == 0 && Set<FrameworkMenu>().Count() == 0;
             }
             catch { }
 

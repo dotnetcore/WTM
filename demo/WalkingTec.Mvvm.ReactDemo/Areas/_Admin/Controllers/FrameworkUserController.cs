@@ -104,7 +104,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 {
                     tempids.Add(Guid.Parse(item));
                 }
-                var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
+                var userids = DC.Set<FrameworkUser>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
                 await Wtm.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
