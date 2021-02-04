@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,7 +69,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagName = "select";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("name", Field.Name);
-            output.Attributes.Add("lay-filter", Field.Name);
+            output.Attributes.Add("lay-filter", $"_WTMMultiCombo_{Guid.NewGuid()}_"+Field.Name);
             output.Attributes.Add("wtm-name", Field.Name);
             output.Attributes.Add("wtm-ctype", "combo");
             if (Disabled == true)
@@ -205,7 +206,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
             }
 
-            if (MultiSelect.Value)
+            if (MultiSelect==true)
             {
                 foreach (var item in listItems)
                 {

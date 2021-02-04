@@ -1,0 +1,12 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs.ISOTypeListVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:textbox field="Searcher.IsoName" />
+<wt:textbox field="Searcher.ISOVerSion" />
+<wt:textbox field="Searcher.Description" />
+<wt:combobox field="Searcher.SelectediSOTypesIDs" items="Searcher.AlliSOTypess" empty-text="@Localizer["Sys.All"]" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" url="/ISOType/Search"/>
