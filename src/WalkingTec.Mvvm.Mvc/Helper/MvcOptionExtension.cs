@@ -51,6 +51,7 @@ namespace WalkingTec.Mvvm.Mvc
             options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
+            options.JsonSerializerOptions.Converters.Add(new PocoConverter());
         }
         public static void UseWtmApiOptions(this ApiBehaviorOptions options)
         {
