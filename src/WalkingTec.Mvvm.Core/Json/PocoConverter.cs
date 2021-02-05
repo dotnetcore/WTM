@@ -71,7 +71,6 @@ namespace WalkingTec.Mvvm.Core.Json
         private class PocoConverterInner<T> :
             JsonConverter<T> where T : TopBasePoco
         {
-            private Dictionary<string, int> _datacache = new Dictionary<string, int>();
             protected readonly JsonSerializerOptions _options;
             public PocoConverterInner(JsonSerializerOptions options)
             {
@@ -92,13 +91,16 @@ namespace WalkingTec.Mvvm.Core.Json
                 T data,
                 JsonSerializerOptions options)
             {
-                RemoveCycleReference(data);
+                var _datacache = new Dictionary<string, int>();
+                RemoveCycleReference(data, _datacache);
                 JsonSerializer.Serialize(writer, data, typeof(T), _options);
             }
 
-            private void RemoveCycleReference(object Entity)
+            private void RemoveCycleReference(object Entity, Dictionary<string, int> datacache)
             {
                 var pros = Entity.GetType().GetAllProperties();
+                var mainkey = Entity.GetType().FullName + (Entity as TopBasePoco).GetID();
+                datacache.TryAdd(mainkey, 1);
 
                 foreach (var pro in pros)
                 {
@@ -106,10 +108,9 @@ namespace WalkingTec.Mvvm.Core.Json
                     {
                         var subentity = pro.GetValue(Entity) as TopBasePoco;
                         string key = pro.PropertyType.FullName + subentity?.GetID() ?? "";
-                        if (subentity != null && _datacache.ContainsKey(key) == false)
+                        if (subentity != null && datacache.ContainsKey(key) == false)
                         {
-                            _datacache.Add(key, 1);
-                            RemoveCycleReference(subentity);
+                            RemoveCycleReference(subentity, datacache);
                         }
                         else
                         {
@@ -128,10 +129,28 @@ namespace WalkingTec.Mvvm.Core.Json
 
                             if (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list && list.Count() > 0)
                             {
+                                bool found = false;
                                 foreach (var newitem in list)
                                 {
-                                    RemoveCycleReference(newitem);
-                                }                              
+                                    if (newitem != null)
+                                    {
+                                        string subkey = ftype.FullName + newitem?.GetID() ?? "";
+                                        if (datacache.ContainsKey(subkey) == false)
+                                        {
+                                            RemoveCycleReference(newitem, datacache.ToDictionary(x=>x.Key,x=>x.Value));
+                                            found = true;
+                                        }
+                                        else
+                                        {
+                                            found = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if(found == false)
+                                {
+                                    pro.SetValue(Entity, null);
+                                }
                             }
                         }
                     }
