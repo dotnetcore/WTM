@@ -6,12 +6,16 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Text.Unicode;
 using System.Threading.Tasks;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core.Json
 {
     public class PocoConverter : JsonConverterFactory
     {
+
         public override bool CanConvert(Type typeToConvert)
         {
             return typeof(TopBasePoco).IsAssignableFrom(typeToConvert);
@@ -30,7 +34,6 @@ namespace WalkingTec.Mvvm.Core.Json
                     temp.Converters.Add(item);
                 }
             }
-            temp.ReferenceHandler = ReferenceHandler.Preserve;
             JsonConverter converter = (JsonConverter)Activator.CreateInstance(
                 typeof(PocoConverterInner<>).MakeGenericType(
                     new Type[] { type }),
@@ -68,6 +71,7 @@ namespace WalkingTec.Mvvm.Core.Json
         private class PocoConverterInner<T> :
             JsonConverter<T> where T : TopBasePoco
         {
+            private Dictionary<string, int> _datacache = new Dictionary<string, int>();
             protected readonly JsonSerializerOptions _options;
             public PocoConverterInner(JsonSerializerOptions options)
             {
@@ -88,10 +92,53 @@ namespace WalkingTec.Mvvm.Core.Json
                 T data,
                 JsonSerializerOptions options)
             {
-                var str = JsonSerializer.Serialize(data, _options);
-                var txt = JsonEncodedText.Encode(str, JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
-                writer.WriteStringValue(txt);
+                RemoveCycleReference(data);
+                JsonSerializer.Serialize(writer, data, typeof(T), _options);
+            }
+
+            private void RemoveCycleReference(object Entity)
+            {
+                var pros = Entity.GetType().GetAllProperties();
+
+                foreach (var pro in pros)
+                {
+                    if (typeof(TopBasePoco).IsAssignableFrom(pro.PropertyType))
+                    {
+                        var subentity = pro.GetValue(Entity) as TopBasePoco;
+                        string key = pro.PropertyType.FullName + subentity?.GetID() ?? "";
+                        if (subentity != null && _datacache.ContainsKey(key) == false)
+                        {
+                            _datacache.Add(key, 1);
+                            RemoveCycleReference(subentity);
+                        }
+                        else
+                        {
+                            pro.SetValue(Entity,null);
+                        }
+                    }
+                    //找到类型为List<xxx>的字段
+                    if (pro.PropertyType.GenericTypeArguments.Count() > 0)
+                    {
+                        //获取xxx的类型
+                        var ftype = pro.PropertyType.GenericTypeArguments.First();
+                        //如果xxx继承自TopBasePoco
+                        if (ftype.IsSubclassOf(typeof(TopBasePoco)))
+                        {
+                            //界面传过来的子表数据
+
+                            if (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list && list.Count() > 0)
+                            {
+                                foreach (var newitem in list)
+                                {
+                                    RemoveCycleReference(newitem);
+                                }                              
+                            }
+                        }
+                    }
+                }
+
             }
         }
+
     }
 }
