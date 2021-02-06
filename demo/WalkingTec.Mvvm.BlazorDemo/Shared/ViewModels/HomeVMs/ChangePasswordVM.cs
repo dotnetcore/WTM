@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.HomeVMs
         {
             List<ValidationResult> rv = new List<ValidationResult>();
             //检查原密码是否正确，如不正确则输出错误
-            if (DC.Set<FrameworkUserBase>().Where(x => x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword)).SingleOrDefault() == null)
+            if (DC.Set<FrameworkUser>().Where(x => x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword)).SingleOrDefault() == null)
             {
                 MSD.AddModelError("OldPassword", Localizer["Login.OldPasswrodWrong"]);
             }
@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.HomeVMs
         /// </summary>
         public void DoChange()
         {
-            var user = DC.Set<FrameworkUserBase>().Where(x => x.ITCode == LoginUserInfo.ITCode).SingleOrDefault();
+            var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == LoginUserInfo.ITCode).SingleOrDefault();
             if (user != null)
             {
                 user.Password = Utils.GetMD5String(NewPassword);

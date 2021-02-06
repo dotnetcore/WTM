@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -35,13 +35,17 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 
 	    protected override void InitVM()
         {
-        }
-
+        }        
     }
 
     public class StudentImportVM : BaseImportVM<StudentTemplateVM, Student>
     {
-
+        public override byte[] GenerateTemplate(out string displayName)
+        {
+            var rv = base.GenerateTemplate(out displayName);
+            displayName = "abc.xlsx";
+            return rv;
+        }
     }
 
 }

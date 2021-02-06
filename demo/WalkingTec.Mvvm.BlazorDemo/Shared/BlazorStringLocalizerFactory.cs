@@ -19,6 +19,12 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
             return CreateStringLocalizer();
         }
 
+        public IStringLocalizer Create()
+        {
+            return CreateStringLocalizer();
+        }
+
+
         protected virtual IStringLocalizer CreateStringLocalizer()
         {
             return new ResourceManagerStringLocalizerFactory(

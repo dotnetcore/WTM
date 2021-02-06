@@ -38,7 +38,7 @@ namespace WalkingTec.Mvvm.Demo.Test
                 v.Name = "name";
                 v.Password = Utils.GetMD5String("password");
                 v.IsValid = true;
-                context.Set<FrameworkUserBase>().Add(v);
+                context.Set<FrameworkUser>().Add(v);
                 context.SaveChanges();
             }
 
@@ -55,14 +55,14 @@ namespace WalkingTec.Mvvm.Demo.Test
         [TestMethod]
         public void ChangePassword()
         {
-            FrameworkUserBase v = new FrameworkUserBase();
+            FrameworkUser v = new FrameworkUser();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 v.ITCode = "user";
                 v.Name = "name";
                 v.Password = Utils.GetMD5String("password");
                 v.IsValid = true;
-                context.Set<FrameworkUserBase>().Add(v);
+                context.Set<FrameworkUser>().Add(v);
                 context.SaveChanges();
             }
 
@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Demo.Test
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var u = context.Set<FrameworkUserBase>().FirstOrDefault();
+                var u = context.Set<FrameworkUser>().FirstOrDefault();
                 Assert.AreEqual(u.Password, Utils.GetMD5String("p1"));
             }
 

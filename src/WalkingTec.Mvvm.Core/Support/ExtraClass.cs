@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Net;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -29,6 +30,19 @@ namespace WalkingTec.Mvvm.Core
     {
         public string Property { get; set; }
         public SortDir Direction { get; set; }
+    }
+
+    public class ApiResult<T>
+    {
+        public T Data { get; set; }
+        public HttpStatusCode? StatusCode { get; set; }
+        public ErrorObj Errors { get; set; }
+        public string ErrorMsg { get; set; }
+
+        public ApiResult()
+        {
+            Data = default(T);
+        }
     }
 
     public class ErrorObj

@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 }
                 else
                 {
-                    var user = DC.Set<FrameworkUserBase>().Where(x => x.ITCode == Entity.UserCode).FirstOrDefault();
+                    var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.UserCode).FirstOrDefault();
                     if (user == null)
                     {
                         MSD.AddModelError("Entity.UserCode", Localizer["Sys.CannotFindUser", Entity.UserCode]);

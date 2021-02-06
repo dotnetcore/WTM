@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 {
     public class LoginVM : BaseVM
     {
-        [Display(Name = "账号")]
+        [Display(Name = "_Admin.Account")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50)]
         public string ITCode { get; set; }
@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         public async System.Threading.Tasks.Task<LoginUserInfo> DoLoginAsync(bool ignorePris = false)
         {
             //根据用户名和密码查询用户
-            string code = await DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password == Utils.GetMD5String(Password)).Select(x => x.ITCode).SingleOrDefaultAsync();
+            string code = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password == Utils.GetMD5String(Password)).Select(x => x.ITCode).SingleOrDefaultAsync();
 
             //如果没有找到则输出错误
             if (string.IsNullOrEmpty(code))

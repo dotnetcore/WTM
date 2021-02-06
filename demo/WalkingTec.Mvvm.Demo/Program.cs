@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
@@ -10,7 +11,13 @@ namespace WalkingTec.Mvvm.Demo
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var server = CreateWebHostBuilder(args).Build();
+            WTMContext wtm = null;
+            using (var scope = server.Services.CreateScope())
+            {
+                wtm = scope.ServiceProvider.GetRequiredService<WTMContext>();
+            }
+            server.Run();
         }
 
         public static IHostBuilder CreateWebHostBuilder(string[] args)

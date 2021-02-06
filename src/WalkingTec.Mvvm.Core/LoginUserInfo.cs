@@ -46,12 +46,12 @@ namespace WalkingTec.Mvvm.Core
 
         public async System.Threading.Tasks.Task LoadBasicInfoAsync(WTMContext context)
         {
-            if (string.IsNullOrEmpty(this.ITCode) || context?.DC == null)
+            if (string.IsNullOrEmpty(this.ITCode) || context?.DC == null || context.BaseUserQuery == null)
             {
                 return;
             }
             var DC = context.DC;
-            var userInfo = await DC.Set<FrameworkUserBase>()
+            var userInfo = await context.BaseUserQuery
                                         .Where(x => x.ITCode.ToLower() == this.ITCode.ToLower() && x.IsValid)
                                         .Select(x => new {
                                             user = x,

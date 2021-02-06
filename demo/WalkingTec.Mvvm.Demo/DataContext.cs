@@ -28,6 +28,8 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<City> Cities { get; set; }
         public DbSet<WxReportData> WxReportDatas { get; set; }
         public DbSet<不要用中文模型名> 不要中文 { get; set; }
+        public DbSet<ISOType> ISOTypes { get; set; }
+        public DbSet<SoftFacInfo> SoftFacInfos { get; set; }
 
 
         public override async Task<bool> DataInit(object allModules, bool IsSpa)

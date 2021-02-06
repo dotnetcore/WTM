@@ -1,0 +1,17 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs.SoftFacInfoVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:textbox field="Entity.IsoName" />
+<wt:textbox field="Entity.EXEVerSion" />
+<wt:textbox field="Entity.Description" />
+<wt:upload field="Entity.EXEFileID" />
+<wt:checkbox field="SelectediSOTypesIDs" items="AlliSOTypess"/>
+</wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

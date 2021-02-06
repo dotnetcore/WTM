@@ -807,7 +807,11 @@ window.ff = {
                 }
                return;
             }
-            if (/_DONOTUSE_(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
+            var itemname = item.name;
+            if (/_WTMMultiCombo_(.*?)_(.*?)$/.test(itemname)) {
+                itemname = RegExp.$2;
+            }
+            if (/_DONOTUSE_(.*?)\[\d?\]\.(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
                 var name2 = RegExp.$2;
                 if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1 + "[0]." + name2) == false) {
@@ -815,7 +819,7 @@ window.ff = {
                 }
                 return;
             }
-            if (/_DONOTUSE_(.*?)$/.test(item.name)) {
+            if (/_DONOTUSE_(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
                 if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1) == false) {
                     filterback[name1] = 1;
@@ -823,7 +827,7 @@ window.ff = {
                 return;
             }
 
-            if (/(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
+            if (/(.*?)\[\d?\]\.(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
                 var name2 = RegExp.$2;
                 var checkname = name1 + "`" + name2;
@@ -837,17 +841,17 @@ window.ff = {
                 filter[newname] = item.value;
                 check[checkname] = check[checkname] + 1;
             }
-            else if (filter.hasOwnProperty(item.name)) {
-                var temp = filter[item.name];
+            else if (filter.hasOwnProperty(itemname)) {
+                var temp = filter[itemname];
                 if (!(temp instanceof Array))
                     temp = [temp];
                 temp.push(item.value);
-                filter[item.name] = temp;
+                filter[itemname] = temp;
             }
             else {
-                filter[item.name] = item.value;
-                if (filterback.hasOwnProperty(item.name) == true) {
-                    filterback[item.name] = undefined;
+                filter[itemname] = item.value;
+                if (filterback.hasOwnProperty(itemname) == true) {
+                    filterback[itemname] = undefined;
                 }
             }
             });
