@@ -324,18 +324,17 @@ export default class Utils {
     };
 
     // 单个
-    if (props.multiple) {
+    if (!props.multiple) {
+      const imgID = _.get(_t.sourceFormData || _t.formData, key);
       compData.on["onBackImgId"] = (event) => {
         _.set(_t.sourceFormData || _t.formData, key, event);
       };
-      const imgID = _.get(_t.sourceFormData || _t.formData, key);
       return (
         <wtm-upload-img imgId={imgID} {...compData}>
           {option.children}
         </wtm-upload-img>
       );
     }
-
     // 上传钩子
     if (!compData.props.onSuccess) {
       compData.props.onSuccess = (res, file, fileList) => {
@@ -363,7 +362,7 @@ export default class Utils {
       }
       compData.props["file-list"] = dataFiles;
     } else {
-      compData.props["file-list"] = sourceItem(_t.sourceFormData || _t.formData, key)[key];
+      compData.props["file-list"] = sourceItem(_t.sourceFormData || _t.formData, key)[key] || [];
     }
 
     if (slot) {
