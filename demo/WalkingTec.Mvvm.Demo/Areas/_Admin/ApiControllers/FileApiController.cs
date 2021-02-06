@@ -82,9 +82,18 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
             }
-            file.DataStream?.CopyToAsync(Response.Body);
-            file.DataStream.Dispose();
-            return new EmptyResult();
+
+            var ext = file.FileExt.ToLower();
+            if (ext == "mp4")
+            {
+                return File(file.DataStream, "video/mpeg4", enableRangeProcessing: true);
+            }
+            else
+            {
+                file.DataStream?.CopyToAsync(Response.Body);
+                file.DataStream.Dispose();
+                return new EmptyResult();
+            }
         }
 
         [HttpGet("[action]/{id}")]
@@ -105,6 +114,10 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (ext == "png" || ext == "bmp" || ext == "gif" || ext == "tif" || ext == "jpg" || ext == "jpeg")
             {
                 contenttype = $"image/{ext}";
+            }
+            if (ext == "mp4")
+            {
+                contenttype = $"video/mpeg4";
             }
             return File(file.DataStream, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
         }

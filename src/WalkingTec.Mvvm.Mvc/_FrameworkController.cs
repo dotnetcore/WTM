@@ -396,13 +396,20 @@ namespace WalkingTec.Mvvm.Mvc
             rv.Position = 0;
             if (stream == false)
             {
-                return File(rv, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
+                    return File(rv, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
             }
             else
             {
-                rv.CopyToAsync(Response.Body);
-                rv.Dispose();
-                return new EmptyResult();
+                if (ext == "mp4")
+                {
+                    return File(rv, contenttype, enableRangeProcessing: true);
+                }
+                else
+                {
+                    rv.CopyToAsync(Response.Body);
+                    rv.Dispose();
+                    return new EmptyResult();
+                }
             }
         }
 
@@ -411,7 +418,8 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var file = fp.GetFile(id, false, ConfigInfo.CreateDC(_DONOT_USE_CS));
             string html = string.Empty;
-            if (file.FileExt.ToLower() == "pdf")
+            var ext = file.FileExt.ToLower();
+            if (ext == "pdf")
             {
                 html = $@"
             <object  classid=""clsid:CA8A9780-280D-11CF-A24D-444553540000"" width=""100%"" height=""100%"" border=""0""
@@ -424,6 +432,10 @@ namespace WalkingTec.Mvvm.Mvc
             <param name=""SRC"" value=""/_Framework/GetFile?id={id}&stream=true"">
            </object>
             ";
+            }
+            else if (ext == "mp4")
+            {
+                html = $@"<video id='FileObject' controls='controls' style='{(string.IsNullOrEmpty(width) ? "" : $"width:{width}px")}'  border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'></video>";
             }
             else
             {

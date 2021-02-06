@@ -14,25 +14,25 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ApiController]
     [Route("api/_file")]
     [AllRights]
-    [ActionDescription("File")]
+    [ActionDescription("_Admin.FileApi")]
     public class FileApiController : BaseApiController
     {
         [HttpPost("[action]")]
         [ActionDescription("UploadFile")]
-        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
+        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir=null,string extra = null,string csName= null)
         {
             var FileData = Request.Form.Files[0];
-            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, extra, sm, Wtm.CreateDC(cskey: csName));
+            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName,subdir,extra,sm,Wtm.CreateDC(cskey:csName));
             return Ok(new { Id = file.GetID(), Name = file.FileName });
         }
 
         [HttpPost("[action]")]
         [ActionDescription("UploadPic")]
-        public IActionResult UploadImage([FromServices] WtmFileProvider fp, int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
+        public IActionResult UploadImage([FromServices] WtmFileProvider fp,int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
         {
             if (width == null && height == null)
             {
-                return Upload(fp, sm, groupName, csName);
+                return Upload(fp,sm,groupName,csName);
             }
             var FileData = Request.Form.Files[0];
 
@@ -52,7 +52,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             MemoryStream ms = new MemoryStream();
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             ms.Position = 0;
-            var file = fp.Upload(FileData.FileName, FileData.Length, ms, groupName, subdir, extra, sm, Wtm.CreateDC(cskey: csName));
+            var file = fp.Upload(FileData.FileName, FileData.Length, ms, groupName,subdir, extra, sm, Wtm.CreateDC(cskey: csName));
             oimage.Dispose();
             ms.Dispose();
 
@@ -75,23 +75,32 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("GetFile")]
         public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(csName));
 
 
             if (file == null)
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
             }
-            file.DataStream?.CopyToAsync(Response.Body);
-            file.DataStream.Dispose();
-            return new EmptyResult();
+
+            var ext = file.FileExt.ToLower();
+            if (ext == "mp4")
+            {
+                return File(file.DataStream, "video/mpeg4", enableRangeProcessing: true);
+            }
+            else
+            {
+                file.DataStream?.CopyToAsync(Response.Body);
+                file.DataStream.Dispose();
+                return new EmptyResult();
+            }
         }
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("DownloadFile")]
         public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(csName));
             if (file == null)
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
@@ -105,6 +114,10 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (ext == "png" || ext == "bmp" || ext == "gif" || ext == "tif" || ext == "jpg" || ext == "jpeg")
             {
                 contenttype = $"image/{ext}";
+            }
+            if (ext == "mp4")
+            {
+                contenttype = $"video/mpeg4";
             }
             return File(file.DataStream, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
         }
