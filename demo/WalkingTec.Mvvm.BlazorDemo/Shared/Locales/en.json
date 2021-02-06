@@ -1,0 +1,41 @@
+﻿{
+  "BootstrapBlazor.Shared.Pages.Components.Block": {
+    "Title": "",
+    "SubTitle": "Demo"
+  },
+  "BootstrapBlazor.Shared.Pages.Alerts": {
+    "Title": "Alert",
+    "SubTitle": "Displays important alert messages.",
+    "BaseUsageText": "Basic usage",
+    "IntroText1": "Alert components are non-overlay elements in the page that does not disappear automatically.",
+    "AlertPrimaryText": "A simple primary alert—check it out!",
+    "AlertSecondaryText": "A simple secondary alert—check it out!",
+    "AlertSuccessText": "A simple success alert—check it out!",
+    "AlertDangerText": "A simple danger alert—check it out!",
+    "AlertWarningText": "A simple warning alert—check it out!",
+    "AlertInfoText": "A simple info alert—check it out!",
+    "AlertDarkText": "A simple dark alert—check it out!",
+    "CloseButtonUsageText": "Close button",
+    "IntroText2": "Customize the close button as texts or other symbols.",
+    "WithIconUsageText": "With Icon",
+    "IntroText3": "Displaying an icon improves readability.",
+    "ShowBarUsageText": "With Bar",
+    "IntroText4": "Show <code>Tip</code>"
+  },
+  "BootstrapBlazor.Shared.Pages.Anchors": {
+    "Title": "Anchor",
+    "SubTitle": "Hyperlinks to scroll on one page.",
+    "BaseUsageText": "Basic usage",
+    "IntroText1": "For displaying anchor hyperlinks on page and jumping between them.",
+    "IntroText2": "Click <code>Anchor</code> item try it",
+    "ContentText1": "<p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>"
+  },
+  "BootstrapBlazor.Shared.Pages.BindItem": {
+    "Name": "Name",
+    "DateTime": "DateTime",
+    "Address": "Address",
+    "Count": "Count",
+    "Complete": "Complete",
+    "Education": "Education"
+  }
+}

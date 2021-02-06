@@ -3,12 +3,22 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Locales\en.json" />
+    <Content Remove="Locales\zh.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\en.json" />
+    <EmbeddedResource Include="Locales\zh.json" />
+  </ItemGroup>
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="5.0.14-beta07" />
+    <PackageReference Include="BootstrapBlazor" Version="5.0.15-beta04" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,17 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\Program.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Program.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\Program.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Program.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\Program.zh.resx">
+      <Generator></Generator>
     </EmbeddedResource>
   </ItemGroup>
 

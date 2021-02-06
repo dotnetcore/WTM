@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
     public class LoginVM : BaseVM
     {
         [Display(Name = "_Admin.Account")]
-        [Required(AllowEmptyStrings = false)]
+        [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(50)]
         public string ITCode { get; set; }
 

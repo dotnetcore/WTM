@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using BootstrapBlazor.Localization.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -49,19 +51,25 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             {
                 options.UseWtmMvcOptions();
             })
-            .AddJsonOptions(options => {
+            .AddJsonOptions(options =>
+            {
                 options.UseWtmJsonOptions();
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
             {
                 options.UseWtmApiOptions();
-            })
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddWtmDataAnnotationsLocalization(typeof(Shared.Program));
+            });
+            //.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+           // .AddWtmDataAnnotationsLocalization(typeof(Shared.Program));
 
             services.AddServerSideBlazor();
-            services.AddBootstrapBlazor();
+            services.AddBootstrapBlazor(null, options =>
+            {
+                // 设置自己的 RESX 多语言文化资源文件 如 Program.{CultureName}.resx
+                options.StringLocalizer = JsonLocalizationOptions.CreateStringLocalizer<Shared.Program>();
+                options.AdditionalAssemblies = new Assembly[] { typeof(Shared.Program).Assembly };
+            });
             services.AddWtmContext(ConfigRoot, (options) => {
                 options.DataPrivileges = DataPrivilegeSettings();
                 options.CsSelector = CSSelector;
