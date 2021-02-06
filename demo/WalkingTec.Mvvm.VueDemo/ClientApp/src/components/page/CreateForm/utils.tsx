@@ -309,7 +309,7 @@ export default class Utils {
 
   private generateUploadComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, directives, key, events, label, mapKey, isFileDataById = false } = option;
+    const { style, props = {}, directives, key, events, label, mapKey, isFileDataById = false } = option;
     let { slot } = option;
     const compData = {
       directives,
