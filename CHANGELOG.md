@@ -1,6 +1,13 @@
 # 更新日志
 ## v5.x.x 
 
+##5.0.3 (2021-2-7)
+* **突变：**  用了新的方式修复了用户表不能自定义主键的问题。老版本更新后请手动将原始代码中的FrameworkUesrBase的引用统一更新成FrameworkUser，或者下载新项目把公共部分copy过去
+* **突变：**  wtm.CallApi方法重构，增加了返回code，错误信息等字段。默认文件中HomeController中的GetGithubInfo方法使用了CallApi，老版本请手动将返回值修改为返回CallApi的结果.Data
+* **新增：**  Layui的文件预览现在可以播放mp4的附件
+* **新增：**  ImportVM中的GenerateTemplate现在可以重写，通过重写该方法可以指定上传模板的文件名
+* **修改：**  修复了api中Json序列化引起的循环引用的错误
+
 ##5.0.2 (2021-1-31)
 * **新增：**  新增IBasePoco和IPersistPoco两个接口，提升定义模型的灵活性。比如继承了TreePoco的树形模型如果同时实现IBasePoco框架也会自动设置添加人，添加事件，修改人，修改时间。详情请查阅文档中模型定义的部分。
 * **新增：**  支持发布为单一文件
