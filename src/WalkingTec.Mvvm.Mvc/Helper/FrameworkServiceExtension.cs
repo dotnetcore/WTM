@@ -682,7 +682,7 @@ namespace WalkingTec.Mvvm.Mvc
             var controllers = gd.GetTypesAssignableFrom <IBaseController>();
             gd.AllModule = GetAllModules(controllers);
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
-            gd.CustomUserType = gd.GetTypesAssignableFrom<FrameworkUserBase>().Where(x=>x.Name != nameof(FrameworkUserBase)).FirstOrDefault();
+            gd.CustomUserType = gd.GetTypesAssignableFrom<FrameworkUserBase>().Where(x=>x.Name.ToLower() == "frameworkuser").FirstOrDefault();
             gd.SetMenuGetFunc(() =>
             {
                 var menus = new List<SimpleMenu>();

@@ -45,7 +45,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             services.AddWtmAuthentication();
             services.AddWtmHttpClient();
             services.AddWtmSwagger();
-            services.AddWtmMultiLanguages();
 
             services.AddMvc(options =>
             {
@@ -70,6 +69,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.StringLocalizer = JsonLocalizationOptions.CreateStringLocalizer<Shared.Program>();
                 options.AdditionalAssemblies = new Assembly[] { typeof(Shared.Program).Assembly };
             });
+            services.AddWtmMultiLanguages();
+
             services.AddWtmContext(ConfigRoot, (options) => {
                 options.DataPrivileges = DataPrivilegeSettings();
                 options.CsSelector = CSSelector;

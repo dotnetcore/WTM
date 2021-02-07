@@ -9,6 +9,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
 {
     public class DataContext : FrameworkContext
     {
+        public DbSet<FrameworkUser> FrameworkUsers { get; set; }
         public DataContext(CS cs)
      : base(cs)
         {
