@@ -1,6 +1,9 @@
 # 更新日志
 ## v5.x.x 
 
+##5.0.4 (2021-2-7)
+* **HotFix：**  紧急修复5.0.3版本在各层分离的多项目模式下无法登录的bug
+
 ##5.0.3 (2021-2-7)
 * **突变：**  用了新的方式修复了用户表不能自定义主键的问题。老版本更新后请手动将原始代码中的FrameworkUesrBase的引用统一更新成FrameworkUser，或者下载新项目把公共部分copy过去
 * **突变：**  wtm.CallApi方法重构，增加了返回code，错误信息等字段。默认文件中HomeController中的GetGithubInfo方法使用了CallApi，老版本请手动将返回值修改为返回CallApi的结果.Data
