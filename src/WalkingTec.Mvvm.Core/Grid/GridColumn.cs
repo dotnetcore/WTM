@@ -415,7 +415,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else if (col.GetType().IsEnumOrNullableEnum())
                 {
-                    rv = (int)col;
+                    rv = col.ToString();
                 }
                 else if (col.GetType().Namespace.Equals("System") == false)
                 {

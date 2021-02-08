@@ -191,6 +191,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        private Type _localizerType;
         private IStringLocalizerFactory _stringLocalizerFactory;
         private IStringLocalizer _localizer;
         private ILoggerFactory _loggerFactory;
@@ -200,8 +201,11 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (_localizer == null && _stringLocalizerFactory != null)
                 {
-                    var programtype = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-                    _localizer = _stringLocalizerFactory.Create(programtype);
+                    if(_localizerType == null)
+                    {
+                        _localizerType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                    }
+                    _localizer = _stringLocalizerFactory.Create(_localizerType);
                 }
                 return _localizer ?? WalkingTec.Mvvm.Core.CoreProgram._localizer;
             }
@@ -267,13 +271,14 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null)
+        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null, WtmLocalizationOption lop=null)
         {
             _configInfo = _config?.CurrentValue ?? new Configs();
             _globaInfo = _gd ?? new GlobalData();
             _httpContext = _http?.HttpContext;
             _stringLocalizerFactory = stringLocalizer;
             _loggerFactory = loggerFactory;
+            _localizerType = lop?.LocalizationType;
             this.Logger = loggerFactory?.CreateLogger<ActionLog>();
             if (_httpContext == null)
             {
@@ -805,7 +810,12 @@ namespace WalkingTec.Mvvm.Core
                     string responseTxt = await res.Content.ReadAsStringAsync();
                     if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
-                        rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt);
+
+                        try
+                        {
+                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt);
+                        }
+                        catch { }
                     }
                     rv.ErrorMsg = responseTxt;
                 }
@@ -904,8 +914,6 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="url">调用地址</param>
         /// <param name="method">调用方式</param>
         /// <param name="postdata">提交字段</param>
-        /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
-        /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
@@ -922,8 +930,6 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="url">调用地址</param>
         /// <param name="method">调用方式</param>
         /// <param name="postdata">提交的object，会被转成json提交</param>
-        /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
-        /// <param name="errormsg">如果框架不识别错误格式，返回错误文本</param>
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>

@@ -28,10 +28,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
     public class Startup
     {
         public IConfigurationRoot ConfigRoot { get; }
-
+        public IWebHostEnvironment HostingEnvironment { get; }
         public Startup(IWebHostEnvironment env)
         {
             var configBuilder = new ConfigurationBuilder();
+            HostingEnvironment = env;
             ConfigRoot = configBuilder.WTMConfig(env).Build();
         }
 
@@ -44,6 +45,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             services.AddWtmCrossDomain();
             services.AddWtmAuthentication();
             services.AddWtmHttpClient();
+            services.AddWtmMultiLanguages(op=> op.LocalizationType = typeof(Shared.Program));
             services.AddWtmSwagger();
 
             services.AddMvc(options =>
@@ -58,18 +60,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             .ConfigureApiBehaviorOptions(options =>
             {
                 options.UseWtmApiOptions();
-            });
-            //.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
-           // .AddWtmDataAnnotationsLocalization(typeof(Shared.Program));
+            })
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+           .AddWtmDataAnnotationsLocalization(typeof(Shared.Program));
 
             services.AddServerSideBlazor();
             services.AddBootstrapBlazor(null, options =>
             {
-                // 设置自己的 RESX 多语言文化资源文件 如 Program.{CultureName}.resx
-                options.StringLocalizer = JsonLocalizationOptions.CreateStringLocalizer<Shared.Program>();
-                options.AdditionalAssemblies = new Assembly[] { typeof(Shared.Program).Assembly };
+                options.ResourceManagerStringLocalizerType = typeof(Shared.Program);
             });
-            services.AddWtmMultiLanguages();
 
             services.AddWtmContext(ConfigRoot, (options) => {
                 options.DataPrivileges = DataPrivilegeSettings();
@@ -77,7 +76,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.FileSubDirSelector = SubDirSelector;
                 options.ReloadUserFunc = ReloadUser;
             });
-            services.AddTransient<ApiClient>();
+            services.AddHttpClient<ApiClient>(x => {
+                x.BaseAddress = new Uri(ConfigRoot["BlazorServerUrl"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

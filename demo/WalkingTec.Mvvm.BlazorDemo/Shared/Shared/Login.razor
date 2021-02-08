@@ -2,12 +2,11 @@
 @using  WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 @inject ApiClient api
 @inject IStringLocalizer local
+@inject WTMContext wtm
 @layout EmptyLayout
 
 <ValidateForm Model="@Model" OnValidSubmit="@Submit">
-    <BootstrapInput @bind-Value="@Model.ITCode" >
-        <RequiredValidator ErrorMessage="aaaa" />
-    </BootstrapInput>
+    <BootstrapInput @bind-Value="@Model.ITCode" />
     <BootstrapInput @bind-Value="@Model.Password" type="password" />
     <Button ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="提交" />
 </ValidateForm>
@@ -15,7 +14,7 @@
     private LoginVM Model = new LoginVM();
     private async Task Submit(EditContext context)
     {
-        var test = await api.Client.PostAsJsonAsync("/api/_account/loginjwt", new { Account = Model.ITCode, Password = Model.Password });
+        var test = await api.CallAPI("/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = Model.ITCode, Password = Model.Password });
         int a = 0;
     }
 }

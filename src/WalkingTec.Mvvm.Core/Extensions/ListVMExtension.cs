@@ -251,10 +251,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             //如果列是枚举，直接使用枚举的文本作为多语言的Key查询多语言文字
                             else if (ptype.IsEnumOrNullableEnum())
                             {
-                                if (int.TryParse(html, out int enumvalue))
-                                {
-                                    html = PropertyHelper.GetEnumDisplayName(ptype, enumvalue);
-                                }
+                                    html = PropertyHelper.GetEnumDisplayName(ptype, html);
                             }
                             //If this column is a class or list, html will be set to a json string, sest inner to true to remove the "
                             if(returnColumnObject == true && ptype?.Namespace.Equals("System") == false && ptype?.IsEnumOrNullableEnum() == false)

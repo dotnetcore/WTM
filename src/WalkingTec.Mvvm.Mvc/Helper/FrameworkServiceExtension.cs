@@ -611,7 +611,7 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IServiceCollection AddWtmMultiLanguages(this IServiceCollection services)
+        public static IServiceCollection AddWtmMultiLanguages(this IServiceCollection services, Action<WtmLocalizationOption> op = null)
         {
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             List<CultureInfo> supportedCultures = new List<CultureInfo>();
@@ -627,6 +627,12 @@ namespace WalkingTec.Mvvm.Mvc
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
             });
+            WtmLocalizationOption loc = new WtmLocalizationOption();
+            op?.Invoke(loc);
+            if (loc.LocalizationType != null)
+            {
+                services.AddSingleton<WtmLocalizationOption>(loc);
+            }
             return services;
         }
 

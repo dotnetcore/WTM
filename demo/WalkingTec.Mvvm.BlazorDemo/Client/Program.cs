@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Client
             builder.RootComponents.Add<App>("app");
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddTransient<ApiClient>();
-            builder.Services.AddBootstrapBlazor(null, options => { options.StringLocalizer = JsonLocalizationOptions.CreateStringLocalizer<Shared.Program>(); });
+            builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(Shared.Program); });
 
             await builder.Build().RunAsync();
         }
