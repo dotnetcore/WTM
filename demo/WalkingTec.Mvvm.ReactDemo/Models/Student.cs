@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.ReactDemo.Models
@@ -10,10 +9,12 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
 
     public class Student : BasePoco
     {
+
+        [Key]
+        [Column("LoginName")]
         [Display(Name = "账号")]
-        [Required(ErrorMessage = "{0}是必填项")]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
-        public string LoginName { get; set; }
+        [Required]
+        public new string ID { get; set; }
 
         [Display(Name = "密码")]
         [Required(AllowEmptyStrings = false)]
@@ -51,11 +52,19 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
         [Display(Name = "照片")]
         public FileAttachment Photo { get; set; }
 
+        [Display(Name = "附件")]
+        public Guid? FileId { get; set; }
+
+        [Display(Name = "附件")]
+        public FileAttachment File { get; set; }
+
+
         [Display(Name = "是否有效")]
         public bool IsValid { get; set; }
 
         [Display(Name = "日期")]
-        public DateTime? EnRollDate { get; set; }
+        [Required]
+        public DateTime EnRollDate { get; set; }
 
         [Display(Name = "专业")]
         public List<StudentMajor> StudentMajor { get; set; }

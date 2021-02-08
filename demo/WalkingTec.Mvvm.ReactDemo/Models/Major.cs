@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.ReactDemo.Models
@@ -36,6 +34,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
         public string Remark { get; set; }
 
         [Display(Name = "所属学校")]
+        [Required()]
         public int? SchoolId { get; set; }
 
 

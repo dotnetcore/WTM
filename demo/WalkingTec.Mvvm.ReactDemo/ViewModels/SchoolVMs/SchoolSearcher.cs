@@ -16,8 +16,8 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
         public String SchoolCode { get; set; }
         [Display(Name = "学校名称")]
         public String SchoolName { get; set; }
-        [Display(Name = "学校类型")]
-        public SchoolTypeEnum? SchoolType { get; set; }
+        [Display(Name = "地点")]
+        public Guid? PlaceId { get; set; }
 
         protected override void InitVM()
         {

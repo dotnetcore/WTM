@@ -10,31 +10,38 @@ using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.ReactDemo.Controllers
 {
-    [AuthorizeJwt]
-    [Area("aaa")]
-    [ActionDescription("地区管理")]
+    
+    [AuthorizeJwtWithCookie]
+    [ActionDescription("城市管理")]
     [ApiController]
     [Route("api/City")]
-	public class CityController : BaseApiController
+	public partial class CityController : BaseApiController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public string Search(CitySearcher searcher)
+		public IActionResult Search(CitySearcher searcher)
         {
-            var vm = Wtm.CreateVM<CityListVM>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<CityListVM>();
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public CityVM Get(Guid id)
+        public CityVM Get(string id)
         {
             var vm = Wtm.CreateVM<CityVM>(id);
             return vm;
         }
 
-        [ActionDescription("新建")]
+        [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
         public IActionResult Add(CityVM vm)
         {
@@ -57,7 +64,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
         public IActionResult Edit(CityVM vm)
         {
@@ -67,7 +74,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
-                vm.DoEdit(true);
+                vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -79,25 +86,8 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
         }
 
-        [ActionDescription("删除")]
-        [HttpGet("Delete/{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var vm = Wtm.CreateVM<CityVM>(id);
-            vm.DoDelete();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(vm.Entity);
-            }
-
-        }
-
 		[HttpPost("BatchDelete")]
-        [ActionDescription("批量删除")]
+        [ActionDescription("Sys.Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<CityBatchVM>();
@@ -120,18 +110,17 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         }
 
 
-        [ActionDescription("导出")]
+        [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(CitySearcher searcher)
         {
             var vm = Wtm.CreateVM<CityListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_City_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [ActionDescription("勾选导出")]
+        [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
@@ -141,11 +130,10 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_City_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [ActionDescription("下载导入模板")]
+        [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
@@ -160,7 +148,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [ActionDescription("导入")]
+        [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
         public ActionResult Import(CityImportVM vm)
         {
@@ -180,6 +168,12 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         public ActionResult GetCitys()
         {
             return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+        }
+
+        [HttpGet("GetCitysTree")]
+        public ActionResult GetCitysTree()
+        {
+            return Ok(DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name));
         }
 
     }

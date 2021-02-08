@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
 {
-    public class CityBatchVM : BaseBatchVM<City, City_BatchEdit>
+    public partial class CityBatchVM : BaseBatchVM<City, City_BatchEdit>
     {
         public CityBatchVM()
         {
@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
     }
 
 	/// <summary>
-    /// 批量编辑字段类
+    /// Class to define batch edit fields
     /// </summary>
     public class City_BatchEdit : BaseVM
     {

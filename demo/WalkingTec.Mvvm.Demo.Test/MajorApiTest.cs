@@ -5,42 +5,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Demo.Controllers;
-using WalkingTec.Mvvm.Demo.ViewModels.MajorVMs;
-using WalkingTec.Mvvm.Demo.Models;
-using WalkingTec.Mvvm.Demo;
+using WalkingTec.Mvvm.ReactDemo.Controllers;
+using WalkingTec.Mvvm.ReactDemo.ViewModels.MajorVMs;
+using WalkingTec.Mvvm.ReactDemo.Models;
+using WalkingTec.Mvvm.ReactDemo;
 
-namespace WalkingTec.Mvvm.Demo.Test
+namespace WalkingTec.Mvvm.ReactDemo.Test
 {
     [TestClass]
     public class MajorApiTest
     {
-        private MajorApiController _controller;
+        private MajorController _controller;
         private string _seed;
 
         public MajorApiTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateApi<MajorApiController>(new DataContext(_seed, DBTypeEnum.Memory), "user");
+            _controller = MockController.CreateApi<MajorController>(new DataContext(_seed, DBTypeEnum.Memory), "user");
         }
 
         [TestMethod]
         public void SearchTest()
         {
-            ContentResult rv = _controller.Search(new MajorApiSearcher()) as ContentResult;
+            ContentResult rv = _controller.Search(new MajorSearcher()) as ContentResult;
             Assert.IsTrue(string.IsNullOrEmpty(rv.Content)==false);
         }
 
         [TestMethod]
         public void CreateTest()
         {
-            MajorApiVM vm = _controller.Wtm.CreateVM<MajorApiVM>();
+            MajorVM vm = _controller.Wtm.CreateVM<MajorVM>();
             Major v = new Major();
             
-            v.MajorCode = "O46MmQ";
-            v.MajorName = "4y4YrB";
-            v.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-            v.Remark = "t4HIXlO";
+            v.MajorCode = "fsY4rlg";
+            v.MajorName = "ZfzziuvGm";
+            v.MajorType = WalkingTec.Mvvm.ReactDemo.Models.MajorTypeEnum.Optional;
+            v.Remark = "2gmb";
             v.SchoolId = AddSchool();
             vm.Entity = v;
             var rv = _controller.Add(vm);
@@ -50,10 +50,10 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data = context.Set<Major>().Find(v.ID);
                 
-                Assert.AreEqual(data.MajorCode, "O46MmQ");
-                Assert.AreEqual(data.MajorName, "4y4YrB");
-                Assert.AreEqual(data.MajorType, WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional);
-                Assert.AreEqual(data.Remark, "t4HIXlO");
+                Assert.AreEqual(data.MajorCode, "fsY4rlg");
+                Assert.AreEqual(data.MajorName, "ZfzziuvGm");
+                Assert.AreEqual(data.MajorType, WalkingTec.Mvvm.ReactDemo.Models.MajorTypeEnum.Optional);
+                Assert.AreEqual(data.Remark, "2gmb");
                 Assert.AreEqual(data.CreateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
             }
@@ -66,24 +66,24 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.MajorCode = "O46MmQ";
-                v.MajorName = "4y4YrB";
-                v.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-                v.Remark = "t4HIXlO";
+                v.MajorCode = "fsY4rlg";
+                v.MajorName = "ZfzziuvGm";
+                v.MajorType = WalkingTec.Mvvm.ReactDemo.Models.MajorTypeEnum.Optional;
+                v.Remark = "2gmb";
                 v.SchoolId = AddSchool();
                 context.Set<Major>().Add(v);
                 context.SaveChanges();
             }
 
-            MajorApiVM vm = _controller.Wtm.CreateVM<MajorApiVM>();
+            MajorVM vm = _controller.Wtm.CreateVM<MajorVM>();
             var oldID = v.ID;
             v = new Major();
             v.ID = oldID;
        		
-            v.MajorCode = "kXJO0Ox";
-            v.MajorName = "Or1E87kc";
-            v.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Required;
-            v.Remark = "CvwctbX";
+            v.MajorCode = "Wpp";
+            v.MajorName = "VBvm";
+            v.MajorType = WalkingTec.Mvvm.ReactDemo.Models.MajorTypeEnum.Optional;
+            v.Remark = "Xv9HtZp";
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
 			
@@ -99,10 +99,10 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data = context.Set<Major>().Find(v.ID);
  				
-                Assert.AreEqual(data.MajorCode, "kXJO0Ox");
-                Assert.AreEqual(data.MajorName, "Or1E87kc");
-                Assert.AreEqual(data.MajorType, WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Required);
-                Assert.AreEqual(data.Remark, "CvwctbX");
+                Assert.AreEqual(data.MajorCode, "Wpp");
+                Assert.AreEqual(data.MajorName, "VBvm");
+                Assert.AreEqual(data.MajorType, WalkingTec.Mvvm.ReactDemo.Models.MajorTypeEnum.Optional);
+                Assert.AreEqual(data.Remark, "Xv9HtZp");
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
             }
@@ -116,10 +116,10 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.MajorCode = "O46MmQ";
-                v.MajorName = "4y4YrB";
-                v.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-                v.Remark = "t4HIXlO";
+                v.MajorCode = "fsY4rlg";
+                v.MajorName = "ZfzziuvGm";
+                v.MajorType = WalkingTec.Mvvm.ReactDemo.Models.MajorTypeEnum.Optional;
+                v.Remark = "2gmb";
                 v.SchoolId = AddSchool();
                 context.Set<Major>().Add(v);
                 context.SaveChanges();
@@ -136,15 +136,15 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.MajorCode = "O46MmQ";
-                v1.MajorName = "4y4YrB";
-                v1.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-                v1.Remark = "t4HIXlO";
+                v1.MajorCode = "fsY4rlg";
+                v1.MajorName = "ZfzziuvGm";
+                v1.MajorType = WalkingTec.Mvvm.ReactDemo.Models.MajorTypeEnum.Optional;
+                v1.Remark = "2gmb";
                 v1.SchoolId = AddSchool();
-                v2.MajorCode = "kXJO0Ox";
-                v2.MajorName = "Or1E87kc";
-                v2.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Required;
-                v2.Remark = "CvwctbX";
+                v2.MajorCode = "Wpp";
+                v2.MajorName = "VBvm";
+                v2.MajorType = WalkingTec.Mvvm.ReactDemo.Models.MajorTypeEnum.Optional;
+                v2.Remark = "Xv9HtZp";
                 v2.SchoolId = v1.SchoolId; 
                 context.Set<Major>().Add(v1);
                 context.Set<Major>().Add(v2);
@@ -173,12 +173,12 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 
-                v.ID = 13;
-                v.SchoolCode = "vSsUQd";
-                v.SchoolName = "3th";
-                v.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PRI;
-                v.Remark = "9Vs";
-                v.Level = 24;
+                v.ID = 61;
+                v.SchoolCode = "ilf3";
+                v.SchoolName = "nfocBB";
+                v.SchoolType = WalkingTec.Mvvm.ReactDemo.Models.SchoolTypeEnum.PRI;
+                v.Remark = "I3QGJCnXU";
+                v.Level = 35;
                 context.Set<School>().Add(v);
                 context.SaveChanges();
             }

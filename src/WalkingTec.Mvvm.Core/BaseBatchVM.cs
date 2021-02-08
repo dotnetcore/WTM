@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
@@ -50,16 +51,19 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 批量修改的VM
         /// </summary>
+        
         public TLinkModel LinkedVM { get; set; }
 
         /// <summary>
         /// 批量列表VM
         /// </summary>
+        [JsonIgnore]
         public IBasePagedListVM<TopBasePoco, ISearcher> ListVM { get; set; }
 
         /// <summary>
         /// 批量操作的错误
         /// </summary>
+        [JsonIgnore]
         public Dictionary<string, string> ErrorMessage { get; set; }
 
         /// <summary>

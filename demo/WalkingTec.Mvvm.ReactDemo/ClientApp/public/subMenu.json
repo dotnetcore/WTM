@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "ParentId": null,
     "Id": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
@@ -89,4 +89,32 @@
     "Text": "Swagger",
     "Url": "@StaticPage/swagger/index.html"
   }
+,{
+    "Id": "bf42abd3-7a9b-4fb1-b1a3-7b754114151f",
+    "ParentId": null,
+    "Text": "学校管理",
+    "Url": "/school"
+    }
+,{
+    "Id": "374df0de-5dcc-4a1e-9dc4-8554b18d2d35",
+    "ParentId": null,
+    "Text": "专业管理",
+    "Url": "/major"
+    }
+,{
+    "Id": "63b80c9c-9e24-4372-af6e-ddeabe9e07d8",
+    "ParentId": null,
+    "Text": "学生管理",
+    "Url": "/student"
+    }
+,{
+    "Id": "7a5bc57e-4562-4bcf-88d4-b9724749d6c1",
+    "ParentId": null,
+    "Text": "城市管理",
+    "Url": "/city"
+    }
+
+
+
+
 ]

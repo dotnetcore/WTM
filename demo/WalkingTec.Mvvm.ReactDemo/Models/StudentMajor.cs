@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System;
+using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Attributes;
 
@@ -15,6 +13,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
 
         public Guid MajorId { get; set; }
 
-        public Guid StudentId { get; set; }
+        [Required()]
+        public string StudentId { get; set; }
     }
 }

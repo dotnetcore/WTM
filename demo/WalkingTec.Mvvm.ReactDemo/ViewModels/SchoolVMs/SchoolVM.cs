@@ -12,27 +12,10 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
 {
     public partial class SchoolVM : BaseCRUDVM<School>
     {
-        public Guid? Place2_Sheng
-        {
-            get
-            {
-                return Entity.Place2?.Parent?.Parent?.ID;
-            }
-        }
-        public Guid? Place2_Shi
-        {
-            get
-            {
-                return Entity.Place2?.Parent?.ID;
-            }
-        }
 
         public SchoolVM()
         {
             SetInclude(x => x.Place);
-            SetInclude(x => x.Place2);
-            SetInclude(x => x.Place2.Parent.Parent);
-            SetInclude(x => x.Majors);
         }
 
         protected override void InitVM()

@@ -10,8 +10,10 @@ using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
 {
-    public class CitySearcher : BaseSearcher
+    public partial class CitySearcher : BaseSearcher
     {
+        [Display(Name = "_Admin.Parent")]
+        public Guid? ParentId { get; set; }
 
         protected override void InitVM()
         {

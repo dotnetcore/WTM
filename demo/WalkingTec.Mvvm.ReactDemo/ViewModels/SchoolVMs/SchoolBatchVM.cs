@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,10 +21,16 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
     }
 
 	/// <summary>
-    /// 批量编辑字段类
+    /// Class to define batch edit fields
     /// </summary>
     public class School_BatchEdit : BaseVM
     {
+        [Display(Name = "学校类型")]
+        public SchoolTypeEnum? SchoolType { get; set; }
+        [Display(Name = "备注")]
+        public String Remark { get; set; }
+        [Display(Name = "地点")]
+        public Guid? PlaceId { get; set; }
 
         protected override void InitVM()
         {

@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 export default {
     actionlog: {
         name: 'MenuKey.Log',
@@ -36,5 +36,37 @@ export default {
         controller: 'WalkingTec.Mvvm.Admin.Api,DataPrivilege',
         component: React.lazy(() => import('./dataprivilege'))
     }
-    /**WTM**/
+    
+, school: {
+        name: '学校管理',
+        path: '/school',
+        controller: 'WalkingTec.Mvvm.ReactDemo.Controllers,School',
+        component: React.lazy(() => import('./school'))
+    }
+
+, major: {
+        name: '专业管理',
+        path: '/major',
+        controller: 'WalkingTec.Mvvm.ReactDemo.Controllers,Major',
+        component: React.lazy(() => import('./major'))
+    }
+
+, student: {
+        name: '学生管理',
+        path: '/student',
+        controller: 'WalkingTec.Mvvm.ReactDemo.Controllers,Student',
+        component: React.lazy(() => import('./student'))
+    }
+
+, city: {
+        name: '城市管理',
+        path: '/city',
+        controller: 'WalkingTec.Mvvm.ReactDemo.Controllers,City',
+        component: React.lazy(() => import('./city'))
+    }
+/**WTM**/
+ 
+ 
+ 
+ 
 }

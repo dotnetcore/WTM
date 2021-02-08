@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,30 +10,38 @@ using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.ReactDemo.Controllers
 {
-    [AuthorizeJwt]
+    
+    [AuthorizeJwtWithCookie]
     [ActionDescription("学校管理")]
     [ApiController]
     [Route("api/School")]
 	public partial class SchoolController : BaseApiController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public string Search(SchoolSearcher searcher)
+		public IActionResult Search(SchoolSearcher searcher)
         {
-            var vm = Wtm.CreateVM<SchoolListVM>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<SchoolListVM>();
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public SchoolVM Get(Guid id)
+        public SchoolVM Get(string id)
         {
             var vm = Wtm.CreateVM<SchoolVM>(id);
             return vm;
         }
 
-        [ActionDescription("新建")]
+        [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
         public IActionResult Add(SchoolVM vm)
         {
@@ -56,7 +64,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
         public IActionResult Edit(SchoolVM vm)
         {
@@ -66,7 +74,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
-                vm.DoEdit(true);
+                vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -78,25 +86,8 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
         }
 
-        [ActionDescription("删除")]
-        [HttpGet("Delete/{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var vm = Wtm.CreateVM<SchoolVM>(id);
-            vm.DoDelete();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(vm.Entity);
-            }
-
-        }
-
 		[HttpPost("BatchDelete")]
-        [ActionDescription("批量删除")]
+        [ActionDescription("Sys.Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<SchoolBatchVM>();
@@ -119,18 +110,17 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         }
 
 
-        [ActionDescription("导出")]
+        [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(SchoolSearcher searcher)
         {
             var vm = Wtm.CreateVM<SchoolListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_School_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [ActionDescription("勾选导出")]
+        [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
@@ -140,11 +130,25 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_School_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [ActionDescription("下载导入模板")]
+        [HttpPost("BatchEdit")]
+        [ActionDescription("Sys.BatchEdit")]
+        public ActionResult DoBatchEdit(SchoolBatchVM vm)
+        {
+            if (!ModelState.IsValid || !vm.DoBatchEdit())
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                return Ok(vm.Ids.Count());
+            }
+        }
+
+
+        [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
@@ -159,7 +163,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [ActionDescription("导入")]
+        [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
         public ActionResult Import(SchoolImportVM vm)
         {
@@ -180,14 +184,6 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         {
             return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
-
-        [HttpGet("GetSubCities")]
-        public ActionResult GetSubCities(Guid? parentid)
-        {
-            var city = DC.Set<City>().Where(x => x.ParentId == parentid).GetSelectListItems(Wtm, x => x.Name);
-            return Ok(city);
-        }
-
 
     }
 }

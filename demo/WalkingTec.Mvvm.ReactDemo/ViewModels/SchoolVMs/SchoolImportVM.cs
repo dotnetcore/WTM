@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,17 +20,15 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
         public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty<School>(x => x.SchoolType);
         [Display(Name = "备注")]
         public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty<School>(x => x.Remark);
+        [Display(Name = "级别")]
+        public ExcelPropety Level_Excel = ExcelPropety.CreateProperty<School>(x => x.Level);
         [Display(Name = "地点")]
-        public ExcelPropety Place_Excel = ExcelPropety.CreateProperty<School>(x => x.Place);
-        [Display(Name = "地点2")]
-        public ExcelPropety Place2_Excel = ExcelPropety.CreateProperty<School>(x => x.Place2);
+        public ExcelPropety Place_Excel = ExcelPropety.CreateProperty<School>(x => x.PlaceId);
 
 	    protected override void InitVM()
         {
             Place_Excel.DataType = ColumnDataType.ComboBox;
             Place_Excel.ListItems = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
-            Place2_Excel.DataType = ColumnDataType.ComboBox;
-            Place2_Excel.ListItems = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

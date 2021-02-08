@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
 {
-    public class CityVM : BaseCRUDVM<City>
+    public partial class CityVM : BaseCRUDVM<City>
     {
 
         public CityVM()
