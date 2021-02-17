@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public IActionResult Index()
         {
             var vm = Wtm.CreateVM<ActionLogListVM>();
-            return PartialView(vm);
+            return View(vm);
         }
 
         [ActionDescription("Sys.Search")]

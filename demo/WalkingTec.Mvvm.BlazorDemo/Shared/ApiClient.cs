@@ -4,9 +4,13 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using BootstrapBlazor.Components;
 using Microsoft.Extensions.Hosting;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Json;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared
 {
@@ -29,6 +33,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 {
                     return rv;
                 }
+                url = url.AppendQuery("culture=" + System.Threading.Thread.CurrentThread.CurrentUICulture.Name);
                 //如果配置了代理，则使用代理
                 //设置超时
                 if (timeout.HasValue)
@@ -59,6 +64,14 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                     return rv;
                 }
                 rv.StatusCode = res.StatusCode;
+                JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
+                jsonOptions.PropertyNamingPolicy = null;
+                jsonOptions.IgnoreNullValues = true;
+                jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+                jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
+                jsonOptions.Converters.Add(new JsonStringEnumConverter());
+                jsonOptions.Converters.Add(new DateRangeConverter());
+                jsonOptions.Converters.Add(new PocoConverter());
                 if (res.IsSuccessStatusCode == true)
                 {
                     Type dt = typeof(T);
@@ -75,7 +88,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                         }
                         else
                         {
-                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt);
+                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt,jsonOptions);
                         }
                     }
                 }
@@ -86,7 +99,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                     {
                         try
                         {
-                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt);
+                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt,jsonOptions);
                         }
                         catch { }
                     }
@@ -213,6 +226,36 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
 
         #endregion
 
+        public async Task<QueryData<T>> CallSearchApi<T>(string url, BaseSearcher searcher, QueryPageOptions options) where T : class, new()
+        {
+            if (string.IsNullOrEmpty(options.SortName) && options.SortOrder != SortOrder.Unset)
+            {
+                searcher.SortInfo = new SortInfo
+                {
+                    Property = options.SortName,
+                    Direction = options.SortOrder == SortOrder.Desc ? SortDir.Desc : SortDir.Asc
+                };
+            }
+            else
+            {
+                searcher.SortInfo = null;
+            }
+            var rv = await CallAPI<WtmApiResult<T>>(url, HttpMethodEnum.POST, searcher);
+            QueryData<T> data = new QueryData<T>();
+            data.Items = rv.Data.Data;
+            data.TotalCount = rv.Data.Count;
+            return data;
 
+        }
+    }
+
+    public class WtmApiResult<T>
+    {
+        public List<T> Data { get; set; }
+        public int Count { get; set; }
+        public int Page { get; set; }
+        public int PageCount { get; set; }
+        public string Msg { get; set; }
+        public int Code { get; set; }
     }
 }

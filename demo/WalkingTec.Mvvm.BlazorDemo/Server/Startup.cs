@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using BootstrapBlazor.Localization.Json;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +41,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var config = ConfigRoot.Get<Configs>();
             services.AddDistributedMemoryCache();
             services.AddWtmSession(3600);
             services.AddWtmCrossDomain();
@@ -63,21 +65,25 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
            .AddWtmDataAnnotationsLocalization(typeof(Shared.Program));
-
-            services.AddServerSideBlazor();
-            services.AddBootstrapBlazor(null, options =>
+            if (config.BlazorMode == BlazorModeEnum.Server)
             {
-                options.ResourceManagerStringLocalizerType = typeof(Shared.Program);
-            });
-
+                services.AddServerSideBlazor();
+                services.AddBootstrapBlazor(null, options =>
+                {
+                    options.ResourceManagerStringLocalizerType = typeof(Shared.Program);
+                });
+            }
             services.AddWtmContext(ConfigRoot, (options) => {
                 options.DataPrivileges = DataPrivilegeSettings();
                 options.CsSelector = CSSelector;
                 options.FileSubDirSelector = SubDirSelector;
                 options.ReloadUserFunc = ReloadUser;
             });
-            services.AddHttpClient<ApiClient>(x => {
+            services.AddHttpClient<ApiClient>(x =>
+            {
                 x.BaseAddress = new Uri(ConfigRoot["BlazorServerUrl"]);
+                x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+                x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
             });
         }
 
@@ -111,7 +117,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             app.UseSession();
             app.UseWtmSwagger();
             app.UseWtm();
-            app.UseBlazorFrameworkFiles();
 
             if (configs.BlazorMode == BlazorModeEnum.Server)
             {
@@ -142,6 +147,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                     endpoints.MapFallbackToFile("index.html");
                 });
             }
+            app.UseBlazorFrameworkFiles();
             app.UseWtmContext();
 
 

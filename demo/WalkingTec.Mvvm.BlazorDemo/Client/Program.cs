@@ -19,10 +19,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Client
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("app");
+            builder.RootComponents.Add<Shared.App>("app");
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddTransient<ApiClient>();
             builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(Shared.Program); });
+            builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
 
             await builder.Build().RunAsync();
         }

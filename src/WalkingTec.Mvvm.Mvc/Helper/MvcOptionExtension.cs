@@ -48,6 +48,7 @@ namespace WalkingTec.Mvvm.Mvc
             options.JsonSerializerOptions.PropertyNamingPolicy = null;
             options.JsonSerializerOptions.IgnoreNullValues = true;
             options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+            options.JsonSerializerOptions.AllowTrailingCommas = true;
             options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());

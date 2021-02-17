@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Json;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
@@ -785,6 +787,14 @@ namespace WalkingTec.Mvvm.Core
                     return rv;
                 }
                 rv.StatusCode = res.StatusCode;
+                JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
+                jsonOptions.PropertyNamingPolicy = null;
+                jsonOptions.IgnoreNullValues = true;
+                jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+                jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
+                jsonOptions.Converters.Add(new JsonStringEnumConverter());
+                jsonOptions.Converters.Add(new DateRangeConverter());
+                jsonOptions.Converters.Add(new PocoConverter());
                 if (res.IsSuccessStatusCode == true)
                 {
                     Type dt = typeof(T);
@@ -801,7 +811,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else
                         {
-                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt);
+                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt, jsonOptions);
                         }
                     }
                 }
@@ -813,7 +823,7 @@ namespace WalkingTec.Mvvm.Core
 
                         try
                         {
-                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt);
+                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt, jsonOptions);
                         }
                         catch { }
                     }

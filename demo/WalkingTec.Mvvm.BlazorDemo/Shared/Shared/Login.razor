@@ -1,8 +1,6 @@
 @page "/login"
 @using  WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 @inject ApiClient api
-@inject IStringLocalizer local
-@inject WTMContext wtm
 @layout EmptyLayout
 
 <ValidateForm Model="@Model" OnValidSubmit="@Submit">

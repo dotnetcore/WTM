@@ -1,12 +1,41 @@
 @page "/"
 @using WalkingTec.Mvvm.Core;
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 @inject IStringLocalizer Localizer;
+@inject ApiClient api
 
+<ValidateForm Model="@SearchModel" OnValidSubmit="@Submit">
+    <BootstrapInput @bind-Value="@SearchModel.ITCode" />
+    <BootstrapInput @bind-Value="@SearchModel.ActionUrl" />
+    <MultiSelect @bind-Value="@SearchModel.LogType" />
+    <Button ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="提交" />
+</ValidateForm>
 
-<div>
-    test: @Localizer["_Admin.Account"]
-</div>
+<Table @ref="searchTable" TItem="ActionLog"  OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true"
+       ShowToolbar="true" ShowSearch="true" IsMultipleSelect="true" ShowExtendButtons="true">
+    <TableColumns>
+        <TableColumn @bind-Field="@context.ITCode" Width="180" />
+        <TableColumn @bind-Field="@context.LogType" />
+        <TableColumn @bind-Field="@context.ModuleName" Sortable="true"/>
+        <TableColumn @bind-Field="@context.ActionName" />
+        <TableColumn @bind-Field="@context.ActionUrl" />
+        <TableColumn @bind-Field="@context.Duration" />
+    </TableColumns>
+</Table>
 
 @code{
-    FrameworkUser Model = new FrameworkUser();
+
+    private ActionLogSearcher SearchModel = new ActionLogSearcher();
+    private Table<ActionLog> searchTable;
+
+    private async Task<QueryData<ActionLog>> OnSearch(QueryPageOptions opts)
+    {
+        return await api.CallSearchApi<ActionLog>("/api/_actionlog/search", SearchModel, opts);
+    }
+
+    private async Task Submit(EditContext context)
+    {
+        await searchTable.QueryAsync();
+    }
+
 }
