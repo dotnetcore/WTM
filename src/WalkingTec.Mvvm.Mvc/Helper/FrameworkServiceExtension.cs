@@ -661,6 +661,7 @@ namespace WalkingTec.Mvvm.Mvc
             var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
             var localfactory = app.ApplicationServices.GetRequiredService<IStringLocalizerFactory>();
+            var lop = app.ApplicationServices.GetService<WtmLocalizationOption>();
             //获取所有程序集
             gd.AllAssembly = Utils.GetAllAssembly();
             //var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
@@ -680,7 +681,15 @@ namespace WalkingTec.Mvvm.Mvc
             //}
 
             //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
-            var programType = Assembly.GetCallingAssembly()?.GetTypes()?.Where(x => x.Name == "Program").FirstOrDefault();
+            Type programType = null;
+            if (lop?.LocalizationType == null)
+            {
+                programType = Assembly.GetCallingAssembly()?.GetTypes()?.Where(x => x.Name == "Program").FirstOrDefault();
+            }
+            else
+            {
+                programType = lop.LocalizationType;
+            }
             var coredll = gd.AllAssembly.Where(x => x.GetName().Name == "WalkingTec.Mvvm.Core.dll" || x.GetName().Name == "WalkingTec.Mvvm.Core").FirstOrDefault();
             var programLocalizer = localfactory.Create(programType);
             coredll.GetType("WalkingTec.Mvvm.Core.CoreProgram").GetProperty("_localizer").SetValue(null, programLocalizer);
