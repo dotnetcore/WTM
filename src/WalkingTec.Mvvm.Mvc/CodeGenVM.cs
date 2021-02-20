@@ -1574,17 +1574,30 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""Entity.{item.FieldName}"" />");
+                            var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
+                            Type checktype = proType;
+                            if (proType.IsNullable())
+                            {
+                                checktype = proType.GetGenericArguments()[0];
+                            }
+                            if (checktype == typeof(bool))
+                            {
+                                fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""Entity.{item.FieldName}""  $switchdefaultvalue$ />");
+                            }
+                            else
+                            {
+                                fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""Entity.{item.FieldName}"" />");
+                            }
                         }
                     }
                     else
                     {
-                        fieldstr.AppendLine($@"                <Col span={{24}}>
+                            fieldstr.AppendLine($@"                <Col span={{24}}>
                     <FormItem {{...props}} fieId=""Entity.{item.FieldName}"" layout=""row"" />
                 </Col>");
                     }
                 }
-                return rv.Replace("$fields$", fieldstr.ToString());
+                return rv.Replace("$fields$", fieldstr.Replace("$switchdefaultvalue$", "value={false}").ToString()).Replace("$efields$", fieldstr.Replace("$switchdefaultvalue$", "").ToString());
             }
 
             return rv;
