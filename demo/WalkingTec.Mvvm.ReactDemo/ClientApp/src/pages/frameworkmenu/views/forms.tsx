@@ -19,6 +19,7 @@ export class InsertForm extends React.Component<any, any> {
         const props = {
             ...this.props,
             models: this.models,
+            defaultValues: { Entity: { FolderOnly: false, IsPublic: false } }
         }
         const IsInside = Help.FormValueEqual(props, 'Entity.IsInside', true, true);
         return <InfoShellLayout>
