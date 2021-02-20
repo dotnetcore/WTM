@@ -19,6 +19,7 @@ export class InsertForm extends React.Component<any, any> {
         const props = {
             ...this.props,
             models: this.models,
+            // defaultValues: { Entity: { FolderOnly: false, IsPublic: false } }
         }
         const IsInside = Help.FormValueEqual(props, 'Entity.IsInside', true, true);
         return <InfoShellLayout>
@@ -28,9 +29,9 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="SelectedActionIDs" hidden={!IsInside} />
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />
-            <FormItem {...props} fieId="Entity.FolderOnly" />
+            <FormItem {...props} fieId="Entity.FolderOnly" value={false}/>
             <FormItem {...props} fieId="Entity.ShowOnMenu" value={true} />
-            <FormItem {...props} fieId="Entity.IsPublic" />
+            <FormItem {...props} fieId="Entity.IsPublic" value={false}/>
             <FormItem {...props} fieId="Entity.DisplayOrder" />
             <FormItem {...props} fieId="Entity.Icon" />
         </InfoShellLayout>

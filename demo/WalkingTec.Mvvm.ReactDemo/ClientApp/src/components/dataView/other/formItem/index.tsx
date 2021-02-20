@@ -67,11 +67,12 @@ export class FormItem extends React.Component<IFormItemProps, any> {
         const model = lodash.get(models, fieId) || { rules: [], label: `未获取到模型(${fieId})`, formItem: <Input placeholder={`未获取到模型(${fieId})`} /> };
         let options: GetFieldDecoratorOptions = {
             rules: model.rules,
+            initialValue: value,
             ...decoratorOptions
         };
         // 获取默认值 默认值，禁用，显示 span 
         if (value || typeof defaultValues === "object") {
-            options.initialValue = value || lodash.get(defaultValues, fieId, formItemProps.value);
+            options.initialValue = value || lodash.get(defaultValues, fieId, formItemProps.value || value);
         }
         // 隐藏 域
         if (hidden || formItemProps.hidden) {
@@ -181,6 +182,9 @@ function itemRender(props: IFormItemProps, config) {
             renderItem = formItem;
         } else {
             if (getFieldDecorator) {
+                if (lodash.has(formItem, 'props.checkedChildren')) {
+                    options.valuePropName = 'checked'
+                }
                 renderItem = getFieldDecorator(fieId as never, options)(formItem);
             } else {
                 renderItem = formItem;
@@ -193,8 +197,8 @@ function itemRender(props: IFormItemProps, config) {
         propsNew.disabled = true;
     }
     // 布尔类型 Swatch
-    if (lodash.isEqual(options.initialValue, true)) {
-        propsNew.defaultChecked = true;
+    if (lodash.includes([true, false], options.initialValue)) {
+        propsNew.defaultChecked = options.initialValue;
     }
     // console.log(propsNew)
     return React.cloneElement(renderItem, propsNew);
