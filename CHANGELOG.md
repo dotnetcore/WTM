@@ -1,6 +1,14 @@
 # 更新日志
 ## v5.x.x 
 
+##5.0.6 (2021-2-21) 
+* **修改：**  修复了ListVM处理枚举列的一个小bug
+* **新增：**  AddWtmMultiLanguages函数现在可以指定一个option，用来指定自定义的多语言文件
+* **修改：**  现在默认允许集合结尾多写逗号的json格式
+* **修改：**  修复了React模式下switch控件不选择无法提交的bug
+* **修改：**  oracle终于支持.net5了，更新了对他的引用，现在不会再报警告了
+* **突变：**  移除了默认项目中引用的Microsoft.EntityFrameworkCore.Tools和Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation，因为他们已经在wtm的dll中引用了。5.0以上的项目可以手动从依赖中删除这两个包。
+
 ##5.0.4 (2021-2-7)
 * **HotFix：**  紧急修复5.0.3版本在各层分离的多项目模式下无法登录的bug
 
