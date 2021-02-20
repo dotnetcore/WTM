@@ -176,7 +176,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     if (model is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
                     {
                         var searcher = lvm.Searcher;
-                        searcher.CopyContext(lvm);                        
+                        searcher.CopyContext(lvm);
+                        searcher.DoInit();
                     }
                     model.Validate();
                     var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();

@@ -31,9 +31,18 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Search")]
         [HttpPost]
-        public string Search(SchoolListVM vm)
+        public string Search(SchoolSearcher searcher)
         {
-            return vm.GetJson(false);
+            var vm = Wtm.CreateVM<SchoolListVM>(passInit: true);
+            if (ModelState.IsValid)
+            {
+                vm.Searcher = searcher;
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
         #endregion
 
