@@ -64,7 +64,7 @@ namespace WalkingTec.Mvvm.VueDemo
 
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/build";
+                configuration.RootPath = "wwwroot";
             });
         }
 
