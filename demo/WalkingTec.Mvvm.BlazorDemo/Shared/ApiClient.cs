@@ -242,8 +242,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
             }
             var rv = await CallAPI<WtmApiResult<T>>(url, HttpMethodEnum.POST, searcher);
             QueryData<T> data = new QueryData<T>();
-            data.Items = rv.Data.Data;
-            data.TotalCount = rv.Data.Count;
+            data.Items = rv.Data?.Data;
+            data.TotalCount = rv.Data?.Count ?? 0;
             return data;
 
         }

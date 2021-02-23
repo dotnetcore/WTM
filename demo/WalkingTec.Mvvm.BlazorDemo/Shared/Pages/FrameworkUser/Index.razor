@@ -1,0 +1,61 @@
+@page "/FrameworkUser/Index"
+@using WalkingTec.Mvvm.Core;
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
+@inject IStringLocalizer localizer;
+@inject GlobalItems gi;
+@inject ApiClient api
+
+<ValidateForm Model="@SearchModel" OnValidSubmit="@Submit">
+    <div class="form-inline">
+        <div class="row">
+            <div class="form-group col-12 col-sm-4">
+                <Select @bind-Value="@SearchModel.IsValid" Items="@gi.SearcherBoolItems" />
+            </div>
+            <div class="form-group col-12 col-sm-4">
+                <BootstrapInput @bind-Value="@SearchModel.ITCode" />
+            </div>
+            <div class="form-group col-12 col-sm-4">
+                <BootstrapInput @bind-Value="@SearchModel.Name" />
+            </div>
+        </div>
+        </div>
+        <Button ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="提交" />
+</ValidateForm>
+
+<Table @ref="searchTable" TItem="FrameworkUser_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true"
+       ShowToolbar="true" ShowSearch="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false">
+    <TableColumns>
+        <TableColumn @bind-Field="@context.ITCode" Width="180" />
+        <TableColumn @bind-Field="@context.Name" />
+        <TableColumn @bind-Field="@context.Gender" Sortable="true" />
+        <TableColumn @bind-Field="@context.CellPhone" />
+        <TableColumn @bind-Field="@context.RoleName_view" />
+        <TableColumn @bind-Field="@context.GroupName_view" />
+        <TableColumn @bind-Field="@context.PhotoId" />
+        <TableColumn @bind-Field="@context.IsValid" Items="@gi.SearcherBoolItems" />
+    </TableColumns>
+    <RowButtonTemplate>
+        <div style="padding-right:10px;">
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Primary" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="明细" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="编辑" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="权限" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="审批" />
+        </div>
+    </RowButtonTemplate>
+</Table>
+
+@code{
+
+    private FrameworkUserSearcher SearchModel = new FrameworkUserSearcher();
+    private Table<FrameworkUser_View> searchTable;
+    private async Task<QueryData<FrameworkUser_View>> OnSearch(QueryPageOptions opts)
+    {
+        return await api.CallSearchApi<FrameworkUser_View>("/api/_frameworkuserbase/search", SearchModel, opts);
+    }
+
+    private async Task Submit(EditContext context)
+    {
+        await searchTable.QueryAsync();
+    }
+
+}

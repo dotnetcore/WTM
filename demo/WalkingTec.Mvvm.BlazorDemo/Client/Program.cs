@@ -24,6 +24,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Client
             builder.Services.AddTransient<ApiClient>();
             builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
             builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(Shared.Program); });
+            builder.Services.AddScoped<GlobalItems>();
 
             await builder.Build().RunAsync();
         }

@@ -21,11 +21,13 @@
         <TableColumn @bind-Field="@context.ActionUrl" />
         <TableColumn @bind-Field="@context.Duration" />
     </TableColumns>
-    <RowButtonTemplate >
-        <TableCellButton AdditionalAttributes="@RowButtonStyle" Size="Size.ExtraSmall" Color="Color.Primary" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="明细"  />
-        <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="编辑"  />
-        <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="权限"  />
-        <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="审批"  />
+    <RowButtonTemplate>
+        <div style="padding-right:10px;">
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Primary" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="明细" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="编辑" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="权限" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="审批" />
+        </div>
     </RowButtonTemplate>
 </Table>
 
@@ -33,9 +35,6 @@
 
     private ActionLogSearcher SearchModel = new ActionLogSearcher();
     private Table<ActionLog> searchTable;
-    private Dictionary<string, object> RowButtonStyle = new Dictionary<string, object> {
-        { "style","margin-right:10px" },
-    };
 
     private async Task<QueryData<ActionLog>> OnSearch(QueryPageOptions opts)
     {
