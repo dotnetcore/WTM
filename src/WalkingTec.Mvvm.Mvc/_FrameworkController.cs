@@ -539,7 +539,7 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var menu in menus)
             {
                 RemoveEmptyMenu(menu.Children);
-                if ((menu.Children == null || menu.Children.Count == 0) && (menu.Url == null))
+                if ((menu.Children == null || menu.Children.Count == 0) && (string.IsNullOrEmpty(menu.Url)))
                 {
                     toRemove.Add(menu);
                 }
