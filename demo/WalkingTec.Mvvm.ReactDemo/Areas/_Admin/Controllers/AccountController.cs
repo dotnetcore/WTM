@@ -45,7 +45,8 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             if (rv == null)
             {
-                return BadRequest(Localizer["Sys.LoginFailed"].Value);
+                ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             LoginUserInfo user = new LoginUserInfo
             {
