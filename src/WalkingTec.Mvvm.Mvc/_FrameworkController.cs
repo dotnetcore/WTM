@@ -272,7 +272,7 @@ namespace WalkingTec.Mvvm.Mvc
                 GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>( LogLevel.Error, new EventId(), log, null, (a, b) => {
                     return a.GetLogString();
                 });
-            
+
             var rv = string.Empty;
             if (ConfigInfo.IsQuickDebug == true)
             {
@@ -563,7 +563,7 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var menu in menus)
             {
                 RemoveEmptyMenu(menu.Children);
-                if ((menu.Children == null || menu.Children.Count == 0) && (menu.Url == null))
+                if ((menu.Children == null || menu.Children.Count == 0) && String.IsNullOrEmpty(menu.Url))
                 {
                     toRemove.Add(menu);
                 }
@@ -707,7 +707,7 @@ namespace WalkingTec.Mvvm.Mvc
         public ActionResult GetGithubInfo()
         {
             var rv = ReadFromCache<string>("githubinfo", () =>
-            {               
+            {
                 var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
                 return JsonConvert.SerializeObject(s);
             }, 1800);
