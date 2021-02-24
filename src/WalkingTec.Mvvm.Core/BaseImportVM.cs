@@ -261,31 +261,31 @@ namespace WalkingTec.Mvvm.Core
                 {
                     //是否有子表
                     HasSubTable = ListTemplateProptetys[pIndex].SubTableType != null ? true : HasSubTable;
-                    if (ListTemplateProptetys[pIndex].DataType != ColumnDataType.Dynamic)
-                    {
-                        if (cells[i].ToString().Trim('*') != ListTemplateProptetys[pIndex].ColumnName)
-                        {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
-                            return;
-                        }
-                        pIndex++;
-                    }
-                    else
-                    {
-                        var listDynamicColumns = ListTemplateProptetys[i].DynamicColumns;
-                        int dcCount = listDynamicColumns.Count;
-                        for (int dclIndex = 0; dclIndex < dcCount; dclIndex++)
-                        {
-                            if (cells[i].ToString().Trim('*') != listDynamicColumns[dclIndex].ColumnName)
-                            {
-                                ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
-                                break;
-                            }
-                            i = i + 1;
-                        }
-                        i = i - 1;
-                        pIndex++;
-                    }
+                    //if (ListTemplateProptetys[pIndex].DataType != ColumnDataType.Dynamic)
+                    //{
+                    //    if (cells[i].ToString().Trim('*') != ListTemplateProptetys[pIndex].ColumnName)
+                    //    {
+                    //        ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
+                    //        return;
+                    //    }
+                    //    pIndex++;
+                    //}
+                    //else
+                    //{
+                    //    var listDynamicColumns = ListTemplateProptetys[i].DynamicColumns;
+                    //    int dcCount = listDynamicColumns.Count;
+                    //    for (int dclIndex = 0; dclIndex < dcCount; dclIndex++)
+                    //    {
+                    //        if (cells[i].ToString().Trim('*') != listDynamicColumns[dclIndex].ColumnName)
+                    //        {
+                    //            ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
+                    //            break;
+                    //        }
+                    //        i = i + 1;
+                    //    }
+                    //    i = i - 1;
+                    //    pIndex++;
+                    //}
                 }
 
                 //如果有子表，则设置主表字段非必填
@@ -509,11 +509,22 @@ namespace WalkingTec.Mvvm.Core
                                         (SubTypeEntity as IBasePoco).CreateTime = DateTime.Now;
                                         (SubTypeEntity as IBasePoco).CreateBy = LoginUserInfo?.ITCode;
                                     }
+                                    var context = new ValidationContext(SubTypeEntity);
+                                    var validationResults = new List<ValidationResult>();
+                                    TryValidateObject(SubTypeEntity, context, validationResults);
+                                    if (validationResults.Count == 0)
+                                    {
+                                        //将付好值得SubTableType实例添加到List中
+                                        list.Add(SubTypeEntity);
 
-                                    //将付好值得SubTableType实例添加到List中
-                                    list.Add(SubTypeEntity);
+                                        PropertyHelper.SetPropertyValue(entity, pro.Name, list);
+                                    }
+                                    else
+                                    {
+                                        ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = item.ExcelIndex });
+                                        break;
+                                    }
 
-                                    PropertyHelper.SetPropertyValue(entity, pro.Name, list);
                                 }
                                 break;
                             }
@@ -523,8 +534,19 @@ namespace WalkingTec.Mvvm.Core
                 }
                 entity.ExcelIndex = item.ExcelIndex;
                 if (isMainData)
-                {
-                    EntityList.Add(entity);
+                {                   
+                    var context = new ValidationContext(entity);
+                    var validationResults = new List<ValidationResult>();
+                    TryValidateObject(entity, context, validationResults);
+                    if (validationResults.Count == 0)
+                    {
+                        EntityList.Add(entity);
+                    }
+                    else
+                    {
+                        ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = item.ExcelIndex });
+                        break;
+                    }
                 }
             }
         }
@@ -796,6 +818,79 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
         }
+
+
+        private  void TryValidateObject(object model, ValidationContext context, ICollection<ValidationResult> results)
+        {
+            var modelType = model.GetType();
+            foreach (var p in modelType.GetProperties())
+            {
+                var propertyValue = p.GetValue(model);
+                TryValidateProperty(propertyValue, context, results, p);
+            }
+        }
+
+        private  void TryValidateProperty(object value, ValidationContext context, ICollection<ValidationResult> results, PropertyInfo? propertyInfo = null)
+        {
+            var modelType = context.ObjectType;
+            if (propertyInfo == null)
+            {
+                propertyInfo = modelType.GetProperty(context.MemberName!);
+            }
+
+            if (propertyInfo != null)
+            {
+                var rules = propertyInfo.GetCustomAttributes(true).Where(i => i.GetType().BaseType == typeof(ValidationAttribute)).Cast<ValidationAttribute>();
+                var displayName = propertyInfo.GetPropertyDisplayName();
+                var memberName = propertyInfo.Name;
+                foreach (var rule in rules)
+                {
+                    if (!rule.IsValid(value))
+                    {
+                        string errorMessage = "Error";
+                        if (!string.IsNullOrEmpty(rule.ErrorMessage))
+                        {
+                            if (rule is RangeAttribute range)
+                            {
+                                if (range.Minimum != null && range.Maximum != null)
+                                {
+                                    errorMessage = Wtm.Localizer[rule.ErrorMessage, displayName, range.Minimum, range.Maximum];
+                                }
+                                else if (range.Minimum != null)
+                                {
+                                    errorMessage = Wtm.Localizer[rule.ErrorMessage, displayName, range.Minimum];
+                                }
+                                else if (range.Maximum != null)
+                                {
+                                    errorMessage = Wtm.Localizer[rule.ErrorMessage, displayName, range.Maximum];
+                                }
+                            }
+                            else if (rule is StringLengthAttribute sl)
+                            {
+                                if (sl.MaximumLength > 0 && sl.MinimumLength > 0)
+                                {
+                                    errorMessage = Wtm.Localizer[rule.ErrorMessage, displayName, sl.MinimumLength, sl.MaximumLength];
+                                }
+                                else if (sl.MinimumLength > 0)
+                                {
+                                    errorMessage = Wtm.Localizer[rule.ErrorMessage, displayName, sl.MinimumLength];
+                                }
+                                else if (sl.MaximumLength > 0)
+                                {
+                                    errorMessage = Wtm.Localizer[rule.ErrorMessage, displayName, sl.MaximumLength];
+                                }
+                            }
+                            else
+                            {
+                                errorMessage = Wtm.Localizer[rule.ErrorMessage, displayName];
+                            }
+                        }
+                        results.Add(new ValidationResult(errorMessage, new string[] { memberName }));
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// 保存指定表中的数据
