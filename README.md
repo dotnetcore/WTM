@@ -1,4 +1,4 @@
-English | [简体中文](./README.zh-CN.md) 
+English | [简体中文](./README.zh-CN.md)
 
 # WalkingTec.Mvvm for asp.net core
 
@@ -16,6 +16,7 @@ Walkingtec.mvvm framework (WTM) is a rapid development framework based on .net c
 | -------- | ------------ | ---- |---------|---------|
 | Azure Pipelines |  Windows/Linux/OSX |  v2.2.300 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=develop) |
 | Azure Pipelines |  Windows/Linux/OSX |  v3.1.101 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.1?branchName=feature/dotnet3)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=28&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.1?branchName=feature/dotnet3)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=28&branchName=feature/dotnet3) |
+| Azure Pipelines |  Windows/Linux/OSX |  v5.0.103 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v5.0?branchName=feature/vNext)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=30&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v5.0?branchName=feature%2FvNext)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=30&branchName=feature/vNext) |
 | AppVeyor |  Windows/Linux |  v2.2.300 | - | - |
 | Travis   | Linux/OSX |  v2.2.300 | - | - |
 
@@ -30,7 +31,7 @@ Package name                              | Version                     | Downlo
 
 ## WTM Features
 
-WTM provides 4 types of ViewModel, covering all of the common functionalities of mainstream web applications. 
+WTM provides 4 types of ViewModel, covering all of the common functionalities of mainstream web applications.
 
 - CrudVM provides most common functionalities for data addition, deletion and modification.
 
@@ -42,7 +43,7 @@ WTM provides 4 types of ViewModel, covering all of the common functionalities of
 
 - WTM has its own code generator, which makes development efficient and fast.
 
-- WTM provides dozens of client-side controls, including Form, Grid, Panel, Dialog and quite alot of other common controls. 
+- WTM provides dozens of client-side controls, including Form, Grid, Panel, Dialog and quite alot of other common controls.
 
 - WTM provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end  functionalities;
 
@@ -70,7 +71,7 @@ Frame QQ communication group: 694148336
 
 ## Click <a href="http://wtmdoc.walkingtec.cn/setup">here</a>  to generate a WTM project online and experience the beauty of WTM immediately~~~
 
-At present, we are a team of 7 developers. We are looking for all kinds of C#, React, VUE experts to join us! 
+At present, we are a team of 7 developers. We are looking for all kinds of C#, React, VUE experts to join us!
 
 If WTM hepls you:
 
