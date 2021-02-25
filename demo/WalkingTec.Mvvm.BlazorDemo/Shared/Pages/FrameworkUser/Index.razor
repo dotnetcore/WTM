@@ -4,6 +4,7 @@
 @inject IStringLocalizer localizer;
 @inject GlobalItems gi;
 @inject ApiClient api
+@inject DialogService dialog
 
 <ValidateForm Model="@SearchModel" OnValidSubmit="@Submit">
     <div class="form-inline">
@@ -36,7 +37,7 @@
     </TableColumns>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Primary" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="明细" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Primary" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="明细" OnClickCallback="@OnDetailsClick"/>
             <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="编辑" />
             <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="权限" />
             <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="审批" />
@@ -58,4 +59,18 @@
         await searchTable.QueryAsync();
     }
 
+    private Task OnDetailsClick(FrameworkUser_View item)
+    {
+        return dialog.Show(new DialogOption()
+        {
+            Title = localizer["Sys.Details"],
+            BodyContext = "我是传参",
+            BodyTemplate = builder =>
+            {
+                var index = 0;
+                builder.OpenComponent<Details>(index++);
+                builder.CloseComponent();
+            }
+        });
+    }
 }
