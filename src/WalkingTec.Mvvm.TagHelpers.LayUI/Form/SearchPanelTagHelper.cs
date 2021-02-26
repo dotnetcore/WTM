@@ -134,6 +134,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 show =_configs.UIOptions.SearchPanel.DefaultExpand;
             }
+
+            string showpage = "";
+            if(ListVM?.NeedPage == true)
+            {
+                showpage = ",page:{curr:1}";
+            }
             var layuiShow = show ? " layui-show" : string.Empty;
             output.PreContent.AppendHtml($@"
 <div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}x"">
@@ -170,7 +176,7 @@ $('#{SearchBtnId}').on('click', function () {{
     var tempwhere = {{}};
     $.extend(tempwhere,{GridId}defaultfilter.where);
       {GridId}filterback.where = tempwhere;
-  table.reload('{GridId}',{{url:{GridId}url,where: $.extend(tempwhere,ff.GetSearchFormData('{Id}','{Vm.Name}')),page:{{curr:1}}
+  table.reload('{GridId}',{{url:{GridId}url,where: $.extend(tempwhere,ff.GetSearchFormData('{Id}','{Vm.Name}')){showpage}
   }})
 }});
     ")}
