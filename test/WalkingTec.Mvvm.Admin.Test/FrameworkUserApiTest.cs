@@ -119,9 +119,11 @@ namespace WalkingTec.Mvvm.Admin.Test
                 v1.ITCode = "itcode";
                 v1.Name = "name";
                 v1.Password = "password";
+                v1.PhotoId = AddPhoto();
                 v2.ITCode = "itcode2";
                 v2.Name = "name2";
                 v2.Password = "password2";
+                v2.PhotoId = AddPhoto();
                 context.Set<FrameworkUser>().Add(v1);
                 context.Set<FrameworkUser>().Add(v2);
                 context.SaveChanges();
@@ -153,5 +155,25 @@ namespace WalkingTec.Mvvm.Admin.Test
             Assert.IsInstanceOfType(rv, typeof(FileResult));
 
         }
+
+        private Guid AddPhoto()
+        {
+            FileAttachment v = new FileAttachment();
+            using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
+            {
+
+                v.FileName = "PEsnw";
+                v.FileExt = "celfpE";
+                v.Path = "egy";
+                v.Length = 61;
+                v.SaveMode = "uLfM37wt";
+                v.ExtraInfo = "Od3aqjgP";
+                v.HandlerInfo = "tbyzFF";
+                context.Set<FileAttachment>().Add(v);
+                context.SaveChanges();
+            }
+            return v.ID;
+        }
+
     }
 }
