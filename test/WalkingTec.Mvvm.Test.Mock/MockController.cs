@@ -17,6 +17,7 @@ namespace WalkingTec.Mvvm.Test.Mock
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             mockHttpContext.Setup(x => x.Request).Returns(new DefaultHttpContext().Request);
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
+            _controller.Wtm.MSD = new ModelStateServiceProvider(_controller.ModelState);
             return _controller;
         }
 
@@ -29,6 +30,7 @@ namespace WalkingTec.Mvvm.Test.Mock
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             mockHttpContext.Setup(x => x.Request).Returns(new DefaultHttpContext().Request);
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
+            _controller.Wtm.MSD = new ModelStateServiceProvider(_controller.ModelState);
             return _controller;
         }
 
