@@ -15,28 +15,5 @@ namespace WtmBlazorControls
         [Parameter(CaptureUnmatchedValues = true)]
         public IDictionary<string, object> AdditionalAttributes { get; set; }
 
-        [CascadingParameter]
-        public WTRow ParentRow { get; set; }
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            if(ParentRow != null)
-            {
-                ParentRow.Items.Add((b) => this.BuildRenderTree(b));
-            }
-        }
-
-        protected override void OnAfterRender(bool firstRender)
-        {
-            if(ParentRow != null && firstRender == true)
-            {
-                return;
-            }
-            else
-            {
-                base.OnAfterRender(firstRender);
-            }
-        }
     }
 }

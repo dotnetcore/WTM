@@ -158,7 +158,7 @@ layui.use(['tree'],function(){{
             }
             else
             {
-                output.Content.SetContent("Error：items must be set and must be of type List<ITreeData<>>");
+                output.Content.SetContent("Error：items must be set and must be of type List<TreeSelectListItem>");
             }
             base.Process(context, output);
         }

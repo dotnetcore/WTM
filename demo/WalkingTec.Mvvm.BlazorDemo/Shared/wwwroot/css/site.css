@@ -281,3 +281,11 @@
 .groupbox{
     margin-top:10px;
 }
+
+.table-toolbar .table-toolbar-button {
+    float: right !important;
+}
+
+.btn-group .btn{
+    padding-left:10px !important;
+}

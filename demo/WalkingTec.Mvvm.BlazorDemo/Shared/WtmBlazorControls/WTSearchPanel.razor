@@ -7,7 +7,7 @@
             <div class="col-6 " style="margin-top:auto; margin-bottom:auto">
                 @local["Sys.SearchCondition"]
             </div>
-            <div class="col-6 text-right"><Button Size="Size.Small" Icon="fa fa-search" Text="@local["Sys.Search"]" @onclick="OnSearch"  /></div>
+            <div class="col-6 text-right"><Button Size="Size.Small" Icon="fa fa-search" Text="@local["Sys.Search"]" @onclick="OnSearch"  StopPropagation="true"/></div>
         </div>
     </div>
     <div class="@BodyClassName @(Collapsed==true? "collapse": "" )" style="padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 1rem;padding-bottom:0px;">
