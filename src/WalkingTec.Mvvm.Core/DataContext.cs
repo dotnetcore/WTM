@@ -370,13 +370,20 @@ namespace WalkingTec.Mvvm.Core
 
         public IDataContext ReCreate()
         {
-            if (ConnectionString != null)
+            if (this?.Database?.CurrentTransaction != null)
             {
-                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS) }).Invoke(new object[] { ConnectionString }); ;
+                return this;
             }
             else
             {
-                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum)}).Invoke(new object[] { CSName, DBType });
+                if (ConnectionString != null)
+                {
+                    return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS) }).Invoke(new object[] { ConnectionString }); ;
+                }
+                else
+                {
+                    return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+                }
             }
         }
         /// <summary>
