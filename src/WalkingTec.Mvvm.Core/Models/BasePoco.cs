@@ -21,23 +21,23 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// CreateTime
         /// </summary>
-        [Display(Name = "CreateTime")]
+        [Display(Name = "_Admin.CreateTime")]
         public DateTime? CreateTime { get; set; }
         /// <summary>
         /// CreateBy
         /// </summary>
-        [Display(Name = "CreateBy")]
+        [Display(Name = "_Admin.CreateBy")]
         [StringLength(50,ErrorMessage = "Validate.{0}stringmax{1}")]
         public string CreateBy { get; set; }
         /// <summary>
         /// UpdateTime
         /// </summary>
-        [Display(Name = "UpdateTime")]
+        [Display(Name = "_Admin.UpdateTime")]
         public DateTime? UpdateTime { get; set; }
         /// <summary>
         /// UpdateBy
         /// </summary>
-        [Display(Name = "UpdateBy")]
+        [Display(Name = "_Admin.UpdateBy")]
         [StringLength(50,ErrorMessage = "Validate.{0}stringmax{1}")]
         public string UpdateBy { get; set; }
     }
