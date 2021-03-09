@@ -1,0 +1,51 @@
+﻿[
+  {
+    "ParentId": null,
+    "Id": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Text": "systemManagement",
+    "Url": null
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "8b982671-cf11-4be8-b745-8903bd1df431",
+    "Text": "actionlog",
+    "Url": "/actionlog"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "dffcd504-1246-4a4f-9f96-4ff93403d64a",
+    "Text": "frameworkuser",
+    "Url": "/frameworkuser"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "84e4696f-2171-49ef-bd79-eea0b40e88a0",
+    "Text": "frameworkrole",
+    "Url": "/frameworkrole"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "5adde7b6-0a8c-4935-8161-23c7d0e6f30d",
+    "Text": "frameworkgroup",
+    "Url": "/frameworkgroup"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "a975f408-043e-41d6-bbb5-a403ed234acd",
+    "Text": "frameworkmenu",
+    "Url": "/frameworkmenu"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "77c21b96-f6aa-41b1-bace-ce94c1ce8b61",
+    "Text": "dataprivilege",
+    "Url": "/dataprivilege"
+  }
+,{
+    "Id": "c4664415-83c4-4cac-88fe-386932644bcd",
+    "ParentId": null,
+    "Text": "学生管理",
+    "Url": "/student"
+    }
+
+]

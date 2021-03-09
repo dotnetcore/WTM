@@ -1,0 +1,35 @@
+@page "/FrameworkUser/Create"
+@using WalkingTec.Mvvm.Core;
+@inject IStringLocalizer localizer;
+@inject GlobalItems gi;
+@inject ApiClient api
+@inject DialogService dialog
+
+
+<ValidateForm Model="@Model" OnValidSubmit="@Submit">
+    <Tab IsBorderCard="true">
+        <TabItem Text="@localizer["_Admin.BasicInfo"]">
+            <Row ItemsPerRow="ItemsPerRowEnum.Two" RowType="RowTypeEnum.FormRow">
+                <BootstrapInput @bind-Value="@Model.ITCode" />
+                <BootstrapInput @bind-Value="@Model.Password" />
+            </Row>
+        </TabItem>
+        <TabItem Text="@localizer["_Admin.AdditionInfo"]">
+            <Row ItemsPerRow="ItemsPerRowEnum.Two" RowType="RowTypeEnum.FormRow">
+                <Select @bind-Value="@Model.Gender"  />
+                <BootstrapInput @bind-Value="@Model.CellPhone" />
+                <BootstrapInput @bind-Value="@Model.HomePhone" />
+            </Row>
+        </TabItem>
+    </Tab>
+</ValidateForm>
+
+@code {
+    private FrameworkUser Model = new FrameworkUser();
+
+    private async Task Submit(EditContext context)
+    {
+        await api.CallAPI("/api/_frameworkuser/create", HttpMethodEnum.POST, Model);
+    }
+
+}

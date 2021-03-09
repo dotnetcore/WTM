@@ -1,5 +1,4 @@
 @page "/FrameworkUser/Index"
-@using WalkingTec.Mvvm.Core;
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 @inject IStringLocalizer localizer;
 @inject GlobalItems gi;
@@ -32,7 +31,7 @@
         <TableColumn @bind-Field="@context.IsValid" Items="@gi.SearcherBoolItems" />
     </TableColumns>
     <TableToolbarTemplate>
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@localizer["Sys.Create"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@localizer["Sys.Create"]"  OnClickCallback="@OnCreateClick"/>
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@localizer["Sys.Edit"]" />
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-key" Text="@localizer["Login.ChangePassword"]" />
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-trash-o" Text="@localizer["Sys.Delete"]" />
@@ -65,6 +64,21 @@
     {
         searchTable.QueryAsync();
     }
+
+    private Task OnCreateClick(IEnumerable<FrameworkUser_View> items)
+    {
+        return dialog.Show(new DialogOption()
+        {
+            Title = localizer["Sys.Create"],
+            BodyTemplate = builder =>
+            {
+                var index = 0;
+                builder.OpenComponent<Create>(index++);
+                builder.CloseComponent();
+            }
+        });
+    }
+
 
     private Task OnDetailsClick(FrameworkUser_View item)
     {
