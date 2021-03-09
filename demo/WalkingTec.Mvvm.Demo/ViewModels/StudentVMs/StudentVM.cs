@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,8 +48,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
             {
                 SelectedStudentMajorIDs.ForEach(x => Entity.StudentMajor.Add(new StudentMajor { ID = Guid.NewGuid(), MajorId = x }));
             }
-
-            base.DoEdit(updateAllFields);
+            using (var trans = DC.BeginTransaction())
+            {
+                base.DoEdit(updateAllFields);
+                trans.Commit();
+            }
         }
 
         public override void DoDelete()

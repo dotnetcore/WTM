@@ -254,7 +254,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 string enumdisplay = PropertyHelper.GetEnumDisplayName(ptype, html);
                                 if (string.IsNullOrEmpty(enumdisplay) == false)
                                 {
-                                    html = PropertyHelper.GetEnumDisplayName(ptype, html);
+                                    html = enumdisplay;
                                 }
                             }
                             //If this column is a class or list, html will be set to a json string, sest inner to true to remove the "

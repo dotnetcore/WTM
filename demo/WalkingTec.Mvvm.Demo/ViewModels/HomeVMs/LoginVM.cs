@@ -20,7 +20,28 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         [Display(Name = "Login.RememberMe")]
         public bool RememberLogin { get; set; }
 
-        public string Redirect { get; set; }
+        private string _redirect;
+        public string Redirect
+        {
+            get
+            {
+                var rv = _redirect;
+                if (string.IsNullOrEmpty(rv) == false)
+                {
+                    if (rv.StartsWith("/#") == false)
+                    {
+                        rv = "/#" + rv;
+                    }
+                    if(rv.Split("#/").Length > 2)
+                    {
+                        int index = rv.LastIndexOf("#/");
+                        rv = rv.Substring(0, index);
+                    }
+                }
+                return rv;
+            }
+            set { _redirect = value; }
+        }
 
         [Display(Name = "Login.InputValidation")]
         public string VerifyCode { get; set; }

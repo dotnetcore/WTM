@@ -1,6 +1,6 @@
 @model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms.FrameworkUserBatchVM
 @using Microsoft.Extensions.Localization;
-@inject IStringLocalizer Localizer;
+@inject IStringLocalizer<Program> Localizer;
 <wt:form vm="@Model">
   <wt:quote>@Localizer["Sys.BatchDeleteConfirm"]</wt:quote>
   <wt:hidden field="Ids" />

@@ -68,46 +68,14 @@ namespace WalkingTec.Mvvm.Mvc
             return self;
         }
         /// <summary>
-        /// 刷新页面
+        /// 刷新当前页面
         /// </summary>
         /// <param name="self"></param>
-        /// <param name="url">url 不允许为 NullOrEmpty</param>
         /// <returns></returns>
-        public static FResult RefreshPage(this FResult self, string url)
+        public static FResult RefreshPage(this FResult self)
         {
-            if (string.IsNullOrEmpty(url))
-            {
-                throw new NullOrEmptyStringException();
-            }
-            self.ContentBuilder.Append($"ff.LoadPage('{url}');");
+            self.ContentBuilder.Append($"layui.index.render();");
             return self;
-        }
-
-        /// <summary>
-        /// 默认刷新当前控制器下的 Index 页面
-        /// </summary>
-        /// <param name="self"></param>
-        /// <param name="controller">当前控制器对象 传this即可</param>
-        /// <returns></returns>
-        public static FResult RefreshPage(this FResult self, BaseController controller)
-        {
-            var url = string.Empty;
-            var routeVals = controller.RouteData.Values;
-
-            //var url = $"{(string.IsNullOrEmpty()?)}/{routeVals["controller"]}/Index";
-            if (routeVals.Keys.Contains("area"))
-            {
-                url += "/" + routeVals["area"];
-            }
-
-            //if (routeVals.Keys.Contains("controller"))
-            //{
-            //    url += "/" + routeVals["controller"];
-            //}
-
-            url += "/" + routeVals["controller"] + "/Index";
-
-            return self.RefreshPage(url);
         }
 
         public static FResult AddCustomScript(this FResult self, string script)

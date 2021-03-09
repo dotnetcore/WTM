@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                     dp.TableName = item.List.Searcher.TableName;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
-                if (item.IsAll == false)
+                if (item.IsAll == false && item.SelectedIds != null)
                 {
                     foreach (var id in item.SelectedIds)
                     {

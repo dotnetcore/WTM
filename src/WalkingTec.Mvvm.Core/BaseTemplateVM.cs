@@ -44,6 +44,12 @@ namespace WalkingTec.Mvvm.Core
         {
             ValidityTemplateType = true;
             Parms = new Dictionary<string, string>();
+            var propetys = this.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
+            for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
+            {
+                ExcelPropety excelPropety = (ExcelPropety)propetys[porpetyIndex].GetValue(this);
+                excelPropety.ColumnName = propetys[porpetyIndex].GetPropertyDisplayName();
+            }
         }
         #endregion
 
@@ -147,7 +153,6 @@ namespace WalkingTec.Mvvm.Core
                 {
                     IsProtect = true;
                 }
-
                 //给必填项加星号
                 string colName = excelPropety.IsNullAble ? excelPropety.ColumnName : excelPropety.ColumnName + "*";
                 row.CreateCell(_currentColunmIndex).SetCellValue(colName);

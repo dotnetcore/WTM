@@ -356,7 +356,7 @@ namespace WalkingTec.Mvvm.Core
         public static ExcelPropety CreateProperty<T>(Expression<Func<T, object>> field, bool isDateTime = false)
         {
             ExcelPropety cp = new ExcelPropety();
-            cp.ColumnName = field.GetPropertyDisplayName();
+            //cp.ColumnName = field.GetPropertyDisplayName();
             var fname = field.GetPropertyName();
             Type t = field.GetPropertyInfo().PropertyType;
             if (fname.Contains('.'))

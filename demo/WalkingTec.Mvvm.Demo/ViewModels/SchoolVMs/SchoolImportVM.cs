@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public class SchoolTemplateVM : BaseTemplateVM
     {
-        [Display(Name = "学校编码")]
+        [Display(Name = "Sys.Create")]
         public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty<School>(x => x.SchoolCode);
 
         [Display(Name = "学校名称")]

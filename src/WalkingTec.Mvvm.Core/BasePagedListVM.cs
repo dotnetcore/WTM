@@ -225,6 +225,13 @@ namespace WalkingTec.Mvvm.Core
                         //处理枚举变量的多语言
                         if (IsEmunBoolParp)
                         {
+                            string enumdisplay = PropertyHelper.GetEnumDisplayName(proType, text);
+                            if (string.IsNullOrEmpty(enumdisplay) == false)
+                            {
+                                text = enumdisplay;
+                            }
+
+
                             if (int.TryParse(text, out int enumvalue))
                             {
                                 text = PropertyHelper.GetEnumDisplayName(proType, enumvalue);

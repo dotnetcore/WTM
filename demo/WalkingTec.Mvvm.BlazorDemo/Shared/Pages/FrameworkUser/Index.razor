@@ -6,25 +6,21 @@
 @inject ApiClient api
 @inject DialogService dialog
 
-<ValidateForm Model="@SearchModel" OnValidSubmit="@Submit">
-    <div class="form-inline">
-        <div class="row">
-            <div class="form-group col-12 col-sm-4">
-                <Select @bind-Value="@SearchModel.IsValid" Items="@gi.SearcherBoolItems" />
-            </div>
-            <div class="form-group col-12 col-sm-4">
-                <BootstrapInput @bind-Value="@SearchModel.ITCode" />
-            </div>
-            <div class="form-group col-12 col-sm-4">
-                <BootstrapInput @bind-Value="@SearchModel.Name" />
-            </div>
-        </div>
-        </div>
-        <Button ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="提交" />
-</ValidateForm>
 
-<Table @ref="searchTable" TItem="FrameworkUser_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true"
-       ShowToolbar="true" ShowSearch="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false">
+<WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
+    <ValidateForm Model="@SearchModel">
+        <Row ItemsPerRow="ItemsPerRowEnum.Three" RowType="RowTypeEnum.FormInline">
+            <Select @bind-Value="@SearchModel.IsValid" Items="@gi.SearcherBoolItems" />
+            <BootstrapInput @bind-Value="@SearchModel.ITCode" />
+            <BootstrapInput @bind-Value="@SearchModel.Name" />
+        </Row>
+    </ValidateForm>
+</WtmBlazorControls.WTSearchPanel>
+
+
+
+<Table @ref="searchTable" TItem="FrameworkUser_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;">
     <TableColumns>
         <TableColumn @bind-Field="@context.ITCode" Width="180" />
         <TableColumn @bind-Field="@context.Name" />
@@ -35,12 +31,23 @@
         <TableColumn @bind-Field="@context.PhotoId" />
         <TableColumn @bind-Field="@context.IsValid" Items="@gi.SearcherBoolItems" />
     </TableColumns>
+    <TableToolbarTemplate>
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@localizer["Sys.Create"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@localizer["Sys.Edit"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-key" Text="@localizer["Login.ChangePassword"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-trash-o" Text="@localizer["Sys.Delete"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-info" Text="@localizer["Sys.Details"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@localizer["Sys.BatchEdit"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-trash-o" Text="@localizer["Sys.BatchDelete"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@localizer["Sys.Import"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@localizer["Sys.Export"]" />
+    </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Primary" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="明细" OnClickCallback="@OnDetailsClick"/>
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="编辑" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="权限" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="审批" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="@localizer["Sys.Edit"]" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-info" Text="@localizer["Sys.Details"]" OnClickCallback="@OnDetailsClick" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-trash-o" Text="@localizer["Sys.Delete"]" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-key" Text="@localizer["Login.ChangePassword"]" />
         </div>
     </RowButtonTemplate>
 </Table>
@@ -54,9 +61,9 @@
         return await api.CallSearchApi<FrameworkUser_View>("/api/_frameworkuserbase/search", SearchModel, opts);
     }
 
-    private async Task Submit(EditContext context)
+    private void DoSearch()
     {
-        await searchTable.QueryAsync();
+        searchTable.QueryAsync();
     }
 
     private Task OnDetailsClick(FrameworkUser_View item)
