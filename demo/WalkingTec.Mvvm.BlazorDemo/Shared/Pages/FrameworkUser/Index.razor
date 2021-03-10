@@ -67,15 +67,10 @@
 
     private Task OnCreateClick(IEnumerable<FrameworkUser_View> items)
     {
-        return dialog.Show(new DialogOption()
+        return dialog.ShowModal<Create>(new ResultDialogOption()
         {
             Title = localizer["Sys.Create"],
-            BodyTemplate = builder =>
-            {
-                var index = 0;
-                builder.OpenComponent<Create>(index++);
-                builder.CloseComponent();
-            }
+            ShowFooter = false
         });
     }
 

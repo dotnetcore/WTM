@@ -4,7 +4,7 @@
 @inject GlobalItems gi;
 @inject ApiClient api
 @inject DialogService dialog
-
+@inherits ComponentBase
 
 <ValidateForm Model="@Model" OnValidSubmit="@Submit">
     <Tab IsBorderCard="true">
@@ -16,12 +16,20 @@
         </TabItem>
         <TabItem Text="@localizer["_Admin.AdditionInfo"]">
             <Row ItemsPerRow="ItemsPerRowEnum.Two" RowType="RowTypeEnum.FormRow">
-                <Select @bind-Value="@Model.Gender"  />
+                <Select @bind-Value="@Model.Gender" />
                 <BootstrapInput @bind-Value="@Model.CellPhone" />
                 <BootstrapInput @bind-Value="@Model.HomePhone" />
             </Row>
         </TabItem>
     </Tab>
+    <div class="modal-footer table-modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fa fa-times"></i>
+            <span>关闭</span>
+        </button>
+        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="保存" />
+    </div>
+
 </ValidateForm>
 
 @code {
@@ -30,6 +38,9 @@
     private async Task Submit(EditContext context)
     {
         await api.CallAPI("/api/_frameworkuser/create", HttpMethodEnum.POST, Model);
+    }
+    public async Task OnClose(DialogResult result)
+    {
     }
 
 }
