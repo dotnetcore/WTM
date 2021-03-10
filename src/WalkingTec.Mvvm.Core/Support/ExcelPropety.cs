@@ -32,6 +32,8 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public string FieldDisplayName { get; set; }
+
         public string FieldName { get; set; }
 
         //private string _backgroudColor;
@@ -356,7 +358,7 @@ namespace WalkingTec.Mvvm.Core
         public static ExcelPropety CreateProperty<T>(Expression<Func<T, object>> field, bool isDateTime = false)
         {
             ExcelPropety cp = new ExcelPropety();
-            //cp.ColumnName = field.GetPropertyDisplayName();
+            cp.FieldDisplayName = field.GetPropertyDisplayName();
             var fname = field.GetPropertyName();
             Type t = field.GetPropertyInfo().PropertyType;
             if (fname.Contains('.'))
