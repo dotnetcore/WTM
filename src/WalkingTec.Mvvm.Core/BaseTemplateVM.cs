@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -48,7 +49,14 @@ namespace WalkingTec.Mvvm.Core
             for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
             {
                 ExcelPropety excelPropety = (ExcelPropety)propetys[porpetyIndex].GetValue(this);
-                excelPropety.ColumnName = propetys[porpetyIndex].GetPropertyDisplayName();
+                if (propetys[porpetyIndex].GetCustomAttributes(typeof(DisplayAttribute), false).Length == 0)
+                {
+                    excelPropety.ColumnName = excelPropety.FieldDisplayName;
+                }
+                else
+                {
+                    excelPropety.ColumnName = propetys[porpetyIndex].GetPropertyDisplayName();
+                }
             }
         }
         #endregion
