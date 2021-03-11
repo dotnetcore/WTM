@@ -1,12 +1,12 @@
 import { createApp } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
+import './assets/styles/index.less'
 import client from './client/use'
-import use from './components/use'
-import globalProperties from './globalProperties'
+import components from './components/use'
 import router from './router'
-console.log("LENG ~ router", router)
-createApp(App).use(use).use(client).use(createRouter({
-    history: createWebHistory(process.env.BASE_URL),
-    routes: router.Routers
-})).use(globalProperties).mount('#app')
+const RootApp = createApp(App)
+    .use(components)
+    .use(client)
+    .use(router.Router);
+RootApp.mount('#app')
+RootApp.config.performance = false

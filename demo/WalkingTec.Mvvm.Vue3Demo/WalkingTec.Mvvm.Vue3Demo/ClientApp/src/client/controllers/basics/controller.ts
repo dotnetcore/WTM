@@ -1,5 +1,6 @@
 import { saveAs } from 'file-saver'
-import lodash from "lodash"
+import { BindAll } from 'lodash-decorators'
+import lodash from 'lodash';
 import { action, observable } from "mobx"
 import { AjaxBasics, Regulars } from "../../helpers"
 import { BasicsOptions, EntitiesBasics } from "./entities"
@@ -12,6 +13,8 @@ export interface ControllerBasicsOptions {
   /** 实体详情 */
   Entities?: BasicsOptions;
 }
+@BindAll()
+
 export class ControllerBasics<T = any> {
   constructor(protected $ajax: AjaxBasics, options?: ControllerBasicsOptions) {
     if (options) {

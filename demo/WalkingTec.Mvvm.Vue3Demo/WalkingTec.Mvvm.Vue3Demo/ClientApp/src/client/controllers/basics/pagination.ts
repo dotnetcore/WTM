@@ -10,6 +10,7 @@ import { action, computed, observable, toJS } from 'mobx';
 import { AjaxRequest } from 'rxjs/ajax';
 import { map } from 'rxjs/operators';
 import { AjaxBasics } from '../../helpers/ajaxBasics';
+
 export interface PaginationResponse<T> {
     /** 数据集 */
     dataSource: Array<T>,
@@ -50,7 +51,7 @@ export interface PaginationInfiniteEvent {
     reset: Function
 }
 // @BindAll()
-export class Pagination<T> {
+export class Pagination<T = any> {
     constructor(protected $ajax: AjaxBasics, options: PaginationOptions) {
         this.onReset(lodash.merge({
             key: 'key',
@@ -91,15 +92,15 @@ export class Pagination<T> {
      * @memberof Pagination
      */
     @observable
-    private _dataSource: Array<T> = [];
+    dataSource: Array<T> = [];
 
-    @computed
-    get dataSource(): Array<T> {
-        // console.time()
-        // const dataSource = toJS(this._dataSource);
-        // console.timeEnd()
-        return [...this._dataSource]
-    }
+    // @computed
+    // get dataSource(): Array<T> {
+    //     // console.time()
+    //     // const dataSource = toJS(this._dataSource);
+    //     // console.timeEnd()
+    //     return lodash.clone(this._dataSource)
+    // }
     /**
      * 选择的 行数据
      * @memberof Pagination
@@ -261,7 +262,7 @@ export class Pagination<T> {
      * @memberof Pagination
      */
     @action
-    protected onSetDataSource(res: PaginationResponse<T>, onlyKey) {
+    onSetDataSource(res: PaginationResponse<T>, onlyKey?) {
         if (!lodash.isArray(res.dataSource)) {
             this.isUndefined = true;
             throw new Error('分页 数据 返回值 dataSource 不是数组')
@@ -275,12 +276,12 @@ export class Pagination<T> {
         }
         // 第一页
         if (lodash.eq(this.current, this.options.defaultCurrent) || this.options.infinite === false) {
-            this._dataSource = res.dataSource;
+            this.dataSource = res.dataSource;
         } else {
             if (this.options.direction === 'bottom') {
-                this._dataSource = lodash.concat(this._dataSource, res.dataSource);
+                this.dataSource = lodash.concat(this.dataSource, res.dataSource);
             } else {
-                this._dataSource = lodash.concat(res.dataSource, this._dataSource);
+                this.dataSource = lodash.concat(res.dataSource, this.dataSource);
             }
         }
         // debugger
@@ -293,7 +294,7 @@ export class Pagination<T> {
     }
     @action
     onSet(dataSource) {
-        this._dataSource = dataSource
+        this.dataSource = dataSource
     }
     /**
      * 切换加载状态
@@ -312,7 +313,7 @@ export class Pagination<T> {
      */
     @action
     onPush(item: T) {
-        this._dataSource.push(item)
+        this.dataSource.push(item)
     }
     /**
      * 追加
@@ -320,7 +321,7 @@ export class Pagination<T> {
      */
     @action
     onUnshift(item: T) {
-        this._dataSource.unshift(item)
+        this.dataSource.unshift(item)
     }
     /**
      * 根据 key 查找 数据
@@ -329,7 +330,7 @@ export class Pagination<T> {
      * @memberof Pagination
      */
     onFind(key: string | T): T {
-        const data = lodash.find(this._dataSource, this.getPredicate(key));
+        const data = lodash.find(this.dataSource, this.getPredicate(key));
         if (!lodash.hasIn(data, this.options.key)) {
             throw new Error(`没有找到 Key:${key} 数据`)
         }
@@ -342,13 +343,13 @@ export class Pagination<T> {
      */
     @action
     onUpdate(key: string | T, updater: (oldValue: any) => any) {
-        const dataSource = lodash.clone(this._dataSource);
+        const dataSource = lodash.clone(this.dataSource);
         const index = lodash.findIndex(dataSource, this.getPredicate(key));
         if (index === -1) {
             return
         }
         lodash.updateWith(dataSource, `[${index}]`, (old) => updater(toJS(old)))
-        this._dataSource = dataSource;
+        this.dataSource = dataSource;
         return dataSource
     }
     /**
@@ -358,10 +359,10 @@ export class Pagination<T> {
      */
     @action
     onOrderBy(key: string | T, overIndex) {
-        let dataSource = lodash.clone(this._dataSource);
+        let dataSource = lodash.clone(this.dataSource);
         const result = lodash.remove(dataSource, this.getPredicate(key));
         dataSource = lodash.concat(lodash.slice(dataSource, 0, overIndex), result, lodash.slice(dataSource, overIndex))
-        this._dataSource = dataSource;
+        this.dataSource = dataSource;
     }
     /**
      * 根据 key 删除数据
@@ -371,9 +372,9 @@ export class Pagination<T> {
      */
     @action
     onRemove(key: string | T): T[] {
-        const dataSource = lodash.clone(this._dataSource);
+        const dataSource = lodash.clone(this.dataSource);
         const result = lodash.remove(dataSource, this.getPredicate(key));
-        this._dataSource = dataSource;
+        this.dataSource = dataSource;
         return result
     }
     /**
@@ -398,7 +399,7 @@ export class Pagination<T> {
         this.pageSize = this.options.defaultPageSize;
         this.isUndefined = false;
         this.total = 0;
-        this._dataSource = [];
+        this.dataSource = [];
         this.oldBody = null;
         this.loading = false;
         this.error = false;

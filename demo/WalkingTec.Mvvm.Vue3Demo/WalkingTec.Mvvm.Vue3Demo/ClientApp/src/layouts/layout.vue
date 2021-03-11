@@ -6,7 +6,7 @@
   <!-- </route-context-provider> -->
 </template>
 <script lang="ts">
-import { Vue, Options } from "vue-class-component";
+import { Vue, Options } from "vue-property-decorator";
 import { createRouteContext } from "@ant-design-vue/pro-layout";
 
 const [RouteContextProvider] = createRouteContext();
@@ -33,10 +33,9 @@ export default class extends Vue {
   // The behavior in class is the same as the current
   count = 0;
   created() {
-    console.log("LENG ~ extends ~ created ~ this", this, this.$route);
   }
   mounted() {
-    // this.onCollapse(true);
+    // console.log("LENG ~ extends ~ created ~ this", this, this.$route);
   }
   onCollapse(collapsed) {
     this.state.collapsed = collapsed;

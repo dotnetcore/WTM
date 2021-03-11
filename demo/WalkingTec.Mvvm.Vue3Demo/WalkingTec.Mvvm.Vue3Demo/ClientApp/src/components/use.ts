@@ -1,13 +1,16 @@
-import ProLayout from '@ant-design-vue/pro-layout';
-import { Button, Divider, Spin, Space, Form, Row, Col, Menu, Image, Tabs, Drawer, Modal, Empty, Pagination } from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.less';
-import { App, defineAsyncComponent } from 'vue';
-import WtmGrid from './grid/index.vue';
+import { App } from 'vue';
+import WtmAction from './page/action/index.vue';
+import WtmDetails from './page/details.vue';
+import WtmGrid from './page/grid/index.vue';
+import antd from './plugins/antd';
+import icon from './plugins/icon';
 export default {
     install(app: App) {
-        /**    use antd 组件    */
-        [Button, Divider, Spin, Space, Form, Row, Col, Menu, Image, Tabs, Drawer, Modal, Empty, Pagination, ProLayout].map(x => app.use(x))
+        app.use(antd)
+        app.use(icon)
         /**    use antd 组件    */
         app.component('WtmGrid', WtmGrid)
+        app.component('WtmDetails', WtmDetails)
+        app.component('WtmAction', WtmAction)
     }
 }
