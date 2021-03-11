@@ -1,20 +1,16 @@
 @page "/FrameworkUser/Create"
 @using WalkingTec.Mvvm.Core;
-@inject IStringLocalizer localizer;
-@inject GlobalItems gi;
-@inject ApiClient api
-@inject DialogService dialog
-@inherits ComponentBase
+@inherits BasePage
 
-<ValidateForm Model="@Model" OnValidSubmit="@Submit">
+<ValidateForm Model="@Model" OnValidSubmit="@Submit" OnInvalidSubmit="@test">
     <Tab IsBorderCard="true">
-        <TabItem Text="@localizer["_Admin.BasicInfo"]">
+        <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
             <Row ItemsPerRow="ItemsPerRowEnum.Two" RowType="RowTypeEnum.FormRow">
                 <BootstrapInput @bind-Value="@Model.ITCode" />
                 <BootstrapInput @bind-Value="@Model.Password" />
             </Row>
         </TabItem>
-        <TabItem Text="@localizer["_Admin.AdditionInfo"]">
+        <TabItem Text="@WtmBlazor.Localizer["_Admin.AdditionInfo"]">
             <Row ItemsPerRow="ItemsPerRowEnum.Two" RowType="RowTypeEnum.FormRow">
                 <Select @bind-Value="@Model.Gender" />
                 <BootstrapInput @bind-Value="@Model.CellPhone" />
@@ -23,13 +19,10 @@
         </TabItem>
     </Tab>
     <div class="modal-footer table-modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            <i class="fa fa-times"></i>
-            <span>关闭</span>
-        </button>
+        <Button Color="Color.Primary"  Icon="fa fa-save" Text="关闭"  OnClick="OnClose"/>
         <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="保存" />
     </div>
-
+    <ValidationSummary/>
 </ValidateForm>
 
 @code {
@@ -37,10 +30,17 @@
 
     private async Task Submit(EditContext context)
     {
-        await api.CallAPI("/api/_frameworkuser/create", HttpMethodEnum.POST, Model);
+        await WtmBlazor.Api.CallAPI("/api/_frameworkuser/create", HttpMethodEnum.POST, Model);
     }
-    public async Task OnClose(DialogResult result)
+
+    private async Task test(EditContext context)
     {
+        int a = 0;
+    }
+
+    public void OnClose()
+    {
+        OnCloseDialog.InvokeAsync();
     }
 
 }

@@ -1,15 +1,12 @@
 @page "/FrameworkUser/Index"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
-@inject IStringLocalizer localizer;
-@inject GlobalItems gi;
-@inject ApiClient api
-@inject DialogService dialog
+@inherits BasePage
 
 
 <WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
     <ValidateForm Model="@SearchModel">
         <Row ItemsPerRow="ItemsPerRowEnum.Three" RowType="RowTypeEnum.FormInline">
-            <Select @bind-Value="@SearchModel.IsValid" Items="@gi.SearcherBoolItems" />
+            <Select @bind-Value="@SearchModel.IsValid" Items="@WtmBlazor.GlobalSelectItems.SearcherBoolItems" />
             <BootstrapInput @bind-Value="@SearchModel.ITCode" />
             <BootstrapInput @bind-Value="@SearchModel.Name" />
         </Row>
@@ -28,25 +25,25 @@
         <TableColumn @bind-Field="@context.RoleName_view" />
         <TableColumn @bind-Field="@context.GroupName_view" />
         <TableColumn @bind-Field="@context.PhotoId" />
-        <TableColumn @bind-Field="@context.IsValid" Items="@gi.SearcherBoolItems" />
+        <TableColumn @bind-Field="@context.IsValid" Items="@WtmBlazor.GlobalSelectItems.SearcherBoolItems" />
     </TableColumns>
     <TableToolbarTemplate>
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@localizer["Sys.Create"]"  OnClickCallback="@OnCreateClick"/>
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@localizer["Sys.Edit"]" />
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-key" Text="@localizer["Login.ChangePassword"]" />
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-trash-o" Text="@localizer["Sys.Delete"]" />
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-info" Text="@localizer["Sys.Details"]" />
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@localizer["Sys.BatchEdit"]" />
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-trash-o" Text="@localizer["Sys.BatchDelete"]" />
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@localizer["Sys.Import"]" />
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@localizer["Sys.Export"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]"  OnClickCallback="@OnCreateClick"/>
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@WtmBlazor.Localizer["Sys.Edit"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-key" Text="@WtmBlazor.Localizer["Login.ChangePassword"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@WtmBlazor.Localizer["Sys.BatchEdit"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" />
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="@localizer["Sys.Edit"]" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-info" Text="@localizer["Sys.Details"]" OnClickCallback="@OnDetailsClick" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-trash-o" Text="@localizer["Sys.Delete"]" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-key" Text="@localizer["Login.ChangePassword"]" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="@OnDetailsClick" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-key" Text="@WtmBlazor.Localizer["Login.ChangePassword"]" />
         </div>
     </RowButtonTemplate>
 </Table>
@@ -57,7 +54,7 @@
     private Table<FrameworkUser_View> searchTable;
     private async Task<QueryData<FrameworkUser_View>> OnSearch(QueryPageOptions opts)
     {
-        return await api.CallSearchApi<FrameworkUser_View>("/api/_frameworkuserbase/search", SearchModel, opts);
+        return await WtmBlazor.Api.CallSearchApi<FrameworkUser_View>("/api/_frameworkuserbase/search", SearchModel, opts);
     }
 
     private void DoSearch()
@@ -67,19 +64,15 @@
 
     private Task OnCreateClick(IEnumerable<FrameworkUser_View> items)
     {
-        return dialog.ShowModal<Create>(new ResultDialogOption()
-        {
-            Title = localizer["Sys.Create"],
-            ShowFooter = false
-        });
+        return WtmBlazor.Dialog.ShowDialog<Create>(WtmBlazor.Localizer["Sys.Create"]);
     }
 
 
     private Task OnDetailsClick(FrameworkUser_View item)
     {
-        return dialog.Show(new DialogOption()
+        return WtmBlazor.Dialog.Show(new DialogOption()
         {
-            Title = localizer["Sys.Details"],
+            Title = WtmBlazor.Localizer["Sys.Details"],
             BodyContext = "我是传参",
             BodyTemplate = builder =>
             {
