@@ -1,12 +1,9 @@
 <template>
-  <div>
-    <a-spin />
-  </div>
+  <a-empty />
 </template>
 
 <script lang="ts">
 import { Options, Prop, Vue } from "vue-property-decorator";
-import lodash from "lodash";
 @Options({
   components: {},
 })

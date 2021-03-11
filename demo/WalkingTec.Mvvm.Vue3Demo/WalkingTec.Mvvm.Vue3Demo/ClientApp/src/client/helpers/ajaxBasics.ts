@@ -5,8 +5,7 @@
  * @modify date 2018-09-12 18:52:37
  * @desc [description]
 */
-import lodash from 'lodash-es';
-// import NProgress from 'nprogress';
+import lodash from 'lodash';
 import { Observable, of, TimeoutError, interval } from "rxjs";
 import { ajax, AjaxError, AjaxResponse, AjaxRequest } from "rxjs/ajax";
 import { catchError, filter, map, merge, timeout } from "rxjs/operators";

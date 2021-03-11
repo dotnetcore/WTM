@@ -5,7 +5,8 @@
  * @modify date 2020-09-25 15:59:49
  * @desc [description]
  */
-import lodash from 'lodash';
+ import lodash from 'lodash';
+import { BindAll } from 'lodash-decorators';
 import { action, computed, observable, toJS } from 'mobx';
 import { AjaxRequest } from 'rxjs/ajax';
 import { map } from 'rxjs/operators';
@@ -19,7 +20,7 @@ export interface BasicsOptions {
     /** 请求结果过滤 */
     onMapValues?: BasicsOnMapValues | string;
 }
-// @BindAll()
+@BindAll()
 export class EntitiesBasics<T> {
     constructor(protected $ajax: AjaxBasics, options: BasicsOptions) {
         this.onReset(lodash.merge<BasicsOptions, BasicsOptions>({ method: 'get' }, options));

@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { Options, Prop, Vue } from "vue-property-decorator";
-import lodash from "lodash";
+import lodash from 'lodash';
 import { IHeaderParams } from "ag-grid-community";
 
 @Options({

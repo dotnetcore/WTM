@@ -1,10 +1,21 @@
-import { map, includes, filter, endsWith, forEach } from 'lodash-es';
-const lodash = { map, includes, filter, endsWith, forEach }
+import lodash from 'lodash';
+import { createRouter, createWebHistory } from 'vue-router'
+import { Vue } from 'vue-class-component'
+Vue.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteLeave',
+  'beforeRouteUpdate'
+])
 class Router {
   lazy = false;
   readonly PageFiles = require.context('./pages', true, /\.vue$/, 'sync') // 根据目录结构去搜索文件
-  readonly PagePath = this.PageFiles.keys().filter(file => !lodash.includes(file, 'views'))
-  get Routers() {
+  readonly PagePath = this.PageFiles.keys().filter(file => !lodash.includes(file, 'views'));
+  // 创建的路由
+  Router = createRouter({
+    history: createWebHistory(process.env.BASE_URL),
+    routes: this.createRouters()
+  })
+  createRouters() {
     const map = this.PagePath.reduce((map, cur) => {
       let dislodge = cur.match(/\/(.+?)\.vue$/)[1] // 只匹配纯文件名的字符串
       let key = dislodge.split('/')[0]; // 拿到一级文件的名称

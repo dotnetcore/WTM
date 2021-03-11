@@ -1,19 +1,28 @@
 <template>
-  <a-empty />
+  <div>
+    <a-spin />
+  </div>
 </template>
 
 <script lang="ts">
 import { Options, Prop, Vue } from "vue-property-decorator";
-import lodash from "lodash";
+import { defineComponent } from "vue";
 @Options({
   components: {},
 })
 export default class extends Vue {
   created() {}
-  mounted() {}
+  mounted() {
+  }
   updated() {}
   destroyed() {}
 }
+// export default defineComponent({
+//   created() {
+//   },
+//   mounted() {
+//   },
+// });
 </script>
 
 <style lang="less">

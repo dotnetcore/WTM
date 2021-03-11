@@ -1,11 +1,11 @@
 import headerIcon from './headerIcon.vue';
 import noRowsOverlay from './noRowsOverlay.vue';
-import loadingOverlayComponent from './loadingOverlayComponent.vue';
+import loadingOverlay from './loadingOverlay.vue';
 
 export default {
     headerIcon,
     noRowsOverlay,
-    loadingOverlayComponent
+    loadingOverlay
 }
 /**
  * 枚举
@@ -15,5 +15,5 @@ export enum frameworkComponents {
     headerIcon = 'headerIcon',
     /** 空数据 */
     noRowsOverlay = 'noRowsOverlay',
-    loadingOverlayComponent = 'loadingOverlayComponent',
+    loadingOverlay = 'loadingOverlay',
 }
