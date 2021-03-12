@@ -660,6 +660,8 @@ setTimeout(function(){{
             int maxDepth, int depth
         )
         {
+            string random = Guid.NewGuid().ToString().Replace("-", "");
+
             foreach (var item in rawCols)
             {
                 var tempCol = new LayuiColumn()
@@ -683,7 +685,7 @@ setTimeout(function(){{
 
                 // 非编辑状态且有字段名的情况下，设置template
                 if ((string.IsNullOrEmpty(ListVM.DetailGridPrix) == true && string.IsNullOrEmpty(item.Field) == false) || item.Field == "BatchError")
-                    tempCol.Templet = getTemplate(item.Field);
+                    tempCol.Templet = getTemplate(item.Field,random);
 
                 NeedShowTotal |= item.ShowTotal == true;
                 switch (item.ColumnType)
@@ -965,9 +967,9 @@ var isPost = false;
             }
         }
 
-        private string getTemplate(string field)
+        private string getTemplate(string field,string random)
         {
-            return $@"function(d){{var sty = '';var bg = '';var did = '{field}_'+d.LAY_INDEX;if(d.{field}__bgcolor != undefined) bg = ""<script>$('#""+did+""').closest('td').css('background-color','""+d.{field}__bgcolor+""');</s""+""cript>""; if(d.{field}__forecolor != undefined) sty = 'color:'+d.{field}__forecolor+';'; return '<div style=""'+sty+'"" id=""'+did+'"">'+d.{field}.replace(/\""/g,""'"")+bg+'</div>';}}";
+            return $@"function(d){{var sty = '';var bg = '';var did = '{field}{random}_'+d.LAY_INDEX;if(d.{field}__bgcolor != undefined) bg = ""<script>$('#""+did+""').closest('td').css('background-color','""+d.{field}__bgcolor+""');</s""+""cript>""; if(d.{field}__forecolor != undefined) sty = 'color:'+d.{field}__forecolor+';'; return '<div style=""'+sty+'"" id=""'+did+'"">'+d.{field}.replace(/\""/g,""'"")+bg+'</div>';}}";
         }
     }
 }
