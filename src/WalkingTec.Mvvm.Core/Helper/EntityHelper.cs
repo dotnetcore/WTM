@@ -24,51 +24,16 @@ namespace WalkingTec.Mvvm.Core
 
             if (typeof(T) == typeof(DynamicData))
             {
-                //foreach (DataRow row in table.Rows)
-                //{
-                //    //新建Entity
-                //    T entity = (T)Activator.CreateInstance(typeof(T));
-                //    foreach(DataColumn col in table.Columns)
-                //    //循环Entity的每一个属性
-                //    {
-                //        entity.SetPropertyValue
-                //        (entity as dynamic).SetPropertyValue()
-                //        //如果DataTable中有列名和属性名一致，则把单元格内容赋值给Entity的该属性
-                //        if (row.Table.Columns.Contains(item.Name))
-                //        {
-                //            //判断null值
-                //            if (string.IsNullOrEmpty(row[item.Name].ToString()))
-                //            {
-                //                item.SetValue(entity, null);
-                //            }
-                //            else
-                //            {
-                //                var ptype = item.PropertyType;
-                //                if (ptype.IsNullable())
-                //                {
-                //                    ptype = ptype.GenericTypeArguments[0];
-                //                }
-                //                //如果是Guid或Guid?类型
-                //                if (ptype == typeof(Guid))
-                //                {
-                //                    item.SetValue(entity, Guid.Parse(row[item.Name].ToString()));
-                //                }
-                //                //如果是enum或enum?类型
-                //                else if (ptype.IsEnum)
-                //                {
-                //                    item.SetValue(entity, Enum.ToObject(ptype, row[item.Name]));
-                //                }
-                //                else
-                //                {
-                //                    item.SetValue(entity, Convert.ChangeType(row[item.Name], ptype));
-                //                }
-
-                //            }
-                //        }
-                //    }
-                //    entityList.Add(entity);
-                //}
-
+                foreach (DataRow row in table.Rows)
+                {
+                    //新建Entity
+                    T entity = (T)Activator.CreateInstance(typeof(T));
+                    foreach (DataColumn col in table.Columns)
+                    {
+                        (entity as DynamicData).Add(col.ColumnName, row[col] == DBNull.Value ? null : row[col]);
+                    }
+                    entityList.Add(entity);
+                }
             }
             else
             {
