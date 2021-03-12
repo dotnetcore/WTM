@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2021-03-12 17:19:19
+ * @modify date 2021-03-12 17:19:19
+ * @desc 详情表单 
+ */
 <template>
   <a-form
     class="w-form"

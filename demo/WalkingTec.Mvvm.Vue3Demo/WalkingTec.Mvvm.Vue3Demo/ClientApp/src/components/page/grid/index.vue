@@ -7,7 +7,7 @@
     />
   </div>
   <a-divider />
-  <Pagination :PageController="PageController"/>
+  <Pagination :PageController="PageController" />
 </template>
 
 <script lang="ts">
@@ -53,47 +53,59 @@ export default class extends Vue {
   }
   get getColumnDefs() {
     return this.lodash.concat(
-      getColumnDefsCheckbox(this.checkboxSelection, "balham"),
+      getColumnDefsCheckbox(this.checkboxSelection, "material"),
       this.columnDefs,
       getColumnDefsAction(this.gridOptions.frameworkComponents)
     );
   }
+
   get options() {
     const { frameworkComponents = {}, ...gridOptions } = this.gridOptions;
-    const options = this.lodash.assign<GridOptions, GridOptions, GridOptions>(
+    const options = this.lodash.assign(
       {
         frameworkComponents: this.lodash.assign(
           {},
           frameworkComponents,
           framework
         ),
-        // 数据选择
-        onSelectionChanged: (event) =>
-          this.PageController.Pagination.onSelectionChanged(
-            event.api.getSelectedRows()
-          ),
         // 行数据的 id
-        getRowNodeId: (data) => this.lodash.get(data, this.PageController.key),
-        // 初始化完成
-        onGridReady: this.onGridReady,
-        // 数据更新
-        onRowDataChanged: this.onRowDataChanged,
+        getRowNodeId: (data) => lodash.get(data, this.PageController.key),
       },
       defaultOptions(this.$i18n as any),
-      gridOptions
+      gridOptions,
+      this.GridEvents
     );
     // console.log("LENG ~ extends ~ getoptions ~ options", options);
     return options;
   }
-  onGridReady = (event: GridReadyEvent) => {
-    event.api.sizeColumnsToFit();
+  GridEvents: GridOptions = {
+    onSortChanged: (event) => {
+      console.log(
+        "LENG ~ extends ~ getoptions ~ event",
+        event.api.getSortModel()
+      );
+      lodash.invoke(this.gridOptions, "onSortChanged", event);
+    },
+    // 数据选择
+    onSelectionChanged: (event) => {
+      this.PageController.Pagination.onSelectionChanged(
+        event.api.getSelectedRows()
+      );
+      lodash.invoke(this.gridOptions, "onSelectionChanged", event);
+    },
+    // 初始化完成
+    onGridReady: (event: GridReadyEvent) => {
+      event.api.sizeColumnsToFit();
+      lodash.invoke(this.gridOptions, "onGridReady", event);
+    },
+    // 数据更新
+    onRowDataChanged: lodash.debounce((event: RowDataChangedEvent) => {
+      event.columnApi.autoSizeColumn("RowAction");
+      lodash.invoke(this.gridOptions, "onRowDataChanged", event);
+    }, 300),
   };
-  // @Debounce(100)
-  onRowDataChanged = lodash.debounce((event: RowDataChangedEvent) => {
-    event.columnApi.autoSizeColumn("RowAction");
-  });
   onReckon() {
-    console.dir(this.gridContent);
+    // console.dir(this.gridContent);
     let height = 500;
     height = window.innerHeight - this.gridContent.offsetTop - 120;
     this.style.height = height + "px";
@@ -107,6 +119,6 @@ export default class extends Vue {
 <style  lang="less">
 .w-grid-content {
   height: 500px;
-  transition: all .2s;
+  transition: all 0.2s;
 }
 </style>

@@ -70,7 +70,6 @@ export default class extends mixins(ActionBasics) {
   @Prop() PageController;
   created() {}
   mounted() {
-    console.log("LENG ~ ActionBasics", this);
   }
 }
 </script>

@@ -1,6 +1,11 @@
 <template>
   <!-- <route-context-provider  :value="state"> -->
   <pro-layout v-bind="state" @collapse="onCollapse">
+    <!-- <template v-slot:headerContentRender>
+      <a-avatar size="small">
+        <template #icon><UserOutlined /></template>
+      </a-avatar>
+    </template> -->
     <template v-slot:rightContentRender>
       <a-dropdown>
         <a class="ant-dropdown-link" @click.prevent>
@@ -24,13 +29,16 @@
 </template>
 <script lang="ts">
 import { Vue, Options } from "vue-property-decorator";
+import { h } from "vue";
 import { createRouteContext } from "@ant-design-vue/pro-layout";
+import headerContentRender from "./headerContentRender.vue";
 
 const [RouteContextProvider] = createRouteContext();
 // Component definition
 @Options({ components: { RouteContextProvider } })
 export default class extends Vue {
   state = {
+    // layout:'mix',
     title: "暄桐小程序",
     collapsed: false,
     openKeys: ["/dashboard"],
@@ -41,11 +49,13 @@ export default class extends Vue {
     menuData: [],
     sideWidth: 208,
     hasSideMenu: true,
-    hasHeader: true,
+    // hasHeader: true,
     hasFooterToolbar: false,
+    // headerRender: false,
     setHasFooterToolbar: (has) => {
       this.state.hasFooterToolbar = has;
     },
+    headerContentRender: (props) => h(headerContentRender),
   };
   created() {}
   mounted() {}

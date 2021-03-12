@@ -11,6 +11,10 @@ export class VueComponentFactory {
     private static getComponentDefinition(component: any, parent: AgGridVue) {
         // vue-class-component 组件会注入一个 __c
         component = lodash.get(component, '__c', component)
+        lodash.update(component, '__props', old => {
+            lodash.remove(old, { params: undefined })
+            return old
+        })
         let componentDefinition: any;
 
         // when referencing components by name - ie: cellRendererFramework: 'MyComponent'

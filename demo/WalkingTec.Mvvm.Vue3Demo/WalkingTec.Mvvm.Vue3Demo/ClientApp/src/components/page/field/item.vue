@@ -9,7 +9,7 @@ import { Vue, Options, Prop, Inject } from "vue-property-decorator";
 @Options({ components: {} })
 export default class extends Vue {
   @Inject() colItem;
-  span = 6;
+  @Prop({ default: 6 }) span;
   mounted() {}
 }
 </script>

@@ -2,7 +2,7 @@
   <ag-grid-vue
     :key="GridKey"
     style="height: 100%"
-    class="ag-theme-balham ag-grid-card"
+    class="ag-theme-material ag-grid-card"
     :columnDefs="columnDefs"
     :rowData="rowData"
     :gridOptions="gridOptions"
@@ -12,7 +12,7 @@
 <script lang="ts">
 import { Vue, Options, Prop } from "vue-property-decorator";
 // import { AgGridVue } from "ag-grid-vue3";
-import { AgGridVue } from "./vue/AgGridVue";
+import { AgGridVue } from "./agGridVue/AgGridVue";
 import { LicenseManager } from "ag-grid-enterprise";
 import { GridOptions, GridReadyEvent, RowDataChangedEvent } from "ag-grid-community";
 import { Debounce } from "lodash-decorators";
@@ -38,8 +38,8 @@ export default class AgGrid extends Vue {
 <style lang="less">
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 // @import '~ag-grid-community/dist/styles/ag-theme-alpine.css';
-@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
-// @import '~ag-grid-community/dist/styles/ag-theme-material.css';
+// @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+@import '~ag-grid-community/dist/styles/ag-theme-material.css';
 // 主题定制 https://www.ag-grid.com/vue-grid/themes-customising/
 .ag-grid-card {
   // --ag-background-color: @primary-color

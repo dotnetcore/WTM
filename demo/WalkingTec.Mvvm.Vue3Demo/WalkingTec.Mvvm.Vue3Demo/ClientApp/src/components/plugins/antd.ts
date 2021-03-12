@@ -1,4 +1,5 @@
 import {
+    Avatar,
     Button,
     Col,
     Divider,
@@ -29,6 +30,7 @@ export default {
     install(app: App) {
         /**    use antd 组件    */
         [
+            Avatar,
             Button,
             Col,
             Divider,

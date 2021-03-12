@@ -4,7 +4,8 @@ import {
     EditOutlined,
     SaveOutlined,
     SearchOutlined,
-    RedoOutlined
+    RedoOutlined,
+    UserOutlined
 } from '@ant-design/icons-vue';
 import lodash from 'lodash';
 import { App } from 'vue';
@@ -16,7 +17,8 @@ export default {
             EditOutlined,
             SaveOutlined,
             SearchOutlined,
-            RedoOutlined
+            RedoOutlined,
+            UserOutlined
         }, (icon, key) => app.component(key, icon))
     }
 }

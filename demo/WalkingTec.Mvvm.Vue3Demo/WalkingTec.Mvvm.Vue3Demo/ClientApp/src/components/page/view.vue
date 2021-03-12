@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2021-03-12 17:20:19
+ * @modify date 2021-03-12 17:20:19
+ * @desc 详情视图 modal 或者 drawer 方式 根据全局配置而定
+ */
 <template>
   <a-modal
     class="w-view"
