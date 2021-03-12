@@ -1,7 +1,6 @@
 <template>
   <div>
-    <WtmAction :PageController="PageController" :params="rowParams">
-    </WtmAction>
+    <WtmAction :PageController="PageController" :params="rowParams" />
   </div>
 </template>
 <script lang="ts">

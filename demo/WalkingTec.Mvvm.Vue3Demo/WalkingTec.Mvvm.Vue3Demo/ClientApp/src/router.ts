@@ -79,6 +79,7 @@ class Router {
   }
   getComponent(item) {
     const component = this.PageFiles(item);
+    console.log("LENG ~ Router ~ getComponent ~ component", component)
     return component.default
   }
   /**

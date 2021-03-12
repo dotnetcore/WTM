@@ -1,18 +1,20 @@
 <template>
-  <Grid
-    :columnDefs="getColumnDefs"
-    :rowData="Pagination.dataSource"
-    :gridOptions="options"
-  />
+  <div class="w-grid-content" :style="style" ref="gridContent">
+    <Grid
+      :columnDefs="getColumnDefs"
+      :rowData="Pagination.dataSource"
+      :gridOptions="options"
+    />
+  </div>
   <a-divider />
-  <Pagination />
+  <Pagination :PageController="PageController"/>
 </template>
 
 <script lang="ts">
 import { defineAsyncComponent } from "vue";
 import { ControllerBasics } from "@/client";
 import lodash from "lodash";
-import { Options, Prop, Vue, Watch } from "vue-property-decorator";
+import { Options, Prop, Vue, Ref } from "vue-property-decorator";
 import {
   GridOptions,
   SelectionChangedEvent,
@@ -26,13 +28,16 @@ import defaultOptions, {
   getColumnDefsAction,
 } from "./defaultOptions";
 import Pagination from "./pagination.vue";
+import Loading from "./loading.vue";
 import { Debounce } from "lodash-decorators";
 @Options({
   components: {
     Pagination,
+    // 拆分 包 异步加载
     Grid: defineAsyncComponent({
       loader: () => import("./grid.vue"),
-      loadingComponent: framework.loadingOverlay,
+      loadingComponent: Loading,
+      delay: 0,
     }),
   },
 })
@@ -41,7 +46,8 @@ export default class extends Vue {
   @Prop({ default: () => [] }) columnDefs;
   @Prop({ default: () => ({}) }) gridOptions: GridOptions;
   @Prop({ default: () => true }) checkboxSelection: boolean;
-
+  @Ref("gridContent") gridContent: HTMLDivElement;
+  style = { height: "500px" };
   get Pagination() {
     return this.PageController.Pagination;
   }
@@ -76,7 +82,7 @@ export default class extends Vue {
       defaultOptions(this.$i18n as any),
       gridOptions
     );
-    console.log("LENG ~ extends ~ getoptions ~ options", options);
+    // console.log("LENG ~ extends ~ getoptions ~ options", options);
     return options;
   }
   onGridReady = (event: GridReadyEvent) => {
@@ -86,8 +92,21 @@ export default class extends Vue {
   onRowDataChanged = lodash.debounce((event: RowDataChangedEvent) => {
     event.columnApi.autoSizeColumn("RowAction");
   });
+  onReckon() {
+    console.dir(this.gridContent);
+    let height = 500;
+    height = window.innerHeight - this.gridContent.offsetTop - 120;
+    this.style.height = height + "px";
+  }
   created() {}
+  mounted() {
+    this.onReckon();
+  }
 }
 </script>
 <style  lang="less">
+.w-grid-content {
+  height: 500px;
+  transition: all .2s;
+}
 </style>

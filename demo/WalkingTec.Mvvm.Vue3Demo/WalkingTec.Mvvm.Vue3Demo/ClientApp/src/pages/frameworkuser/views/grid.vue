@@ -57,7 +57,6 @@ export default class extends Vue {
   }
   created() {
     this.onText();
-    console.log("LENG ~ extends ~ created ~ this", this);
   }
 }
 </script>
