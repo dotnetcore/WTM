@@ -93,7 +93,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 layfilter = output.Attributes["lay-filter"].Value.ToString();
             }
 
-            if (!(this is DisplayTagHelper) && Field.Metadata.IsRequired && Required != false)
+            if (!(this is DisplayTagHelper) && (Field.Metadata.IsRequired || Required == true))
             {
                 requiredDot = "<font color='red'>*</font>";
                 if (!(this is UploadTagHelper || this is RadioTagHelper || this is CheckBoxTagHelper || this is MultiUploadTagHelper || this is ColorPickerTagHelper)) // 上传组件自定义验证
