@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public string SelectedModule { get; set; }
 
         [Display(Name = "_Admin.AllowedRole")]
-        public List<string> SelectedRolesCodes { get; set; }
+        public List<Guid> SelectedRolesIds { get; set; }
 
         [JsonIgnore]
         public FrameworkRoleListVM RoleListVM { get; set; }
@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             AllActions = new List<ComboSelectListItem>();
             AllModules = new List<ComboSelectListItem>();
 
-            SelectedRolesCodes = new List<string>();
+            SelectedRolesIds = new List<Guid>();
         }
 
         protected override void InitVM()
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 IconFontItem = res[1];
             }
 
-            SelectedRolesCodes.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToList());
+            SelectedRolesIds.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.ID).ToList());
 
             var data = DC.Set<FrameworkMenu>().AsNoTracking().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
@@ -106,6 +106,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
+                if (string.IsNullOrEmpty(SelectedModule) == true)
+                {
+                    MSD.AddModelError("SelectedModule", Localizer["Validate.{0}required", Localizer["_Admin.Module"]]);
+                }
                 var modules = Wtm.GlobaInfo.AllModule;
                 var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (x.MethodName == null || x.MethodName == "Index") && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
@@ -134,11 +138,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
             else
             {
-                if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
-                {
-                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
-                    return;
-                }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = Wtm.GlobaInfo.AllModule;
@@ -236,11 +235,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             else
             {
 
-                if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
-                {
-                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
-                    return;
-                }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = Wtm.GlobaInfo.AllModule;
@@ -311,16 +305,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public void AddPrivilege(List<Guid> menuids)
         {
             var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").FirstOrDefault();
-            if (admin != null && SelectedRolesCodes.Contains(admin.RoleCode) == false)
+            if (admin != null && SelectedRolesIds.Contains(admin.ID) == false)
             {
-                SelectedRolesCodes.Add(admin.RoleCode);
+                SelectedRolesIds.Add(admin.ID);
             }
+            var codes = DC.Set<FrameworkRole>().Where(x => SelectedRolesIds.Contains(x.ID)).Select(x => x.RoleCode).ToList();
             foreach (var menuid in menuids)
             {
 
-                if (SelectedRolesCodes != null)
-                {
-                    foreach (var code in SelectedRolesCodes)
+                if (SelectedRolesIds != null)
+                {                    
+                    foreach (var code in codes)
                     {
                         FunctionPrivilege fp = new FunctionPrivilege();
                         fp.MenuItemId = menuid;

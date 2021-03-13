@@ -811,13 +811,14 @@ window.ff = {
             if (/_WTMMultiCombo_(.*?)_(.*?)$/.test(itemname)) {
                 itemname = RegExp.$2;
             }
-            if (/_DONOTUSE_(.*?)\[\d?\]\.(.*?)$/.test(itemname)) {
+            if (/_DONOTUSE_(.*?)\[(\d?)\]\.(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
-                var name2 = RegExp.$2;
-                if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1 + "[0]." + name2) == false) {
+                var number = RegExp.$2;
+                var name2 = RegExp.$3;
+                if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1 + "[" + number + "]." + name2) == false) {
                     filterback[name1] = 1;
                 }
-                return;
+               return;
             }
             if (/_DONOTUSE_(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
@@ -827,17 +828,24 @@ window.ff = {
                 return;
             }
 
-            if (/(.*?)\[\d?\]\.(.*?)$/.test(itemname)) {
+            if (/(.*?)\[(\d?)\]\.(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
-                var name2 = RegExp.$2;
-                var checkname = name1 + "`" + name2;
+                var number = RegExp.$2;
+                var name2 = RegExp.$3;
+                var checkname = itemname;
                 if (check.hasOwnProperty(checkname) == false) {
                     check[checkname] = 0;
                 }
                 if (filterback.hasOwnProperty(name1) == true) {
                     filterback[name1] = undefined;
                 }
-                var newname = name1 + "[" + check[checkname] + "]." + name2;
+                if (filterback.hasOwnProperty(itemname) == true) {
+                    filterback[itemname] = undefined;
+                }
+                var newname = itemname;
+                if (number == "0") {
+                    newname = name1 + "[" + check[checkname] + "]." + name2;
+                }
                 filter[newname] = item.value;
                 check[checkname] = check[checkname] + 1;
             }

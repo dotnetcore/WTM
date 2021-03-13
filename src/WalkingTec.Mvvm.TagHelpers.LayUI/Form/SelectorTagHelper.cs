@@ -326,7 +326,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                     sb.Append($"<input type='hidden' name='{Field.Name}' value='{item.ToString()}' />");
                 }
                 hiddenStr = sb.ToString();
-                output.PreElement.AppendHtml($@"<div id=""{Id}_Container"" style=""position:absolute;right:{SelectButtonWidth?.ToString() ?? "50"}px;left:0px;width:auto"">");
+                output.PreElement.AppendHtml($@"
+<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />
+<div id=""{Id}_Container"" style=""position:absolute;right:{SelectButtonWidth?.ToString() ?? "50"}px;left:0px;width:auto"">");
                 output.PostElement.AppendHtml($@"
 {hiddenStr}
 </div>
