@@ -509,21 +509,21 @@ namespace WalkingTec.Mvvm.Core
                                         (SubTypeEntity as IBasePoco).CreateTime = DateTime.Now;
                                         (SubTypeEntity as IBasePoco).CreateBy = LoginUserInfo?.ITCode;
                                     }
-                                    var context = new ValidationContext(SubTypeEntity);
-                                    var validationResults = new List<ValidationResult>();
-                                    TryValidateObject(SubTypeEntity, context, validationResults);
-                                    if (validationResults.Count == 0)
-                                    {
+                                    //var context = new ValidationContext(SubTypeEntity);
+                                    //var validationResults = new List<ValidationResult>();
+                                    //TryValidateObject(SubTypeEntity, context, validationResults);
+                                    //if (validationResults.Count == 0)
+                                    //{
                                         //将付好值得SubTableType实例添加到List中
                                         list.Add(SubTypeEntity);
 
                                         PropertyHelper.SetPropertyValue(entity, pro.Name, list);
-                                    }
-                                    else
-                                    {
-                                        ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = item.ExcelIndex });
-                                        break;
-                                    }
+                                    //}
+                                    //else
+                                    //{
+                                    //    ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = item.ExcelIndex });
+                                    //    break;
+                                    //}
 
                                 }
                                 break;
@@ -535,18 +535,7 @@ namespace WalkingTec.Mvvm.Core
                 entity.ExcelIndex = item.ExcelIndex;
                 if (isMainData)
                 {                   
-                    var context = new ValidationContext(entity);
-                    var validationResults = new List<ValidationResult>();
-                    TryValidateObject(entity, context, validationResults);
-                    if (validationResults.Count == 0)
-                    {
-                        EntityList.Add(entity);
-                    }
-                    else
-                    {
-                        ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = item.ExcelIndex });
-                        break;
-                    }
+                    EntityList.Add(entity);
                 }
             }
         }
@@ -911,6 +900,16 @@ namespace WalkingTec.Mvvm.Core
 
             //进行赋值
             SetEntityList();
+            foreach (var entity in EntityList)
+            {
+                var context = new ValidationContext(entity);
+                var validationResults = new List<ValidationResult>();
+                TryValidateObject(entity, context, validationResults);
+                if (validationResults.Count > 0)
+                {
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = entity.ExcelIndex });
+                }
+            }
             if (ErrorListVM.EntityList.Count > 0)
             {
                 DoReInit();
@@ -946,6 +945,11 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 var val = proToSet.GetValue(item);
                                 PropertyHelper.SetPropertyValue(exist, excelProp.FieldName, val, stringBasedValue: true);
+                                try
+                                {
+                                    DC.UpdateProperty(exist, proToSet.Name);
+                                }
+                                catch { }
                             }
                         }
 
@@ -954,6 +958,7 @@ namespace WalkingTec.Mvvm.Core
                             if (typeof(IBasePoco).IsAssignableFrom(exist.GetType()))
                             {
                                 (exist as IBasePoco).UpdateTime = DateTime.Now;
+                                DC.UpdateProperty(exist, "UpdateTime");
                             }
                         }
 
@@ -962,10 +967,11 @@ namespace WalkingTec.Mvvm.Core
                             if (typeof(IBasePoco).IsAssignableFrom(exist.GetType()))
                             {
                                 (exist as IBasePoco).UpdateBy = LoginUserInfo.ITCode;
+                                DC.UpdateProperty(exist, "UpdateBy");
                             }
                         }
                         exist.ExcelIndex = item.ExcelIndex;
-                        DC.UpdateEntity(exist);
+                        //DC.UpdateEntity(exist);
 
                         continue;
                     }
