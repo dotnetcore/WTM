@@ -1,5 +1,9 @@
 <template>
-  <WtmFilter :PageController="PageController" @finish="onFinish">
+  <WtmFilter
+    :PageController="PageController"
+    @finish="onFinish"
+    @reset="onReset"
+  >
     <WtmField name="ITCode" :label="EnumLocaleLabel.ITCode" />
     <WtmField name="Name" :label="EnumLocaleLabel.Name" />
   </WtmFilter>
@@ -19,8 +23,21 @@ export default class extends Vue {
   get Pagination() {
     return this.PageController.Pagination;
   }
-  onFinish(values) {
-    this.Pagination.onLoading(values);
+  async onFinish(values) {
+    await this.Pagination.onLoading(values);
+    this.onText();
+  }
+  async onReset(values) {
+    await this.Pagination.onLoading(values);
+  }
+  onText() {
+    this.Pagination.onSet([
+      { ITCode: 123, Name: "测试" },
+      { ITCode: 12, Name: "测试" },
+      { ITCode: 3, Name: "测试" },
+      { ITCode: 4, Name: "测试" },
+      { ITCode: 5, Name: "测试" },
+    ]);
   }
   mounted() {
     console.log("LENG ~ Filter", this);

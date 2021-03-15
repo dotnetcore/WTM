@@ -98,21 +98,25 @@ export default class extends Vue {
   span = 6;
   bind = { span: 6 };
   @Emit("finish")
-  onFinish(values, replace = true) {
-    this.__wtmToQuery(values);
+  onFinish(values, query = true) {
+    if (query) {
+      this.__wtmToQuery(values);
+    }
     return values;
   }
+  @Emit("reset")
   async onReset() {
     await this.lodash.result(this.formRef, "resetFields");
     let values = await this.lodash.result(this.formRef, "validateFields");
-    this.Pagination.onReset();
     // 清空 current & pageSize
-    values = this.lodash.assign({}, values, {
-      [this.Pagination.options.currentKey]: "",
-      [this.Pagination.options.pageSizeKey]: "",
-    });
-
-    this.onFinish(values);
+    this.__wtmToQuery(
+      this.lodash.assign({}, values, {
+        [this.Pagination.options.currentKey]: "",
+        [this.Pagination.options.pageSizeKey]: "",
+      })
+    );
+    // this.onFinish(values);
+    return values;
   }
   /** 回填 url 数据 */
   backfillQuery() {

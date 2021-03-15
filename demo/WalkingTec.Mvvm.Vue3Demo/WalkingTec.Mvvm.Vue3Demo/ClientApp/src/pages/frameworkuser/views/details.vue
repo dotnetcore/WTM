@@ -1,5 +1,5 @@
 <template>
-  <WtmDetails @finish="onFinish">
+  <WtmDetails :onFinish="onFinish">
     <WtmField entityKey="ITCode" />
     <WtmField entityKey="Password" />
     <WtmField entityKey="Email" />
@@ -14,12 +14,18 @@ export default class extends Vue {
   @Inject() PageController;
   @Provide() formState = {
     Entity: {
-      ITCode: "",
-      Password: "",
+      ITCode: "1",
+      Password: "2",
+      Email: "3",
+      Name: "4",
+      Gender: "5",
     },
   };
-  onFinish(values) {
+  async onFinish(values) {
     console.log("LENG ~ extends ~ onFinish ~ values", values);
+    return new Promise((res, rej) => {
+      this.lodash.delay(rej, 2000);
+    });
   }
   created() {}
 }

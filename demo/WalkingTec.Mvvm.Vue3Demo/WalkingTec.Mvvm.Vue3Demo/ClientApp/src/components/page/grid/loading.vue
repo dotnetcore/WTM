@@ -21,6 +21,8 @@ import { Options, Prop, Vue, Watch } from "vue-property-decorator";
   components: {},
 })
 export default class extends Vue {
+  @Prop({ default: false }) loading;
+  @Prop({ default: "material" }) theme;
   @Prop({ default: () => [] }) columnDefs;
   @Prop({}) rowData;
   @Prop({ default: () => ({}) }) gridOptions;

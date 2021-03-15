@@ -183,6 +183,9 @@ export class Pagination<T = any> {
                 [this.options.currentKey]: this.current,
                 [this.options.pageSizeKey]: this.pageSize
             });
+            await new Promise((res) => {
+                lodash.delay(res, 3000);
+              });
             console.log("LENG: Pagination<T> -> onLoading -> body", body)
             AjaxRequest = lodash.merge({
                 url: this.options.url,
@@ -300,7 +303,7 @@ export class Pagination<T = any> {
      * @memberof Pagination
      */
     @action
-    protected onToggleLoading(loading: boolean = !this.loading, error = false) {
+     onToggleLoading(loading: boolean = !this.loading, error = false) {
         this.loading = loading;
         this.error = error;
     }

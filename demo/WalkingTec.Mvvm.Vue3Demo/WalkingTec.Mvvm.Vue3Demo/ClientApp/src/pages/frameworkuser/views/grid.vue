@@ -15,15 +15,7 @@ import RowAction from "./action.vue";
 @Options({ components: {} })
 export default class extends Vue {
   @Inject() PageController: PageController;
-  onText() {
-    this.PageController.Pagination.onSet([
-      { ITCode: 123, Name: "测试" },
-      { ITCode: 12, Name: "测试" },
-      { ITCode: 3, Name: "测试" },
-      { ITCode: 4, Name: "测试" },
-      { ITCode: 5, Name: "测试" },
-      ]);
-  }
+  
   columnDefs: (ColDef | ColGroupDef)[] = [
     {
       headerName: EnumLocaleLabel.ITCode,
@@ -62,7 +54,6 @@ export default class extends Vue {
     };
   }
   created() {
-    this.onText();
   }
 }
 </script>

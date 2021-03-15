@@ -14,22 +14,29 @@
     :model="formState"
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
-    @finish="onFinish"
+    @finish="onSubmit"
   >
-    <slot />
+    <a-spin :spinning="spinning">
+      <slot />
+    </a-spin>
     <a-space class="w-form-space" align="center">
-      <a-button type="primary" html-type="submit">
-        <template v-slot:icon>
-          <SaveOutlined />
+      <a-spin :spinning="spinning">
+        <template v-slot:indicator>
+          <div></div>
         </template>
-        <i18n-t keypath="action.submit" />
-      </a-button>
-      <a-button @click.stop.prevent="onReset">
-        <template v-slot:icon>
-          <RedoOutlined />
-        </template>
-        <i18n-t keypath="action.reset" />
-      </a-button>
+        <a-button type="primary" html-type="submit">
+          <template v-slot:icon>
+            <SaveOutlined />
+          </template>
+          <i18n-t keypath="action.submit" />
+        </a-button>
+        <a-button @click.stop.prevent="onReset">
+          <template v-slot:icon>
+            <RedoOutlined />
+          </template>
+          <i18n-t keypath="action.reset" />
+        </a-button>
+      </a-spin>
     </a-space>
   </a-form>
 </template>
@@ -46,17 +53,58 @@ export default class extends Vue {
   @Ref("formRef") formRef;
   /** 表单 rules */
   @Prop({ default: () => [] }) rules;
+  @Prop({ type: Function, required: true }) onFinish;
+  spinning = false;
   labelCol = { span: 24 };
   wrapperCol = { span: 24 };
-  @Emit("finish")
-  onFinish(values) {
-    return values;
+  // @Emit("finish")
+  // onFinish(values) {
+  //   this.spinning = true;
+  //   this.onSubmit(values)
+  //   return {
+  //     // 表单值
+  //     values,
+  //     // 成功回调
+  //     onComplete: this.onComplete,
+  //     // 失败回调
+  //     onFail: this.onFail,
+  //   };
+  // }
+  async onSubmit(values) {
+    try {
+      this.spinning = true;
+      await this.onFinish(values);
+      this.onComplete();
+    } catch (error) {
+      this.onFail(error);
+    }
   }
   async onReset() {
     await this.lodash.result(this.formRef, "resetFields");
     // const values = await this.lodash.result(this.formRef, "validateFields");
   }
+  // 成功
+  onComplete() {
+    this.spinning = false;
+    // this.__wtmBackDetails();
+  }
+  // 失败
+  onFail(error) {
+    console.log("LENG ~ extends ~ onFail ~ error", error);
+    this.spinning = false;
+  }
+  // 加载数据
+  onLoading() {
+    this.spinning = true;
+    this.lodash.delay(() => {
+      this.spinning = false;
+    }, 2000);
+  }
   created() {}
+  mounted() {
+    this.onLoading();
+    console.log("LENG ~ extends ~ mounted ~ this", this);
+  }
 }
 </script>
 <style lang="less" scoped>

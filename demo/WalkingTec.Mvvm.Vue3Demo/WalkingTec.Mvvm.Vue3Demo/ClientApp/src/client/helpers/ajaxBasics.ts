@@ -41,26 +41,26 @@ export class AjaxBasics {
             target: "/",
             timeout: 30000,
         }, options);
-        this.onTime()
+        // this.onTime()
     }
-    static serviceDate = moment(Date.now());
-    static serviceDateKey = 'Date';
-    /**
-     * 服务器时间
-     * @readonly
-     * @memberof AjaxBasics
-     */
-    get serviceDate() {
-        return AjaxBasics.serviceDate
-    }
-    /**
-     * 计时
-     */
-    onTime() {
-        interval(1000).subscribe(x => {
-            AjaxBasics.serviceDate.add(1, 'seconds')
-        })
-    }
+    // static serviceDate = moment(Date.now());
+    // static serviceDateKey = 'Date';
+    // /**
+    //  * 服务器时间
+    //  * @readonly
+    //  * @memberof AjaxBasics
+    //  */
+    // get serviceDate() {
+    //     return AjaxBasics.serviceDate
+    // }
+    // /**
+    //  * 计时
+    //  */
+    // onTime() {
+    //     interval(1000).subscribe(x => {
+    //         AjaxBasics.serviceDate.add(1, 'seconds')
+    //     })
+    // }
     options: IAjaxBasicsOptions = {};
     /** get */
     get<T>(url: string, body?: any, headers?: Object, options?: IAjaxBasicsOptions) {
@@ -125,15 +125,15 @@ export class AjaxBasics {
                 filter((ajax) => {
                     try {
                         // 取服务器时间
-                        try {
-                            const currentTarget: XMLHttpRequest = lodash.get(ajax, 'originalEvent.currentTarget');
-                            if (currentTarget) {
-                                const time = currentTarget.getResponseHeader(AjaxBasics.serviceDateKey)
-                                time && (AjaxBasics.serviceDate = moment(time));
-                            }
-                        } catch (error) {
-                            console.error('获取系统时间错误')
-                        }
+                        // try {
+                        //     const currentTarget: XMLHttpRequest = lodash.get(ajax, 'originalEvent.currentTarget');
+                        //     if (currentTarget) {
+                        //         const time = currentTarget.getResponseHeader(AjaxBasics.serviceDateKey)
+                        //         time && (AjaxBasics.serviceDate = moment(time));
+                        //     }
+                        // } catch (error) {
+                        //     console.error('获取系统时间错误')
+                        // }
                         AjaxBasics.onNProgress("done");
                         return AjaxBasics.onFilter(ajax);
                     } catch (error) {

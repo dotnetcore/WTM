@@ -60,7 +60,7 @@ export class ControllerBasics<T = any> {
   */
   onReset(options?: ControllerBasicsOptions) {
     this.options = lodash.merge({}, this.options, options);
-    this.Pagination = new Pagination(this.$ajax, this.options.Pagination);
+    this.Pagination = new Pagination(this.$ajax, { key: this.key, ...this.options.Pagination });
     this.Entities = new EntitiesBasics(this.$ajax, this.options.Entities);
     this.onToggleLoading(false)
     return this;

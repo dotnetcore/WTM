@@ -5,7 +5,11 @@ import {
     SaveOutlined,
     SearchOutlined,
     RedoOutlined,
-    UserOutlined
+    UserOutlined,
+    DeleteOutlined,
+    CloudUploadOutlined,
+    CloudDownloadOutlined,
+    FormOutlined,
 } from '@ant-design/icons-vue';
 import lodash from 'lodash';
 import { App } from 'vue';
@@ -18,7 +22,11 @@ export default {
             SaveOutlined,
             SearchOutlined,
             RedoOutlined,
-            UserOutlined
+            UserOutlined,
+            DeleteOutlined,
+            CloudUploadOutlined,
+            CloudDownloadOutlined,
+            FormOutlined
         }, (icon, key) => app.component(key, icon))
     }
 }

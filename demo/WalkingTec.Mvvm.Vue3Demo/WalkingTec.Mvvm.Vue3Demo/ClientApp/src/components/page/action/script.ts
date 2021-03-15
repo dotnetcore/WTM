@@ -32,7 +32,7 @@ export class PageActionBasics extends Vue {
 }
 
 @Options({ components: {} })
-export class RowActionBasics extends mixins(PageActionBasics) {
+export class RowActionBasics extends Vue {
     /**
     * 行 操作需要 aggrid 传入
     * @type {ICellRendererParams}
@@ -58,31 +58,23 @@ export class RowActionBasics extends mixins(PageActionBasics) {
     get isRowAction() {
         return this.lodash.has(this.rowParams, 'node')
     }
-}
-
-@Options({ components: {} })
-export class ActionBasics extends mixins(RowActionBasics) {
     /**
-     * 按钮样式等
+     * 按钮配置参数
      * @readonly
      * @memberof ActionBasics
      */
-    styles(type: EnumActionType | string): number | ButtonProps {
+    get ButtonProps() {
         const styles: ButtonProps = { size: 'default' }
-        switch (type) {
-            case 'space':
-                return 10
-            case EnumActionType.Insert:
-                styles.type = 'primary'
-                break;
-            default:
-        }
         if (this.isRowAction) {
             styles.type = "link"
             styles.size = 'small'
         }
         return styles
     }
+}
+
+@Options({ components: {} })
+export class ActionBasics extends mixins(PageActionBasics, RowActionBasics) {
     get isInsert() {
         if (this.isRowAction) {
             return false
@@ -107,6 +99,5 @@ export class ActionBasics extends mixins(RowActionBasics) {
         }
         return this.onAuthority(EnumActionType.Export)
     }
-
 }
 export default ActionBasics

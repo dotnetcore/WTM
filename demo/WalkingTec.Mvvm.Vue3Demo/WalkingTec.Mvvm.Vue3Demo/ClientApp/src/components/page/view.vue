@@ -7,22 +7,24 @@
  */
 <template>
   <a-modal
-    class="w-view"
     v-if="isModal"
-    @cancel="onCancel"
+    class="w-view"
     footer=""
     :visible="visible"
     :title="modalTitle"
+    destroyOnClose
+    @cancel="onCancel"
   >
     <slot />
   </a-modal>
   <a-drawer
-    class="w-view"
     v-else
+    class="w-view"
     :width="width"
     :visible="visible"
     :title="modalTitle"
     placement="right"
+    destroyOnClose
     @close="onCancel"
   >
     <slot />

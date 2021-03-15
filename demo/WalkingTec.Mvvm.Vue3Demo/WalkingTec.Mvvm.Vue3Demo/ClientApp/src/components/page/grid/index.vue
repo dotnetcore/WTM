@@ -1,6 +1,8 @@
 <template>
   <div class="w-grid-content" :style="style" ref="gridContent">
     <Grid
+      :loading="Pagination.loading"
+      :theme="theme"
       :columnDefs="getColumnDefs"
       :rowData="Pagination.dataSource"
       :gridOptions="options"
@@ -14,13 +16,14 @@
 import { defineAsyncComponent } from "vue";
 import { ControllerBasics } from "@/client";
 import lodash from "lodash";
-import { Options, Prop, Vue, Ref } from "vue-property-decorator";
+import { Options, Prop, Vue, Ref, Watch } from "vue-property-decorator";
 import {
   GridOptions,
   SelectionChangedEvent,
   ColDef,
   GridReadyEvent,
   RowDataChangedEvent,
+  GridApi,
 } from "ag-grid-community";
 import framework from "./framework";
 import defaultOptions, {
@@ -47,13 +50,15 @@ export default class extends Vue {
   @Prop({ default: () => ({}) }) gridOptions: GridOptions;
   @Prop({ default: () => true }) checkboxSelection: boolean;
   @Ref("gridContent") gridContent: HTMLDivElement;
+  theme: "balham" | "alpine" | "material" = "alpine";
   style = { height: "500px" };
+  GridApi: GridApi = null;
   get Pagination() {
     return this.PageController.Pagination;
   }
   get getColumnDefs() {
     return this.lodash.concat(
-      getColumnDefsCheckbox(this.checkboxSelection, "material"),
+      getColumnDefsCheckbox(this.checkboxSelection, this.theme),
       this.columnDefs,
       getColumnDefsAction(this.gridOptions.frameworkComponents)
     );
@@ -80,10 +85,6 @@ export default class extends Vue {
   }
   GridEvents: GridOptions = {
     onSortChanged: (event) => {
-      console.log(
-        "LENG ~ extends ~ getoptions ~ event",
-        event.api.getSortModel()
-      );
       lodash.invoke(this.gridOptions, "onSortChanged", event);
     },
     // 数据选择
@@ -95,7 +96,11 @@ export default class extends Vue {
     },
     // 初始化完成
     onGridReady: (event: GridReadyEvent) => {
+      this.GridApi = event.api;
       event.api.sizeColumnsToFit();
+      if (this.Pagination.loading) {
+        this.GridApi.showLoadingOverlay();
+      }
       lodash.invoke(this.gridOptions, "onGridReady", event);
     },
     // 数据更新
@@ -109,6 +114,16 @@ export default class extends Vue {
     let height = 500;
     height = window.innerHeight - this.gridContent.offsetTop - 120;
     this.style.height = height + "px";
+  }
+  @Watch("Pagination.loading")
+  onLoading(val, old) {
+    if (this.GridApi) {
+      if (val) {
+        this.GridApi.showLoadingOverlay();
+      } else {
+        this.GridApi.hideOverlay();
+      }
+    }
   }
   created() {}
   mounted() {

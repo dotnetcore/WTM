@@ -1,80 +1,58 @@
 <template>
-  <a-space :size="styles('space')">
+  <a-space :size="size">
     <!-- 添加 -->
     <slot name="insert">
-      <a-button
-        v-if="isInsert"
-        v-bind="styles(EnumActionType.Insert)"
-        @click="__wtmToDetails()"
-      >
-        <template #icon v-if="isPageAction">
-          <DownloadOutlined />
-        </template>
-        <i18n-t keypath="action.insert" />
-      </a-button>
+      <ActionInsert :PageController="PageController" :params="params" />
     </slot>
     <!-- 修改 -->
     <slot name="update">
-      <a-button
-        v-if="isUpdate"
-        v-bind="styles(EnumActionType.Update)"
-        :disabled="!rowKey"
-        @click="__wtmToDetails(rowKey)"
-      >
-        <template #icon v-if="isPageAction">
-          <DownloadOutlined />
-        </template>
-        <i18n-t keypath="action.update" />
-      </a-button>
+      <ActionUpdate :PageController="PageController" :params="params" />
     </slot>
     <!-- 删除 -->
     <slot name="delete">
-      <a-button
-        v-if="isDelete"
-        v-bind="styles(EnumActionType.Delete)"
-        @click="__wtmToDetails()"
-      >
-        <template #icon v-if="isPageAction">
-          <DownloadOutlined />
-        </template>
-        <i18n-t keypath="action.delete" />
-      </a-button>
+      <ActionDelete :PageController="PageController" :params="params" />
     </slot>
     <!-- 导入  -->
     <slot name="import">
-      <a-button v-if="isImport" v-bind="styles()" @click="__wtmToDetails()">
-        <template #icon v-if="isPageAction">
-          <DownloadOutlined />
-        </template>
-        <i18n-t keypath="action.import" />
-      </a-button>
+      <ActionExport :PageController="PageController" :params="params" />
     </slot>
     <!-- 导出 -->
     <slot name="export">
-      <a-button v-if="isExport" v-bind="styles()" @click="__wtmToDetails()">
-        <template #icon v-if="isPageAction">
-          <DownloadOutlined />
-        </template>
-        <i18n-t keypath="action.export" />
-      </a-button>
+      <ActionImport :PageController="PageController" :params="params" />
     </slot>
     <!-- 追加内容 -->
     <slot />
   </a-space>
 </template>
 <script lang="ts">
-import { ActionBasics } from "./script";
 import { Vue, Options, mixins, Prop } from "vue-property-decorator";
-@Options({ components: {} })
-export default class extends mixins(ActionBasics) {
+import { RowActionBasics, PageActionBasics } from "./script";
+import ActionInsert from "./action_insert.vue";
+import ActionUpdate from "./action_update.vue";
+import ActionDelete from "./action_delete.vue";
+import ActionExport from "./action_export.vue";
+import ActionImport from "./action_import.vue";
+@Options({
+  components: {
+    ActionInsert,
+    ActionUpdate,
+    ActionDelete,
+    ActionExport,
+    ActionImport,
+  },
+})
+export default class extends Vue {
   @Prop() PageController;
+  /**
+   * 行 操作需要 aggrid 传入
+   * @type {ICellRendererParams}
+   * @memberof Action
+   */
+  @Prop() params;
+  size = 10;
   created() {}
-  mounted() {
-  }
+  mounted() {}
 }
 </script>
 <style lang="less">
-.test {
-  color: @primary-color;
-}
 </style>
