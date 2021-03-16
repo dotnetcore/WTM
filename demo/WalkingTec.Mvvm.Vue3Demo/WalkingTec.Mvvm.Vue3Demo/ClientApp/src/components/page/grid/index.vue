@@ -33,6 +33,8 @@ import defaultOptions, {
 import Pagination from "./pagination.vue";
 import Loading from "./loading.vue";
 import { Debounce } from "lodash-decorators";
+import { fromEvent, Subscription } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 @Options({
   components: {
     Pagination,
@@ -53,6 +55,8 @@ export default class extends Vue {
   theme: "balham" | "alpine" | "material" = "alpine";
   style = { height: "500px" };
   GridApi: GridApi = null;
+  ResizeEvent: Subscription;
+
   get Pagination() {
     return this.PageController.Pagination;
   }
@@ -128,6 +132,13 @@ export default class extends Vue {
   created() {}
   mounted() {
     this.onReckon();
+    this.ResizeEvent = fromEvent(window, "resize")
+      .pipe(debounceTime(200))
+      .subscribe(this.onReckon);
+  }
+  unmounted() {
+    this.ResizeEvent && this.ResizeEvent.unsubscribe();
+    this.ResizeEvent = undefined;
   }
 }
 </script>

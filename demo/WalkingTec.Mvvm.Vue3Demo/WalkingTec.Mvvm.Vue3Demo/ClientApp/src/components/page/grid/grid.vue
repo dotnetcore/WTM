@@ -69,5 +69,8 @@ export default class AgGrid extends Vue {
       border-color: @primary-color;
     }
   }
+  .w-row-action {
+    display: inline-flex;
+  }
 }
 </style>

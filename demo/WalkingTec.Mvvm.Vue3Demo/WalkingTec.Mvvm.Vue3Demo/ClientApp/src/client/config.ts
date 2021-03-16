@@ -5,7 +5,9 @@ import Bowser from 'bowser';
 export class WtmConfig {
     constructor() {
         this.onInspectVersion();
-        console.log("LENG: WtmGlobal -> ", this)
+        console.group('WtmGlobal')
+        console.log(this)
+        console.groupEnd()
     }
     /**
      * 显示详情的 key

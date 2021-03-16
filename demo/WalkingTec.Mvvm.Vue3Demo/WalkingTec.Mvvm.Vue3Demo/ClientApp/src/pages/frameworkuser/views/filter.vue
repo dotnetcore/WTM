@@ -6,6 +6,11 @@
   >
     <WtmField name="ITCode" :label="EnumLocaleLabel.ITCode" />
     <WtmField name="Name" :label="EnumLocaleLabel.Name" />
+    <WtmField name="Name" :label="EnumLocaleLabel.Name" />
+    <WtmField name="Name" :label="EnumLocaleLabel.Name" />
+    <WtmField name="Name" :label="EnumLocaleLabel.Name" />
+    <WtmField name="Name" :label="EnumLocaleLabel.Name" />
+    <!-- <div></div> -->
   </WtmFilter>
 </template>
 <script lang="ts">
@@ -40,7 +45,6 @@ export default class extends Vue {
     ]);
   }
   mounted() {
-    console.log("LENG ~ Filter", this);
   }
 }
 </script>

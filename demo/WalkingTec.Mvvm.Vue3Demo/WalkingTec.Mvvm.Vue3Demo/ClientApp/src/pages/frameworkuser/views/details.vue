@@ -1,9 +1,14 @@
 <template>
   <WtmDetails :onFinish="onFinish">
-    <WtmField entityKey="ITCode" />
-    <WtmField entityKey="Password" />
-    <WtmField entityKey="Email" />
-    <WtmField entityKey="Name" />
+    <a-space>
+      <WtmField entityKey="ITCode" />
+      <WtmField entityKey="Password" />
+    </a-space>
+    <a-space>
+      <WtmField entityKey="Email" />
+      <WtmField entityKey="Name" />
+    </a-space>
+
     <WtmField entityKey="Gender" />
   </WtmDetails>
 </template>

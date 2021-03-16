@@ -9,6 +9,7 @@ import {
     DeleteOutlined,
     CloudUploadOutlined,
     CloudDownloadOutlined,
+    SettingOutlined,
     FormOutlined,
 } from '@ant-design/icons-vue';
 import lodash from 'lodash';
@@ -26,6 +27,7 @@ export default {
             DeleteOutlined,
             CloudUploadOutlined,
             CloudDownloadOutlined,
+            SettingOutlined,
             FormOutlined
         }, (icon, key) => app.component(key, icon))
     }

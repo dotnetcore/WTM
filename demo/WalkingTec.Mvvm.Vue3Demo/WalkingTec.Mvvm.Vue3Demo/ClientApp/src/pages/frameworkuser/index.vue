@@ -21,9 +21,6 @@ import PageController, { PageEntity } from "./controller";
     ViewGrid,
     ViewDetails,
   },
-  beforeRouteEnter(){
-    
-  }
 })
 export default class extends Vue {
   /**

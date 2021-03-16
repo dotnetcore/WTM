@@ -1,72 +1,124 @@
 <template>
-  <!-- <route-context-provider  :value="state"> -->
-  <pro-layout v-bind="state" @collapse="onCollapse">
-    <!-- <template v-slot:headerContentRender>
-      <a-avatar size="small">
-        <template #icon><UserOutlined /></template>
-      </a-avatar>
-    </template> -->
-    <template v-slot:rightContentRender>
-      <a-dropdown>
-        <a class="ant-dropdown-link" @click.prevent>
-          <span v-text="$i18n.locale"></span>
-          <DownOutlined />
-        </a>
-        <template #overlay>
-          <a-menu @click="changeLanguage">
-            <a-menu-item
-              v-for="item in languages"
-              :key="item"
-              v-text="item"
-            ></a-menu-item>
-          </a-menu>
-        </template>
-      </a-dropdown>
-    </template>
-    <router-view />
-  </pro-layout>
-  <!-- </route-context-provider> -->
+  <route-context-provider :value="provider">
+    <pro-layout
+      v-bind="state"
+      @select="onSelect"
+      @openKeys="onOpenKeys"
+      @collapse="onCollapse"
+    >
+      <template v-slot:rightContentRender>
+        <RightContentRender />
+      </template>
+      <!-- <PageContainer
+        :fixedHeader="true"
+        :title="false"
+        :tabList="[
+          { key: '1', tab: 'Details' },
+          { key: '2', tab: 'Rule' },
+        ]"
+        :tabProps="{
+          type: 'editable-card',
+          hideAdd: true,
+        }"
+        :affixProps="{ offsetTop: 100 }"
+      > -->
+      <Tabs />
+      <Container />
+      <!-- </PageContainer> -->
+    </pro-layout>
+  </route-context-provider>
 </template>
 <script lang="ts">
 import { Vue, Options } from "vue-property-decorator";
 import { h } from "vue";
 import { createRouteContext } from "@ant-design-vue/pro-layout";
-import headerContentRender from "./headerContentRender.vue";
+import RightContentRender from "./rightContentRender.vue";
+import Container from "./container.vue";
+import Tabs from "./tabs.vue";
 
 const [RouteContextProvider] = createRouteContext();
 // Component definition
-@Options({ components: { RouteContextProvider } })
+@Options({
+  components: { RouteContextProvider, RightContentRender, Container, Tabs },
+})
 export default class extends Vue {
-  state = {
-    // layout:'mix',
-    title: "暄桐小程序",
-    collapsed: false,
-    openKeys: ["/dashboard"],
-    selectedKeys: ["/welcome"],
+  provider = {
+    menuData: this.menuData,
+    headerHeight: 48,
+    sideWidth: 208,
+    openKeys: [],
+    selectedKeys: [],
     isMobile: false,
+    hasFooterToolbar: false,
+    hasSideMenu: true,
+    hasHeader: true,
     fixSiderbar: true,
     fixedHeader: true,
-    menuData: [],
-    sideWidth: 208,
-    hasSideMenu: true,
-    // hasHeader: true,
-    hasFooterToolbar: false,
-    // headerRender: false,
     setHasFooterToolbar: (has) => {
-      this.state.hasFooterToolbar = has;
+      this.provider.hasFooterToolbar = has;
     },
-    headerContentRender: (props) => h(headerContentRender),
   };
+  state = {
+    // layout:'top',
+    title: "暄桐小程序",
+    collapsed: false,
+    fixSiderbar: true,
+    fixedHeader: true,
+    locale: (key) => {
+      console.log("LENG ~ extends ~ key", key);
+      return key;
+    },
+    // menuItemRender: (props) => null,
+    // headerContentRender: (props) => h(headerContentRender),
+  };
+  get menuData() {
+    return [
+      {
+        path: "/a",
+        name: "a",
+        meta: { icon: "SaveOutlined", title: "测试页面" },
+        children: [
+          {
+            path: "/frameworkuser",
+            name: "frameworkuser",
+            meta: { icon: "SaveOutlined", title: "测试用户" },
+          },
+          {
+            path: "/test",
+            name: "test",
+            meta: { icon: "SaveOutlined", title: "Dashboard" },
+          },
+        ],
+      },
+      {
+        path: "/b",
+        name: "b",
+        meta: { icon: "SaveOutlined", title: "测试页面" },
+        children: [
+          {
+            path: "/frameworkuser2",
+            // name: "frameworkuser2",
+            meta: { icon: "SaveOutlined", title: "测试用户" },
+          },
+          {
+            path: "/test3",
+            // name: "test3",
+            meta: { icon: "SaveOutlined", title: "Dashboard" },
+          },
+        ],
+      },
+    ];
+  }
   created() {}
   mounted() {}
   onCollapse(collapsed) {
     this.state.collapsed = collapsed;
   }
-  get languages() {
-    return this.lodash.keys(this.lodash.get(this.$i18n, "messages"));
+  onSelect(event) {
+    this.provider.selectedKeys = event;
   }
-  changeLanguage(event) {
-    this.$i18n.locale = event.key;
+  onOpenKeys(event) {
+    this.provider.openKeys = event;
   }
 }
 </script>

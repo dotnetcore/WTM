@@ -1,5 +1,5 @@
 <template>
-  <a-col v-if="colItem" :span="span">
+  <a-col v-if="colProps?.colItem" :span="_span">
     <slot />
   </a-col>
   <slot v-else />
@@ -8,9 +8,18 @@
 import { Vue, Options, Prop, Inject } from "vue-property-decorator";
 @Options({ components: {} })
 export default class extends Vue {
-  @Inject() colItem;
-  @Prop({ default: 6 }) span;
-  mounted() {}
+  @Inject() colProps;
+  get _span() {
+    return this.colProps.colSpan ? this.colProps.colSpan : 24;
+  }
+  get parentElement(): HTMLDivElement {
+    return this.$el.parentElement;
+  }
+  get containerWidth() {
+    return this.parentElement.clientWidth;
+  }
+  mounted() {
+  }
 }
 </script>
 <style lang="less">

@@ -55,13 +55,14 @@ export default (i18n: VueI18n) => {
  * 行 操作
  * @param frameworkComponents 
  */
-export function getColumnDefsAction(frameworkComponents) {
+export function getColumnDefsAction(frameworkComponents): (ColGroupDef | ColDef)[] {
     if (lodash.has(frameworkComponents, 'RowAction')) {
         return [{
             minWidth: 0,
             headerName: 'action.name',
             field: 'RowAction',
             cellRenderer: 'RowAction',
+            cellClass: 'w-row-action',
             pinned: 'right',
             sortable: false,
             suppressMenu: true,

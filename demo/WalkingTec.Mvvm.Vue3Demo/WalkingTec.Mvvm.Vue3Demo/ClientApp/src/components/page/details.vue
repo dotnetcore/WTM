@@ -17,7 +17,11 @@
     @finish="onSubmit"
   >
     <a-spin :spinning="spinning">
-      <slot />
+      <!-- <a-row :gutter="16" type="flex"> -->
+      <!-- </a-row> -->
+      <div class="w-form-items">
+        <slot />
+      </div>
     </a-spin>
     <a-space class="w-form-space" align="center">
       <a-spin :spinning="spinning">
@@ -30,6 +34,7 @@
           </template>
           <i18n-t keypath="action.submit" />
         </a-button>
+        <a-divider type="vertical" />
         <a-button @click.stop.prevent="onReset">
           <template v-slot:icon>
             <RedoOutlined />
@@ -126,6 +131,18 @@ export default class extends Vue {
     border-top: 1px solid #e9e9e9;
     background: white;
     z-index: 1;
+  }
+}
+.w-form-items {
+  .ant-space {
+    width: 100%;
+    @media screen and (max-width: 785px) {
+      display: block;
+    }
+  }
+
+  .ant-space-item {
+    flex: auto;
   }
 }
 </style>

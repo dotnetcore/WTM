@@ -24,7 +24,7 @@ import {
     DatePicker,
     ConfigProvider
 } from 'ant-design-vue';
-import ProLayout from '@ant-design-vue/pro-layout';
+import ProLayout, { PageContainer } from '@ant-design-vue/pro-layout';
 import { App } from 'vue';
 export default {
     install(app: App) {
@@ -56,5 +56,6 @@ export default {
             ConfigProvider
         ].map(x => app.use(x));
         app.use(ProLayout)
+        app.component('PageContainer',PageContainer)
     }
 }

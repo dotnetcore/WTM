@@ -2,6 +2,8 @@
  * 字段描述 枚举
  */
 export enum EnumLocaleLabel {
+    /** 当前页面名称 */
+    PageName = "frameworkuser.PageName",
     /** 用户ITCode */
     ITCode = "frameworkuser.ITCode",
     /** 密码 */
@@ -33,6 +35,7 @@ export enum EnumLocaleLabel {
 }
 export default {
     en: {
+        [EnumLocaleLabel.PageName]: 'User',
         [EnumLocaleLabel.ITCode]: 'Account',
         [EnumLocaleLabel.Password]: 'Password',
         [EnumLocaleLabel.Email]: 'Email',
@@ -50,6 +53,7 @@ export default {
         [EnumLocaleLabel.ZipCode]: 'ZipCode',
     },
     zh: {
+        [EnumLocaleLabel.PageName]: '用户',
         [EnumLocaleLabel.ITCode]: '账号',
         [EnumLocaleLabel.Password]: '密码',
         [EnumLocaleLabel.Email]: '邮箱',

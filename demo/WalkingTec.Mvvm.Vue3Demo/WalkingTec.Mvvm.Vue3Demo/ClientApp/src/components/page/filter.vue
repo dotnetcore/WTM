@@ -8,16 +8,21 @@
 <template>
   <a-form
     ref="formRef"
+    :layout="layout"
     :rules="rules"
     :model="formState"
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
     @finish="onFinish"
   >
-    <a-row type="flex">
-      <slot v-bind="bind" />
-      <a-col :span="span">
-        <a-form-item :wrapper-col="{ span: 24 }">
+    <a-row type="flex" :gutter="8">
+      <slot />
+      <a-col
+        :offset="offset"
+        :span="colProps.colSpan"
+        style="text-align: right"
+      >
+        <a-form-item :wrapper-col="{ span: 22 }">
           <a-space align="center">
             <a-button type="primary" html-type="submit">
               <template v-slot:icon>
@@ -40,6 +45,9 @@
 
 <script lang="ts">
 import { ControllerBasics } from "@/client";
+import { fromEvent, Subscription } from "rxjs";
+import { debounceTime } from "rxjs/operators";
+import { computed } from "vue";
 import {
   Options,
   Prop,
@@ -64,13 +72,13 @@ const BREAKPOINTS = {
     // [breakpoint, cols, layout]
     [513, 1, "vertical"],
     [785, 2, "vertical"],
-    [1057, 3, "vertical"],
-    [Infinity, 4, "vertical"],
+    [1057, 3, "horizontal"],
+    [Infinity, 4, "horizontal"],
   ],
   default: [
     [513, 1, "vertical"],
     [701, 2, "vertical"],
-    [1062, 3, "horizontal"],
+    [1062, 2, "horizontal"],
     [1352, 3, "horizontal"],
     [Infinity, 4, "horizontal"],
   ],
@@ -84,7 +92,10 @@ export default class extends Vue {
     return this.PageController.Pagination;
   }
   /** 告诉 field 使用 a-col */
-  @Provide() colItem = true;
+  @Provide() colProps = {
+    colItem: true,
+    colSpan: 6,
+  };
   /** 表单状态 */
   @Inject() formState = {};
   /** 原始的表单 数据 formState 初始化状态 */
@@ -93,10 +104,14 @@ export default class extends Vue {
   @Ref("formRef") formRef;
   /** 表单 rules */
   @Prop({ default: () => [] }) rules;
-  labelCol = { span: 6 };
-  wrapperCol = { span: 14 };
-  span = 6;
-  bind = { span: 6 };
+  labelCol = { xs: 24, sm: 24, md: 6, lg: 6, xl: 6, xxl: 6 };
+  wrapperCol = { xs: 24, sm: 24, md: 16, lg: 16, xl: 16, xxl: 16 };
+  layout: "vertical" | "horizontal" = "vertical";
+  offset = 0;
+  ResizeEvent: Subscription;
+  get formEl(): HTMLFormElement {
+    return this.$el;
+  }
   @Emit("finish")
   onFinish(values, query = true) {
     if (query) {
@@ -125,10 +140,38 @@ export default class extends Vue {
       this.lodash.pick(this.$route.query, this.lodash.keys(this.formState))
     );
   }
+  breakPoint() {
+    const length = this.$slots
+      .default()
+      .filter((x) => typeof x.type !== "symbol").length;
+    const width = window.innerWidth;
+    const breakPoint: [number, number, string] = this.lodash.find<any>(
+      BREAKPOINTS.vertical,
+      (item) => {
+        return width < (item[0] as number) + 16;
+      }
+    );
+    this.colProps.colSpan = 24 / breakPoint[1];
+    this.layout = breakPoint[2] as any;
+    const offset = (length * this.colProps.colSpan) % 24;
+    this.offset = offset + this.colProps.colSpan;
+    if (offset === 0) {
+      this.offset = this.colProps.colSpan * (breakPoint[1] - 1);
+    }
+  }
   created() {}
   mounted() {
+    this.breakPoint();
     this.backfillQuery();
     this.onFinish(this.lodash.cloneDeep(this.formState), false);
+    this.ResizeEvent = fromEvent(window, "resize")
+      .pipe(debounceTime(200))
+      .subscribe(this.breakPoint);
+    console.log(this.$slots.default());
+  }
+  unmounted() {
+    this.ResizeEvent && this.ResizeEvent.unsubscribe();
+    this.ResizeEvent = undefined;
   }
 }
 </script>

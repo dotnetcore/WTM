@@ -11,7 +11,7 @@
     class="w-view"
     footer=""
     :visible="visible"
-    :title="modalTitle"
+    :title="_title"
     destroyOnClose
     @cancel="onCancel"
   >
@@ -20,9 +20,9 @@
   <a-drawer
     v-else
     class="w-view"
-    :width="width"
+    :width="_width"
     :visible="visible"
-    :title="modalTitle"
+    :title="_title"
     placement="right"
     destroyOnClose
     @close="onCancel"
@@ -53,7 +53,7 @@ export default class extends Vue {
   get visible() {
     return this.lodash.has(this.query, this.visibleKey);
   }
-  get modalTitle() {
+  get _title() {
     if (this.title) {
       return this.title;
     }
@@ -61,8 +61,9 @@ export default class extends Vue {
       ? this.$t("action.update")
       : this.$t("action.insert");
   }
-  get width() {
-    return this.lodash.max([500, window.innerWidth * 0.5]);
+  get _width() {
+    const width = window.innerWidth * 0.5;
+    return this.lodash.max([500, width > 800 ? 800 : width]);
   }
   onCancel() {
     this.__wtmBackDetails();

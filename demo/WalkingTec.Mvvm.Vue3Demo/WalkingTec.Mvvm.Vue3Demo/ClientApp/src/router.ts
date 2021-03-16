@@ -1,20 +1,89 @@
 import lodash from 'lodash';
-import { createRouter, createWebHistory } from 'vue-router'
-import { Vue } from 'vue-class-component'
-Vue.registerHooks([
-  'beforeRouteEnter',
-  'beforeRouteLeave',
-  'beforeRouteUpdate'
-])
-class Router {
+import { BindAll } from 'lodash-decorators';
+import { action, observable } from 'mobx';
+import { BehaviorSubject } from 'rxjs';
+import { createRouter, createWebHistory, RouteLocationNormalized, Router } from 'vue-router';
+// Vue.registerHooks([
+//   'beforeRouteEnter',
+//   'beforeRouteLeave',
+//   'beforeRouteUpdate'
+// ])
+@BindAll()
+class AppRouter {
   lazy = false;
   readonly PageFiles = require.context('./pages', true, /\.vue$/, 'sync') // 根据目录结构去搜索文件
   readonly PagePath = this.PageFiles.keys().filter(file => !lodash.includes(file, 'views'));
-  // 创建的路由
-  Router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
-    routes: this.createRouters()
-  })
+  /**
+   * 创建的路由
+   * @type {Router}
+   * @memberof AppRouter
+   */
+  Router: Router;
+  /**
+   * 已开 页面缓存列表
+   * @memberof AppRouter
+   */
+  PagesCache = new Map<string, RouteLocationNormalized>();
+  /**
+   * 订阅事件
+   * @memberof AppRouter
+   */
+  RouterBehaviorSubject = new BehaviorSubject(this.toArray());
+  /**
+   * 全局前置守卫
+   * @param to 
+   * @param from 
+   * @doc https://next.router.vuejs.org/zh/guide/advanced/navigation-guards.html
+   */
+  async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
+    console.log('')
+    console.group(to.path)
+    console.log("beforeEach", to, from)
+  }
+  /**
+   * 全局解析守卫
+   * @param to 
+   * @param from 
+   * @doc https://next.router.vuejs.org/zh/guide/advanced/navigation-guards.html
+   */
+  async beforeResolve(to: RouteLocationNormalized) {
+    console.log("beforeResolve", to)
+  }
+  /**
+   * 全局后置钩子
+   * @param to 
+   * @param from 
+   * @doc https://next.router.vuejs.org/zh/guide/advanced/navigation-guards.html
+   */
+  afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
+    console.log("afterEach", to, from)
+    this.PagesCache.set(to.path, to)
+    this.RouterBehaviorSubject.next(this.toArray())
+    console.groupEnd()
+    console.log('')
+  }
+
+  onInit() {
+    this.Router = createRouter({
+      history: createWebHistory(process.env.BASE_URL),
+      routes: this.createRouters()
+    })
+    this.Router.beforeEach(this.beforeEach)
+    this.Router.beforeResolve(this.beforeResolve)
+    this.Router.afterEach(this.afterEach)
+    console.log('')
+    console.group('Router')
+    console.log(this)
+    console.groupEnd()
+    console.log('')
+  }
+  toArray() {
+    let PagesCache = []
+    this.PagesCache.forEach(x => {
+      PagesCache = lodash.concat(PagesCache, x)
+    })
+    return PagesCache
+  }
   createRouters() {
     const map = this.PagePath.reduce((map, cur) => {
       let dislodge = cur.match(/\/(.+?)\.vue$/)[1] // 只匹配纯文件名的字符串
@@ -44,42 +113,16 @@ class Router {
   getRoute(item, childrenPage) {
     const name = this.getRouteItemName(item);
     const path = this.getRouteItemPath(item);
-    // const children = lodash.get(component, 'children', lodash.get(component, 'options.children', lodash.filter(childrenPage, x => lodash.includes(x, `${path}/children`)).map(x => getRoute(x, childrenPage))))
     const route = {
       name,
       path,
       component: this.getComponent(item),
-      // 组件 静态属性 meta 或者 options.meta
-      // meta: lodash.get(component, 'meta', lodash.get(component, 'options.meta')),
       exact: true,
-      // children
     }
-    // 子路由
-    // if (children && children.length > 0) {
-    //   lodash.unset(route, 'name')
-    // }
-    // 守卫
-    // if (beforeEnter) {
-    //   route.beforeEnter = beforeEnter;
-    // } else if (validate) {
-    //   // 添加校验参数
-    //   route.beforeEnter = async (to, from, next) => {
-    //     if (await validate(to)) {
-    //       next()
-    //     } else {
-    //       // next('/404')
-    //       // message.warning({ content: `缺少参数 ${store.$global.dev && to.name}` });
-    //       console.warn("LENG:", to)
-    //       next('/')
-    //     }
-    //   };
-    // }
-
     return route
   }
   getComponent(item) {
     const component = this.PageFiles(item);
-    console.log("LENG ~ Router ~ getComponent ~ component", component)
     return component.default
   }
   /**
@@ -100,4 +143,4 @@ class Router {
     return file.replace('/index.vue', '').replace(/_/g, ':').replace(/\./g, '') || '/'
   }
 }
-export default new Router()
+export default new AppRouter()
