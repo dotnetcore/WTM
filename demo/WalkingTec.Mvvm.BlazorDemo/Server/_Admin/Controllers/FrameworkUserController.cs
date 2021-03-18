@@ -15,17 +15,15 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("MenuKey.UserManagement")]
     [ApiController]
     [Route("api/_FrameworkUserBase")]
-    [Public]
     public class FrameworkUserController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(FrameworkUserSearcher searcher)
+        public string Search(FrameworkUserSearcher searcher)
         {
             var vm = Wtm.CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
-            vm.DoSearch();
-            return Ok(new { Data = vm.EntityList, Count = vm.Searcher.Count, PageCount = vm.Searcher.PageCount, Page = vm.Searcher.Page, Msg = vm.MSD.GetFirstError(), Code = 200 });
+            return vm.GetJson();
         }
 
         [ActionDescription("Sys.Get")]

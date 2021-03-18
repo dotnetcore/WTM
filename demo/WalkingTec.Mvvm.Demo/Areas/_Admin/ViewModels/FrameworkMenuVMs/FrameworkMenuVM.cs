@@ -125,7 +125,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             Entity.Icon = $"{IconFont} {IconFontItem}";
             FC.Add("Entity.Icon", " ");
-            List<Guid> guids = new List<Guid>();
             if (Entity.IsInside == false)
             {
                 if (Entity.Url != null && Entity.Url != ""  && Entity.Url.StartsWith("/") == false)
@@ -180,10 +179,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             {
                                 aid = adb.ID;
                             }
-                            else
-                            {
-                                guids.Add(aid);
-                            }
                             var menu = new FrameworkMenu();
                             menu.FolderOnly = false;
                             menu.IsPublic = false;
@@ -216,6 +211,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
             FC.Add("Entity.ModuleName",0);
             base.DoEdit();
+            List<Guid> guids = new List<Guid>();
+            guids.Add(Entity.ID);
+            if (Entity.Children != null)
+            {
+                guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
+            }
             AddPrivilege(guids);
         }
 

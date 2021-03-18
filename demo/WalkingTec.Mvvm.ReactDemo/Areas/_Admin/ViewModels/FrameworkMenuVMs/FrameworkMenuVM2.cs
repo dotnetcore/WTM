@@ -64,7 +64,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override void DoEdit(bool updateAllFields = false)
         {
-            List<Guid> guids = new List<Guid>();
             if (Entity.IsInside == false)
             {
                 if (Entity.Url != null && Entity.Url != "")
@@ -116,10 +115,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             {
                                 aid = adb.ID;
                             }
-                            else
-                            {
-                                guids.Add(aid);
-                            }
                             FrameworkMenu menu = new FrameworkMenu();
                             menu.FolderOnly = false;
                             menu.IsPublic = false;
@@ -147,11 +142,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     Entity.Url = null;
                 }
             }
-            if(FC.ContainsKey("Entity.Children") == false)
+            if (FC.ContainsKey("Entity.Children") == false)
             {
                 FC.Add("Entity.Children", 0);
             }
             base.DoEdit(updateAllFields);
+            List<Guid> guids = new List<Guid>();
+            guids.Add(Entity.ID);
+            if (Entity.Children != null)
+            {
+                guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
+            }
             AddPrivilege(guids);
         }
 
