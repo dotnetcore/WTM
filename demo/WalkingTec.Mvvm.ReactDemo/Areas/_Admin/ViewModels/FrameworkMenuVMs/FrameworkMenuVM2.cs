@@ -48,6 +48,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
+                if (string.IsNullOrEmpty(SelectedModule) == true)
+                {
+                    MSD.AddModelError("SelectedModule", Localizer["Validate.{0}required", Localizer["_Admin.Module"]]);
+                }
                 var modules = Wtm.GlobaInfo.AllModule;
                 var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)

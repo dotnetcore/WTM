@@ -14,15 +14,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
     {
         [Display(Name = "名称")]
         public ExcelPropety Name_Excel = ExcelPropety.CreateProperty<City>(x => x.Name);
-        [Display(Name = "test")]
-        public ExcelPropety Test_Excel = ExcelPropety.CreateProperty<City>(x => x.Test);
-        [Display(Name = "_Admin.Parent")]
-        public ExcelPropety Parent_Excel = ExcelPropety.CreateProperty<City>(x => x.ParentId);
+        [Display(Name = "二级")]
+        public ExcelPropety sub1 = ExcelPropety.CreateProperty<City>(x => x.Children[0].Name);
 
-	    protected override void InitVM()
+        protected override void InitVM()
         {
-            Parent_Excel.DataType = ColumnDataType.ComboBox;
-            Parent_Excel.ListItems = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

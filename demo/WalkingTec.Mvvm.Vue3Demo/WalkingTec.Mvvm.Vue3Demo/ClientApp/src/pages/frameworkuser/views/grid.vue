@@ -16,7 +16,13 @@ import RowAction from "./action.vue";
 export default class extends Vue {
   @Inject() PageController: PageController;
   onText() {
-    this.PageController.Pagination.onSet([{ ITCode: 123, Name: "测试" }]);
+    this.PageController.Pagination.onSet([
+      { ITCode: 123, Name: "测试" },
+      { ITCode: 12, Name: "测试" },
+      { ITCode: 3, Name: "测试" },
+      { ITCode: 4, Name: "测试" },
+      { ITCode: 5, Name: "测试" },
+      ]);
   }
   columnDefs: (ColDef | ColGroupDef)[] = [
     {
@@ -57,7 +63,6 @@ export default class extends Vue {
   }
   created() {
     this.onText();
-    console.log("LENG ~ extends ~ created ~ this", this);
   }
 }
 </script>

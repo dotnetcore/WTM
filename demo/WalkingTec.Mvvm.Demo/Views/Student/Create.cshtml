@@ -1,21 +1,21 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
+@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
-<wt:row items-per-row="ItemsPerRowEnum.Two">
-<wt:textbox field="Entity.ID" />
-<wt:textbox field="Entity.Password" />
-<wt:textbox field="Entity.Email" />
-<wt:textbox field="Entity.Name" />
-<wt:combobox field="Entity.Sex" />
-<wt:textbox field="Entity.CellPhone" />
-<wt:textbox field="Entity.Address" />
-<wt:textbox field="Entity.ZipCode" />
-<wt:upload field="Entity.PhotoId" />
-<wt:switch field="Entity.IsValid" />
-<wt:datetime field="Entity.EnRollDate" />
-<wt:checkbox field="SelectedStudentMajorIDs" items="AllStudentMajors"/>
-</wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:textbox field="Entity.ID" />
+    <wt:textbox field="Entity.Password" />
+    <wt:textbox field="Entity.Email" />
+    <wt:textbox field="Entity.Name" />
+    <wt:combobox field="Entity.Sex" />
+    <wt:textbox field="Entity.CellPhone" />
+    <wt:textbox field="Entity.Address" />
+    <wt:textbox field="Entity.ZipCode" />
+    <wt:upload field="Entity.PhotoId" />
+    <wt:switch field="Entity.IsValid" />
+    <wt:datetime field="Entity.EnRollDate" />
+    <wt:checkbox field="Entity.StudentMajor[0].MajorId" items="AllStudentMajors" />
+  </wt:row>
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />

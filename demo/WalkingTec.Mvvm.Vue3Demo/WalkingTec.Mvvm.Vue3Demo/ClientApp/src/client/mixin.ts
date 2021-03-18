@@ -1,6 +1,7 @@
 import { ComponentOptions, defineComponent } from "vue"
 import lodash from "lodash"
 import $WtmConfig, { WtmConfig } from './config';
+import { NavigationFailure } from "vue-router";
 const options: ComponentOptions = {
     data: function () {
         return {}
@@ -34,11 +35,23 @@ const options: ComponentOptions = {
          */
         __wtmToRowAction(action, PageController) {
             return defineComponent({
+                // extends action组件 class 组件取 __c
                 extends: lodash.get(action, "__c", action),
                 data() {
                     return { PageController }
                 }
             })
+        },
+        /**
+         * 记录 参数 到 url query
+         * @param values 
+         */
+        __wtmToQuery(values) {
+            const query = lodash.pickBy(
+                lodash.assign({}, this.$route.query, values),
+                this.lodash.identity
+            );
+            return this.$router.replace({ query });
         }
     },
 }
@@ -49,19 +62,25 @@ declare module '@vue/runtime-core' {
          * 合并当前页面的 query 追加 detailsVisible 触发显示
          * @param {*} [query]
          */
-         __wtmToDetails: (query: any) => void
+        __wtmToDetails: (query: any) => void
         /**
          * 详情返回
          * 去除当前页面的 query 中 detailsVisible 触发隐藏
          */
-         __wtmBackDetails: () => void
+        __wtmBackDetails: () => void
         /**
          * 将组件转换为 row 组件
          * @param action  row 组件
          * @param PageController 页面控制器
          * @returns 
          */
-         __wtmToRowAction: (action, PageController) => any
+        __wtmToRowAction: (action, PageController) => any
+        /**
+         * 记录 参数 到 url query
+         * $router.replace
+         * @param values 
+         */
+        __wtmToQuery: (values) => Promise<void | NavigationFailure>
     }
 }
 

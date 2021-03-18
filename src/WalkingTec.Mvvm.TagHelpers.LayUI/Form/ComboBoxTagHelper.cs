@@ -111,7 +111,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var contentBuilder = new StringBuilder();
             if (string.IsNullOrEmpty(EmptyText) == false)
             {
-                contentBuilder.Append($"<option value=''>{(Disabled == true ? "" : EmptyText)}</option>");
+                contentBuilder.Append($"<option value=''>{EmptyText}</option>");
             }
 
             output.PostElement.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
@@ -234,7 +234,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                     else
                     {
-                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")} {(Disabled && listItems.Count > 1 && Field.Model != null ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")} {(item.Disabled==true ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
                     }
                 }
             }

@@ -1,6 +1,5 @@
-import { observable, action } from "mobx";
 import * as WTM from "@/client";
-export * from './entity'
+export * from './entity';
 export class PageController extends WTM.ControllerBasics {
     constructor() {
         super(null)

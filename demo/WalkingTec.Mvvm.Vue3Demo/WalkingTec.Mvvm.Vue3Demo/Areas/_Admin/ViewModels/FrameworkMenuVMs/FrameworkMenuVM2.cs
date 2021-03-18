@@ -48,11 +48,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
-                var modules = Wtm.GlobaInfo.AllModule;
-                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
-                if (test != null)
+                if (string.IsNullOrEmpty(SelectedModule) == true)
                 {
-                    MSD.AddModelError(" error", Localizer["_Admin.ModuleHasSet"]);
+                    MSD.AddModelError("SelectedModule", Localizer["Validate.{0}required", Localizer["_Admin.Module"]]);
+                }
+                else
+                {
+                    var modules = Wtm.GlobaInfo.AllModule;
+                    var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
+                    if (test != null)
+                    {
+                        MSD.AddModelError(" error", Localizer["_Admin.ModuleHasSet"]);
+                    }
                 }
             }
             base.Validate();
@@ -82,11 +89,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
             else
             {
-                if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
-                {
-                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
-                    return;
-                }
 
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
@@ -177,11 +179,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             else
             {
 
-                if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
-                {
-                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
-                    return;
-                }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = Wtm.GlobaInfo.AllModule;

@@ -68,10 +68,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 jsonOptions.PropertyNamingPolicy = null;
                 jsonOptions.IgnoreNullValues = true;
                 jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+                jsonOptions.AllowTrailingCommas = true;
                 jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
                 jsonOptions.Converters.Add(new JsonStringEnumConverter());
                 jsonOptions.Converters.Add(new DateRangeConverter());
                 jsonOptions.Converters.Add(new PocoConverter());
+                jsonOptions.Converters.Add(new TypeConverter());
+                jsonOptions.Converters.Add(new DynamicDataConverter());
                 if (res.IsSuccessStatusCode == true)
                 {
                     Type dt = typeof(T);

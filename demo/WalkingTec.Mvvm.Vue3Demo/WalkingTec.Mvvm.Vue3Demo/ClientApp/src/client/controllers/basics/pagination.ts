@@ -219,17 +219,14 @@ export class Pagination<T = any> {
         }
     }
     @action
-    onCurrentChange(current?: number, body?, pageSize?: number) {
-        // console.log("LENG ~ Pagination<T> ~ onCurrentChange ~ body", body)
+    onCurrentChange(params: { current?: number, pageSize?: number, body?}, loading = true) {
+        const { body, current, pageSize } = params
         if (lodash.isNumber(current) || lodash.isString(current)) {
             this.current = lodash.toInteger(current);
-        } else {
-            this.current += 1;
         }
-        if (pageSize) {
+        if (lodash.isNumber(pageSize) || lodash.isString(pageSize)) {
             this.pageSize = lodash.toInteger(pageSize)
         }
-        // console.log("LENG: Pagination<T> -> onCurrentChange -> current", this.current)
         return this.onLoading(body || this.oldBody)
     }
     /**

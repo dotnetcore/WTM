@@ -9,11 +9,11 @@ namespace WalkingTec.Mvvm.Core
 {
     public class DynamicData : DynamicObject
     {
-        private Dictionary<string, object> Fields = new Dictionary<string, object>();
+        public Dictionary<string, object> Fields = new Dictionary<string, object>();
 
         public int Count { get { return Fields.Keys.Count; } }
 
-        public void Add(string name, string val = null)
+        public void Add(string name, object val = null)
         {
             if (!Fields.ContainsKey(name))
             {
