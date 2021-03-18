@@ -81,6 +81,7 @@ namespace WalkingTec.Mvvm.Core
     /// <typeparam name="TModel">继承TopBasePoco的类</typeparam>
     public class BaseCRUDVM<TModel> : BaseVM, IBaseCRUDVM<TModel> where TModel : TopBasePoco,new()
     {
+        [ValidateComplexType]
         public TModel Entity { get; set; }
         [JsonIgnore]
         public bool ByPassBaseValidation { get; set; }

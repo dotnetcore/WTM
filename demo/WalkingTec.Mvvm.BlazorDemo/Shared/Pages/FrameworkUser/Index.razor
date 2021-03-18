@@ -62,9 +62,12 @@
         searchTable.QueryAsync();
     }
 
-    private Task OnCreateClick(IEnumerable<FrameworkUser_View> items)
+    private async Task OnCreateClick(IEnumerable<FrameworkUser_View> items)
     {
-        return WtmBlazor.Dialog.ShowDialog<Create>(WtmBlazor.Localizer["Sys.Create"]);
+        if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"]) == DialogResult.Yes)
+        {
+            await searchTable.QueryAsync();
+        }
     }
 
 

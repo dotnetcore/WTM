@@ -3,47 +3,26 @@
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 @inject IStringLocalizer Localizer;
 @inject ApiClient api
-
-<ValidateForm Model="@SearchModel" OnValidSubmit="@Submit">
-    <BootstrapInput @bind-Value="@SearchModel.ITCode" />
-    <BootstrapInput @bind-Value="@SearchModel.ActionUrl" />
-    <MultiSelect @bind-Value="@SearchModel.LogType" />
-    <Button ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="提交" />
-</ValidateForm>
-
-<Table @ref="searchTable" TItem="ActionLog" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true"
-       ShowToolbar="true" ShowSearch="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false">
-    <TableColumns>
-        <TableColumn @bind-Field="@context.ITCode" Width="180" />
-        <TableColumn @bind-Field="@context.LogType" />
-        <TableColumn @bind-Field="@context.ModuleName" Sortable="true" />
-        <TableColumn @bind-Field="@context.ActionName" />
-        <TableColumn @bind-Field="@context.ActionUrl" />
-        <TableColumn @bind-Field="@context.Duration" />
-    </TableColumns>
-    <RowButtonTemplate>
-        <div style="padding-right:10px;">
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Primary" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="明细" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="编辑" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="权限" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="ActionLog" Item="@context" Icon="fa fa-edit" Text="审批" />
-        </div>
-    </RowButtonTemplate>
-</Table>
+@inject DialogService ds
+<Button @onclick="@Show">Dialog</Button>
 
 @code{
 
     private ActionLogSearcher SearchModel = new ActionLogSearcher();
     private Table<ActionLog> searchTable;
 
-    private async Task<QueryData<ActionLog>> OnSearch(QueryPageOptions opts)
-    {
-        return await api.CallSearchApi<ActionLog>("/api/_actionlog/search", SearchModel, opts);
-    }
-
-    private async Task Submit(EditContext context)
-    {
-        await searchTable.QueryAsync();
-    }
+        private async Task Show()
+        {
+            var option = new DialogOption()
+            {
+                Title = "利用代码关闭弹出框",
+            };
+            option.BodyTemplate = DynamicComponent.CreateComponent<Button>(new KeyValuePair<string, object>[]
+            {
+                new KeyValuePair<string, object>(nameof(Button.Text), "点击关闭弹窗"),
+                new KeyValuePair<string, object>(nameof(Button.OnClick), EventCallback.Factory.Create<MouseEventArgs>(this, async () => await option.Dialog.Close()))
+            }).Render();
+            await ds.Show(option);
+        }
 
 }
