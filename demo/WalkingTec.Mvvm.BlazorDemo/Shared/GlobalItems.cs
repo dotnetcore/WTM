@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BootstrapBlazor.Components;
 using Microsoft.Extensions.Localization;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared
 {

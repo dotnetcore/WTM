@@ -250,6 +250,29 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
             return data;
 
         }
+
+        public async Task<List<SelectedItem>> CallItemsApi(string url, HttpMethodEnum method = HttpMethodEnum.GET, object postdata=null, int? timeout = null, string proxy = null)
+        {
+            var result = await CallAPI<List<ComboSelectListItem>>(url, method, postdata, timeout, proxy);
+            List<SelectedItem> rv = new List<SelectedItem>();
+            if(result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                if (result.Data != null)
+                {
+                    foreach (var item in result.Data)
+                    {
+                        rv.Add(new SelectedItem
+                        {
+                            Text = item.Text,
+                            Value = item.Value.ToString(),
+                            Active = item.Selected
+                        });
+                    }
+                }
+            }
+            return rv;
+        }
+
     }
 
     public class WtmApiResult<T>

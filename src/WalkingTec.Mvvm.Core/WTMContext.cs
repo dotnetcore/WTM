@@ -362,7 +362,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 cs = "default";
             }
-            var rv = ConfigInfo.Connections.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
+            var rv = ConfigInfo.Connections.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault().CreateDC();
             rv.IsDebug = ConfigInfo.IsQuickDebug;
             rv.SetLoggerFactory(_loggerFactory);
             return rv;

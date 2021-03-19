@@ -12,7 +12,7 @@ namespace WtmBlazorControls
 {
     public static class DialogExtensions
     {
-        public static async Task ShowDialog<T>(this DialogService self, string Title, Expression<Func<T, object>> Values = null)
+        public static void  ShowDialog<T>(this DialogService self, string Title, Expression<Func<T, object>> Values = null)
         {
             SetValuesParser p = new SetValuesParser();
             DialogOption option = new DialogOption
@@ -27,7 +27,7 @@ namespace WtmBlazorControls
                 builder.AddMultipleAttributes(2, p.Parse(Values));
                 try
                 {
-                    builder.AddAttribute(3, "OnCloseDialog", EventCallback.Factory.Create(self, () =>
+                    builder.AddAttribute(3, "OnCloseDialog", new Action(() =>
                     {
                         option.Dialog!.Close();
                     }));
@@ -36,7 +36,7 @@ namespace WtmBlazorControls
                 builder.SetKey(Guid.NewGuid());
                 builder.CloseComponent();
             };
-            await self.Show(option);
+            self.Show(option);
         }
     }
 }
