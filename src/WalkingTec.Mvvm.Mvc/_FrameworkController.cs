@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
@@ -346,7 +347,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [ActionDescription("GetFile")]
-        public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
+        public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
             var file = fp.GetFile(id, true, ConfigInfo.CreateDC(_DONOT_USE_CS));
             if (file == null)
@@ -406,7 +407,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 else
                 {
-                    rv.CopyToAsync(Response.Body);
+                    await rv.CopyToAsync(Response.Body);
                     rv.Dispose();
                     return new EmptyResult();
                 }
