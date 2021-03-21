@@ -554,6 +554,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 }
                 rv = rv.Replace("$other$", other.ToString());
+                rv = GetRelatedNamespace(pros, rv);
             }
             return rv;
         }
@@ -1116,12 +1117,13 @@ namespace WalkingTec.Mvvm.Mvc
                 string linkedpros = "";
                 string linkedfc = "";
                 string meassert = "";
+                List<Type> addexist = new List<Type>();
                 foreach (var pro in modelprops)
                 {
                     if (pro.Value == "$fk$")
                     {
                         var fktype = modelType.GetSingleProperty(pro.Key.Substring(0, pro.Key.Length - 2))?.PropertyType;
-                        add += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
+                        add += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype, addexist);
                     }
                 }
 
@@ -1210,12 +1212,23 @@ namespace WalkingTec.Mvvm.Mvc
                 rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros)
                     .Replace("$assert$", assert).Replace("$eassert$", eassert).Replace("$fc$", fc).Replace("$add$", add).Replace("$del$", del).Replace("$mdel$", mdel)
                     .Replace("$linkedpros$", linkedpros).Replace("$linkedfc$", linkedfc).Replace("$meassert$", meassert);
+
+                rv = GetRelatedNamespace(FieldInfos.Where(x=>string.IsNullOrEmpty( x.RelatedField) == false).ToList(), rv);
             }
             return rv;
         }
 
-        private string GenerateAddFKModel(string keyname, Type t)
+        private string GenerateAddFKModel(string keyname, Type t, List<Type> exist)
         {
+            if(exist == null)
+            {
+                exist = new List<Type>();
+            }
+            if(exist.Contains(t) == true)
+            {
+                return "";
+            }
+            exist.Add(t);
             var modelprops = t.GetRandomValues();
             var mname = t.Name?.Split(',').FirstOrDefault()?.Split('.').LastOrDefault() ?? "";
             string cpros = "";
@@ -1227,7 +1240,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var fktype = t.GetSingleProperty(pro.Key.Substring(0, pro.Key.Length - 2))?.PropertyType;
                     if (fktype != t)
                     {
-                        rv += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
+                        rv += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype, exist);
                     }
                 }
             }
@@ -2091,7 +2104,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     prons = proType.GetGenericArguments()[0].Namespace;
                 }
-                if (s.Contains($"using {prons}") == false && otherns.Contains($"using {prons}") == false)
+                if (s.Contains($"using {prons};") == false && otherns.Contains($"using {prons};") == false)
                 {
                     otherns += $@"using {prons};
 ";
