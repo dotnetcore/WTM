@@ -155,6 +155,13 @@ namespace WalkingTec.Mvvm.Mvc
                             view.FieldDes += $"({MvcProgram._localizer["Codegen.OneToMany"]})";
                         }
                         view.LinkedType = checktype.AssemblyQualifiedName;
+                        if (fk != null)
+                        {
+                            if (modeltype.GetSingleProperty(fk) == null)
+                            {
+                                view.FieldDes = $"<font color='#ff0000'>(Error:Can't find {fk.Replace("ID","Id")} in {checktype.Name})</font>";
+                            }
+                        }
                     }
                     if (checktype.IsList())
                     {
@@ -184,6 +191,9 @@ namespace WalkingTec.Mvvm.Mvc
                                         var fk = DC.GetFKName2(checktype, spro.Name);
                                         view.SubIdField = fk;
                                         show = true;
+                                        if(checktype.GetSingleProperty(fk) == null) {
+                                            view.FieldDes = $"<font color='#ff0000'>(Error:Can't find {fk.Replace("ID", "Id")} in {checktype.Name})</font>";
+                                        }
                                     }
                                 }
                             }

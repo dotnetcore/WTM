@@ -290,24 +290,27 @@ namespace WalkingTec.Mvvm.Core
         public static bool IsPropertyRequired(this MemberInfo pi)
         {
             bool isRequired = false;
-            //如果需要显示星号，则判断是否是必填项，如果是必填则在内容后面加上星号
-            //所有int，float。。。这种Primitive类型的，肯定都是必填
-            Type t = pi.GetMemberType();
-            if (t != null && (t.IsPrimitive() || t.IsEnum() || t == typeof(decimal) || t == typeof(Guid)))
+            if (pi != null)
             {
-                isRequired = true;
-            }
-            else
-            {
-                var test = pi.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault();
-                //对于其他类，检查是否有RequiredAttribute，如果有就是必填
-                if (pi.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault() is RequiredAttribute required && required.AllowEmptyStrings == false)
+                //如果需要显示星号，则判断是否是必填项，如果是必填则在内容后面加上星号
+                //所有int，float。。。这种Primitive类型的，肯定都是必填
+                Type t = pi.GetMemberType();
+                if (t != null && (t.IsPrimitive() || t.IsEnum() || t == typeof(decimal) || t == typeof(Guid)))
                 {
                     isRequired = true;
                 }
-                else if (pi.GetCustomAttributes(typeof(KeyAttribute), false).FirstOrDefault() != null)
+                else
                 {
-                    isRequired = true;
+                    var test = pi.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault();
+                    //对于其他类，检查是否有RequiredAttribute，如果有就是必填
+                    if (pi.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault() is RequiredAttribute required && required.AllowEmptyStrings == false)
+                    {
+                        isRequired = true;
+                    }
+                    else if (pi.GetCustomAttributes(typeof(KeyAttribute), false).FirstOrDefault() != null)
+                    {
+                        isRequired = true;
+                    }
                 }
             }
             return isRequired;
@@ -523,13 +526,16 @@ namespace WalkingTec.Mvvm.Core
         public static Type GetMemberType(this MemberInfo mi)
         {
             Type rv = null;
-            if (mi.MemberType == MemberTypes.Property)
+            if (mi != null)
             {
-                rv = ((PropertyInfo)mi).PropertyType;
-            }
-            else if (mi.MemberType == MemberTypes.Field)
-            {
-                rv = ((FieldInfo)mi).FieldType;
+                if (mi.MemberType == MemberTypes.Property)
+                {
+                    rv = ((PropertyInfo)mi).PropertyType;
+                }
+                else if (mi.MemberType == MemberTypes.Field)
+                {
+                    rv = ((FieldInfo)mi).FieldType;
+                }
             }
             return rv;
         }
