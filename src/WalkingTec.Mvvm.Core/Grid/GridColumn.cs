@@ -405,13 +405,24 @@ namespace WalkingTec.Mvvm.Core
                 {
                     rv = "";
                 }
-                else if (col is DateTime dateTime)
+                else if (col is DateTime || col is DateTime?)
                 {
-                    rv = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
-                }
-                else if (col != null && col is DateTime?)
-                {
-                    rv = (col as DateTime?).Value.ToString("yyyy-MM-dd HH:mm:ss");
+                    var datevalue = col as DateTime?;
+                    if(datevalue != null)
+                    {
+                        if (datevalue.Value.Hour == 0 && datevalue.Value.Minute == 0 && datevalue.Value.Second == 0)
+                        {
+                            rv = datevalue.Value.ToString("yyyy-MM-dd");
+                        }
+                        else
+                        {
+                            rv = datevalue.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                        }
+                    }
+                    else
+                    {
+                        rv = "";
+                    }
                 }
                 else if (col.GetType().IsEnumOrNullableEnum())
                 {
