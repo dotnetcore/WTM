@@ -112,7 +112,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                     if (string.IsNullOrEmpty(fileName) == false)
                     {
                         var dotPos = fileName.LastIndexOf('.');
-                        ext = fileName.Substring(dotPos + 1);
+                        ext = fileName[(dotPos + 1)..];
                     }
                     file.FileExt = ext;
                     file.Path = rv.path;

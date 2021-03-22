@@ -44,10 +44,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 sb.Append(self.GetSingleDataJson(sou, returnColumnObject, x));
                 if (x < el.Count - 1)
                 {
-                    sb.Append(",");
+                    sb.Append(',');
                 }
             }
-            return $"[{sb.ToString()}]";
+            return $"[{sb}]";
         }
 
         private static string GetFormatResult(BaseVM vm, ColumnFormatInfo info)
@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var sb = new StringBuilder();
             var RowBgColor = string.Empty;
             var RowColor = string.Empty;
-            if (!(obj is T sou))
+            if (obj is not T sou)
             {
                 sou = self.CreateEmptyEntity();
             }
@@ -116,7 +116,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             RowColor = self.SetFullRowColor(sou);
             var isSelected = self.GetIsSelected(sou);
             //循环所有列
-            sb.Append("{");
+            sb.Append('{');
             bool containsID = false;
             bool addHiddenID = false;
             Dictionary<string, (string, string)> colorcolumns = new Dictionary<string, (string, string)>();
@@ -163,7 +163,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     if (col.Field?.ToLower() == "children" && typeof(IEnumerable<T>).IsAssignableFrom(ptype))
                     {
                         var children = ((IEnumerable<T>)col.GetObject(obj))?.ToList();
-                        if (children == null || children.Count() == 0)
+                        if (children == null || children.Count == 0)
                         {
                             continue;
                         }
@@ -274,7 +274,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 html = (self as BaseVM).UIService.MakeTextBox(name, val);
                                 break;
                             case EditTypeEnum.CheckBox:
-                                bool.TryParse(val, out bool nb);
+                                _ = bool.TryParse(val, out bool nb);
                                 html = (self as BaseVM).UIService.MakeCheckBox(nb, null, name, "true");
                                 break;
                             case EditTypeEnum.ComboBox:
@@ -294,7 +294,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         html = "\"" + html.Replace(Environment.NewLine, "").Replace("\t", string.Empty).Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     }
                     sb.Append(html);
-                    sb.Append(",");
+                    sb.Append(',');
                 }
             }
             sb.Append($"\"TempIsSelected\":\"{ (isSelected == true ? "1" : "0") }\"");
@@ -326,7 +326,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             // 标识当前行数据是否被选中
             sb.Append($@",""LAY_CHECKED"":{sou.Checked.ToString().ToLower()}");
             sb.Append(string.Empty);
-            sb.Append("}");
+            sb.Append('}');
             return sb.ToString();
         }
 

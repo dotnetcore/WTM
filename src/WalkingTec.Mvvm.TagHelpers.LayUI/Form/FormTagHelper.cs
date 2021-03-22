@@ -56,8 +56,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var baseVM = Vm?.Model as BaseVM;
-            if (baseVM == null)
+            if (Vm?.Model is not BaseVM baseVM)
             {
                 output.TagName = "div";
                 output.TagMode = TagMode.StartTagAndEndTag;

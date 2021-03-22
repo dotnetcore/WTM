@@ -216,11 +216,11 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
 
-            for (int i = 0; i < lv.Count(); i++)
+            for (int i = 0; i < lv.Count; i++)
             {
                 if (ignoreField.Contains(lv[i].FieldName))
                 {
-                    for(int j = i; j < lv.Count(); j++)
+                    for(int j = i; j < lv.Count; j++)
                     {
                         lv[j].Index--;
                     }

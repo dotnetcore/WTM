@@ -6,15 +6,17 @@ using WalkingTec.Mvvm.Core.Extensions;
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
     [HtmlTargetElement("wt:image", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class ImageTagHelper : BaseElementTag
+    public class ImageTagHelper : BaseFieldTag
     {
-        protected const string REQUIRED_ATTR_NAME = "field";
-        public ModelExpression Field { get; set; }
 
         public string Url { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            if(HideLabel == null)
+            {
+                HideLabel = true;
+            }
             BaseVM vm = null;
             if (context.Items.TryGetValue("model", out object baseVM))
             {
