@@ -1,15 +1,14 @@
 <template>
-  <route-context-provider :value="provider">
-    <pro-layout
-      v-bind="state"
-      @select="onSelect"
-      @openKeys="onOpenKeys"
-      @collapse="onCollapse"
-    >
-      <template v-slot:rightContentRender>
-        <RightContentRender />
-      </template>
-      <!-- <PageContainer
+  <pro-layout
+    v-bind="provider"
+    @select="onSelect"
+    @openKeys="onOpenKeys"
+    @collapse="onCollapse"
+  >
+    <template v-slot:rightContentRender>
+      <RightContentRender />
+    </template>
+    <!-- <PageContainer
         :fixedHeader="true"
         :title="false"
         :tabList="[
@@ -22,97 +21,86 @@
         }"
         :affixProps="{ offsetTop: 100 }"
       > -->
-      <Tabs />
-      <Container />
-      <!-- </PageContainer> -->
-    </pro-layout>
-  </route-context-provider>
+    <Tabs />
+    <Container />
+    <!-- </PageContainer> -->
+  </pro-layout>
 </template>
 <script lang="ts">
 import { Vue, Options } from "vue-property-decorator";
 import { h } from "vue";
-import { createRouteContext } from "@ant-design-vue/pro-layout";
 import RightContentRender from "./rightContentRender.vue";
 import Container from "./container.vue";
 import Tabs from "./tabs.vue";
-
-const [RouteContextProvider] = createRouteContext();
-// Component definition
 @Options({
-  components: { RouteContextProvider, RightContentRender, Container, Tabs },
+  components: { RightContentRender, Container, Tabs }
 })
 export default class extends Vue {
   provider = {
     menuData: this.menuData,
     headerHeight: 48,
     sideWidth: 208,
-    openKeys: [],
-    selectedKeys: [],
-    isMobile: false,
-    hasFooterToolbar: false,
-    hasSideMenu: true,
-    hasHeader: true,
-    fixSiderbar: true,
-    fixedHeader: true,
-    setHasFooterToolbar: (has) => {
-      this.provider.hasFooterToolbar = has;
-    },
-  };
-  state = {
-    // layout:'top',
+    // layout: "top",
     title: "暄桐小程序",
     collapsed: false,
     fixSiderbar: true,
     fixedHeader: true,
-    locale: (key) => {
+    openKeys: [],
+    selectedKeys: [],
+    locale: key => {
       console.log("LENG ~ extends ~ key", key);
       return key;
     },
-    // menuItemRender: (props) => null,
-    // headerContentRender: (props) => h(headerContentRender),
+    isMobile: false,
+    hasFooterToolbar: false,
+    hasSideMenu: true,
+    hasHeader: true,
+    setHasFooterToolbar: has => {
+      this.provider.hasFooterToolbar = has;
+    }
   };
   get menuData() {
     return [
       {
         path: "/a",
         name: "a",
-        meta: { icon: "SaveOutlined", title: "测试页面" },
+        meta: { icon: "SaveOutlined", title: "测试页面", target: "a" },
         children: [
           {
             path: "/frameworkuser",
             name: "frameworkuser",
-            meta: { icon: "SaveOutlined", title: "测试用户" },
+            meta: { icon: "SaveOutlined", title: "测试用户" }
           },
           {
             path: "/test",
             name: "test",
-            meta: { icon: "SaveOutlined", title: "Dashboard" },
-          },
-        ],
+            meta: { icon: "SaveOutlined", title: "Dashboard" }
+          }
+        ]
       },
       {
         path: "/b",
         name: "b",
-        meta: { icon: "SaveOutlined", title: "测试页面" },
+        meta: { icon: "SaveOutlined", title: "测试页面", target: "a" },
         children: [
           {
             path: "/frameworkuser2",
             // name: "frameworkuser2",
-            meta: { icon: "SaveOutlined", title: "测试用户" },
+            meta: { icon: "SaveOutlined", title: "测试用户" }
           },
           {
             path: "/test3",
             // name: "test3",
-            meta: { icon: "SaveOutlined", title: "Dashboard" },
-          },
-        ],
-      },
+            meta: { icon: "SaveOutlined", title: "Dashboard" }
+          }
+        ]
+      }
     ];
   }
   created() {}
   mounted() {}
   onCollapse(collapsed) {
-    this.state.collapsed = collapsed;
+    this.provider.collapsed = collapsed;
   }
   onSelect(event) {
     this.provider.selectedKeys = event;

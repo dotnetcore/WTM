@@ -1,5 +1,5 @@
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
-const PrerenderSPAPlugin = require('prerender-spa-plugin')
+    // const PrerenderSPAPlugin = require('prerender-spa-plugin')    "prerender-spa-plugin": "^3.4.0",
 const CopyPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 const lodash = require('lodash');
@@ -118,7 +118,7 @@ module.exports = (port, env) => {
   }
   // 路由
   if (process.env.NODE_ENV === 'production') {
-    config.configureWebpack.plugins.push(new PrerenderSPAPlugin({ staticDir: path.join(__dirname, env.config.dir), routes: routerAuto('./src/pages', true) }))
+    // config.configureWebpack.plugins.push(new PrerenderSPAPlugin({ staticDir: path.join(__dirname, env.config.dir), routes: routerAuto('./src/pages', true) }))
   }
   return config
 

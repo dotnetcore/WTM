@@ -116,7 +116,7 @@ export default class extends Vue {
   onReckon() {
     // console.dir(this.gridContent);
     let height = 500;
-    height = window.innerHeight - this.gridContent.offsetTop - 120;
+    height = window.innerHeight - this.gridContent.offsetTop - 125;
     this.style.height = height + "px";
   }
   @Watch("Pagination.loading")
