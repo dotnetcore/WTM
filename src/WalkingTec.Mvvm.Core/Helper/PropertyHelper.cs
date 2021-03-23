@@ -16,6 +16,29 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public static class PropertyHelper
     {
+
+        public static Func<object,object> GetPropertyExpression(Type objtype, string property)
+        {
+            property = Regex.Replace(property, @"\[[^\]]*\]", string.Empty);
+            List<string> level = new List<string>();
+            if (property.Contains('.'))
+            {
+                level.AddRange(property.Split('.'));
+            }
+            else
+            {
+                level.Add(property);
+            }
+
+            var pe = Expression.Parameter(objtype);
+            var member = Expression.Property(pe, objtype.GetSingleProperty(level[0]));
+            for (int i = 1; i < level.Count; i++)
+            {
+                member = Expression.Property(member, member.Type.GetSingleProperty(level[i]));
+            }
+            return Expression.Lambda<Func<object, object>>(member, pe).Compile();
+        }
+
         /// <summary>
         /// 获取属性名
         /// </summary>

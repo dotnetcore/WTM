@@ -1,6 +1,6 @@
 @page "/login"
 @using  WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
-@inject ApiClient api
+@inherits BasePage
 @layout EmptyLayout
 
 <ValidateForm Model="@Model" OnValidSubmit="@Submit">
@@ -9,10 +9,23 @@
     <Button ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="提交" />
 </ValidateForm>
 @code {
+    [Parameter]
+    public bool? LoginSuccess { get; set; }
+    [Parameter]
+    public EventCallback<bool?> LoginSuccessChanged { get; set; }
     private LoginVM Model = new LoginVM();
     private async Task Submit(EditContext context)
     {
-        var test = await api.CallAPI("/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = Model.ITCode, Password = Model.Password });
-        int a = 0;
+        var rv = await WtmBlazor.Api.CallAPI<DynamicData>("/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = Model.ITCode, Password = Model.Password });
+        if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            var token = rv.Data.Fields["access_token"].ToString();
+            await SetToken(token);
+            await LoginSuccessChanged.InvokeAsync(true);
+        }
+        else
+        {
+            
+        }
     }
 }
