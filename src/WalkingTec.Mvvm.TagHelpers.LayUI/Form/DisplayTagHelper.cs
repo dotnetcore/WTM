@@ -34,8 +34,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.TagMode = TagMode.StartTagAndEndTag;
                     output.Attributes.Add("class", "layui-btn layui-btn-primary layui-btn-xs");
                     output.Attributes.Add("style", "margin:9px 0;width:unset");
-                    var vm = context.Items["model"] as BaseVM;
-                    if (vm != null)
+                    if (context.Items["model"] is BaseVM vm)
                     {
                         output.Attributes.Add("href", $"/_Framework/GetFile/{Field.Model}?_DONOT_USE_CS={vm.CurrentCS}");
                     }
@@ -69,13 +68,24 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                     else if (Field.Model.GetType() == typeof(DateTime) || Field.Model.GetType() == typeof(DateTime?))
                     {
-                        if (string.IsNullOrEmpty(Format))
+                        var datevalue = Field.Model as DateTime?;
+                        if (datevalue != null)
                         {
-                            val = Field.Model.ToString();
-                        }
-                        else
-                        {
-                            val = (Field.Model as DateTime?).Value.ToString(Format);
+                            if (string.IsNullOrEmpty(Format))
+                            {
+                                if (datevalue.Value.Hour == 0 && datevalue.Value.Minute == 0 && datevalue.Value.Second == 0)
+                                {
+                                    val = datevalue.Value.ToString("yyyy-MM-dd");
+                                }
+                                else
+                                {
+                                    val = datevalue.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                                }
+                            }
+                            else
+                            {
+                                val = (Field.Model as DateTime?).Value.ToString(Format);
+                            }
                         }
                     }
                     else if (Field.Model.GetType().IsBoolOrNullableBool())

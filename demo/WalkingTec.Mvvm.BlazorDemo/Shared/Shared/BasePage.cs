@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
@@ -15,6 +16,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
     {
         [Inject]
         public WtmBlazorContext WtmBlazor { get; set; }
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+        [Inject]
+        public NavigationManager navigationManager { get; set; }
+
         [Parameter]
         public Action<DialogResult> OnCloseDialog { get; set; }
 
@@ -55,6 +61,28 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             return rv;
         }
 
+        public async Task SetError(ValidateForm form, ErrorObj errors)
+        {
+            foreach (var item in errors.Form)
+            {
+                //var exp = PropertyHelper.GetPropertyExpression(form.Model.GetType(), item.Key);
+                //form.SetError(exp, item.Value);
+            }
+        }
+        public async Task<string> GetToken()
+        {
+            return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get","wtmtoken");
+        }
+
+        public async Task SetToken(string token)
+        {
+            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set","wtmtoken",token);
+        }
+
+        public async Task Redirect(string path)
+        {
+            await JSRuntime.InvokeVoidAsync("urlFuncs.redirect", path);
+        }
     }
 
     public class WtmBlazorContext

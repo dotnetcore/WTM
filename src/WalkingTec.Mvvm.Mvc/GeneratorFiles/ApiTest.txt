@@ -9,6 +9,7 @@ using $cns$;
 using $vns$;
 using $mns$;
 using $dns$;
+$othernamespace$
 
 namespace $tns$
 {
