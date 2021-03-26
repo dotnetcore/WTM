@@ -53,12 +53,13 @@ import { Options, Prop, Vue, Inject, Ref, Emit } from "vue-property-decorator";
 })
 export default class extends Vue {
   /** 表单状态 */
-  @Inject() formState = {};
+  @Inject() readonly formState = {};
   /** 表单 ref */
-  @Ref("formRef") formRef;
+  @Ref("formRef") readonly formRef;
   /** 表单 rules */
-  @Prop({ default: () => [] }) rules;
-  @Prop({ type: Function, required: true }) onFinish;
+  @Prop({ default: () => [] }) readonly rules;
+  /** 数据 提交 函数 */
+  @Prop({ type: Function, required: true }) readonly onFinish;
   spinning = false;
   labelCol = { span: 24 };
   wrapperCol = { span: 24 };
@@ -78,7 +79,7 @@ export default class extends Vue {
   async onSubmit(values) {
     try {
       this.spinning = true;
-      await this.onFinish(values);
+      await this.onFinish(this.lodash.cloneDeep(values));
       this.onComplete();
     } catch (error) {
       this.onFail(error);
@@ -95,7 +96,7 @@ export default class extends Vue {
   }
   // 失败
   onFail(error) {
-    console.log("LENG ~ extends ~ onFail ~ error", error);
+    console.error("LENG  ~ onFail ", error);
     this.spinning = false;
   }
   // 加载数据
@@ -108,7 +109,7 @@ export default class extends Vue {
   created() {}
   mounted() {
     this.onLoading();
-    console.log("LENG ~ extends ~ mounted ~ this", this);
+    // console.log("LENG ~ extends ~ mounted ~ this", this);
   }
 }
 </script>

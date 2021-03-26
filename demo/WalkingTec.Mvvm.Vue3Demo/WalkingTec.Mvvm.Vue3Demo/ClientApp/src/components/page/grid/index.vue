@@ -47,16 +47,16 @@ import { debounceTime } from "rxjs/operators";
   },
 })
 export default class extends Vue {
-  @Prop({ required: true }) PageController: ControllerBasics;
-  @Prop({ default: () => [] }) columnDefs;
-  @Prop({ default: () => ({}) }) gridOptions: GridOptions;
-  @Prop({ default: () => true }) checkboxSelection: boolean;
-  @Ref("gridContent") gridContent: HTMLDivElement;
+  @Prop({ required: true }) readonly PageController: ControllerBasics;
+  @Prop({ default: () => [] }) readonly columnDefs;
+  @Prop({ default: () => ({}) }) readonly gridOptions: GridOptions;
+  @Prop({ default: () => true }) readonly checkboxSelection: boolean;
+  @Ref("gridContent") readonly gridContent: HTMLDivElement;
   theme: "balham" | "alpine" | "material" = "alpine";
   style = { height: "500px" };
   GridApi: GridApi = null;
   ResizeEvent: Subscription;
-
+  isAutoSizeColumn = true;
   get Pagination() {
     return this.PageController.Pagination;
   }
@@ -109,14 +109,17 @@ export default class extends Vue {
     },
     // 数据更新
     onRowDataChanged: lodash.debounce((event: RowDataChangedEvent) => {
-      event.columnApi.autoSizeColumn("RowAction");
+      if (this.isAutoSizeColumn) {
+        event.columnApi.autoSizeColumn("RowAction");
+        this.isAutoSizeColumn = false;
+      }
       lodash.invoke(this.gridOptions, "onRowDataChanged", event);
     }, 300),
   };
   onReckon() {
     // console.dir(this.gridContent);
     let height = 500;
-    height = window.innerHeight - this.gridContent.offsetTop - 125;
+    height = window.innerHeight - this.gridContent.offsetTop - 155;
     this.style.height = height + "px";
   }
   @Watch("Pagination.loading")

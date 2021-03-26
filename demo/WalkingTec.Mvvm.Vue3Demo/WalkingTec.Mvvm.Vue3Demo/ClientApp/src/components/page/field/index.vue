@@ -1,47 +1,110 @@
 <template>
   <Item>
-    <a-form-item v-bind="bind" hasFeedback>
+    <a-form-item v-bind="itemBind">
       <slot>
-        <a-input
-          v-model:value="value"
-          :placeholder="_placeholder"
-          autocomplete="off"
-        />
+        <!-- 只读 -->
+        <template v-if="readonly">
+          <span v-text="value"></span>
+        </template>
+        <!-- 可编辑 -->
+        <template v-else>
+          <!-- 文本 text -->
+          <template v-if="_valueType === 'text'">
+            <a-input
+              v-model:value="value"
+              :placeholder="_placeholder"
+              :disabled="disabled"
+              autocomplete="off"
+            />
+          </template>
+          <!-- 文本 textarea -->
+          <template v-else-if="_valueType === 'textarea'">
+            <a-textarea
+              v-model:value="value"
+              :placeholder="_placeholder"
+              :auto-size="{ minRows: 2, maxRows: 5 }"
+            />
+          </template>
+          <!-- 单选 radio -->
+          <template v-else-if="_valueType === 'radio'">
+            <a-radio-group v-model:value="value">
+              <a-radio
+                v-for="item in dataSource"
+                :key="item.value"
+                :value="item.value"
+              >
+                <span v-text="item.label"></span>
+              </a-radio>
+            </a-radio-group>
+          </template>
+          <!-- 多选 checkbox -->
+          <template v-else-if="_valueType === 'checkbox'">
+            <a-checkbox-group v-model:value="value" :options="dataSource" />
+          </template>
+          <!-- 未配置 -->
+          <template v-else>
+            <span
+              >没有找到类型【<span v-text="_valueType"></span>】：<span
+                v-text="value"
+              ></span
+            ></span>
+          </template>
+        </template>
       </slot>
     </a-form-item>
   </Item>
 </template>
 <script lang="ts">
 import { Vue, Options, Prop, Inject } from "vue-property-decorator";
+import { WTM_ValueType } from "@/client";
 import Item from "./item.vue";
-@Options({ components: { Item } })
+import Text from "./views/text.vue";
+@Options({ components: { Item, Text } })
 export default class extends Vue {
-  @Prop({ type: String }) label;
-  @Prop({ type: String }) name;
-  @Prop({ type: String }) placeholder;
-  @Prop({ type: String }) entityKey;
-  @Prop({ type: Boolean, default: false }) readonly;
-  @Prop({ type: Boolean, default: false }) disabled;
-  @Inject() formState;
-  @Inject() PageEntity;
-  get bind() {
-    // if (this.entityKey) {
+  // form label 没有 取 name 数据
+  @Prop({ type: String }) readonly label;
+  // form name
+  @Prop({ type: String }) readonly name;
+  // 输入提示
+  @Prop({ type: String }) readonly placeholder;
+  // 当前实体对应的 属性key
+  @Prop({ type: String }) readonly entityKey;
+  // 值类型
+  @Prop({ type: String, default: "text" }) readonly valueType: WTM_ValueType;
+  // 只读
+  @Prop({ type: Boolean, default: false }) readonly readonly;
+  // 禁用
+  @Prop({ type: Boolean, default: false }) readonly disabled;
+  // 数据源
+  @Prop({ type: Function, default: () => [] }) readonly request;
+  // 表单状态值
+  @Inject() readonly formState;
+  // 实体
+  @Inject() readonly PageEntity;
+  // 数据源
+  dataSource: Array<{ label: any; value: any }> = [];
+  /**  form-item 属性 */
+  get itemBind() {
+    const label = this._label,
+      name = this._name,
+      valueType = this._valueType;
     return {
-      label: this._label,
-      name: this._name,
+      label: label || name,
+      name: name,
       rules: this._rules,
+      hasFeedback: this.lodash.includes(["text"], valueType),
     };
-    // }
   }
+  // form-item lable
   get _label() {
-    const label =
-      this.lodash.get(this.PageEntity, `${this.entityKey}.label`, this.label) || this._name;
-    try {
-      return label ? this.$t(label) : label;
-    } catch (error) {
-      return label;
-    }
+    const label = this.lodash.get(
+      this.PageEntity,
+      `${this.entityKey}.label`,
+      this.label
+    );
+    return label ? this.$t(label) : label;
   }
+  // form-item name
   get _name() {
     return this.lodash.get(
       this.PageEntity,
@@ -49,6 +112,7 @@ export default class extends Vue {
       this.name
     );
   }
+  // 输入提示
   get _placeholder() {
     return this.lodash.get(
       this.PageEntity,
@@ -56,16 +120,44 @@ export default class extends Vue {
       this.placeholder
     );
   }
+  // form 校验规则
   get _rules() {
     return this.lodash.get(this.PageEntity, `${this.entityKey}.rules`);
   }
+  // 属性值
   get value() {
     return this.lodash.get(this.formState, this._name);
   }
   set value(value) {
     this.lodash.set(this.formState, this._name, value);
   }
-  mounted() {
+  // 属性值类型
+  get _valueType(): WTM_ValueType {
+    return this.lodash.get(
+      this.PageEntity,
+      `${this.entityKey}.valueType`,
+      this.valueType
+    );
+  }
+  // 数据源
+  get _request() {
+    return this.lodash.get(
+      this.PageEntity,
+      `${this.entityKey}.request`,
+      this.request
+    );
+  }
+  // 加载数据源
+  async onRequest() {
+    const res = await this.lodash.invoke(
+      this,
+      "_request",
+      this.lodash.cloneDeep(this.formState)
+    );
+    this.dataSource = res;
+  }
+  async mounted() {
+    this.onRequest();
     // console.log("");
     // console.group(`Field ~ ${this.entityKey} ${this._name} `);
     // console.log(this);

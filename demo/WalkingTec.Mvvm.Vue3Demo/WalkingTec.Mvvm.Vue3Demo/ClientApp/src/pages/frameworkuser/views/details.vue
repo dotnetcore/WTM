@@ -10,26 +10,28 @@
     </a-space>
 
     <WtmField entityKey="Gender" />
+    <WtmField entityKey="SelectedGroupCodes" />
   </WtmDetails>
 </template>
 <script lang="ts">
 import { Vue, Options, Inject, Provide } from "vue-property-decorator";
 @Options({ components: {} })
 export default class extends Vue {
-  @Inject() PageController;
-  @Provide() formState = {
+  @Inject() readonly PageController;
+  @Provide({ reactive: true }) readonly formState = {
     Entity: {
       ITCode: "1",
       Password: "2",
       Email: "3",
       Name: "4",
-      Gender: "5",
+      Gender: "Male",
     },
+    SelectedGroupCodes: [],
   };
   async onFinish(values) {
     console.log("LENG ~ extends ~ onFinish ~ values", values);
     return new Promise((res, rej) => {
-      this.lodash.delay(rej, 2000);
+      this.lodash.delay(() => rej("出错了"), 2000);
     });
   }
   created() {}

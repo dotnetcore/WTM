@@ -38,9 +38,9 @@ import { Options, Prop, Vue, Provide, Ref } from "vue-property-decorator";
 })
 export default class extends Vue {
   /** query参数的Key 默认取 detailsVisible */
-  @Prop() queryKey: string;
+  @Prop() readonly queryKey: string;
   /** 标题  */
-  @Prop() title: string;
+  @Prop() readonly title: string;
   get visibleKey() {
     return this.queryKey || this.$WtmConfig.detailsVisible;
   }

@@ -87,23 +87,24 @@ const BREAKPOINTS = {
   components: {},
 })
 export default class extends Vue {
-  @Prop({ required: true }) PageController: ControllerBasics;
+  @Prop({ required: true }) readonly PageController: ControllerBasics;
   get Pagination() {
     return this.PageController.Pagination;
   }
+  /** 表单状态 */
+  @Inject() readonly formState = {};
+  /** 表单 ref */
+  @Ref("formRef") readonly formRef;
+
+  /** 表单 rules */
+  @Prop({ default: () => [] }) readonly rules;
+
   /** 告诉 field 使用 a-col */
-  @Provide() colProps = {
+  @Provide({ reactive: true }) colProps = {
     colItem: true,
     colSpan: 6,
   };
-  /** 表单状态 */
-  @Inject() formState = {};
-  /** 原始的表单 数据 formState 初始化状态 */
-  // originalFormState = {};
-  /** 表单 ref */
-  @Ref("formRef") formRef;
-  /** 表单 rules */
-  @Prop({ default: () => [] }) rules;
+
   labelCol = { xs: 24, sm: 24, md: 6, lg: 6, xl: 6, xxl: 6 };
   wrapperCol = { xs: 24, sm: 24, md: 16, lg: 16, xl: 16, xxl: 16 };
   layout: "vertical" | "horizontal" = "vertical";
@@ -167,7 +168,7 @@ export default class extends Vue {
     this.ResizeEvent = fromEvent(window, "resize")
       .pipe(debounceTime(200))
       .subscribe(this.breakPoint);
-    console.log(this.$slots.default());
+    // console.log(this.$slots.default());
   }
   unmounted() {
     this.ResizeEvent && this.ResizeEvent.unsubscribe();

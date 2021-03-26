@@ -5,11 +5,11 @@ import { EnumActionType } from "@/client";
 import { ButtonProps } from "ant-design-vue/lib/button/buttonTypes";
 @Options({ components: {} })
 export class PageActionBasics extends Vue {
-    EnumActionType = EnumActionType
+    readonly EnumActionType = EnumActionType
     /**
       * 页面控制器
       */
-    PageController: ControllerBasics;
+    readonly PageController: ControllerBasics;
     get Pagination() {
         return this.PageController.Pagination;
     }
@@ -38,7 +38,7 @@ export class RowActionBasics extends Vue {
     * @type {ICellRendererParams}
     * @memberof Action
     */
-    @Prop() params;
+    @Prop() readonly params;
     get rowParams(): ICellRendererParams {
         return this.lodash.get(this, 'params', {}) as ICellRendererParams
     }

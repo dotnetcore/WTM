@@ -6,11 +6,6 @@
   >
     <WtmField name="ITCode" :label="EnumLocaleLabel.ITCode" />
     <WtmField name="Name" :label="EnumLocaleLabel.Name" />
-    <WtmField name="Name" :label="EnumLocaleLabel.Name" />
-    <WtmField name="Name" :label="EnumLocaleLabel.Name" />
-    <WtmField name="Name" :label="EnumLocaleLabel.Name" />
-    <WtmField name="Name" :label="EnumLocaleLabel.Name" />
-    <!-- <div></div> -->
   </WtmFilter>
 </template>
 <script lang="ts">
@@ -19,12 +14,12 @@ import { PageController } from "../controller";
 import { EnumLocaleLabel } from "../locales";
 @Options({ components: {} })
 export default class extends Vue {
-  @Inject() PageController: PageController;
-  @Provide() formState = {
+  @Inject() readonly PageController: PageController;
+  @Provide({ reactive: true }) readonly formState = {
     ITCode: "2",
     Name: "",
   };
-  EnumLocaleLabel = EnumLocaleLabel;
+  readonly EnumLocaleLabel = EnumLocaleLabel;
   get Pagination() {
     return this.PageController.Pagination;
   }
@@ -36,16 +31,11 @@ export default class extends Vue {
     await this.Pagination.onLoading(values);
   }
   onText() {
-    this.Pagination.onSet([
-      { ITCode: 123, Name: "测试" },
-      { ITCode: 12, Name: "测试" },
-      { ITCode: 3, Name: "测试" },
-      { ITCode: 4, Name: "测试" },
-      { ITCode: 5, Name: "测试" },
-    ]);
+    this.Pagination.onSet(
+      this.lodash.range(1, 50).map((x) => ({ ITCode: x, Name: "测试" + x }))
+    );
   }
-  mounted() {
-  }
+  mounted() {}
 }
 </script>
 <style lang="less">

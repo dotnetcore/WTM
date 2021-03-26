@@ -42,13 +42,13 @@ import ActionImport from "./action_import.vue";
   },
 })
 export default class extends Vue {
-  @Prop() PageController;
+  @Prop() readonly PageController;
   /**
    * 行 操作需要 aggrid 传入
    * @type {ICellRendererParams}
    * @memberof Action
    */
-  @Prop() params;
+  @Prop() readonly params;
   size = 10;
   created() {}
   mounted() {}

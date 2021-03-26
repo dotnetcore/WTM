@@ -31,7 +31,7 @@ export default class extends Vue {
   onEdit() {}
   @action
   created() {
-    console.log("LENG ~ extends ~ created ~ this", this);
+    // console.log("LENG ~ extends ~ created ~ this", this);
   }
   mounted() {
     AppRouter.RouterBehaviorSubject.subscribe((obs) => {

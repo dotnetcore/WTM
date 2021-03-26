@@ -16,7 +16,7 @@ import { ControllerBasics } from "@/client";
 import { ActionBasics } from "./script";
 @Options({ components: {} })
 export default class extends mixins(ActionBasics) {
-  @Prop() PageController:ControllerBasics;
+  @Prop() readonly PageController:ControllerBasics;
   created() {}
   mounted() {}
 }

@@ -29,11 +29,12 @@
 <script lang="ts">
 import { Vue, Options } from "vue-property-decorator";
 import { h } from "vue";
-import RightContentRender from "./rightContentRender.vue";
-import Container from "./container.vue";
-import Tabs from "./tabs.vue";
+import RightContentRender from "./views/rightContentRender.vue";
+import Container from "./views/container.vue";
+import Tabs from "./views/tabs.vue";
+import { $i18n } from "@/client";
 @Options({
-  components: { RightContentRender, Container, Tabs }
+  components: { RightContentRender, Container, Tabs },
 })
 export default class extends Vue {
   provider = {
@@ -47,17 +48,17 @@ export default class extends Vue {
     fixedHeader: true,
     openKeys: [],
     selectedKeys: [],
-    locale: key => {
-      console.log("LENG ~ extends ~ key", key);
-      return key;
-    },
+    // locale: (key) => {
+    //   return key
+    //   // return $i18n.t(key);
+    // },
     isMobile: false,
     hasFooterToolbar: false,
     hasSideMenu: true,
     hasHeader: true,
-    setHasFooterToolbar: has => {
+    setHasFooterToolbar: (has) => {
       this.provider.hasFooterToolbar = has;
-    }
+    },
   };
   get menuData() {
     return [
@@ -69,14 +70,17 @@ export default class extends Vue {
           {
             path: "/frameworkuser",
             name: "frameworkuser",
-            meta: { icon: "SaveOutlined", title: "测试用户" }
+            meta: {
+              icon: "SaveOutlined",
+              title: $i18n.t("frameworkuser.PageName"),
+            },
           },
           {
             path: "/test",
             name: "test",
-            meta: { icon: "SaveOutlined", title: "Dashboard" }
-          }
-        ]
+            meta: { icon: "SaveOutlined", title: "Dashboard" },
+          },
+        ],
       },
       {
         path: "/b",
@@ -86,15 +90,15 @@ export default class extends Vue {
           {
             path: "/frameworkuser2",
             // name: "frameworkuser2",
-            meta: { icon: "SaveOutlined", title: "测试用户" }
+            meta: { icon: "SaveOutlined", title: "frameworkuser.PageName" },
           },
           {
             path: "/test3",
             // name: "test3",
-            meta: { icon: "SaveOutlined", title: "Dashboard" }
-          }
-        ]
-      }
+            meta: { icon: "SaveOutlined", title: "Dashboard" },
+          },
+        ],
+      },
     ];
   }
   created() {}

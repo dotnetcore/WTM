@@ -10,7 +10,7 @@ import { createRouter, createWebHistory, RouteLocationNormalized, Router } from 
 // ])
 @BindAll()
 class AppRouter {
-  lazy = false;
+  readonly lazy = false;
   readonly PageFiles = require.context('./pages', true, /\.vue$/, 'sync') // 根据目录结构去搜索文件
   readonly PagePath = this.PageFiles.keys().filter(file => !lodash.includes(file, 'views'));
   /**
@@ -38,7 +38,7 @@ class AppRouter {
   async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
     console.log('')
     console.group(to.path)
-    console.log("beforeEach", to, from)
+    // console.log("beforeEach", to, from)
   }
   /**
    * 全局解析守卫
@@ -47,7 +47,7 @@ class AppRouter {
    * @doc https://next.router.vuejs.org/zh/guide/advanced/navigation-guards.html
    */
   async beforeResolve(to: RouteLocationNormalized) {
-    console.log("beforeResolve", to)
+    // console.log("beforeResolve", to)
   }
   /**
    * 全局后置钩子

@@ -14,8 +14,7 @@ import { EnumLocaleLabel } from "../locales";
 import RowAction from "./action.vue";
 @Options({ components: {} })
 export default class extends Vue {
-  @Inject() PageController: PageController;
-  
+  @Inject() readonly PageController: PageController;
   columnDefs: (ColDef | ColGroupDef)[] = [
     {
       headerName: EnumLocaleLabel.ITCode,
@@ -53,8 +52,7 @@ export default class extends Vue {
       },
     };
   }
-  created() {
-  }
+  created() {}
 }
 </script>
 <style lang="less">

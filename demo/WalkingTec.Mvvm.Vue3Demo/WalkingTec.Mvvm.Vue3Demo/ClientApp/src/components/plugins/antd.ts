@@ -11,13 +11,16 @@ import {
     InputNumber,
     Menu,
     Modal,
+    Checkbox,
     Pagination,
     Row,
+    Radio,
     Select,
     Space,
     Spin,
     Tabs,
     Tag,
+    Popconfirm,
     Transfer,
     Dropdown,
     Skeleton,
@@ -31,6 +34,7 @@ export default {
         /**    use antd 组件    */
         [
             Avatar,
+            Popconfirm,
             Button,
             Col,
             Divider,
@@ -39,12 +43,14 @@ export default {
             Form,
             Image,
             Input,
+            Checkbox,
             InputNumber,
             Menu,
             Modal,
             Pagination,
             Row,
             Select,
+            Radio,
             Space,
             Spin,
             Tabs,
@@ -56,6 +62,6 @@ export default {
             ConfigProvider
         ].map(x => app.use(x));
         app.use(ProLayout)
-        app.component('PageContainer',PageContainer)
+        app.component('PageContainer', PageContainer)
     }
 }

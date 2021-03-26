@@ -27,12 +27,12 @@ export default class extends Vue {
    * 当前页面控制器
    * 子组件 通过 Inject 均可访问
    */
-  @Provide() PageController = PageController;
+  @Provide({ reactive: true }) readonly PageController = PageController;
   /**
    * 当前实体配置
    * 子组件 通过 Inject 均可访问
    */
-  @Provide() PageEntity = PageEntity;
+  @Provide({ reactive: true }) readonly PageEntity = PageEntity;
   created() {}
   mounted() {
     console.log("");
