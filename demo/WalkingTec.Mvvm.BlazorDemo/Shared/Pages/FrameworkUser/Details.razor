@@ -1,6 +1,61 @@
-@page "/FrameworkUser/Details"
-<h3>Details</h3>
+@page "/FrameworkUser/Details/{id}"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model" >
+    <Tab IsBorderCard="true">
+        <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+                <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.ITCode" />
+                <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.Password" />
+                <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.Name" />
+                <Select IsDisabled="true" @bind-Value="@Model.Entity.Gender" PlaceHolder="aaa" />
+                <WTUploadImage IsDisabled="true" @bind-FileID="@Model.Entity.PhotoId" LabelText="测试" />
+            </Row>
+            <CheckboxList IsDisabled="true" @bind-Value="Model.SelectedRolesCodes" Items="@AllRoles" />
+            <CheckboxList IsDisabled="true" @bind-Value="Model.SelectedGroupCodes" Items="@AllGroups" />
+        </TabItem>
+        <TabItem Text="@WtmBlazor.Localizer["_Admin.AdditionInfo"]">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+                <BootstrapInput @bind-Value="@Model.Entity.CellPhone" IsDisabled="true"/>
+                <BootstrapInput @bind-Value="@Model.Entity.HomePhone" IsDisabled="true"/>
+                <BootstrapInput @bind-Value="@Model.Entity.Email" IsDisabled="true"/>
+                <BootstrapInput @bind-Value="@Model.Entity.ZipCode" IsDisabled="true"/>
+            </Row>
+            <Row>
+                <BootstrapInput @bind-Value="@Model.Entity.Address" IsDisabled="true"/>
+            </Row>
+        </TabItem>
+    </Tab>
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="关闭" OnClick="OnClose" />
+    </div>
+</ValidateForm>
 
 @code {
+    private FrameworkUserVM Model = new FrameworkUserVM() { SelectedRolesCodes = new List<string>() };
+    private List<SelectedItem> AllRoles = new List<SelectedItem>();
+    private List<SelectedItem> AllGroups = new List<SelectedItem>();
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == true)
+        {
+            AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
+            AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
+            var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUserBase/{id}");
+            Model = rv.Data;
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
 
 }

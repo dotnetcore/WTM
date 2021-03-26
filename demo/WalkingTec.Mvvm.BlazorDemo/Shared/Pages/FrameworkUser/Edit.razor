@@ -1,4 +1,4 @@
-@page "/FrameworkUser/Create"
+@page "/FrameworkUser/Edit/{id}"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 @inherits BasePage
 
@@ -41,13 +41,16 @@
         private List<SelectedItem> AllRoles = new List<SelectedItem>();
         private List<SelectedItem> AllGroups = new List<SelectedItem>();
         private ValidateForm vform { get; set; }
-
+        [Parameter]
+        public string id { get; set; }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if(firstRender == true)
             {
                 AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
                 AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
+                var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUserBase/{id}");
+                Model = rv.Data;
                 StateHasChanged();
             }
             await base.OnAfterRenderAsync(firstRender);

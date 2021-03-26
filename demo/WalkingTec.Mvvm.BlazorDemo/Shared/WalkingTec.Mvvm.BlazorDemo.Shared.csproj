@@ -18,15 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="5.0.22-beta03" />
+    <PackageReference Include="BootstrapBlazor" Version="5.0.23-beta03" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>

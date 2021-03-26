@@ -3,11 +3,25 @@
 @inherits BasePage
 @layout EmptyLayout
 
-<ValidateForm Model="@Model" OnValidSubmit="@Submit">
-    <BootstrapInput @bind-Value="@Model.ITCode" />
-    <BootstrapInput @bind-Value="@Model.Password" type="password" />
-    <Button ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="提交" />
-</ValidateForm>
+<div class="d-flex flex-column app-layout-login ">
+    <div class="flex-fill  login-layout app-login-back-2">
+        <header class="login-header">
+            <img  src="/images/logo.png" alt="" height="48">
+        </header>
+        <div class="login-content">
+            <div class="login-form">
+                <h1>WTM Blazor</h1>
+                <ValidateForm Model="@Model" OnValidSubmit="@Submit">
+                    <BootstrapInput @bind-Value="@Model.ITCode" />
+                    <BootstrapInput @bind-Value="@Model.Password" type="password" />
+                    <Button ButtonType="ButtonType.Submit" Text="Login" style="width:100%;margin-top:20px;" />
+                </ValidateForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @code {
     [Parameter]
     public bool? LoginSuccess { get; set; }
@@ -25,7 +39,7 @@
         }
         else
         {
-            
+
         }
     }
 }
