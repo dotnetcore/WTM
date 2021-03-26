@@ -135,7 +135,18 @@ layui.use(['tree'],function(){{
     id:'tree{Id}',elem: '#div{Id}',onlyIconControl:{(!MultiSelect).ToString().ToLower()}, showCheckbox:{MultiSelect.ToString().ToLower()},showLine:{ShowLine.ToString().ToLower()}
     ,data: {JsonSerializer.Serialize(treeitems)} {oncheck} {onclick}
   }});
-  loaded{Id} = true;
+  loaded{Id} = true;";
+                if(MultiSelect == false && Field.Model != null)
+                {
+                    script += $@"
+    var selected = $(""div[data-id='{Field.Model.ToString()}']"");
+    var selected2 = selected.find('.layui-tree-entry:first');
+    selected2.css('background-color','#5fb878');
+    selected2.find('.layui-tree-txt').css('color','#fff');
+    last{Id} = selected2;
+";
+                }
+                script += $@"
 }})
 </script>
 ";
@@ -154,15 +165,6 @@ layui.use(['tree'],function(){{
                     else
                     {
                         hidden += $"<input type='hidden' name='{Field?.Name}' value='{Field.Model}'/>";
-                        hidden += $@"
-<script>
-    var selected = $(""div[data-id='{Field.Model.ToString()}']"");
-    var selected2 = selected.find('.layui-tree-entry:first');
-    selected2.css('background-color','#5fb878');
-    selected2.find('.layui-tree-txt').css('color','#fff');
-    last{Id} = selected2;
-</script>
-";
                     }
                     hidden += " </p>";
                 }

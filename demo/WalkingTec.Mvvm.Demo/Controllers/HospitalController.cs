@@ -4,27 +4,27 @@ using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
+using WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("城市管理")]
-    public partial class CityController : BaseController
+    [ActionDescription("医院管理")]
+    public partial class HospitalController : BaseController
     {
         #region Search
         [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
-            var vm = Wtm.CreateVM<CityListVM>();
+            var vm = Wtm.CreateVM<HospitalListVM>();
             return PartialView(vm);
         }
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public string Search(CitySearcher searcher)
+        public string Search(HospitalSearcher searcher)
         {
-            var vm = Wtm.CreateVM<CityListVM>(passInit: true);
+            var vm = Wtm.CreateVM<HospitalListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
@@ -42,13 +42,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
-            var vm = Wtm.CreateVM<CityVM>();
+            var vm = Wtm.CreateVM<HospitalVM>();
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("Sys.Create")]
-        public ActionResult Create(CityVM vm)
+        public ActionResult Create(HospitalVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -74,14 +74,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Edit")]
         public ActionResult Edit(string id)
         {
-            var vm = Wtm.CreateVM<CityVM>(id);
+            var vm = Wtm.CreateVM<HospitalVM>(id);
             return PartialView(vm);
         }
 
         [ActionDescription("Sys.Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
-        public ActionResult Edit(CityVM vm)
+        public ActionResult Edit(HospitalVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Delete")]
         public ActionResult Delete(string id)
         {
-            var vm = Wtm.CreateVM<CityVM>(id);
+            var vm = Wtm.CreateVM<HospitalVM>(id);
             return PartialView(vm);
         }
 
@@ -115,7 +115,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Delete(string id, IFormCollection nouse)
         {
-            var vm = Wtm.CreateVM<CityVM>(id);
+            var vm = Wtm.CreateVM<HospitalVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Details")]
         public ActionResult Details(string id)
         {
-            var vm = Wtm.CreateVM<CityVM>(id);
+            var vm = Wtm.CreateVM<HospitalVM>(id);
             return PartialView(vm);
         }
         #endregion
@@ -142,13 +142,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchEdit")]
         public ActionResult BatchEdit(string[] IDs)
         {
-            var vm = Wtm.CreateVM<CityBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<HospitalBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult DoBatchEdit(CityBatchVM vm, IFormCollection nouse)
+        public ActionResult DoBatchEdit(HospitalBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
             {
@@ -166,13 +166,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
-            var vm = Wtm.CreateVM<CityBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<HospitalBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult DoBatchDelete(CityBatchVM vm, IFormCollection nouse)
+        public ActionResult DoBatchDelete(HospitalBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
@@ -189,13 +189,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 		[ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
-            var vm = Wtm.CreateVM<CityImportVM>();
+            var vm = Wtm.CreateVM<HospitalImportVM>();
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("Sys.Import")]
-        public ActionResult Import(CityImportVM vm, IFormCollection nouse)
+        public ActionResult Import(HospitalImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
@@ -210,7 +210,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost]
-        public IActionResult ExportExcel(CityListVM vm)
+        public IActionResult ExportExcel(HospitalListVM vm)
         {
             return vm.GetExportData();
         }
