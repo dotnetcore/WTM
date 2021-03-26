@@ -4,6 +4,8 @@ import { VueI18n } from 'vue-i18n'
 import { frameworkComponents } from "./framework";
 export default (i18n: VueI18n) => {
     const defaultOptions: GridOptions = {
+        suppressColumnVirtualisation: true,
+        rowBuffer: 0,
         loadingOverlayComponent: frameworkComponents.loadingOverlay,
         noRowsOverlayComponent: frameworkComponents.noRowsOverlay,
         // debug:true,

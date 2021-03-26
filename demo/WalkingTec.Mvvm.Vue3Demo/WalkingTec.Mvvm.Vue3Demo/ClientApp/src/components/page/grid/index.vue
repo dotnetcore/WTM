@@ -107,9 +107,12 @@ export default class extends Vue {
       }
       lodash.invoke(this.gridOptions, "onGridReady", event);
     },
+    onBodyScroll: (event) => {
+      console.log("LENG ~ extends ~ event", event.api);
+    },
     // 数据更新
     onRowDataChanged: lodash.debounce((event: RowDataChangedEvent) => {
-      if (this.isAutoSizeColumn) {
+      if (this.isAutoSizeColumn && this.Pagination.dataSource.length > 0) {
         event.columnApi.autoSizeColumn("RowAction");
         this.isAutoSizeColumn = false;
       }
