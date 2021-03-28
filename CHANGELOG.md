@@ -1,6 +1,12 @@
 # 更新日志
 ## v5.x.x 
 
+##5.1.1 (2021-3-28) 
+* **修改：**  wt:image现在也可以显示label，默认不显示，通过设置hide-label=false来显示label
+* **修改：**  ListVM种和wt:display中显示时间时，使用yyyy-MM-dd或者yyyy-MM-dd HH:mm:ss作为默认格式
+* **修改：**  修复了wt:tree显示上的一些bug
+* **修改：**  修复了代码生成器生成多对多假删除时的逻辑
+
 ##5.1.0 (2021-3-22) 
 * **修改：**  修复了wtm.CreateDC时，connectionstring名称只能认小写字母的bug
 * **修改：**  修复了_framework/getfile方法有时不能显示附件的bug
