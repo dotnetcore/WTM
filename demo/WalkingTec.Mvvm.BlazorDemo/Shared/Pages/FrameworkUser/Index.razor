@@ -16,7 +16,7 @@
 
 
 <Table @ref="dataTable" TItem="FrameworkUser_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;">
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" @bind-SelectedRows="@selectedRows">
     <TableColumns>
         <TableColumn @bind-Field="@context.ITCode" Width="180" />
         <TableColumn @bind-Field="@context.Name" />
@@ -32,7 +32,7 @@
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@WtmBlazor.Localizer["Sys.BatchEdit"]" />
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]" />
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick"/>
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick"/>
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true"/>
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
@@ -58,6 +58,8 @@
         dataTable.QueryAsync();
     }
 
+    private IEnumerable<FrameworkUser_View> selectedRows { get; set; }
+
     private async Task OnCreateClick(IEnumerable<FrameworkUser_View> items)
     {
         if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"]) == DialogResult.Yes)
@@ -81,19 +83,21 @@
 
     private async Task OnExportClick(IEnumerable<FrameworkUser_View> items)
     {
-        //if (dataTable.SelectedRows.Any())
-        //{
-        //    await Download("/api/_frameworkuserbase/ExportExcelByIds", dataTable.SelectedRows.Select(x=>x.ID.ToString()).ToList());
-        //}
-        //else
-        //{
-        await Download("/api/_frameworkuserbase/ExportExcel", SearchModel);
-        //}
+        if (dataTable.SelectedRows.Any())
+        {
+            await Download("/api/_frameworkuserbase/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
+        }
+        else
+        {
+            await Download("/api/_frameworkuserbase/ExportExcel", SearchModel);
+        }
     }
     private async Task OnImportClick(IEnumerable<FrameworkUser_View> items)
     {
-        await OpenDialog<Import>(WtmBlazor.Localizer["Sys.Import"]);
-
+        if(await OpenDialog<Import>(WtmBlazor.Localizer["Sys.Import"]) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
     }
 
 }

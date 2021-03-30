@@ -632,7 +632,7 @@ namespace WalkingTec.Mvvm.Core
                         ep.Value = processResult.EntityValues[0].FieldValue;
                         if (!string.IsNullOrEmpty(processResult.EntityValues[0].ErrorMsg))
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = processResult.EntityValues[0].ErrorMsg, ExcelIndex = rowIndex });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = processResult.EntityValues[0].ErrorMsg, ExcelIndex = rowIndex,Index = rowIndex });
                         }
                         PropertyHelper.SetPropertyValue(entity, fieldName, ep.Value, stringBasedValue: true);
                     }
@@ -643,7 +643,7 @@ namespace WalkingTec.Mvvm.Core
                         {
                             if (!string.IsNullOrEmpty(entityValue.ErrorMsg))
                             {
-                                ErrorListVM.EntityList.Add(new ErrorMessage { Message = entityValue.ErrorMsg, ExcelIndex = rowIndex });
+                                ErrorListVM.EntityList.Add(new ErrorMessage { Message = entityValue.ErrorMsg, ExcelIndex = rowIndex, Index = rowIndex });
                             }
                             PropertyHelper.SetPropertyValue(entity, entityValue.FieldName, entityValue.FieldValue, stringBasedValue: true);
                         }
@@ -655,7 +655,7 @@ namespace WalkingTec.Mvvm.Core
                 ep.FormatSingleData(ep.Value, templateVM, out string singleEntityValue, out string errorMsg);
                 if (!string.IsNullOrEmpty(errorMsg))
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = errorMsg, ExcelIndex = rowIndex });
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = errorMsg, ExcelIndex = rowIndex, Index = rowIndex });
                 }
                 PropertyHelper.SetPropertyValue(entity, fieldName, singleEntityValue, stringBasedValue: true);
             }
@@ -907,7 +907,7 @@ namespace WalkingTec.Mvvm.Core
                 TryValidateObject(entity, context, validationResults);
                 if (validationResults.Count > 0)
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = entity.ExcelIndex });
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = entity.ExcelIndex , Index = entity.ExcelIndex});
                 }
             }
             if (ErrorListVM.EntityList.Count > 0)

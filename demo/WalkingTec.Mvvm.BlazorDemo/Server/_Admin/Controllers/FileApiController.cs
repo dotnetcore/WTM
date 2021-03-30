@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Mvc;
@@ -100,26 +101,19 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("DownloadFile")]
         public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
             if (file == null)
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
             }
             var ext = file.FileExt.ToLower();
-            var contenttype = "application/octet-stream";
-            if (ext == "pdf")
+            var provider = new FileExtensionContentTypeProvider();
+            string contentType;
+            if (!provider.TryGetContentType(file.FileName, out contentType))
             {
-                contenttype = "application/pdf";
+                contentType = "application/octet-stream";
             }
-            if (ext == "png" || ext == "bmp" || ext == "gif" || ext == "tif" || ext == "jpg" || ext == "jpeg")
-            {
-                contenttype = $"image/{ext}";
-            }
-            if (ext == "mp4")
-            {
-                contenttype = $"video/mpeg4";
-            }
-            return File(file.DataStream, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
+            return File(file.DataStream, contentType, file.FileName ?? (Guid.NewGuid().ToString() + ext));
         }
 
         [HttpGet("[action]/{id}")]

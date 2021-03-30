@@ -2,8 +2,11 @@
 @inherits WTComponent
 @inject WtmBlazorContext WtmBlazor
 @using System.Threading;
+@using System.Linq.Expressions;
 @using System.IO;
-<AvatarUpload @ref="uploader" @bind-Value="FileID" Accept="image/*" IsSingle="!IsMultiple" ShowProgress="true" OnChange="@OnAvatarUpload" OnDelete="@OnAvatarDelete" ShowLabel="@ShowLabel" DisplayText="@LabelText" DefaultFileList="@dlist"></AvatarUpload>
+@typeparam TValue
+<AvatarUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="image/*" IsSingle="!IsMultiple" ShowProgress="true" OnChange="@OnAvatarUpload"
+              OnDelete="@OnAvatarDelete"  DisplayText="@LabelText" DefaultFileList="@dlist"></AvatarUpload>
 
 @code{
 
@@ -12,34 +15,71 @@
     [Parameter]
     public int? ThumbHeight { get; set; }
     [Parameter]
-    public Guid? FileID { get; set; }
+    public TValue Value { get; set; }
     [Parameter]
-    public EventCallback<Guid?> FileIDChanged { get; set; }
+    public EventCallback<TValue> ValueChanged { get; set; }
+    [Parameter]
+    public Expression<Func<TValue>> ValueExpression { get; set; }
+
     [Parameter]
     public bool IsMultiple { get; set; }
     [Parameter]
     public bool ShowLabel { get; set; } = true;
     [Parameter]
-    public string LabelText { get; set; } = "";
+    public string LabelText { get; set; } = null;
 
     private Dictionary<string, string> files { get; set; } = new Dictionary<string, string>();
     private List<UploadFile> dlist = new List<UploadFile>();
-    private AvatarUpload<Guid?> uploader { get; set; }
+    private AvatarUpload<TValue> uploader { get; set; }
     private bool FileSet { get; set; } = false;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected TValue CurrentValue
     {
-        if (FileID != null && FileSet == false)
+        get => Value;
+        set
         {
-            dlist.Add(new UploadFile
+            var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
+            if (hasChanged)
             {
-                PrevUrl = $"https://static.699pic.com/images/index/right-bottom-ewm3.jpg"
-            });
-            FileSet = true;
-            StateHasChanged();
+                Value = value;
+                _ = ValueChanged.InvokeAsync(value);
+            }
         }
-        await base.OnAfterRenderAsync(firstRender);
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        if (Value != null)
+        {
+            var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{Value}", HttpMethodEnum.GET, new Dictionary<string, string> {
+                    {"width", ThumbWidth?.ToString() },
+                    {"height", ThumbHeight?.ToString() }
+                });
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                dlist.Add(new UploadFile
+                {
+                    PrevUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}"
+                });
+            }
+        }
+        await base.OnInitializedAsync();
+    }
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (Value != null && FileSet == false)
+    //    {
+    //        dlist.Add(new UploadFile
+    //        {
+    //            PrevUrl = $"https://static.699pic.com/images/index/right-bottom-ewm3.jpg"
+    //        });
+    //        FileSet = true;
+    //        StateHasChanged();
+    //    }
+    //    await base.OnAfterRenderAsync(firstRender);
+    //}
 
 
     private async Task OnAvatarUpload(UploadFile file)
@@ -65,7 +105,7 @@
                     }
                     else
                     {
-                        await FileIDChanged.InvokeAsync(new Guid(files.First().Key));
+                        CurrentValue = (TValue)(object)(new Guid(files.First().Key));
                     }
                     suc = true;
                 }

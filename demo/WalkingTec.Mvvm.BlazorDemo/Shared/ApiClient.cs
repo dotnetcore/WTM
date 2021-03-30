@@ -45,10 +45,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 url = url.AppendQuery("culture=" + System.Threading.Thread.CurrentThread.CurrentUICulture.Name);
                 //如果配置了代理，则使用代理
                 //设置超时
-                //if (timeout.HasValue)
-                //{
-                //    Client.Timeout = new TimeSpan(0, 0, 0, timeout.Value, 0);
-                //}
+                if (timeout.HasValue)
+                {
+                    Client.Timeout = new TimeSpan(0, 0, 0, timeout.Value, 0);
+                }
                 //填充表单数据
                 HttpResponseMessage res = null;
                 switch (method)

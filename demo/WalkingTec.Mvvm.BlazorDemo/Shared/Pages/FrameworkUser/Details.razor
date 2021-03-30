@@ -11,7 +11,7 @@
                 <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.Password" />
                 <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.Name" />
                 <Select IsDisabled="true" @bind-Value="@Model.Entity.Gender" PlaceHolder="aaa" />
-                <WTUploadImage IsDisabled="true" @bind-FileID="@Model.Entity.PhotoId" LabelText="测试" />
+                <WTUploadImage IsDisabled="true" @bind-Value="@Model.Entity.PhotoId" LabelText="测试" />
             </Row>
             <CheckboxList IsDisabled="true" @bind-Value="Model.SelectedRolesCodes" Items="@AllRoles" />
             <CheckboxList IsDisabled="true" @bind-Value="Model.SelectedGroupCodes" Items="@AllGroups" />

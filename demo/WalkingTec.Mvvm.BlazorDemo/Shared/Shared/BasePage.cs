@@ -62,16 +62,22 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             return rv;
         }
 
-        public async Task<bool> PostsForm(ValidateForm form, string url)
+        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string,string> Msg = null, Action<ErrorObj> ErrorHandler=null)
         {
             var rv = await WtmBlazor.Api.CallAPI(url, HttpMethodEnum.POST, form.Model);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 CloseDialog(DialogResult.Yes);
+                if(Msg != null)
+                {
+                    var m = Msg.Invoke(rv.Data);
+                    await WtmBlazor.Toast.Success(WtmBlazor.Localizer["Sys.Info"],  WtmBlazor.Localizer[m]);
+                }
                 return true;
             }
             else
             {
+                ErrorHandler?.Invoke(rv.Errors);
                 SetError(form, rv.Errors);
                 return false;
             }

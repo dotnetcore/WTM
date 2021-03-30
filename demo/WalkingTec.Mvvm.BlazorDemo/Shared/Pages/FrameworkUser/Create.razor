@@ -11,7 +11,7 @@
                     <BootstrapInput @bind-Value="@Model.Entity.Password" />
                     <BootstrapInput @bind-Value="@Model.Entity.Name" />
                     <Select @bind-Value="@Model.Entity.Gender" PlaceHolder="aaa"/>
-                    <WTUploadImage @bind-FileID="@Model.Entity.PhotoId" LabelText="测试"/>
+                    <WTUploadImage @bind-Value="@Model.Entity.PhotoId" />
                 </Row>
                 <Row>
                 </Row>
@@ -31,8 +31,8 @@
             </TabItem>
         </Tab>
         <div class="modal-footer table-modal-footer">
-            <Button Color="Color.Primary" Icon="fa fa-save" Text="关闭" OnClick="OnClose" />
-            <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="保存" />
+            <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+            <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Create"]" IsAsync="true"/>
         </div>
     </ValidateForm>
 
@@ -56,7 +56,7 @@
 
         private async Task Submit(EditContext context)
         {
-            await PostsForm(vform, "/api/_frameworkuserbase/add");
+            await PostsForm(vform, "/api/_frameworkuserbase/add", (s)=> "Sys.OprationSuccess");
         }
 
         public void OnClose()
