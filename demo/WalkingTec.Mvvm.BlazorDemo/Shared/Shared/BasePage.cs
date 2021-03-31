@@ -30,10 +30,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             OnCloseDialog?.Invoke(result);
         }
 
-        private TaskCompletionSource<DialogResult> ReturnTask { get; } = new TaskCompletionSource<DialogResult>();
 
         public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null)
         {
+            TaskCompletionSource<DialogResult> ReturnTask = new TaskCompletionSource<DialogResult>();
             SetValuesParser p = new SetValuesParser();
             DialogOption option = new DialogOption
             {
@@ -62,31 +62,41 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             return rv;
         }
 
-        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string,string> Msg = null, Action<ErrorObj> ErrorHandler=null)
+        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string,string> Msg = null, Action<ErrorObj> ErrorHandler=null, HttpMethodEnum method= HttpMethodEnum.POST)
         {
-            var rv = await WtmBlazor.Api.CallAPI(url, HttpMethodEnum.POST, form.Model);
+            var rv = await WtmBlazor.Api.CallAPI(url, method, form.Model);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                CloseDialog(DialogResult.Yes);
                 if(Msg != null)
                 {
                     var m = Msg.Invoke(rv.Data);
                     await WtmBlazor.Toast.Success(WtmBlazor.Localizer["Sys.Info"],  WtmBlazor.Localizer[m]);
                 }
+                CloseDialog(DialogResult.Yes);
                 return true;
             }
             else
             {
                 ErrorHandler?.Invoke(rv.Errors);
-                SetError(form, rv.Errors);
+                if (rv.Errors == null)
+                {
+                    await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.StatusCode.ToString());
+                }
+                else
+                {
+                    SetError(form, rv.Errors);
+                }
                 return false;
             }
         }
         public void SetError(ValidateForm form, ErrorObj errors)
         {
-            foreach (var item in errors.Form)
+            if (errors != null)
             {
-                form.SetError(item.Key, item.Value);
+                foreach (var item in errors.Form)
+                {
+                    form.SetError(item.Key, item.Value);
+                }
             }
         }
         public async Task<string> GetToken()

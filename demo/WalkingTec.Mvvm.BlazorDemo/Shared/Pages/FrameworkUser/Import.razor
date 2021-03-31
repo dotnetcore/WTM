@@ -9,8 +9,8 @@
             <Button type="button" Size="Size.Small" OnClick="DownloadTemplate" Text="@WtmBlazor.Localizer["Sys.DownloadTemplate"]" IsAsync="true"/>
         </Row>
         <Row ItemsPerRow="ItemsPerRow.Three">
-            <span style="font-size:18px;position:absolute;top:25px;"><Badge Color="Color.Info">2</Badge>将编辑好的模板上传 </span>
-            <WTSimpleUpload @bind-Value="Model.UploadFileId" ShowLabel="false"></WTSimpleUpload>
+            <span style="font-size:18px;position:absolute;top:30px;"><Badge Color="Color.Info">2</Badge>将编辑好的模板上传 </span>
+            <WTSimpleUpload @bind-Value="Model.UploadFileId" LabelText=""></WTSimpleUpload>
         </Row>
         <Row ItemsPerRow="ItemsPerRow.Two" style="@ErrorRowStyle">
             <span style="font-size:18px;position:absolute;top:5px;"><Badge Color="Color.Danger">3</Badge>导入失败，请下载错误文件查看详情 </span>
