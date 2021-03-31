@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using BootstrapBlazor.Components;
 using Microsoft.Extensions.Hosting;
+using Microsoft.JSInterop;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Json;
@@ -17,15 +18,23 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
     public class ApiClient
     {
         public HttpClient Client { get; }
-
-        public ApiClient(HttpClient client)
+        private IJSRuntime js { get; }
+        public ApiClient(HttpClient client, IJSRuntime jsr)
         {
             Client = client;
+            js = jsr;
+        }
+
+        public void SetToken(string token)
+        {
+            Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         }
 
         #region CallApi
         public async Task<ApiResult<T>> CallAPI<T>(string url, HttpMethodEnum method, HttpContent content, int? timeout = null, string proxy = null) where T : class
         {
+            var token = await js.InvokeAsync<string>("localStorageFuncs.get", "wtmtoken");
+            Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             ApiResult<T> rv = new ApiResult<T>();
             try
             {
@@ -97,6 +106,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 }
                 else
                 {
+                    if(res.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        await js.InvokeVoidAsync("localStorageFuncs.remove", "wtmtoken");
+                        await js.InvokeVoidAsync("urlFuncs.refresh");
+                    }
                     string responseTxt = await res.Content.ReadAsStringAsync();
                     if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
@@ -160,6 +174,27 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
             }
             return await CallAPI<T>(url, method, content, timeout, proxy);
         }
+
+        public async Task<ApiResult<T>> CallAPI<T>(string url, HttpMethodEnum method, IDictionary<string, string> postdata, byte[] filedata,string filename,int? timeout = null, string proxy = null) where T : class
+        {
+            MultipartFormDataContent content = new MultipartFormDataContent();
+            //填充表单数据
+            if (!(postdata == null || postdata.Count == 0))
+            {
+                List<KeyValuePair<string, string>> paras = new List<KeyValuePair<string, string>>();
+                foreach (string key in postdata.Keys)
+                {
+                    if (postdata[key] != null)
+                    {
+                        content.Add(new StringContent(postdata[key]), key);
+                    }
+                }
+            }
+            content.Add(new ByteArrayContent(filedata),"File",filename);
+
+            return await CallAPI<T>(url, method, content, timeout, proxy);
+        }
+
 
         /// <summary>
         /// 

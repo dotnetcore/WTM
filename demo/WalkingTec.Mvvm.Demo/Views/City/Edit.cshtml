@@ -1,12 +1,12 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.CityVMs.CityVM
+@model WalkingTec.Mvvm.Demo.ViewModels.CityVMs.CityVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
-<wt:row items-per-row="ItemsPerRowEnum.Two">
-<wt:textbox field="Entity.Name" />
-<wt:textbox field="Entity.Test" />
-<wt:combobox field="Entity.ParentId" items="AllParents"/>
-</wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:textbox field="Entity.Name" />
+    <wt:textbox field="Entity.Test" />
+    <wt:tree field="Entity.ParentId" items="AllParents" />
+  </wt:row>
     <wt:hidden field="Entity.ID" />
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />

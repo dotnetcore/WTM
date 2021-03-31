@@ -5,15 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Demo.Models.Virus;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
 {
-    public partial class CitySearcher : BaseSearcher
+    public partial class HospitalSearcher : BaseSearcher
     {
-        [Display(Name = "名称")]
-        public String Name { get; set; }
 
         protected override void InitVM()
         {

@@ -1,12 +1,13 @@
-@model WalkingTec.Mvvm.Demo.ViewModels.CityVMs.CityVM
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs.HospitalVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
 <wt:row items-per-row="ItemsPerRowEnum.Two">
 <wt:textbox field="Entity.Name" />
-<wt:textbox field="Entity.Test" />
-<wt:tree field="Entity.ParentId" items="AllParents"/>
+<wt:combobox field="Entity.Level" />
+<wt:combobox field="Entity.LocationId" items="AllLocations"/>
 </wt:row>
+    <wt:hidden field="Entity.ID" />
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />

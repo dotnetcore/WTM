@@ -3,17 +3,40 @@
 @inherits BasePage
 @layout EmptyLayout
 
-<ValidateForm Model="@Model" OnValidSubmit="@Submit">
-    <BootstrapInput @bind-Value="@Model.ITCode" />
-    <BootstrapInput @bind-Value="@Model.Password" type="password" />
-    <Button ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="提交" />
-</ValidateForm>
+<div class="d-flex flex-column app-layout-login ">
+    <div class="flex-fill  login-layout app-login-back-@bgnumber">
+        <header class="login-header">
+            <img src="/images/logo.png" alt="" height="48">
+        </header>
+        <div class="login-content">
+            <div class="login-form">
+                <h1>WTM Blazor</h1>
+                <ValidateForm Model="@Model" OnValidSubmit="@Submit">
+                    <BootstrapInput @bind-Value="@Model.ITCode" />
+                    <BootstrapInput @bind-Value="@Model.Password" type="password" />
+                    <Button ButtonType="ButtonType.Submit" Text="Login" style="width:100%;margin-top:20px;" IsAsync="true" />
+                </ValidateForm>
+            </div>
+        </div>
+    </div>
+</div>
+<Toast />
+
+
 @code {
     [Parameter]
     public bool? LoginSuccess { get; set; }
     [Parameter]
     public EventCallback<bool?> LoginSuccessChanged { get; set; }
+    private int bgnumber;
     private LoginVM Model = new LoginVM();
+
+    protected override void OnInitialized()
+    {
+        bgnumber = new Random().Next(1, 6);
+        base.OnInitialized();
+    }
+
     private async Task Submit(EditContext context)
     {
         var rv = await WtmBlazor.Api.CallAPI<DynamicData>("/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = Model.ITCode, Password = Model.Password });
@@ -25,7 +48,7 @@
         }
         else
         {
-            
+            await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"] , rv.Errors.Message[0]);
         }
     }
 }

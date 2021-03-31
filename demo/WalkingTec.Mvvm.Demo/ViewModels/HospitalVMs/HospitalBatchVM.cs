@@ -5,17 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Demo.Models.Virus;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
 {
-    public partial class CityBatchVM : BaseBatchVM<City, City_BatchEdit>
+    public partial class HospitalBatchVM : BaseBatchVM<Hospital, Hospital_BatchEdit>
     {
-        public CityBatchVM()
+        public HospitalBatchVM()
         {
-            ListVM = new CityListVM();
-            LinkedVM = new City_BatchEdit();
+            ListVM = new HospitalListVM();
+            LinkedVM = new Hospital_BatchEdit();
         }
 
     }
@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 	/// <summary>
     /// Class to define batch edit fields
     /// </summary>
-    public class City_BatchEdit : BaseVM
+    public class Hospital_BatchEdit : BaseVM
     {
 
         protected override void InitVM()

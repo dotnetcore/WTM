@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using WalkingTec.Mvvm.Core;
+using System.Text.Json;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
 {
@@ -61,12 +62,31 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             return rv;
         }
 
-        public async Task SetError(ValidateForm form, ErrorObj errors)
+        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string,string> Msg = null, Action<ErrorObj> ErrorHandler=null)
+        {
+            var rv = await WtmBlazor.Api.CallAPI(url, HttpMethodEnum.POST, form.Model);
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                CloseDialog(DialogResult.Yes);
+                if(Msg != null)
+                {
+                    var m = Msg.Invoke(rv.Data);
+                    await WtmBlazor.Toast.Success(WtmBlazor.Localizer["Sys.Info"],  WtmBlazor.Localizer[m]);
+                }
+                return true;
+            }
+            else
+            {
+                ErrorHandler?.Invoke(rv.Errors);
+                SetError(form, rv.Errors);
+                return false;
+            }
+        }
+        public void SetError(ValidateForm form, ErrorObj errors)
         {
             foreach (var item in errors.Form)
             {
-                //var exp = PropertyHelper.GetPropertyExpression(form.Model.GetType(), item.Key);
-                //form.SetError(exp, item.Value);
+                form.SetError(item.Key, item.Value);
             }
         }
         public async Task<string> GetToken()
@@ -83,6 +103,12 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         {
             await JSRuntime.InvokeVoidAsync("urlFuncs.redirect", path);
         }
+
+        public async Task Download(string url, object data, HttpMethodEnum method= HttpMethodEnum.POST)
+        {
+            await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data), method.ToString());
+        }
+
     }
 
     public class WtmBlazorContext
@@ -91,13 +117,14 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         public GlobalItems GlobalSelectItems { get; set; }
         public ApiClient Api { get; set; }
         public DialogService Dialog { get; set; }
-
-        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog)
+        public ToastService Toast { get; set; }
+        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog,ToastService toast)
         {
             this.Localizer = factory.Create(typeof(Program)); ;
             this.GlobalSelectItems = gi;
             this.Api = api;
             this.Dialog = dialog;
+            this.Toast = toast;
         }
     }
 }
