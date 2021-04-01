@@ -342,6 +342,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return $@"{{""Data"":{self.GetDataJson(PlainText)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount},""Msg"":""success"",""Code"":200}}";
         }
 
+        public static object GetJsonForApi<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true) where T : TopBasePoco, new()
+        {
+            return new { Data = self.GetEntityList(), Count = self.Searcher.Count, PageCount = self.Searcher.PageCount, Page = self.Searcher.Page, Msg = "success", Code = 200 };
+        }
+
+
         public static string GetError<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco, new()
         {
             return $@"{{""Data"":{{}},""Count"":0,""Page"":0,""PageCount"":0,""Msg"":""{(self as BaseVM).MSD.GetFirstError()}"",""Code"":400}}";

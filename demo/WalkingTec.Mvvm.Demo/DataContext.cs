@@ -18,8 +18,13 @@ namespace WalkingTec.Mvvm.Demo
         public DataContext(string cs, DBTypeEnum dbtype)
             : base(cs, dbtype)
         {
-
         }
+
+        public DataContext(string cs, DBTypeEnum dbtype, string version = null)
+            : base(cs, dbtype, version)
+        {
+        }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<FrameworkUser> FrameworkUsers { get; set; }
 
