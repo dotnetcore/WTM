@@ -39,7 +39,7 @@
             <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="@OnEditClick" />
             <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="@OnDetailsClick" />
             <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-key" Text="@WtmBlazor.Localizer["Login.ChangePassword"]" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-key" Text="@WtmBlazor.Localizer["Login.ChangePassword"]" OnClickCallback="@OnPasswordClick" />
         </div>
     </RowButtonTemplate>
 </Table>
@@ -76,10 +76,16 @@
         }
     }
 
+    private async Task OnPasswordClick(FrameworkUser_View item)
+    {
+        await OpenDialog<Password>(WtmBlazor.Localizer["Login.ChangePassword"], x => x.id == item.ID.ToString());
+    }
+
     private async Task OnDetailsClick(FrameworkUser_View item)
     {
         await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());
     }
+
 
     private async Task OnExportClick(IEnumerable<FrameworkUser_View> items)
     {

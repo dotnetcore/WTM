@@ -8,7 +8,7 @@
             <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
                 <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
                     <BootstrapInput @bind-Value="@Model.Entity.ITCode" />
-                    <BootstrapInput @bind-Value="@Model.Entity.Password" />
+                    <BootstrapInput @bind-Value="@Model.Entity.Password"  type="password"/>
                     <BootstrapInput @bind-Value="@Model.Entity.Name" />
                     <Select @bind-Value="@Model.Entity.Gender" PlaceHolder="aaa"/>
                     <WTUploadImage @bind-Value="@Model.Entity.PhotoId" />
@@ -42,15 +42,10 @@
         private List<SelectedItem> AllGroups = new List<SelectedItem>();
         private ValidateForm vform { get; set; }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnInitializedAsync()
         {
-            if(firstRender == true)
-            {
-                AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
-                AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
-                StateHasChanged();
-            }
-            await base.OnAfterRenderAsync(firstRender);
+            AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
+            AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
         }
 
 

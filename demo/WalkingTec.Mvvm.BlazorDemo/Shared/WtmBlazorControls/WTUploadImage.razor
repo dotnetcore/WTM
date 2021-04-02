@@ -5,6 +5,8 @@
 @using System.Linq.Expressions;
 @using System.IO;
 @typeparam TValue
+
+
 <AvatarUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="image/*" IsSingle="!IsMultiple" ShowProgress="true" OnChange="@OnAvatarUpload"
               OnDelete="@OnAvatarDelete"  DisplayText="@LabelText" DefaultFileList="@dlist"></AvatarUpload>
 
@@ -29,7 +31,7 @@
     public string LabelText { get; set; } = null;
 
     private Dictionary<string, string> files { get; set; } = new Dictionary<string, string>();
-    private List<UploadFile> dlist = new List<UploadFile>();
+    private List<UploadFile> dlist = null;
     private AvatarUpload<TValue> uploader { get; set; }
     private bool FileSet { get; set; } = false;
 
@@ -49,7 +51,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         if (Value != null)
         {
             var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{Value}", HttpMethodEnum.GET, new Dictionary<string, string> {

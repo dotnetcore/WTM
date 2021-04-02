@@ -7,7 +7,7 @@
         <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
             <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
                 <BootstrapInput @bind-Value="@Model.Entity.ITCode" />
-                <BootstrapInput @bind-Value="@Model.Entity.Password" />
+                <div></div>
                 <BootstrapInput @bind-Value="@Model.Entity.Name" />
                 <Select @bind-Value="@Model.Entity.Gender" PlaceHolder="aaa" />
                 <WTUploadImage @bind-Value="@Model.Entity.PhotoId" />
@@ -42,26 +42,12 @@
     [Parameter]
     public string id { get; set; }
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
-    //    AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
-    //    var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUserBase/{id}");
-    //    Model = rv.Data;
-    //    await base.OnInitializedAsync();
-    //}
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        if (firstRender == true)
-        {
-            AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
-            AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
-            var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUserBase/{id}");
-            Model = rv.Data;
-            StateHasChanged();
-        }
-        await base.OnAfterRenderAsync(firstRender);
+        AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
+        AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
+        var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUserBase/{id}");
+        Model = rv.Data;
     }
 
 

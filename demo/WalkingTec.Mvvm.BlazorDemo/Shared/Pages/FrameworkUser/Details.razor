@@ -40,18 +40,14 @@
     private ValidateForm vform { get; set; }
     [Parameter]
     public string id { get; set; }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender == true)
+
+        protected override async Task OnInitializedAsync()
         {
             AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
             AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
             var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUserBase/{id}");
             Model = rv.Data;
-            StateHasChanged();
         }
-        await base.OnAfterRenderAsync(firstRender);
-    }
 
     public void OnClose()
     {

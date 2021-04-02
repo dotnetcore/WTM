@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                     }));
                 }
                 catch { };
-                builder.SetKey(Guid.NewGuid());
+                //builder.SetKey(Guid.NewGuid());
                 builder.CloseComponent();
             };
             await WtmBlazor.Dialog.Show(option);
