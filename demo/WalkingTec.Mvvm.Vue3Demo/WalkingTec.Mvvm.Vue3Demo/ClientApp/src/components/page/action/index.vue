@@ -25,13 +25,12 @@
   </a-space>
 </template>
 <script lang="ts">
-import { Vue, Options, mixins, Prop } from "vue-property-decorator";
-import { RowActionBasics, PageActionBasics } from "./script";
-import ActionInsert from "./action_insert.vue";
-import ActionUpdate from "./action_update.vue";
+import { Options,Prop,Vue } from "vue-property-decorator";
 import ActionDelete from "./action_delete.vue";
 import ActionExport from "./action_export.vue";
 import ActionImport from "./action_import.vue";
+import ActionInsert from "./action_insert.vue";
+import ActionUpdate from "./action_update.vue";
 @Options({
   components: {
     ActionInsert,

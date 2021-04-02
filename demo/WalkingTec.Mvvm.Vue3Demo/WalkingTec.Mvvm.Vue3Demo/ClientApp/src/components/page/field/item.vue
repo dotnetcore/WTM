@@ -5,7 +5,7 @@
   <slot v-else />
 </template>
 <script lang="ts">
-import { Vue, Options, Prop, Inject } from "vue-property-decorator";
+import { Inject,Options,Vue } from "vue-property-decorator";
 @Options({ components: {} })
 export default class extends Vue {
   @Inject({ default: { colItem: false, colSpan: 24 } }) readonly colProps;

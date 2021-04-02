@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { Options, Prop, Vue, Inject, Ref, Emit } from "vue-property-decorator";
+import { Inject,Options,Prop,Ref,Vue } from "vue-property-decorator";
 @Options({
   components: {},
 })

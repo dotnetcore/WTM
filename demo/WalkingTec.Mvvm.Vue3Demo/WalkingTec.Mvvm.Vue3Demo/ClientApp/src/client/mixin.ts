@@ -62,7 +62,7 @@ declare module '@vue/runtime-core' {
          * 合并当前页面的 query 追加 detailsVisible 触发显示
          * @param {*} [query]
          */
-        __wtmToDetails: (query: any) => void
+        __wtmToDetails: (query?: any) => void
         /**
          * 详情返回
          * 去除当前页面的 query 中 detailsVisible 触发隐藏

@@ -8,12 +8,12 @@
   </WtmView>
 </template>
 <script lang="ts">
-import { Vue, Options, Provide, Inject } from "vue-property-decorator";
+import { Options,Provide,Vue } from "vue-property-decorator";
+import PageController,{ PageEntity } from "./controller";
 import ViewAction from "./views/action.vue";
 import ViewDetails from "./views/details.vue";
 import ViewFilter from "./views/filter.vue";
 import ViewGrid from "./views/grid.vue";
-import PageController, { PageEntity } from "./controller";
 @Options({
   components: {
     ViewAction,

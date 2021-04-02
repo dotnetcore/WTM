@@ -2,9 +2,7 @@
   <WtmAction :PageController="PageController" :params="params" />
 </template>
 <script lang="ts">
-import { Vue, Options, mixins, Inject } from "vue-property-decorator";
-import { ActionBasics } from "@/components";
-import PageController from "../controller";
+import { Inject,Options,Vue } from "vue-property-decorator";
 @Options({ components: {} })
 export default class extends Vue {
   // page Inject 注入 row 为 toRowAction 注入

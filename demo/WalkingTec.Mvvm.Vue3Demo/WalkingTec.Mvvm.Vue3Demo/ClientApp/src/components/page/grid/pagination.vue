@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
-import { Options, Prop, Vue, Watch } from "vue-property-decorator";
 import { ControllerBasics } from "@/client";
+import { Options, Prop, Vue } from "vue-property-decorator";
 @Options({
   components: {},
 })
@@ -44,7 +44,7 @@ export default class extends Vue {
     this.__wtmToQuery(values);
     this.Pagination.onCurrentChange({ current, pageSize });
   }
-  created() {}
+  created() { }
 }
 </script>
 <style  lang="less">

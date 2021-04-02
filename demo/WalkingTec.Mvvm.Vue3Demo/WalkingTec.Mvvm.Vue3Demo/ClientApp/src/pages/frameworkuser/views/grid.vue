@@ -6,9 +6,8 @@
   />
 </template>
 <script lang="ts">
-import { Vue, Options, Inject } from "vue-property-decorator";
-import { defineComponent } from "vue";
-import { ColDef, ColGroupDef, GridOptions } from "ag-grid-community";
+import { ColDef,ColGroupDef,GridOptions } from "ag-grid-community";
+import { Inject,Options,Vue } from "vue-property-decorator";
 import { PageController } from "../controller";
 import { EnumLocaleLabel } from "../locales";
 import RowAction from "./action.vue";

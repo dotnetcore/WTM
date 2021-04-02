@@ -27,12 +27,11 @@
   </pro-layout>
 </template>
 <script lang="ts">
-import { Vue, Options } from "vue-property-decorator";
-import { h } from "vue";
-import RightContentRender from "./views/rightContentRender.vue";
-import Container from "./views/container.vue";
-import Tabs from "./views/tabs.vue";
 import { $i18n } from "@/client";
+import { Options,Vue } from "vue-property-decorator";
+import Container from "./views/container.vue";
+import RightContentRender from "./views/rightContentRender.vue";
+import Tabs from "./views/tabs.vue";
 @Options({
   components: { RightContentRender, Container, Tabs },
 })

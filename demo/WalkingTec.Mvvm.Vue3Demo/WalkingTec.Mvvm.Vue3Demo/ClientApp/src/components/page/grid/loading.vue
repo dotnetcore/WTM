@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { Options, Prop, Vue, Watch } from "vue-property-decorator";
+import { Options,Prop,Vue } from "vue-property-decorator";
 @Options({
   components: {},
 })

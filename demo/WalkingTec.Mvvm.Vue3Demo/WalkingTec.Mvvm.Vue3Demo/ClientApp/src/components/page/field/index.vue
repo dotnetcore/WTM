@@ -55,8 +55,8 @@
   </Item>
 </template>
 <script lang="ts">
-import { Vue, Options, Prop, Inject } from "vue-property-decorator";
 import { WTM_ValueType } from "@/client";
+import { Inject,Options,Prop,Vue } from "vue-property-decorator";
 import Item from "./item.vue";
 import Text from "./views/text.vue";
 @Options({ components: { Item, Text } })

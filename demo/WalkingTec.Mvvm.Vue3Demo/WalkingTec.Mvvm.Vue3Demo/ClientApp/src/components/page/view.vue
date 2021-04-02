@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { Options, Prop, Vue, Provide, Ref } from "vue-property-decorator";
+import { Options,Prop,Vue } from "vue-property-decorator";
 @Options({
   components: {},
 })

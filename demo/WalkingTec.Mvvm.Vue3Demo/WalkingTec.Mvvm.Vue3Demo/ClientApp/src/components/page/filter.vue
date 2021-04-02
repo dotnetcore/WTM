@@ -45,17 +45,14 @@
 
 <script lang="ts">
 import { ControllerBasics } from "@/client";
-import { fromEvent, Subscription } from "rxjs";
+import { fromEvent,Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
-import { computed } from "vue";
 import {
-  Options,
-  Prop,
-  Vue,
-  Ref,
-  Provide,
-  Inject,
-  Emit,
+Emit,Inject,Options,
+Prop,
+
+
+Provide,Ref,Vue
 } from "vue-property-decorator";
 
 const CONFIG_SPAN_BREAKPOINTS = {
