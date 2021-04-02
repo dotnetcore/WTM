@@ -2,7 +2,7 @@ import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
 import { action, observable } from 'mobx';
 import { BehaviorSubject } from 'rxjs';
-import { createRouter, createWebHistory, RouteLocationNormalized, Router } from 'vue-router';
+import { createRouter, createWebHistory, RouteLocationNormalized, Router, RouteRecordRaw } from 'vue-router';
 // Vue.registerHooks([
 //   'beforeRouteEnter',
 //   'beforeRouteLeave',
@@ -19,6 +19,12 @@ class AppRouter {
    * @memberof AppRouter
    */
   Router: Router;
+  /**
+   * 路由配置
+   * @type {Array<RouteRecordRaw>}
+   * @memberof AppRouter
+   */
+  RouterConfig: Array<RouteRecordRaw>;
   /**
    * 已开 页面缓存列表
    * @memberof AppRouter
@@ -64,9 +70,10 @@ class AppRouter {
   }
 
   onInit() {
+    this.RouterConfig = this.createRouters()
     this.Router = createRouter({
       history: createWebHistory(process.env.BASE_URL),
-      routes: this.createRouters()
+      routes: this.RouterConfig
     })
     this.Router.beforeEach(this.beforeEach)
     this.Router.beforeResolve(this.beforeResolve)
