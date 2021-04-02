@@ -1,7 +1,10 @@
 <template>
-  <WtmDetails :onFinish="onFinish">
+  <WtmDetails :loading="Entities.loading" :onFinish="onFinish">
+    <template v-show="false">
+      <WtmField entityKey="ID" />
+    </template>
     <a-space>
-      <WtmField entityKey="ITCode" />
+      <WtmField entityKey="ITCode" :disabled="IsEdit" />
       <WtmField entityKey="Password" />
     </a-space>
     <a-space>
@@ -10,31 +13,33 @@
     </a-space>
 
     <WtmField entityKey="Gender" />
-    <WtmField entityKey="SelectedGroupCodes" />
+    <WtmField entityKey="SelectedRolesCodes" />
+    <!-- <WtmField entityKey="SelectedGroupCodes" /> -->
   </WtmDetails>
 </template>
 <script lang="ts">
-import { Vue, Options, Inject, Provide } from "vue-property-decorator";
+import { PageDetailsBasics } from "@/components";
+import { Inject, mixins, Options, Provide } from "vue-property-decorator";
+import { PageController } from "../controller";
 @Options({ components: {} })
-export default class extends Vue {
-  @Inject() readonly PageController;
-  @Provide({ reactive: true }) readonly formState = {
+export default class extends mixins(PageDetailsBasics) {
+  @Inject() readonly PageController: PageController;
+  @Provide({ reactive: true }) formState = {
     Entity: {
-      ITCode: "1",
-      Password: "2",
-      Email: "3",
-      Name: "4",
-      Gender: "Male",
+      ID: "",
+      ITCode: "",
+      Password: "",
+      Email: "",
+      Name: "",
+      Gender: "",
     },
+    SelectedRolesCodes: [],
     SelectedGroupCodes: [],
   };
-  async onFinish(values) {
-    console.log("LENG ~ extends ~ onFinish ~ values", values);
-    return new Promise((res, rej) => {
-      this.lodash.delay(() => rej("出错了"), 2000);
-    });
+  created() { }
+  mounted() {
+    this.onLoading()
   }
-  created() {}
 }
 </script>
 <style lang="less">

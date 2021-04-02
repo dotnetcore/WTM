@@ -1,8 +1,6 @@
 <template>
   <a-popconfirm
-    title="Are you sure delete this task?"
-    ok-text="Yes"
-    cancel-text="No"
+    :title="$t('action.deleteConfirm')"
     :disabled="disabled"
     @confirm="onConfirm"
   >

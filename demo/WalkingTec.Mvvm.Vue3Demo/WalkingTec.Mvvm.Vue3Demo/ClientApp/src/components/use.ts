@@ -1,6 +1,6 @@
 import { App } from 'vue';
 import WtmAction from './page/action/index.vue';
-import WtmDetails from './page/details.vue';
+import WtmDetails from './page/details/index.vue';
 import WtmView from './page/view.vue';
 import WtmGrid from './page/grid/index.vue';
 import WtmFilter from './page/filter.vue';

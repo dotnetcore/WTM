@@ -16,7 +16,7 @@ import { EnumLocaleLabel } from "../locales";
 export default class extends Vue {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) readonly formState = {
-    ITCode: "2",
+    ITCode: "",
     Name: "",
   };
   readonly EnumLocaleLabel = EnumLocaleLabel;
@@ -25,7 +25,7 @@ export default class extends Vue {
   }
   async onFinish(values) {
     await this.Pagination.onLoading(values);
-    this.onText();
+    // this.onText();
   }
   async onReset(values) {
     await this.Pagination.onLoading(values);

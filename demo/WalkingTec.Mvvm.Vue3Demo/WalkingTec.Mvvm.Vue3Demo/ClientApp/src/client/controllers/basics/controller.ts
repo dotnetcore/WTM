@@ -1,26 +1,34 @@
-import { saveAs } from 'file-saver'
-import { BindAll } from 'lodash-decorators'
+import { saveAs } from 'file-saver';
 import lodash from 'lodash';
-import { action, observable } from "mobx"
-import { AjaxBasics, Regulars } from "../../helpers"
-import { BasicsOptions, EntitiesBasics } from "./entities"
-import { Pagination, PaginationOptions } from "./pagination"
+import { BindAll } from 'lodash-decorators';
+import { action, observable } from "mobx";
+import { AjaxRequest } from 'rxjs/ajax';
+import { AjaxBasics, Regulars } from "../../helpers";
+import { EntitiesBasics } from "./entities";
+import { Pagination } from "./pagination";
+import { globalProperties } from "@/client";
 export interface ControllerBasicsOptions {
   /** 数据唯一标识 key */
   key?: string;
-  /** 列表 */
-  Pagination?: PaginationOptions;
-  /** 实体详情 */
-  Entities?: BasicsOptions;
+  search?: string | AjaxRequest;
+  details?: string | AjaxRequest;
+  insert?: string | AjaxRequest;
+  update?: string | AjaxRequest;
+  delete?: string | AjaxRequest;
+  import?: string | AjaxRequest;
+  export?: string | AjaxRequest;
+  exportIds?: string | AjaxRequest;
+  template?: string | AjaxRequest;
 }
 @BindAll()
 
 export class ControllerBasics<T = any> {
-  constructor(protected $ajax: AjaxBasics, options?: ControllerBasicsOptions) {
+  constructor(options?: ControllerBasicsOptions) {
     if (options) {
       this.onReset(options);
     }
   }
+  $ajax = globalProperties.$Ajax
   /**
    * 配置
    * @type {ControllerBasicsOptions}
@@ -60,10 +68,34 @@ export class ControllerBasics<T = any> {
   */
   onReset(options?: ControllerBasicsOptions) {
     this.options = lodash.merge({}, this.options, options);
-    this.Pagination = new Pagination(this.$ajax, { key: this.key, ...this.options.Pagination });
-    this.Entities = new EntitiesBasics(this.$ajax, this.options.Entities);
+    this.Pagination = new Pagination(this.$ajax, { key: this.key, ...this.getAjaxRequest('search') });
+    this.Entities = new EntitiesBasics(this.$ajax, this.getAjaxRequest('details'));
     this.onToggleLoading(false)
     return this;
+  }
+  /**
+   * 转换为对应的 AjaxRequest
+   * @param type 
+   * @returns 
+   */
+  getAjaxRequest(type: 'search' | 'details' | 'insert' | 'update' | 'delete' | 'import' | 'export' | 'exportIds' | 'template'): AjaxRequest {
+    let options = lodash.get(this.options, type);
+    if (lodash.isString(options)) {
+      return {
+        url: options, method: lodash.get({
+          search: 'post',
+          details: 'get',
+          insert: 'post',
+          update: 'put',
+          delete: 'post',
+          import: 'post',
+          export: 'post',
+          exportIds: 'post',
+          template: 'get',
+        }, type)
+      }
+    }
+    return options
   }
   /**
     * 切换加载状态
@@ -78,11 +110,11 @@ export class ControllerBasics<T = any> {
   /**
    * 添加
    */
-  async onInstall(entities: T, msg: string) {
+  async onInstall(entities: T, msg?: string) {
     try {
       this.onToggleLoading(true);
-      const res = await this.$ajax.post('', entities)
-      // this.Pagination.onCurrentChange(1, this.Pagination.oldBody)
+      const res = await this.$ajax.request(lodash.assign({ body: entities }, this.getAjaxRequest('insert'))).toPromise()
+      this.Pagination.onCurrentChange({ current: 1})
       ControllerBasics.$msg(msg)
       this.onToggleLoading(false);
       return res
@@ -96,10 +128,10 @@ export class ControllerBasics<T = any> {
    * @param key 
    * @param value 
    */
-  async onUpdate(entities: T, msg: string) {
+  async onUpdate(entities: T, msg?: string) {
     try {
       this.onToggleLoading(true);
-      const res = await this.$ajax.put('', entities)
+      const res = await this.$ajax.request(lodash.assign({ body: entities }, this.getAjaxRequest('update'))).toPromise()
       this.Entities.onUpdate(old => {
         return lodash.assign(old, entities)
       })
@@ -118,7 +150,7 @@ export class ControllerBasics<T = any> {
    * @param entities 元素
    * @param overIndex 索引
    */
-  async onOrderBy(entities: T, overIndex, msg: string) {
+  async onOrderBy(entities: T, overIndex, msg?: string) {
     try {
       this.onToggleLoading(true);
       this.Pagination.onOrderBy(entities, overIndex)
@@ -136,7 +168,7 @@ export class ControllerBasics<T = any> {
    * @returns {T[]}
    * @memberof Pagination
    */
-  async onRemove(key: any, msg: string) {
+  async onRemove(key: any, msg?: string) {
     try {
       this.onToggleLoading(true);
       let ids = []

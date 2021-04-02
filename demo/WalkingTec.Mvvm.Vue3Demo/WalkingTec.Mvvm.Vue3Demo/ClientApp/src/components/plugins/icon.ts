@@ -11,6 +11,8 @@ import {
     CloudDownloadOutlined,
     SettingOutlined,
     FormOutlined,
+    InboxOutlined,
+    LockOutlined
 } from '@ant-design/icons-vue';
 import lodash from 'lodash';
 import { App } from 'vue';
@@ -18,6 +20,7 @@ export default {
     install(app: App) {
         lodash.map({
             DownloadOutlined,
+            LockOutlined,
             DownOutlined,
             EditOutlined,
             SaveOutlined,
@@ -28,6 +31,7 @@ export default {
             CloudUploadOutlined,
             CloudDownloadOutlined,
             SettingOutlined,
+            InboxOutlined,
             FormOutlined
         }, (icon, key) => app.component(key, icon))
     }

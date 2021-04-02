@@ -1,6 +1,8 @@
-import { BindAll } from 'lodash-decorators';
-import lodash from 'lodash';
 import Bowser from 'bowser';
+import lodash from 'lodash';
+import { BindAll } from 'lodash-decorators';
+import { configure } from "mobx";
+configure({ enforceActions: "observed" });
 @BindAll()
 export class WtmConfig {
     constructor() {
@@ -18,7 +20,7 @@ export class WtmConfig {
      * api 地址
      * @memberof XTGlobal
      */
-    readonly target = lodash.get(window, '__xt__env.target', process.env.target);
+    readonly target = ''// lodash.get(window, '__xt__env.target', process.env.target);
     /**
      * 环境设备信息
      * @memberof XTGlobal

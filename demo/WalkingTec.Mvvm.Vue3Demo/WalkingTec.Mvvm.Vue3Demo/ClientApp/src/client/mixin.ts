@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2021-04-02 13:55:12
+ * @modify date 2021-04-02 13:55:12
+ * @desc 全局扩展函数
+ */
 import { ComponentOptions, defineComponent } from "vue"
 import lodash from "lodash"
 import $WtmConfig, { WtmConfig } from './config';

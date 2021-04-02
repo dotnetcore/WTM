@@ -1,62 +1,60 @@
 <template>
   <Item>
-    <a-form-item v-bind="itemBind">
-      <slot>
-        <!-- 只读 -->
-        <template v-if="readonly">
-          <span v-text="value"></span>
-        </template>
-        <!-- 可编辑 -->
-        <template v-else>
-          <!-- 文本 text -->
-          <template v-if="_valueType === 'text'">
-            <a-input
-              v-model:value="value"
-              :placeholder="_placeholder"
-              :disabled="disabled"
-              autocomplete="off"
-            />
+    <a-spin :spinning="spinning">
+      <a-form-item v-bind="itemBind">
+        <slot>
+          <!-- 只读 -->
+          <template v-if="readonly">
+            <span v-text="value"></span>
           </template>
-          <!-- 文本 textarea -->
-          <template v-else-if="_valueType === 'textarea'">
-            <a-textarea
-              v-model:value="value"
-              :placeholder="_placeholder"
-              :auto-size="{ minRows: 2, maxRows: 5 }"
-            />
-          </template>
-          <!-- 单选 radio -->
-          <template v-else-if="_valueType === 'radio'">
-            <a-radio-group v-model:value="value">
-              <a-radio
-                v-for="item in dataSource"
-                :key="item.value"
-                :value="item.value"
-              >
-                <span v-text="item.label"></span>
-              </a-radio>
-            </a-radio-group>
-          </template>
-          <!-- 多选 checkbox -->
-          <template v-else-if="_valueType === 'checkbox'">
-            <a-checkbox-group v-model:value="value" :options="dataSource" />
-          </template>
-          <!-- 未配置 -->
+          <!-- 可编辑 -->
           <template v-else>
-            <span
-              >没有找到类型【<span v-text="_valueType"></span>】：<span
-                v-text="value"
-              ></span
-            ></span>
+            <!-- 文本 text -->
+            <template v-if="_valueType === 'text'">
+              <a-input
+                v-model:value="value"
+                :placeholder="_placeholder"
+                :disabled="disabled"
+                autocomplete="off"
+              />
+            </template>
+            <!-- 文本 textarea -->
+            <template v-else-if="_valueType === 'textarea'">
+              <a-textarea
+                v-model:value="value"
+                :placeholder="_placeholder"
+                :auto-size="{ minRows: 2, maxRows: 5 }"
+              />
+            </template>
+            <!-- 单选 radio -->
+            <template v-else-if="_valueType === 'radio'">
+              <a-radio-group v-model:value="value">
+                <a-radio v-for="item in dataSource" :key="item.value" :value="item.value">
+                  <span v-text="item.label"></span>
+                </a-radio>
+              </a-radio-group>
+            </template>
+            <!-- 多选 checkbox -->
+            <template v-else-if="_valueType === 'checkbox'">
+              <a-checkbox-group v-model:value="value" :options="dataSource" />
+            </template>
+            <!-- 未配置 -->
+            <template v-else>
+              <span>
+                没有找到类型【
+                <span v-text="_valueType"></span>】：
+                <span v-text="value"></span>
+              </span>
+            </template>
           </template>
-        </template>
-      </slot>
-    </a-form-item>
+        </slot>
+      </a-form-item>
+    </a-spin>
   </Item>
 </template>
 <script lang="ts">
 import { WTM_ValueType } from "@/client";
-import { Inject,Options,Prop,Vue } from "vue-property-decorator";
+import { Inject, Options, Prop, Vue } from "vue-property-decorator";
 import Item from "./item.vue";
 import Text from "./views/text.vue";
 @Options({ components: { Item, Text } })
@@ -79,8 +77,12 @@ export default class extends Vue {
   @Prop({ type: Function, default: () => [] }) readonly request;
   // 表单状态值
   @Inject() readonly formState;
+  // 自定义校验状态
+  @Inject() readonly formValidate;
   // 实体
   @Inject() readonly PageEntity;
+  // 数据加载
+  spinning = false;
   // 数据源
   dataSource: Array<{ label: any; value: any }> = [];
   /**  form-item 属性 */
@@ -88,11 +90,13 @@ export default class extends Vue {
     const label = this._label,
       name = this._name,
       valueType = this._valueType;
+    const formValidate = this.lodash.get(this.formValidate, this.lodash.isArray(name) ? name.join('.') : name, {})
     return {
       label: label || name,
       name: name,
       rules: this._rules,
       hasFeedback: this.lodash.includes(["text"], valueType),
+      ...formValidate
     };
   }
   // form-item lable
@@ -149,12 +153,18 @@ export default class extends Vue {
   }
   // 加载数据源
   async onRequest() {
-    const res = await this.lodash.invoke(
-      this,
-      "_request",
-      this.lodash.cloneDeep(this.formState)
-    );
-    this.dataSource = res;
+    this.spinning = true;
+    try {
+      const res = await this.lodash.invoke(
+        this,
+        "_request",
+        this.lodash.cloneDeep(this.formState)
+      );
+      this.dataSource = res;
+    } catch (error) {
+      console.error("LENG ~ onRequest", error)
+    }
+    this.spinning = false;
   }
   async mounted() {
     this.onRequest();

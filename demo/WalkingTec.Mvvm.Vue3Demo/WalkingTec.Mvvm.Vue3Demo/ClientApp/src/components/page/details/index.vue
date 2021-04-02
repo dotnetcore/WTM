@@ -15,16 +15,15 @@
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
     @finish="onSubmit"
+    @validate="onValidate"
   >
-    <a-spin :spinning="spinning">
-      <!-- <a-row :gutter="16" type="flex"> -->
-      <!-- </a-row> -->
+    <a-spin :spinning="spinning || loading">
       <div class="w-form-items">
         <slot />
       </div>
     </a-spin>
     <a-space class="w-form-space" align="center">
-      <a-spin :spinning="spinning">
+      <a-spin :spinning="spinning || loading">
         <template v-slot:indicator>
           <div></div>
         </template>
@@ -47,35 +46,26 @@
 </template>
 
 <script lang="ts">
-import { Inject,Options,Prop,Ref,Vue } from "vue-property-decorator";
+import { Inject, Options, Prop, Ref, Vue, Provide, Watch } from "vue-property-decorator";
 @Options({
   components: {},
 })
 export default class extends Vue {
   /** 表单状态 */
   @Inject() readonly formState = {};
+  /** 自定义 校验状态 用于服务器返回 错误*/
+  @Provide({ reactive: true }) formValidate = {}
   /** 表单 ref */
   @Ref("formRef") readonly formRef;
   /** 表单 rules */
   @Prop({ default: () => [] }) readonly rules;
+  /** 加载中 */
+  @Prop({ default: false }) readonly loading;
   /** 数据 提交 函数 */
   @Prop({ type: Function, required: true }) readonly onFinish;
   spinning = false;
   labelCol = { span: 24 };
   wrapperCol = { span: 24 };
-  // @Emit("finish")
-  // onFinish(values) {
-  //   this.spinning = true;
-  //   this.onSubmit(values)
-  //   return {
-  //     // 表单值
-  //     values,
-  //     // 成功回调
-  //     onComplete: this.onComplete,
-  //     // 失败回调
-  //     onFail: this.onFail,
-  //   };
-  // }
   async onSubmit(values) {
     try {
       this.spinning = true;
@@ -87,28 +77,32 @@ export default class extends Vue {
   }
   async onReset() {
     await this.lodash.result(this.formRef, "resetFields");
+    this.formValidate = {}
     // const values = await this.lodash.result(this.formRef, "validateFields");
+  }
+  onValidate(name) {
+    console.log("LENG ~ extends ~ onValidate ~ name", name)
   }
   // 成功
   onComplete() {
     this.spinning = false;
-    // this.__wtmBackDetails();
+    this.__wtmBackDetails();
   }
   // 失败
   onFail(error) {
-    console.error("LENG  ~ onFail ", error);
+    const formErrors = this.lodash.get(error, 'response.Form');
+    this.formValidate = this.lodash.mapValues(formErrors, (msg, key) => {
+      return {
+        help: msg,
+        validateStatus: 'error'
+      }
+    });
+    console.error("LENG  ~ onFail ", this.formRef, formErrors, error);
     this.spinning = false;
   }
-  // 加载数据
-  onLoading() {
-    this.spinning = true;
-    this.lodash.delay(() => {
-      this.spinning = false;
-    }, 2000);
-  }
-  created() {}
+  created() { }
   mounted() {
-    this.onLoading();
+    // this.onLoading();
     // console.log("LENG ~ extends ~ mounted ~ this", this);
   }
 }

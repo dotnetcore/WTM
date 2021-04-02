@@ -1,34 +1,15 @@
 <template>
-  <pro-layout
-    v-bind="provider"
-    @select="onSelect"
-    @openKeys="onOpenKeys"
-    @collapse="onCollapse"
-  >
+  <pro-layout v-bind="provider" @select="onSelect" @openKeys="onOpenKeys" @collapse="onCollapse">
     <template v-slot:rightContentRender>
       <RightContentRender />
     </template>
-    <!-- <PageContainer
-        :fixedHeader="true"
-        :title="false"
-        :tabList="[
-          { key: '1', tab: 'Details' },
-          { key: '2', tab: 'Rule' },
-        ]"
-        :tabProps="{
-          type: 'editable-card',
-          hideAdd: true,
-        }"
-        :affixProps="{ offsetTop: 100 }"
-      > -->
     <Tabs />
     <Container />
-    <!-- </PageContainer> -->
   </pro-layout>
 </template>
 <script lang="ts">
 import { $i18n } from "@/client";
-import { Options,Vue } from "vue-property-decorator";
+import { Options, Vue } from "vue-property-decorator";
 import Container from "./views/container.vue";
 import RightContentRender from "./views/rightContentRender.vue";
 import Tabs from "./views/tabs.vue";
@@ -62,9 +43,8 @@ export default class extends Vue {
   get menuData() {
     return [
       {
-        path: "/a",
-        name: "a",
-        meta: { icon: "SaveOutlined", title: "测试页面", target: "a" },
+        name: "development",
+        meta: { icon: "SaveOutlined", title: "开发测试", target: "a" },
         children: [
           {
             path: "/frameworkuser",
@@ -82,9 +62,8 @@ export default class extends Vue {
         ],
       },
       {
-        path: "/b",
-        name: "b",
-        meta: { icon: "SaveOutlined", title: "测试页面", target: "a" },
+        name: "production",
+        meta: { icon: "SaveOutlined", title: "正式菜单", target: "a" },
         children: [
           {
             path: "/frameworkuser2",
@@ -100,8 +79,8 @@ export default class extends Vue {
       },
     ];
   }
-  created() {}
-  mounted() {}
+  created() { }
+  mounted() { }
   onCollapse(collapsed) {
     this.provider.collapsed = collapsed;
   }

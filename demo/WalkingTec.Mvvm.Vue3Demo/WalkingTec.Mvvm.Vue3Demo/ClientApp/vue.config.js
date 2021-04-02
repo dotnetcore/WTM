@@ -7,6 +7,7 @@ module.exports = {
     filenameHashing: true,
 
     devServer: {
+        proxy: 'http://localhost:8598',
         hot: true,
         disableHostCheck: true,
         port: 8002,

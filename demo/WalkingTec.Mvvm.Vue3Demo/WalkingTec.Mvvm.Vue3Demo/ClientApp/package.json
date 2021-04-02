@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",
+    "start:api": "cd .. && dotnet run --launch-profile ApiOnly",
     "build": "vue-cli-service build --report",
     "build:dev": "cross-env DEPLOY_ENV=dev vue-cli-service build --report",
     "build:pro": "cross-env DEPLOY_ENV=pro vue-cli-service build --report",

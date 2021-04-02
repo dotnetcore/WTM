@@ -1,11 +1,17 @@
 
-import { $i18n, WTM_EntitiesField, WTM_ValueType } from '@/client';
+import { $i18n, WTM_EntitiesField, WTM_ValueType, FieldRequest } from '@/client';
 import { EnumLocaleLabel } from '../locales';
 
 /**
  * 页面实体
  */
 class Entity {
+    readonly ID: WTM_EntitiesField = {
+        // form 的 name 属性 解析为 Entity.ITCode
+        name: ['Entity', 'ID'],
+        // label 字段描述
+        label: EnumLocaleLabel.ID,
+    }
     readonly ITCode: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'ITCode'],
@@ -49,18 +55,20 @@ class Entity {
         },
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Sex) }],
     }
+    readonly SelectedRolesCodes: WTM_EntitiesField = {
+        name: 'SelectedRolesCodes',
+        label: EnumLocaleLabel.RoleName,
+        placeholder: $i18n.toPlaceholder(EnumLocaleLabel.RoleName),
+        valueType: WTM_ValueType.checkbox,
+        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
+        rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.RoleName), type: "array" }],
+    }
     readonly SelectedGroupCodes: WTM_EntitiesField = {
         name: 'SelectedGroupCodes',
         label: EnumLocaleLabel.GroupName,
         placeholder: $i18n.toPlaceholder(EnumLocaleLabel.GroupName),
         valueType: WTM_ValueType.checkbox,
-        // request: async () => Ajax.get('/api/_FrameworkUserBase/GetFrameworkRoles'),
-        request: async (formState) => {
-            return [
-                { label: $i18n.t(EnumLocaleLabel.Sex_Male), value: 'Male' },
-                { label: $i18n.t(EnumLocaleLabel.Sex_Female), value: 'Female' }
-            ]
-        },
+        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkGroups'),
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.GroupName), type: "array" }],
     }
 }

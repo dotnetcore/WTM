@@ -4,7 +4,13 @@ export * from "./controllers";
 export * from "./enum";
 export * from "./helpers";
 export * from "./locales";
-declare type ProFieldRequestData<U = any> = (params: U, props: any) => Promise<{
+export * from "./globalProperties";
+
+
+/**
+ * 类型定义
+ */
+export declare type ProFieldRequestData<U = any> = (params: U, props: any) => Promise<{
     label: any;
     value: any;
     [key: string]: any;

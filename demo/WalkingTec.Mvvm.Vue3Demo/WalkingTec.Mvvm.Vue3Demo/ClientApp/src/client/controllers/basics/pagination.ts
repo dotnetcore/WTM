@@ -37,6 +37,8 @@ export interface PaginationOptions {
     defaultCurrent?: number;
     /** 默认的每页条数 10 */
     defaultPageSize?: number;
+    /** 排序 key */
+    soryKey?: string;
     /** 当前页码 接口使用key */
     currentKey?: string;
     /** 每页条数 接口使用key */
@@ -60,8 +62,9 @@ export class Pagination<T = any> {
             direction: 'bottom',
             defaultCurrent: 1,
             defaultPageSize: 20,
-            currentKey: 'current',
-            pageSizeKey: 'pageSize',
+            soryKey: 'SortInfo',
+            currentKey: 'Page',
+            pageSizeKey: 'Limit',
         }, options))
     }
     /**
@@ -183,9 +186,9 @@ export class Pagination<T = any> {
                 [this.options.currentKey]: this.current,
                 [this.options.pageSizeKey]: this.pageSize
             });
-            await new Promise((res) => {
-                lodash.delay(res, 3000);
-              });
+            // await new Promise((res) => {
+            //     lodash.delay(res, 3000);
+            //   });
             console.log("LENG: Pagination<T> -> onLoading -> body", body)
             AjaxRequest = lodash.merge({
                 url: this.options.url,
@@ -252,6 +255,10 @@ export class Pagination<T = any> {
         if (lodash.isArray(res)) {
             return { dataSource: res }
         }
+        // wtm
+        if (lodash.hasIn(res, 'Data')) {
+            return { dataSource: lodash.get(res, 'Data'), ...res };
+        }
         return res
     }
     /**
@@ -303,7 +310,7 @@ export class Pagination<T = any> {
      * @memberof Pagination
      */
     @action
-     onToggleLoading(loading: boolean = !this.loading, error = false) {
+    onToggleLoading(loading: boolean = !this.loading, error = false) {
         this.loading = loading;
         this.error = error;
     }

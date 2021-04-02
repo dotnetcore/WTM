@@ -1,7 +1,6 @@
 <template>
   <div class="w-grid-content" :style="style" ref="gridContent">
     <Grid
-      :loading="Pagination.loading"
       :theme="theme"
       :columnDefs="getColumnDefs"
       :rowData="Pagination.dataSource"
@@ -96,9 +95,9 @@ export default class extends Vue {
       }
       lodash.invoke(this.gridOptions, "onGridReady", event);
     },
-    onBodyScroll: (event) => {
-      console.log("LENG ~ extends ~ event", event.api);
-    },
+    // onBodyScroll: (event) => {
+    //   // console.log("LENG ~ extends ~ event", event.api);
+    // },
     // 数据更新
     onRowDataChanged: lodash.debounce((event: RowDataChangedEvent) => {
       if (this.isAutoSizeColumn && this.Pagination.dataSource.length > 0) {
@@ -108,6 +107,9 @@ export default class extends Vue {
       lodash.invoke(this.gridOptions, "onRowDataChanged", event);
     }, 300),
   };
+  /**
+   * 计算 表格高度
+   */
   onReckon() {
     // console.dir(this.gridContent);
     let height = 500;

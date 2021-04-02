@@ -23,12 +23,14 @@ import {
     Popconfirm,
     Transfer,
     Dropdown,
+    Layout,
     Skeleton,
+    Upload,
     DatePicker,
     ConfigProvider
 } from 'ant-design-vue';
 import ProLayout, { PageContainer } from '@ant-design-vue/pro-layout';
-import { App } from 'vue';
+import { App, h } from 'vue';
 export default {
     install(app: App) {
         /**    use antd 组件    */
@@ -37,7 +39,9 @@ export default {
             Popconfirm,
             Button,
             Col,
+            Layout,
             Divider,
+            Upload,
             Drawer,
             Empty,
             Form,
@@ -61,6 +65,9 @@ export default {
             DatePicker,
             ConfigProvider
         ].map(x => app.use(x));
+        // Spin.setDefaultIndicator({
+        //     indicator: h('i', { class: 'anticon anticon-loading anticon-spin ant-spin-dot' }),
+        // });
         app.use(ProLayout)
         app.component('PageContainer', PageContainer)
     }
