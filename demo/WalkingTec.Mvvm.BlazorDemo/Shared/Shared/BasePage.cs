@@ -49,6 +49,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                 {
                     builder.AddAttribute(3, "OnCloseDialog", new Action<DialogResult>((r) =>
                     {
+                        option.OnCloseAsync = null;
                         ReturnTask.TrySetResult(r);
                         option.Dialog!.Close();
                     }));
@@ -56,6 +57,12 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                 catch { };
                 //builder.SetKey(Guid.NewGuid());
                 builder.CloseComponent();
+            };
+            option.OnCloseAsync = async () =>
+            {
+                    option.OnCloseAsync = null;
+                    await option.Dialog.Close();
+                ReturnTask.TrySetResult( DialogResult.Close);
             };
             await WtmBlazor.Dialog.Show(option);
             var rv = await ReturnTask.Task;
