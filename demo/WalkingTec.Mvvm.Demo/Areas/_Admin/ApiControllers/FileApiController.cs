@@ -75,15 +75,42 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetFile")]
-        public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, string csName = null)
+        public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, string csName = null, int? width = null, int? height = null)
         {
-            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
 
 
             if (file == null)
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
             }
+            try
+            {
+                if (width != null || height != null)
+                {
+                    Image oimage = Image.FromStream(file.DataStream);
+                    if (oimage != null)
+                    {
+                        if (width == null)
+                        {
+                            width = oimage.Width * height / oimage.Height;
+                        }
+                        if (height == null)
+                        {
+                            height = oimage.Height * width / oimage.Width;
+                        }
+                        var ms = new MemoryStream();
+                        oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        ms.Position = 0;
+                        await ms?.CopyToAsync(Response.Body);
+                        file.DataStream.Dispose();
+                        ms.Dispose();
+                        oimage.Dispose();
+                        return new EmptyResult();
+                    }
+                }
+            }
+            catch { }
 
             var ext = file.FileExt.ToLower();
             if (ext == "mp4")

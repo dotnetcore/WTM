@@ -8,7 +8,7 @@
         <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
             <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
                 <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.ITCode" />
-                <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.Password" />
+                <div></div>
                 <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.Name" />
                 <Select IsDisabled="true" @bind-Value="@Model.Entity.Gender" PlaceHolder="aaa" />
                 <WTUploadImage IsDisabled="true" @bind-Value="@Model.Entity.PhotoId" LabelText="测试" />

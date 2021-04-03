@@ -56,6 +56,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                 }
                 catch { };
                 //builder.SetKey(Guid.NewGuid());
+                builder.AddMarkupContent(4, "<div style=\"height:10px\"></div>");
                 builder.CloseComponent();
             };
             option.OnCloseAsync = async () =>
@@ -67,6 +68,45 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             await WtmBlazor.Dialog.Show(option);
             var rv = await ReturnTask.Task;
             return rv;
+        }
+
+        public async Task<bool> PostsData(object data,string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
+        {
+            var rv = await WtmBlazor.Api.CallAPI(url, method, data);
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                if (Msg != null)
+                {
+                    var m = Msg.Invoke(rv.Data);
+                    await WtmBlazor.Toast.Success(WtmBlazor.Localizer["Sys.Info"], WtmBlazor.Localizer[m]);
+                }
+                CloseDialog(DialogResult.Yes);
+                return true;
+            }
+            else
+            {
+                ErrorHandler?.Invoke(rv.Errors);
+                if (rv.Errors == null)
+                {
+                    await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.StatusCode.ToString());
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(rv.ErrorMsg))
+                    {
+                        if (rv.Errors.Form.Any())
+                        {
+                            await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.Errors.Form.First().Value);
+                        }
+                    }
+                    else
+                    {
+                        await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.ErrorMsg);
+                    }
+                }
+                return false;
+            }
+
         }
 
         public async Task<bool> PostsForm(ValidateForm form, string url, Func<string,string> Msg = null, Action<ErrorObj> ErrorHandler=null, HttpMethodEnum method= HttpMethodEnum.POST)
@@ -106,6 +146,40 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                 }
             }
         }
+
+        public  async Task<string> GetBase64Image(string fileid, int? width=null, int? height=null)
+        {
+            var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{fileid}", HttpMethodEnum.GET, new Dictionary<string, string> {
+                    {"width", width?.ToString() },
+                    {"height", height?.ToString() }
+                });
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}";
+            }
+            else
+            {
+                return $"data:image/jpeg;base64,0";
+            }
+        }
+
+        public async Task<string> GetFileUrl(string fileid, int? width = null, int? height = null)
+        {
+            var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{fileid}", HttpMethodEnum.GET, new Dictionary<string, string> {
+                    {"width", width?.ToString() },
+                    {"height", height?.ToString() }
+                });
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}";
+            }
+            else
+            {
+                return $"data:image/jpeg;base64,0";
+            }
+        }
+
+
         public async Task<string> GetToken()
         {
             return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get","wtmtoken");

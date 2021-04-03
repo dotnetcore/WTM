@@ -158,5 +158,52 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             return self;
         }
+
+        public static string AppendQuery(this string self, IDictionary data)
+        {
+            if (self == null)
+            {
+                return null;
+            }
+            string query = "";
+            foreach (IDictionaryEnumerator item in data)
+            {
+                query += item.Key + "=" + item.Value + "&";
+            }
+
+            if (self.Contains("?"))
+            {
+                self += "&" + query;
+            }
+            else
+            {
+                self += "?" + query;
+            }
+            return self;
+        }
+
+        public static string AppendQuery(this string self, List<KeyValuePair<string, string>> data)
+        {
+            if (self == null)
+            {
+                return null;
+            }
+            string query = "";
+            foreach (var item in data)
+            {
+                query += item.Key + "=" + item.Value + "&";
+            }
+
+            if (self.Contains("?"))
+            {
+                self += "&" + query;
+            }
+            else
+            {
+                self += "?" + query;
+            }
+            return self;
+        }
+
     }
 }

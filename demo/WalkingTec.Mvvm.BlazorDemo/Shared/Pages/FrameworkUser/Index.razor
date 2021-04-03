@@ -16,7 +16,7 @@
 
 
 <Table @ref="dataTable" TItem="FrameworkUser_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" @bind-SelectedRows="@selectedRows">
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" >
     <TableColumns>
         <TableColumn @bind-Field="@context.ITCode" Width="180" />
         <TableColumn @bind-Field="@context.Name" />
@@ -24,15 +24,23 @@
         <TableColumn @bind-Field="@context.CellPhone" />
         <TableColumn @bind-Field="@context.RoleName_view" />
         <TableColumn @bind-Field="@context.GroupName_view" />
-        <TableColumn @bind-Field="@context.PhotoId" />
-        <TableColumn @bind-Field="@context.IsValid" Items="@WtmBlazor.GlobalSelectItems.SearcherBoolItems" />
+        <TableColumn @bind-Field="@context.PhotoId">
+            @*<Template Context="value">
+                <Avatar Url="@GetBase64Image(value.ToString(),100,100).Result" Size="Size.ExtraSmall" />
+            </Template>*@
+        </TableColumn>
+        <TableColumn @bind-Field="@context.IsValid"  ComponentType="@typeof(Switch)" />
     </TableColumns>
     <TableToolbarTemplate>
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]"  OnClickCallback="@OnCreateClick"/>
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="@OnCreateClick" />
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@WtmBlazor.Localizer["Sys.BatchEdit"]" />
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]" />
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick"/>
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true"/>
+        <TableToolbarPopconfirmButton TItem="FrameworkUser_View" Color="Color.Primary"
+                                      Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
+                                      OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
+                                      ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
+
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
@@ -48,6 +56,9 @@
 
     private FrameworkUserSearcher SearchModel = new FrameworkUserSearcher();
     private Table<FrameworkUser_View> dataTable;
+
+    
+
     private async Task<QueryData<FrameworkUser_View>> OnSearch(QueryPageOptions opts)
     {
         return await WtmBlazor.Api.CallSearchApi<FrameworkUser_View>("/api/_frameworkuserbase/search", SearchModel, opts);
@@ -57,8 +68,6 @@
     {
         dataTable.QueryAsync();
     }
-
-    private IEnumerable<FrameworkUser_View> selectedRows { get; set; }
 
     private async Task OnCreateClick(IEnumerable<FrameworkUser_View> items)
     {
@@ -84,6 +93,19 @@
     private async Task OnDetailsClick(FrameworkUser_View item)
     {
         await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());
+    }
+
+    private async Task OnBatchDeleteClick()
+    {
+        if (dataTable.SelectedRows.Any())
+        {
+            await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/_frameworkuserbase/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
+            await dataTable.QueryAsync();
+        }
+        else
+        {
+            await WtmBlazor.Toast.Information(content: WtmBlazor.Localizer["Sys.SelectOneRowMin"]);
+        }
     }
 
 
