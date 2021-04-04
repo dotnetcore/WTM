@@ -25,14 +25,14 @@
         <TableColumn @bind-Field="@context.RoleName_view" />
         <TableColumn @bind-Field="@context.GroupName_view" />
         <TableColumn @bind-Field="@context.PhotoId">
-            @*<Template Context="value">
-                <Avatar Url="@GetBase64Image(value.ToString(),100,100).Result" Size="Size.ExtraSmall" />
-            </Template>*@
+            <Template Context="value">
+                <Avatar Size="Size.ExtraSmall"  GetUrlAsync="()=>GetBase64Image(value.Value.ToString(),150,150)"/>
+            </Template>
         </TableColumn>
         <TableColumn @bind-Field="@context.IsValid"  ComponentType="@typeof(Switch)" />
     </TableColumns>
     <TableToolbarTemplate>
-        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="@OnCreateClick" />
+        <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@WtmBlazor.Localizer["Sys.BatchEdit"]" />
         <TableToolbarPopconfirmButton TItem="FrameworkUser_View" Color="Color.Primary"
                                       Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
@@ -44,10 +44,11 @@
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="@OnEditClick" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="@OnDetailsClick" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Danger" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" TItem="FrameworkUser_View" Item="@context" Icon="fa fa-key" Text="@WtmBlazor.Localizer["Login.ChangePassword"]" OnClickCallback="@OnPasswordClick" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success"  Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="()=>OnEditClick(context)" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info"  Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
+            <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="()=>OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+                              Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger"/>
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning"  Icon="fa fa-key" Text="@WtmBlazor.Localizer["Login.ChangePassword"]" OnClickCallback="()=>OnPasswordClick(context)" />
         </div>
     </RowButtonTemplate>
 </Table>
@@ -57,7 +58,7 @@
     private FrameworkUserSearcher SearchModel = new FrameworkUserSearcher();
     private Table<FrameworkUser_View> dataTable;
 
-    
+
 
     private async Task<QueryData<FrameworkUser_View>> OnSearch(QueryPageOptions opts)
     {
@@ -97,21 +98,27 @@
 
     private async Task OnBatchDeleteClick()
     {
-        if (dataTable.SelectedRows.Any())
+        if (dataTable.SelectedRows?.Any() == true)
         {
             await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/_frameworkuserbase/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
             await dataTable.QueryAsync();
         }
         else
         {
-            await WtmBlazor.Toast.Information(content: WtmBlazor.Localizer["Sys.SelectOneRowMin"]);
+            await WtmBlazor.Toast.Information(WtmBlazor.Localizer["Sys.Info"], WtmBlazor.Localizer["Sys.SelectOneRowMin"]);
         }
+    }
+
+    private async Task OnDeleteClick(FrameworkUser_View item)
+    {
+        await PostsData(new List<string> { item.ID.ToString() }, $"/api/_frameworkuserbase/batchdelete",(s)=> "Sys.OprationSuccess");
+        await dataTable.QueryAsync();
     }
 
 
     private async Task OnExportClick(IEnumerable<FrameworkUser_View> items)
     {
-        if (dataTable.SelectedRows.Any())
+        if (dataTable.SelectedRows?.Any() == true)
         {
             await Download("/api/_frameworkuserbase/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
         }
