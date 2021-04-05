@@ -13,8 +13,8 @@ const componentObj: any = new Utils();
  */
 @Component({
   components: {
-    "wtm-upload-img": WtmUploadImg,
-  },
+    "wtm-upload-img": WtmUploadImg
+  }
 })
 export default class CreateForm extends Vue {
   /**
@@ -86,9 +86,13 @@ export default class CreateForm extends Vue {
     const formOptions = this.options.formItem;
     for (const key in formOptions) {
       const option = formOptions[key];
-      if (_.isBoolean(option['isFileDataById']) && !option['isFileDataById']) {
+      if (_.isBoolean(option["isFileDataById"]) && !option["isFileDataById"]) {
         const value = _.get(deep, key) || [];
-        _.set(deep, key, value.map(item => item.response.Id || item.Id))
+        _.set(
+          deep,
+          key,
+          value.map(item => item.response.Id || item.Id)
+        );
       }
     }
     return deep;
@@ -125,11 +129,11 @@ export default class CreateForm extends Vue {
    * @param option
    */
   private getLanguageByKey({ label, key }) {
-      return this.$getLanguageByKey({
-          languageKey: this.languageKey,
-          label,
-          key
-      });
+    return this.$getLanguageByKey({
+      languageKey: this.languageKey,
+      label,
+      key
+    });
   }
   private createFormData() {
     let newFormData = {};
@@ -150,7 +154,7 @@ export default class CreateForm extends Vue {
     this.formData = this.createFormData();
   }
   render(h) {
-    const components = _.keys(this.options.formItem).map((key) => {
+    const components = _.keys(this.options.formItem).map(key => {
       const item = this.options.formItem[key];
       if (_.isFunction(item.isHidden)) {
         if (item.isHidden(this.getFormData(), this.status)) {
@@ -168,7 +172,7 @@ export default class CreateForm extends Vue {
     const props = {
       ...this.options.formProps,
       disabled: this.status === "detail",
-      model: this.sourceFormData || this.formData,
+      model: this.sourceFormData || this.formData
     };
     const slots = this.$scopedSlots["default"];
     return (
