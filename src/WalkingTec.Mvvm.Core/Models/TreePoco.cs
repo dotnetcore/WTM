@@ -24,6 +24,15 @@ namespace WalkingTec.Mvvm.Core
         public T Parent { get; set; }
         [InverseProperty("Parent")]
         public List<T> Children { get; set; }
+
+        [NotMapped]
+        public bool HasChildren
+        {
+            get
+            {
+                return Children?.Any() == true;
+            }
+        }
     }
 
 }
