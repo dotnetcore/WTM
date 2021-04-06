@@ -9,6 +9,7 @@
 </template>
 <script lang="ts">
 import { $i18n } from "@/client";
+import lodash from "lodash";
 import { Options, Vue } from "vue-property-decorator";
 import Container from "./views/container.vue";
 import RightContentRender from "./views/rightContentRender.vue";
@@ -46,13 +47,15 @@ export default class extends Vue {
       {
         name: "development",
         meta: { icon: "SaveOutlined", title: "开发测试", target: "a" },
-        children: this.lodash.map(router, item => {
-          return this.lodash.assign(this.lodash.pick(item, ['path', 'name']), {
+        children: lodash.map(router.RouterConfig, item => {
+          const data = lodash.assign(lodash.pick(item, ['path', 'name']), {
             meta: {
               icon: "SaveOutlined",
-              title: $i18n.t(`${this.lodash.get(item, 'name')}.PageName`),
+              title: $i18n.t(`${lodash.get(item, 'name') as any}.PageName`),
             }
           })
+          console.log("LENG ~ extends ~ data ~ data", data)
+          return data
         })
         // [
         //   {
