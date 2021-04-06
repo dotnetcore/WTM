@@ -407,6 +407,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 else
                 {
+                    Response.Headers.TryAdd("Content-Disposition",$"inline; filename=\"{file.FileName}\"");
                     await rv.CopyToAsync(Response.Body);
                     rv.Dispose();
                     return new EmptyResult();
@@ -423,15 +424,7 @@ namespace WalkingTec.Mvvm.Mvc
             if (ext == "pdf")
             {
                 html = $@"
-            <object  classid=""clsid:CA8A9780-280D-11CF-A24D-444553540000"" width=""100%"" height=""100%"" border=""0""
-            id=""FileObject"" name=""pdf"" VIEWASTEXT>
-            <param name=""toolbar"" value=""false"">
-            <param name=""_Version"" value=""65539"">
-            <param name=""_ExtentX"" value=""20108"">
-            <param name=""_ExtentY"" value=""10866"">
-            <param name=""_StockProps"" value=""0"">
-            <param name=""SRC"" value=""/_Framework/GetFile?id={id}&stream=true"">
-           </object>
+<embed src=""/_Framework/GetFile?id={id}&stream=true"" width=""100%"" height=""100%"" type=""application/pdf"" ></embed>
             ";
             }
             else if (ext == "mp4")
