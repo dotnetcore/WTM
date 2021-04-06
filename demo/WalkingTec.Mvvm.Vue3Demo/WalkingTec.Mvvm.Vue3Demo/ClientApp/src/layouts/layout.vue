@@ -13,6 +13,7 @@ import { Options, Vue } from "vue-property-decorator";
 import Container from "./views/container.vue";
 import RightContentRender from "./views/rightContentRender.vue";
 import Tabs from "./views/tabs.vue";
+import router from "../router";
 @Options({
   components: { RightContentRender, Container, Tabs },
 })
@@ -45,21 +46,29 @@ export default class extends Vue {
       {
         name: "development",
         meta: { icon: "SaveOutlined", title: "开发测试", target: "a" },
-        children: [
-          {
-            path: "/frameworkuser",
-            name: "frameworkuser",
+        children: this.lodash.map(router, item => {
+          return this.lodash.assign(this.lodash.pick(item, ['path', 'name']), {
             meta: {
               icon: "SaveOutlined",
-              title: $i18n.t("frameworkuser.PageName"),
-            },
-          },
-          {
-            path: "/test",
-            name: "test",
-            meta: { icon: "SaveOutlined", title: "Dashboard" },
-          },
-        ],
+              title: $i18n.t(`${this.lodash.get(item, 'name')}.PageName`),
+            }
+          })
+        })
+        // [
+        //   {
+        //     path: "/frameworkuser",
+        //     name: "frameworkuser",
+        //     meta: {
+        //       icon: "SaveOutlined",
+        //       title: $i18n.t("frameworkuser.PageName"),
+        //     },
+        //   },
+        //   {
+        //     path: "/test",
+        //     name: "test",
+        //     meta: { icon: "SaveOutlined", title: "Dashboard" },
+        //   },
+        // ],
       },
       {
         name: "production",
