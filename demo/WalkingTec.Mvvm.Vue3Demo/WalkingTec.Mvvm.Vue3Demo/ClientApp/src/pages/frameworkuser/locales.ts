@@ -36,6 +36,7 @@ export enum EnumLocaleLabel {
 }
 export default {
     en: {
+        [EnumLocaleLabel.ID]: 'ID',
         [EnumLocaleLabel.PageName]: 'UserManage',
         [EnumLocaleLabel.ITCode]: 'Account',
         [EnumLocaleLabel.Password]: 'Password',
@@ -54,6 +55,7 @@ export default {
         [EnumLocaleLabel.ZipCode]: 'ZipCode',
     },
     zh: {
+        [EnumLocaleLabel.ID]: 'ID',
         [EnumLocaleLabel.PageName]: '用户管理',
         [EnumLocaleLabel.ITCode]: '账号',
         [EnumLocaleLabel.Password]: '密码',

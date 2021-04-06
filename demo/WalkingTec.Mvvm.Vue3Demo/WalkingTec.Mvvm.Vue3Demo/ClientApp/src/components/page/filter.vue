@@ -17,11 +17,7 @@
   >
     <a-row type="flex" :gutter="8">
       <slot />
-      <a-col
-        :offset="offset"
-        :span="colProps.colSpan"
-        style="text-align: right"
-      >
+      <a-col :offset="offset" :span="colProps.colSpan" style="text-align: right">
         <a-form-item :wrapper-col="{ span: 22 }">
           <a-space align="center">
             <a-button type="primary" html-type="submit">
@@ -45,14 +41,14 @@
 
 <script lang="ts">
 import { ControllerBasics } from "@/client";
-import { fromEvent,Subscription } from "rxjs";
+import { fromEvent, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import {
-Emit,Inject,Options,
-Prop,
+  Emit, Inject, Options,
+  Prop,
 
 
-Provide,Ref,Vue
+  Provide, Ref, Vue
 } from "vue-property-decorator";
 
 const CONFIG_SPAN_BREAKPOINTS = {
@@ -152,12 +148,21 @@ export default class extends Vue {
     this.colProps.colSpan = 24 / breakPoint[1];
     this.layout = breakPoint[2] as any;
     const offset = (length * this.colProps.colSpan) % 24;
-    this.offset = offset + this.colProps.colSpan;
-    if (offset === 0) {
-      this.offset = this.colProps.colSpan * (breakPoint[1] - 1);
+    switch (true) {
+      // case offset === 0:
+      //   this.offset = this.colProps.colSpan * (breakPoint[1] - 1);
+      //   break;
+      case this.colProps.colSpan + offset === 24:
+        this.offset = 0;
+        break;
+      case this.colProps.colSpan + offset < 24:
+        this.offset = 24 - (this.colProps.colSpan + offset);
+        break;
+      default:
+        break;
     }
   }
-  created() {}
+  created() { }
   mounted() {
     this.breakPoint();
     this.backfillQuery();

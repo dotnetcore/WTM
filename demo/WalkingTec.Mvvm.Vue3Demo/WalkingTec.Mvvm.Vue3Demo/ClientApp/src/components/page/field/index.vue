@@ -73,6 +73,8 @@ export default class extends Vue {
   @Prop({ type: Boolean, default: false }) readonly readonly;
   // 禁用
   @Prop({ type: Boolean, default: false }) readonly disabled;
+  // 测试日志
+  @Prop({ type: Boolean, default: false }) readonly debug;
   // 数据源
   @Prop({ type: Function, default: () => [] }) readonly request;
   // 表单状态值
@@ -87,7 +89,7 @@ export default class extends Vue {
   dataSource: Array<{ label: any; value: any }> = [];
   /**  form-item 属性 */
   get itemBind() {
-    const label = this._label,
+    const label = this.$t(this._label),
       name = this._name,
       valueType = this._valueType;
     const formValidate = this.lodash.get(this.formValidate, this.lodash.isArray(name) ? name.join('.') : name, {})
@@ -101,34 +103,48 @@ export default class extends Vue {
   }
   // form-item lable
   get _label() {
-    const label = this.lodash.get(
-      this.PageEntity,
-      `${this.entityKey}.label`,
-      this.label
-    );
-    return label ? this.$t(label) : label;
+    const label = this.lodash.head(this.lodash.compact([
+      // 优先获取 Props 配置
+      this.label,
+      // 获取 Entity 配置
+      this.lodash.get(this.PageEntity, `${this.entityKey}.label`),
+      'label 未配置'
+    ]))
+    return label;
   }
   // form-item name
   get _name() {
-    return this.lodash.get(
-      this.PageEntity,
-      `${this.entityKey}.name`,
-      this.name
-    );
+    const name = this.lodash.head(this.lodash.compact([
+      // 优先获取 Props 配置
+      this.name,
+      // 获取 Entity 配置
+      this.lodash.get(this.PageEntity, `${this.entityKey}.name`),
+      '__name'
+    ]));
+    if (name === '__name') {
+      console.warn('name 未配置', this)
+    }
+    return name;
   }
   // 输入提示
   get _placeholder() {
-    return this.lodash.get(
-      this.PageEntity,
-      `${this.entityKey}.placeholder`,
-      this.placeholder
-    );
+    const placeholder = this.lodash.head(this.lodash.compact([
+      // 优先获取 Props 配置
+      this.placeholder,
+      // 获取 Entity 配置
+      this.lodash.get(this.PageEntity, `${this.entityKey}.placeholder`),
+      // this.$t(localesKey, { label: $i18n.t(label) }),
+      // 转换 执行 toPlaceholder 
+      this.lodash.invoke(this.$i18n, 'toPlaceholder', this._label),
+      'placeholder'
+    ]));
+    return placeholder;
   }
   // form 校验规则
   get _rules() {
     return this.lodash.get(this.PageEntity, `${this.entityKey}.rules`);
   }
-  // 属性值
+  // 属性值 v-model:value
   get value() {
     return this.lodash.get(this.formState, this._name);
   }
@@ -168,10 +184,13 @@ export default class extends Vue {
   }
   async mounted() {
     this.onRequest();
-    // console.log("");
-    // console.group(`Field ~ ${this.entityKey} ${this._name} `);
-    // console.log(this);
-    // console.groupEnd();
+    if (this.debug) {
+      console.log("");
+      console.group(`Field ~ ${this.entityKey} ${this._name} `);
+      console.log(this);
+      console.groupEnd();
+    }
+
   }
 }
 </script>

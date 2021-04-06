@@ -39,6 +39,8 @@ export interface PaginationOptions {
     defaultPageSize?: number;
     /** 排序 key */
     soryKey?: string;
+    /** 统计 key */
+    totalKey?: string;
     /** 当前页码 接口使用key */
     currentKey?: string;
     /** 每页条数 接口使用key */
@@ -63,6 +65,7 @@ export class Pagination<T = any> {
             defaultCurrent: 1,
             defaultPageSize: 20,
             soryKey: 'SortInfo',
+            totalKey: 'Count',
             currentKey: 'Page',
             pageSizeKey: 'Limit',
         }, options))
@@ -270,6 +273,7 @@ export class Pagination<T = any> {
      */
     @action
     onSetDataSource(res: PaginationResponse<T>, onlyKey?) {
+        console.log("LENG ~ Pagination<T ~ onSetDataSource ~ res", res)
         if (!lodash.isArray(res.dataSource)) {
             this.isUndefined = true;
             throw new Error('分页 数据 返回值 dataSource 不是数组')
@@ -296,7 +300,7 @@ export class Pagination<T = any> {
         if (this.options.infinite) {
             this.current += 1;
         }
-        this.total = res.total;
+        this.total = lodash.get(res, this.options.totalKey, 0);
         return res.dataSource;
     }
     @action

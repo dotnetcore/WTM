@@ -30,16 +30,24 @@ export const $i18n = i18n.global
  * @returns 
  */
 $i18n.toRulesMessage = function (label, localesKey = 'tips.error.required') {
-    return $i18n.t(localesKey, { label: $i18n.t(label) })
+    try {
+        return $i18n.t(localesKey, { label: $i18n.t(label) })
+    } catch (error) {
+        console.log("LENG ~ error", error, label)
+    }
 }
 /**
- * 转换 Rules 信息
+ * 转换 Placeholder 信息
  * @param label 
  * @param localesKey 默认 tips.placeholder.input
  * @returns 
  */
 $i18n.toPlaceholder = function (label, localesKey = 'tips.placeholder.input') {
-    return $i18n.t(localesKey, { label: $i18n.t(label) })
+    try {
+        return $i18n.t(localesKey, { label: $i18n.t(label) })
+    } catch (error) {
+        console.log("LENG ~ error", error, label)
+    }
 }
 
 export default i18n

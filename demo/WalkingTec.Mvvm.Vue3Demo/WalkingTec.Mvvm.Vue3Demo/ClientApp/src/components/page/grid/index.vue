@@ -13,13 +13,13 @@
 
 <script lang="ts">
 import { ControllerBasics } from "@/client";
-import { GridApi,GridOptions,GridReadyEvent,RowDataChangedEvent } from "ag-grid-community";
+import { GridApi, GridOptions, GridReadyEvent, RowDataChangedEvent } from "ag-grid-community";
 import lodash from "lodash";
-import { fromEvent,Subscription } from "rxjs";
+import { fromEvent, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { defineAsyncComponent } from "vue";
-import { Options,Prop,Ref,Vue,Watch } from "vue-property-decorator";
-import defaultOptions,{ getColumnDefsAction,getColumnDefsCheckbox } from "./defaultOptions";
+import { Options, Prop, Ref, Vue, Watch } from "vue-property-decorator";
+import defaultOptions, { getColumnDefsAction, getColumnDefsCheckbox } from "./defaultOptions";
 import framework from "./framework";
 import Loading from "./loading.vue";
 import Pagination from "./pagination.vue";
@@ -75,45 +75,48 @@ export default class extends Vue {
     // console.log("LENG ~ extends ~ getoptions ~ options", options);
     return options;
   }
-  GridEvents: GridOptions = {
-    onSortChanged: (event) => {
-      lodash.invoke(this.gridOptions, "onSortChanged", event);
-    },
-    // 数据选择
-    onSelectionChanged: (event) => {
-      this.PageController.Pagination.onSelectionChanged(
-        event.api.getSelectedRows()
-      );
-      lodash.invoke(this.gridOptions, "onSelectionChanged", event);
-    },
-    // 初始化完成
-    onGridReady: (event: GridReadyEvent) => {
-      this.GridApi = event.api;
-      event.api.sizeColumnsToFit();
-      if (this.Pagination.loading) {
-        this.GridApi.showLoadingOverlay();
-      }
-      lodash.invoke(this.gridOptions, "onGridReady", event);
-    },
-    // onBodyScroll: (event) => {
-    //   // console.log("LENG ~ extends ~ event", event.api);
-    // },
-    // 数据更新
-    onRowDataChanged: lodash.debounce((event: RowDataChangedEvent) => {
-      if (this.isAutoSizeColumn && this.Pagination.dataSource.length > 0) {
-        event.columnApi.autoSizeColumn("RowAction");
-        this.isAutoSizeColumn = false;
-      }
-      lodash.invoke(this.gridOptions, "onRowDataChanged", event);
-    }, 300),
+  get GridEvents(): GridOptions {
+    return {
+      onSortChanged: (event) => {
+        lodash.invoke(this.gridOptions, "onSortChanged", event);
+      },
+      // 数据选择
+      onSelectionChanged: (event) => {
+        this.PageController.Pagination.onSelectionChanged(
+          event.api.getSelectedRows()
+        );
+        lodash.invoke(this.gridOptions, "onSelectionChanged", event);
+      },
+      // 初始化完成
+      onGridReady: (event: GridReadyEvent) => {
+        this.GridApi = event.api;
+        event.api.sizeColumnsToFit();
+        if (this.Pagination.loading) {
+          this.GridApi.showLoadingOverlay();
+        }
+        lodash.invoke(this.gridOptions, "onGridReady", event);
+        this.onReckon()
+      },
+      // onBodyScroll: (event) => {
+      //   // console.log("LENG ~ extends ~ event", event.api);
+      // },
+      // 数据更新
+      onRowDataChanged: lodash.debounce((event: RowDataChangedEvent) => {
+        if (this.isAutoSizeColumn && this.Pagination.dataSource.length > 0) {
+          event.columnApi.autoSizeColumn("RowAction");
+          this.isAutoSizeColumn = false;
+        }
+        lodash.invoke(this.gridOptions, "onRowDataChanged", event);
+      }, 300),
+    }
   };
   /**
    * 计算 表格高度
    */
   onReckon() {
-    // console.dir(this.gridContent);
+    // console.dir(this);
     let height = 500;
-    height = window.innerHeight - this.gridContent.offsetTop - 155;
+    height = window.innerHeight - this.gridContent.offsetTop - 125;
     this.style.height = height + "px";
   }
   @Watch("Pagination.loading")

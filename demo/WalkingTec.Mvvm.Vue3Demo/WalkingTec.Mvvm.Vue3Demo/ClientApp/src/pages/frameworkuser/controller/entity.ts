@@ -17,34 +17,34 @@ class Entity {
         name: ['Entity', 'ITCode'],
         // label 字段描述
         label: EnumLocaleLabel.ITCode,
-        // 输入框提示
-        placeholder: $i18n.toPlaceholder(EnumLocaleLabel.ITCode),
+        // 输入框提示 非必填 默认如下
+        // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.ITCode),
         // 校验规则
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.ITCode) }],
     }
     readonly Password: WTM_EntitiesField = {
         name: ['Entity', 'Password'],
         label: EnumLocaleLabel.Password,
-        placeholder: $i18n.toPlaceholder(EnumLocaleLabel.Password),
+        // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.Password),
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Password) }],
     }
     readonly Email: WTM_EntitiesField = {
         name: ['Entity', 'Email'],
         label: EnumLocaleLabel.Email,
-        placeholder: $i18n.toPlaceholder(EnumLocaleLabel.Email),
+        // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.Email),
         valueType: WTM_ValueType.textarea,
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Email) }],
     }
     readonly Name: WTM_EntitiesField = {
         name: ['Entity', 'Name'],
         label: EnumLocaleLabel.Name,
-        placeholder: $i18n.toPlaceholder(EnumLocaleLabel.Name),
+        // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.Name),
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Name) }],
     }
     readonly Gender: WTM_EntitiesField = {
         name: ['Entity', 'Gender'],
         label: EnumLocaleLabel.Sex,
-        placeholder: $i18n.toPlaceholder(EnumLocaleLabel.Sex),
+        // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.Sex),
         valueType: WTM_ValueType.radio,
         // 远程数据
         request: async (formState) => {
@@ -58,7 +58,7 @@ class Entity {
     readonly SelectedRolesCodes: WTM_EntitiesField = {
         name: 'SelectedRolesCodes',
         label: EnumLocaleLabel.RoleName,
-        placeholder: $i18n.toPlaceholder(EnumLocaleLabel.RoleName),
+        // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.RoleName),
         valueType: WTM_ValueType.checkbox,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.RoleName), type: "array" }],
@@ -66,7 +66,7 @@ class Entity {
     readonly SelectedGroupCodes: WTM_EntitiesField = {
         name: 'SelectedGroupCodes',
         label: EnumLocaleLabel.GroupName,
-        placeholder: $i18n.toPlaceholder(EnumLocaleLabel.GroupName),
+        // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.GroupName),
         valueType: WTM_ValueType.checkbox,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkGroups'),
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.GroupName), type: "array" }],

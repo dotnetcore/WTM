@@ -3,7 +3,7 @@
     class="w-pagination"
     :current="Pagination.current"
     :pageSize="Pagination.pageSize"
-    :total="999"
+    :total="Pagination.total"
     size="small"
     show-less-items
     show-size-changer
