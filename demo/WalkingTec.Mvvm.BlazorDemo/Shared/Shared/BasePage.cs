@@ -30,10 +30,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             OnCloseDialog?.Invoke(result);
         }
 
-        private TaskCompletionSource<DialogResult> ReturnTask { get; } = new TaskCompletionSource<DialogResult>();
 
         public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null)
         {
+            TaskCompletionSource<DialogResult> ReturnTask = new TaskCompletionSource<DialogResult>();
             SetValuesParser p = new SetValuesParser();
             DialogOption option = new DialogOption
             {
@@ -49,46 +49,137 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                 {
                     builder.AddAttribute(3, "OnCloseDialog", new Action<DialogResult>((r) =>
                     {
+                        option.OnCloseAsync = null;
                         ReturnTask.TrySetResult(r);
                         option.Dialog!.Close();
                     }));
                 }
                 catch { };
-                builder.SetKey(Guid.NewGuid());
+                //builder.SetKey(Guid.NewGuid());
+                builder.AddMarkupContent(4, "<div style=\"height:10px\"></div>");
                 builder.CloseComponent();
+            };
+            option.OnCloseAsync = async () =>
+            {
+                    option.OnCloseAsync = null;
+                    await option.Dialog.Close();
+                ReturnTask.TrySetResult( DialogResult.Close);
             };
             await WtmBlazor.Dialog.Show(option);
             var rv = await ReturnTask.Task;
             return rv;
         }
 
-        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string,string> Msg = null, Action<ErrorObj> ErrorHandler=null)
+        public async Task<bool> PostsData(object data,string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
         {
-            var rv = await WtmBlazor.Api.CallAPI(url, HttpMethodEnum.POST, form.Model);
+            var rv = await WtmBlazor.Api.CallAPI(url, method, data);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                CloseDialog(DialogResult.Yes);
-                if(Msg != null)
+                if (Msg != null)
                 {
                     var m = Msg.Invoke(rv.Data);
-                    await WtmBlazor.Toast.Success(WtmBlazor.Localizer["Sys.Info"],  WtmBlazor.Localizer[m]);
+                    await WtmBlazor.Toast.Success(WtmBlazor.Localizer["Sys.Info"], WtmBlazor.Localizer[m]);
                 }
+                CloseDialog(DialogResult.Yes);
                 return true;
             }
             else
             {
                 ErrorHandler?.Invoke(rv.Errors);
-                SetError(form, rv.Errors);
+                if (rv.Errors == null)
+                {
+                    await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.StatusCode.ToString());
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(rv.ErrorMsg))
+                    {
+                        if (rv.Errors.Form.Any())
+                        {
+                            await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.Errors.Form.First().Value);
+                        }
+                    }
+                    else
+                    {
+                        await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.ErrorMsg);
+                    }
+                }
+                return false;
+            }
+
+        }
+
+        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string,string> Msg = null, Action<ErrorObj> ErrorHandler=null, HttpMethodEnum method= HttpMethodEnum.POST)
+        {
+            var rv = await WtmBlazor.Api.CallAPI(url, method, form.Model);
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                if(Msg != null)
+                {
+                    var m = Msg.Invoke(rv.Data);
+                    await WtmBlazor.Toast.Success(WtmBlazor.Localizer["Sys.Info"],  WtmBlazor.Localizer[m]);
+                }
+                CloseDialog(DialogResult.Yes);
+                return true;
+            }
+            else
+            {
+                ErrorHandler?.Invoke(rv.Errors);
+                if (rv.Errors == null)
+                {
+                    await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.StatusCode.ToString());
+                }
+                else
+                {
+                    SetError(form, rv.Errors);
+                }
                 return false;
             }
         }
         public void SetError(ValidateForm form, ErrorObj errors)
         {
-            foreach (var item in errors.Form)
+            if (errors != null)
             {
-                form.SetError(item.Key, item.Value);
+                foreach (var item in errors.Form)
+                {
+                    form.SetError(item.Key, item.Value);
+                }
             }
         }
+
+        public  async Task<string> GetBase64Image(string fileid, int? width=null, int? height=null)
+        {
+            var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{fileid}", HttpMethodEnum.GET, new Dictionary<string, string> {
+                    {"width", width?.ToString() },
+                    {"height", height?.ToString() }
+                });
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}";
+            }
+            else
+            {
+                return $"data:image/jpeg;base64,0";
+            }
+        }
+
+        public async Task<string> GetFileUrl(string fileid, int? width = null, int? height = null)
+        {
+            var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{fileid}", HttpMethodEnum.GET, new Dictionary<string, string> {
+                    {"width", width?.ToString() },
+                    {"height", height?.ToString() }
+                });
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}";
+            }
+            else
+            {
+                return $"data:image/jpeg;base64,0";
+            }
+        }
+
+
         public async Task<string> GetToken()
         {
             return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get","wtmtoken");

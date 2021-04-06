@@ -170,6 +170,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 {
                     paras.Add(new KeyValuePair<string, string>(key, postdata[key]));
                 }
+                if (paras.Any())
+                {
+                    url = url.AppendQuery(paras);
+                }
                 content = new FormUrlEncodedContent(paras);
             }
             return await CallAPI<T>(url, method, content, timeout, proxy);

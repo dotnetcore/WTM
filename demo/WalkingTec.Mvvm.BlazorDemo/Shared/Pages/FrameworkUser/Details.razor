@@ -7,25 +7,23 @@
     <Tab IsBorderCard="true">
         <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
             <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
-                <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.ITCode" />
-                <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.Password" />
-                <BootstrapInput IsDisabled="true" @bind-Value="@Model.Entity.Name" />
-                <Select IsDisabled="true" @bind-Value="@Model.Entity.Gender" PlaceHolder="aaa" />
-                <WTUploadImage IsDisabled="true" @bind-Value="@Model.Entity.PhotoId" LabelText="测试" />
+                <Display @bind-Value="@Model.Entity.ITCode" ShowLabel="true" />
+                <div></div>
+                <Display @bind-Value="@Model.Entity.Name" ShowLabel="true" />
+                <Display @bind-Value="@Model.Entity.Gender" ShowLabel="true" />
+                <WTUploadImage IsDisabled="true" @bind-Value="@Model.Entity.PhotoId" />
             </Row>
-            <CheckboxList IsDisabled="true" @bind-Value="Model.SelectedRolesCodes" Items="@AllRoles" />
-            <CheckboxList IsDisabled="true" @bind-Value="Model.SelectedGroupCodes" Items="@AllGroups" />
+                <Display @bind-Value="Model.SelectedRolesCodes" ShowLabel="true" Data="AllRoles"/>
+                <Display @bind-Value="Model.SelectedGroupCodes"  ShowLabel="true"  Data="AllGroups"/>
         </TabItem>
         <TabItem Text="@WtmBlazor.Localizer["_Admin.AdditionInfo"]">
             <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
-                <BootstrapInput @bind-Value="@Model.Entity.CellPhone" IsDisabled="true"/>
-                <BootstrapInput @bind-Value="@Model.Entity.HomePhone" IsDisabled="true"/>
-                <BootstrapInput @bind-Value="@Model.Entity.Email" IsDisabled="true"/>
-                <BootstrapInput @bind-Value="@Model.Entity.ZipCode" IsDisabled="true"/>
+                <Display @bind-Value="@Model.Entity.CellPhone" ShowLabel="true" />
+                <Display @bind-Value="@Model.Entity.HomePhone"  ShowLabel="true"/>
+                <Display @bind-Value="@Model.Entity.Email"  ShowLabel="true"/>
+                <Display @bind-Value="@Model.Entity.ZipCode"  ShowLabel="true"/>
             </Row>
-            <Row>
-                <BootstrapInput @bind-Value="@Model.Entity.Address" IsDisabled="true"/>
-            </Row>
+                <Display @bind-Value="@Model.Entity.Address"  ShowLabel="true"/>
         </TabItem>
     </Tab>
     <div class="modal-footer table-modal-footer">
@@ -40,18 +38,14 @@
     private ValidateForm vform { get; set; }
     [Parameter]
     public string id { get; set; }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender == true)
+
+        protected override async Task OnInitializedAsync()
         {
             AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
             AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
             var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUserBase/{id}");
             Model = rv.Data;
-            StateHasChanged();
         }
-        await base.OnAfterRenderAsync(firstRender);
-    }
 
     public void OnClose()
     {

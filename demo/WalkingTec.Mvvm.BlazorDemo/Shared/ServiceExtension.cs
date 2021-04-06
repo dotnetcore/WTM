@@ -17,6 +17,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
             self.AddScoped<WtmBlazorContext>();
             self.Configure<BootstrapBlazorOptions>(options =>
             {
+                options.ToastPlacement = Placement.TopEnd;
                 options.ToastDelay = 3000;
             });
         }

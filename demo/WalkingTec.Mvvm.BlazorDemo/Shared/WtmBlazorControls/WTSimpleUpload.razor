@@ -5,7 +5,7 @@
 @using System.Linq.Expressions;
 @using System.IO;
 @typeparam TValue
-<ButtonUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="*/*" IsSingle="true" ShowProgress="true" OnChange="@OnAvatarUpload" OnDelete="@OnAvatarDelete" ShowLabel="@ShowLabel" DefaultFileList="@dlist"></ButtonUpload>
+<ButtonUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="*/*" IsSingle="true" ShowProgress="true" OnChange="@OnAvatarUpload" OnDelete="@OnAvatarDelete" DisplayText="@LabelText"  DefaultFileList="@dlist"></ButtonUpload>
 
 @code{
 
@@ -21,9 +21,7 @@
     public Expression<Func<TValue>> ValueExpression { get; set; }
 
     [Parameter]
-    public bool ShowLabel { get; set; } = true;
-    [Parameter]
-    public string LabelText { get; set; } = "";
+    public string LabelText { get; set; }
 
     private Dictionary<string, string> files { get; set; } = new Dictionary<string, string>();
     private List<UploadFile> dlist = new List<UploadFile>();

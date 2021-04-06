@@ -278,14 +278,22 @@
     background-color: inherit;
 }
 
-.groupbox{
-    margin-top:10px;
+.groupbox {
+    margin-top: 10px;
 }
 
 .table-toolbar .table-toolbar-button {
     float: right !important;
 }
 
-.btn-group .btn{
-    padding-left:10px !important;
+.btn-group .btn {
+    padding-left: 10px !important;
+}
+
+.table-modal-footer {
+    margin-top: 10px !important;
+}
+
+.toast{
+    background-color:white;
 }

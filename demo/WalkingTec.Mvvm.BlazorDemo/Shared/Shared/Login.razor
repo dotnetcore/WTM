@@ -1,7 +1,6 @@
 @page "/login"
 @using  WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 @inherits BasePage
-@layout EmptyLayout
 
 <div class="d-flex flex-column app-layout-login ">
     <div class="flex-fill  login-layout app-login-back-@bgnumber">
@@ -20,8 +19,8 @@
         </div>
     </div>
 </div>
-<Toast />
 
+<Toast />
 
 @code {
     [Parameter]
@@ -48,7 +47,7 @@
         }
         else
         {
-            await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"] , rv.Errors.Message[0]);
+            await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.Errors.Message[0]);
         }
     }
 }
