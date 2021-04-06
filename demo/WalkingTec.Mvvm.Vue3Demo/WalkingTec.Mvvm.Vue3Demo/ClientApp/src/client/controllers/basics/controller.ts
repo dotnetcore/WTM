@@ -81,18 +81,19 @@ export class ControllerBasics<T = any> {
   getAjaxRequest(type: 'search' | 'details' | 'insert' | 'update' | 'delete' | 'import' | 'export' | 'exportIds' | 'template'): AjaxRequest {
     let options = lodash.get(this.options, type);
     if (lodash.isString(options)) {
+      const defaultRequest: { [key: string]: AjaxRequest } = {
+        search: { method: 'post' },
+        details: { method: 'get' },
+        insert: { method: 'post' },
+        update: { method: 'put' },
+        delete: { method: 'post' },
+        import: { method: 'post' },
+        export: { method: 'post', responseType: 'blob' },
+        exportIds: { method: 'post' },
+        template: { method: 'get', responseType: 'blob' },
+      }
       return {
-        url: options, method: lodash.get({
-          search: 'post',
-          details: 'get',
-          insert: 'post',
-          update: 'put',
-          delete: 'post',
-          import: 'post',
-          export: 'post',
-          exportIds: 'post',
-          template: 'get',
-        }, type)
+        url: options, ...lodash.get(defaultRequest, type),
       }
     }
     return options
@@ -114,7 +115,7 @@ export class ControllerBasics<T = any> {
     try {
       this.onToggleLoading(true);
       const res = await this.$ajax.request(lodash.assign({ body: entities }, this.getAjaxRequest('insert'))).toPromise()
-      this.Pagination.onCurrentChange({ current: 1})
+      this.Pagination.onCurrentChange({ current: 1 })
       ControllerBasics.$msg(msg)
       this.onToggleLoading(false);
       return res
@@ -173,13 +174,13 @@ export class ControllerBasics<T = any> {
       this.onToggleLoading(true);
       let ids = []
       if (lodash.isArray(key)) {
-        ids = lodash.map(key, this.key)
+        ids = lodash.map(key, item => lodash.isObject(item) ? lodash.get(item, this.key) : item)
       } else if (lodash.isObject(key)) {
         ids = [lodash.get(key, this.key)]
       } else {
         ids = [key]
       }
-      await this.$ajax.delete('', { ids })
+      await this.$ajax.request(lodash.assign({ body: ids }, this.getAjaxRequest('delete'))).toPromise()
       this.Pagination.onRemove(key);
       ControllerBasics.$msg(msg)
     } catch (error) {
@@ -191,14 +192,21 @@ export class ControllerBasics<T = any> {
    * 导出
    * @param body 
    */
-  async onExport(body) {
-    // if (!this.options.export) {
-    //   throw "没有配置导出路径"
-    // }
-    const res: any = await this.$ajax.request({ url: '', body, responseType: 'blob' }).toPromise();
+  async onExport(body?) {
+    const res: any = await this.$ajax.request(lodash.assign({ body }, this.getAjaxRequest('export'))).toPromise()
     const disposition = res.xhr.getResponseHeader('content-disposition');
     Regulars.filename.test(disposition);
-    saveAs(res.response, decodeURI(RegExp.$1) || `${Date.now()}.xls`);
+    saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
+  }
+  /**
+   * 导出
+   * @param body 
+   */
+  async onGetTemplate() {
+    const res: any = await this.$ajax.request(lodash.assign({}, this.getAjaxRequest('template'))).toPromise()
+    const disposition = res.xhr.getResponseHeader('content-disposition');
+    Regulars.filename.test(disposition);
+    saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
   }
   /**
     * 获取 lodash Predicate 参数

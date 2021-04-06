@@ -1,9 +1,5 @@
 <template>
-  <a-button
-    v-if="isExport"
-    v-bind="ButtonProps"
-    @click="__wtmToDetails()"
-  >
+  <a-button v-if="isExport" v-bind="ButtonProps" @click="onExport()">
     <template #icon v-if="isPageAction">
       <CloudDownloadOutlined />
     </template>
@@ -16,9 +12,12 @@ import { ControllerBasics } from "@/client";
 import { ActionBasics } from "./script";
 @Options({ components: {} })
 export default class extends mixins(ActionBasics) {
-  @Prop() readonly PageController:ControllerBasics;
-  created() {}
-  mounted() {}
+  @Prop() readonly PageController: ControllerBasics;
+  onExport() {
+    this.PageController.onExport()
+  }
+  created() { }
+  mounted() { }
 }
 </script>
 <style lang="less">

@@ -1,9 +1,5 @@
 <template>
-  <a-popconfirm
-    :title="$t('action.deleteConfirm')"
-    :disabled="disabled"
-    @confirm="onConfirm"
-  >
+  <a-popconfirm :title="title" :disabled="disabled" @confirm="onConfirm">
     <a-button v-if="isDelete" v-bind="ButtonProps" :disabled="disabled">
       <template #icon v-if="isPageAction">
         <DeleteOutlined />
@@ -25,11 +21,15 @@ export default class extends mixins(ActionBasics) {
     }
     return !this.Pagination.selectionDataSource.length;
   }
-  onConfirm() {
-    this.Pagination.onRemove(this.rowKey);
+  get title() {
+    return this.$t('action.deleteConfirm', { text: this.isRowAction ? 1 : this.Pagination.selectionDataSource.length })
   }
-  created() {}
-  mounted() {}
+  onConfirm() {
+    const remKey = this.isRowAction ? this.rowKey : this.Pagination.selectionDataSource
+    this.PageController.onRemove(remKey);
+  }
+  created() { }
+  mounted() { }
 }
 </script>
 <style lang="less">

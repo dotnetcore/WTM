@@ -1,17 +1,17 @@
 <template>
   <a-space>
-    <a-button type="link" shape="circle" @click="UserStore.onLogOut()">
+    <a-button type="link" shape="circle" @click="System.UserController.onLogOut()">
       <template #icon>
         <SettingOutlined />
       </template>
     </a-button>
-    <div >
+    <div>
       <a-avatar size="small">
         <template #icon>
           <UserOutlined />
         </template>
       </a-avatar>
-      <span v-text="UserStore.UserInfo.Name"></span>
+      <span v-text="System.UserController.UserInfo.Name"></span>
     </div>
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
@@ -27,12 +27,15 @@
   </a-space>
 </template>
 <script lang="ts">
-import { UserController } from "@/client";
+import { SystemController } from "@/client";
 import { Vue, Options, Inject } from "vue-property-decorator";
 // Component definition
 @Options({ components: {} })
 export default class extends Vue {
-  @Inject() UserStore: UserController;
+  /**
+   * 从 Aapp 中 注入 系统管理
+   */
+  @Inject({ from: SystemController.Symbol }) System: SystemController;
   get languages() {
     return this.lodash.keys(this.lodash.get(this.$i18n, "messages"));
   }

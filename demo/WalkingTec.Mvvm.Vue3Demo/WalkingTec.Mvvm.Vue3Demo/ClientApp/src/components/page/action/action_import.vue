@@ -1,8 +1,5 @@
 <template>
-  <a-popconfirm
-    overlayClassName="x-action-import"
-    @confirm="onConfirm"
-  >
+  <a-popconfirm overlayClassName="x-action-import" @confirm="onConfirm">
     <template #icon>
       <div></div>
     </template>
@@ -10,14 +7,14 @@
       <div>
         <i18n-t keypath="tips.text.importExplain" />
         <a-divider type="vertical" />
-        <a-button>
+        <a-button @click="onGetTemplate">
           <template #icon>
             <CloudUploadOutlined />
           </template>
           <i18n-t keypath="action.downloadTemplate" />
         </a-button>
       </div>
-      <a-divider style="margin:8px"/>
+      <a-divider style="margin:8px" />
       <a-upload-dragger
         name="file"
         :multiple="true"
@@ -52,6 +49,9 @@ export default class extends mixins(ActionBasics) {
   }
   onChange() {
 
+  }
+  onGetTemplate() {
+    this.PageController.onGetTemplate()
   }
   created() { }
   mounted() { }

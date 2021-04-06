@@ -388,7 +388,10 @@ export class Pagination<T = any> {
      * 获取 lodash Predicate 参数
      * @param key 
      */
-    getPredicate(key: string | T): any {
+    getPredicate(key: string | T | Array<T>): any {
+        if (lodash.isArray(key)) {
+            return (item) => lodash.some(key, [this.key, lodash.get(item, this.key)])
+        }
         if (lodash.isObject(key)) {
             return [this.key, lodash.get(key, this.key)]
         }

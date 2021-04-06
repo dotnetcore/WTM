@@ -31,30 +31,31 @@
                     <a-button
                         type="primary"
                         html-type="submit"
-                        :loading="UserStore.loading"
+                        :loading="System.UserController.loading"
                         :disabled="disabled"
                     >Log in</a-button>
                 </a-form-item>
             </a-form>
         </a-layout-content>
-        <a-layout-footer>
-            Footer
-        </a-layout-footer>
+        <a-layout-footer>Footer</a-layout-footer>
     </a-layout>
 </template>
 <script lang="ts">
-import { UserController } from "@/client";
+import { SystemController } from "@/client";
 import { Inject, Options, Vue } from "vue-property-decorator";
 @Options({ components: {} })
 export default class extends Vue {
-    @Inject() UserStore: UserController;
+    /**
+     * 从 Aapp 中 注入 系统管理
+     */
+    @Inject({ from: SystemController.Symbol }) System: SystemController;
     formState = {
         account: 'admin',
         password: '000000'
     }
     wrapperCol = { span: 24 }
     onFinish(values) {
-        this.UserStore.onSignIn(this.formState)
+        this.System.UserController.onSignIn(this.formState)
     }
     get disabled() {
         return this.formState.account === '' || this.formState.password === ''
@@ -63,7 +64,6 @@ export default class extends Vue {
         return 'w-login-back-' + this.lodash.sample(this.lodash.range(1, 5))
     }
     created() {
-        console.log(this)
     }
 }
 </script>

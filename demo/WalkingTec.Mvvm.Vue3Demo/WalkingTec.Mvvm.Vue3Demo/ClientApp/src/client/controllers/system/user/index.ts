@@ -39,11 +39,12 @@ export class UserController extends UserEntity {
                 const res = await this.$ajax.get("/api/_Account/CheckUserInfo");
                 this.UserInfo = res
             }
+            this.onToggleLoading(false)
         } catch (error) {
+            this.onToggleLoading(false)
             this.onLogOut()
             throw error
         }
-        this.onToggleLoading(false)
     }
     async onLogOut() {
         this.$ajax.get("/api/_Account/Logout");
