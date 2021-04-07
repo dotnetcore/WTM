@@ -16,7 +16,7 @@
 
 
 <Table @ref="dataTable" TItem="FrameworkMenu_ListView" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" >
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;"  OnTreeExpand="OnTreeExpand">
     <TableColumns>
         <TableColumn @bind-Field="@context.PageName" Width="180" />
         <TableColumn @bind-Field="@context.ModuleName" />
@@ -58,7 +58,12 @@
 
     private async Task<QueryData<FrameworkMenu_ListView>> OnSearch(QueryPageOptions opts)
     {
-        return await WtmBlazor.Api.CallSearchTreeApi<FrameworkMenu_ListView,FrameworkMenu>("/api/_frameworkmenu/search", SearchModel, opts);
+        return await WtmBlazor.Api.CallSearchTreeApi<FrameworkMenu_ListView>("/api/_frameworkmenu/search", SearchModel, opts);
+    }
+
+    private async Task<IEnumerable<FrameworkMenu_ListView>> OnTreeExpand(FrameworkMenu_ListView data)
+    {
+        return data.Children;
     }
 
     private void DoSearch()

@@ -290,9 +290,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
 
         }
 
-        public async Task<QueryData<T>> CallSearchTreeApi<T,S>(string url, BaseSearcher searcher, QueryPageOptions options)
-            where T : S, new()
-            where S: TreePoco<S>,new()
+        public async Task<QueryData<T>> CallSearchTreeApi<T>(string url, BaseSearcher searcher, QueryPageOptions options)
+            where T : class,new()
         {
             if (string.IsNullOrEmpty(options.SortName) && options.SortOrder != SortOrder.Unset)
             {
@@ -314,11 +313,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 foreach (var item in rv.Data.Data)
                 {
                     string pid = idpro.GetValue(item)?.ToString();
-                    item.Children = new List<S>();
-                    item.Children.AddRange(rv.Data.Data.AsQueryable().CheckParentID(pid));
+                    item.SetPropertyValue("Children", new List<T>(rv.Data.Data.AsQueryable().CheckParentID(pid)));
                 }
             }
-            data.Items = rv.Data?.Data.Where(x=>x.ParentId == null);
+            data.Items = rv.Data?.Data.AsQueryable().CheckParentID(null);
             data.TotalCount = rv.Data?.Count ?? 0;
             return data;
         }

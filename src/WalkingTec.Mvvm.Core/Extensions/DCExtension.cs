@@ -604,15 +604,21 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
         }
 
-        public static IQueryable<T> CheckParentID<T>(this IQueryable<T> baseQuery, object val)
+        public static IQueryable<T> CheckParentID<T>(this IQueryable<T> baseQuery, string val)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
             PropertyInfo idproperty = null;
             idproperty = typeof(T).GetSingleProperty("ParentId");
             Expression peid = Expression.Property(pe, idproperty);
-            var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
-            var rv = baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
-            return rv;
+            var p = Expression.Call(peid, "ToString", new Type[] { });
+            if(val == null)
+            {
+                return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(null)), pe));
+            }
+            else
+            {
+                return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(p, Expression.Constant(val)), pe));
+            }
         }
 
 
