@@ -100,13 +100,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                         }
                         else
                         {
-                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt,jsonOptions);
+                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt, jsonOptions);
                         }
                     }
                 }
                 else
                 {
-                    if(res.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    if (res.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
                         await js.InvokeVoidAsync("localStorageFuncs.remove", "wtmtoken");
                         await js.InvokeVoidAsync("urlFuncs.refresh");
@@ -116,7 +116,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                     {
                         try
                         {
-                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt,jsonOptions);
+                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt, jsonOptions);
                         }
                         catch { }
                     }
@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
         {
             HttpContent content = null;
             //填充表单数据
-            return await CallAPI<T>( url, HttpMethodEnum.GET, content, timeout, proxy);
+            return await CallAPI<T>(url, HttpMethodEnum.GET, content, timeout, proxy);
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<T>> CallAPI<T>( string url, HttpMethodEnum method, IDictionary<string, string> postdata, int? timeout = null, string proxy = null) where T : class
+        public async Task<ApiResult<T>> CallAPI<T>(string url, HttpMethodEnum method, IDictionary<string, string> postdata, int? timeout = null, string proxy = null) where T : class
         {
             HttpContent content = null;
             //填充表单数据
@@ -179,7 +179,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
             return await CallAPI<T>(url, method, content, timeout, proxy);
         }
 
-        public async Task<ApiResult<T>> CallAPI<T>(string url, HttpMethodEnum method, IDictionary<string, string> postdata, byte[] filedata,string filename,int? timeout = null, string proxy = null) where T : class
+        public async Task<ApiResult<T>> CallAPI<T>(string url, HttpMethodEnum method, IDictionary<string, string> postdata, byte[] filedata, string filename, int? timeout = null, string proxy = null) where T : class
         {
             MultipartFormDataContent content = new MultipartFormDataContent();
             //填充表单数据
@@ -194,7 +194,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                     }
                 }
             }
-            content.Add(new ByteArrayContent(filedata),"File",filename);
+            content.Add(new ByteArrayContent(filedata), "File", filename);
 
             return await CallAPI<T>(url, method, content, timeout, proxy);
         }
@@ -217,7 +217,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
             return await CallAPI<T>(url, method, content, timeout, proxy);
         }
 
-        public async Task<ApiResult<string>> CallAPI( string url, HttpMethodEnum method, HttpContent content, int? timeout = null, string proxy = null)
+        public async Task<ApiResult<string>> CallAPI(string url, HttpMethodEnum method, HttpContent content, int? timeout = null, string proxy = null)
         {
             return await CallAPI<string>(url, method, content, timeout, proxy);
         }
@@ -230,9 +230,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<string>> CallAPI( string url, int? timeout = null, string proxy = null)
+        public async Task<ApiResult<string>> CallAPI(string url, int? timeout = null, string proxy = null)
         {
-            return await CallAPI<string>( url, timeout, proxy);
+            return await CallAPI<string>(url, timeout, proxy);
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<string>> CallAPI( string url, HttpMethodEnum method, IDictionary<string, string> postdata, int? timeout = null, string proxy = null)
+        public async Task<ApiResult<string>> CallAPI(string url, HttpMethodEnum method, IDictionary<string, string> postdata, int? timeout = null, string proxy = null)
         {
             return await CallAPI<string>(url, method, postdata, timeout, proxy);
 
@@ -261,7 +261,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<string>> CallAPI( string url, HttpMethodEnum method, object postdata, int? timeout = null, string proxy = null)
+        public async Task<ApiResult<string>> CallAPI(string url, HttpMethodEnum method, object postdata, int? timeout = null, string proxy = null)
         {
             return await CallAPI<string>(url, method, postdata, timeout, proxy);
         }
@@ -290,11 +290,44 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
 
         }
 
-        public async Task<List<SelectedItem>> CallItemsApi(string url, HttpMethodEnum method = HttpMethodEnum.GET, object postdata=null, int? timeout = null, string proxy = null)
+        public async Task<QueryData<T>> CallSearchTreeApi<T,S>(string url, BaseSearcher searcher, QueryPageOptions options)
+            where T : S, new()
+            where S: TreePoco<S>,new()
+        {
+            if (string.IsNullOrEmpty(options.SortName) && options.SortOrder != SortOrder.Unset)
+            {
+                searcher.SortInfo = new SortInfo
+                {
+                    Property = options.SortName,
+                    Direction = options.SortOrder == SortOrder.Desc ? SortDir.Desc : SortDir.Asc
+                };
+            }
+            else
+            {
+                searcher.SortInfo = null;
+            }
+            var rv = await CallAPI<WtmApiResult<T>>(url, HttpMethodEnum.POST, searcher);
+            QueryData<T> data = new QueryData<T>();
+            var idpro = typeof(T).GetSingleProperty("ID");
+            if (rv.Data?.Data != null)
+            {
+                foreach (var item in rv.Data.Data)
+                {
+                    string pid = idpro.GetValue(item)?.ToString();
+                    item.Children = new List<S>();
+                    item.Children.AddRange(rv.Data.Data.AsQueryable().CheckParentID(pid));
+                }
+            }
+            data.Items = rv.Data?.Data.Where(x=>x.ParentId == null);
+            data.TotalCount = rv.Data?.Count ?? 0;
+            return data;
+        }
+
+        public async Task<List<SelectedItem>> CallItemsApi(string url, HttpMethodEnum method = HttpMethodEnum.GET, object postdata = null, int? timeout = null, string proxy = null)
         {
             var result = await CallAPI<List<ComboSelectListItem>>(url, method, postdata, timeout, proxy);
             List<SelectedItem> rv = new List<SelectedItem>();
-            if(result.StatusCode == System.Net.HttpStatusCode.OK)
+            if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 if (result.Data != null)
                 {
