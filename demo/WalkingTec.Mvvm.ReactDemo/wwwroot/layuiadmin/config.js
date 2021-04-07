@@ -15,7 +15,7 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function (exports) {
     , views: '/' //视图所在目录
     , entry: 'Home/FrontPage' //默认视图文件名
     , engine: '' //视图文件后缀名
-
+    , layout: 'Home/Layout'
     , pageTabs: $.cookie("pagemode") === 'Tab' //是否开启页面选项卡功能。单页版不推荐开启
 
 

@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 ID = x.ID,
                 Name = x.PageName,
                 AllActions = x.FolderOnly == true ? null : x.Children.ToListItems(y => y.ActionName, y => y.ID, null),
-                ParentID = x.ParentId,
+                ParentId = x.ParentId,
                 Level = x.GetLevel(),
                 ExtraOrder = order++
             }).OrderBy(x => x.ExtraOrder).ToList();
@@ -111,7 +111,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
         public int ExtraOrder { get; set; }
 
         [JsonIgnore]
-        public Guid? ParentID { get; set; }
+        public Guid? ParentId { get; set; }
 
         [JsonIgnore]
         public Page_View Parent { get; set; }

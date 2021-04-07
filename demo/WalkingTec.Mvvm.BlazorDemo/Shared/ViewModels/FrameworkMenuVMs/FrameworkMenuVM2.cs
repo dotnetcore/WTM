@@ -33,7 +33,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             var data = DC.Set<FrameworkMenu>().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
-            var pids = Entity.GetAllChildrenIDs(DC);
             var modules = Wtm.GlobaInfo.AllModule;
 
             if (Entity.Url != null && Entity.IsInside == true)
@@ -48,11 +47,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
-                var modules = Wtm.GlobaInfo.AllModule;
-                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
-                if (test != null)
+                if (string.IsNullOrEmpty(SelectedModule) == true)
                 {
-                    MSD.AddModelError(" error", Localizer["_Admin.ModuleHasSet"]);
+                    MSD.AddModelError("SelectedModule", Localizer["Validate.{0}required", Localizer["_Admin.Module"]]);
+                }
+                else
+                {
+                    var modules = Wtm.GlobaInfo.AllModule;
+                    var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
+                    if (test != null)
+                    {
+                        MSD.AddModelError(" error", Localizer["_Admin.ModuleHasSet"]);
+                    }
                 }
             }
             base.Validate();
@@ -60,7 +66,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override void DoEdit(bool updateAllFields = false)
         {
-            List<Guid> guids = new List<Guid>();
             if (Entity.IsInside == false)
             {
                 if (Entity.Url != null && Entity.Url != "")
@@ -83,11 +88,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
             else
             {
-                if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
-                {
-                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
-                    return;
-                }
 
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
@@ -111,10 +111,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             if (adb != null)
                             {
                                 aid = adb.ID;
-                            }
-                            else
-                            {
-                                guids.Add(aid);
                             }
                             FrameworkMenu menu = new FrameworkMenu();
                             menu.FolderOnly = false;
@@ -143,11 +139,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     Entity.Url = null;
                 }
             }
-            if(FC.ContainsKey("Entity.Children") == false)
+            if (FC.ContainsKey("Entity.Children") == false)
             {
                 FC.Add("Entity.Children", 0);
             }
             base.DoEdit(updateAllFields);
+            List<Guid> guids = new List<Guid>();
+            guids.Add(Entity.ID);
+            if (Entity.Children != null)
+            {
+                guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
+            }
             AddPrivilege(guids);
         }
 
@@ -176,11 +178,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             else
             {
 
-                if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
-                {
-                    MSD.AddModelError("SelectedModule", Localizer["_Admin.SelectModule"]);
-                    return;
-                }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = Wtm.GlobaInfo.AllModule;

@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("city")]
+    [ActionDescription("城市管理")]
     public partial class CityController : BaseController
     {
         #region Search

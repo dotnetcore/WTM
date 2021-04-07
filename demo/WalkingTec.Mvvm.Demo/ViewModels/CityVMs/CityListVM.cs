@@ -43,8 +43,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         {
             var query = DC.Set<City>()
                 .CheckContain(Searcher.Name, x=>x.Name)
-                .CheckContain(Searcher.Test, x=>x.Test)
-                .CheckEqual(Searcher.ParentId, x=>x.ParentId)
                 .Select(x => new City_View
                 {
 				    ID = x.ID,

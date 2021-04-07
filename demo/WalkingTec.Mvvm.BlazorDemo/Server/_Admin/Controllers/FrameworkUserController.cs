@@ -15,17 +15,17 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("MenuKey.UserManagement")]
     [ApiController]
     [Route("api/_FrameworkUserBase")]
-    [Public]
     public class FrameworkUserController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
         public IActionResult Search(FrameworkUserSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkUserListVM>();
+
+            var vm = Wtm.CreateVM<FrameworkUserListVM>(passInit: true);
             vm.Searcher = searcher;
             vm.DoSearch();
-            return Ok(new { Data = vm.EntityList, Count = vm.Searcher.Count, PageCount = vm.Searcher.PageCount, Page = vm.Searcher.Page, Msg = vm.MSD.GetFirstError(), Code = 200 });
+            return Ok(vm.GetJsonForApi());
         }
 
         [ActionDescription("Sys.Get")]
@@ -81,6 +81,37 @@ namespace WalkingTec.Mvvm.Admin.Api
                 }
             }
         }
+
+        [ActionDescription("Login.ChangePassword")]
+        [HttpPut("[action]")]
+        public async Task<IActionResult> Password(FrameworkUserVM vm)
+        {
+            var keys = ModelState.Keys.ToList();
+            foreach (var item in keys)
+            {
+                if (item != "Entity.Password")
+                {
+                    ModelState.Remove(item);
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                await vm.ChangePassword();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+                else
+                {
+                    return Ok(vm.Entity);
+                }
+            }
+        }
+
 
         [HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]

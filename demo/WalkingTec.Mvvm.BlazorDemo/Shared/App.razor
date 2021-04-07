@@ -1,18 +1,25 @@
-<Router AppAssembly="@typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-    </Found>
-    <NotFound>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p>Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
+@inherits BasePage
 
+@if (hasToken == true)
+{
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+}
+@if (hasToken == false)
+{
+    <Login @bind-LoginSuccess="hasToken"/>
+}
 @code{
-    [Inject]
-    private IJSRuntime JSRuntime { get; set; }
 
+    private bool? hasToken { get; set; }
     /// <summary>
     ///
     /// </summary>
@@ -24,6 +31,16 @@
         if (firstRender)
         {
             await JSRuntime.InvokeVoidAsync("$.loading");
+            var token = await GetToken();
+            if (string.IsNullOrEmpty(token))
+            {
+                hasToken = false;
+            }
+            else
+            {
+                hasToken = true;
+            }
+            StateHasChanged();
         }
     }
 

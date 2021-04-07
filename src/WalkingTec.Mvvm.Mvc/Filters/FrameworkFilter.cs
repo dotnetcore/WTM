@@ -177,7 +177,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         var searcher = lvm.Searcher;
                         searcher.CopyContext(lvm);
-                        searcher.DoInit();
+                        if (ctrl is BaseController)
+                        {
+                            searcher.DoInit();
+                        }
                     }
                     model.Validate();
                     var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();

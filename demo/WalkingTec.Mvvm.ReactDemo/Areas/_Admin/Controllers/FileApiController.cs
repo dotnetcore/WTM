@@ -3,7 +3,9 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Mvc;
@@ -73,15 +75,42 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetFile")]
-        public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, string csName = null)
+        public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, string csName = null, int? width = null, int? height = null)
         {
-            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
 
 
             if (file == null)
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
             }
+            try
+            {
+                if (width != null || height != null)
+                {
+                    Image oimage = Image.FromStream(file.DataStream);
+                    if (oimage != null)
+                    {
+                        if (width == null)
+                        {
+                            width = oimage.Width * height / oimage.Height;
+                        }
+                        if (height == null)
+                        {
+                            height = oimage.Height * width / oimage.Width;
+                        }
+                        var ms = new MemoryStream();
+                        oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        ms.Position = 0;
+                        await ms?.CopyToAsync(Response.Body);
+                        file.DataStream.Dispose();
+                        ms.Dispose();
+                        oimage.Dispose();
+                        return new EmptyResult();
+                    }
+                }
+            }
+            catch { }
 
             var ext = file.FileExt.ToLower();
             if (ext == "mp4")
@@ -90,7 +119,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                file.DataStream?.CopyToAsync(Response.Body);
+                await file.DataStream?.CopyToAsync(Response.Body);
                 file.DataStream.Dispose();
                 return new EmptyResult();
             }
@@ -100,26 +129,19 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("DownloadFile")]
         public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
             if (file == null)
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
             }
             var ext = file.FileExt.ToLower();
-            var contenttype = "application/octet-stream";
-            if (ext == "pdf")
+            var provider = new FileExtensionContentTypeProvider();
+            string contentType;
+            if (!provider.TryGetContentType(file.FileName, out contentType))
             {
-                contenttype = "application/pdf";
+                contentType = "application/octet-stream";
             }
-            if (ext == "png" || ext == "bmp" || ext == "gif" || ext == "tif" || ext == "jpg" || ext == "jpeg")
-            {
-                contenttype = $"image/{ext}";
-            }
-            if (ext == "mp4")
-            {
-                contenttype = $"video/mpeg4";
-            }
-            return File(file.DataStream, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
+            return File(file.DataStream, contentType, file.FileName ?? (Guid.NewGuid().ToString() + ext));
         }
 
         [HttpGet("[action]/{id}")]

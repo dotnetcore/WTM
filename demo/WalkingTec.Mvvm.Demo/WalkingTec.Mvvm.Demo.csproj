@@ -17,6 +17,11 @@
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Models\Virus\" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

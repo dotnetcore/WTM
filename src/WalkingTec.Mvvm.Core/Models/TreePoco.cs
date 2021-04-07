@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -21,7 +22,17 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Parent")]
         [JsonIgnore]
         public T Parent { get; set; }
+        [InverseProperty("Parent")]
         public List<T> Children { get; set; }
+
+        [NotMapped]
+        public bool HasChildren
+        {
+            get
+            {
+                return Children?.Any() == true;
+            }
+        }
     }
 
 }

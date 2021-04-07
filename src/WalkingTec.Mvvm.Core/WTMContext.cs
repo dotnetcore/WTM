@@ -235,14 +235,15 @@ namespace WalkingTec.Mvvm.Core
             }
 
 
-            string code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x => x.ITCode).SingleOrDefaultAsync();
-            if (string.IsNullOrEmpty(code))
+            var code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>new { x.ITCode, x.ID }).SingleOrDefaultAsync();
+            if (code == null)
             {
                 return null;
             }
             LoginUserInfo rv = new LoginUserInfo
             {
-                ITCode = code
+                ITCode = code.ITCode,
+                UserId = code.ID.ToString()
             };
             await rv.LoadBasicInfoAsync(this);
             return rv;
@@ -362,7 +363,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 cs = "default";
             }
-            var rv = ConfigInfo.Connections.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
+            var rv = ConfigInfo.Connections.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault().CreateDC();
             rv.IsDebug = ConfigInfo.IsQuickDebug;
             rv.SetLoggerFactory(_loggerFactory);
             return rv;
@@ -791,10 +792,13 @@ namespace WalkingTec.Mvvm.Core
                 jsonOptions.PropertyNamingPolicy = null;
                 jsonOptions.IgnoreNullValues = true;
                 jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+                jsonOptions.AllowTrailingCommas = true;
                 jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
                 jsonOptions.Converters.Add(new JsonStringEnumConverter());
                 jsonOptions.Converters.Add(new DateRangeConverter());
                 jsonOptions.Converters.Add(new PocoConverter());
+                jsonOptions.Converters.Add(new TypeConverter());
+                jsonOptions.Converters.Add(new DynamicDataConverter());
                 if (res.IsSuccessStatusCode == true)
                 {
                     Type dt = typeof(T);

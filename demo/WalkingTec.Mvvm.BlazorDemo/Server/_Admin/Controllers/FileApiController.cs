@@ -3,7 +3,9 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Mvc;
@@ -14,25 +16,25 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ApiController]
     [Route("api/_file")]
     [AllRights]
-    [ActionDescription("File")]
+    [ActionDescription("_Admin.FileApi")]
     public class FileApiController : BaseApiController
     {
         [HttpPost("[action]")]
         [ActionDescription("UploadFile")]
-        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
+        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir=null,string extra = null,string csName= null)
         {
             var FileData = Request.Form.Files[0];
-            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, extra, sm, Wtm.CreateDC(cskey: csName));
+            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName,subdir,extra,sm,Wtm.CreateDC(cskey:csName));
             return Ok(new { Id = file.GetID(), Name = file.FileName });
         }
 
         [HttpPost("[action]")]
         [ActionDescription("UploadPic")]
-        public IActionResult UploadImage([FromServices] WtmFileProvider fp, int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
+        public IActionResult UploadImage([FromServices] WtmFileProvider fp,int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
         {
             if (width == null && height == null)
             {
-                return Upload(fp, sm, groupName, csName);
+                return Upload(fp,sm,groupName,csName);
             }
             var FileData = Request.Form.Files[0];
 
@@ -52,7 +54,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             MemoryStream ms = new MemoryStream();
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             ms.Position = 0;
-            var file = fp.Upload(FileData.FileName, FileData.Length, ms, groupName, subdir, extra, sm, Wtm.CreateDC(cskey: csName));
+            var file = fp.Upload(FileData.FileName, FileData.Length, ms, groupName,subdir, extra, sm, Wtm.CreateDC(cskey: csName));
             oimage.Dispose();
             ms.Dispose();
 
@@ -73,7 +75,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetFile")]
-        public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, string csName = null)
+        public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, string csName = null, int? width = null, int? height = null)
         {
             var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
 
@@ -82,9 +84,45 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
             }
-            file.DataStream?.CopyToAsync(Response.Body);
-            file.DataStream.Dispose();
-            return new EmptyResult();
+            try
+            {
+                if (width != null || height != null)
+                {
+                    Image oimage = Image.FromStream(file.DataStream);
+                    if (oimage != null)
+                    {
+                        if (width == null)
+                        {
+                            width = oimage.Width * height / oimage.Height;
+                        }
+                        if (height == null)
+                        {
+                            height = oimage.Height * width / oimage.Width;
+                        }
+                        var ms = new MemoryStream();
+                        oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        ms.Position = 0;
+                        await ms?.CopyToAsync(Response.Body);
+                        file.DataStream.Dispose();
+                        ms.Dispose();
+                        oimage.Dispose();
+                        return new EmptyResult();
+                    }
+                }
+            }
+            catch { }
+
+            var ext = file.FileExt.ToLower();
+            if (ext == "mp4")
+            {
+                return File(file.DataStream, "video/mpeg4", enableRangeProcessing: true);
+            }
+            else
+            {
+                await file.DataStream?.CopyToAsync(Response.Body);
+                file.DataStream.Dispose();
+                return new EmptyResult();
+            }
         }
 
         [HttpGet("[action]/{id}")]
@@ -97,16 +135,13 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return BadRequest(Localizer["Sys.FileNotFound"]);
             }
             var ext = file.FileExt.ToLower();
-            var contenttype = "application/octet-stream";
-            if (ext == "pdf")
+            var provider = new FileExtensionContentTypeProvider();
+            string contentType;
+            if (!provider.TryGetContentType(file.FileName, out contentType))
             {
-                contenttype = "application/pdf";
+                contentType = "application/octet-stream";
             }
-            if (ext == "png" || ext == "bmp" || ext == "gif" || ext == "tif" || ext == "jpg" || ext == "jpeg")
-            {
-                contenttype = $"image/{ext}";
-            }
-            return File(file.DataStream, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
+            return File(file.DataStream, contentType, file.FileName ?? (Guid.NewGuid().ToString() + ext));
         }
 
         [HttpGet("[action]/{id}")]

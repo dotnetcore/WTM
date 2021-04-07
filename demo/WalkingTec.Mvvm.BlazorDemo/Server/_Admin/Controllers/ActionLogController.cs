@@ -14,7 +14,6 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("MenuKey.ActionLog")]
     [ApiController]
     [Route("api/_[controller]")]
-    [Public]
     public class ActionLogController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
@@ -25,8 +24,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 var vm = Wtm.CreateVM<ActionLogListVM>(passInit:true);
                 vm.Searcher = searcher;
-                vm.DoSearch();
-                return Ok(new { Data = vm.EntityList, Count = vm.Searcher.Count, PageCount = vm.Searcher.PageCount, Page = vm.Searcher.Page, Msg = vm.MSD.GetFirstError(), Code = 200 });
+                return Content(vm.GetJson());
             }
             else
             {

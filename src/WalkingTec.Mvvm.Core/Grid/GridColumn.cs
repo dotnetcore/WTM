@@ -122,10 +122,10 @@ namespace WalkingTec.Mvvm.Core
                 if (_childrenLen == null)
                 {
                     var len = 0;
-                    if (Children != null && Children.Count() > 0)
+                    if (Children != null && Children.Any())
                     {
-                        len += Children.Where(x => x.Children == null || x.Children.Count() == 0).Count();
-                        var tempChildren = Children.Where(x => x.Children != null && x.Children.Count() > 0).ToList();
+                        len += Children.Where(x => x.Children == null || !x.Children.Any()).Count();
+                        var tempChildren = Children.Where(x => x.Children != null && x.Children.Any()).ToList();
                         foreach (var item in tempChildren)
                         {
                             len += item.ChildrenLength;
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.Core
             get
             {
                 int rv = 1;
-                if (this.Children != null && this.Children.Count() > 0)
+                if (this.Children != null && Children.Any())
                 {
                     rv = 0;
                     foreach (var child in this.Children)
@@ -170,7 +170,7 @@ namespace WalkingTec.Mvvm.Core
             get
             {
                 int rv = 1;
-                if (this.Children != null && this.Children.Count() > 0)
+                if (this.Children != null && Children.Any())
                 {
                     int max = 0;
                     foreach (var child in this.Children)
@@ -318,7 +318,7 @@ namespace WalkingTec.Mvvm.Core
             get
             {
                 List<IGridColumn<T>> rv = new List<IGridColumn<T>>();
-                if (Children != null && Children.Count() > 0)
+                if (Children != null && Children.Any())
                 {
                     foreach (var child in Children)
                     {
@@ -405,13 +405,24 @@ namespace WalkingTec.Mvvm.Core
                 {
                     rv = "";
                 }
-                else if (col is DateTime dateTime)
+                else if (col is DateTime || col is DateTime?)
                 {
-                    rv = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
-                }
-                else if (col != null && col is DateTime?)
-                {
-                    rv = (col as DateTime?).Value.ToString("yyyy-MM-dd HH:mm:ss");
+                    var datevalue = col as DateTime?;
+                    if(datevalue != null)
+                    {
+                        if (datevalue.Value.Hour == 0 && datevalue.Value.Minute == 0 && datevalue.Value.Second == 0)
+                        {
+                            rv = datevalue.Value.ToString("yyyy-MM-dd");
+                        }
+                        else
+                        {
+                            rv = datevalue.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                        }
+                    }
+                    else
+                    {
+                        rv = "";
+                    }
                 }
                 else if (col.GetType().IsEnumOrNullableEnum())
                 {
@@ -457,7 +468,7 @@ namespace WalkingTec.Mvvm.Core
         protected virtual string GetHeader()
         {
             string rv = PropertyHelper.GetPropertyDisplayName(PI);
-            return rv == null ? "" : rv;
+            return rv ?? "";
         }
         /// <summary>
         /// 默认构造函数

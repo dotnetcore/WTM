@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public int? LabelWidth { get; set; }
 
         public bool? Required { get; set; }
-        public bool HideLabel { get; set; }
+        public bool? HideLabel { get; set; }
         private string _id;
         public new string Id
         {
@@ -53,15 +53,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public string DefaultValue { get; set; }
 
-        /// <summary>
-        /// 不需要生成必填验证
-        /// </summary>
-        private static readonly string[] _excludeType = new string[]
-        {
-            "checkbox",
-            "radio",
-            "select"
-        };
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -69,11 +60,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var postHtml = string.Empty;
             var requiredDot = string.Empty;
             var layfilter = string.Empty;
-            if (output.Attributes.TryGetAttribute("id", out TagHelperAttribute a) == false)
+            if (output.Attributes.TryGetAttribute("id", out _) == false)
             {
                 output.Attributes.SetAttribute("id", Id ?? string.Empty);
             }
-            if (output.Attributes.TryGetAttribute("name", out TagHelperAttribute b) == false)
+
+            if (output.Attributes.TryGetAttribute("name", out _) == false)
             {
                 output.Attributes.SetAttribute("name", string.IsNullOrEmpty(Name) ? Field?.Name : Name);
             }
@@ -93,10 +85,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 layfilter = output.Attributes["lay-filter"].Value.ToString();
             }
 
-            if (!(this is DisplayTagHelper) && Field.Metadata.IsRequired && Required != false)
+            if (!(this is DisplayTagHelper) && (Field.Metadata.IsRequired || Required == true))
             {
                 requiredDot = "<font color='red'>*</font>";
-                if (!(this is UploadTagHelper || this is RadioTagHelper || this is CheckBoxTagHelper || this is MultiUploadTagHelper || this is ColorPickerTagHelper)) // 上传组件自定义验证
+                if (!(this is UploadTagHelper || this is RadioTagHelper || this is CheckBoxTagHelper || this is MultiUploadTagHelper || this is ColorPickerTagHelper || this is TreeTagHelper)) // 上传组件自定义验证
                 {
                     //richtextbox不需要进行必填验证
                     if (output.Attributes["isrich"] == null)
@@ -137,7 +129,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             //如果不显示label则隐藏
 
-            if (HideLabel == false)
+            if (HideLabel != true)
             {
                 string lb = "";
                 if(LabelText != "") {

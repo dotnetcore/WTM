@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 {
     public partial class CityVM : BaseCRUDVM<City>
     {
-        public List<ComboSelectListItem> AllParents { get; set; }
+        public List<TreeSelectListItem> AllParents { get; set; }
 
         public CityVM()
         {
@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 
         protected override void InitVM()
         {
-            AllParents = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
+            AllParents = DC.Set<City>().GetTreeSelectListItems(Wtm, y => y.Name);
         }
 
         public override void DoAdd()
