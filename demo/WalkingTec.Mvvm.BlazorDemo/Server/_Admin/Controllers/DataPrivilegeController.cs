@@ -19,11 +19,12 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(DataPrivilegeSearcher searcher)
+        public IActionResult Search(DataPrivilegeSearcher searcher)
         {
             var vm = Wtm.CreateVM<DataPrivilegeListVM>();
             vm.Searcher = searcher;
-            return vm.GetJson();
+            vm.DoSearch();
+            return Ok(vm.GetJsonForApi());
         }
 
         [ActionDescription("Sys.Get")]

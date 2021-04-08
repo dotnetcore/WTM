@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             services.AddWtmCrossDomain();
             services.AddWtmAuthentication();
             services.AddWtmHttpClient();
-            services.AddWtmMultiLanguages(op=> op.LocalizationType = typeof(Shared.Program));
+            services.AddWtmMultiLanguages(op => op.LocalizationType = typeof(Shared.Program));
             services.AddWtmSwagger();
 
             services.AddMvc(options =>
@@ -74,7 +74,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 });
                 services.AddWtmBlazor();
             }
-            services.AddWtmContext(ConfigRoot, (options) => {
+            services.AddWtmContext(ConfigRoot, (options) =>
+            {
                 options.DataPrivileges = DataPrivilegeSettings();
                 options.CsSelector = CSSelector;
                 options.FileSubDirSelector = SubDirSelector;
@@ -132,7 +133,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                         name: "default",
                         pattern: "{controller=Home}/{action=Index}/{id?}");
                     endpoints.MapFallbackToPage("/_Host");
-            });
+                });
             }
             else
             {
@@ -203,9 +204,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
             //指定哪些模型需要数据权限
-            pris.Add(new DataPrivilegeInfo<City>("城市权限", m => m.Name));
-            pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
-            pris.Add(new DataPrivilegeInfo<Major>("专业权限", m => m.MajorName));
+            //pris.Add(new DataPrivilegeInfo<City>("城市权限", m => m.Name));
+
+            pris.Add(new DataPrivilegeInfo<FrameworkGroup>("组权限", m => m.GroupName));
+            pris.Add(new DataPrivilegeInfo<FrameworkRole>("角色权限", m => m.RoleName));
             return pris;
         }
 
