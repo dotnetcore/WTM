@@ -15,14 +15,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public List<ComboSelectListItem> TableNames { get; set; }
         public List<ComboSelectListItem> AllItems { get; set; }
         public List<ComboSelectListItem> AllGroups { get; set; }
-        [Display(Name = "AllowedDp")]
+        [Display(Name = "_Admin.AllowedDp")]
         public List<string> SelectedItemsID { get; set; }
 
-        [Display(Name = "DpType")]
+        [Display(Name = "_Admin.DpType")]
         public DpTypeEnum DpType { get; set; }
 
         public DpListVM DpList { get; set; }
-        [Display(Name = "AllDp")]
+        [Display(Name = "_Admin.AllDp")]
         public bool? IsAll { get; set; }
         public DataPrivilegeVM()
         {

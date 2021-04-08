@@ -19,11 +19,12 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(FrameworkRoleSearcher searcher)
+        public IActionResult Search(FrameworkRoleSearcher searcher)
         {
             var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
-            return vm.GetJson();
+            vm.DoSearch();
+            return Ok(vm.GetJsonForApi());
         }
 
         [ActionDescription("Sys.Get")]
