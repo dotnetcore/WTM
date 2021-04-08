@@ -53,7 +53,8 @@ export default {
             "DpType": {
                 label: <FormattedMessage id='dataprivilege.DpType' />,
                 rules: [{
-                    "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.DpType')}}/> }],
+                    "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.DpType') }} />
+                }],
                 formItem: <WtmRadio
                     dataSource={[
                         { Text: <FormattedMessage id='dataprivilege.DpType.dataSource.0' />, Value: 'UserGroup' },
@@ -89,7 +90,7 @@ export default {
                 rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.IsAll') }} /> }],
                 formItem: <WtmSelect
                     dataSource={[
-                        { Text: <FormattedMessage id='tips.bool.true' />, Value: true},
+                        { Text: <FormattedMessage id='tips.bool.true' />, Value: true },
                         { Text: <FormattedMessage id='tips.bool.false' />, Value: false },
                     ]} />
             },
@@ -103,7 +104,7 @@ export default {
             "Entity.GroupCode": {
                 label: <FormattedMessage id='dataprivilege.GroupId' />,
                 rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.GroupId') }} /> }],
-                formItem: <WtmSelect placeholder={<FormattedMessage id='tips.placeholder.choose' values={{ txt: getLocalesValue('dataprivilege.GroupId') }}/>}
+                formItem: <WtmSelect placeholder={<FormattedMessage id='tips.placeholder.choose' values={{ txt: getLocalesValue('dataprivilege.GroupId') }} />}
                     dataSource={Request.cache({ url: "/api/_DataPrivilege/GetUserGroups" })}
                 />
             }
@@ -145,8 +146,7 @@ export default {
     },
 
     getValue(props: WTM.FormProps, fieId, defaultvalue = undefined) {
-        var rv = lodash.toString(props.form.getFieldValue(fieId) || lodash.get(props.defaultValues, fieId));
-        console.log("rv=" + rv);
+        var rv = lodash.toString(props.form.getFieldValue(fieId)) || lodash.toString(lodash.get(props.defaultValues, fieId));
         if (rv == "") {
             rv = lodash.toString(defaultvalue);
         }

@@ -1,4 +1,4 @@
-﻿import { BindAll } from 'lodash-decorators';
+import { BindAll } from 'lodash-decorators';
 import lodash from 'lodash';
 import DataSource, { ISearchParams } from 'store/dataSource';
 import { message } from 'antd';
@@ -65,8 +65,8 @@ export class Store extends DataSource {
             // 格式化树结构数据
             res.Data = res.Data.map(value => {
                 value.treePath = [value.PageName];
-                if (value.ParentID) {
-                    value.treePath = this.recursionTree(res.Data, value.ParentID, value.treePath);
+                if (value.ParentId) {
+                    value.treePath = this.recursionTree(res.Data, value.ParentId, value.treePath);
                 }
                 return value;
             });
@@ -91,8 +91,8 @@ export class Store extends DataSource {
         const findData = lodash.find(datalist, ['ID', ParentId]);
         if (findData) {
             children.unshift(findData.PageName);
-            if (findData.ParentID) {
-                this.recursionTree(datalist, findData.ParentID, children);
+            if (findData.ParentId) {
+                this.recursionTree(datalist, findData.ParentId, children);
             }
         }
         return children;

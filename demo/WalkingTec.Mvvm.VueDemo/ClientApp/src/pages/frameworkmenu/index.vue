@@ -43,7 +43,7 @@ export default class Index extends Vue {
     get treeData() {
         const list = this["tableData"];
         const getChilders = (pid, children = []) => {
-            _.filter(list, ["ParentID", pid]).map(item => {
+            _.filter(list, ["ParentId", pid]).map(item => {
                 const itemChild = getChilders(item.ID, item.children);
                 children.push({ ...item, children: itemChild });
             });

@@ -191,7 +191,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //如果value字段为空，则默认使用Id字段作为value值
             if (valueField == null)
             {
-                valueField = x => x.GetID();
+                valueField = x => x.GetID().ToString();
             }
 
             //如果没有指定忽略权限，则拼接权限过滤的where条件
@@ -603,6 +603,24 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
         }
+
+        public static IQueryable<T> CheckParentID<T>(this IQueryable<T> baseQuery, string val)
+        {
+            ParameterExpression pe = Expression.Parameter(typeof(T));
+            PropertyInfo idproperty = null;
+            idproperty = typeof(T).GetSingleProperty("ParentId");
+            Expression peid = Expression.Property(pe, idproperty);
+            var p = Expression.Call(peid, "ToString", new Type[] { });
+            if(val == null)
+            {
+                return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(null)), pe));
+            }
+            else
+            {
+                return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(p, Expression.Constant(val)), pe));
+            }
+        }
+
 
         public static IQueryable<T> CheckIDs<T>(this IQueryable<T> baseQuery, List<string> val, MemberExpression member = null)
         {

@@ -304,6 +304,38 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
 
         }
 
+
+        public async Task<QueryData<T>> CallSearchTreeApi<T>(string url, BaseSearcher searcher, QueryPageOptions options)
+            where T : class,new()
+        {
+            if (string.IsNullOrEmpty(options.SortName) && options.SortOrder != SortOrder.Unset)
+            {
+                searcher.SortInfo = new SortInfo
+                {
+                    Property = options.SortName,
+                    Direction = options.SortOrder == SortOrder.Desc ? SortDir.Desc : SortDir.Asc
+                };
+            }
+            else
+            {
+                searcher.SortInfo = null;
+            }
+            var rv = await CallAPI<WtmApiResult<T>>(url, HttpMethodEnum.POST, searcher);
+            QueryData<T> data = new QueryData<T>();
+            var idpro = typeof(T).GetSingleProperty("ID");
+            if (rv.Data?.Data != null)
+            {
+                foreach (var item in rv.Data.Data)
+                {
+                    string pid = idpro.GetValue(item)?.ToString();
+                    item.SetPropertyValue("Children", new List<T>(rv.Data.Data.AsQueryable().CheckParentID(pid)));
+                }
+            }
+            data.Items = rv.Data?.Data.AsQueryable().CheckParentID(null);
+            data.TotalCount = rv.Data?.Count ?? 0;
+            return data;
+        }
+
         public async Task<List<SelectedItem>> CallItemsApi(string url, HttpMethodEnum method = HttpMethodEnum.GET, object postdata = null, int? timeout = null, string proxy = null)
         {
             var result = await CallAPI<List<ComboSelectListItem>>(url, method, postdata, timeout, proxy);
