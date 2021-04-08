@@ -134,6 +134,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "view/index.html",
+      favicon: 'static/favicon.ico',
       chunks: ["index", "vendor", "common", "runtime"]
       // minify: {
       //     removeComments: true,
@@ -146,6 +147,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: "login.html",
       template: "view/index.html",
+        favicon: 'static/favicon.ico',
       chunks: ["login", "vendor", "common", "runtime"]
       // minify: {
       //     removeComments: true,

@@ -121,7 +121,7 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
           this.tableData = repData.Data || [];
         })
         .catch(error => {
-          this.showResponseValidate(error.response.data.Form)
+          this.showResponseValidate(error.response.data.Form);
           this.loading = false;
         });
     }
@@ -187,7 +187,9 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
       _.get(this.$refs, this.searchRefName).showResponseValidate(resForms);
     }
     created() {
-      this.onSearch();
+      this.$nextTick(() => {
+        this.onSearch();
+      });
     }
     beforeCreate() {
       // if (LOCAL && !this.$i18n.getLocaleMessage('en')[this.$options.name]) {

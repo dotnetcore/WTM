@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             if (children != null && children.Count() > 0)
             {
-                var dictinct = children.Where(x => x.ID != self.ID).ToList();
+                var dictinct = children.Where(x => x.GetID().ToString() != self.GetID().ToString()).ToList();
                 foreach (var item in dictinct)
                 {
                     rv.Add(item);

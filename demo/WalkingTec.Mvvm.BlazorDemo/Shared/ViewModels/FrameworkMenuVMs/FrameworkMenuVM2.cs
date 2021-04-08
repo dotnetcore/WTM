@@ -33,7 +33,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             var data = DC.Set<FrameworkMenu>().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
-            var pids = Entity.GetAllChildrenIDs(DC);
             var modules = Wtm.GlobaInfo.AllModule;
 
             if (Entity.Url != null && Entity.IsInside == true)

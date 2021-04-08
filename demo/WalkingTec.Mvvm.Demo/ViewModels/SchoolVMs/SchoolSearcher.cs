@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         public Guid? CityId { get; set; }
         protected override void InitVM()
         {
-            var test = DC.Set<School>().ToList();
+            //var test = DC.Set<School>().ToList();
         }
 
     }
