@@ -73,10 +73,10 @@
 
     private async Task OnCreateClick(IEnumerable<FrameworkMenu_ListView> items)
     {
-        //if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"]) == DialogResult.Yes)
-        //{
-        //    await dataTable.QueryAsync();
-        //}
+        if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"]) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
     }
 
     private async Task OnEditClick(FrameworkMenu_ListView item)
