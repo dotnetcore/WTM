@@ -1,7 +1,7 @@
 <template>
   <WtmFilter :PageController="PageController" @finish="onFinish" @reset="onReset">
-    <WtmField entityKey="ITCode_Filter" />
-    <WtmField entityKey="Name_Filter" />
+    <WtmField entityKey="GroupCode_Filter" />
+    <WtmField entityKey="GroupName_Filter" />
   </WtmFilter>
 </template>
 <script lang="ts">

@@ -104,6 +104,7 @@ export default class extends Vue {
       onRowDataChanged: lodash.debounce((event: RowDataChangedEvent) => {
         if (this.isAutoSizeColumn && this.Pagination.dataSource.length > 0) {
           event.columnApi.autoSizeColumn("RowAction");
+          // event.api.sizeColumnsToFit();
           this.isAutoSizeColumn = false;
         }
         lodash.invoke(this.gridOptions, "onRowDataChanged", event);
@@ -131,7 +132,7 @@ export default class extends Vue {
   }
   created() { }
   mounted() {
-    this.onReckon();
+    this.$nextTick(() => this.onReckon())
     this.ResizeEvent = fromEvent(window, "resize")
       .pipe(debounceTime(200))
       .subscribe(this.onReckon);

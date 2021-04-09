@@ -3,18 +3,9 @@
     <template v-show="false">
       <WtmField entityKey="ID" />
     </template>
-    <a-space>
-      <WtmField entityKey="ITCode" :disabled="IsEdit" />
-      <WtmField entityKey="Password" />
-    </a-space>
-    <a-space>
-      <WtmField entityKey="Email" />
-      <WtmField entityKey="Name" />
-    </a-space>
-
-    <WtmField entityKey="Gender" />
-    <WtmField entityKey="SelectedRolesCodes" />
-    <WtmField entityKey="SelectedGroupCodes" />
+    <WtmField entityKey="GroupCode" />
+    <WtmField entityKey="GroupName" />
+    <WtmField entityKey="GroupRemark" />
   </WtmDetails>
 </template>
 <script lang="ts">
@@ -26,15 +17,8 @@ export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
     Entity: {
-      ID: "",
-      ITCode: "",
-      Password: "",
-      Email: "",
-      Name: "",
-      Gender: "",
+
     },
-    SelectedRolesCodes: [],
-    SelectedGroupCodes: [],
   };
   created() { }
   mounted() {

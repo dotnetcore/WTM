@@ -9,7 +9,7 @@
   <a-modal
     v-if="isModal"
     class="w-view"
-    footer=""
+    footer
     :visible="visible"
     :title="_title"
     destroyOnClose
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { Options,Prop,Vue } from "vue-property-decorator";
+import { Options, Prop, Vue } from "vue-property-decorator";
 @Options({
   components: {},
 })
@@ -41,6 +41,8 @@ export default class extends Vue {
   @Prop() readonly queryKey: string;
   /** 标题  */
   @Prop() readonly title: string;
+  /** 记录创建 时的 page */
+  PageKey = null;
   get visibleKey() {
     return this.queryKey || this.$WtmConfig.detailsVisible;
   }
@@ -51,7 +53,7 @@ export default class extends Vue {
     return this.lodash.clone(this.$route.query);
   }
   get visible() {
-    return this.lodash.has(this.query, this.visibleKey);
+    return this.lodash.eq(this.PageKey, this.$route.name) && this.lodash.has(this.query, this.visibleKey);
   }
   get _title() {
     if (this.title) {
@@ -68,7 +70,10 @@ export default class extends Vue {
   onCancel() {
     this.__wtmBackDetails();
   }
-  created() {}
+  created() { }
+  mounted() {
+    this.PageKey = this.$route.name
+  }
 }
 </script>
 <style  lang="less">

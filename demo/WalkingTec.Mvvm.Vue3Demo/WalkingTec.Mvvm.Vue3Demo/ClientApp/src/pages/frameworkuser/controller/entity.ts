@@ -22,6 +22,10 @@ class Entity {
         // 校验规则
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.ITCode) }],
     }
+    readonly ITCode_Filter: WTM_EntitiesField = {
+        name: 'ITCode',
+        label: EnumLocaleLabel.ITCode,
+    }
     readonly Password: WTM_EntitiesField = {
         name: ['Entity', 'Password'],
         label: EnumLocaleLabel.Password,
@@ -40,6 +44,10 @@ class Entity {
         label: EnumLocaleLabel.Name,
         // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.Name),
         rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Name) }],
+    }
+    readonly Name_Filter: WTM_EntitiesField = {
+        name: 'Name',
+        label: EnumLocaleLabel.Name,
     }
     readonly Gender: WTM_EntitiesField = {
         name: ['Entity', 'Gender'],

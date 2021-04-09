@@ -1,7 +1,10 @@
 <template>
   <WtmFilter :PageController="PageController" @finish="onFinish" @reset="onReset">
     <WtmField entityKey="ITCode_Filter" />
-    <WtmField entityKey="Name_Filter" />
+    <WtmField entityKey="ActionUrl_Filter" />
+    <WtmField entityKey="ActionTime_Filter" />
+    <WtmField entityKey="IP_Filter" />
+    <WtmField entityKey="LogType_Filter" />
   </WtmFilter>
 </template>
 <script lang="ts">

@@ -98,8 +98,8 @@ export default class extends Vue {
     colSpan: 6,
   };
 
-  labelCol = { xs: 24, sm: 24, md: 6, lg: 6, xl: 6, xxl: 6 };
-  wrapperCol = { xs: 24, sm: 24, md: 16, lg: 16, xl: 16, xxl: 16 };
+  labelCol = { xs: 24, sm: 24, md: 7, lg: 7, xl: 7, xxl: 7 };
+  wrapperCol = { xs: 24, sm: 24, md: 15, lg: 15, xl: 15, xxl: 15 };
   layout: "vertical" | "horizontal" = "vertical";
   offset = 0;
   ResizeEvent: Subscription;
@@ -170,7 +170,6 @@ export default class extends Vue {
     this.ResizeEvent = fromEvent(window, "resize")
       .pipe(debounceTime(200))
       .subscribe(this.breakPoint);
-    // console.log(this.$slots.default());
   }
   unmounted() {
     this.ResizeEvent && this.ResizeEvent.unsubscribe();
