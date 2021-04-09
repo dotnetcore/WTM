@@ -36,7 +36,6 @@ namespace WalkingTec.Mvvm.Demo
             services.AddWtmHttpClient();
             services.AddWtmSwagger();
             services.AddWtmMultiLanguages();
-
             services.AddMvc(options =>
             {
                 options.UseWtmMvcOptions();
@@ -58,7 +57,6 @@ namespace WalkingTec.Mvvm.Demo
                 options.FileSubDirSelector = SubDirSelector;
                 options.ReloadUserFunc = ReloadUser;
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,7 +75,6 @@ namespace WalkingTec.Mvvm.Demo
             app.UseSession();
             app.UseWtmSwagger();
             app.UseWtm();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

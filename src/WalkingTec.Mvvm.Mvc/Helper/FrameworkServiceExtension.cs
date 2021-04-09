@@ -550,7 +550,7 @@ namespace WalkingTec.Mvvm.Mvc
                         options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
                         options.Cookie.HttpOnly = true;
                         options.Cookie.SameSite = SameSiteMode.Strict;
-
+                        options.Cookie.Domain = string.IsNullOrEmpty(cookieOptions.Domain)?"": cookieOptions.Domain;
                         options.ClaimsIssuer = cookieOptions.Issuer;
                         options.SlidingExpiration = cookieOptions.SlidingExpiration;
                         options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
