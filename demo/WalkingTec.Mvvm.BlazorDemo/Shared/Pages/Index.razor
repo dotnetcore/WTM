@@ -1,28 +1,316 @@
 @page "/"
-@using WalkingTec.Mvvm.Core;
+@using WalkingTec.Mvvm.Mvc;
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
-@inject IStringLocalizer Localizer;
-@inject ApiClient api
-@inject DialogService ds
-<Button @onclick="@Show">Dialog</Button>
+@inherits BasePage
+<style>
+
+    .p-index .welcome-header {
+        margin-bottom: 0;
+        margin-top: 0;
+        font-size: 1rem;
+        line-height: 2;
+    }
+
+    .p-index .welcome-footer {
+        display: flex;
+        flex-direction: column;
+        /* position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;*/
+        padding: 0 15px;
+        margin: 20px 10px;
+    }
+
+        .p-index .welcome-footer div:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        .p-index .welcome-footer div {
+            justify-content: space-between;
+        }
+
+
+
+    .p-index .card {
+        text-align: center;
+        border-color: #dce3e8;
+        height: 263px;
+        width: 100%;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+    }
+
+    .p-index .intro p {
+        font-size: 15px;
+        /*color: #1a1a1a;*/
+        letter-spacing: .41px;
+        text-align: center;
+        line-height: 24px;
+    }
+
+    .p-index .intro h3 {
+        /*color: #1a1a1a;*/
+        letter-spacing: .1px;
+        text-align: center;
+        line-height: 25px;
+        font-weight: 400;
+        margin: 15px 0;
+        font-size: 1.25rem;
+    }
+
+    .p-index .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .p-index .q-link a {
+        color: #333;
+        text-align: center;
+    }
+
+    .p-index .q-link i {
+        font-size: 3em;
+        display: block;
+    }
+
+    .p-index .d-sm-block i {
+        font-size: 4em;
+    }
+
+    .p-index .badge-widget {
+        display: inline;
+    }
+
+        .p-index .badge-widget i {
+            font-size: 2em;
+            display: block;
+        }
+
+        .p-index .badge-widget .badge {
+            /*position: absolute;
+            top: -6px;
+            right: -6px;*/
+            display: block;
+            opacity: 0.8;
+        }
+</style>
+
+
+<div class="p-index">
+    <div class="welcome container">
+        <div class="form-inline">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="welcome-header">
+                        <h4>
+                            WTM框架，全称<code>
+                                WalkingTec
+                                MVVM
+                            </code>
+                        </h4>
+                        <div>
+                            <p>WTM是一个快速开发框架，有多快？至少目前<code>dotnet core</code>的开源项目中，我还没有见到更接地气，开发速度更快的框架。WTM的设计理念就是最大程度的加快开发速度，降低开发成本。</p>
+                            <p>
+                                国内Java一家独大原因很多，有BAT的示范效应，也有微软自己战略的失误。好在微软这两年终于想明白了，<code>dotnet core</code>的横空出世和收购github都是非常正确的方向。当然要想达到java一样的生态还有很长的路要走，那我就贡献一点绵薄之力吧。
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="welcome-header">
+                        <h4>
+                            &nbsp;
+                        </h4>
+                        <p>
+                            WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（<code>layui.com</code>），授权WTM开发的项目可以免费使用其收费版的<code>LayuiAdmin</code>。提高自己，造福他人，吾道不孤！
+                        </p>
+                        <p>
+                            —— 框架开源地址：<a href="https://github.com/dotnetcore/WTM" target="_blank" type="primary">https://github.com/dotnetcore/WTM</a>
+                        </p>
+                        <p>
+                            —— 框架在线文档：<a href="https://wtmdoc.walkingtec.cn" target="_blank" type="primary">https://wtmdoc.walkingtec.cn</a>
+                        </p>
+                        <p>
+                            —— 框架QQ交流群：694148336
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-inline">
+            <div class="row">
+                <div class="col-12">
+                    <div class="welcome-footer">
+                        <div class="d-flex flex-wrap q-link">
+                            <a target="_self" href="/FrameworkUser/Index" :underline="false" style="color: #007bff">
+                                <i class="fa fa-user fa-3"></i>
+                                <span class="link-ctx">用户</span>
+                            </a>
+                            <a target="_self" href="/FrameworkRole/Index" :underline="false" style="color: #28a745">
+                                <i class="fa fa-clipboard fa-3"></i>
+                                <span class="link-ctx">角色</span>
+                            </a>
+                            <a target="_self" href="/FrameworkMenu/Index" :underline="false" style="color: #17a2b8">
+                                <i class="fa fa-bars fa-3"></i>
+                                <span class="link-ctx">菜单</span>
+                            </a>
+                            <a target="_self" href="/FrameworkGroup/Index" :underline="false" style=" color: #ffc107">
+                                <i class="fa fa-users fa-3"></i>
+                                <span class="link-ctx">用户组</span>
+                            </a>
+                            <a target="_self" href="/DataPrivilege/Index" :underline="false" style="  color: #343a40">
+                                <i class="fa fa-shield fa-3"></i>
+                                <span class="link-ctx">数据权限</span>
+                            </a>
+                            <a target="_self" href="/ActionLog/Index" :underline="false" style=" color: #6610f2">
+                                <i class="fa fa-database fa-3"></i>
+                                <span class="link-ctx">日志</span>
+                            </a>
+                            <a target="_blank" href="https://wtmdoc.walkingtec.cn/" :underline="false" style="color: #007bff">
+                                <i class="fa fa-file-text fa-3"></i>
+                                <span class="link-ctx">项目文档</span>
+                            </a>
+                            <a target="_blank" href="https://localhost:5001/_codegen?ui=vue" :underline="false" style="color: #dc3545">
+                                <i class="fa fa-cogs fa-3"></i>
+                                <span class="link-ctx">代码生成</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="intro container">
+        <div class="form-inline">
+            <div class="row">
+                <div class="form-group col-12 col-sm-6 col-md-4">
+                    <div style="color:#28a745" class="card border-success">
+                        <p class="d-none d-sm-block">
+                            <i class="fa fa-cubes"></i>
+                        </p>
+                        <h3>丰富模块</h3>
+                        <div>
+                            提供了很多基类，封装了绝大部分后台常用操作<br />
+                            提供了用户，角色，用户组，菜单，日志等常用模块<br />
+                            支持数据权限的开发和配置<br />
+                            支持读写分离和数据库分库
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 col-sm-6 col-md-4">
+                    <div class="card border-primary" style="        color: #007bff">
+                        <p class="d-none d-sm-block">
+                            <i class="fa fa-rocket"></i>
+                        </p>
+                        <h3>性能</h3>
+                        <div>
+                            支持一对多，多对多关联模型的识别和代码生成<br />
+                            支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式<br />
+                            支持sqlserver，mysql，pgsql三种数据库<br />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 col-sm-6 col-md-4">
+                    <div class="card border-info" style="        color: #17a2b8">
+                        <p class="d-none d-sm-block">
+                            <i class="fa fa-trophy"></i>
+                        </p>
+                        <h3>简单易用</h3>
+                        <div>
+                            一键生成WTM项目<br />
+                            一键生成增删改查，导入导出，批量操作代码<br />
+                            封装了Layui，AntD，Element的大部分控件，编写前台更加简便<br />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 col-sm-6 col-md-4">
+                    <div class="card border-danger" style="        color: #dc3545">
+                        <p class="d-none d-sm-block">
+                            <i class="fa fa-github"></i>
+                        </p>
+                        <h3>免费开源</h3>
+                        <div>
+                            <div class="form-inline">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="d-flex flex-wrap" style=" justify-content: space-around;">
+                                            <div class="badge-widget">
+                                                <i class="fa fa-star"></i>Star
+                                                <Badge Color="Color.Secondary"><span style="padding: 0 2px;">@model.stargazers_count</span></Badge>
+                                            </div>
+                                            <div class="badge-widget">
+                                                <i class="fa fa-code-fork"></i>Frok
+                                                <Badge Color="Color.Secondary"><span style="padding: 0 2px;">@model.forks_count</span></Badge>
+                                            </div>
+                                            <div class="badge-widget">
+                                                <i class="fa fa-eye"></i>Watch
+                                                <Badge Color="Color.Secondary"><span style="padding: 0 2px;">@model.subscribers_count</span></Badge>
+                                            </div>
+                                            <div class="badge-widget">
+                                                <i class="fa fa-calendar-o"></i>Issue
+                                                <Badge Color="Color.Secondary"><span style="padding: 0 2px;">@model.open_issues_count</span></Badge>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 col-sm-6 col-md-4">
+                    <div class="card border-warning" style="        color: #ffc107">
+                        <p class="d-none d-sm-block">
+                            <i class="fa fa-code"></i>
+                        </p>
+                        <h3>演示与示例</h3>
+                        <div>详细文档与在线演示，功能设置简单，直接拷贝代码开箱即用</div>
+                    </div>
+                </div>
+                <div class="form-group col-12 col-sm-6 col-md-4">
+                    <div class="card border-secondary" style="        color: #6c757d">
+                        <p class="d-none d-sm-block">
+                            <i class="fa fa-refresh"></i>
+                        </p>
+                        <h3>持续更新</h3>
+                        <div>码云平台托管开源，永不闭源，持续更新，及时响应问题与反馈</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code{
 
     private ActionLogSearcher SearchModel = new ActionLogSearcher();
-    private Table<ActionLog> searchTable;
+    private Table<ActionLogVM> searchTable;
 
-        private async Task Show()
-        {
-            var option = new DialogOption()
-            {
-                Title = "利用代码关闭弹出框",
-            };
-            option.BodyTemplate = BootstrapDynamicComponent.CreateComponent<Button>(new KeyValuePair<string, object>[]
-            {
-                new KeyValuePair<string, object>(nameof(Button.Text), "点击关闭弹窗"),
-                new KeyValuePair<string, object>(nameof(Button.OnClick), EventCallback.Factory.Create<MouseEventArgs>(this, async () => await option.Dialog.Close()))
-            }).Render();
-            await ds.Show(option);
-        }
+    private List<SelectedItem> AllRoles = new List<SelectedItem>();
+    private github model = new github();
+    protected override async Task OnInitializedAsync()
+    {
 
+        //var rv = await WtmBlazor.Api.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm");
+        //if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+        //{
+        //    model = rv.Data;
+        //}
+    }
+    private class github
+    {
+        public int stargazers_count { get; set; }
+        public int forks_count { get; set; }
+        public int subscribers_count { get; set; }
+        public int open_issues_count { get; set; }
+    }
 }

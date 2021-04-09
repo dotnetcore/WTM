@@ -213,7 +213,19 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
         /// <returns></returns>
         public async Task<ApiResult<T>> CallAPI<T>(string url, HttpMethodEnum method, object postdata, int? timeout = null, string proxy = null) where T : class
         {
-            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
+            JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
+            jsonOptions.PropertyNamingPolicy = null;
+            jsonOptions.IgnoreNullValues = true;
+            jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+            jsonOptions.AllowTrailingCommas = true;
+            jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
+            jsonOptions.Converters.Add(new JsonStringEnumConverter());
+            jsonOptions.Converters.Add(new DateRangeConverter());
+            jsonOptions.Converters.Add(new PocoConverter());
+            jsonOptions.Converters.Add(new TypeConverter());
+            jsonOptions.Converters.Add(new DynamicDataConverter());
+
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata, jsonOptions), System.Text.Encoding.UTF8, "application/json");
             return await CallAPI<T>(url, method, content, timeout, proxy);
         }
 
@@ -270,6 +282,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
 
         public async Task<QueryData<T>> CallSearchApi<T>(string url, BaseSearcher searcher, QueryPageOptions options) where T : class, new()
         {
+            searcher.Page = options.PageIndex;
+            searcher.Limit = options.PageItems;
             if (string.IsNullOrEmpty(options.SortName) && options.SortOrder != SortOrder.Unset)
             {
                 searcher.SortInfo = new SortInfo
@@ -289,6 +303,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
             return data;
 
         }
+
 
         public async Task<QueryData<T>> CallSearchTreeApi<T>(string url, BaseSearcher searcher, QueryPageOptions options)
             where T : class,new()

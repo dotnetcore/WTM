@@ -1,6 +1,7 @@
 // WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -101,8 +102,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
     public class Page_View : TopBasePoco
     {
+        [Display(Name = "_Admin.PageName")]
         public string Name { get; set; }
         public List<Guid> Actions { get; set; }
+        [Display(Name = "_Admin.PageFunction")]
         public List<ComboSelectListItem> AllActions { get; set; }
 
         public List<Page_View> Children { get; set; }
