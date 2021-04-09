@@ -10,6 +10,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using WalkingTec.Mvvm.Core;
 using System.Text.Json;
+using System.Net.Http;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
 {
@@ -233,13 +234,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         public ApiClient Api { get; set; }
         public DialogService Dialog { get; set; }
         public ToastService Toast { get; set; }
-        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog,ToastService toast)
+        public IHttpClientFactory ClientFactory { get; set; }
+        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog,ToastService toast, IHttpClientFactory  cf)
         {
             this.Localizer = factory.Create(typeof(Program)); ;
             this.GlobalSelectItems = gi;
             this.Api = api;
             this.Dialog = dialog;
             this.Toast = toast;
+            this.ClientFactory = cf;
         }
     }
 }

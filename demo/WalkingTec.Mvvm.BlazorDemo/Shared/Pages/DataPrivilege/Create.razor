@@ -30,7 +30,7 @@
     private List<SelectedItem> AllPrivileges = new List<SelectedItem>();
     private List<SelectedItem> AllGroups = new List<SelectedItem>();
     private List<SelectedItem> AllPrivilegeTableNames = new List<SelectedItem>();
-    private MultiSelect<List<string>>? Select2 { get; set; }
+    private MultiSelect<List<string>> Select2 { get; set; }
     protected override async Task OnInitializedAsync()
     {
         AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges");
@@ -48,7 +48,7 @@
     {
         AllPrivilegeTableNames.Clear();
         AllPrivilegeTableNames = await WtmBlazor.Api.CallItemsApi($"/api/_DataPrivilege/GetPrivilegeByTableName?table={item.Value}");
-        //Select2.set(AllPrivilegeTableNames);
+        Select2.SetItems(AllPrivilegeTableNames);
     }
 
     private async Task Submit(EditContext context)

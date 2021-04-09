@@ -11,6 +11,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.BlazorDemo.Shared;
 using BootstrapBlazor.Localization.Json;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Client
 {
@@ -20,11 +21,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<Shared.App>("app");
-            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddTransient<ApiClient>();
             builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
             builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(Shared.Program); });
-            builder.Services.AddWtmBlazor();
+            builder.Services.AddWtmBlazor(builder.Configuration.Get<Configs>());
             await builder.Build().RunAsync();
         }
 

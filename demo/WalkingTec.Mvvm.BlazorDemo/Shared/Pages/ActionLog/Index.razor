@@ -70,7 +70,7 @@
         dataTable.QueryAsync();
     }
 
-    private static Task<string> IntFormatter(object? d)
+    private static Task<string> IntFormatter(object d)
     {
         var data = (double?)d;
         return Task.FromResult(data?.ToString("F2") ?? "");

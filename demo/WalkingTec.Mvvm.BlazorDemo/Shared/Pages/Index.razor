@@ -299,12 +299,9 @@
     private github model = new github();
     protected override async Task OnInitializedAsync()
     {
-
-        //var rv = await WtmBlazor.Api.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm");
-        //if (rv.StatusCode == System.Net.HttpStatusCode.OK)
-        //{
-        //    model = rv.Data;
-        //}
+        var client = WtmBlazor.ClientFactory.CreateClient("github");
+        var info = await client.GetFromJsonAsync<github>("/repos/dotnetcore/wtm");
+        model = info;
     }
     private class github
     {
