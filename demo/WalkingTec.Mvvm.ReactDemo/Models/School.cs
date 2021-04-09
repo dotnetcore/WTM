@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
 
         public Guid FileId { get; set; }
         public FileAttachment File { get; set; }
-        public int order { get; set; }
+        public int Order { get; set; }
     }
 
     public class SchoolFiles : TopBasePoco, ISubFile
@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
 
         public Guid FileId { get; set; }
         public FileAttachment File { get; set; }
-        public int order { get; set; }
+        public int Order { get; set; }
     }
 
 }
