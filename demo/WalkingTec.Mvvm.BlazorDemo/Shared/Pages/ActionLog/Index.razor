@@ -26,11 +26,11 @@
         <TableColumn @bind-Field="@context.ModuleName" Width="120" Fixed="true" />
         <TableColumn @bind-Field="@context.ActionName" Width="120" />
         <TableColumn @bind-Field="@context.ITCode" Width="120" />
-        <TableColumn @bind-Field="@context.ActionUrl" Width="120" />
-        <TableColumn @bind-Field="@context.ActionTime" Width="120"/>
-        <TableColumn @bind-Field="@context.Duration" Width="120"/>
-        <TableColumn @bind-Field="@context.IP" Width="120"/>
-        <TableColumn @bind-Field="@context.Remark" Width="320" />
+        <TableColumn @bind-Field="@context.ActionUrl" Width="180" AllowTextWrap="true" />
+        <TableColumn @bind-Field="@context.ActionTime" Width="180" AllowTextWrap="true" />
+        <TableColumn @bind-Field="@context.Duration" Width="120" Formatter="IntFormatter" />
+        <TableColumn @bind-Field="@context.IP" Width="120" />
+        <TableColumn @bind-Field="@context.Remark" Width="320" AllowTextWrap="true" />
     </TableColumns>
     <TableToolbarTemplate>
         <TableToolbarPopconfirmButton TItem="ActionLog" Color="Color.Primary"
@@ -70,7 +70,11 @@
         dataTable.QueryAsync();
     }
 
-
+    private static Task<string> IntFormatter(object? d)
+    {
+        var data = (double?)d;
+        return Task.FromResult(data?.ToString("F2") ?? "");
+    }
 
 
 
