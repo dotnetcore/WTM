@@ -18,12 +18,11 @@ namespace WalkingTec.Mvvm.Demo
 {
     public class Startup
     {
-        public IConfigurationRoot ConfigRoot { get; }
+        public IConfiguration ConfigRoot { get; }
 
-        public Startup(IWebHostEnvironment env)
+        public Startup(IWebHostEnvironment env, IConfiguration config)
         {
-            var configBuilder = new ConfigurationBuilder();
-            ConfigRoot = configBuilder.WTMConfig(env).Build();
+            ConfigRoot = config;
         }
 
 

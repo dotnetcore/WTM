@@ -168,6 +168,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             else
             {
                 var forapi = new LoginUserInfo();
+                forapi.UserId = Wtm.LoginUserInfo.UserId;
                 forapi.ITCode = Wtm.LoginUserInfo.ITCode;
                 forapi.Name = Wtm.LoginUserInfo.Name;
                 forapi.Roles = Wtm.LoginUserInfo.Roles;

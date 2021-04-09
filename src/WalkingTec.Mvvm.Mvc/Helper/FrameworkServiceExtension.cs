@@ -450,7 +450,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        public static IServiceCollection AddWtmContext(this IServiceCollection services,IConfigurationRoot config, Action<WtmContextOption> options = null)
+        public static IServiceCollection AddWtmContext(this IServiceCollection services,IConfiguration config, Action<WtmContextOption> options = null)
         {
             WtmContextOption op = new WtmContextOption();
             options?.Invoke(op);

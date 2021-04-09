@@ -185,10 +185,34 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get","wtmtoken");
         }
 
-        public async Task SetToken(string token)
+        public async Task<string> GetRefreshToken()
+        {
+            return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmrefreshtoken");
+        }
+
+        public async Task SetToken(string token,string refreshtoken)
         {
             await JSRuntime.InvokeVoidAsync("localStorageFuncs.set","wtmtoken",token);
+            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", "wtmrefreshtoken", refreshtoken);
         }
+
+        public async Task DeleteToken()
+        {
+             await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmtoken");
+             await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmrefreshtoken");
+        }
+
+        public async Task SetUserInfo(LoginUserInfo userinfo)
+        {
+            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", "wtmuser", JsonSerializer.Serialize(userinfo));
+        }
+
+        public async Task<LoginUserInfo> GetUserInfo()
+        {
+            string rv = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmuser");
+            return JsonSerializer.Deserialize<LoginUserInfo>(rv);
+        }
+
 
         public async Task Redirect(string path)
         {
