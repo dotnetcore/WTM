@@ -235,15 +235,15 @@ namespace WalkingTec.Mvvm.Core
             }
 
 
-            var code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>new { x.ITCode, x.ID }).SingleOrDefaultAsync();
+            var code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>new { itcode = x.ITCode, id= x.GetID() }).SingleOrDefaultAsync();
             if (code == null)
             {
                 return null;
             }
             LoginUserInfo rv = new LoginUserInfo
             {
-                ITCode = code.ITCode,
-                UserId = code.ID.ToString()
+                ITCode = code.itcode,
+                UserId = code.id?.ToString()
             };
             await rv.LoadBasicInfoAsync(this);
             return rv;
