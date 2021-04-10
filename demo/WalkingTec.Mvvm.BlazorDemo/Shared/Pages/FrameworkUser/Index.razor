@@ -32,7 +32,9 @@
         <TableColumn @bind-Field="@context.IsValid"  ComponentType="@typeof(Switch)" />
     </TableColumns>
     <TableToolbarTemplate>
+        @if (IsAccessable("/api/_frameworkuserbase/add")) { 
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
+        }
         <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-pencil" Text="@WtmBlazor.Localizer["Sys.BatchEdit"]" />
         <TableToolbarPopconfirmButton TItem="FrameworkUser_View" Color="Color.Primary"
                                       Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"

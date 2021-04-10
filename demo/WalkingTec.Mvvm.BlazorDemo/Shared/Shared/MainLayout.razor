@@ -1,4 +1,5 @@
 @inherits LayoutComponentBase
+@using System.Text.Json
 
 <CascadingValue Value="this" IsFixed="true">
 
@@ -28,7 +29,7 @@
             </div>
         </Side>
         <Main>
-            <CascadingValue Value="this" IsFixed="true">
+            <CascadingValue Value="UserInfo">
                 @Body
             </CascadingValue>
         </Main>
@@ -142,34 +143,37 @@
     <PopoverConfirm />
     <Message />
     <SweetAlert />
-    </CascadingValue>
-    @code
+</CascadingValue>
+@code
 {
 
-        private bool UseTabSet { get; set; } = true;
+    private bool UseTabSet { get; set; } = true;
 
-        private string Theme { get; set; } = "";
+    private string Theme { get; set; } = "";
 
-        private bool IsOpen { get; set; }
+    private bool IsOpen { get; set; }
 
-        private bool IsFixedHeader { get; set; } = true;
+    private bool IsFixedHeader { get; set; } = true;
 
-        private bool IsFixedFooter { get; set; } = true;
+    private bool IsFixedFooter { get; set; } = true;
 
-        private bool IsFullSide { get; set; } = true;
+    private bool IsFullSide { get; set; } = true;
 
-        private bool ShowFooter { get; set; } = true;
+    private bool ShowFooter { get; set; } = true;
 
-        private List<BootstrapBlazor.Components.MenuItem> Menus { get; set; }
+    private List<BootstrapBlazor.Components.MenuItem> Menus { get; set; }
 
+    [CascadingParameter]
+    public LoginUserInfo UserInfo {
+        get;
+        set;
+    }
 
-        private static List<BootstrapBlazor.Components.MenuItem> GetIconSideMenuItems()
-        {
-            var menus = new List<BootstrapBlazor.Components.MenuItem>
+    private static List<BootstrapBlazor.Components.MenuItem> GetIconSideMenuItems()
     {
-                new BootstrapBlazor.Components.MenuItem() { Text = "返回组件库", Icon = "fa fa-fw fa-home", Url = "https://www.blazor.zone/components" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "Index", Icon = "fa fa-fw fa-fa", Url = "" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "Counter", Icon = "fa fa-fw fa-check-square-o", Url = "counter" },
+        var menus = new List<BootstrapBlazor.Components.MenuItem>
+{
+                new BootstrapBlazor.Components.MenuItem() { Text = "首页", Icon = "fa fa-fw fa-fa", Url = "" },
                 new BootstrapBlazor.Components.MenuItem() { Text = "用户管理", Icon = "fa fa-fw fa-database", Url = "/FrameworkUser/Index" },
                 new BootstrapBlazor.Components.MenuItem() { Text = "菜单管理", Icon = "fa fa-fw fa-database", Url = "/FrameworkMenu/Index" },
                 new BootstrapBlazor.Components.MenuItem() { Text = "角色管理", Icon = "fa fa-fw fa-database", Url = "/FrameworkRole/Index" },
@@ -178,6 +182,6 @@
                 new BootstrapBlazor.Components.MenuItem() { Text = "日志管理", Icon = "fa fa-fw fa-database", Url = "/ActionLog/Index" }
            };
 
-            return menus;
-        }
+        return menus;
     }
+}

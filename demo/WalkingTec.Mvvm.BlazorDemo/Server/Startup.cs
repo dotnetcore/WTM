@@ -144,7 +144,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 });
             }
             app.UseBlazorFrameworkFiles();
-            app.UseWtmContext();
+            app.UseWtmContext(true);
 
 
 

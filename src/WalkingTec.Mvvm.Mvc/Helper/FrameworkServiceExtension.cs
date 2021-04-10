@@ -655,7 +655,7 @@ namespace WalkingTec.Mvvm.Mvc
             return builder;
         }
 
-        public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app)
+        public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app, bool isblazor=false)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
             var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
@@ -751,12 +751,12 @@ namespace WalkingTec.Mvvm.Mvc
                     foreach (var item in cs)
                     {
                         var dc = item.CreateDC();
-                        dc.DataInit(gd.AllModule, test != null).Wait();
+                        dc.DataInit(gd.AllModule, isblazor==true || test != null).Wait();
                     }
                 }
                 else
                 {
-                    fixdc.DataInit(gd.AllModule, test != null).Wait();
+                    fixdc.DataInit(gd.AllModule, isblazor == true || test != null).Wait();
                 }
 
             }
