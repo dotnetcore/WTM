@@ -1,5 +1,5 @@
 @inherits LayoutComponentBase
-@using System.Reflection 
+@using System.Reflection
 @inject WtmBlazorContext wtmblazor
 <CascadingValue Value="this" IsFixed="true">
 
@@ -172,33 +172,66 @@
 
     private List<BootstrapBlazor.Components.MenuItem> GetIconSideMenuItems()
     {
-        GetAllPages();
         List<BootstrapBlazor.Components.MenuItem> menus = null;
+        menus = new List<BootstrapBlazor.Components.MenuItem> { };
+        menus.Add(new BootstrapBlazor.Components.MenuItem() { Text = wtmblazor.Localizer["Sys.Home"], Icon = "fa fa-fw fa-home", Url = "/" });
         if (wtmblazor.ConfigInfo.IsQuickDebug == true)
         {
-            menus = new List<BootstrapBlazor.Components.MenuItem>
-        {
-                new BootstrapBlazor.Components.MenuItem() { Text = "首页", Icon = "fa fa-fw fa-fa", Url = "" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "用户管理", Icon = "fa fa-fw fa-database", Url = "/_Admin/FrameworkUser" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "菜单管理", Icon = "fa fa-fw fa-database", Url = "/_Admin/FrameworkMenu" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "角色管理", Icon = "fa fa-fw fa-database", Url = "/_Admin/FrameworkRole" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "用户组管理", Icon = "fa fa-fw fa-database", Url = "/_Admin/FrameworkGroup" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "数据权限", Icon = "fa fa-fw fa-database", Url = "/_Admin/DataPrivilege" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "日志管理", Icon = "fa fa-fw fa-database", Url = "/_Admin/ActionLog" }
-           };
+            wtmblazor.GetAllPages().ForEach(x => menus.Add(x));
         }
         else
         {
-
+            var usermenu = UserInfo.Attributes["Menus"] as WalkingTec.Mvvm.Core.Support.Json.SimpleMenuApi[];
+            var formatedmenu = new List<FrameworkMenu>();
+            foreach (var item in usermenu)
+            {
+                if (item.ParentId == null)
+                {
+                    formatedmenu.Add(new FrameworkMenu
+                    {
+                        ID = new Guid( item.Id),
+                        PageName = item.Text,
+                        Icon = item.Icon,
+                        Url = item.Url,
+                        Children = new List<FrameworkMenu>()
+                    });
+                }
+                else
+                {
+                    var parent = formatedmenu.Where(x => x.ID.ToString() == item.ParentId).FirstOrDefault();
+                    parent.Children.Add(new FrameworkMenu
+                    {
+                        ID = new Guid(item.Id),
+                        PageName = item.Text,
+                        Icon = item.Icon,
+                        Url = item.Url,
+                        Children = new List<FrameworkMenu>()
+                    });
+                }
+            }
+            GetMenuFromFrameworkMenu(formatedmenu).ForEach(x => menus.Add(x));
         }
         return menus;
 
     }
 
-    private List<BootstrapBlazor.Components.MenuItem> GetAllPages()
+    private List<BootstrapBlazor.Components.MenuItem> GetMenuFromFrameworkMenu(List<FrameworkMenu> input)
     {
-        var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
-        var menus = new List<BootstrapBlazor.Components.MenuItem>();
-        return menus;
+        List<BootstrapBlazor.Components.MenuItem> rv = new List<BootstrapBlazor.Components.MenuItem>();
+        foreach (var item in input)
+        {
+            var m = new BootstrapBlazor.Components.MenuItem
+            {
+                Text = wtmblazor.Localizer[item.PageName],
+                Icon = item.Icon,
+                Url = item.Url
+            };
+            if(item.Children?.Any() == true)
+            {
+                GetMenuFromFrameworkMenu(item.Children).ForEach(x=> m.AddItem(x));
+            }
+            rv.Add(m);
+        }
+        return rv;
     }
 }

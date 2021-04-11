@@ -456,6 +456,9 @@
   <data name="Sys.HideShow" xml:space="preserve">
     <value>Hide/Show</value>
   </data>
+  <data name="Sys.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
   <data name="Sys.Import" xml:space="preserve">
     <value>Import</value>
   </data>

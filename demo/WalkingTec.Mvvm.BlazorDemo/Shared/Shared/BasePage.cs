@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
@@ -12,7 +11,6 @@ using WalkingTec.Mvvm.Core;
 using System.Text.Json;
 using System.Net.Http;
 using WalkingTec.Mvvm.Core.Support.Json;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
@@ -221,8 +219,12 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         {
             string rv = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmuser");
             var user = JsonSerializer.Deserialize<LoginUserInfo>(rv);
-            user.Attributes["Actions"] = JsonSerializer.Deserialize<string[]>(user.Attributes["Actions"].ToString()).Where(x=>x != null).ToArray();
-            user.Attributes["Menus"] = JsonSerializer.Deserialize<SimpleMenu[]>(user.Attributes["Menus"].ToString());
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            user.Attributes["Actions"] = JsonSerializer.Deserialize<string[]>(user.Attributes["Actions"].ToString(),options).Where(x=>x != null).ToArray();
+            user.Attributes["Menus"] = JsonSerializer.Deserialize<SimpleMenuApi[]>(user.Attributes["Menus"].ToString(), options);
             return user;
         }
 
@@ -247,16 +249,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data), method.ToString());
         }
 
-        public static List<BootstrapBlazor.Components.MenuItem> GetAllPages()
-        {
-            var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
-            var menus = new List<BootstrapBlazor.Components.MenuItem>();
-            foreach (var item in pages)
-            {
-                var actdes = item.GetCustomAttribute<ActionDescriptionAttribute>();
-            }
-            return menus;
-        }
 
     }
 
@@ -270,9 +262,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         public IHttpClientFactory ClientFactory { get; set; }
         private Configs _configInfo;
         public Configs ConfigInfo { get => _configInfo; }
-        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog, ToastService toast, IHttpClientFactory cf, IOptionsMonitor<Configs> _config)
+        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog, ToastService toast, IHttpClientFactory cf, Configs _config)
         {
-            _configInfo = _config?.CurrentValue ?? new Configs();
+            _configInfo = _config;
             this.Localizer = factory.Create(typeof(Program)); ;
             this.GlobalSelectItems = gi;
             this.Api = api;
@@ -280,5 +272,43 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             this.Toast = toast;
             this.ClientFactory = cf;
         }
+
+        public  List<BootstrapBlazor.Components.MenuItem> GetAllPages()
+        {
+            var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
+            var menus = new List<BootstrapBlazor.Components.MenuItem>();
+            foreach (var item in pages)
+            {
+                var actdes = item.GetCustomAttribute<ActionDescriptionAttribute>();
+                if (actdes != null)
+                {
+                    var route = item.GetCustomAttribute<RouteAttribute>();
+                    var parts = route.Template.Split("/").Where(x=>x != "").ToArray();
+                    var area = Localizer["Sys.DefaultArea"].Value;
+                    if (parts.Length > 1)
+                    {
+                        area = parts[0];
+                    }
+                    var areamenu = menus.Where(x => x.Text == area).FirstOrDefault();
+                    if (areamenu == null)
+                    {
+                        areamenu = new BootstrapBlazor.Components.MenuItem
+                        {
+                            Text = area,
+                            Icon = "fa fa-fw fa-folder"
+                        };
+                        menus.Add(areamenu);
+                    }
+                    areamenu.AddItem(new BootstrapBlazor.Components.MenuItem
+                    {
+                        Text = Localizer[actdes.Description],
+                        Icon = "fa fa-fw fa-file",
+                        Url = route.Template
+                    });
+                }
+            }
+            return menus;
+        }
+
     }
 }

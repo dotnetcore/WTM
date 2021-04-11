@@ -15,6 +15,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
         public static void AddWtmBlazor(this IServiceCollection self, Configs config)
         {
             self.AddScoped<GlobalItems>();
+            self.AddSingleton<Configs>(config);
             self.AddHttpClient<ApiClient>(x =>
             {
                 x.BaseAddress = new Uri(config.Domains["server"].Url);

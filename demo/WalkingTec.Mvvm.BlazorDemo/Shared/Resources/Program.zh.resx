@@ -459,6 +459,9 @@
   <data name="Sys.HideShow" xml:space="preserve">
     <value>侧边伸缩</value>
   </data>
+  <data name="Sys.Home" xml:space="preserve">
+    <value>首页</value>
+  </data>
   <data name="Sys.Import" xml:space="preserve">
     <value>导入</value>
   </data>

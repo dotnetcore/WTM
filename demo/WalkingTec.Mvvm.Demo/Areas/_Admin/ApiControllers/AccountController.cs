@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Mvc.Auth;
@@ -41,7 +42,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] bool rememberLogin = false)
         {
 
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => new { itcode = x.ITCode, id = x.ID }).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
 
             if (rv == null)
             {
@@ -68,8 +69,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             var principal = Wtm.LoginUserInfo.CreatePrincipal();
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
-            List<SimpleMenu> ms = new List<SimpleMenu>();
+            List<SimpleMenuApi> ms = new List<SimpleMenuApi>();
             LoginUserInfo forapi = new LoginUserInfo();
+            forapi.UserId = user.UserId;
             forapi.ITCode = user.ITCode;
             forapi.Name = user.Name;
             forapi.Roles = user.Roles;
@@ -80,7 +82,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 .Select(x => x.MenuItem)
                 .Where(x => x.MethodName == null)
                 .OrderBy(x => x.DisplayOrder)
-                .Select(x => new SimpleMenu
+                .Select(x => new SimpleMenuApi
                 {
                     Id = x.ID.ToString().ToLower(),
                     ParentId = x.ParentId.ToString().ToLower(),
@@ -112,11 +114,12 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
 
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password.ToLower())).Select(x => new { itcode = x.ITCode, id = x.ID }).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password.ToLower())).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
 
             if (rv == null)
             {
-                return BadRequest(Localizer["Sys.LoginFailed"].Value);
+                ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             LoginUserInfo user = new LoginUserInfo
             {
@@ -133,7 +136,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 
-        private void LocalizeMenu(List<SimpleMenu> menus)
+        private void LocalizeMenu(List<SimpleMenuApi> menus)
         {
             if (menus == null)
             {
@@ -151,9 +154,17 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         [AllRights]
         [ProducesResponseType(typeof(Token), StatusCodes.Status200OK)]
-        public async Task<Token> RefreshToken(string refreshToken)
+        public async Task<IActionResult> RefreshToken(string refreshToken)
         {
-            return await _authService.RefreshTokenAsync(refreshToken);
+            var rv = await _authService.RefreshTokenAsync(refreshToken);
+            if (rv == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(rv);
+            }
         }
 
         [AllRights]
@@ -167,13 +178,14 @@ namespace WalkingTec.Mvvm.Admin.Api
             else
             {
                 var forapi = new LoginUserInfo();
+                forapi.UserId = Wtm.LoginUserInfo.UserId;
                 forapi.ITCode = Wtm.LoginUserInfo.ITCode;
                 forapi.Name = Wtm.LoginUserInfo.Name;
                 forapi.Roles = Wtm.LoginUserInfo.Roles;
                 forapi.Groups = Wtm.LoginUserInfo.Groups;
                 forapi.PhotoId = Wtm.LoginUserInfo.PhotoId;
 
-                var ms = new List<SimpleMenu>();
+                var ms = new List<SimpleMenuApi>();
                 var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
                 var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
                 var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
@@ -188,7 +200,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 {
                     if (allowedids.Contains(item.ID))
                     {
-                        ms.Add(new SimpleMenu
+                        ms.Add(new SimpleMenuApi
                         {
                             Id = item.ID.ToString().ToLower(),
                             ParentId = item.ParentId?.ToString()?.ToLower(),
@@ -244,19 +256,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             HttpContext.Response.Redirect("/");
         }
 
-    }
-
-    public class SimpleMenu
-    {
-        public string Id { get; set; }
-
-        public string ParentId { get; set; }
-
-        public string Text { get; set; }
-
-        public string Url { get; set; }
-
-        public string Icon { get; set; }
     }
 
     public class SimpleLogin
