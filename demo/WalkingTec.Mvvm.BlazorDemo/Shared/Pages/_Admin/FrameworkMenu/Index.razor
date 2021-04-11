@@ -1,22 +1,22 @@
-@page "/FrameworkMenu/Index"
+@page "/_Admin/FrameworkMenu"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 @inherits BasePage
-
+@attribute [ActionDescription("MenuKey.MenuMangement")]
 
 @*<WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
-    <ValidateForm Model="@SearchModel">
-        <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
-            <Select @bind-Value="@SearchModel.IsValid" Items="@WtmBlazor.GlobalSelectItems.SearcherBoolItems" />
-            <BootstrapInput @bind-Value="@SearchModel.ITCode" />
-            <BootstrapInput @bind-Value="@SearchModel.Name" />
-        </Row>
-    </ValidateForm>
-</WtmBlazorControls.WTSearchPanel>*@
+        <ValidateForm Model="@SearchModel">
+            <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
+                <Select @bind-Value="@SearchModel.IsValid" Items="@WtmBlazor.GlobalSelectItems.SearcherBoolItems" />
+                <BootstrapInput @bind-Value="@SearchModel.ITCode" />
+                <BootstrapInput @bind-Value="@SearchModel.Name" />
+            </Row>
+        </ValidateForm>
+    </WtmBlazorControls.WTSearchPanel>*@
 
 
 
 <Table @ref="dataTable" TItem="FrameworkMenu_ListView" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;"  OnTreeExpand="OnTreeExpand">
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" OnTreeExpand="OnTreeExpand">
     <TableColumns>
         <TableColumn @bind-Field="@context.PageName" Width="180" />
         <TableColumn @bind-Field="@context.ModuleName" />
@@ -41,10 +41,10 @@
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success"  Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="()=>OnEditClick(context)" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info"  Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="()=>OnEditClick(context)" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
             <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="()=>OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
-                              Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger"/>
+                              Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
         </div>
     </RowButtonTemplate>
 </Table>
@@ -107,7 +107,7 @@
 
     private async Task OnDeleteClick(FrameworkMenu_ListView item)
     {
-        await PostsData(new List<string> { item.ID.ToString() }, $"/api/_frameworkuserbase/batchdelete",(s)=> "Sys.OprationSuccess");
+        await PostsData(new List<string> { item.ID.ToString() }, $"/api/_frameworkuserbase/batchdelete", (s) => "Sys.OprationSuccess");
         await dataTable.QueryAsync();
     }
 

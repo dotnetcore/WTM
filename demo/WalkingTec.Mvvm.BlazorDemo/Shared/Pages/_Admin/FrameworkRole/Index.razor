@@ -1,6 +1,7 @@
-@page "/FrameworkRole/Index"
+@page "/_Admin/FrameworkRole"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 @inherits BasePage
+@attribute [ActionDescription("MenuKey.RoleManagement")]
 
 
 <WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">

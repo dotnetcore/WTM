@@ -1,5 +1,5 @@
-@page "/FrameworkGroup/Import"
-@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
+@page "/_Admin/FrameworkRole/Import"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 @inherits BasePage
 
 
@@ -23,7 +23,7 @@
 </ValidateForm>
 
 @code {
-    private FrameworkGroupImportVM Model = new FrameworkGroupImportVM() { };
+    private FrameworkRoleImportVM Model = new FrameworkRoleImportVM() { };
     private ValidateForm vform { get; set; }
     private string ErrorRowStyle = "display:none";
     private string ErrorFileId;
@@ -36,12 +36,12 @@
     }
     private async Task DownloadTemplate()
     {
-        await Download("/api/_FrameworkGroup/GetExcelTemplate", new { }, HttpMethodEnum.GET);
+        await Download("/api/_FrameworkRole/GetExcelTemplate", new { }, HttpMethodEnum.GET);
     }
 
     private async Task Submit(EditContext context)
     {
-        await PostsForm(vform, "/api/_FrameworkGroup/import", (s) => WtmBlazor.Localizer["Sys.ImportSuccess", s], (err) =>
+        await PostsForm(vform, "/api/_FrameworkRole/import", (s) => WtmBlazor.Localizer["Sys.ImportSuccess", s], (err) =>
         {
             ErrorRowStyle = "display:visiable";
             ErrorFileId = err.Form["Entity.ErrorFileId"];

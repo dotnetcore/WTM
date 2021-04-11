@@ -12,6 +12,8 @@ using WalkingTec.Mvvm.Core;
 using System.Text.Json;
 using System.Net.Http;
 using WalkingTec.Mvvm.Core.Support.Json;
+using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
 {
@@ -245,6 +247,17 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data), method.ToString());
         }
 
+        public static List<BootstrapBlazor.Components.MenuItem> GetAllPages()
+        {
+            var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
+            var menus = new List<BootstrapBlazor.Components.MenuItem>();
+            foreach (var item in pages)
+            {
+                var actdes = item.GetCustomAttribute<ActionDescriptionAttribute>();
+            }
+            return menus;
+        }
+
     }
 
     public class WtmBlazorContext
@@ -255,8 +268,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         public DialogService Dialog { get; set; }
         public ToastService Toast { get; set; }
         public IHttpClientFactory ClientFactory { get; set; }
-        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog, ToastService toast, IHttpClientFactory cf)
+        private Configs _configInfo;
+        public Configs ConfigInfo { get => _configInfo; }
+        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog, ToastService toast, IHttpClientFactory cf, IOptionsMonitor<Configs> _config)
         {
+            _configInfo = _config?.CurrentValue ?? new Configs();
             this.Localizer = factory.Create(typeof(Program)); ;
             this.GlobalSelectItems = gi;
             this.Api = api;

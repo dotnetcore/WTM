@@ -1,13 +1,13 @@
-@page "/DataPrivilege/Index"
+@page "/_Admin/DataPrivilege"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 @inherits BasePage
-
+@attribute [ActionDescription("MenuKey.DataPrivilege")]
 
 <WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
     <ValidateForm Model="@SearchModel">
         <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Inline">
             <Select @bind-Value="@SearchModel.TableName" Items="@AllPrivileges" />
-            <Select @bind-Value="@SearchModel.DpType"/>
+            <Select @bind-Value="@SearchModel.DpType" />
         </Row>
     </ValidateForm>
 </WtmBlazorControls.WTSearchPanel>
