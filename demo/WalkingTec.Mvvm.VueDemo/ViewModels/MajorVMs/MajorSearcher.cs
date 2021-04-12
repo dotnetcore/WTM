@@ -8,9 +8,9 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.VueDemo.BasicData.ViewModels.SchoolVMs
+namespace WalkingTec.Mvvm.VueDemo.ViewModels.MajorVMs
 {
-    public partial class SchoolSearcher : BaseSearcher
+    public partial class MajorSearcher : BaseSearcher
     {
 
         protected override void InitVM()

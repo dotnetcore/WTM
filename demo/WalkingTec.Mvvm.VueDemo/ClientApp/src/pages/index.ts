@@ -44,7 +44,21 @@ export default {
     path: '/student',
     controller: 'WalkingTec.Mvvm.VueDemo.Controllers,Student'
     }
+
+, school: {
+    name: '学校管理',
+    path: '/school',
+    controller: 'WalkingTec.Mvvm.VueDemo.Controllers,School'
+    }
+
+, major: {
+    name: '专业管理',
+    path: '/major',
+    controller: 'WalkingTec.Mvvm.VueDemo.Controllers,Major'
+    }
 /**WTM**/
+ 
+ 
  
 
 };

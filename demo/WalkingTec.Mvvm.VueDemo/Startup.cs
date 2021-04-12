@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -135,7 +136,7 @@ namespace WalkingTec.Mvvm.VueDemo
             //Add data privilege to specific type
             //指定哪些模型需要数据权限
             pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
-            pris.Add(new DataPrivilegeInfo<FrameworkRole>("角色权限", m => m.RoleName));
+            //pris.Add(new DataPrivilegeInfo<FrameworkRole>("角色权限", m => m.RoleName));
             return pris;
         }
 

@@ -5,26 +5,26 @@ using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.VueDemo.BasicData.ViewModels.SchoolVMs;
+using WalkingTec.Mvvm.VueDemo.ViewModels.MajorVMs;
 using WalkingTec.Mvvm.Demo.Models;
 
 
 namespace WalkingTec.Mvvm.VueDemo.Controllers
 {
-    [Area("BasicData")]
+    
     [AuthorizeJwtWithCookie]
-    [ActionDescription("学校管理")]
+    [ActionDescription("专业管理")]
     [ApiController]
-    [Route("api/School")]
-	public partial class SchoolController : BaseApiController
+    [Route("api/Major")]
+	public partial class MajorController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(SchoolSearcher searcher)
+		public IActionResult Search(MajorSearcher searcher)
         {
             if (ModelState.IsValid)
             {
-                var vm = Wtm.CreateVM<SchoolListVM>();
+                var vm = Wtm.CreateVM<MajorListVM>();
                 vm.Searcher = searcher;
                 return Content(vm.GetJson());
             }
@@ -36,15 +36,15 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
 
         [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public SchoolVM Get(string id)
+        public MajorVM Get(string id)
         {
-            var vm = Wtm.CreateVM<SchoolVM>(id);
+            var vm = Wtm.CreateVM<MajorVM>(id);
             return vm;
         }
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(SchoolVM vm)
+        public IActionResult Add(MajorVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(SchoolVM vm)
+        public IActionResult Edit(MajorVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         [ActionDescription("Sys.Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
-            var vm = Wtm.CreateVM<SchoolBatchVM>();
+            var vm = Wtm.CreateVM<MajorBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -113,9 +113,9 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(SchoolSearcher searcher)
+        public IActionResult ExportExcel(MajorSearcher searcher)
         {
-            var vm = Wtm.CreateVM<SchoolListVM>();
+            var vm = Wtm.CreateVM<MajorListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             return vm.GetExportData();
@@ -125,7 +125,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = Wtm.CreateVM<SchoolListVM>();
+            var vm = Wtm.CreateVM<MajorListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = Wtm.CreateVM<SchoolImportVM>();
+            var vm = Wtm.CreateVM<MajorImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(SchoolImportVM vm)
+        public ActionResult Import(MajorImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -164,6 +164,18 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
             }
         }
 
+
+        [HttpGet("GetSchools")]
+        public ActionResult GetSchools()
+        {
+            return Ok(DC.Set<School>().GetSelectListItems(Wtm, x => x.SchoolName));
+        }
+
+        [HttpGet("GetStudents")]
+        public ActionResult GetStudents()
+        {
+            return Ok(DC.Set<Student>().GetSelectListItems(Wtm, x => x.LoginName));
+        }
 
     }
 }

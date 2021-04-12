@@ -15,6 +15,9 @@ namespace WalkingTec.Mvvm.Core
     public class FrameworkUser : FrameworkUserBase
     {
 
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public new int ID { get; set; }
         [Display(Name = "_Admin.Email")]
         [RegularExpression("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", ErrorMessage = "Validate.{0}formaterror")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]

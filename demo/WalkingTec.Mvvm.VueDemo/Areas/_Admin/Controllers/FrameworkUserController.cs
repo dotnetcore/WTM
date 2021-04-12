@@ -99,10 +99,10 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                List<Guid?> tempids = new List<Guid?>();
+                List<int> tempids = new List<int>();
                 foreach (var item in vm?.Ids)
                 {
-                    tempids.Add(Guid.Parse(item));
+                    tempids.Add(int.Parse(item));
                 }
                 var userids = DC.Set<FrameworkUser>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
                 await Wtm.RemoveUserCache(userids);
