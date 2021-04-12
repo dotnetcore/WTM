@@ -1,11 +1,15 @@
+import { ControllerBasics, EnumActionType } from "@/client";
 import { ICellRendererParams } from "ag-grid-community";
-import { ControllerBasics, Pagination } from "@/client";
-import { Vue, Options, Prop, mixins } from "vue-property-decorator";
-import { EnumActionType } from "@/client";
 import { ButtonProps } from "ant-design-vue/lib/button/buttonTypes";
+import { mixins, Options, Prop, Vue } from "vue-property-decorator";
 @Options({ components: {} })
 export class PageActionBasics extends Vue {
-    readonly EnumActionType = EnumActionType
+    /** 包含 */
+    // @Prop({ default: () => [EnumActionType.Info, EnumActionType.Insert, EnumActionType.Update, EnumActionType.Delete, EnumActionType.Import, EnumActionType.Export] }) include;
+    // /** 排除 */
+    // @Prop({ default: () => [] }) exclude;
+    /** 页面操作枚举 */
+    // readonly EnumActionType = EnumActionType
     /**
       * 页面控制器
       */
@@ -75,6 +79,9 @@ export class RowActionBasics extends Vue {
 
 @Options({ components: {} })
 export class ActionBasics extends mixins(PageActionBasics, RowActionBasics) {
+    get isInfo() {
+        return this.onAuthority(EnumActionType.Info)
+    }
     get isInsert() {
         if (this.isRowAction) {
             return false

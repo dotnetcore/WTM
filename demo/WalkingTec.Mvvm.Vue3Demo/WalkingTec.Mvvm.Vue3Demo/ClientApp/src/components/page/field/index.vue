@@ -4,7 +4,7 @@
       <a-form-item v-bind="itemBind">
         <slot>
           <!-- 只读 -->
-          <template v-if="readonly">
+          <template v-if="_readonly">
             <span v-text="value"></span>
           </template>
           <!-- 可编辑 -->
@@ -100,6 +100,10 @@ export default class extends Vue {
       hasFeedback: this.lodash.includes(["text"], valueType),
       ...formValidate
     };
+  }
+  // 只读
+  get _readonly() {
+    return this.readonly || this.lodash.has(this.$route.query, '_readonly')
   }
   // form-item lable
   get _label() {

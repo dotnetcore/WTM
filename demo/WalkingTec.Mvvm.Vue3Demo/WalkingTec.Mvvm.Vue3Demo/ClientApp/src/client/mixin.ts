@@ -32,7 +32,7 @@ const options: ComponentOptions = {
          * 去除当前页面的 query 中 detailsVisible 触发隐藏
          */
         __wtmBackDetails() {
-            const query = lodash.omit(lodash.assign({}, this.$route.query), [$WtmConfig.detailsVisible])
+            const query = lodash.omit(lodash.assign({}, this.$route.query), [$WtmConfig.detailsVisible, '_readonly'])
             this.$router.replace({ query })
         },
         /**

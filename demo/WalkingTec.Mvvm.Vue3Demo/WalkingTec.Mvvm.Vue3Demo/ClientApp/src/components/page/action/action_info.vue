@@ -1,9 +1,9 @@
 <template>
-  <a-button v-if="isUpdate" v-bind="ButtonProps" :disabled="disabled" @click="onToDetails">
+  <a-button v-if="isInfo" v-bind="ButtonProps" :disabled="disabled" @click="onToDetails">
     <template #icon v-if="isPageAction">
       <EditOutlined />
     </template>
-    <i18n-t keypath="action.update" />
+    <i18n-t keypath="action.info" />
   </a-button>
 </template>
 <script lang="ts">
@@ -20,13 +20,19 @@ export default class extends mixins(ActionBasics) {
     return !this.lodash.eq(this.Pagination.selectionDataSource.length, 1);
   }
   get dateKey() {
+    let rowKey = ''
     if (this.isRowAction) {
-      return this.rowKey;
+      rowKey = this.rowKey
+    } else {
+      rowKey = this.lodash.get(
+        this.lodash.head(this.Pagination.selectionDataSource),
+        this.PageController.key
+      )
     }
-    return this.lodash.get(
-      this.lodash.head(this.Pagination.selectionDataSource),
-      this.PageController.key
-    );
+    return {
+      [this.$WtmConfig.detailsVisible]: rowKey,
+      _readonly: ''
+    };
   }
   onToDetails() {
     this.__wtmToDetails(this.dateKey)
