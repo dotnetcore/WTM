@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Server
 {
@@ -27,6 +28,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
 
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<FrameworkUser> FrameworkUsers { get; set; }
+        public DbSet<City> Citys { get; set; }
+        public DbSet<School> Schools { get; set; }
 
 
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
@@ -57,8 +60,32 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                     UserCode = user.ITCode,
                     RoleCode = "001"
                 };
+
                 Set<FrameworkUser>().Add(user);
                 Set<FrameworkUserRole>().Add(userrole);
+                Set<FrameworkGroup>().Add(new FrameworkGroup
+                {
+                    GroupCode = "1",
+                    GroupName = "学生组"
+                });
+                Set<FrameworkGroup>().Add(new FrameworkGroup
+                {
+                    GroupCode = "2",
+                    GroupName = "老师组"
+                });
+                Set<City>().Add(new City
+                {
+                    Name = "北京"
+                });
+                Set<City>().Add(new City
+                {
+                    Name = "上海"
+                });
+                Set<City>().Add(new City
+                {
+                    Name = "广东"
+                });
+
                 var adminmenus = Set<FrameworkMenu>().Where(x => x.Url != null && x.Url.StartsWith("/api") == false).ToList();
                 foreach (var item in adminmenus)
                 {

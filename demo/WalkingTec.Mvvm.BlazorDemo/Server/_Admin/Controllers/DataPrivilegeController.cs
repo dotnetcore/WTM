@@ -35,6 +35,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (DpType == DpTypeEnum.User)
             {
                 vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.UserCode == TargetId && x.DpType == DpType);
+                
             }
             else
             {
