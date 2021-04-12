@@ -1,28 +1,65 @@
 @page "/_Admin/DataPrivilege/Details/{id}"
-@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 @inherits BasePage
 
 
 <ValidateForm @ref="vform" Model="@Model">
-    <Display @bind-Value="@Model.Entity.RoleCode" ShowLabel="true" />
-    <Display @bind-Value="@Model.Entity.RoleName" ShowLabel="true" />
-    <Display @bind-Value="@Model.Entity.RoleRemark" ShowLabel="true" />
+    <Select @bind-Value="@Model.DpType" IsDisabled="true" />
+    @if (Model.DpType == DpTypeEnum.User)
+    {
+        <Display @bind-Value="@Model.Entity.UserCode" />
+    }
+    else
+    {
+        <Select @bind-Value="@Model.Entity.GroupCode" Items="@AllGroups" IsDisabled="true" />
+    }
+    <Select @bind-Value="@Model.Entity.TableName" Items="AllPrivileges" OnSelectedItemChanged="OnCascadeBindSelectClick" IsDisabled="true" />
+    <Select @bind-Value="@Model.IsAll" Items="NullableBoolItems" IsDisabled="true" />
+    <MultiSelect @ref="Select2" @bind-Value="@Model.SelectedItemsID" Items="AllPrivilegeTableNames" IsDisabled="true" />
     <div class="modal-footer table-modal-footer">
-        <Button Color="Color.Primary" Icon="fa fa-save" Text="关闭" OnClick="OnClose" />
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Create"]" IsAsync="true" />
     </div>
 </ValidateForm>
 
 @code {
-    private FrameworkRoleVM Model = new FrameworkRoleVM() ;
+    private DataPrivilegeVM Model = new DataPrivilegeVM();
+
     private ValidateForm vform { get; set; }
+
+    private IEnumerable<SelectedItem> NullableBoolItems { get; set; } = new SelectedItem[]
+      {
+            new SelectedItem() { Text = "是", Value = "true" },
+            new SelectedItem() { Text = "否", Value = "false" }};
+
+    private List<SelectedItem> AllPrivileges = new List<SelectedItem>();
+    private List<SelectedItem> AllGroups = new List<SelectedItem>();
+    private List<SelectedItem> AllPrivilegeTableNames = new List<SelectedItem>();
+    private MultiSelect<List<string>> Select2 { get; set; }
+
+
     [Parameter]
     public string id { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            var rv = await WtmBlazor.Api.CallAPI<FrameworkRoleVM>($"/api/_FrameworkRole/{id}");
-            Model = rv.Data;
-        }
+    protected override async Task OnInitializedAsync()
+    {
+        AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges");
+        AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetUserGroups");
+        var rv = await WtmBlazor.Api.CallAPI<DataPrivilegeVM>($"/api/_DataPrivilege/{id}");
+        Model = rv.Data;
+    }
+
+
+    /// <summary>
+    /// 级联绑定菜单
+    /// </summary>
+    /// <param name="item"></param>
+    private async Task OnCascadeBindSelectClick(SelectedItem item)
+    {
+        AllPrivilegeTableNames.Clear();
+        AllPrivilegeTableNames = await WtmBlazor.Api.CallItemsApi($"/api/_DataPrivilege/GetPrivilegeByTableName?table={item.Value}");
+        Select2.SetItems(AllPrivilegeTableNames);
+    }
 
     public void OnClose()
     {
