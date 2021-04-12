@@ -407,7 +407,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 else
                 {
-                    Response.Headers.TryAdd("Content-Disposition",$"inline; filename=\"{file.FileName}\"");
+                    Response.Headers.TryAdd("Content-Disposition",$"inline; filename=\"{HttpUtility.UrlEncode( file.FileName)}\"");
                     await rv.CopyToAsync(Response.Body);
                     rv.Dispose();
                     return new EmptyResult();

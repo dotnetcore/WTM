@@ -450,7 +450,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        public static IServiceCollection AddWtmContext(this IServiceCollection services,IConfigurationRoot config, Action<WtmContextOption> options = null)
+        public static IServiceCollection AddWtmContext(this IServiceCollection services,IConfiguration config, Action<WtmContextOption> options = null)
         {
             WtmContextOption op = new WtmContextOption();
             options?.Invoke(op);
@@ -550,7 +550,7 @@ namespace WalkingTec.Mvvm.Mvc
                         options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
                         options.Cookie.HttpOnly = true;
                         options.Cookie.SameSite = SameSiteMode.Strict;
-
+                        options.Cookie.Domain = string.IsNullOrEmpty(cookieOptions.Domain)?"": cookieOptions.Domain;
                         options.ClaimsIssuer = cookieOptions.Issuer;
                         options.SlidingExpiration = cookieOptions.SlidingExpiration;
                         options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
@@ -655,7 +655,7 @@ namespace WalkingTec.Mvvm.Mvc
             return builder;
         }
 
-        public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app)
+        public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app, bool isspa=false)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
             var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
@@ -751,12 +751,12 @@ namespace WalkingTec.Mvvm.Mvc
                     foreach (var item in cs)
                     {
                         var dc = item.CreateDC();
-                        dc.DataInit(gd.AllModule, test != null).Wait();
+                        dc.DataInit(gd.AllModule, isspa == true || test != null).Wait();
                     }
                 }
                 else
                 {
-                    fixdc.DataInit(gd.AllModule, test != null).Wait();
+                    fixdc.DataInit(gd.AllModule, isspa == true || test != null).Wait();
                 }
 
             }

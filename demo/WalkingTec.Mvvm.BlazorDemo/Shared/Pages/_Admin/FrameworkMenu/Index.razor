@@ -1,0 +1,127 @@
+@page "/_Admin/FrameworkMenu"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
+@inherits BasePage
+@attribute [ActionDescription("MenuKey.MenuMangement")]
+
+@*<WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
+        <ValidateForm Model="@SearchModel">
+            <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
+                <Select @bind-Value="@SearchModel.IsValid" Items="@WtmBlazor.GlobalSelectItems.SearcherBoolItems" />
+                <BootstrapInput @bind-Value="@SearchModel.ITCode" />
+                <BootstrapInput @bind-Value="@SearchModel.Name" />
+            </Row>
+        </ValidateForm>
+    </WtmBlazorControls.WTSearchPanel>*@
+
+
+
+<Table @ref="dataTable" TItem="FrameworkMenu_ListView" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" OnTreeExpand="OnTreeExpand">
+    <TableColumns>
+        <TableColumn @bind-Field="@context.PageName" Width="180" />
+        <TableColumn @bind-Field="@context.ModuleName" />
+        <TableColumn @bind-Field="@context.ShowOnMenu" Sortable="true" />
+        <TableColumn @bind-Field="@context.FolderOnly" />
+        <TableColumn @bind-Field="@context.IsPublic" />
+        <TableColumn @bind-Field="@context.DisplayOrder" />
+        <TableColumn @bind-Field="@context.Icon">
+            <Template Context="value">
+                <span><i class="@value.Value"></i></span>
+            </Template>
+        </TableColumn>
+    </TableColumns>
+    <TableToolbarTemplate>
+        <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
+        <TableToolbarPopconfirmButton TItem="FrameworkMenu_ListView" Color="Color.Primary"
+                                      Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
+                                      OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
+                                      ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
+
+        <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+    </TableToolbarTemplate>
+    <RowButtonTemplate>
+        <div style="padding-right:10px;">
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="()=>OnEditClick(context)" />
+            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
+            <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="()=>OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+                              Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
+        </div>
+    </RowButtonTemplate>
+</Table>
+
+@code{
+
+    private FrameworkMenuSearcher SearchModel = new FrameworkMenuSearcher();
+    private Table<FrameworkMenu_ListView> dataTable;
+
+
+
+    private async Task<QueryData<FrameworkMenu_ListView>> OnSearch(QueryPageOptions opts)
+    {
+        return await WtmBlazor.Api.CallSearchTreeApi<FrameworkMenu_ListView>("/api/_frameworkmenu/search", SearchModel, opts);
+    }
+
+    private async Task<IEnumerable<FrameworkMenu_ListView>> OnTreeExpand(FrameworkMenu_ListView data)
+    {
+        return data.Children;
+    }
+
+    private void DoSearch()
+    {
+        dataTable.QueryAsync();
+    }
+
+    private async Task OnCreateClick(IEnumerable<FrameworkMenu_ListView> items)
+    {
+        if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"]) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
+    }
+
+    private async Task OnEditClick(FrameworkMenu_ListView item)
+    {
+        //if (await OpenDialog<Edit>(WtmBlazor.Localizer["Sys.Edit"], x => x.id == item.ID.ToString()) == DialogResult.Yes)
+        //{
+        //    await dataTable.QueryAsync();
+        //}
+    }
+
+    private async Task OnDetailsClick(FrameworkMenu_ListView item)
+    {
+        //await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());
+    }
+
+    private async Task OnBatchDeleteClick()
+    {
+        if (dataTable.SelectedRows?.Any() == true)
+        {
+            await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/_frameworkuserbase/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
+            await dataTable.QueryAsync();
+        }
+        else
+        {
+            await WtmBlazor.Toast.Information(WtmBlazor.Localizer["Sys.Info"], WtmBlazor.Localizer["Sys.SelectOneRowMin"]);
+        }
+    }
+
+    private async Task OnDeleteClick(FrameworkMenu_ListView item)
+    {
+        await PostsData(new List<string> { item.ID.ToString() }, $"/api/_frameworkuserbase/batchdelete", (s) => "Sys.OprationSuccess");
+        await dataTable.QueryAsync();
+    }
+
+
+    private async Task OnExportClick(IEnumerable<FrameworkMenu_ListView> items)
+    {
+        if (dataTable.SelectedRows?.Any() == true)
+        {
+            await Download("/api/_frameworkuserbase/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
+        }
+        else
+        {
+            await Download("/api/_frameworkuserbase/ExportExcel", SearchModel);
+        }
+    }
+
+}

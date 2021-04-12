@@ -3,22 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="Locales\en.json" />
-    <Content Remove="Locales\zh.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Locales\en.json" />
-    <EmbeddedResource Include="Locales\zh.json" />
-  </ItemGroup>
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="5.0.24-beta06" />
+    <PackageReference Include="BootstrapBlazor" Version="5.0.26-beta02" />
   </ItemGroup>
 
   <ItemGroup>

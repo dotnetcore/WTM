@@ -118,7 +118,9 @@ namespace WalkingTec.Mvvm.Mvc.Auth
                 return await IssueTokenAsync(loginUserInfo);
             }
             else
-                throw new Exception("非法的 refresh Token");
+            {
+                return null;
+            }
         }
 
         /// <summary>

@@ -129,7 +129,7 @@
                             &nbsp;
                         </h4>
                         <p>
-                            WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（<code>layui.com</code>），授权WTM开发的项目可以免费使用其收费版的<code>LayuiAdmin</code>。提高自己，造福他人，吾道不孤！
+                            WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。WTM Blazor版本要特别鸣谢我的好友，微软MVP张广坡带来的<a href="https://www.blazor.zone/" target="_blank" type="primary">BootstrapBlazor组件库</a>。提高自己，造福他人，吾道不孤！
                         </p>
                         <p>
                             —— 框架开源地址：<a href="https://github.com/dotnetcore/WTM" target="_blank" type="primary">https://github.com/dotnetcore/WTM</a>
@@ -299,12 +299,9 @@
     private github model = new github();
     protected override async Task OnInitializedAsync()
     {
-
-        //var rv = await WtmBlazor.Api.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm");
-        //if (rv.StatusCode == System.Net.HttpStatusCode.OK)
-        //{
-        //    model = rv.Data;
-        //}
+        var client = WtmBlazor.ClientFactory.CreateClient("github");
+        var info = await client.GetFromJsonAsync<github>("/repos/dotnetcore/wtm");
+        model = info;
     }
     private class github
     {

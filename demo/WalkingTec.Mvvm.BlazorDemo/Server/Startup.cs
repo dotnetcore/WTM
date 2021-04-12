@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 {
                     options.ResourceManagerStringLocalizerType = typeof(Shared.Program);
                 });
-                services.AddWtmBlazor();
+                services.AddWtmBlazor(config);
             }
             services.AddWtmContext(ConfigRoot, (options) =>
             {
@@ -80,12 +80,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.CsSelector = CSSelector;
                 options.FileSubDirSelector = SubDirSelector;
                 options.ReloadUserFunc = ReloadUser;
-            });
-            services.AddHttpClient<ApiClient>(x =>
-            {
-                x.BaseAddress = new Uri(ConfigRoot["BlazorServerUrl"]);
-                x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
-                x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
             });
         }
 
@@ -150,34 +144,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 });
             }
             app.UseBlazorFrameworkFiles();
-            app.UseWtmContext();
-
-
-
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //    app.UseWebAssemblyDebugging();
-            //}
-            //else
-            //{
-            //    app.UseExceptionHandler("/Error");
-            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //    app.UseHsts();
-            //}
-
-            //app.UseHttpsRedirection();
-            //app.UseBlazorFrameworkFiles();
-            //app.UseStaticFiles();
-
-            //app.UseRouting();
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapRazorPages();
-            //    endpoints.MapControllers();
-            //    endpoints.MapFallbackToFile("index.html");
-            //});
+            app.UseWtmContext(true);
         }
 
         /// <summary>

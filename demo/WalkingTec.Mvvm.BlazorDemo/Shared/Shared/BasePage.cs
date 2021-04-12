@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
@@ -10,6 +9,9 @@ using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using WalkingTec.Mvvm.Core;
 using System.Text.Json;
+using System.Net.Http;
+using WalkingTec.Mvvm.Core.Support.Json;
+using System.Reflection;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
 {
@@ -22,10 +24,16 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         [Inject]
         public NavigationManager navigationManager { get; set; }
 
+        [CascadingParameter]
+        public LoginUserInfo UserInfo {
+            get;
+            set;
+        }
+
         [Parameter]
         public Action<DialogResult> OnCloseDialog { get; set; }
 
-        protected void CloseDialog(DialogResult result= DialogResult.Close)
+        protected void CloseDialog(DialogResult result = DialogResult.Close)
         {
             OnCloseDialog?.Invoke(result);
         }
@@ -61,16 +69,16 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             };
             option.OnCloseAsync = async () =>
             {
-                    option.OnCloseAsync = null;
-                    await option.Dialog.Close();
-                ReturnTask.TrySetResult( DialogResult.Close);
+                option.OnCloseAsync = null;
+                await option.Dialog.Close();
+                ReturnTask.TrySetResult(DialogResult.Close);
             };
             await WtmBlazor.Dialog.Show(option);
             var rv = await ReturnTask.Task;
             return rv;
         }
 
-        public async Task<bool> PostsData(object data,string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
+        public async Task<bool> PostsData(object data, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
         {
             var rv = await WtmBlazor.Api.CallAPI(url, method, data);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
@@ -109,15 +117,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
 
         }
 
-        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string,string> Msg = null, Action<ErrorObj> ErrorHandler=null, HttpMethodEnum method= HttpMethodEnum.POST)
+        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
         {
             var rv = await WtmBlazor.Api.CallAPI(url, method, form.Model);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                if(Msg != null)
+                if (Msg != null)
                 {
                     var m = Msg.Invoke(rv.Data);
-                    await WtmBlazor.Toast.Success(WtmBlazor.Localizer["Sys.Info"],  WtmBlazor.Localizer[m]);
+                    await WtmBlazor.Toast.Success(WtmBlazor.Localizer["Sys.Info"], WtmBlazor.Localizer[m]);
                 }
                 CloseDialog(DialogResult.Yes);
                 return true;
@@ -147,7 +155,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             }
         }
 
-        public  async Task<string> GetBase64Image(string fileid, int? width=null, int? height=null)
+        public async Task<string> GetBase64Image(string fileid, int? width = null, int? height = null)
         {
             var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{fileid}", HttpMethodEnum.GET, new Dictionary<string, string> {
                     {"width", width?.ToString() },
@@ -182,12 +190,53 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
 
         public async Task<string> GetToken()
         {
-            return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get","wtmtoken");
+            return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmtoken");
         }
 
-        public async Task SetToken(string token)
+        public async Task<string> GetRefreshToken()
         {
-            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set","wtmtoken",token);
+            return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmrefreshtoken");
+        }
+
+        public async Task SetToken(string token, string refreshtoken)
+        {
+            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", "wtmtoken", token);
+            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", "wtmrefreshtoken", refreshtoken);
+        }
+
+        public async Task DeleteToken()
+        {
+            await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmtoken");
+            await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmrefreshtoken");
+        }
+
+        public async Task SetUserInfo(LoginUserInfo userinfo)
+        {
+            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", "wtmuser", JsonSerializer.Serialize(userinfo));
+        }
+
+        public async Task<LoginUserInfo> GetUserInfo()
+        {
+            string rv = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmuser");
+            var user = JsonSerializer.Deserialize<LoginUserInfo>(rv);
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            user.Attributes["Actions"] = JsonSerializer.Deserialize<string[]>(user.Attributes["Actions"].ToString(),options).Where(x=>x != null).ToArray();
+            user.Attributes["Menus"] = JsonSerializer.Deserialize<SimpleMenuApi[]>(user.Attributes["Menus"].ToString(), options);
+            return user;
+        }
+
+        public bool IsAccessable(string url)
+        {
+            if (UserInfo != null)
+            {
+                var actions = UserInfo.Attributes["Actions"] as string[];
+                url = url.ToLower();
+                return actions.Any(x => x.ToLower() == url);
+            }
+            return false;
         }
 
         public async Task Redirect(string path)
@@ -195,10 +244,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             await JSRuntime.InvokeVoidAsync("urlFuncs.redirect", path);
         }
 
-        public async Task Download(string url, object data, HttpMethodEnum method= HttpMethodEnum.POST)
+        public async Task Download(string url, object data, HttpMethodEnum method = HttpMethodEnum.POST)
         {
             await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data), method.ToString());
         }
+
 
     }
 
@@ -209,13 +259,56 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         public ApiClient Api { get; set; }
         public DialogService Dialog { get; set; }
         public ToastService Toast { get; set; }
-        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog,ToastService toast)
+        public IHttpClientFactory ClientFactory { get; set; }
+        private Configs _configInfo;
+        public Configs ConfigInfo { get => _configInfo; }
+        public WtmBlazorContext(IStringLocalizerFactory factory, GlobalItems gi, ApiClient api, DialogService dialog, ToastService toast, IHttpClientFactory cf, Configs _config)
         {
+            _configInfo = _config;
             this.Localizer = factory.Create(typeof(Program)); ;
             this.GlobalSelectItems = gi;
             this.Api = api;
             this.Dialog = dialog;
             this.Toast = toast;
+            this.ClientFactory = cf;
         }
+
+        public  List<BootstrapBlazor.Components.MenuItem> GetAllPages()
+        {
+            var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
+            var menus = new List<BootstrapBlazor.Components.MenuItem>();
+            foreach (var item in pages)
+            {
+                var actdes = item.GetCustomAttribute<ActionDescriptionAttribute>();
+                if (actdes != null)
+                {
+                    var route = item.GetCustomAttribute<RouteAttribute>();
+                    var parts = route.Template.Split("/").Where(x=>x != "").ToArray();
+                    var area = Localizer["Sys.DefaultArea"].Value;
+                    if (parts.Length > 1)
+                    {
+                        area = parts[0];
+                    }
+                    var areamenu = menus.Where(x => x.Text == area).FirstOrDefault();
+                    if (areamenu == null)
+                    {
+                        areamenu = new BootstrapBlazor.Components.MenuItem
+                        {
+                            Text = area,
+                            Icon = "fa fa-fw fa-folder"
+                        };
+                        menus.Add(areamenu);
+                    }
+                    areamenu.AddItem(new BootstrapBlazor.Components.MenuItem
+                    {
+                        Text = Localizer[actdes.Description],
+                        Icon = "fa fa-fw fa-file",
+                        Url = route.Template
+                    });
+                }
+            }
+            return menus;
+        }
+
     }
 }

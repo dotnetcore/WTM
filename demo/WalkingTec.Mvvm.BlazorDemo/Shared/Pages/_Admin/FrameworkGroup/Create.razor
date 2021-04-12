@@ -1,0 +1,31 @@
+@page "/_Admin/FrameworkGroup/Create"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
+    <BootstrapInput @bind-Value="@Model.Entity.GroupCode" />
+    <BootstrapInput @bind-Value="@Model.Entity.GroupName" />
+    <BootstrapInput @bind-Value="@Model.Entity.GroupRemark" />
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Create"]" IsAsync="true" />
+    </div>
+</ValidateForm>
+
+@code {
+    private FrameworkGroupVM Model = new FrameworkGroupVM();
+
+    private ValidateForm vform { get; set; }
+
+    private async Task Submit(EditContext context)
+    {
+        await PostsForm(vform, "/api/_FrameworkGroup/add", (s) => "Sys.OprationSuccess");
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

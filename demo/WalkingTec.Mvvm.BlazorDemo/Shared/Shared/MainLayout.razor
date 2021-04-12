@@ -1,5 +1,6 @@
 @inherits LayoutComponentBase
-
+@using System.Reflection
+@inject WtmBlazorContext wtmblazor
 <CascadingValue Value="this" IsFixed="true">
 
     <Layout SideWidth="0" IsPage="true" ShowGotoTop="true" ShowCollapseBar="true"
@@ -28,7 +29,7 @@
             </div>
         </Side>
         <Main>
-            <CascadingValue Value="this" IsFixed="true">
+            <CascadingValue Value="UserInfo">
                 @Body
             </CascadingValue>
         </Main>
@@ -142,42 +143,95 @@
     <PopoverConfirm />
     <Message />
     <SweetAlert />
-    </CascadingValue>
-    @code
+</CascadingValue>
+@code
 {
 
-        private bool UseTabSet { get; set; } = true;
+    private bool UseTabSet { get; set; } = true;
 
-        private string Theme { get; set; } = "";
+    private string Theme { get; set; } = "";
 
-        private bool IsOpen { get; set; }
+    private bool IsOpen { get; set; }
 
-        private bool IsFixedHeader { get; set; } = true;
+    private bool IsFixedHeader { get; set; } = true;
 
-        private bool IsFixedFooter { get; set; } = true;
+    private bool IsFixedFooter { get; set; } = true;
 
-        private bool IsFullSide { get; set; } = true;
+    private bool IsFullSide { get; set; } = true;
 
-        private bool ShowFooter { get; set; } = true;
+    private bool ShowFooter { get; set; } = true;
 
-        private List<BootstrapBlazor.Components.MenuItem> Menus { get; set; }
+    private List<BootstrapBlazor.Components.MenuItem> Menus { get; set; }
 
-
-        private static List<BootstrapBlazor.Components.MenuItem> GetIconSideMenuItems()
-        {
-            var menus = new List<BootstrapBlazor.Components.MenuItem>
+    [CascadingParameter]
+    public LoginUserInfo UserInfo
     {
-                new BootstrapBlazor.Components.MenuItem() { Text = "返回组件库", Icon = "fa fa-fw fa-home", Url = "https://www.blazor.zone/components" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "Index", Icon = "fa fa-fw fa-fa", Url = "" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "Counter", Icon = "fa fa-fw fa-check-square-o", Url = "counter" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "用户管理", Icon = "fa fa-fw fa-database", Url = "/FrameworkUser/Index" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "菜单管理", Icon = "fa fa-fw fa-database", Url = "/FrameworkMenu/Index" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "角色管理", Icon = "fa fa-fw fa-database", Url = "/FrameworkRole/Index" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "用户组管理", Icon = "fa fa-fw fa-database", Url = "/FrameworkGroup/Index" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "数据权限", Icon = "fa fa-fw fa-database", Url = "/DataPrivilege/Index" },
-                new BootstrapBlazor.Components.MenuItem() { Text = "日志管理", Icon = "fa fa-fw fa-database", Url = "/ActionLog/Index" }
-           };
-
-            return menus;
-        }
+        get;
+        set;
     }
+
+    private List<BootstrapBlazor.Components.MenuItem> GetIconSideMenuItems()
+    {
+        List<BootstrapBlazor.Components.MenuItem> menus = null;
+        menus = new List<BootstrapBlazor.Components.MenuItem> { };
+        menus.Add(new BootstrapBlazor.Components.MenuItem() { Text = wtmblazor.Localizer["Sys.Home"], Icon = "fa fa-fw fa-home", Url = "/" });
+        if (wtmblazor.ConfigInfo.IsQuickDebug == true)
+        {
+            wtmblazor.GetAllPages().ForEach(x => menus.Add(x));
+        }
+        else
+        {
+            var usermenu = UserInfo.Attributes["Menus"] as WalkingTec.Mvvm.Core.Support.Json.SimpleMenuApi[];
+            var formatedmenu = new List<FrameworkMenu>();
+            foreach (var item in usermenu)
+            {
+                if (item.ParentId == null)
+                {
+                    formatedmenu.Add(new FrameworkMenu
+                    {
+                        ID = new Guid( item.Id),
+                        PageName = item.Text,
+                        Icon = item.Icon,
+                        Url = item.Url,
+                        Children = new List<FrameworkMenu>()
+                    });
+                }
+                else
+                {
+                    var parent = formatedmenu.Where(x => x.ID.ToString() == item.ParentId).FirstOrDefault();
+                    parent.Children.Add(new FrameworkMenu
+                    {
+                        ID = new Guid(item.Id),
+                        PageName = item.Text,
+                        Icon = item.Icon,
+                        Url = item.Url,
+                        Children = new List<FrameworkMenu>()
+                    });
+                }
+            }
+            GetMenuFromFrameworkMenu(formatedmenu).ForEach(x => menus.Add(x));
+        }
+        return menus;
+
+    }
+
+    private List<BootstrapBlazor.Components.MenuItem> GetMenuFromFrameworkMenu(List<FrameworkMenu> input)
+    {
+        List<BootstrapBlazor.Components.MenuItem> rv = new List<BootstrapBlazor.Components.MenuItem>();
+        foreach (var item in input)
+        {
+            var m = new BootstrapBlazor.Components.MenuItem
+            {
+                Text = wtmblazor.Localizer[item.PageName],
+                Icon = item.Icon,
+                Url = item.Url
+            };
+            if(item.Children?.Any() == true)
+            {
+                GetMenuFromFrameworkMenu(item.Children).ForEach(x=> m.AddItem(x));
+            }
+            rv.Add(m);
+        }
+        return rv;
+    }
+}
