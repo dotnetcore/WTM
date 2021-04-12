@@ -14,7 +14,7 @@
         <Select @bind-Value="@Model.Entity.GroupCode" Items="@AllGroups" />
     }
     <Select @bind-Value="@Model.Entity.TableName" Items="AllPrivileges" OnSelectedItemChanged="OnCascadeBindSelectClick" />
-    <Select @bind-Value="@Model.IsAll" />
+    <Select @bind-Value="@Model.IsAll" Items="NullableBoolItems" />
     <MultiSelect @ref="Select2" @bind-Value="@Model.SelectedItemsID" Items="AllPrivilegeTableNames" />
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
@@ -26,6 +26,11 @@
     private DataPrivilegeVM Model = new DataPrivilegeVM();
 
     private ValidateForm vform { get; set; }
+
+    private IEnumerable<SelectedItem> NullableBoolItems { get; set; } = new SelectedItem[]
+      {
+            new SelectedItem() { Text = "是", Value = "true" },
+            new SelectedItem() { Text = "否", Value = "false" }};
 
     private List<SelectedItem> AllPrivileges = new List<SelectedItem>();
     private List<SelectedItem> AllGroups = new List<SelectedItem>();
