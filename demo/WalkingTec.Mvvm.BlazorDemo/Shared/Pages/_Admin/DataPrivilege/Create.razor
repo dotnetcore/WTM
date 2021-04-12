@@ -13,7 +13,7 @@
     {
         <Select @bind-Value="@Model.Entity.GroupCode" Items="@AllGroups" />
     }
-    <Select @bind-Value="@Model.Entity.TableName" Items="AllPrivileges" OnSelectedItemChanged="OnCascadeBindSelectClick" />
+    <Select @bind-Value="@Model.Entity.TableName" Items="AllPrivileges" OnSelectedItemChanged="OnCascadeBindSelectClick" PlaceHolder="请选择"/>
     <Select @bind-Value="@Model.IsAll" Items="NullableBoolItems" />
     <MultiSelect @ref="Select2" @bind-Value="@Model.SelectedItemsID" Items="AllPrivilegeTableNames" />
     <div class="modal-footer table-modal-footer">

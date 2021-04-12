@@ -27,6 +27,9 @@
     public bool? LoginSuccess { get; set; }
     [Parameter]
     public EventCallback<bool?> LoginSuccessChanged { get; set; }
+    [Parameter]
+    public EventCallback OnUserInfoSet { get; set; }
+
     private int bgnumber;
     private LoginVM Model = new LoginVM();
 
@@ -49,6 +52,7 @@
             if (userinfo.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 await SetUserInfo(userinfo.Data);
+                await OnUserInfoSet.InvokeAsync();
                 await LoginSuccessChanged.InvokeAsync(true);
             }
             else

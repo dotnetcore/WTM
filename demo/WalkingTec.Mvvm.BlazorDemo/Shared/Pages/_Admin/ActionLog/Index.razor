@@ -7,10 +7,10 @@
 <WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
     <ValidateForm Model="@SearchModel">
         <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
-            <MultiSelect @bind-Value="@SearchModel.LogType" />
+            <MultiSelect @bind-Value="@SearchModel.LogType" PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
             <BootstrapInput @bind-Value="@SearchModel.ITCode" />
             <BootstrapInput @bind-Value="@SearchModel.ActionUrl" />
-            <DateTimeRange @bind-Value="date" DisplayText="@WtmBlazor.Localizer["_Admin.ActionTime"]" />
+            <WTDateRange @bind-Value="@SearchModel.ActionTime"  />
             <BootstrapInput @bind-Value="@SearchModel.IP" />
             <BootstrapInput @bind-Value="@SearchModel.Duration" />
         </Row>
@@ -22,12 +22,12 @@
 <Table @ref="dataTable" TItem="ActionLog" ShowLineNo="true" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
        ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" FixedExtendButtonsColumn="true" ShowDefaultButtons="false" style="margin-top:10px;">
     <TableColumns>
-        <TableColumn @bind-Field="@context.LogType" Width="120" Fixed="true" />
-        <TableColumn @bind-Field="@context.ModuleName" Width="120" Fixed="true" />
+        <TableColumn @bind-Field="@context.LogType" Width="120"  />
+        <TableColumn @bind-Field="@context.ModuleName" Width="120"  />
         <TableColumn @bind-Field="@context.ActionName" Width="120" />
         <TableColumn @bind-Field="@context.ITCode" Width="120" />
-        <TableColumn @bind-Field="@context.ActionUrl" Width="180" AllowTextWrap="true" />
-        <TableColumn @bind-Field="@context.ActionTime" Width="180" AllowTextWrap="true" />
+        <TableColumn @bind-Field="@context.ActionUrl" Width="180" />
+        <TableColumn @bind-Field="@context.ActionTime" Width="180"  Sortable="true" />
         <TableColumn @bind-Field="@context.Duration" Width="120" Formatter="IntFormatter" />
         <TableColumn @bind-Field="@context.IP" Width="120" />
         <TableColumn @bind-Field="@context.Remark" Width="320" AllowTextWrap="true" />
@@ -50,18 +50,18 @@
 
 @code{
 
-    private ActionLogSearcher SearchModel = new ActionLogSearcher();
+    private ActionLogSearcher SearchModel = new ActionLogSearcher() { ActionTime = new DateRange(DateTime.Now, DateTime.Now.AddDays(10)) };
     private Table<ActionLog> dataTable;
 
-    [Display(Name = "_Admin.ActionTime")]
-    private DateTimeRangeValue date = new DateTimeRangeValue();
+    //[Display(Name = "_Admin.ActionTime")]
+    //private DateTimeRangeValue date = new DateTimeRangeValue();
 
     private async Task<QueryData<ActionLog>> OnSearch(QueryPageOptions opts)
     {
-        if (date != null && date.Start.Year > 1 && date.End.Year > 1)
-        {
-            SearchModel.ActionTime = new DateRange(date.Start, date.End);
-        }
+        //if (date != null && date.Start.Year > 1 && date.End.Year > 1)
+        //{
+        //    SearchModel.ActionTime = new DateRange(date.Start, date.End);
+        //}
         return await WtmBlazor.Api.CallSearchApi<ActionLog>("/api/_ActionLog/search", SearchModel, opts);
     }
 
