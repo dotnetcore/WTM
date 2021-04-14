@@ -3,7 +3,7 @@
  */
 export enum EnumLocaleLabel {
     /** 当前页面名称 */
-    PageName = "frameworkgroup.PageName",
+    PageName = "PageName.system-frameworkgroup",
     ID = "frameworkgroup.ID",
     GroupCode = "frameworkgroup.GroupCode",
     GroupName = "frameworkgroup.GroupName",

@@ -41,10 +41,10 @@ export class UserEntity {
     @persist('object')
     @observable
     private _UserInfo: UserInfo = undefined;
-    get UserInfo(): any {
+    get UserInfo(): UserInfo {
         return toJS(this._UserInfo);
     }
-    set UserInfo(value: any) {
+    set UserInfo(value: UserInfo) {
         this.setUserInfo(value)
     }
     @action.bound

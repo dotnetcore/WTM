@@ -147,7 +147,10 @@ class AppRouter {
   * @param {*} file String （目录，一级路由则为完整目录，多级为自身目录名称）
   */
   getRouteItemPath(file) {
-    return file.replace('/index.vue', '').replace(/_/g, ':').replace(/\./g, '') || '/'
+    return file
+      .replace('/index.vue', '')
+      // .replace(/_/g, ':')
+      .replace(/\./g, '') || '/'
   }
 }
 export default new AppRouter()

@@ -3,7 +3,7 @@
  */
 export enum EnumLocaleLabel {
     /** 当前页面名称 */
-    PageName = "actionlog.PageName",
+    PageName = "PageName.system-actionlog",
     ID = "actionlog.ID",
     ModuleName = "actionlog.ModuleName",
     ActionName = "actionlog.ActionName",

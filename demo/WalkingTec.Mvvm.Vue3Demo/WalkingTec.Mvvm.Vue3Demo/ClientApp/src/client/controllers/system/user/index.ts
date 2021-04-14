@@ -5,19 +5,22 @@
  * @modify date 2021-04-02 11:49:08
  * @desc 用户管理
  */
-import { AjaxBasics } from '@/client';
+import { globalProperties } from "@/client";
 import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
-import { of } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import { UserEntity } from './entity';
-import { globalProperties } from "@/client";
+import { UserMenus } from './menus';
 @BindAll()
 export class UserController extends UserEntity {
     $ajax = globalProperties.$Ajax;
+    UserMenus = new UserMenus()
     async onInit() {
         await this.onPersist()
         this.onCheckLogin()
+    }
+    onSetUserInfo(info) {
+        this.UserInfo = info;
+        this.UserMenus.onInit(this.UserInfo.Attributes.Menus)
     }
     /**
      * 登录
@@ -25,8 +28,7 @@ export class UserController extends UserEntity {
     async onSignIn(body: { account: string, password: string }) {
         this.onToggleLoading(true)
         const res = await this.$ajax.post<any>('/api/_Account/Login', { rememberLogin: false, ...body }, { 'Content-Type': null })
-        this.UserInfo = res
-        this.onToggleLoading(false)
+        this.onSetUserInfo(res)
     }
     /**
      * 校验登录状态
@@ -37,7 +39,7 @@ export class UserController extends UserEntity {
             const userid = lodash.get(this.UserInfo, 'ITCode');
             if (userid) {
                 const res = await this.$ajax.get("/api/_Account/CheckUserInfo");
-                this.UserInfo = res
+                this.onSetUserInfo(res)
             }
             this.onToggleLoading(false)
         } catch (error) {
@@ -48,7 +50,7 @@ export class UserController extends UserEntity {
     }
     async onLogOut() {
         this.$ajax.get("/api/_Account/Logout");
-        this.UserInfo = {};
+        this.onSetUserInfo({})
     }
 }
 // export const UserStore = new UserController()
