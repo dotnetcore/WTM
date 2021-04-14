@@ -41,5 +41,29 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 return _searcherBoolItems;
             }
         }
+
+        private List<SelectedItem> _boolItems;
+        public List<SelectedItem> BoolItems
+        {
+            get
+            {
+                if (_boolItems == null)
+                {
+                    _boolItems = new List<SelectedItem> {
+                     new SelectedItem{ Text = _local["Sys.PleaseSelect"], Value = null},
+                   new SelectedItem{ Text = _local["Sys.Yes"], Value = "True"},
+                    new SelectedItem{ Text = _local["Sys.No"], Value = "False"},
+                };
+                }
+                else
+                {
+                    _boolItems[0].Text = _local["Sys.PleaseSelect"];
+                    _boolItems[1].Text = _local["Sys.Yes"];
+                    _boolItems[2].Text = _local["Sys.No"];
+                }
+                return _boolItems;
+            }
+        }
+
     }
 }

@@ -3,12 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <SupportedPlatform Include="browser" />
-  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="5.0.26-beta02" />
+    <PackageReference Include="BootstrapBlazor" Version="5.0.26-beta08" />
+  </ItemGroup>
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
   </ItemGroup>
 
   <ItemGroup>

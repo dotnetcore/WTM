@@ -1,24 +1,32 @@
-@page "/_Admin/DataPrivilege/Details/{id}"
+@page "/_Admin/DataPrivilege/Details"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 @inherits BasePage
 
 
 <ValidateForm @ref="vform" Model="@Model">
-    <Select @bind-Value="@Model.DpType" IsDisabled="true" />
     @if (Model.DpType == DpTypeEnum.User)
     {
-        <Display @bind-Value="@Model.Entity.UserCode" />
+        <Row ItemsPerRow="ItemsPerRow.Two">
+            <Display @bind-Value="@Model.DpType" ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.UserCode" ShowLabel="true"/>
+        </Row>
     }
     else
     {
-        <Select @bind-Value="@Model.Entity.GroupCode" Items="@AllGroups" IsDisabled="true" />
+        <Row ItemsPerRow="ItemsPerRow.Two">
+            <Display @bind-Value="@Model.DpType" ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.GroupCode"  Data="@AllGroups" ShowLabel="true"/>
+        </Row>
     }
-    <Select @bind-Value="@Model.Entity.TableName" Items="AllPrivileges" OnSelectedItemChanged="OnCascadeBindSelectClick" IsDisabled="true" />
-    <Select @bind-Value="@Model.IsAll" Items="NullableBoolItems" IsDisabled="true" />
-    <MultiSelect @ref="Select2" @bind-Value="@Model.SelectedItemsID" Items="AllPrivilegeTableNames" IsDisabled="true" />
+    <Row ItemsPerRow="ItemsPerRow.Two">
+        <Display @bind-Value="@Model.Entity.TableName" Data="AllPrivileges"  ShowLabel="true"/>
+        <Display @bind-Value="@Model.IsAll" Data="@WtmBlazor.GlobalSelectItems.BoolItems" ShowLabel="true"/>
+    </Row>
+    <Row>
+        <Display @ref="Select2" @bind-Value="@Model.SelectedItemsID" Data="AllPrivilegeTableNames" ShowLabel="true"/>
+    </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
-        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Create"]" IsAsync="true" />
     </div>
 </ValidateForm>
 
@@ -27,38 +35,26 @@
 
     private ValidateForm vform { get; set; }
 
-    private IEnumerable<SelectedItem> NullableBoolItems { get; set; } = new SelectedItem[]
-      {
-            new SelectedItem() { Text = "是", Value = "true" },
-            new SelectedItem() { Text = "否", Value = "false" }};
-
-    private List<SelectedItem> AllPrivileges = new List<SelectedItem>();
-    private List<SelectedItem> AllGroups = new List<SelectedItem>();
-    private List<SelectedItem> AllPrivilegeTableNames = new List<SelectedItem>();
-    private MultiSelect<List<string>> Select2 { get; set; }
-
-
     [Parameter]
-    public string id { get; set; }
+    public string TableName { get; set; }
+    [Parameter]
+    public string TargetId { get; set; }
+    [Parameter]
+    public int DpType { get; set; }
+
+    private List<SelectedItem> AllPrivileges ;
+    private List<SelectedItem> AllGroups;
+    private List<SelectedItem> AllPrivilegeTableNames;
+    private Display<List<string>> Select2 { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
         AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges");
         AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetUserGroups");
-        var rv = await WtmBlazor.Api.CallAPI<DataPrivilegeVM>($"/api/_DataPrivilege/{id}");
+        var rv = await WtmBlazor.Api.CallAPI<DataPrivilegeVM>($"/api/_DataPrivilege/Get?TableName={TableName}&TargetId={TargetId}&DpType={DpType}");
+        AllPrivilegeTableNames = await WtmBlazor.Api.CallItemsApi($"/api/_DataPrivilege/GetPrivilegeByTableName?table={TableName}");
         Model = rv.Data;
-    }
-
-
-    /// <summary>
-    /// 级联绑定菜单
-    /// </summary>
-    /// <param name="item"></param>
-    private async Task OnCascadeBindSelectClick(SelectedItem item)
-    {
-        AllPrivilegeTableNames.Clear();
-        AllPrivilegeTableNames = await WtmBlazor.Api.CallItemsApi($"/api/_DataPrivilege/GetPrivilegeByTableName?table={item.Value}");
-        Select2.SetItems(AllPrivilegeTableNames);
     }
 
     public void OnClose()

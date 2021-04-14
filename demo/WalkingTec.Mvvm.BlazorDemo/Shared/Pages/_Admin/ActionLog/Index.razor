@@ -50,18 +50,12 @@
 
 @code{
 
-    private ActionLogSearcher SearchModel = new ActionLogSearcher() { ActionTime = new DateRange(DateTime.Now, DateTime.Now.AddDays(10)) };
+    private ActionLogSearcher SearchModel = new ActionLogSearcher();
     private Table<ActionLog> dataTable;
 
-    //[Display(Name = "_Admin.ActionTime")]
-    //private DateTimeRangeValue date = new DateTimeRangeValue();
 
     private async Task<QueryData<ActionLog>> OnSearch(QueryPageOptions opts)
     {
-        //if (date != null && date.Start.Year > 1 && date.End.Year > 1)
-        //{
-        //    SearchModel.ActionTime = new DateRange(date.Start, date.End);
-        //}
         return await WtmBlazor.Api.CallSearchApi<ActionLog>("/api/_ActionLog/search", SearchModel, opts);
     }
 

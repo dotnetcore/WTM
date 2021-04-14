@@ -157,13 +157,20 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
 
         public async Task<string> GetBase64Image(string fileid, int? width = null, int? height = null)
         {
-            var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{fileid}", HttpMethodEnum.GET, new Dictionary<string, string> {
+            if (string.IsNullOrEmpty(fileid) == false)
+            {
+                var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{fileid}", HttpMethodEnum.GET, new Dictionary<string, string> {
                     {"width", width?.ToString() },
                     {"height", height?.ToString() }
                 });
-            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                return $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}";
+                if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    return $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}";
+                }
+                else
+                {
+                    return $"data:image/jpeg;base64,0";
+                }
             }
             else
             {

@@ -53,7 +53,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.ConsoleDemo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Demo.Test", "demo\WalkingTec.Mvvm.Demo.Test\WalkingTec.Mvvm.Demo.Test.csproj", "{D1363106-3DAB-4273-8750-05A96F9EFA9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.Vue3Demo", "demo\WalkingTec.Mvvm.Vue3Demo\WalkingTec.Mvvm.Vue3Demo\WalkingTec.Mvvm.Vue3Demo.csproj", "{46309A77-6127-4ED9-95BE-C830B3E6FD0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Vue3Demo", "demo\WalkingTec.Mvvm.Vue3Demo\WalkingTec.Mvvm.Vue3Demo\WalkingTec.Mvvm.Vue3Demo.csproj", "{46309A77-6127-4ED9-95BE-C830B3E6FD0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,34 +1,38 @@
-@page "/_Admin/DataPrivilege/Edit/{TableName}"
+@page "/_Admin/DataPrivilege/Edit"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 @inherits BasePage
 
 <ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
-    <Select @bind-Value="@Model.DpType" />
     @if (Model.DpType == DpTypeEnum.User)
     {
-        <BootstrapInput @bind-Value="@Model.Entity.UserCode" />
+        <Row ItemsPerRow="ItemsPerRow.Two">
+            <Select @bind-Value="@Model.DpType" />
+            <BootstrapInput @bind-Value="@Model.Entity.UserCode" />
+        </Row>
     }
     else
     {
-        <Select @bind-Value="@Model.Entity.GroupCode" Items="@AllGroups" />
+        <Row ItemsPerRow="ItemsPerRow.Two">
+            <Select @bind-Value="@Model.DpType" />
+            <Select @bind-Value="@Model.Entity.GroupCode" Items="@AllGroups" />
+        </Row>
     }
-    <Select @bind-Value="@Model.Entity.TableName" Items="AllPrivileges" OnSelectedItemChanged="OnCascadeBindSelectClick" />
-    <Select @bind-Value="@Model.IsAll" Items="NullableBoolItems" />
-    <MultiSelect @ref="Select2" @bind-Value="@Model.SelectedItemsID" Items="AllPrivilegeTableNames" />
+    <Row ItemsPerRow="ItemsPerRow.Two">
+        <Select @bind-Value="@Model.Entity.TableName" Items="AllPrivileges" OnSelectedItemChanged="OnCascadeBindSelectClick" />
+        <Select @bind-Value="@Model.IsAll" Items="@WtmBlazor.GlobalSelectItems.BoolItems" />
+    </Row>
+    <Row>
+        <MultiSelect @ref="Select2" @bind-Value="@Model.SelectedItemsID" Items="AllPrivilegeTableNames" />
+    </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
-        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Create"]" IsAsync="true" />
+        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Edit"]" IsAsync="true" />
     </div>
 </ValidateForm>
 @code {
     private DataPrivilegeVM Model = new DataPrivilegeVM();
 
     private ValidateForm vform { get; set; }
-
-    private IEnumerable<SelectedItem> NullableBoolItems { get; set; } = new SelectedItem[]
-      {
-            new SelectedItem() { Text = "是", Value = "true" },
-            new SelectedItem() { Text = "否", Value = "false" }};
 
     private List<SelectedItem> AllPrivileges = new List<SelectedItem>();
     private List<SelectedItem> AllGroups = new List<SelectedItem>();
@@ -59,7 +63,10 @@
         AllPrivilegeTableNames = await WtmBlazor.Api.CallItemsApi($"/api/_DataPrivilege/GetPrivilegeByTableName?table={item.Value}");
         foreach (var itemPri in AllPrivilegeTableNames)
         {
-            itemPri.Active = true;
+            if (Model.SelectedItemsID.Contains(itemPri.Value))
+            {
+                itemPri.Active = true;
+            }
         }
         Select2.SetItems(AllPrivilegeTableNames);
 

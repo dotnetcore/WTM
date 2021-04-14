@@ -68,7 +68,7 @@
 
     private async Task OnCreateClick(IEnumerable<DataPrivilege_ListView> items)
     {
-        if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"]) == DialogResult.Yes)
+        if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"], x=> x.dptype == SearchModel.DpType) == DialogResult.Yes)
         {
             await dataTable.QueryAsync();
         }
@@ -85,7 +85,8 @@
 
     private async Task OnDetailsClick(DataPrivilege_ListView item)
     {
-        await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());
+        await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.TableName == item.TableName
+                   && x.TargetId == item.TargetId && x.DpType == item.DpType);
     }
 
     private async Task OnBatchDeleteClick()
