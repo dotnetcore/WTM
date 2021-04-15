@@ -28,13 +28,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
 {
     public class Startup
     {
-        public IConfigurationRoot ConfigRoot { get; }
-        public IWebHostEnvironment HostingEnvironment { get; }
-        public Startup(IWebHostEnvironment env)
+        public IConfiguration ConfigRoot { get; }
+
+        public Startup(IWebHostEnvironment env, IConfiguration config)
         {
-            var configBuilder = new ConfigurationBuilder();
-            HostingEnvironment = env;
-            ConfigRoot = configBuilder.WTMConfig(env).Build();
+            ConfigRoot = config;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.

@@ -20,6 +20,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                  .ConfigureAppConfiguration((hostingContext, config) =>
+                  {
+                      config.AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", hostingContext.HostingEnvironment.ContentRootPath } });
+                  })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.ClearProviders();
