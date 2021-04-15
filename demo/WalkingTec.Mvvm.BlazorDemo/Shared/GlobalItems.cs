@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 if (_searcherBoolItems == null)
                 {
                     _searcherBoolItems = new List<SelectedItem> {
-                    new SelectedItem{ Text = _local["Sys.All"], Value = null},
+                    new SelectedItem{ Text = _local["Sys.All"], Value = ""},
                     new SelectedItem{ Text = _local["Sys.Yes"], Value = "true"},
                     new SelectedItem{ Text = _local["Sys.No"], Value = "false"},
                 };
@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 if (_boolItems == null)
                 {
                     _boolItems = new List<SelectedItem> {
-                     new SelectedItem{ Text = _local["Sys.PleaseSelect"], Value = null},
+                     new SelectedItem{ Text = _local["Sys.PleaseSelect"], Value = ""},
                    new SelectedItem{ Text = _local["Sys.Yes"], Value = "True"},
                     new SelectedItem{ Text = _local["Sys.No"], Value = "False"},
                 };

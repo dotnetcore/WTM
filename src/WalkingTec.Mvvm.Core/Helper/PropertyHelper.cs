@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections;
@@ -17,7 +18,7 @@ namespace WalkingTec.Mvvm.Core
     public static class PropertyHelper
     {
 
-        public static Func<object,object> GetPropertyExpression(Type objtype, string property)
+        public static Func<object, object> GetPropertyExpression(Type objtype, string property)
         {
             property = Regex.Replace(property, @"\[[^\]]*\]", string.Empty);
             List<string> level = new List<string>();
@@ -149,10 +150,10 @@ namespace WalkingTec.Mvvm.Core
             if (pi.GetCustomAttributes(typeof(RegularExpressionAttribute), false).FirstOrDefault() is RegularExpressionAttribute dis && !string.IsNullOrEmpty(dis.ErrorMessage))
             {
                 rv = dis.ErrorMessage;
-                    if (CoreProgram._localizer != null)
-                    {
-                        rv = CoreProgram._localizer[rv];
-                    }
+                if (CoreProgram._localizer != null)
+                {
+                    rv = CoreProgram._localizer[rv];
+                }
             }
             else
             {
@@ -166,16 +167,23 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="pi">属性信息</param>
         /// <returns>属性名称</returns>
-        public static string GetPropertyDisplayName(this MemberInfo pi)
+        public static string GetPropertyDisplayName(this MemberInfo pi, IStringLocalizer local = null)
         {
             string rv = "";
             if (pi.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault() is DisplayAttribute dis && !string.IsNullOrEmpty(dis.Name))
             {
                 rv = dis.Name;
+                if (local == null)
+                {
                     if (CoreProgram._localizer != null)
                     {
                         rv = CoreProgram._localizer[rv];
                     }
+                }
+                else
+                {
+                    rv = local[rv];
+                }
             }
             else
             {
@@ -189,9 +197,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="expression">属性表达式</param>
         /// <returns>属性显示名称</returns>
-        public static string GetPropertyDisplayName(this Expression expression)
+        public static string GetPropertyDisplayName(this Expression expression, IStringLocalizer local = null)
         {
-            return GetPropertyDisplayName(expression.GetPropertyInfo());
+            return GetPropertyDisplayName(expression.GetPropertyInfo(), local);
         }
 
 
@@ -519,7 +527,7 @@ namespace WalkingTec.Mvvm.Core
         public static void SetMemberValue(this MemberInfo mi, object obj, object val, object[] index = null)
         {
             object newval = val;
-            if(val is string s)
+            if (val is string s)
             {
                 if (string.IsNullOrEmpty(s))
                 {
@@ -590,10 +598,10 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
-                        if (CoreProgram._localizer != null)
-                        {
-                            rv = CoreProgram._localizer[rv];
-                        }
+                    if (CoreProgram._localizer != null)
+                    {
+                        rv = CoreProgram._localizer[rv];
+                    }
                 }
                 else
                 {
@@ -627,10 +635,10 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
-                        if (CoreProgram._localizer != null)
-                        {
-                            rv = CoreProgram._localizer[rv];
-                        }
+                    if (CoreProgram._localizer != null)
+                    {
+                        rv = CoreProgram._localizer[rv];
+                    }
                 }
                 else
                 {

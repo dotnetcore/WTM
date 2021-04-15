@@ -336,10 +336,14 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
             return data;
         }
 
-        public async Task<List<SelectedItem>> CallItemsApi(string url, HttpMethodEnum method = HttpMethodEnum.GET, object postdata = null, int? timeout = null, string proxy = null)
+        public async Task<List<SelectedItem>> CallItemsApi(string url, HttpMethodEnum method = HttpMethodEnum.GET, object postdata = null, int? timeout = null, string proxy = null, string placeholder = null,List<string> values = null)
         {
             var result = await CallAPI<List<ComboSelectListItem>>(url, method, postdata, timeout, proxy);
             List<SelectedItem> rv = new List<SelectedItem>();
+            if(values == null)
+            {
+                values = new List<string>();
+            }
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 if (result.Data != null)
@@ -350,9 +354,17 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                         {
                             Text = item.Text,
                             Value = item.Value.ToString(),
-                            Active = item.Selected
+                            Active = values.Any(x=>x.Contains(item.Value.ToString()))
                         });
                     }
+                }
+                if(string.IsNullOrEmpty(placeholder) == false)
+                {
+                    rv.Insert(0, new SelectedItem
+                    {
+                        Text = placeholder,
+                        Value = ""
+                    });
                 }
             }
             return rv;

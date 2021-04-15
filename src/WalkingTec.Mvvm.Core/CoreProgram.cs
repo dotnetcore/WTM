@@ -5,7 +5,10 @@ namespace WalkingTec.Mvvm.Core
 {
     public class CoreProgram
     {
-        public static IStringLocalizer _localizer { get; set; }
+        public static IStringLocalizer _localizer {
+            get;
+            set;
+        }
 
 
         public static string[] Buildindll = new string[]

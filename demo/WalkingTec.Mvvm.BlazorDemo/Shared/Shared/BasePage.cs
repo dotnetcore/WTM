@@ -280,10 +280,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             this.ClientFactory = cf;
         }
 
-        public  List<BootstrapBlazor.Components.MenuItem> GetAllPages()
-        {
+        public  List<FrameworkMenu> GetAllPages()
+        {            
             var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
-            var menus = new List<BootstrapBlazor.Components.MenuItem>();
+            var menus = new List<FrameworkMenu>();
             foreach (var item in pages)
             {
                 var actdes = item.GetCustomAttribute<ActionDescriptionAttribute>();
@@ -296,21 +296,23 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                     {
                         area = parts[0];
                     }
-                    var areamenu = menus.Where(x => x.Text == area).FirstOrDefault();
+                    var areamenu = menus.Where(x => x.PageName == area).FirstOrDefault();
                     if (areamenu == null)
                     {
-                        areamenu = new BootstrapBlazor.Components.MenuItem
+                        areamenu = new FrameworkMenu
                         {
-                            Text = area,
-                            Icon = "fa fa-fw fa-folder"
+                            PageName = area,
+                            Icon = "fa fa-fw fa-folder",
+                            Children = new List<FrameworkMenu>()
                         };
                         menus.Add(areamenu);
                     }
-                    areamenu.AddItem(new BootstrapBlazor.Components.MenuItem
+                    areamenu.Children.Add(new FrameworkMenu
                     {
-                        Text = Localizer[actdes.Description],
+                        PageName = Localizer[actdes.Description],
                         Icon = "fa fa-fw fa-file",
-                        Url = route.Template
+                        Url = route.Template,
+                        ClassName = actdes.ClassFullName
                     });
                 }
             }

@@ -38,7 +38,7 @@
     {
         if (string.IsNullOrEmpty(LabelText))
         {
-            LabelText = ValueExpression.GetPropertyDisplayName();
+            LabelText = ValueExpression.GetPropertyDisplayName(WtmBlazor.Localizer);
         }
         return base.OnInitializedAsync();
     }

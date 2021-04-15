@@ -10,8 +10,8 @@
     @if (Model.Entity.IsInside != false)
     {
         <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
-            <Select @bind-Value="@Model.SelectedModule" Items="@AllModels" />
-            <MultiSelect @bind-Value="@Model.SelectedActionIDs" />
+            <Select @bind-Value="@Model.SelectedModule" Items="@AllModels"  OnSelectedItemChanged="OnModelChange"/>
+            <MultiSelect @ref="Select2" @bind-Value="@Model.SelectedActionIDs" Items="@AllActions"/>
         </Row>
     }
     else
@@ -22,7 +22,7 @@
     }
     <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
         <BootstrapInput @bind-Value="@Model.Entity.PageName" />
-        <Select @bind-Value="@Model.Entity.ParentId" Items="@AllFolders" />
+        <Select @bind-Value="@Model.Entity.ParentId" Items="@AllFolders"  />
         <BootstrapInputNumber @bind-Value="@Model.Entity.DisplayOrder" />
     </Row>
     <Row ItemsPerRow="ItemsPerRow.Four" RowType="RowType.FormRow">
@@ -41,19 +41,37 @@
     private List<SelectedItem> AllType = new List<SelectedItem>();
     private List<SelectedItem> AllModels = new List<SelectedItem>();
     private List<SelectedItem> AllFolders = new List<SelectedItem>();
+    private List<SelectedItem> AllActions = new List<SelectedItem>();
     private ValidateForm vform { get; set; }
+    private MultiSelect<List<string>> Select2 { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Inside"], Value = "true" });
         AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Outside"], Value = "false" });
-        AllFolders = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetFolders");
+        AllFolders = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetFolders", placeholder:WtmBlazor.Localizer["Sys.PleaseSelect"]);
+        var items = WtmBlazor.GetAllPages();
+        AllModels.Add(new SelectedItem { Text = WtmBlazor.Localizer["Sys.PleaseSelect"], Value = "" });
+        foreach (var item in items)
+        {
+            foreach (var sub in item.Children)
+            {
+                AllModels.Add(new SelectedItem { Text = sub.PageName, Value = sub.ClassName??sub.Url, GroupName = item.PageName });
+            }
+        }
+    }
+
+    private async Task OnModelChange(SelectedItem item)
+    {
+        AllActions.Clear();
+        AllActions = await WtmBlazor.Api.CallItemsApi($"/api/_FrameworkMenu/GetActionsByModel?ModelName={item.Value}");
+        Select2.SetItems(AllActions);
     }
 
 
     private async Task Submit(EditContext context)
     {
-        await PostsForm(vform, "/api/_frameworkuserbase/add", (s) => "Sys.OprationSuccess");
+        await PostsForm(vform, "/api/_frameworkmenu/add", (s) => "Sys.OprationSuccess");
     }
 
     public void OnClose()
