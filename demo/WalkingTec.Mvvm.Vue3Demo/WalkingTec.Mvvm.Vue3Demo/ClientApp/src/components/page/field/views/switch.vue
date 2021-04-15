@@ -3,12 +3,14 @@
     <span v-text="value"></span>
   </template>
   <template v-else>
-    <a-input
-      v-model:value="value"
-      :placeholder="_placeholder"
-      :disabled="disabled"
-      autocomplete="off"
-    />
+    <a-switch v-model:checked="value" :disabled="disabled">
+      <template #checkedChildren>
+        <check-outlined />
+      </template>
+      <template #unCheckedChildren>
+        <close-outlined />
+      </template>
+    </a-switch>
   </template>
 </template>
 <script lang="ts">

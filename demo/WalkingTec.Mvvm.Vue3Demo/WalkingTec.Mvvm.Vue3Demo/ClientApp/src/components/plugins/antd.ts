@@ -25,8 +25,11 @@ import {
     Dropdown,
     Layout,
     Skeleton,
+    Switch,
+    Slider,
     Upload,
     DatePicker,
+    Rate,
     ConfigProvider
 } from 'ant-design-vue';
 import ProLayout, { PageContainer } from '@ant-design-vue/pro-layout';
@@ -62,7 +65,10 @@ export default {
             Transfer,
             Dropdown,
             Skeleton,
+            Switch,
+            Slider,
             DatePicker,
+            Rate,
             ConfigProvider
         ].map(x => app.use(x));
         // Spin.setDefaultIndicator({

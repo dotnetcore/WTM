@@ -3,11 +3,11 @@
     <span v-text="value"></span>
   </template>
   <template v-else>
-    <a-input
+    <a-textarea
       v-model:value="value"
       :placeholder="_placeholder"
       :disabled="disabled"
-      autocomplete="off"
+      :auto-size="{ minRows: 2, maxRows: 5 }"
     />
   </template>
 </template>

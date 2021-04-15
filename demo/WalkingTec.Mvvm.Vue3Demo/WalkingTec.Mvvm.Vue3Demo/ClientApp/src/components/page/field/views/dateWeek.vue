@@ -3,12 +3,7 @@
     <span v-text="value"></span>
   </template>
   <template v-else>
-    <a-input
-      v-model:value="value"
-      :placeholder="_placeholder"
-      :disabled="disabled"
-      autocomplete="off"
-    />
+    <a-week-picker v-model:value="value" :placeholder="_placeholder" :disabled="disabled" />
   </template>
 </template>
 <script lang="ts">

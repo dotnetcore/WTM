@@ -1,14 +1,28 @@
 <template>
   <template v-if="_readonly">
-    <span v-text="value"></span>
+    <a-image
+      :width="100"
+      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+    />
   </template>
   <template v-else>
-    <a-input
-      v-model:value="value"
-      :placeholder="_placeholder"
-      :disabled="disabled"
-      autocomplete="off"
-    />
+    <a-upload
+      v-model:file-list="value"
+      name="avatar"
+      list-type="picture-card"
+      class="avatar-uploader"
+      :show-upload-list="false"
+      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+      :before-upload="beforeUpload"
+      @change="handleChange"
+    >
+      <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" /> -->
+      <div>
+        <!-- <loading-outlined v-if="loading"></loading-outlined> -->
+        <plus-outlined ></plus-outlined>
+        <div class="ant-upload-text">Upload</div>
+      </div>
+    </a-upload>
   </template>
 </template>
 <script lang="ts">
@@ -31,6 +45,8 @@ export default class extends mixins(FieldBasics) {
       console.groupEnd();
     }
   }
+  beforeUpload(){}
+  handleChange(){}
 }
 </script>
 <style lang="less">

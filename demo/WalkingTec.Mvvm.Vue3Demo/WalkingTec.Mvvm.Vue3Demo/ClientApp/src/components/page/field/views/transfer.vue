@@ -3,12 +3,7 @@
     <span v-text="value"></span>
   </template>
   <template v-else>
-    <a-input
-      v-model:value="value"
-      :placeholder="_placeholder"
-      :disabled="disabled"
-      autocomplete="off"
-    />
+    <a-transfer :dataSource="dataSource" :placeholder="_placeholder" :disabled="disabled" />
   </template>
 </template>
 <script lang="ts">
@@ -23,7 +18,7 @@ export default class extends mixins(FieldBasics) {
   // 实体
   @Inject() readonly PageEntity;
   async mounted() {
-    // this.onRequest();
+    this.onRequest();
     if (this.debug) {
       console.log("");
       console.group(`Field ~ ${this.entityKey} ${this._name} `);

@@ -7,6 +7,7 @@ import { App } from 'vue';
 import $WtmConfig, { WtmConfig } from './config';
 import { AjaxBasics } from './helpers';
 import { EnumActionType } from './enum';
+import { WTM_ValueType } from './declare';
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
         $WtmConfig: WtmConfig
@@ -15,6 +16,7 @@ declare module '@vue/runtime-core' {
         $message: typeof message
         lodash: typeof lodash
         EnumActionType: typeof EnumActionType
+        EnumValueType: typeof WTM_ValueType
     }
 }
 export const $Ajax = new AjaxBasics({ target: $WtmConfig.target })
@@ -35,6 +37,7 @@ export const globalProperties = {
     moment,
     lodash,
     EnumActionType,
+    EnumValueType: WTM_ValueType
 }
 export default {
     install(app: App) {

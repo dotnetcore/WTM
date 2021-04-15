@@ -12,6 +12,9 @@ import {
     SettingOutlined,
     FormOutlined,
     InboxOutlined,
+    CheckOutlined,
+    CloseOutlined,
+    PlusOutlined,
     LockOutlined
 } from '@ant-design/icons-vue';
 import lodash from 'lodash';
@@ -32,6 +35,9 @@ export default {
             CloudDownloadOutlined,
             SettingOutlined,
             InboxOutlined,
+            CheckOutlined,
+            CloseOutlined,
+            PlusOutlined,
             FormOutlined
         }, (icon, key) => app.component(key, icon))
     }

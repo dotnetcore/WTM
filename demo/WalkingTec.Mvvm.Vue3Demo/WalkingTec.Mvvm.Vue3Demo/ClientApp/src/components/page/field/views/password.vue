@@ -3,7 +3,7 @@
     <span v-text="value"></span>
   </template>
   <template v-else>
-    <a-input
+    <a-input-password
       v-model:value="value"
       :placeholder="_placeholder"
       :disabled="disabled"
