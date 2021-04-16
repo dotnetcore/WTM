@@ -187,7 +187,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             {
                 var actions = UserInfo.Attributes["Actions"] as string[];
                 url = url.ToLower();
-                return actions.Any(x => x.ToLower() == url);
+                return actions.Any(x => x.ToLower() == url.ToLower());
             }
             return false;
         }

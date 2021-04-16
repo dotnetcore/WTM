@@ -49,7 +49,7 @@
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
             }
-            @if (IsAccessable("/api/_FrameworkGroup/get"))
+            @if (IsAccessable("/api/_FrameworkGroup/{id}"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
             }
