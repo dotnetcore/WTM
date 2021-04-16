@@ -177,14 +177,29 @@
         menus.Add(new BootstrapBlazor.Components.MenuItem() { Text = wtmblazor.Localizer["Sys.Home"], Icon = "fa fa-fw fa-home", Url = "/" });
         if (wtmblazor.ConfigInfo.IsQuickDebug == true)
         {
-            wtmblazor.GetAllPages().ForEach(x => menus.Add(
-                 new BootstrapBlazor.Components.MenuItem
-                 {
-                     Text = x.PageName,
-                     Icon = x.Icon,
-                     Url = x.Url
-                 }
-                ));
+            var pages = wtmblazor.GetAllPages();
+            foreach (var item in pages)
+            {
+                BootstrapBlazor.Components.MenuItem m = new BootstrapBlazor.Components.MenuItem
+                {
+                    Text = item.PageName,
+                    Icon = item.Icon,
+                    Url = item.Url
+                };
+                if(item.Children != null)
+                {
+                    foreach (var child in item.Children)
+                    {
+                        m.AddItem(new BootstrapBlazor.Components.MenuItem
+                        {
+                            Text = child.PageName,
+                            Icon = child.Icon,
+                            Url = child.Url
+                        });
+                    }
+                }
+                menus.Add(m);
+            }
         }
         else
         {
