@@ -23,15 +23,30 @@
 
     </TableColumns>
     <TableToolbarTemplate>
-        <TableToolbarButton TItem="DataPrivilege_ListView" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
-        <TableToolbarButton TItem="DataPrivilege_ListView" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+        @if (IsAccessable("/api/_DataPrivilege/add"))
+        {
+            <TableToolbarButton TItem="DataPrivilege_ListView" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
+        }
+        @if (IsAccessable("/api/_DataPrivilege/export"))
+        {
+            <TableToolbarButton TItem="DataPrivilege_ListView" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+        }
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="()=>OnEditClick(context)" />
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
-            <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="()=>OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
-                              Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
+            @if (IsAccessable("/api/_DataPrivilege/edit"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
+            }
+            @if (IsAccessable("/api/_DataPrivilege/get"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
+            }
+            @if (IsAccessable("/api/_DataPrivilege/batchdelete"))
+            {
+                <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+                                  Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
+            }
         </div>
     </RowButtonTemplate>
 </Table>
@@ -64,7 +79,7 @@
 
     private async Task OnCreateClick(IEnumerable<DataPrivilege_ListView> items)
     {
-        if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"], x=> x.dptype == SearchModel.DpType) == DialogResult.Yes)
+        if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"], x => x.dptype == SearchModel.DpType) == DialogResult.Yes)
         {
             await dataTable.QueryAsync();
         }

@@ -92,7 +92,7 @@
                             </a>
                         </div>
                         <div>
-                            <a target="_blank" href="https://localhost:5001/_codegen?ui=blazor" :underline="false">
+                            <a target="_blank" href="/_codegen?ui=blazor" :underline="false">
                                 <i class="fa fa-cogs fa-3"></i>
                                 <p class="link-ctx">代码生成</p>
                             </a>
@@ -210,9 +210,16 @@
     private github model = new github();
     protected override async Task OnInitializedAsync()
     {
-        var client = WtmBlazor.ClientFactory.CreateClient("github");
-        var info = await client.GetFromJsonAsync<github>("/repos/dotnetcore/wtm");
-        model = info;
+        try
+        {
+            var client = WtmBlazor.ClientFactory.CreateClient("github");
+            var info = await client.GetFromJsonAsync<github>("/repos/dotnetcore/wtm");
+            model = info;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
     private class github
     {

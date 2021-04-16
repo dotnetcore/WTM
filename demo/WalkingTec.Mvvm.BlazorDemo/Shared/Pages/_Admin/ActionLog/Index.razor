@@ -7,10 +7,10 @@
 <WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
     <ValidateForm Model="@SearchModel">
         <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
-            <MultiSelect @bind-Value="@SearchModel.LogType" PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
+            <MultiSelect @bind-Value="@SearchModel.LogType" PlaceHolder="@WtmBlazor.Localizer["Sys.All"]" />
             <BootstrapInput @bind-Value="@SearchModel.ITCode" />
             <BootstrapInput @bind-Value="@SearchModel.ActionUrl" />
-            <WTDateRange @bind-Value="@SearchModel.ActionTime"  />
+            <WTDateRange @bind-Value="@SearchModel.ActionTime" />
             <BootstrapInput @bind-Value="@SearchModel.IP" />
             <BootstrapInput @bind-Value="@SearchModel.Duration" />
         </Row>
@@ -22,28 +22,40 @@
 <Table @ref="dataTable" TItem="ActionLog" ShowLineNo="true" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
        ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" FixedExtendButtonsColumn="true" ShowDefaultButtons="false" style="margin-top:10px;">
     <TableColumns>
-        <TableColumn @bind-Field="@context.LogType" Width="120"  />
-        <TableColumn @bind-Field="@context.ModuleName" Width="120"  />
+        <TableColumn @bind-Field="@context.LogType" Width="120" />
+        <TableColumn @bind-Field="@context.ModuleName" Width="120" />
         <TableColumn @bind-Field="@context.ActionName" Width="120" />
         <TableColumn @bind-Field="@context.ITCode" Width="120" />
-        <TableColumn @bind-Field="@context.ActionUrl" Width="180" />
-        <TableColumn @bind-Field="@context.ActionTime" Width="180"  Sortable="true" />
+        <TableColumn @bind-Field="@context.ActionUrl" Width="200" />
+        <TableColumn @bind-Field="@context.ActionTime" Width="180" Sortable="true" />
         <TableColumn @bind-Field="@context.Duration" Width="120" Formatter="IntFormatter" />
         <TableColumn @bind-Field="@context.IP" Width="120" />
-        <TableColumn @bind-Field="@context.Remark" Width="320" AllowTextWrap="true" />
+        @*<TableColumn @bind-Field="@context.Remark" Width="320"  AllowTextWrap="true" />*@
     </TableColumns>
     <TableToolbarTemplate>
-        <TableToolbarPopconfirmButton TItem="ActionLog" Color="Color.Primary"
-                                      Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
-                                      OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
-                                      ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
-        <TableToolbarButton TItem="ActionLog" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+        @if (IsAccessable("/api/_ActionLog/batchdelete"))
+        {
+            <TableToolbarPopconfirmButton TItem="ActionLog" Color="Color.Primary"
+                                          Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
+                                          OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
+                                          ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
+        }
+        @if (IsAccessable("/api/_ActionLog/export"))
+        {
+            <TableToolbarButton TItem="ActionLog" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+        }
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
-            <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="()=>OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
-                              Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
+            @if (IsAccessable("/api/_ActionLog/edit"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
+            }
+            @if (IsAccessable("/api/_ActionLog/batchdelete"))
+            {
+                <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+                                  Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
+            }
         </div>
     </RowButtonTemplate>
 </Table>

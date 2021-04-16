@@ -25,7 +25,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         public NavigationManager navigationManager { get; set; }
 
         [CascadingParameter]
-        public LoginUserInfo UserInfo {
+        public LoginUserInfo UserInfo
+        {
             get;
             set;
         }
@@ -39,43 +40,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         }
 
 
-        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null)
+        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.None)
         {
-            TaskCompletionSource<DialogResult> ReturnTask = new TaskCompletionSource<DialogResult>();
-            SetValuesParser p = new SetValuesParser();
-            DialogOption option = new DialogOption
-            {
-                ShowCloseButton = false,
-                ShowFooter = false,
-                Title = Title
-            };
-            option.BodyTemplate = builder =>
-            {
-                builder.OpenComponent(0, typeof(T));
-                builder.AddMultipleAttributes(2, p.Parse(Values));
-                try
-                {
-                    builder.AddAttribute(3, "OnCloseDialog", new Action<DialogResult>((r) =>
-                    {
-                        option.OnCloseAsync = null;
-                        ReturnTask.TrySetResult(r);
-                        option.Dialog!.Close();
-                    }));
-                }
-                catch { };
-                //builder.SetKey(Guid.NewGuid());
-                builder.AddMarkupContent(4, "<div style=\"height:10px\"></div>");
-                builder.CloseComponent();
-            };
-            option.OnCloseAsync = async () =>
-            {
-                option.OnCloseAsync = null;
-                await option.Dialog.Close();
-                ReturnTask.TrySetResult(DialogResult.Close);
-            };
-            await WtmBlazor.Dialog.Show(option);
-            var rv = await ReturnTask.Task;
-            return rv;
+            return await WtmBlazor.OpenDialog(Title, Values, size);
         }
 
         public async Task<bool> PostsData(object data, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
@@ -155,28 +122,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             }
         }
 
-        public async Task<string> GetBase64Image(string fileid, int? width = null, int? height = null)
-        {
-            if (string.IsNullOrEmpty(fileid) == false)
-            {
-                var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{fileid}", HttpMethodEnum.GET, new Dictionary<string, string> {
-                    {"width", width?.ToString() },
-                    {"height", height?.ToString() }
-                });
-                if (rv.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    return $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}";
-                }
-                else
-                {
-                    return $"data:image/jpeg;base64,0";
-                }
-            }
-            else
-            {
-                return $"data:image/jpeg;base64,0";
-            }
-        }
+
 
         public async Task<string> GetFileUrl(string fileid, int? width = null, int? height = null)
         {
@@ -230,7 +176,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             {
                 PropertyNameCaseInsensitive = true
             };
-            user.Attributes["Actions"] = JsonSerializer.Deserialize<string[]>(user.Attributes["Actions"].ToString(),options).Where(x=>x != null).ToArray();
+            user.Attributes["Actions"] = JsonSerializer.Deserialize<string[]>(user.Attributes["Actions"].ToString(), options).Where(x => x != null).ToArray();
             user.Attributes["Menus"] = JsonSerializer.Deserialize<SimpleMenuApi[]>(user.Attributes["Menus"].ToString(), options);
             return user;
         }
@@ -280,8 +226,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
             this.ClientFactory = cf;
         }
 
-        public  List<FrameworkMenu> GetAllPages()
-        {            
+        public List<FrameworkMenu> GetAllPages()
+        {
             var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
             var menus = new List<FrameworkMenu>();
             foreach (var item in pages)
@@ -290,7 +236,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                 if (actdes != null)
                 {
                     var route = item.GetCustomAttribute<RouteAttribute>();
-                    var parts = route.Template.Split("/").Where(x=>x != "").ToArray();
+                    var parts = route.Template.Split("/").Where(x => x != "").ToArray();
                     var area = Localizer["Sys.DefaultArea"].Value;
                     if (parts.Length > 1)
                     {
@@ -317,6 +263,69 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                 }
             }
             return menus;
+        }
+
+        public async Task<string> GetBase64Image(string fileid, int? width = null, int? height = null)
+        {
+            if (string.IsNullOrEmpty(fileid) == false)
+            {
+                var rv = await Api.CallAPI<byte[]>($"/api/_file/GetFile/{fileid}", HttpMethodEnum.GET, new Dictionary<string, string> {
+                    {"width", width?.ToString() },
+                    {"height", height?.ToString() }
+                });
+                if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    return $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}";
+                }
+                else
+                {
+                    return $"data:image/jpeg;base64,0";
+                }
+            }
+            else
+            {
+                return $"data:image/jpeg;base64,0";
+            }
+        }
+
+        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.None)
+        {
+            TaskCompletionSource<DialogResult> ReturnTask = new TaskCompletionSource<DialogResult>();
+            SetValuesParser p = new SetValuesParser();
+            DialogOption option = new DialogOption
+            {
+                ShowCloseButton = false,
+                ShowFooter = false,
+                Size = size,
+                Title = Title
+            };
+            option.BodyTemplate = builder =>
+            {
+                builder.OpenComponent(0, typeof(T));
+                builder.AddMultipleAttributes(2, p.Parse(Values));
+                try
+                {
+                    builder.AddAttribute(3, "OnCloseDialog", new Action<DialogResult>((r) =>
+                    {
+                        option.OnCloseAsync = null;
+                        ReturnTask.TrySetResult(r);
+                        option.Dialog!.Close();
+                    }));
+                }
+                catch { };
+                //builder.SetKey(Guid.NewGuid());
+                builder.AddMarkupContent(4, "<div style=\"height:10px\"></div>");
+                builder.CloseComponent();
+            };
+            option.OnCloseAsync = async () =>
+            {
+                option.OnCloseAsync = null;
+                await option.Dialog.Close();
+                ReturnTask.TrySetResult(DialogResult.Close);
+            };
+            await Dialog.Show(option);
+            var rv = await ReturnTask.Task;
+            return rv;
         }
 
     }
