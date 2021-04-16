@@ -41,11 +41,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// </summary>
         private const string SPLIT_CHAR = ":";
 
-        private static readonly JsonSerializerOptions jsonSerializerSettings = new JsonSerializerOptions
-        {
-            IgnoreNullValues = true,
-        };
-
         private static string _instanceName;
         private static string InstanceName
         {
@@ -76,7 +71,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             if (value == null)
                 return default;
             else
-                return JsonSerializer.Deserialize<T>(value);
+                return JsonSerializer.Deserialize<T>(value,Core.CoreProgram.DefaultJsonOption);
         }
 
         public static async Task<T> GetAsync<T>(
@@ -88,7 +83,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             if (value == null)
                 return default;
             else
-                return JsonSerializer.Deserialize<T>(value);
+                return JsonSerializer.Deserialize<T>(value, Core.CoreProgram.DefaultJsonOption);
         }
 
         public static bool TryGetValue<T>(
@@ -104,7 +99,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             else
             {
-                outValue = JsonSerializer.Deserialize<T>(value);
+                outValue = JsonSerializer.Deserialize<T>(value, Core.CoreProgram.DefaultJsonOption);
                 return true;
             }
         }
@@ -120,9 +115,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             DistributedCacheEntryOptions options = null)
         {
             if (options == null)
-                cache.Set(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, jsonSerializerSettings)));
+                cache.Set(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, CoreProgram.DefaultJsonOption)));
             else
-                cache.Set(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, jsonSerializerSettings)), options);
+                cache.Set(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, CoreProgram.DefaultJsonOption)), options);
         }
 
         public static async Task AddAsync<T>(
@@ -133,9 +128,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             CancellationToken token = default)
         {
             if (options == null)
-                await cache.SetAsync(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, jsonSerializerSettings)), token);
+                await cache.SetAsync(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, CoreProgram.DefaultJsonOption)), token);
             else
-                await cache.SetAsync(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, jsonSerializerSettings)), options, token);
+                await cache.SetAsync(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, CoreProgram.DefaultJsonOption)), options, token);
         }
 
         #endregion

@@ -20,11 +20,11 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(BaseSearcher searcher)
+        public string Search(BaseSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkMenuListVM2>();
+            var vm = Wtm.CreateVM<FrameworkMenuListVM2>(passInit: true);
             vm.Searcher = searcher;
-            return Ok(vm.GetJsonForApi());
+            return vm.GetJson(enumToString: false);
         }
 
         [ActionDescription("Sys.Get")]

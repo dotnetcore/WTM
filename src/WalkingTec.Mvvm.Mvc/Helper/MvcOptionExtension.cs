@@ -49,12 +49,14 @@ namespace WalkingTec.Mvvm.Mvc
             options.JsonSerializerOptions.IgnoreNullValues = true;
             options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
             options.JsonSerializerOptions.AllowTrailingCommas = true;
+            options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
             options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
             options.JsonSerializerOptions.Converters.Add(new PocoConverter());
             options.JsonSerializerOptions.Converters.Add(new TypeConverter());
             options.JsonSerializerOptions.Converters.Add(new DynamicDataConverter());
+            Core.CoreProgram.DefaultJsonOption = options.JsonSerializerOptions;
         }
         public static void UseWtmApiOptions(this ApiBehaviorOptions options)
         {

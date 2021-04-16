@@ -73,17 +73,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                     return rv;
                 }
                 rv.StatusCode = res.StatusCode;
-                JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
-                jsonOptions.PropertyNamingPolicy = null;
-                jsonOptions.IgnoreNullValues = true;
-                jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
-                jsonOptions.AllowTrailingCommas = true;
-                jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
-                jsonOptions.Converters.Add(new JsonStringEnumConverter());
-                jsonOptions.Converters.Add(new DateRangeConverter());
-                jsonOptions.Converters.Add(new PocoConverter());
-                jsonOptions.Converters.Add(new TypeConverter());
-                jsonOptions.Converters.Add(new DynamicDataConverter());
                 if (res.IsSuccessStatusCode == true)
                 {
                     Type dt = typeof(T);
@@ -100,7 +89,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                         }
                         else
                         {
-                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt, jsonOptions);
+                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt, CoreProgram.DefaultJsonOption);
                         }
                     }
                 }
@@ -116,7 +105,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                     {
                         try
                         {
-                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt, jsonOptions);
+                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt, CoreProgram.DefaultJsonOption);
                         }
                         catch { }
                     }
@@ -213,19 +202,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
         /// <returns></returns>
         public async Task<ApiResult<T>> CallAPI<T>(string url, HttpMethodEnum method, object postdata, int? timeout = null, string proxy = null) where T : class
         {
-            JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
-            jsonOptions.PropertyNamingPolicy = null;
-            jsonOptions.IgnoreNullValues = true;
-            jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
-            jsonOptions.AllowTrailingCommas = true;
-            jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
-            jsonOptions.Converters.Add(new JsonStringEnumConverter());
-            jsonOptions.Converters.Add(new DateRangeConverter());
-            jsonOptions.Converters.Add(new PocoConverter());
-            jsonOptions.Converters.Add(new TypeConverter());
-            jsonOptions.Converters.Add(new DynamicDataConverter());
-
-            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata, jsonOptions), System.Text.Encoding.UTF8, "application/json");
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata, CoreProgram.DefaultJsonOption), System.Text.Encoding.UTF8, "application/json");
             return await CallAPI<T>(url, method, content, timeout, proxy);
         }
 

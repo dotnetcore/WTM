@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="self">是否需要对数据进行Json编码</param>
         /// <param name="returnColumnObject">不在后台进行ColumnFormatInfo的转化，而是直接输出ColumnFormatInfo的json结构到前端，由前端处理，默认False</param>
         /// <returns>Json格式的数据</returns>
-        public static string GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool returnColumnObject = false) where T : TopBasePoco, new()
+        public static string GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool returnColumnObject = false, bool enumToString = true) where T : TopBasePoco, new()
         {
             var sb = new StringBuilder();
             self.GetHeaders();
@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             for (int x = 0; x < el.Count; x++)
             {
                 var sou = el[x];
-                sb.Append(self.GetSingleDataJson(sou, returnColumnObject, x));
+                sb.Append(self.GetSingleDataJson(sou, returnColumnObject, x, enumToString));
                 if (x < el.Count - 1)
                 {
                     sb.Append(',');
@@ -102,7 +102,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="returnColumnObject">不在后台进行ColumnFormatInfo的转化，而是直接输出ColumnFormatInfo的json结构到前端，由前端处理，默认False</param>
         /// <param name="index">index</param>
         /// <returns>Json格式的数据</returns>
-        public static string GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, object obj, bool returnColumnObject, int index = 0) where T : TopBasePoco
+        public static string GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, object obj, bool returnColumnObject, int index = 0, bool enumToString = true) where T : TopBasePoco
         {
             bool inner = false;
             var sb = new StringBuilder();
@@ -168,7 +168,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             continue;
                         }
                     }
-                    sb.Append($"\"{col.Field}\":");
                     var html = string.Empty;
 
                     if (col.EditType == EditTypeEnum.Text || col.EditType == null)
@@ -182,7 +181,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 for (int i = 0; i < children.Count; i++)
                                 {
                                     var item = children[i];
-                                    html += self.GetSingleDataJson(item, returnColumnObject);
+                                    html += self.GetSingleDataJson(item, returnColumnObject,0,enumToString);
                                     if (i < children.Count - 1)
                                     {
                                         html += ",";
@@ -229,7 +228,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             //如果列是布尔值，直接返回true或false，让前台生成CheckBox
                             if (ptype == typeof(bool) || ptype == typeof(bool?))
                             {
-                                if (returnColumnObject == false)
+                                if(enumToString == false)
+                                {
+                                    html = html.ToLower();
+                                    inner = true;
+                                }
+                                else if (returnColumnObject == false)
                                 {
                                     if (html.ToLower() == "true")
                                     {
@@ -251,10 +255,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             //如果列是枚举，直接使用枚举的文本作为多语言的Key查询多语言文字
                             else if (ptype.IsEnumOrNullableEnum())
                             {
-                                string enumdisplay = PropertyHelper.GetEnumDisplayName(ptype, html);
-                                if (string.IsNullOrEmpty(enumdisplay) == false)
+                                if (enumToString == true)
                                 {
-                                    html = enumdisplay;
+                                    string enumdisplay = PropertyHelper.GetEnumDisplayName(ptype, html);
+                                    if (string.IsNullOrEmpty(enumdisplay) == false)
+                                    {
+                                        html = enumdisplay;
+                                    }
                                 }
                             }
                             //If this column is a class or list, html will be set to a json string, sest inner to true to remove the "
@@ -263,6 +270,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 inner = true;
                             }
                         }
+                        if (enumToString == false && string.IsNullOrEmpty(html))
+                        {
+                            continue;
+                        }
+
                     }
                     else
                     {
@@ -293,6 +305,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         html = "\"" + html.Replace(Environment.NewLine, "").Replace("\t", string.Empty).Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     }
+                    sb.Append($"\"{col.Field}\":");
                     sb.Append(html);
                     sb.Append(',');
                 }
@@ -336,10 +349,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <typeparam name="T">Model type</typeparam>
         /// <param name="self">a listvm</param>
         /// <param name="PlainText">true to return plain text, false to return formated html, such as checkbox,buttons ...</param>
+        /// <param name="enumToString">use enum display name</param>
         /// <returns>json string</returns>
-        public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true) where T : TopBasePoco, new()
+        public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true, bool enumToString = true) where T : TopBasePoco, new()
         {
-            return $@"{{""Data"":{self.GetDataJson(PlainText)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount},""Msg"":""success"",""Code"":200}}";
+            return $@"{{""Data"":{self.GetDataJson(PlainText,enumToString)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount},""Msg"":""success"",""Code"":200}}";
         }
 
         public static object GetJsonForApi<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true) where T : TopBasePoco, new()

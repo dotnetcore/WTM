@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public enum TabModeEnum { Default, Simple }
 
-    public enum BlazorModeEnum { Server, WSAM}
+    public enum BlazorModeEnum { Server, Wasm}
     public enum OrmTypeEnum { EF,FreeSql}
     /// <summary>
     /// Notification出现的位置

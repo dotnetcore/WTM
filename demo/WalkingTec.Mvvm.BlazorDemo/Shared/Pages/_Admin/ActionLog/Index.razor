@@ -27,7 +27,7 @@
         <TableColumn @bind-Field="@context.ActionName" Width="120" />
         <TableColumn @bind-Field="@context.ITCode" Width="120" />
         <TableColumn @bind-Field="@context.ActionUrl" Width="200" />
-        <TableColumn @bind-Field="@context.ActionTime" Width="180" Sortable="true" />
+        <TableColumn @bind-Field="@context.ActionTime" Width="180" Sortable="true" FormatString="yyyy-MM-dd HH:mm:ss" />
         <TableColumn @bind-Field="@context.Duration" Width="120" Formatter="IntFormatter" />
         <TableColumn @bind-Field="@context.IP" Width="120" />
         @*<TableColumn @bind-Field="@context.Remark" Width="320"  AllowTextWrap="true" />*@

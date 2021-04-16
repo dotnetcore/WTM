@@ -690,9 +690,8 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 programType = lop.LocalizationType;
             }
-            var coredll = gd.AllAssembly.Where(x => x.GetName().Name == "WalkingTec.Mvvm.Core.dll" || x.GetName().Name == "WalkingTec.Mvvm.Core").FirstOrDefault();
             var programLocalizer = localfactory.Create(programType);
-            coredll.GetType("WalkingTec.Mvvm.Core.CoreProgram").GetProperty("_localizer").SetValue(null, programLocalizer);
+            Core.CoreProgram._localizer = programLocalizer;
 
             var controllers = gd.GetTypesAssignableFrom <IBaseController>();
             gd.AllModule = GetAllModules(controllers);

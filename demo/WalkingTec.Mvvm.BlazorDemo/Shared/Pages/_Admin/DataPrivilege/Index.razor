@@ -18,7 +18,7 @@
        ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;">
     <TableColumns>
         <TableColumn @bind-Field="@context.Name" Width="180" />
-        <TableColumn @bind-Field="@context.TableName" />
+        <TableColumn @bind-Field="@context.PName" />
         <TableColumn @bind-Field="@context.RelateIDs" />
 
     </TableColumns>
@@ -38,7 +38,7 @@
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
             }
-            @if (IsAccessable("/api/_DataPrivilege/{id}"))
+            @if (IsAccessable("/api/_DataPrivilege/Get"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
             }

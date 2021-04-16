@@ -788,17 +788,6 @@ namespace WalkingTec.Mvvm.Core
                     return rv;
                 }
                 rv.StatusCode = res.StatusCode;
-                JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
-                jsonOptions.PropertyNamingPolicy = null;
-                jsonOptions.IgnoreNullValues = true;
-                jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
-                jsonOptions.AllowTrailingCommas = true;
-                jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
-                jsonOptions.Converters.Add(new JsonStringEnumConverter());
-                jsonOptions.Converters.Add(new DateRangeConverter());
-                jsonOptions.Converters.Add(new PocoConverter());
-                jsonOptions.Converters.Add(new TypeConverter());
-                jsonOptions.Converters.Add(new DynamicDataConverter());
                 if (res.IsSuccessStatusCode == true)
                 {
                     Type dt = typeof(T);
@@ -815,7 +804,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else
                         {
-                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt, jsonOptions);
+                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt, CoreProgram.DefaultJsonOption);
                         }
                     }
                 }
@@ -827,7 +816,7 @@ namespace WalkingTec.Mvvm.Core
 
                         try
                         {
-                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt, jsonOptions);
+                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt, CoreProgram.DefaultJsonOption);
                         }
                         catch { }
                     }

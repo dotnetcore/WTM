@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
@@ -10,8 +11,12 @@ namespace WalkingTec.Mvvm.Core
             set;
         }
 
+        public static JsonSerializerOptions DefaultJsonOption
+        {
+            get;set;
+        }
 
-        public static string[] Buildindll = new string[]
+    public static string[] Buildindll = new string[]
             {
                     "WalkingTec.Mvvm.Core",
                     "WalkingTec.Mvvm.Mvc",

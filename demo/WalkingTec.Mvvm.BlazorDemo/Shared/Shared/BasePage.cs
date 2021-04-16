@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
         }
 
 
-        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.None)
+        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.Large)
         {
             return await WtmBlazor.OpenDialog(Title, Values, size);
         }

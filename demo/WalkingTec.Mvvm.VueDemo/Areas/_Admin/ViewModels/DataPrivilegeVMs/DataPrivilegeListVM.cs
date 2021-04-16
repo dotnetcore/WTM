@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 tp = "UserGroup";
             }
 
-                return new List<GridAction>
+            return new List<GridAction>
             {
                 this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800).SetQueryString($"Type={tp}"),
                 this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         {
             return new List<GridColumn<DataPrivilege_ListView>>{
                 this.MakeGridHeader(x => x.Name, 200),
-                this.MakeGridHeader(x => "PName").SetFormat((entity,val)=>GetPrivilegeName(entity)),
+                this.MakeGridHeader(x => x.PName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
                 this.MakeGridHeader(x => x.TableName),
                 this.MakeGridHeader(x => x.RelateIDs),
                 this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Localizer["Sys.Operation"]).SetDisableExport(),
@@ -61,7 +61,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         {
             string editurl = "";
             string delurl = "";
-            if(Searcher.DpType == DpTypeEnum.User)
+            if (Searcher.DpType == DpTypeEnum.User)
             {
                 editurl = "/_Admin/DataPrivilege/Edit?ModelName=" + item.TableName + "&Type=User&Id=" + item.TargetId;
                 delurl = "/_Admin/DataPrivilege/Delete?ModelName=" + item.TableName + "&Type=User&Id=" + item.TargetId;
@@ -138,6 +138,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public Guid? DomainID { get; set; }
 
         public string Edit { get; set; }
+
+        [Display(Name = "_Admin.DataPrivilegeName")]
+        public string PName { get; set; }
     }
 
 }

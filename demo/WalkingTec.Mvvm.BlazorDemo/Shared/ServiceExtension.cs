@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using BootstrapBlazor.Components;
 using Microsoft.Extensions.DependencyInjection;
 using WalkingTec.Mvvm.BlazorDemo.Shared.Shared;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Json;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared
 {
@@ -39,6 +42,19 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared
                 options.ToastPlacement = Placement.TopEnd;
                 options.ToastDelay = 3000;
             });
+            JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
+            jsonOptions.PropertyNamingPolicy = null;
+            jsonOptions.IgnoreNullValues = true;
+            jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
+            jsonOptions.AllowTrailingCommas = true;
+            jsonOptions.Converters.Add(new DateTimeConverter());
+            jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
+            jsonOptions.Converters.Add(new JsonStringEnumConverter());
+            jsonOptions.Converters.Add(new DateRangeConverter());
+            jsonOptions.Converters.Add(new PocoConverter());
+            jsonOptions.Converters.Add(new TypeConverter());
+            jsonOptions.Converters.Add(new DynamicDataConverter());
+            Core.CoreProgram.DefaultJsonOption = jsonOptions;
         }
     }
 }

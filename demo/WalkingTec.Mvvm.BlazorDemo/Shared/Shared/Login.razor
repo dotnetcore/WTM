@@ -36,6 +36,11 @@
     protected override void OnInitialized()
     {
         bgnumber = new Random().Next(1, 6);
+        if(WtmBlazor.ConfigInfo.IsQuickDebug == true)
+        {
+            Model.ITCode = "admin";
+            Model.Password = "000000";
+        }
         base.OnInitialized();
     }
 
