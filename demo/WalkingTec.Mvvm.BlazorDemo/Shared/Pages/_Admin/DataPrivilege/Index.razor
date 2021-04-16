@@ -69,7 +69,7 @@
 
     private async Task<QueryData<DataPrivilege_ListView>> OnSearch(QueryPageOptions opts)
     {
-        return await WtmBlazor.Api.CallSearchApi<DataPrivilege_ListView>("/api/_DataPrivilege/search", SearchModel, opts);
+        return await StartSearch<DataPrivilege_ListView>("/api/_DataPrivilege/search", SearchModel, opts);
     }
 
     private void DoSearch()

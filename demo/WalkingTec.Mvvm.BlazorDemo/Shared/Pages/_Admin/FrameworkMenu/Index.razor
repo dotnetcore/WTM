@@ -74,12 +74,12 @@
 
     private async Task<QueryData<FrameworkMenu_ListView>> OnSearch(QueryPageOptions opts)
     {
-        return await WtmBlazor.Api.CallSearchTreeApi<FrameworkMenu_ListView>("/api/_frameworkmenu/search", SearchModel, opts);
+        return await StartSearchTree<FrameworkMenu_ListView>("/api/_frameworkmenu/search", SearchModel, opts);
     }
 
     private async Task<IEnumerable<FrameworkMenu_ListView>> OnTreeExpand(FrameworkMenu_ListView data)
     {
-        return data.Children;
+        return await Task.FromResult( data.Children);
     }
 
     private void DoSearch()

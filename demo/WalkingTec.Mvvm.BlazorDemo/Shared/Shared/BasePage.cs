@@ -12,6 +12,7 @@ using System.Text.Json;
 using System.Net.Http;
 using WalkingTec.Mvvm.Core.Support.Json;
 using System.Reflection;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
 {
@@ -111,6 +112,49 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
                 return false;
             }
         }
+
+        public async Task<QueryData<T>> StartSearch<T>(string url, BaseSearcher searcher, QueryPageOptions options) where T : class, new()
+        {
+            var rv = await WtmBlazor.Api.CallSearchApi<T>(url, searcher, options);
+            QueryData<T> data = new QueryData<T>();
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                data.Items = rv.Data?.Data;
+                data.TotalCount = rv.Data?.Count ?? 0;
+            }
+            if (rv.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], WtmBlazor.Localizer["Sys.NoPrivilege"]);
+            }
+            return data;
+        }
+
+        public async Task<QueryData<T>> StartSearchTree<T>(string url, BaseSearcher searcher, QueryPageOptions options) where T : class, new()
+        {
+            var rv = await WtmBlazor.Api.CallSearchApi<T>(url, searcher, options);
+            QueryData<T> data = new QueryData<T>();
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var idpro = typeof(T).GetSingleProperty("ID");
+                if (rv.Data?.Data != null)
+                {
+                    foreach (var item in rv.Data.Data)
+                    {
+                        string pid = idpro.GetValue(item)?.ToString();
+                        item.SetPropertyValue("Children", new List<T>(rv.Data.Data.AsQueryable().CheckParentID(pid)));
+                    }
+                }
+                data.Items = rv.Data?.Data.AsQueryable().CheckParentID(null);
+                data.TotalCount = rv.Data?.Count ?? 0;
+            }
+            if (rv.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], WtmBlazor.Localizer["Sys.NoPrivilege"]);
+            }
+            return data;
+        }
+
+
         public void SetError(ValidateForm form, ErrorObj errors)
         {
             if (errors != null)

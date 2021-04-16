@@ -68,7 +68,7 @@
 
     private async Task<QueryData<ActionLog>> OnSearch(QueryPageOptions opts)
     {
-        return await WtmBlazor.Api.CallSearchApi<ActionLog>("/api/_ActionLog/search", SearchModel, opts);
+        return await StartSearch<ActionLog>("/api/_ActionLog/search", SearchModel, opts);
     }
 
     private void DoSearch()

@@ -85,7 +85,7 @@
 
     private async Task<QueryData<FrameworkUser_View>> OnSearch(QueryPageOptions opts)
     {
-        return await WtmBlazor.Api.CallSearchApi<FrameworkUser_View>("/api/_frameworkuserbase/search", SearchModel, opts);
+        return await StartSearch<FrameworkUser_View>("/api/_frameworkuserbase/search", SearchModel, opts);
     }
 
     private void DoSearch()
