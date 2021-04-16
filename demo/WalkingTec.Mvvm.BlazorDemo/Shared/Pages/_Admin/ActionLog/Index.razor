@@ -47,7 +47,7 @@
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            @if (IsAccessable("/api/_ActionLog/edit"))
+            @if (IsAccessable("/api/_ActionLog/{id}"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
             }

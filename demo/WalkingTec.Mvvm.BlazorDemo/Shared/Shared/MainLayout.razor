@@ -16,7 +16,10 @@
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#">
-                                    <Avatar style="margin-top:3px;display:inline-table;" GetUrlAsync="()=>wtmblazor.GetBase64Image(UserInfo.PhotoId.ToString(),150,150)" IsCircle="true" Size="Size.ExtraSmall" />
+                                    @if (!string.IsNullOrEmpty(UserInfo.PhotoId.ToString()))
+                                    {
+                                        <Avatar style="margin-top:3px;display:inline-table;" GetUrlAsync="()=>wtmblazor.GetBase64Image(UserInfo.PhotoId.ToString(),150,150)" IsCircle="true" Size="Size.ExtraSmall" />
+                                    }
                                     <span class="mx-1" style="">@UserInfo.Name</span>
                                 </a>
                                 <div class="dropdown-menu">

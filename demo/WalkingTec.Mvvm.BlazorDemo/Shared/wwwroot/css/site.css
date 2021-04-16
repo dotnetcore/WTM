@@ -291,6 +291,9 @@
     .btn-group .btn {
         padding-left: 10px !important;
     }
+.table-cell .btn-group .btn {
+    margin-left: 3px !important;
+}
 
     .table-modal-footer {
         margin-top: 10px !important;
