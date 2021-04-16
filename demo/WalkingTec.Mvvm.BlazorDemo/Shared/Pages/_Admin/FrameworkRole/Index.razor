@@ -76,7 +76,7 @@
 
     private async Task<QueryData<FrameworkRole>> OnSearch(QueryPageOptions opts)
     {
-        return await WtmBlazor.Api.CallSearchApi<FrameworkRole>("/api/_FrameworkRole/search", SearchModel, opts);
+        return await StartSearch<FrameworkRole>("/api/_FrameworkRole/search", SearchModel, opts);
     }
 
     private void DoSearch()
