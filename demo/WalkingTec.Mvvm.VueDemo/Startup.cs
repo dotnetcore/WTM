@@ -135,7 +135,7 @@ namespace WalkingTec.Mvvm.VueDemo
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
             //指定哪些模型需要数据权限
-            pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
+            //pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
             //pris.Add(new DataPrivilegeInfo<FrameworkRole>("角色权限", m => m.RoleName));
             return pris;
         }

@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         PRI
     }
 
-    public class School : BasePoco
+    public class School : PersistPoco
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
