@@ -19,7 +19,12 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 新建一个描述
         /// </summary>
-        public ActionDescriptionAttribute(string desc, string classFullName=null)
+        public ActionDescriptionAttribute(string desc)
+        {
+            this.Description = desc;
+        }
+
+        public ActionDescriptionAttribute(string desc, string classFullName)
         {
             this.Description = desc;
             this.ClassFullName = classFullName;
