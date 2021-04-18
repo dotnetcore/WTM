@@ -1,4 +1,4 @@
-@page "/_Admin/FrameworkMenu/Create"
+@page "/_Admin/FrameworkMenu/Edit/{id}"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 @inherits BasePage
 
@@ -9,10 +9,13 @@
     </Row>
     @if (Model.Entity.IsInside != false)
     {
-        <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
-            <Select @bind-Value="@Model.SelectedModule" Items="@AllModels"  OnSelectedItemChanged="OnModelChange"/>
-            <MultiSelect @bind-Value="@Model.SelectedActionIDs" Items="@AllActions"/>
-        </Row>
+<Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+    <Select @bind-Value="@Model.SelectedModule" Items="@AllModels" OnSelectedItemChanged="OnModelChange" />
+    <div></div>
+    <Row ColSpan="2">
+        <MultiSelect @bind-Value="@Model.SelectedActionIDs" Items="@AllActions" />
+    </Row>
+</Row>
     }
     else
     {
@@ -32,7 +35,7 @@
     </Row>
         <div class="modal-footer table-modal-footer">
             <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
-            <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Create"]" IsAsync="true" />
+            <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Edit"]" IsAsync="true" />
         </div>
 </ValidateForm>
 
@@ -43,6 +46,8 @@
     private List<SelectedItem> AllFolders = new List<SelectedItem>();
     private List<SelectedItem> AllActions = new List<SelectedItem>();
     private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,6 +63,10 @@
                 AllModels.Add(new SelectedItem { Text = sub.PageName, Value = sub.ClassName??sub.Url, GroupName = item.PageName });
             }
         }
+        var rv = await WtmBlazor.Api.CallAPI<FrameworkMenuVM2>($"/api/_FrameworkMenu/{id}");
+        AllActions = await WtmBlazor.Api.CallItemsApi($"/api/_FrameworkMenu/GetActionsByModel?ModelName={rv.Data.SelectedModule}");
+        Model = rv.Data;
+
     }
 
     private async Task OnModelChange(SelectedItem item)
@@ -69,7 +78,7 @@
 
     private async Task Submit(EditContext context)
     {
-        await PostsForm(vform, "/api/_frameworkmenu/add", (s) => "Sys.OprationSuccess");
+        await PostsForm(vform, $"/api/_frameworkmenu/edit", (s) => "Sys.OprationSuccess", method: HttpMethodEnum.PUT);
     }
 
     public void OnClose()

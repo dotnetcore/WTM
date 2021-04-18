@@ -1,7 +1,7 @@
 @page "/_Admin/FrameworkGroup"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 @inherits BasePage
-@attribute [ActionDescription("MenuKey.GroupManagement")]
+@attribute [ActionDescription("MenuKey.GroupManagement", "WalkingTec.Mvvm.Admin.Api,FrameworkGroup")]
 
 <WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
     <ValidateForm Model="@SearchModel">

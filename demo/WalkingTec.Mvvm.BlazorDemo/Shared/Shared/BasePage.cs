@@ -227,6 +227,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Shared.Shared
 
         public bool IsAccessable(string url)
         {
+            if(WtmBlazor.ConfigInfo.IsQuickDebug == true)
+            {
+                return true;
+            }
             if (UserInfo != null)
             {
                 var actions = UserInfo.Attributes["Actions"] as string[];

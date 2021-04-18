@@ -1,7 +1,7 @@
 @page "/_Admin/DataPrivilege"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 @inherits BasePage
-@attribute [ActionDescription("MenuKey.DataPrivilege")]
+@attribute [ActionDescription("MenuKey.DataPrivilege", "WalkingTec.Mvvm.Admin.Api,DataPrivilege")]
 
 <WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
     <ValidateForm Model="@SearchModel">

@@ -1,17 +1,7 @@
 @page "/_Admin/FrameworkMenu"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 @inherits BasePage
-@attribute [ActionDescription("MenuKey.MenuMangement")]
-@*<WtmBlazorControls.WTSearchPanel OnSearch="@DoSearch">
-        <ValidateForm Model="@SearchModel">
-            <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
-                <Select @bind-Value="@SearchModel.IsValid" Items="@WtmBlazor.GlobalSelectItems.SearcherBoolItems" />
-                <BootstrapInput @bind-Value="@SearchModel.ITCode" />
-                <BootstrapInput @bind-Value="@SearchModel.Name" />
-            </Row>
-        </ValidateForm>
-    </WtmBlazorControls.WTSearchPanel>*@
-
+@attribute [ActionDescription("MenuKey.MenuMangement", "WalkingTec.Mvvm.Admin.Api,FrameworkMenu")]
 
 
 <Table @ref="dataTable" TItem="FrameworkMenu_ListView" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
@@ -45,6 +35,8 @@
         {
             <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
+        <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-refresh" Text="@WtmBlazor.Localizer["Sys.Refresh"]" OnClickCallback="@DoSearch" IsAsync="true" />
+
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
@@ -79,12 +71,12 @@
 
     private async Task<IEnumerable<FrameworkMenu_ListView>> OnTreeExpand(FrameworkMenu_ListView data)
     {
-        return await Task.FromResult( data.Children);
+        return await Task.FromResult(data.Children);
     }
 
-    private void DoSearch()
+    private async Task DoSearch(IEnumerable<FrameworkMenu_ListView> data)
     {
-        dataTable.QueryAsync();
+        await dataTable.QueryAsync();
     }
 
     private async Task OnCreateClick(IEnumerable<FrameworkMenu_ListView> items)
@@ -97,22 +89,22 @@
 
     private async Task OnEditClick(FrameworkMenu_ListView item)
     {
-        //if (await OpenDialog<Edit>(WtmBlazor.Localizer["Sys.Edit"], x => x.id == item.ID.ToString()) == DialogResult.Yes)
-        //{
-        //    await dataTable.QueryAsync();
-        //}
+        if (await OpenDialog<Edit>(WtmBlazor.Localizer["Sys.Edit"], x => x.id == item.ID.ToString()) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
     }
 
     private async Task OnDetailsClick(FrameworkMenu_ListView item)
     {
-        //await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());
+        await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());
     }
 
     private async Task OnBatchDeleteClick()
     {
         if (dataTable.SelectedRows?.Any() == true)
         {
-            await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/_frameworkuserbase/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
+            await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/_frameworkmenu/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
             await dataTable.QueryAsync();
         }
         else
@@ -123,7 +115,7 @@
 
     private async Task OnDeleteClick(FrameworkMenu_ListView item)
     {
-        await PostsData(new List<string> { item.ID.ToString() }, $"/api/_frameworkuserbase/batchdelete", (s) => "Sys.OprationSuccess");
+        await PostsData(new List<string> { item.ID.ToString() }, $"/api/_frameworkmenu/batchdelete", (s) => "Sys.OprationSuccess");
         await dataTable.QueryAsync();
     }
 
@@ -132,11 +124,11 @@
     {
         if (dataTable.SelectedRows?.Any() == true)
         {
-            await Download("/api/_frameworkuserbase/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
+            await Download("/api/_frameworkmenu/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
         }
         else
         {
-            await Download("/api/_frameworkuserbase/ExportExcel", SearchModel);
+            await Download("/api/_frameworkmenu/ExportExcel", SearchModel);
         }
     }
 
