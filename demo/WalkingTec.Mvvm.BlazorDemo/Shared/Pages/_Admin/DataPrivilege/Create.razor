@@ -23,7 +23,7 @@
         <Select @bind-Value="@Model.IsAll" Items="@WtmBlazor.GlobalSelectItems.BoolItems" />
     </Row>
     <Row>
-        <MultiSelect @ref="Select2" @bind-Value="@Model.SelectedItemsID" Items="AllPrivilegeTableNames" />
+        <MultiSelect @bind-Value="@Model.SelectedItemsID" @bind-Items="AllPrivilegeTableNames" PlaceHolder="@WtmBlazor.Localizer["Sys.PleaseSelect"]" />
     </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
@@ -44,13 +44,12 @@
     private List<SelectedItem> AllPrivileges = new List<SelectedItem>();
     private List<SelectedItem> AllGroups = new List<SelectedItem>();
     private List<SelectedItem> AllPrivilegeTableNames = new List<SelectedItem>();
-    private MultiSelect<List<string>> Select2 { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
         Model.DpType = dptype;
-        AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges");
+        AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetUserGroups");
     }
 
@@ -62,7 +61,6 @@
     {
         AllPrivilegeTableNames.Clear();
         AllPrivilegeTableNames = await WtmBlazor.Api.CallItemsApi($"/api/_DataPrivilege/GetPrivilegeByTableName?table={item.Value}");
-        Select2.SetItems(AllPrivilegeTableNames);
     }
 
     private async Task Submit(EditContext context)
