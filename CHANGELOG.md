@@ -1,7 +1,7 @@
 # 更新日志
 ## v5.x.x 
 
-##5.1.5 (2021-4-18) 
+##5.1.6 (2021-4-18) 
 * **修改：**  默认Json序列化加入了JsonNumberHandling.WriteAsString
 * **修改：**  默认Json序列化加入了自定义日期，去掉了默认日期和时间之间的那个T
 * **修改：**  修复了导入时IsOverWriteExistData=false的时候没有验证重复数据的bug
