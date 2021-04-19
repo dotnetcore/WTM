@@ -181,6 +181,20 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Ok(AllParents);
         }
 
+        [AllRights]
+        [HttpGet("GetIcons")]
+        public List<ComboSelectListItem> GetIcons()
+        {
+            return IconFontsHelper.IconFontItems;
+        }
+
+        [AllRights]
+        [HttpGet("GetIconItems")]
+        public List<MenuItem> GetIconItems(string key)
+        {
+            return IconFontsHelper.IconFontDicItems[key];
+        }
+
     }
 
 }
