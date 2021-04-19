@@ -100,11 +100,15 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             string body = context.HttpContext.Items["DONOTUSE_REQUESTBODY"].ToString();
                             var joption = new JsonSerializerOptions();
                             joption.Converters.Add(new BodyConverter());
-                            var obj = JsonSerializer.Deserialize<PostedBody>(body,joption);
-                            foreach (var field in obj.ProNames)
+                            try
                             {
-                               model.FC.Add(field, null);
+                                var obj = JsonSerializer.Deserialize<PostedBody>(body, joption);
+                                foreach (var field in obj.ProNames)
+                                {
+                                    model.FC.Add(field, null);
+                                }
                             }
+                            catch { }
                         }
                     }
                     //if (model is IBaseCRUDVM<TopBasePoco> crud)

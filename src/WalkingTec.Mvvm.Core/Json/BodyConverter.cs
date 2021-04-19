@@ -18,58 +18,76 @@ namespace WalkingTec.Mvvm.Core.Json
             var rv = new PostedBody();
             rv.ProNames = new List<string>();
             List<string> prefix = new List<string>();
-            prefix.Add("");
             int depth = 0;
             string lastObjecName = "";
             int insideArray = 0;
-            while(true)
+            JsonTokenType lastToken = JsonTokenType.Null;
+            while (true)
             {
-                if(reader.TokenType == JsonTokenType.StartArray)
+                if (reader.TokenType == JsonTokenType.StartArray)
                 {
                     insideArray++;
+                    depth++;
+                    prefix.Add(lastObjecName + "[0]");
+                    if (rv.ProNames.Count > 0)
+                    {
+                        rv.ProNames.RemoveAt(rv.ProNames.Count - 1);
+                    }
                 }
-                if(reader.TokenType == JsonTokenType.EndArray)
+                if (reader.TokenType == JsonTokenType.EndArray)
                 {
                     insideArray--;
+                    depth--;
+                    prefix.RemoveAt(prefix.Count - 1);
                 }
-                if(insideArray > 0)
+                if (reader.TokenType == JsonTokenType.StartObject)
                 {
-                    reader.Read();
-                    continue;
-                }
-                if(reader.TokenType == JsonTokenType.StartObject)
-                {
-                    depth++;
-                    if (prefix.Count < depth)
+                    if (insideArray == 0)
                     {
+                        depth++;
                         prefix.Add(lastObjecName);
+                        if (rv.ProNames.Count > 0)
+                        {
+                            rv.ProNames.RemoveAt(rv.ProNames.Count - 1);
+                        }
                     }
                     else
                     {
-                        prefix[depth - 1] = lastObjecName;
+                        if (lastToken != JsonTokenType.StartArray && lastToken != JsonTokenType.EndObject)
+                        {
+                            reader.TrySkip();
+                            reader.Read();
+                        }
                     }
-                    rv.ProNames.Remove(lastObjecName);
                 }
                 if (reader.TokenType == JsonTokenType.PropertyName)
                 {
                     var pname = reader.GetString();
                     lastObjecName = pname;
                     var p = prefix.Take(depth).ToSepratedString(seperator: ".");
-                    if(string.IsNullOrEmpty(p) == false)
+                    if (string.IsNullOrEmpty(p) == false)
                     {
                         pname = p + "." + pname;
                     }
-                    rv.ProNames.Add(pname);
+                    if (rv.ProNames.Contains(pname) == false)
+                    {
+                        rv.ProNames.Add(pname);
+                    }
                 }
                 if (reader.TokenType == JsonTokenType.EndObject)
                 {
-                    depth--;
-                    if(reader.IsFinalBlock == true && depth == 0)
+                    if (insideArray == 0)
+                    {
+                        depth--;
+                        prefix.RemoveAt(prefix.Count - 1);
+                    }
+                    if (reader.IsFinalBlock == true && reader.CurrentDepth == 0)
                     {
                         reader.Read();
                         break;
                     }
                 }
+                lastToken = reader.TokenType;
                 reader.Read();
             }
             return rv;
