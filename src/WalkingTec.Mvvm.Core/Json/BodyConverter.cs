@@ -29,10 +29,6 @@ namespace WalkingTec.Mvvm.Core.Json
                     insideArray++;
                     depth++;
                     prefix.Add(lastObjecName + "[0]");
-                    if (rv.ProNames.Count > 0)
-                    {
-                        rv.ProNames.RemoveAt(rv.ProNames.Count - 1);
-                    }
                 }
                 if (reader.TokenType == JsonTokenType.EndArray)
                 {
@@ -53,10 +49,11 @@ namespace WalkingTec.Mvvm.Core.Json
                     }
                     else
                     {
-                        if (lastToken != JsonTokenType.StartArray && lastToken != JsonTokenType.EndObject)
+                        if (lastToken != JsonTokenType.StartArray)
                         {
                             reader.TrySkip();
                             reader.Read();
+                            continue;
                         }
                     }
                 }
