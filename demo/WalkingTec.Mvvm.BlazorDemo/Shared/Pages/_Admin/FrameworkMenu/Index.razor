@@ -31,7 +31,7 @@
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }
-        @if (IsAccessable("/api/_frameworkmenu/export"))
+        @if (IsAccessable("/api/_frameworkmenu/exportexcel"))
         {
             <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
