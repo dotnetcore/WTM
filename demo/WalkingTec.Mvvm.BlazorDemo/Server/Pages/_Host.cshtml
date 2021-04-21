@@ -1,7 +1,8 @@
+@page "/_host"
 @namespace WalkingTec.Mvvm.BlazorDemo.Server
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    Layout = null;
+  Layout = null;
 }
 @inject WalkingTec.Mvvm.Core.WTMContext wtm
 <!DOCTYPE html>
@@ -18,7 +19,7 @@
   <link rel="stylesheet" href="WalkingTec.Mvvm.BlazorDemo.Server.styles.css">
 </head>
 <body>
-    <component type="typeof(WalkingTec.Mvvm.BlazorDemo.Shared.App)" render-mode="Server" />
+  <component type="typeof(WalkingTec.Mvvm.BlazorDemo.Shared.App)" render-mode="Server" />
   <div id="blazor-error-ui">
     <environment include="Staging,Production">
       An error has occurred. This application may no longer respond until reloaded.
