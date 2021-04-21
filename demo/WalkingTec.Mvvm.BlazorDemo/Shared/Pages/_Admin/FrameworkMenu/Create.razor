@@ -9,10 +9,13 @@
     </Row>
     @if (Model.Entity.IsInside != false)
     {
-        <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
-            <Select @bind-Value="@Model.SelectedModule" Items="@AllModels" OnSelectedItemChanged="OnModelChange" />
-            <MultiSelect @bind-Value="@Model.SelectedActionIDs" Items="@AllActions" />
-        </Row>
+<Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+    <Select @bind-Value="@Model.SelectedModule" Items="@AllModels" OnSelectedItemChanged="OnModelChange" />
+    <div></div>
+    <Row ColSpan="2">
+        <Transfer @bind-Value="@Model.SelectedActionIDs" Items="@AllActions" />
+    </Row>
+</Row>
     }
     else
     {
@@ -23,8 +26,14 @@
     <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
         <BootstrapInput @bind-Value="@Model.Entity.PageName" />
         <Select @bind-Value="@Model.Entity.ParentId" Items="@AllFolders" />
-        <Select @bind-Value="@SelectedIconType" Items="@IconTypes" OnSelectedItemChanged="OnIconChange" />
-        <Select @bind-Value="@Model.Entity.Icon" Items="@Icons">
+        <Select @bind-Value="@SelectedIconType" Items="@IconTypes" OnSelectedItemChanged="OnIconChange" DisplayText="@WtmBlazor.Localizer["_Admin.IconFont"]" />
+        <Select TValue="string" @bind-Value="@Model.Entity.Icon" Items="@Icons">
+            <ItemTemplate>
+                    <div class="dropdown-item-demo">
+                        <i class="@context.Value"></i>
+                        <span>@context.Text</span>
+                    </div>
+                </ItemTemplate>
         </Select>
         <BootstrapInputNumber @bind-Value="@Model.Entity.DisplayOrder" />
     </Row>
@@ -55,7 +64,7 @@
         AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Inside"], Value = "true" });
         AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Outside"], Value = "false" });
         AllFolders = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetFolders", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
-        IconTypes = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetIcons");
+        IconTypes = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetIcons", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         var items = WtmBlazor.GetAllPages();
         AllModels.Add(new SelectedItem { Text = WtmBlazor.Localizer["Sys.PleaseSelect"], Value = "" });
         foreach (var item in items)
@@ -75,7 +84,14 @@
 
     private async Task OnIconChange(SelectedItem item)
     {
-        Icons = await WtmBlazor.Api.CallItemsApi($"/api/_FrameworkMenu/GetIconItems?key={item.Value}");
+        Icons = await WtmBlazor.Api.CallItemsApi($"/api/_FrameworkMenu/GetIconItems?key={item.Value}", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
+        foreach (var icon in Icons)
+        {
+            if (icon.Value != "")
+            {
+                icon.Value = SelectedIconType + " " + icon.Value;
+            }
+        }
         StateHasChanged();
     }
 

@@ -84,7 +84,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            IconFontsHelper.GenerateIconFont();
+            IconFontsHelper.GenerateIconFont("wwwroot/font", "wwwroot/font-awesome");
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
 
             if (configs == null)
