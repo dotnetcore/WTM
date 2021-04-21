@@ -826,6 +826,19 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [Public]
+        public IActionResult SetLanguageForBlazor(string culture, string redirect)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return Content($"<script>window.location.href='{HttpUtility.UrlDecode(redirect)}';</script>","text/html");
+        }
+
+
+        [Public]
         [HttpGet]
         public IActionResult Redirect401()
         {

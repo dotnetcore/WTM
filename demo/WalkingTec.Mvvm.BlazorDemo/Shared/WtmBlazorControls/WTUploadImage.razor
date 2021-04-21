@@ -11,6 +11,11 @@
     <AvatarUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="image/*" IsSingle="!IsMultiple" ShowProgress="true" OnChange="@OnAvatarUpload"
                   OnDelete="@OnAvatarDelete" DisplayText="@LabelText" DefaultFileList="@dlist" IsDisabled="@IsDisabled"></AvatarUpload>
 }
+else
+{
+    <AvatarUpload IsDisabled="true" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="image/*" IsSingle="!IsMultiple"></AvatarUpload>
+
+}
 @code{
 
     [Parameter]

@@ -614,18 +614,12 @@ namespace WalkingTec.Mvvm.Mvc
         public static IServiceCollection AddWtmMultiLanguages(this IServiceCollection services, Action<WtmLocalizationOption> op = null)
         {
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-            List<CultureInfo> supportedCultures = new List<CultureInfo>();
-            var lans = WtmConfigs.Languages.Split(",");
-            foreach (var lan in lans)
-            {
-                supportedCultures.Add(new CultureInfo(lan));
-            }
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
+                options.DefaultRequestCulture = new RequestCulture(WtmConfigs.SupportLanguages[0]);
+                options.SupportedCultures = WtmConfigs.SupportLanguages;
+                options.SupportedUICultures = WtmConfigs.SupportLanguages;
             });
             WtmLocalizationOption loc = new WtmLocalizationOption();
             op?.Invoke(loc);
@@ -766,21 +760,14 @@ namespace WalkingTec.Mvvm.Mvc
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;            
             if (string.IsNullOrEmpty(configs.Languages) == false)
             {
-                List<CultureInfo> supportedCultures = new List<CultureInfo>();
-                var lans = configs.Languages.Split(",");
-                foreach (var lan in lans)
-                {
-                    supportedCultures.Add(new CultureInfo(lan));
-                }
-
                 app.UseRequestLocalization(new RequestLocalizationOptions
                 {
-                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
-                    SupportedCultures = supportedCultures,
-                    SupportedUICultures = supportedCultures
+                    DefaultRequestCulture = new RequestCulture(configs.SupportLanguages[0]),
+                    SupportedCultures = configs.SupportLanguages,
+                    SupportedUICultures = configs.SupportLanguages
                 });
-                System.Threading.Thread.CurrentThread.CurrentCulture = supportedCultures[0];
-                System.Threading.Thread.CurrentThread.CurrentUICulture = supportedCultures[0];
+                System.Threading.Thread.CurrentThread.CurrentCulture = configs.SupportLanguages[0];
+                System.Threading.Thread.CurrentThread.CurrentUICulture = configs.SupportLanguages[0];
             }
             return app;
         }

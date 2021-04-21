@@ -1,230 +1,132 @@
 @page "/"
-@using WalkingTec.Mvvm.Mvc;
-@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
+@using System.Globalization
 @inherits BasePage
-<div class="welcome container">
-    <div class="form-inline">
-        <div class="row">
-            <div class="col-12 col-lg-6">
-                <div class="welcome-header">
-                    <h4>
-                        WTM框架，全称<code>
-                            WalkingTec
-                            MVVM
-                        </code>
-                    </h4>
-                    <div>
-                        <p>WTM是一个快速开发框架，有多快？至少目前<code>dotnet core</code>的开源项目中，我还没有见到更接地气，开发速度更快的框架。WTM的设计理念就是最大程度的加快开发速度，降低开发成本。</p>
-                        <p>
-                            国内Java一家独大原因很多，有BAT的示范效应，也有微软自己战略的失误。好在微软这两年终于想明白了，<code>dotnet core</code>的横空出世和收购github都是非常正确的方向。当然要想达到java一样的生态还有很长的路要走，那我就贡献一点绵薄之力吧。
-                        </p>
-                    </div>
 
-                </div>
-
-            </div>
-            <div class="col-12 col-lg-6">
-                <div class="welcome-header">
-                    <h4>
-                        &nbsp;
-                    </h4>
-                    <p>
-                        WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。WTM Blazor版本要特别鸣谢我的好友，微软MVP张广坡带来的<a href="https://www.blazor.zone/" target="_blank" type="primary">BootstrapBlazor组件库</a>。提高自己，造福他人，吾道不孤！
-                    </p>
-                    <p>
-                        —— 框架开源地址：<a href="https://github.com/dotnetcore/WTM" target="_blank" type="primary">https://github.com/dotnetcore/WTM</a>
-                    </p>
-                    <p>
-                        —— 框架在线文档：<a href="https://wtmdoc.walkingtec.cn" target="_blank" type="primary">https://wtmdoc.walkingtec.cn</a>
-                    </p>
-                    <p>
-                        —— 框架QQ交流群：694148336
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-inline">
-        <div class="row">
-            <div class="col-12">
-                <div class="welcome-footer">
-                    <div class="d-flex flex-wrap q-link">
-                        <div>
-                            <a target="_self" href="/_Admin/FrameworkUser" :underline="false">
-                                <i class="fa fa-user fa-3"></i>
-                                <p class="link-ctx">用户</p>
-                            </a>
-                        </div>
-                        <div>
-                            <a target="_self" href="/_Admin/FrameworkRole" :underline="false">
-                                <i class="fa fa-clipboard fa-3"></i>
-                                <p class="link-ctx">角色</p>
-                            </a>
-                        </div>
-                        <div>
-                            <a target="_self" href="/_Admin/FrameworkMenu" :underline="false">
-                                <i class="fa fa-bars fa-3"></i>
-                                <p class="link-ctx">菜单</p>
-                            </a>
-                        </div>
-                        <div>
-                            <a target="_self" href="/_Admin/FrameworkGroup" :underline="false">
-                                <i class="fa fa-users fa-3"></i>
-                                <p class="link-ctx">用户组</p>
-                            </a>
-                        </div>
-                        <div>
-                            <a target="_self" href="/_Admin/DataPrivilege" :underline="false">
-                                <i class="fa fa-shield fa-3"></i>
-                                <p class="link-ctx">数据权限</p>
-                            </a>
-                        </div>
-                        <div>
-                            <a target="_self" href="/_Admin/ActionLog" :underline="false">
-                                <i class="fa fa-database fa-3"></i>
-                                <p class="link-ctx">日志</p>
-                            </a>
-                        </div>
-                        <div>
-                            <a target="_blank" href="https://wtmdoc.walkingtec.cn/" :underline="false">
-                                <i class="fa fa-file-text fa-3"></i>
-                                <p class="link-ctx">项目文档</p>
-                            </a>
-                        </div>
-                        <div>
-                            <a target="_blank" href="/_codegen?ui=blazor" :underline="false">
-                                <i class="fa fa-cogs fa-3"></i>
-                                <p class="link-ctx">代码生成</p>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="intro container">
-    <div class="form-inline">
-        <div class="row">
-            <div class="form-group col-12 col-sm-6 col-md-4">
-                <div class="card border-success">
-                    <p class="d-none d-sm-block">
-                        <i class="fa fa-cubes"></i>
-                    </p>
-                    <h3>丰富模块</h3>
-                    <div>
-                        提供多种基类，封装了绝大部分后台常用操作<br />
-                        提供了用户，角色，用户组，菜单，日志，权限配置等常用模块<br />
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-12 col-sm-6 col-md-4">
-                <div class="card border-primary">
-                    <p class="d-none d-sm-block">
-                        <i class="fa fa-rocket"></i>
-                    </p>
-                    <h3>性能</h3>
-                    <div>
-                        支持一对多，多对多关联模型的识别和代码生成<br />
-                        支持React,Vue,Blazor,LayUI等多种前端架构<br />
-                        支持sqlserver，sqlite，mysql，pgsql，oracle等多种数据库<br />
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-12 col-sm-6 col-md-4">
-                <div class="card border-info">
-                    <p class="d-none d-sm-block">
-                        <i class="fa fa-trophy"></i>
-                    </p>
-                    <h3>简单易用</h3>
-                    <div>
-                        一键生成WTM项目<br />
-                        一键生成增删改查，导入导出，批量操作代码<br />
-                        封装了Layui，AntD，Element，Blazor的大部分控件，编写前台更加简便<br />
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-12 col-sm-6 col-md-4">
-                <div class="card border-danger">
-                    <p class="d-none d-sm-block">
-                        <i class="fa fa-github"></i>
-                    </p>
-                    <h3>免费开源</h3>
-                    <div>
-                        <div class="form-inline">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="d-flex flex-wrap" style=" justify-content: space-around;">
-                                        <div class="badge-widget">
-                                            <i class="fa fa-star"></i>Star
-                                            <Badge style="display:block" Color="Color.Success"><span style="padding: 0 2px;">@model.stargazers_count</span></Badge>
-                                        </div>
-                                        <div class="badge-widget">
-                                            <i class="fa fa-code-fork"></i>Frok
-                                            <Badge style="display:block" Color="Color.Success"><span style="padding: 0 2px;">@model.forks_count</span></Badge>
-                                        </div>
-                                        <div class="badge-widget">
-                                            <i class="fa fa-eye"></i>Watch
-                                            <Badge style="display:block" Color="Color.Success"><span style="padding: 0 2px;">@model.subscribers_count</span></Badge>
-                                        </div>
-                                        <div class="badge-widget">
-                                            <i class="fa fa-calendar-o"></i>Issue
-                                            <Badge style="display:block" Color="Color.Success"><span style="padding: 0 2px;">@model.open_issues_count</span></Badge>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-12 col-sm-6 col-md-4">
-                <div class="card border-warning">
-                    <p class="d-none d-sm-block">
-                        <i class="fa fa-code"></i>
-                    </p>
-                    <h3>演示与示例</h3>
-                    <div>详细文档与在线演示，开箱即用</div>
-                </div>
-            </div>
-            <div class="form-group col-12 col-sm-6 col-md-4">
-                <div class="card border-secondary">
-                    <p class="d-none d-sm-block">
-                        <i class="fa fa-refresh"></i>
-                    </p>
-                    <h3>持续更新</h3>
-                    <div>MIT协议，永不闭源，持续更新，及时响应问题与反馈</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@code{ private ActionLogSearcher SearchModel = new ActionLogSearcher();
-    private Table<ActionLogVM> searchTable;
-
-    private List<SelectedItem> AllRoles = new List<SelectedItem>();
-    private github model = new github();
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            var client = WtmBlazor.ClientFactory.CreateClient("github");
-            var info = await client.GetFromJsonAsync<github>("/repos/dotnetcore/wtm");
-            model = info;
+    <style>
+        .index .welcome-header {
+            margin-bottom: 0;
+            margin-top: 0;
+            font-size: 1rem;
+            line-height: 2;
         }
-        catch (Exception)
-        {
-            throw;
+
+        .index .welcome-footer {
+            display: flex;
+            flex-direction: column;
+            /* position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;*/
+            padding: 0 15px;
+            margin: 20px 10px;
         }
-    }
-    private class github
-    {
-        public int stargazers_count { get; set; }
-        public int forks_count { get; set; }
-        public int subscribers_count { get; set; }
-        public int open_issues_count { get; set; }
-    } }
+
+            .index .welcome-footer > div:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+
+            .index .welcome-footer > div {
+                justify-content: space-between;
+            }
+
+        .index .q-link > div {
+            padding: 8px 0;
+            background-color: #f0f0f4;
+            width: 92px
+        }
+
+            .index .q-link > div p {
+                margin-bottom: 0px;
+            }
+
+
+        .index .card {
+            text-align: center;
+            border-color: #dce3e8;
+            height: 263px;
+            width: 100%;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all .3s ease-in-out;
+        }
+
+        .index .intro p {
+            font-size: 15px;
+            color: #1a1a1a;
+            letter-spacing: .41px;
+            text-align: center;
+            line-height: 24px;
+        }
+
+        .index .intro h3 {
+            color: #1a1a1a;
+            letter-spacing: .1px;
+            text-align: center;
+            line-height: 25px;
+            font-weight: 400;
+            margin: 15px 0;
+            font-size: 1.25rem;
+        }
+
+        .index .container {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .index .q-link a {
+            color: #367fa9;
+            text-align: center;
+        }
+
+        .index .q-link i {
+            font-size: 3em;
+            display: block;
+        }
+
+        .index .d-sm-block i {
+            font-size: 4em;
+        }
+
+        .index .badge-widget {
+            display: inline;
+        }
+
+            .index .badge-widget i {
+                font-size: 2em;
+                display: block;
+            }
+
+        .index .badge {
+            display: block;
+            opacity: 0.8;
+        }
+    </style>
+
+    <CulturePage @bind-Model="@model" MainPageType="@this.GetType()" />
+
+    @code{
+
+        private githubpoco model = new githubpoco();
+        protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                var client = WtmBlazor.ClientFactory.CreateClient("github");
+                var info = await client.GetFromJsonAsync<githubpoco>("/repos/dotnetcore/wtm");
+                model = info;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public class githubpoco
+        {
+            public int stargazers_count { get; set; }
+            public int forks_count { get; set; }
+            public int subscribers_count { get; set; }
+            public int open_issues_count { get; set; }
+        } }

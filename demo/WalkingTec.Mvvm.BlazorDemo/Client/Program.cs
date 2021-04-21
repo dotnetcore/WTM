@@ -12,6 +12,8 @@ using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.BlazorDemo.Shared;
 using BootstrapBlazor.Localization.Json;
 using WalkingTec.Mvvm.Core;
+using Microsoft.JSInterop;
+using System.Globalization;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Client
 {
@@ -24,7 +26,16 @@ namespace WalkingTec.Mvvm.BlazorDemo.Client
             builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
             builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(Shared.Program); });
             builder.Services.AddWtmBlazor(builder.Configuration.Get<Configs>());
-            await builder.Build().RunAsync();
+            var host = builder.Build();
+            var jsInterop = host.Services.GetRequiredService<IJSRuntime>();
+            var result = await jsInterop.InvokeAsync<string>("localStorageFuncs.get", "wtmculture");
+            if (result != null)
+            {
+                var culture = new CultureInfo(result);
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+            }
+            await host.RunAsync();
         }
 
     }
