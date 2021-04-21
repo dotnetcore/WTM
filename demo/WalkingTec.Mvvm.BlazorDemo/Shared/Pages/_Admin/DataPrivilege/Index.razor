@@ -27,7 +27,7 @@
         {
             <TableToolbarButton TItem="DataPrivilege_ListView" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }
-        @if (IsAccessable("/api/_DataPrivilege/export"))
+        @if (IsAccessable("/api/_DataPrivilege/exportexcel"))
         {
             <TableToolbarButton TItem="DataPrivilege_ListView" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
@@ -60,7 +60,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges");
+        AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         //AllDptypes.Add(new SelectedItem() { Text = WtmBlazor.Localizer["_Admin.UserDp"], Value = DpTypeEnum.User.ToString() });
         //AllDptypes.Add(new SelectedItem() { Text = WtmBlazor.Localizer["_Admin.GroupDp"], Value = DpTypeEnum.UserGroup.ToString() });
 
