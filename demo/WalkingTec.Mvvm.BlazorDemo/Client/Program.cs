@@ -22,19 +22,25 @@ namespace WalkingTec.Mvvm.BlazorDemo.Client
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            var configs = builder.Configuration.Get<Configs>();
             builder.RootComponents.Add<Shared.App>("app");
             builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
             builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(Shared.Program); });
-            builder.Services.AddWtmBlazor(builder.Configuration.Get<Configs>());
+            builder.Services.AddWtmBlazor(configs);
             var host = builder.Build();
             var jsInterop = host.Services.GetRequiredService<IJSRuntime>();
             var result = await jsInterop.InvokeAsync<string>("localStorageFuncs.get", "wtmculture");
-            if (result != null)
+            CultureInfo culture = null;
+            if (result == null)
             {
-                var culture = new CultureInfo(result);
-                CultureInfo.DefaultThreadCurrentCulture = culture;
-                CultureInfo.DefaultThreadCurrentUICulture = culture;
+                culture = configs.SupportLanguages[0];
             }
+            else 
+            {
+                culture = new CultureInfo(result);
+            }
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
             await host.RunAsync();
         }
 

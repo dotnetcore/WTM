@@ -13,7 +13,7 @@
                 <ValidateForm Model="@Model" OnValidSubmit="@Submit">
                     <BootstrapInput @bind-Value="@Model.ITCode" />
                     <BootstrapInput @bind-Value="@Model.Password" type="password" />
-                    <Button ButtonType="ButtonType.Submit" Text="Login" style="width:100%;margin-top:20px;" IsAsync="true" />
+                    <Button ButtonType="ButtonType.Submit" Text="@WtmBlazor.Localizer["Login.Login"]" style="width:100%;margin-top:20px;" IsAsync="true" />
                 </ValidateForm>
             </div>
         </div>
