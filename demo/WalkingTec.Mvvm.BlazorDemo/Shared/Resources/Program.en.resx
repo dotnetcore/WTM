@@ -208,7 +208,7 @@
     <value>VMNs</value>
   </data>
   <data name="Login.ChangePassword" xml:space="preserve">
-    <value>Change my password</value>
+    <value>Change password</value>
   </data>
   <data name="Login.ChangePasswordSuccess" xml:space="preserve">
     <value>The password has been modified successfully. Please log in with the new password next time.</value>
@@ -474,8 +474,14 @@
   <data name="Sys.Invalid" xml:space="preserve">
     <value>Invalid</value>
   </data>
+  <data name="Sys.Layout" xml:space="preserve">
+    <value>Layout</value>
+  </data>
   <data name="Sys.LayuiDateLan" xml:space="preserve">
     <value>EN</value>
+  </data>
+  <data name="Sys.LeftRight" xml:space="preserve">
+    <value>Horizontal</value>
   </data>
   <data name="Sys.LoadFailed" xml:space="preserve">
     <value>Failed to load</value>
@@ -488,6 +494,9 @@
   </data>
   <data name="Sys.Male" xml:space="preserve">
     <value>Male</value>
+  </data>
+  <data name="Sys.MoreSettings" xml:space="preserve">
+    <value>More</value>
   </data>
   <data name="Sys.NeedLogin" xml:space="preserve">
     <value>You havn't logged in or your login is expired, please login again.</value>
@@ -594,17 +603,29 @@
   <data name="Sys.SelectOneRowMin" xml:space="preserve">
     <value>Please select at least one row</value>
   </data>
+  <data name="Sys.SinglePage" xml:space="preserve">
+    <value>Single</value>
+  </data>
   <data name="Sys.Submit" xml:space="preserve">
     <value>Submit</value>
   </data>
   <data name="Sys.SubmitFailed" xml:space="preserve">
     <value>Failed to submit</value>
   </data>
+  <data name="Sys.Tabs" xml:space="preserve">
+    <value>Tabs</value>
+  </data>
+  <data name="Sys.Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
   <data name="Sys.Total" xml:space="preserve">
     <value>Total:</value>
   </data>
   <data name="Sys.UpdateDone" xml:space="preserve">
     <value>Update successfully</value>
+  </data>
+  <data name="Sys.UpDown" xml:space="preserve">
+    <value>Vertical</value>
   </data>
   <data name="Sys.UploadFailed" xml:space="preserve">
     <value>Upload failed</value>
