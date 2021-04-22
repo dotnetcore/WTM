@@ -43,17 +43,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Test.Mock",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BlazorDemo", "BlazorDemo", "{840C6DED-B5D5-4763-A6A7-6F615B72EC10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo.Server", "demo\WalkingTec.Mvvm.BlazorDemo\Server\WalkingTec.Mvvm.BlazorDemo.Server.csproj", "{3C6BDF97-18A2-4AC1-9F1D-6C9E62FCE4C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.csproj", "{3C6BDF97-18A2-4AC1-9F1D-6C9E62FCE4C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo.Client", "demo\WalkingTec.Mvvm.BlazorDemo\Client\WalkingTec.Mvvm.BlazorDemo.Client.csproj", "{F04FD9BA-448E-4024-9C39-3779D614A67E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo.Client", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.Client\WalkingTec.Mvvm.BlazorDemo.Client.csproj", "{F04FD9BA-448E-4024-9C39-3779D614A67E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo.Shared", "demo\WalkingTec.Mvvm.BlazorDemo\Shared\WalkingTec.Mvvm.BlazorDemo.Shared.csproj", "{D6C584E4-7330-4CD8-9ACC-CFFDC9DEEDD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo.Shared", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.Shared\WalkingTec.Mvvm.BlazorDemo.Shared.csproj", "{D6C584E4-7330-4CD8-9ACC-CFFDC9DEEDD3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.ConsoleDemo", "demo\WalkingTec.Mvvm.ConsoleDemo\WalkingTec.Mvvm.ConsoleDemo.csproj", "{DFA81262-7D8B-4568-AB90-AED7922F45CA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Demo.Test", "demo\WalkingTec.Mvvm.Demo.Test\WalkingTec.Mvvm.Demo.Test.csproj", "{D1363106-3DAB-4273-8750-05A96F9EFA9B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Vue3Demo", "demo\WalkingTec.Mvvm.Vue3Demo\WalkingTec.Mvvm.Vue3Demo\WalkingTec.Mvvm.Vue3Demo.csproj", "{46309A77-6127-4ED9-95BE-C830B3E6FD0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.BlazorDemo.Model", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.Model\WalkingTec.Mvvm.BlazorDemo.Model\WalkingTec.Mvvm.BlazorDemo.Model.csproj", "{341561A3-B563-4DFC-9EC5-702F85AAC174}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.BlazorDemo.DataAccess", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess.csproj", "{94352C3E-899A-44A2-A052-578DC6A7159F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.BlazorDemo.ViewModel", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.ViewModel\WalkingTec.Mvvm.BlazorDemo.ViewModel\WalkingTec.Mvvm.BlazorDemo.ViewModel.csproj", "{D4104589-85BE-446A-A123-1E0FD1538A7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.BlazorDemo.Test", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.Test\WalkingTec.Mvvm.BlazorDemo.Test\WalkingTec.Mvvm.BlazorDemo.Test.csproj", "{22C2CB15-1537-47D2-86BF-A7FFEE3A0677}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +129,22 @@ Global
 		{46309A77-6127-4ED9-95BE-C830B3E6FD0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46309A77-6127-4ED9-95BE-C830B3E6FD0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46309A77-6127-4ED9-95BE-C830B3E6FD0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{341561A3-B563-4DFC-9EC5-702F85AAC174}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{341561A3-B563-4DFC-9EC5-702F85AAC174}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{341561A3-B563-4DFC-9EC5-702F85AAC174}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{341561A3-B563-4DFC-9EC5-702F85AAC174}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94352C3E-899A-44A2-A052-578DC6A7159F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94352C3E-899A-44A2-A052-578DC6A7159F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94352C3E-899A-44A2-A052-578DC6A7159F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94352C3E-899A-44A2-A052-578DC6A7159F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4104589-85BE-446A-A123-1E0FD1538A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4104589-85BE-446A-A123-1E0FD1538A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4104589-85BE-446A-A123-1E0FD1538A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4104589-85BE-446A-A123-1E0FD1538A7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22C2CB15-1537-47D2-86BF-A7FFEE3A0677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22C2CB15-1537-47D2-86BF-A7FFEE3A0677}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22C2CB15-1537-47D2-86BF-A7FFEE3A0677}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22C2CB15-1537-47D2-86BF-A7FFEE3A0677}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,6 +166,10 @@ Global
 		{DFA81262-7D8B-4568-AB90-AED7922F45CA} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
 		{D1363106-3DAB-4273-8750-05A96F9EFA9B} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
 		{46309A77-6127-4ED9-95BE-C830B3E6FD0E} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
+		{341561A3-B563-4DFC-9EC5-702F85AAC174} = {840C6DED-B5D5-4763-A6A7-6F615B72EC10}
+		{94352C3E-899A-44A2-A052-578DC6A7159F} = {840C6DED-B5D5-4763-A6A7-6F615B72EC10}
+		{D4104589-85BE-446A-A123-1E0FD1538A7B} = {840C6DED-B5D5-4763-A6A7-6F615B72EC10}
+		{22C2CB15-1537-47D2-86BF-A7FFEE3A0677} = {840C6DED-B5D5-4763-A6A7-6F615B72EC10}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D25EAAD-E43A-466A-95DA-ECE1F3C462DC}
