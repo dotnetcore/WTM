@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
+namespace WalkingTec.Mvvm.Demo.ViewModel.HomeVMs
 {
     public class LoginVM : BaseVM
     {
