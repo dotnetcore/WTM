@@ -1,76 +1,55 @@
+import { $i18n, WTM_EntitiesField, WTM_ValueType, FieldRequest } from '@/client';
+
 /**
  * 字段描述 枚举
  */
 export enum EnumLocaleLabel {
     /** 当前页面名称 */
-    PageName = "PageName.system-frameworkuser",
-    ID = "frameworkuser.ID",
-    /** 用户ITCode */
-    ITCode = "frameworkuser.ITCode",
-    /** 密码 */
-    Password = "frameworkuser.Password",
-    /** 邮箱 */
-    Email = "frameworkuser.Email",
-    /** 用户名称 */
-    Name = "frameworkuser.Name",
-    /** 用户性别 */
-    Sex = "frameworkuser.Sex",
+    PageName = "PageName.test",
+
     Sex_Male = "frameworkuser.Sex_Male",
     Sex_Female = "frameworkuser.Sex_Female",
-    /** 用户头像 */
-    Photo = "frameworkuser.PhotoId",
-    /** 是否有效 */
-    IsValid = "frameworkuser.IsValid",
-    /** 角色 */
-    RoleName = "frameworkuser.RoleName_view",
-    /** 用户组 */
-    GroupName = "frameworkuser.GroupName_view",
-    /** 手机号 */
-    CellPhone = "frameworkuser.CellPhone",
-    /** 座机 */
-    HomePhone = "frameworkuser.HomePhone",
-    /** 住址 */
-    Address = "frameworkuser.Address",
-    /** 邮编 */
-    ZipCode = "frameworkuser.ZipCode"
+
 }
 export default {
     en: {
-        [EnumLocaleLabel.ID]: 'ID',
-        [EnumLocaleLabel.PageName]: 'UserManage',
-        [EnumLocaleLabel.ITCode]: 'Account',
-        [EnumLocaleLabel.Password]: 'Password',
-        [EnumLocaleLabel.Email]: 'Email',
-        [EnumLocaleLabel.Name]: 'Name',
-        [EnumLocaleLabel.Sex]: 'Gender',
+        [EnumLocaleLabel.PageName]: 'Test',
         [EnumLocaleLabel.Sex_Male]: 'Male',
         [EnumLocaleLabel.Sex_Female]: 'Female',
-        [EnumLocaleLabel.Photo]: 'Photo',
-        [EnumLocaleLabel.IsValid]: 'IsValid',
-        [EnumLocaleLabel.RoleName]: 'RoleName',
-        [EnumLocaleLabel.GroupName]: 'GroupName',
-        [EnumLocaleLabel.CellPhone]: 'CellPhone',
-        [EnumLocaleLabel.HomePhone]: 'HomePhone',
-        [EnumLocaleLabel.Address]: 'Address',
-        [EnumLocaleLabel.ZipCode]: 'ZipCode',
+        [WTM_ValueType.checkbox]:'checkbox',
+        [WTM_ValueType.date]:'date',
+        [WTM_ValueType.dateMonth]:'dateMonth',
+        [WTM_ValueType.dateRange]:'dateRange',
+        [WTM_ValueType.dateWeek]:'dateWeek',
+        [WTM_ValueType.image]:'image',
+        [WTM_ValueType.password]:'password',
+        [WTM_ValueType.radio]:'radio',
+        [WTM_ValueType.rate]:'rate',
+        [WTM_ValueType.select]:'select',
+        [WTM_ValueType.slider]:'slider',
+        [WTM_ValueType.switch]:'switch',
+        [WTM_ValueType.text]:'text',
+        [WTM_ValueType.textarea]:'textarea',
+        [WTM_ValueType.transfer]:'transfer',
     },
     zh: {
-        [EnumLocaleLabel.ID]: 'ID',
-        [EnumLocaleLabel.PageName]: '用户管理',
-        [EnumLocaleLabel.ITCode]: '账号',
-        [EnumLocaleLabel.Password]: '密码',
-        [EnumLocaleLabel.Email]: '邮箱',
-        [EnumLocaleLabel.Name]: '姓名',
-        [EnumLocaleLabel.Sex]: '性别',
+        [EnumLocaleLabel.PageName]: '测试',
         [EnumLocaleLabel.Sex_Male]: '男',
         [EnumLocaleLabel.Sex_Female]: '女',
-        [EnumLocaleLabel.Photo]: '照片',
-        [EnumLocaleLabel.IsValid]: '是否有效',
-        [EnumLocaleLabel.RoleName]: '角色',
-        [EnumLocaleLabel.GroupName]: '用户组',
-        [EnumLocaleLabel.CellPhone]: '手机号',
-        [EnumLocaleLabel.HomePhone]: '座机',
-        [EnumLocaleLabel.Address]: '住址',
-        [EnumLocaleLabel.ZipCode]: '邮编',
+        [WTM_ValueType.checkbox]:'多选框',
+        [WTM_ValueType.date]:'时间',
+        [WTM_ValueType.dateMonth]:'月份',
+        [WTM_ValueType.dateRange]:'范围',
+        [WTM_ValueType.dateWeek]:'周期',
+        [WTM_ValueType.image]:'图片',
+        [WTM_ValueType.password]:'密码',
+        [WTM_ValueType.radio]:'单选',
+        [WTM_ValueType.rate]:'评分',
+        [WTM_ValueType.select]:'选择框',
+        [WTM_ValueType.slider]:'滑动输入',
+        [WTM_ValueType.switch]:'开关',
+        [WTM_ValueType.text]:'文本',
+        [WTM_ValueType.textarea]:'文本域',
+        [WTM_ValueType.transfer]:'穿梭框',
     }
 }

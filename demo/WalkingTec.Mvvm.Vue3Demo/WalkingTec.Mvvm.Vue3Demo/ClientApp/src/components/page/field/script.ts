@@ -32,7 +32,7 @@ export class FieldBasics extends Vue {
     // 数据加载
     spinning = false;
     // 数据源
-    dataSource: Array<{ label: any; value: any }> = [];
+    dataSource: Array<{ label?: any; value?: any, [key: string]: any }> = [];
     /**  form-item 属性 */
     get itemBind() {
         const label = this.$t(this._label),

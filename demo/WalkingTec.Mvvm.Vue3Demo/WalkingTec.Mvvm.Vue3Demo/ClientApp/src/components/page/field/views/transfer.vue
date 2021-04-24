@@ -2,8 +2,20 @@
   <template v-if="_readonly">
     <span v-text="value"></span>
   </template>
+  <template v-else-if="dataSource.length">
+    <a-transfer
+      :dataSource="dataSource"
+      :target-keys="targetKeys"
+      :selected-keys="selectedKeys"
+      :render="renderTitle"
+      :placeholder="_placeholder"
+      :disabled="disabled"
+      @change="onChange"
+      @selectChange="onSelectChange"
+    />
+  </template>
   <template v-else>
-    <a-transfer :dataSource="dataSource" :placeholder="_placeholder" :disabled="disabled" />
+    <a-transfer :placeholder="_placeholder" :disabled="true" />
   </template>
 </template>
 <script lang="ts">
@@ -17,6 +29,49 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly formValidate;
   // 实体
   @Inject() readonly PageEntity;
+  get targetKeys() {
+    return this.value;
+  }
+  get selectedKeys() {
+    return;
+  }
+  get titles() {
+    return [];
+  }
+  renderTitle(item) {
+    return item.label;
+  }
+  onChange(nextTargetKeys: string[], direction: string, moveKeys: string[]) {
+    this.value = nextTargetKeys;
+  }
+  onSelectChange(sourceSelectedKeys: string[], targetSelectedKeys: string[]) {
+    console.log(
+      "🚀 ~ file: transfer.vue",
+      sourceSelectedKeys,
+      targetSelectedKeys,
+      this
+    );
+  }
+  // 加载数据源
+  async onRequest() {
+    this.spinning = true;
+    try {
+      const res = await this.lodash.invoke(
+        this,
+        "_request",
+        this.lodash.cloneDeep(this.formState)
+      );
+      this.dataSource = this.lodash.map(res, item => {
+        return this.lodash.assign(
+          { title: item.label, description: item.label, disabled: false },
+          item
+        );
+      });
+    } catch (error) {
+      console.error("LENG ~ onRequest", error);
+    }
+    this.spinning = false;
+  }
   async mounted() {
     this.onRequest();
     if (this.debug) {
@@ -28,5 +83,4 @@ export default class extends mixins(FieldBasics) {
   }
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

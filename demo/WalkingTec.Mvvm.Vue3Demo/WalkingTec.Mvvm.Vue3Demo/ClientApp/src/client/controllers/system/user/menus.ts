@@ -34,7 +34,10 @@ export class UserMenus {
             data = lodash.assign({
                 path: data.Url,
                 name: data.Url ? undefined : data.Id,
-                meta: { icon: data.Icon, title: data.Text },
+                meta: { 
+                    // icon: data.Icon, 
+                    title: data.Text
+                 },
             }, data)
             data.children = this.recursionTree(datalist, data.Id, data.children || []);
             children.push(data);

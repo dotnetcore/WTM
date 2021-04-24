@@ -15,34 +15,7 @@ import RowAction from "./action.vue";
 export default class extends Vue {
   @Inject() readonly PageController: PageController;
   columnDefs: (ColDef | ColGroupDef)[] = [
-    {
-      headerName: EnumLocaleLabel.ITCode,
-      field: "ITCode",
-    },
-    {
-      headerName: EnumLocaleLabel.Name,
-      field: "Name",
-    },
-    {
-      headerName: EnumLocaleLabel.Sex,
-      field: "Sex",
-    },
-    {
-      headerName: EnumLocaleLabel.Photo,
-      field: "Photo",
-    },
-    {
-      headerName: EnumLocaleLabel.IsValid,
-      field: "IsValid",
-    },
-    {
-      headerName: EnumLocaleLabel.RoleName,
-      field: "RoleName",
-    },
-    {
-      headerName: EnumLocaleLabel.GroupName,
-      field: "GroupName",
-    },
+   
   ];
   get gridOptions(): GridOptions {
     return {

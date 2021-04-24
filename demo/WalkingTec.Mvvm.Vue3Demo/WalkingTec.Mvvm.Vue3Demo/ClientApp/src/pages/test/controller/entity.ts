@@ -84,11 +84,11 @@ class Entity {
         valueType: WTM_ValueType.checkbox,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
     }
-    // readonly [WTM_ValueType.transfer]: WTM_EntitiesField = {
-    //     name: WTM_ValueType.transfer,
-    //     label: WTM_ValueType.transfer,
-    //     valueType: WTM_ValueType.transfer,
-    //     request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
-    // }
+    readonly [WTM_ValueType.transfer]: WTM_EntitiesField = {
+        name: WTM_ValueType.transfer,
+        label: WTM_ValueType.transfer,
+        valueType: WTM_ValueType.transfer,
+        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
+    }
 }
 export const PageEntity = new Entity()

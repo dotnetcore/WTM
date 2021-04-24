@@ -16,18 +16,18 @@
 <script lang="ts">
 import { SystemController } from "@/client";
 import lodash from "lodash";
-import { Inject,Options,Vue } from "vue-property-decorator";
+import { Inject, Options, Vue } from "vue-property-decorator";
 import router from "../router";
 import Container from "./views/container.vue";
 import RightContentRender from "./views/rightContentRender.vue";
 import Tabs from "./views/tabs.vue";
 @Options({
-  components: { RightContentRender, Container, Tabs },
+  components: { RightContentRender, Container, Tabs }
 })
 export default class extends Vue {
   /**
-     * 从 Aapp 中 注入 系统管理
-     */
+   * 从 Aapp 中 注入 系统管理
+   */
   @Inject({ from: SystemController.Symbol }) System: SystemController;
   provider = {
     // menuData: this.menuData,
@@ -48,39 +48,44 @@ export default class extends Vue {
     hasFooterToolbar: false,
     hasSideMenu: true,
     hasHeader: true,
-    setHasFooterToolbar: (has) => {
+    setHasFooterToolbar: has => {
       this.provider.hasFooterToolbar = has;
-    },
+    }
   };
   getMenuData() {
+    const production = this.System.UserController.UserMenus.getMenus();
+    if (this.$WtmConfig.production) {
+    console.log("🚀 ~ file: layout.vue ~ line 57 ~ extends ~ getMenuData ~ production", production)
+      return production;
+    }
     const menus = [
       {
         name: "development",
         meta: { icon: "SaveOutlined", title: "开发测试", target: "a" },
         children: lodash.map(router.RouterConfig, item => {
-          const data = lodash.assign(lodash.pick(item, ['path', 'name']), {
+          const data = lodash.assign(lodash.pick(item, ["path", "name"]), {
             meta: {
               icon: "SaveOutlined",
-              title: this.$t(`PageName.${lodash.get(item, 'name') as any}`),
+              title: this.$t(`PageName.${lodash.get(item, "name") as any}`)
             }
-          })
+          });
           // console.log("LENG ~ extends ~ data ~ data", data)
-          return data
+          return data;
         })
-      },
+      }
     ];
-    const production = this.System.UserController.UserMenus.getMenus();
     if (production.length) {
       menus.push({
         name: "production",
         meta: { icon: "SaveOutlined", title: "正式菜单", target: "a" },
         children: production
-      })
+      });
     }
+
     return menus;
   }
-  created() { }
-  mounted() { }
+  created() {}
+  mounted() {}
   onCollapse(collapsed) {
     this.provider.collapsed = collapsed;
   }

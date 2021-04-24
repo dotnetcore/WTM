@@ -24,6 +24,7 @@ export function FieldRequest(request: string | AjaxRequest) {
     return $Ajax.request<any>(request).pipe(map(value => {
         return lodash.map(value, item => {
             return {
+                key: lodash.get(item, 'Value'),
                 label: lodash.get(item, 'Text'),
                 value: lodash.get(item, 'Value'),
                 ...item

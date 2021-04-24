@@ -7,6 +7,7 @@
   </template>
   <template v-else>
     <a-upload
+      :disabled="disabled"
       v-model:file-list="value"
       name="avatar"
       list-type="picture-card"
@@ -14,12 +15,12 @@
       :show-upload-list="false"
       action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
       :before-upload="beforeUpload"
-      @change="handleChange"
+      @change="onChange"
     >
-      <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" /> -->
-      <div>
+      <img v-if="imageUrl" :src="imageUrl" alt="avatar" style="" />
+      <div v-else>
         <!-- <loading-outlined v-if="loading"></loading-outlined> -->
-        <plus-outlined ></plus-outlined>
+        <plus-outlined></plus-outlined>
         <div class="ant-upload-text">Upload</div>
       </div>
     </a-upload>
@@ -36,6 +37,13 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly formValidate;
   // 实体
   @Inject() readonly PageEntity;
+  imageUrl = "";
+  get value() {
+    return this.lodash.get(this.formState, this._name, []);
+  }
+  set value(value) {
+    this.lodash.set(this.formState, this._name, value);
+  }
   async mounted() {
     // this.onRequest();
     if (this.debug) {
@@ -45,9 +53,29 @@ export default class extends mixins(FieldBasics) {
       console.groupEnd();
     }
   }
-  beforeUpload(){}
-  handleChange(){}
+  beforeUpload() {}
+  onChange(event) {
+    this.value = event.fileList;
+    if (event.file.status === "done") {
+      // Get this url from response in real world.
+      getBase64(event.file.originFileObj, (base64Url: string) => {
+        this.imageUrl = base64Url;
+        console.log(
+          "🚀 ~ file: image.vue ~ line 62 ~ extends ~ getBase64 ~ this.imageUrl",
+          this.imageUrl
+        );
+      });
+    }
+    console.log(
+      "🚀 ~ file: image.vue ~ line 57 ~ extends ~ onChange ~ this.value",
+      this.value
+    );
+  }
+}
+function getBase64(img: Blob, callback: (base64Url: string) => void) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result as string));
+  reader.readAsDataURL(img);
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

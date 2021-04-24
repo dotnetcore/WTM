@@ -79,7 +79,8 @@ export default class extends Vue {
         width: 250px;
         padding: 20px;
         text-align: center;
-        margin: 30% 30px auto auto;
+        // margin-left: auto;
+        margin: 30vh 50px auto auto;
     }
 }
 .w-login-back-1 {
