@@ -12,10 +12,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
     <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.Client\WalkingTec.Mvvm.BlazorDemo.Client.csproj" />
+    <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess.csproj" />
     <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.Shared\WalkingTec.Mvvm.BlazorDemo.Shared.csproj" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 
 </Project>

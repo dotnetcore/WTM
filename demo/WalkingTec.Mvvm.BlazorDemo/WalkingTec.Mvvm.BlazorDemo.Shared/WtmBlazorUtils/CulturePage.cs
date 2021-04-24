@@ -20,7 +20,18 @@ namespace WtmBlazorUtils
         public EventCallback<TValue> ModelChanged { get; set; }
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            Type componentTyype = Type.GetType(MainPageType.Namespace + "." + MainPageType.Name + "_" + CultureInfo.CurrentUICulture.Name.ToLower());
+            Type componentTyype = null;
+            CultureInfo cl = CultureInfo.CurrentUICulture;
+            while (cl != null)
+            {
+                string typename = MainPageType.Namespace + "." + MainPageType.Name + "_" + cl.Name.ToLower();
+                componentTyype = Type.GetType(typename);
+                if(componentTyype != null)
+                {
+                    break;
+                }
+                cl = cl.Parent;
+            }
             if (componentTyype != null)
             {
                 builder.OpenComponent(0, componentTyype);

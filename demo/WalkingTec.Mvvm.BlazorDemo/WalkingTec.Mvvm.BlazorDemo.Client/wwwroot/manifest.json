@@ -7,9 +7,9 @@
   "theme_color": "#03173d",
   "icons": [
     {
-      "src": "icon-512.png",
+      "src": "pwaicon.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "144x144"
     }
   ]
 }
