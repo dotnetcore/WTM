@@ -94,7 +94,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             }
 
             app.UseStaticFiles();
-
+            app.UseWtmStaticFiles();
             app.UseRouting();
             app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
