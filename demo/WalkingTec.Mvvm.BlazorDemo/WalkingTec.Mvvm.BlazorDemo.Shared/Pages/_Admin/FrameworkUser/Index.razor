@@ -68,7 +68,7 @@
                 <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                                   Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
             }
-            @if (IsAccessable("/api/_frameworkuserbase/ExportExcel"))
+            @if (IsAccessable("/api/_frameworkuserbase/password"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" Icon="fa fa-key" Text="@WtmBlazor.Localizer["Login.ChangePassword"]" OnClickCallback="() => OnPasswordClick(context)" />
             }
