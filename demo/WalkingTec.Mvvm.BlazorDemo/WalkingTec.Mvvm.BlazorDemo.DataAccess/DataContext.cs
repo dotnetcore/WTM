@@ -30,6 +30,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
         public DbSet<FrameworkUser> FrameworkUsers { get; set; }
         public DbSet<City> Citys { get; set; }
         public DbSet<School> Schools { get; set; }
+        public DbSet<Major> Majors { get; set; }
+        public DbSet<Student> Students { get; set; }
 
 
         public override async Task<bool> DataInit(object allModules, bool IsSpa)

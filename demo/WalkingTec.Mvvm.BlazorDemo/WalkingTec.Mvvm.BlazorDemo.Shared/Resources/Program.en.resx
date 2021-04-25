@@ -465,6 +465,15 @@
   <data name="Sys.ImportError" xml:space="preserve">
     <value>Error occurs during import</value>
   </data>
+  <data name="Sys.ImportStep1" xml:space="preserve">
+    <value>Click to download template</value>
+  </data>
+  <data name="Sys.ImportStep2" xml:space="preserve">
+    <value>Upload your template with data</value>
+  </data>
+  <data name="Sys.ImportStep3" xml:space="preserve">
+    <value>Import failed, please download error file for details</value>
+  </data>
   <data name="Sys.ImportSuccess" xml:space="preserve">
     <value>{0} rows have been imported</value>
   </data>

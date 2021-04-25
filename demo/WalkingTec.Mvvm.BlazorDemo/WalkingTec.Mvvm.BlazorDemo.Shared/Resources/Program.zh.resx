@@ -468,6 +468,15 @@
   <data name="Sys.ImportError" xml:space="preserve">
     <value>导入时发生错误</value>
   </data>
+  <data name="Sys.ImportStep1" xml:space="preserve">
+    <value>点击右侧按钮下载模板</value>
+  </data>
+  <data name="Sys.ImportStep2" xml:space="preserve">
+    <value>将编辑好的模板上传</value>
+  </data>
+  <data name="Sys.ImportStep3" xml:space="preserve">
+    <value>导入失败，请下载错误文件查看详情</value>
+  </data>
   <data name="Sys.ImportSuccess" xml:space="preserve">
     <value>成功导入{0}行数据</value>
   </data>

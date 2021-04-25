@@ -2,7 +2,7 @@
 @using $vmnamespace$;
 @inherits BasePage
 
-<ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
+<ValidateForm @ref="vform" Model="@Model" >
     <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
 $formfields$
     </Row>
@@ -12,6 +12,7 @@ $formfields$
 </ValidateForm>
 
 @code {
+
     private $modelname$VM Model = new $modelname$VM();
     private ValidateForm vform { get; set; }
     [Parameter]
@@ -21,7 +22,7 @@ $fieldinit$
     protected override async Task OnInitializedAsync()
     {
 $init$
-        var rv = await WtmBlazor.Api.CallAPI<FrameworkMenuVM2>($"/api/$modelname$/{id}");
+        var rv = await WtmBlazor.Api.CallAPI<$modelname$VM>($"/api/$modelname$/{id}");
         Model = rv.Data;
     }
 

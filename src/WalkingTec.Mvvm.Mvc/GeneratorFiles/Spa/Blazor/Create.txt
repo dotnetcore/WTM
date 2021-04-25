@@ -13,6 +13,7 @@ $formfields$
 </ValidateForm>
 
 @code {
+
     private $modelname$VM Model = new $modelname$VM();
     private ValidateForm vform { get; set; }
 $fieldinit$
@@ -20,6 +21,7 @@ $fieldinit$
     protected override async Task OnInitializedAsync()
     {
 $init$
+        await base.OnInitializedAsync();
     }
 
 

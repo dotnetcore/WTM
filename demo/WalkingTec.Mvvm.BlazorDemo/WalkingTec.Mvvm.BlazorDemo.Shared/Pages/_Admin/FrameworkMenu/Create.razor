@@ -13,7 +13,7 @@
     <Select @bind-Value="@Model.SelectedModule" Items="@AllModels" OnSelectedItemChanged="OnModelChange" />
     <div></div>
     <Row ColSpan="2">
-        <MultiSelect @bind-Value="@Model.SelectedActionIDs" Items="@AllActions" />
+        <Transfer @bind-Value="@Model.SelectedActionIDs" Items="@AllActions" />
     </Row>
 </Row>
     }

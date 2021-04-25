@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,9 +8,9 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
+namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.SchoolVMs
 {
-    public class SchoolBatchVM : BaseBatchVM<School, School_BatchEdit>
+    public partial class SchoolBatchVM : BaseBatchVM<School, School_BatchEdit>
     {
         public SchoolBatchVM()
         {
@@ -21,14 +21,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
     }
 
 	/// <summary>
-    /// 批量编辑字段类
+    /// Class to define batch edit fields
     /// </summary>
     public class School_BatchEdit : BaseVM
     {
-        [Display(Name = "学校类型")]
-        public SchoolTypeEnum? SchoolType { get; set; }
-
-        public string SchoolCode { get; set; }
 
         protected override void InitVM()
         {

@@ -8,9 +8,9 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
+namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.SchoolVMs
 {
-    public class SchoolSearcher : BaseSearcher
+    public partial class SchoolSearcher : BaseSearcher
     {
         [Display(Name = "学校编码")]
         public String SchoolCode { get; set; }
@@ -18,6 +18,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         public String SchoolName { get; set; }
         [Display(Name = "学校类型")]
         public SchoolTypeEnum? SchoolType { get; set; }
+        [Display(Name = "备注")]
+        public String Remark { get; set; }
 
         protected override void InitVM()
         {

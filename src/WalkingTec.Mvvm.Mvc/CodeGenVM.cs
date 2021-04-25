@@ -504,10 +504,10 @@ namespace WalkingTec.Mvvm.Mvc
                 if(UI == UIEnum.Blazor)
                 {
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Index.razor", GenerateBlazorView("Index"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Create.razor", GenerateBlazorView("Index"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Edit.razor", GenerateBlazorView("Index"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Details.razor", GenerateBlazorView("Index"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Import.razor", GenerateBlazorView("Index"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Create.razor", GenerateBlazorView("Create"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Edit.razor", GenerateBlazorView("Edit"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Details.razor", GenerateBlazorView("Details"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Import.razor", GenerateBlazorView("Import"), Encoding.UTF8);
                 }
             }
             var test = GenerateTest();
@@ -850,10 +850,13 @@ namespace WalkingTec.Mvvm.Mvc
                         continue;
                     }
                     var fname = "All" + pro.FieldName + "s";
-                    prostr += $@"
+                    if (UI != UIEnum.Blazor)
+                    {
+                        prostr += $@"
         public List<ComboSelectListItem> {fname} {{ get; set; }}";
-                    initstr += $@"
+                        initstr += $@"
             {fname} = DC.Set<{subtype.Name}>().GetSelectListItems(Wtm, y => y.{pro.SubField});";
+                    }
                     includestr += $@"
             SetInclude(x => x.{pro.FieldName});";
 
@@ -885,7 +888,7 @@ namespace WalkingTec.Mvvm.Mvc
 ";
                     }
                 }
-                if (UI == UIEnum.LayUI && IsApi == false)
+                if ((UI == UIEnum.LayUI && IsApi == false) || UI == UIEnum.Blazor)
                 {
                     rv = rv.Replace("$pros$", prostr).Replace("$init$", initstr).Replace("$include$", includestr).Replace("$add$", addstr).Replace("$edit$", editstr);
                 }
@@ -2113,7 +2116,11 @@ namespace WalkingTec.Mvvm.Mvc
         public string GenerateBlazorView(string name)
         {
             string pagepath = string.IsNullOrEmpty(Area) ? $"/{ModelName}" : $"/{Area}/{ModelName}";
-            if(name == "Edit" || name == "Details")
+            if(name != "Index")
+            {
+                pagepath += $"/{name}";
+            }
+            if (name == "Edit" || name == "Details")
             {
                 pagepath += "/{id}";
             }
@@ -2130,14 +2137,13 @@ namespace WalkingTec.Mvvm.Mvc
                 StringBuilder fieldstr2 = new StringBuilder();
                 var pros = FieldInfos.Where(x => x.IsListField == true).ToList();
                 var pros2 = FieldInfos.Where(x => x.IsSearcherField == true).ToList();
-                fieldstr.Append(Environment.NewLine);
                 List<PropertyInfo> existSubPro = new List<PropertyInfo>();
                 Dictionary<string, string> apis = new Dictionary<string, string>();
+                Dictionary<string, string> multiapis = new Dictionary<string, string>();
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
                     var mpro = modelType.GetSingleProperty(item.FieldName);
-                    string label = mpro.GetPropertyDisplayName();
                     string render = "";
                     string template = "";
                     string newname = item.FieldName;
@@ -2156,8 +2162,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 template = @"
             <Template Context=""data"">
                 <Avatar @key=""data.Value"" Size=""Size.ExtraSmall"" GetUrlAsync=""()=>WtmBlazor.GetBase64Image(data.Value.ToString(),150,150)"" />
-            </Template>
-";
+            </Template>";
                             }
                             else
                             {
@@ -2181,18 +2186,15 @@ namespace WalkingTec.Mvvm.Mvc
                     if (template == "")
                     {
                         fieldstr.Append($@"
-        <TableColumn @bind-Field=""@context.Name"" {render} />");
+        <TableColumn @bind-Field=""@context.{newname}"" {render} />");
                     }
                     else
                     {
                         fieldstr.Append($@"
-        <TableColumn @bind-Field=""@context.Name"" {render} >
+        <TableColumn @bind-Field=""@context.{newname}"" {render} >
 {template}
-        </TableColumn>
-");
-
+        </TableColumn>");
                     }
-                    fieldstr.Append(Environment.NewLine);
                 }
 
                 for (int i = 0; i < pros2.Count; i++)
@@ -2200,15 +2202,13 @@ namespace WalkingTec.Mvvm.Mvc
                     string controltype = "BootstrapInput";
                     string sitems = "";
                     string bindfield = "";
+                    string ph = "";
                     var item = pros2[i];
                     if (item.SubField == "`file")
                     {
                         continue;
                     }
-                    var property = modelType.GetSingleProperty(item.FieldName);
-                    string label = property.GetPropertyDisplayName();
 
-                    fieldstr2.AppendLine($@"            /** {label} */");
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
@@ -2236,11 +2236,18 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             controltype = "MultiSelect";
                         }
-                        var tempname = $"@All{subtype.Name}s";
-                        sitems = $"Items=\"{tempname}\"";
-                        if (apis.ContainsKey(tempname) == false)
+                        var tempname = $"All{subtype.Name}s";
+                        sitems = $"Items=\"@{tempname}\"";
+                        if (apis.ContainsKey(tempname) == false && multiapis.ContainsKey(tempname) == false)
                         {
-                            apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                            if (controltype == "Select")
+                            {
+                                apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                            }
+                            else
+                            {
+                                multiapis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                            }
                         }
                     }
                     else
@@ -2272,283 +2279,253 @@ namespace WalkingTec.Mvvm.Mvc
                             controltype = "WTDateRange";
                         }
                     }
-                    fieldstr2.AppendLine($@"
-            <{controltype} @bind-Value=""@SearchModel.{bindfield}"" {sitems} />
-");
+                    if(controltype == "Select" || controltype == "MultiSelect")
+                    {
+                        ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.All\"]\"";
+                    }
+                    fieldstr2.Append($@"
+            <{controltype} @bind-Value=""@SearchModel.{bindfield}"" {sitems} {ph}/>");
                 }
 
                 StringBuilder apiinit = new StringBuilder();
                 StringBuilder fieldinit = new StringBuilder();
                 foreach (var item in apis)
                 {
-                    apiinit.AppendLine(@$"
+                    apiinit.Append(@$"
         {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"", placeholder: WtmBlazor.Localizer[""Sys.All""]);
 ");
-                    fieldinit.AppendLine($@"
+                    fieldinit.Append($@"
     private List<SelectedItem> {item.Key} = new List<SelectedItem>();
 ");
                 }
+                foreach (var item in multiapis)
+                {
+                    apiinit.Append(@$"
+        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"");
+");
+                    fieldinit.Append($@"
+    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
+");
+                }
+
                 return rv.Replace("$columns$", fieldstr.ToString()).Replace("$searchfields$",fieldstr2.ToString()).Replace("$init$", apiinit.ToString()).Replace("$fieldinit$", fieldinit.ToString());
             }
-            //if (name == "Create" || name == "Edit")
-            //{
-            //    StringBuilder fieldstr = new StringBuilder();
-            //    StringBuilder fieldstr2 = new StringBuilder();
-            //    var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
-            //    var pros2 = FieldInfos.Where(x => x.IsSearcherField == true).ToList();
 
-            //    //生成表单model
-            //    for (int i = 0; i < pros.Count; i++)
-            //    {
-            //        var item = pros[i];
-            //        var property = modelType.GetSingleProperty(item.FieldName);
-            //        string label = property.GetPropertyDisplayName();
-            //        bool isrequired = property.IsPropertyRequired();
-            //        var fktest = DC.GetFKName2(modelType, item.FieldName);
-            //        if (string.IsNullOrEmpty(fktest) == false)
-            //        {
-            //            isrequired = modelType.GetSingleProperty(fktest).IsPropertyRequired();
-            //        }
-            //        string rules = "rules: []";
-            //        if (isrequired == true)
-            //        {
-            //            rules = $@"rules: [{{ ""required"": true, ""message"": <FormattedMessage id='tips.error.required' values={{{{ txt: getLocalesValue('{label}') }}}} /> }}]";
-            //        }
-            //        fieldstr.AppendLine($@"            /** {label} */");
-            //        if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
-            //        {
-            //            var fk = DC.GetFKName2(modelType, item.FieldName);
-            //            fieldstr.AppendLine($@"            ""Entity.{fk}"":{{");
-            //        }
-            //        else
-            //        {
-            //            fieldstr.AppendLine($@"            ""Entity.{item.FieldName}"":{{");
-            //        }
-            //        fieldstr.AppendLine($@"                label: ""{label}"",");
-            //        fieldstr.AppendLine($@"                {rules},");
-            //        if (string.IsNullOrEmpty(item.RelatedField) == false)
-            //        {
-            //            var subtype = Type.GetType(item.RelatedField);
-            //            if (item.SubField == "`file")
-            //            {
-            //                fieldstr.AppendLine($@"                formItem: <WtmUploadImg />");
-            //            }
-            //            else
-            //            {
-            //                if (string.IsNullOrEmpty(item.SubIdField) == true)
-            //                {
-            //                    fieldstr.AppendLine($@"                formItem: <WtmSelect placeholder=""{label}""
-            //        dataSource ={{ Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
-            //    /> ");
-            //                }
-            //                else
-            //                {
-            //                    fieldstr.AppendLine($@"                formItem: <WtmTransfer
-            //        listStyle={{undefined}}
-            //        dataSource={{Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
-            //        mapKey=""{item.SubIdField}""
-            //    /> ");
 
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
-            //            Type checktype = proType;
-            //            if (proType.IsNullable())
-            //            {
-            //                checktype = proType.GetGenericArguments()[0];
-            //            }
-            //            if (checktype == typeof(bool))
-            //            {
-            //                fieldstr.AppendLine($@"                formItem: <Switch checkedChildren={{<Icon type=""check"" />}} unCheckedChildren={{<Icon type=""close"" />}} />");
-            //            }
-            //            else if (checktype.IsEnum())
-            //            {
-            //                var es = checktype.ToListItems();
-            //                fieldstr.AppendLine($@"                formItem: <WtmSelect placeholder=""{label}"" dataSource={{[  ");
-            //                for (int a = 0; a < es.Count; a++)
-            //                {
-            //                    var e = es[a];
-            //                    fieldstr.Append($@"                    {{ Text: ""{e.Text}"", Value: ""{e.Value}"" }}");
-            //                    if (a < es.Count - 1)
-            //                    {
-            //                        fieldstr.Append(',');
-            //                    }
-            //                    fieldstr.AppendLine();
-            //                }
-            //                fieldstr.AppendLine($@"                ]}}/>");
-            //            }
-            //            else if (checktype.IsNumber())
-            //            {
-            //                fieldstr.AppendLine($@"                formItem: <InputNumber placeholder={{getLocalesTemplate('tips.placeholder.input', {{ txt: getLocalesValue('{label}') }})}} />");
-            //            }
-            //            else if (checktype == typeof(string))
-            //            {
-            //                fieldstr.AppendLine($@"                formItem: <Input placeholder={{getLocalesTemplate('tips.placeholder.input', {{ txt: getLocalesValue('{label}') }})}} />");
-            //            }
-            //            else if (checktype == typeof(DateTime))
-            //            {
-            //                fieldstr.AppendLine($@"                formItem: <WtmDatePicker placeholder={{getLocalesTemplate('tips.placeholder.input', {{ txt: getLocalesValue('{label}') }})}} />");
-            //            }
-            //        }
-            //        fieldstr.Append("            }");
-            //        if (i < pros.Count - 1)
-            //        {
-            //            fieldstr.Append(',');
-            //        }
-            //        fieldstr.Append(Environment.NewLine);
-            //    }
+            if (name == "Create" || name == "Edit")
+            {
+                StringBuilder fieldstr = new StringBuilder();
+                var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
 
-            //    //生成searchmodel
-            //    for (int i = 0; i < pros2.Count; i++)
-            //    {
-            //        var item = pros2[i];
-            //        if (item.SubField == "`file")
-            //        {
-            //            continue;
-            //        }
-            //        var property = modelType.GetSingleProperty(item.FieldName);
-            //        string label = property.GetPropertyDisplayName();
-            //        string rules = "rules: []";
+                //生成表单model
+                Dictionary<string, string> apis = new Dictionary<string, string>();
+                Dictionary<string, string> multiapis = new Dictionary<string, string>();
+                for (int i = 0; i < pros.Count; i++)
+                {
+                    var item = pros[i];
+                    string controltype = "BootstrapInput";
+                    string sitems = "";
+                    string bindfield = "";
+                    string ph = "";
+                    var property = modelType.GetSingleProperty(item.FieldName);
 
-            //        fieldstr2.AppendLine($@"            /** {label} */");
-            //        if (string.IsNullOrEmpty(item.RelatedField) == false)
-            //        {
-            //            if (string.IsNullOrEmpty(item.SubIdField) == true)
-            //            {
-            //                var fk = DC.GetFKName2(modelType, item.FieldName);
-            //                fieldstr2.AppendLine($@"            ""{fk}"":{{");
-            //            }
-            //            else
-            //            {
-            //                fieldstr2.AppendLine($@"            ""Selected{item.FieldName}IDs"":{{");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            fieldstr2.AppendLine($@"            ""{item.FieldName}"":{{");
-            //        }
-            //        fieldstr2.AppendLine($@"                label: ""{label}"",");
-            //        fieldstr2.AppendLine($@"                {rules},");
-            //        if (string.IsNullOrEmpty(item.RelatedField) == false)
-            //        {
-            //            var subtype = Type.GetType(item.RelatedField);
-            //            if (string.IsNullOrEmpty(item.SubIdField) == true)
-            //            {
-            //                fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder={{getLocalesValue('tips.all')}}
-            //        dataSource ={{ Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
-            //    /> ");
-            //            }
-            //            else
-            //            {
-            //                fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder={{getLocalesValue('tips.all')}}  multiple
-            //        dataSource ={{ Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
-            //    /> ");
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        {
+                            var fk = DC.GetFKName2(modelType, item.FieldName);
+                            bindfield = "Entity." + fk;
+                        }
+                        else
+                        {
+                            bindfield = $"Selected{item.FieldName}IDs";
+                        }
+                    }
+                    else
+                    {
+                        bindfield = "Entity."+ item.FieldName;
+                    }
 
-            //            }
-            //        }
-            //        else
-            //        {
-            //            var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
-            //            Type checktype = proType;
-            //            if (proType.IsNullable())
-            //            {
-            //                checktype = proType.GetGenericArguments()[0];
-            //            }
-            //            if (checktype == typeof(bool))
-            //            {
-            //                fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder={{getLocalesValue('tips.all')}}  dataSource={{[
-            //        {{ Text: <FormattedMessage id='tips.bool.true' />, Value: true }},{{ Text: <FormattedMessage id='tips.bool.false' />, Value: false }}
-            //    ]}}/>");
-            //            }
-            //            else if (checktype.IsEnum())
-            //            {
-            //                var es = checktype.ToListItems();
-            //                fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder={{getLocalesValue('tips.all')}} dataSource={{[  ");
-            //                for (int a = 0; a < es.Count; a++)
-            //                {
-            //                    var e = es[a];
-            //                    fieldstr2.Append($@"                    {{ Text: ""{e.Text}"", Value: ""{e.Value}"" }}");
-            //                    if (a < es.Count - 1)
-            //                    {
-            //                        fieldstr2.Append(',');
-            //                    }
-            //                    fieldstr2.AppendLine();
-            //                }
-            //                fieldstr2.AppendLine($@"                ]}}/>");
-            //            }
-            //            else if (checktype.IsNumber())
-            //            {
-            //                fieldstr2.AppendLine($@"                formItem: <InputNumber placeholder="""" />");
-            //            }
-            //            else if (checktype == typeof(string))
-            //            {
-            //                fieldstr2.AppendLine($@"                formItem: <Input placeholder="""" />");
-            //            }
-            //            else if (checktype == typeof(DateTime))
-            //            {
-            //                fieldstr2.AppendLine($@"                formItem: <WtmRangePicker placeholder="""" />");
-            //            }
-            //        }
-            //        fieldstr2.Append("            }");
-            //        if (i < pros.Count - 1)
-            //        {
-            //            fieldstr2.Append(',');
-            //        }
-            //        fieldstr2.Append(Environment.NewLine);
-            //    }
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        var subtype = Type.GetType(item.RelatedField);
+                        if (item.SubField == "`file")
+                        {
+                            controltype = "WTUploadImage";
+                        }
+                        else
+                        {
+                            if (string.IsNullOrEmpty(item.SubIdField) == true)
+                            {
+                                controltype = "Select";
+                            }
+                            else
+                            {
+                                controltype = "Transfer";
+                            }
+                            var tempname = $"All{subtype.Name}s";
+                            sitems = $"Items=\"@{tempname}\"";
+                            if (apis.ContainsKey(tempname) == false && multiapis.ContainsKey(tempname) == false)
+                            {
+                                if (controltype == "Select")
+                                {
+                                    apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                                }
+                                else
+                                {
+                                    multiapis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                                }
+                            }
 
-            //    return rv.Replace("$fields$", fieldstr.ToString()).Replace("$fields2$", fieldstr2.ToString());
-            //}
+                        }
+                    }
+                    else
+                    {
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
+                        Type checktype = proType;
+                        if (proType.IsNullable())
+                        {
+                            checktype = proType.GetGenericArguments()[0];
+                        }
+                        if (checktype == typeof(bool))
+                        {
+                            controltype = "Switch";
+                        }
+                        else if (checktype.IsEnum())
+                        {
+                            controltype = "Select";
 
-            //if (name == "search")
-            //{
-            //    return rv;
-            //}
-            //if (name == "forms")
-            //{
-            //    StringBuilder fieldstr = new StringBuilder();
-            //    var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
+                        }
+                        else if (checktype.IsNumber())
+                        {
+                            controltype = "BootstrapInputNumber";
+                        }
+                        else if (checktype == typeof(string))
+                        {
+                        }
+                        else if (checktype == typeof(DateTime))
+                        {
+                            controltype = "DateTimePicker";
+                        }
+                    }
+                    if (controltype == "Select" || controltype == "MultiSelect")
+                    {
+                        ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.All\"]\"";
+                    }
+                    if (controltype == "Transfer")
+                    {
+                        fieldstr.Append($@"
+    <Row ColSpan=""2"">
+            <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {ph}/>
+    </Row>");
+                    }
+                    else
+                    {
+                        fieldstr.Append($@"
+            <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {ph}/>");
+                    }
+                }
 
-            //    for (int i = 0; i < pros.Count; i++)
-            //    {
-            //        var item = pros[i];
-            //        if (string.IsNullOrEmpty(item.SubIdField))
-            //        {
-            //            if (string.IsNullOrEmpty(item.RelatedField) == false)
-            //            {
-            //                var fk = DC.GetFKName2(modelType, item.FieldName);
-            //                fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""Entity.{fk}"" />");
-            //            }
-            //            else
-            //            {
-            //                var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
-            //                Type checktype = proType;
-            //                if (proType.IsNullable())
-            //                {
-            //                    checktype = proType.GetGenericArguments()[0];
-            //                }
-            //                if (checktype == typeof(bool))
-            //                {
-            //                    fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""Entity.{item.FieldName}""  $switchdefaultvalue$ />");
-            //                }
-            //                else
-            //                {
-            //                    fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""Entity.{item.FieldName}"" />");
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            fieldstr.AppendLine($@"                <Col span={{24}}>
-            //        <FormItem {{...props}} fieId=""Entity.{item.FieldName}"" layout=""row"" />
-            //    </Col>");
-            //        }
-            //    }
-            //    return rv.Replace("$fields$", fieldstr.Replace("$switchdefaultvalue$", "value={false}").ToString()).Replace("$efields$", fieldstr.Replace("$switchdefaultvalue$", "").ToString());
-            //}
+                StringBuilder apiinit = new StringBuilder();
+                StringBuilder fieldinit = new StringBuilder();
+                foreach (var item in apis)
+                {
+                    apiinit.Append(@$"
+        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"", placeholder: WtmBlazor.Localizer[""Sys.PleaseSelect""]);
+");
+                    fieldinit.Append($@"
+    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
+");
+                }
+                foreach (var item in multiapis)
+                {
+                    apiinit.Append(@$"
+        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"");
+");
+                    fieldinit.Append($@"
+    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
+");
+                }
+                    return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$init$", apiinit.ToString());
+            }
+            if (name == "Details")
+            {
+                StringBuilder fieldstr = new StringBuilder();
+                var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
+
+                //生成表单model
+                Dictionary<string, string> apis = new Dictionary<string, string>();
+                for (int i = 0; i < pros.Count; i++)
+                {
+                    var item = pros[i];
+                    string controltype = "Display";
+                    string sitems = "";
+                    string bindfield = "";
+                    string disabled = "";
+                    var property = modelType.GetSingleProperty(item.FieldName);
+
+                    if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
+                    {
+                        var fk = DC.GetFKName2(modelType, item.FieldName);
+                        bindfield = $"Entity.{fk}";
+                    }
+                    else
+                    {
+                        bindfield = $"Entity.{item.FieldName}";
+                    }
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        var subtype = Type.GetType(item.RelatedField);
+                        if (item.SubField == "`file")
+                        {
+                            controltype = "WTUploadImage";
+                            disabled = "IsDisabled=\"true\"";
+                        }
+                        else
+                        {
+                            var tempname = $"All{subtype.Name}s";
+                            sitems = $"Data=\"@{tempname}\"";
+                            if (apis.ContainsKey(tempname) == false)
+                            {
+                                apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
+                        Type checktype = proType;
+                        if (proType.IsNullable())
+                        {
+                            checktype = proType.GetGenericArguments()[0];
+                        }
+                        if (checktype == typeof(bool))
+                        {
+                            controltype = "Switch";
+                            disabled = "IsDisabled=\"true\"";
+                        }
+                    }
+
+                    fieldstr.Append($@"
+            <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {disabled} ShowLabel=""true""/>");
+                }
+
+                StringBuilder apiinit = new StringBuilder();
+                StringBuilder fieldinit = new StringBuilder();
+                foreach (var item in apis)
+                {
+                    apiinit.Append(@$"
+        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"", placeholder: WtmBlazor.Localizer[""Sys.All""]);
+");
+                    fieldinit.Append($@"
+    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
+");
+                }
+
+                return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$init$", apiinit.ToString());
+            }
+
 
             return rv;
         }

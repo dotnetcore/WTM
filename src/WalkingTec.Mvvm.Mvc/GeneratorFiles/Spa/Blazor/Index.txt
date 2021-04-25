@@ -68,11 +68,12 @@ $fieldinit$
     protected override async Task OnInitializedAsync()
     {
 $init$
+        await base.OnInitializedAsync();
     }
 
     private async Task<QueryData<$modelname$_View>> OnSearch(QueryPageOptions opts)
     {
-        return await StartSearch<FrameworkUser_View>("/api/$modelname$/search", SearchModel, opts);
+        return await StartSearch<$modelname$_View>("/api/$modelname$/search", SearchModel, opts);
     }
 
     private void DoSearch()

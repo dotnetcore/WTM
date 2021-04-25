@@ -1,29 +1,39 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
-using WalkingTec.Mvvm.Demo.ViewModels.MajorVMs;
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
+
+namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.SchoolVMs
 {
-    public class SchoolVM : BaseCRUDVM<School>
+    public partial class SchoolVM : BaseCRUDVM<School>
     {
-        public MajorDetailListVM MajorList { get; set; }
-
 
         public SchoolVM()
         {
-            MajorList = new MajorDetailListVM();
-            SetInclude(x => x.Photos);
         }
-
 
         protected override void InitVM()
         {
-            MajorList.CopyContext(this);
         }
 
+        public override void DoAdd()
+        {           
+            base.DoAdd();
+        }
+
+        public override void DoEdit(bool updateAllFields = false)
+        {
+            base.DoEdit(updateAllFields);
+        }
+
+        public override void DoDelete()
+        {
+            base.DoDelete();
+        }
     }
 }

@@ -101,6 +101,10 @@ namespace WalkingTec.Mvvm.Mvc
                 List<string> apineeded = new List<string>();
                 ViewData["code"] = vm.GenerateVUEView(vm.PreviewFile,apineeded);
             }
+            else if(vm.UI == UIEnum.Blazor)
+            {
+                ViewData["code"] = vm.GenerateBlazorView(vm.PreviewFile);
+            }
             else if (vm.PreviewFile.EndsWith("View"))
             {
                 ViewData["filename"] = vm.PreviewFile.Replace("ListView","Index").Replace("View","") + "cshtml";
