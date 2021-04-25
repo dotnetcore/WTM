@@ -12,7 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
     <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.Client\WalkingTec.Mvvm.BlazorDemo.Client.csproj" />
-    <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess.csproj" />
+    <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess.csproj" />
     <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.Shared\WalkingTec.Mvvm.BlazorDemo.Shared.csproj" />
   </ItemGroup>
 

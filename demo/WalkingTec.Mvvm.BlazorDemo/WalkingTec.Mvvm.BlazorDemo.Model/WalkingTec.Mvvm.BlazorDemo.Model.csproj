@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
+    <ProjectReference Include="..\..\..\src\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,12 +7,12 @@
   <ItemGroup>
     <PackageReference Include="BootstrapBlazor" Version="5.0.27" />
   </ItemGroup>
-  <ItemGroup>
-    <SupportedPlatform Include="browser" />
-  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.ViewModel\WalkingTec.Mvvm.BlazorDemo.ViewModel\WalkingTec.Mvvm.BlazorDemo.ViewModel.csproj" />
+    <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.ViewModel\WalkingTec.Mvvm.BlazorDemo.ViewModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
   </ItemGroup>
 
   <ItemGroup>

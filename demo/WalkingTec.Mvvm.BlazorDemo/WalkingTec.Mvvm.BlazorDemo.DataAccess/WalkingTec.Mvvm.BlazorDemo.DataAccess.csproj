@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\WalkingTec.Mvvm.BlazorDemo.Model\WalkingTec.Mvvm.BlazorDemo.Model\WalkingTec.Mvvm.BlazorDemo.Model.csproj" />
+    <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.Model\WalkingTec.Mvvm.BlazorDemo.Model.csproj" />
   </ItemGroup>
 
 </Project>
