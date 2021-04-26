@@ -14,7 +14,13 @@
     <wt:upload field="Entity.PhotoId" />
     <wt:switch field="Entity.IsValid" />
     <wt:datetime field="Entity.EnRollDate" />
-    <wt:checkbox field="Entity.StudentMajor[0].MajorId" items="AllStudentMajors" />
+      <wt:selector list-vm="MajorList" field="Entity.StudentMajor[0].MajorId" text-bind="MajorList.EntityList[0].MajorName" val-bind="MajorList.EntityList[0].ID">
+    <wt:searchpanel vm="MajorList">
+      <wt:row items-per-row=" ItemsPerRowEnum.Two">
+        <wt:combobox field="MajorList.Searcher.SchoolId" items="MajorList.Searcher.AllSchools" />
+      </wt:row>
+    </wt:searchpanel>
+  </wt:selector>
   </wt:row>
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />

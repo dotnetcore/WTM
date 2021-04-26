@@ -40,8 +40,11 @@ namespace WalkingTec.Mvvm.Mvc
             , string _DONOT_USE_LINK_FIELD_MODEL
             , string _DONOT_USE_LINK_FIELD
             , string _DONOT_USE_TRIGGER_URL
+            , string _DONOT_USE_CURRENTCS
         )
         {
+            string cs = string.IsNullOrEmpty(_DONOT_USE_CURRENTCS) ? "default" : _DONOT_USE_CURRENTCS;
+            Wtm.CurrentCS = cs;
             var listVM = Wtm.CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, ISearcher>;
 
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
@@ -52,7 +55,6 @@ namespace WalkingTec.Mvvm.Mvc
             listVM.SearcherMode = ListVMSearchModeEnum.Selector;
             listVM.RemoveActionColumn();
             listVM.RemoveAction();
-
             ViewBag.TextName = _DONOT_USE_KFIELD;
             ViewBag.ValName = _DONOT_USE_VFIELD;
             ViewBag.FieldName = _DONOT_USE_FIELD;
@@ -62,11 +64,12 @@ namespace WalkingTec.Mvvm.Mvc
             ViewBag.LinkFieldModel = _DONOT_USE_LINK_FIELD_MODEL;
             ViewBag.LinkField = _DONOT_USE_LINK_FIELD;
             ViewBag.TriggerUrl = _DONOT_USE_TRIGGER_URL;
-
+            ViewBag.CurrentCS = cs;
             #region 获取选中的数据
             ViewBag.SelectData = "[]";
             if (listVM.Ids?.Count > 0)
             {
+                listVM.DC = Wtm.CreateDC();
                 var originNeedPage = listVM.NeedPage;
                 listVM.NeedPage = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Batch;
