@@ -726,5 +726,19 @@ namespace WalkingTec.Mvvm.Core
             }
             return val;
         }
+
+        public static object MakeList(Type innerType, string propertyName, object[] values)
+        {
+            object rv = typeof(List<>).MakeGenericType(innerType).GetConstructor(Type.EmptyTypes).Invoke(null);
+            var mi = rv.GetType().GetMethod("Add");
+            var con = innerType.GetConstructor(Type.EmptyTypes);
+            foreach (var item in values)
+            {
+                var newobj = con.Invoke(null);
+                newobj.SetPropertyValue(propertyName, item);
+                mi.Invoke(rv, new object[] { newobj });
+            }
+            return rv;
+        }
     }
 }

@@ -31,7 +31,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.SchoolVMs
                 .CheckContain(Searcher.SchoolCode, x=>x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x=>x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x=>x.SchoolType)
-                .CheckContain(Searcher.Remark, x=>x.Remark)
                 .Select(x => new School_View
                 {
 				    ID = x.ID,

@@ -18,8 +18,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.SchoolVMs
         public String SchoolName { get; set; }
         [Display(Name = "学校类型")]
         public SchoolTypeEnum? SchoolType { get; set; }
-        [Display(Name = "备注")]
-        public String Remark { get; set; }
 
         protected override void InitVM()
         {

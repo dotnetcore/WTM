@@ -9,11 +9,10 @@
 @if (dlist != null)
 {
     <AvatarUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="image/*" IsSingle="!IsMultiple" ShowProgress="true" OnChange="@OnAvatarUpload"
-                  OnDelete="@OnAvatarDelete" DisplayText="@LabelText" DefaultFileList="@dlist" IsDisabled="@IsDisabled"></AvatarUpload>
+                  OnDelete="@OnAvatarDelete" DisplayText="@LabelText" DefaultFileList="@dlist" IsDisabled="@IsDisabled" ></AvatarUpload>
 }
 else
 {
-    <AvatarUpload IsDisabled="true" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="image/*" IsSingle="!IsMultiple"></AvatarUpload>
 
 }
 @code{
@@ -31,8 +30,20 @@ else
     [Parameter]
     public bool IsDisabled { get; set; }
 
-    [Parameter]
-    public bool IsMultiple { get; set; }
+    private bool IsMultiple
+    {
+        get
+        {
+            if (typeof(IEnumerable<ISubFile>).IsAssignableFrom(typeof(TValue)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
     [Parameter]
     public bool ShowLabel { get; set; } = true;
     [Parameter]
@@ -62,25 +73,40 @@ else
 
         if (Value != null)
         {
-            var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{Value}", HttpMethodEnum.GET, new Dictionary<string, string> {
+            List<UploadFile> temp = new List<UploadFile>();
+            if (IsMultiple == false)
+            {
+                var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{Value}", HttpMethodEnum.GET, new Dictionary<string, string> {
                     {"width", ThumbWidth?.ToString() },
                     {"height", ThumbHeight?.ToString() }
                 });
-            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                if (dlist == null)
+                if (rv.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    dlist = new List<UploadFile>();
+                    temp.Add(new UploadFile
+                    {
+                        PrevUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}"
+                    });
                 }
-                dlist.Add(new UploadFile
-                {
-                    PrevUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}"
-                });
+                dlist = temp;
             }
             else
             {
-                dlist = new List<UploadFile>();
-
+                var list = Value as IEnumerable<ISubFile>;
+                foreach (var item in list)
+                {
+                    var rv = await WtmBlazor.Api.CallAPI<byte[]>($"/api/_file/GetFile/{item.FileId}", HttpMethodEnum.GET, new Dictionary<string, string> {
+                    {"width", ThumbWidth?.ToString() },
+                    {"height", ThumbHeight?.ToString() }
+                });
+                    if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        temp.Add(new UploadFile
+                        {
+                            PrevUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}"
+                        });
+                    }
+                }
+                dlist = temp;
             }
         }
         else
@@ -110,7 +136,7 @@ else
                     files.Add(rv.Data.Fields["Id"].ToString(), file.File.Name);
                     if (IsMultiple)
                     {
-                        //await FileIDChanged.InvokeAsync(files.Select(x => x.Key).Cast<Guid?>().ToList());
+                        CurrentValue = (TValue)PropertyHelper.MakeList(typeof(TValue).GetGenericArguments()[0], "FileId", files.Select(x => x.Key).ToArray());
                     }
                     else
                     {
@@ -118,6 +144,7 @@ else
                     }
                     suc = true;
                 }
+
                 await file.RequestBase64ImageFileAsync(format, 400, 300);
             }
 
@@ -136,8 +163,15 @@ else
         {
             var rv = await WtmBlazor.Api.CallAPI($"/api/_file/DeletedFile/{idstr}");
             files.Remove(idstr);
-            Guid? ng = null;
-            CurrentValue = (TValue)(object)ng;
+            if (IsMultiple == true)
+            {
+                CurrentValue = (TValue)PropertyHelper.MakeList(typeof(TValue).GetGenericArguments()[0], "FileId", files.Select(x => x.Key).ToArray());
+            }
+            else
+            {
+                Guid? ng = null;
+                CurrentValue = (TValue)(object)ng;
+            }
         }
         return true;
     }
@@ -149,7 +183,7 @@ else
 
     private async Task<byte[]> GetFileData(IBrowserFile file)
     {
-        using var fileStream = file.OpenReadStream();
+        using var fileStream = file.OpenReadStream(WtmBlazor.ConfigInfo.FileUploadOptions.UploadLimit);
         using var memoryStream = new MemoryStream();
         await fileStream.CopyToAsync(memoryStream);
         byte[] rv = memoryStream.ToArray();

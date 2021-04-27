@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +15,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.SchoolVMs
 
         public SchoolVM()
         {
+            SetInclude(x => x.Photos);
         }
 
         protected override void InitVM()

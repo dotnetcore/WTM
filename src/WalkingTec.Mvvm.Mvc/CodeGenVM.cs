@@ -2166,7 +2166,10 @@ namespace WalkingTec.Mvvm.Mvc
                             }
                             else
                             {
-                                render = "";
+                                template = @"
+            <Template Context=""data"">
+                <Button Size=""Size.ExtraSmall"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{data.Value}"",null, HttpMethodEnum.GET))"" />
+            </Template>";
                             }
                             var fk = DC.GetFKName2(modelType, item.FieldName);
                             newname = fk;

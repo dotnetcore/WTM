@@ -42,9 +42,15 @@ window.urlFuncs = {
         xhr.onload = function () {
             if (this.status === 200) {
                 var fname = this.getResponseHeader("content-disposition");
-                /filename=(.*?);/.test(fname)
-                var filename = RegExp.$1;
-
+                var filename = "";
+                if (/filename\*=UTF-8''(.*?)($|;|\s)/.test(fname)) {
+                    filename = RegExp.$1;
+                }
+                else if (/filename=(.*?)($|;|\s)/.test(fname))
+                {
+                    filename = RegExp.$1;
+                }
+                filename = decodeURI(filename);
                 var blob = this.response;
                 var reader = new FileReader();
                 reader.readAsDataURL(blob);  
