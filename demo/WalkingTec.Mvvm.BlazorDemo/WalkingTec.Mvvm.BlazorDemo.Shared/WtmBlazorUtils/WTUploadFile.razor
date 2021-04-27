@@ -1,0 +1,174 @@
+@namespace WtmBlazorUtils
+@inherits WTComponent
+@inject WtmBlazorContext WtmBlazor
+@using System.Threading;
+@using System.Linq.Expressions;
+@using System.IO;
+@typeparam TValue
+
+@if (dlist != null)
+{
+    <ButtonUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="*/*" IsSingle="!IsMultiple" ShowProgress="true" OnChange="@OnAvatarUpload"
+                  OnDelete="@OnAvatarDelete" DisplayText="@LabelText" DefaultFileList="@dlist" IsDisabled="@IsDisabled"></ButtonUpload>
+}
+else
+{
+
+}
+@code{
+
+    [Parameter]
+    public int? ThumbWidth { get; set; } = 200;
+    [Parameter]
+    public int? ThumbHeight { get; set; } = 200;
+    [Parameter]
+    public TValue Value { get; set; }
+    [Parameter]
+    public EventCallback<TValue> ValueChanged { get; set; }
+    [Parameter]
+    public Expression<Func<TValue>> ValueExpression { get; set; }
+    [Parameter]
+    public bool IsDisabled { get; set; }
+
+    private bool IsMultiple
+    {
+        get
+        {
+            if (typeof(IEnumerable<ISubFile>).IsAssignableFrom(typeof(TValue)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    [Parameter]
+    public bool ShowLabel { get; set; } = true;
+    [Parameter]
+    public string LabelText { get; set; } = null;
+
+    private Dictionary<string, string> files { get; set; } = new Dictionary<string, string>();
+    private List<UploadFile> dlist = null;
+    private ButtonUpload<TValue> uploader { get; set; }
+    private bool FileSet { get; set; } = false;
+
+    protected TValue CurrentValue
+    {
+        get => Value;
+        set
+        {
+            var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
+            if (hasChanged)
+            {
+                Value = value;
+                _ = ValueChanged.InvokeAsync(value);
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (Value != null)
+        {
+            List<UploadFile> temp = new List<UploadFile>();
+            if (IsMultiple == false)
+            {
+                var rv = await WtmBlazor.Api.CallAPI<string>($"/api/_file/GetFileName/{Value}", HttpMethodEnum.GET, new object());
+                if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    temp.Add(new UploadFile
+                    {
+                        FileName = rv.Data
+                    });
+                }
+                dlist = temp;
+            }
+            else
+            {
+                var list = Value as IEnumerable<ISubFile>;
+                foreach (var item in list)
+                {
+                    var rv = await WtmBlazor.Api.CallAPI<string>($"/api/_file/GetFileName/{item.FileId}", HttpMethodEnum.GET, new object());
+                    if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        temp.Add(new UploadFile
+                        {
+                            FileName = rv.Data
+                        });
+                    }
+                }
+                dlist = temp;
+            }
+        }
+        else
+        {
+            dlist = new List<UploadFile>();
+        }
+        await base.OnInitializedAsync();
+    }
+
+
+    private async Task OnAvatarUpload(UploadFile file)
+    {
+        bool suc = false;
+        if (file != null && file.File != null)
+        {
+            var format = file.File.ContentType;
+
+            byte[] filedata = await GetFileData(file.File);
+            var rv = await WtmBlazor.Api.CallAPI<DynamicData>("/api/_file/Upload", HttpMethodEnum.POST, new Dictionary<string, string>(), filedata, file.File.Name);
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                files.Add(rv.Data.Fields["Id"].ToString(), file.File.Name);
+                if (IsMultiple)
+                {
+                    CurrentValue = (TValue)PropertyHelper.MakeList(typeof(TValue).GetGenericArguments()[0], "FileId", files.Select(x => x.Key).ToArray());
+                }
+                else
+                {
+                    CurrentValue = (TValue)(object)(new Guid(files.First().Key));
+                }
+                suc = true;
+            }
+        }
+        if (suc == false)
+        {
+            await WtmBlazor.Toast.Error(content: WtmBlazor.Localizer["Sys.UploadFailed"]);
+        }
+
+    }
+
+    private async Task<bool> OnAvatarDelete(string filename)
+    {
+        var idstr = files.Where(x => x.Value == filename).Select(x => x.Key).FirstOrDefault();
+        if (idstr != null)
+        {
+            var rv = await WtmBlazor.Api.CallAPI($"/api/_file/DeletedFile/{idstr}");
+            files.Remove(idstr);
+            if (IsMultiple == true)
+            {
+                CurrentValue = (TValue)PropertyHelper.MakeList(typeof(TValue).GetGenericArguments()[0], "FileId", files.Select(x => x.Key).ToArray());
+            }
+            else
+            {
+                Guid? ng = null;
+                CurrentValue = (TValue)(object)ng;
+            }
+        }
+        return true;
+    }
+
+    private async Task<byte[]> GetFileData(IBrowserFile file)
+    {
+        using var fileStream = file.OpenReadStream(WtmBlazor.ConfigInfo.FileUploadOptions.UploadLimit);
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+        byte[] rv = memoryStream.ToArray();
+        memoryStream.Dispose();
+        fileStream.Dispose();
+        return rv;
+    }
+}
