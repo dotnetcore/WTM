@@ -457,10 +457,10 @@ namespace WalkingTec.Mvvm.Core
 
                             TModel _entity = null;
                             //打开新的数据库联接,获取数据库中的主表和子表数据
-                            using (var ndc = DC.CreateNew())
-                            {
-                                _entity = ndc.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
-                            }
+                            //using (var ndc = DC.CreateNew())
+                            //{
+                                _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
+                            //}
                             if(_entity == null)
                             {
                                 MSD.AddModelError(" ", Localizer["Sys.EditFailed"]);
