@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Demo.Models;
 
-namespace WalkingTec.Mvvm.BlazorDemo.Server
+namespace WalkingTec.Mvvm.BlazorDemo.DataAccess
 {
     public class DataContext : FrameworkContext
     {

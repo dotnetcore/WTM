@@ -11,6 +11,7 @@
     <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess.csproj" />
     <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.csproj" />
   </ItemGroup>
 

@@ -16,7 +16,7 @@ using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Mvc;
 
 
-namespace WalkingTec.Mvvm.Demo.Test
+namespace WalkingTec.Mvvm.BlazorDemo.Test
 {
     public class MockController
     {
