@@ -9,6 +9,7 @@
             <Display @bind-Value="@Model.Entity.SchoolName"   ShowLabel="true"/>
             <Display @bind-Value="@Model.Entity.SchoolType"   ShowLabel="true"/>
             <Display @bind-Value="@Model.Entity.Remark"   ShowLabel="true"/>
+            <WTUploadImage @bind-Value="@Model.Entity.PhotoId"  IsDisabled="true" ShowLabel="true"/>
     </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />

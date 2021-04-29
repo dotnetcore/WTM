@@ -16,7 +16,13 @@ namespace WalkingTec.Mvvm.Core
             get;set;
         }
 
-    public static string[] Buildindll = new string[]
+        public static JsonSerializerOptions DefaultPostJsonOption
+        {
+            get; set;
+        }
+
+
+        public static string[] Buildindll = new string[]
             {
                     "WalkingTec.Mvvm.Core",
                     "WalkingTec.Mvvm.Mvc",

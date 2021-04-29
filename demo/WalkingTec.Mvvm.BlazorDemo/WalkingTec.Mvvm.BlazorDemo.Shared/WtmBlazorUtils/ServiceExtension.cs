@@ -50,6 +50,18 @@ namespace WtmBlazorUtils
             jsonOptions.Converters.Add(new TypeConverter());
             jsonOptions.Converters.Add(new DynamicDataConverter());
             CoreProgram.DefaultJsonOption = jsonOptions;
+            JsonSerializerOptions jsonOptions2 = new JsonSerializerOptions();
+            jsonOptions2.PropertyNamingPolicy = null;
+            jsonOptions2.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
+            jsonOptions2.AllowTrailingCommas = true;
+            jsonOptions2.Converters.Add(new DateTimeConverter());
+            jsonOptions2.Converters.Add(new JsonStringEnumConverter());
+            jsonOptions2.Converters.Add(new DateRangeConverter());
+            jsonOptions2.Converters.Add(new PocoConverter());
+            jsonOptions2.Converters.Add(new TypeConverter());
+            jsonOptions2.Converters.Add(new DynamicDataConverter());
+            CoreProgram.DefaultPostJsonOption = jsonOptions2;
+
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System.Text.Json.Serialization;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models
@@ -43,12 +43,22 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Display(Name = "专业")]
         public List<Major> Majors { get; set; }
 
+        [Display(Name = "_Admin.Photo")]
+        [Required]
+        public Guid? PhotoId { get; set; }
+
+        [Display(Name = "_Admin.Photo")]
+        [JsonIgnore]
+        public FileAttachment Photo { get; set; }
+
+
+        [Display(Name = "_Admin.Photo")]
         public List<SchoolPhoto> Photos { get; set; }
     }
 
     public class SchoolPhoto : TopBasePoco, ISubFile
     {
-        public int SchoolId { get; set; }
+        public int? SchoolId { get; set; }
         public School School { get; set; }
 
         public Guid FileId { get; set; }

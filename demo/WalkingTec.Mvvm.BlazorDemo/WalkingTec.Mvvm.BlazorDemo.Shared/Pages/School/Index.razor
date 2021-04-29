@@ -10,6 +10,7 @@
             <BootstrapInput @bind-Value="@SearchModel.SchoolCode"  />
             <BootstrapInput @bind-Value="@SearchModel.SchoolName"  />
             <Select @bind-Value="@SearchModel.SchoolType"  PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
+            <BootstrapInput @bind-Value="@SearchModel.Remark"  />
         </Row>
     </ValidateForm>
 </WTSearchPanel>
@@ -24,6 +25,12 @@
         <TableColumn @bind-Field="@context.SchoolName"  />
         <TableColumn @bind-Field="@context.SchoolType"  />
         <TableColumn @bind-Field="@context.Remark"  />
+        <TableColumn @bind-Field="@context.PhotoId"  >
+
+            <Template Context="data">
+                <Avatar @key="data.Value" Size="Size.ExtraSmall" GetUrlAsync="()=>WtmBlazor.GetBase64Image(data.Value.ToString(),150,150)" />
+            </Template>
+        </TableColumn>
     </TableColumns>
     <TableToolbarTemplate>
         @if (IsAccessable("/api/School/add"))

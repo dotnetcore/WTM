@@ -21,9 +21,19 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.SchoolVMs
                 this.MakeGridHeader(x => x.SchoolName),
                 this.MakeGridHeader(x => x.SchoolType),
                 this.MakeGridHeader(x => x.Remark),
+                this.MakeGridHeader(x => x.PhotoId).SetFormat(PhotoIdFormat),
                 this.MakeGridHeaderAction(width: 200)
             };
         }
+        private List<ColumnFormatInfo> PhotoIdFormat(School_View entity, object val)
+        {
+            return new List<ColumnFormatInfo>
+            {
+                ColumnFormatInfo.MakeDownloadButton(ButtonTypesEnum.Button,entity.PhotoId),
+                ColumnFormatInfo.MakeViewButton(ButtonTypesEnum.Button,entity.PhotoId,640,480),
+            };
+        }
+
 
         public override IOrderedQueryable<School_View> GetSearchQuery()
         {
@@ -31,6 +41,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.SchoolVMs
                 .CheckContain(Searcher.SchoolCode, x=>x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x=>x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x=>x.SchoolType)
+                .CheckContain(Searcher.Remark, x=>x.Remark)
                 .Select(x => new School_View
                 {
 				    ID = x.ID,
@@ -38,6 +49,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.SchoolVMs
                     SchoolName = x.SchoolName,
                     SchoolType = x.SchoolType,
                     Remark = x.Remark,
+                    PhotoId = x.PhotoId,
                 })
                 .OrderBy(x => x.ID);
             return query;

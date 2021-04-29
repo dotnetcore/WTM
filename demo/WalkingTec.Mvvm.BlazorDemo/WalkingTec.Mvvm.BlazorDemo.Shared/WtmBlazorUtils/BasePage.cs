@@ -327,12 +327,12 @@ namespace WtmBlazorUtils
                 }
                 else
                 {
-                    return $"data:image/jpeg;base64,0";
+                    return "";
                 }
             }
             else
             {
-                return $"data:image/jpeg;base64,0";
+                return "";
             }
         }
 

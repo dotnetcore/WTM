@@ -84,8 +84,15 @@ else
                 {
                     temp.Add(new UploadFile
                     {
-                        PrevUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}"
-                    });
+                        PrevUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}",
+                        FileName = Value.ToString()
+                    }); ;
+                    files.Add(Value.ToString(), Value.ToString());
+                }
+                else
+                {
+                    Guid? ng = null;
+                    CurrentValue = (TValue)(object)ng;
                 }
                 dlist = temp;
             }
@@ -102,8 +109,10 @@ else
                     {
                         temp.Add(new UploadFile
                         {
-                            PrevUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}"
+                            PrevUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(rv.Data)}",
+                            FileName = item.FileId.ToString()
                         });
+                        files.Add(item.FileId.ToString(), item.FileId.ToString());
                     }
                 }
                 dlist = temp;
@@ -144,6 +153,7 @@ else
                     }
                     suc = true;
                 }
+
 
                 await file.RequestBase64ImageFileAsync(format, 400, 300);
             }

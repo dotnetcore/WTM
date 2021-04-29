@@ -888,7 +888,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns></returns>
         public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url, HttpMethodEnum method, object postdata,  int? timeout = null, string proxy = null) where T : class
         {
-            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata, CoreProgram.DefaultPostJsonOption), System.Text.Encoding.UTF8, "application/json");
             return await CallAPI<T>(domainName, url, method, content,  timeout, proxy);
         }
 

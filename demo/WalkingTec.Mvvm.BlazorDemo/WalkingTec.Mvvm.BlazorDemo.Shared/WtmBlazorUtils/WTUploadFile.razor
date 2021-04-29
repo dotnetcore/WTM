@@ -83,6 +83,13 @@ else
                     {
                         FileName = rv.Data
                     });
+                    files.Add(Value.ToString(), rv.Data.ToString());
+
+                }
+                else
+                {
+                    Guid? ng = null;
+                    CurrentValue = (TValue)(object)ng;
                 }
                 dlist = temp;
             }
@@ -98,6 +105,7 @@ else
                         {
                             FileName = rv.Data
                         });
+                        files.Add(item.FileId.ToString(), rv.Data.ToString());
                     }
                 }
                 dlist = temp;
