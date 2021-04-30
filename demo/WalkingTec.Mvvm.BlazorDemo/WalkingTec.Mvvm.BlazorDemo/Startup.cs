@@ -33,11 +33,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
         {
             var config = ConfigRoot.Get<Configs>();
             services.AddDistributedMemoryCache();
-            services.AddWtmSession(3600);
-            services.AddWtmCrossDomain();
-            services.AddWtmAuthentication();
-            services.AddWtmHttpClient();
-            services.AddWtmMultiLanguages(op => op.LocalizationType = typeof(Shared.Program));
+            services.AddWtmSession(3600, ConfigRoot);
+            services.AddWtmCrossDomain(ConfigRoot);
+            services.AddWtmAuthentication(ConfigRoot);
+            services.AddWtmHttpClient(ConfigRoot);
+            services.AddWtmMultiLanguages(ConfigRoot,op => op.LocalizationType = typeof(Shared.Program));
             services.AddWtmSwagger();
 
             services.AddMvc(options =>

@@ -51,19 +51,19 @@ namespace WalkingTec.Mvvm.Mvc
     public static class FrameworkServiceExtension
     {
 
-        private static Configs _wtmconfigs;
-        private static Configs WtmConfigs
-        {
-            get
-            {
-                if(_wtmconfigs == null)
-                {
-                    ConfigurationBuilder cb = new ConfigurationBuilder();
-                    _wtmconfigs = cb.WTMConfig(null).Build().Get<Configs>();
-                }
-                return _wtmconfigs;
-            }
-        }
+        //private static Configs _wtmconfigs;
+        //private static Configs WtmConfigs
+        //{
+        //    get
+        //    {
+        //        if(_wtmconfigs == null)
+        //        {
+        //            ConfigurationBuilder cb = new ConfigurationBuilder();
+        //            _wtmconfigs = cb.WTMConfig(null).Build().Get<Configs>();
+        //        }
+        //        return _wtmconfigs;
+        //    }
+        //}
 
 
 
@@ -452,6 +452,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public static IServiceCollection AddWtmContext(this IServiceCollection services,IConfiguration config, Action<WtmContextOption> options = null)
         {
+            var conf = config.Get<Configs>();
             WtmContextOption op = new WtmContextOption();
             options?.Invoke(op);
             services.Configure<Configs>(config);
@@ -470,17 +471,18 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 y.ValueCountLimit = 5000;
                 y.ValueLengthLimit = int.MaxValue - 20480;
-                y.MultipartBodyLengthLimit = WtmConfigs.FileUploadOptions.UploadLimit;
+                y.MultipartBodyLengthLimit = conf.FileUploadOptions.UploadLimit;
             });
             return services;
         }
-        public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services)
+        public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services, IConfiguration config)
         {
+            var conf = config.Get<Configs>();
             services.AddCors(options =>
             {
-                if (WtmConfigs.CorsOptions?.Policy?.Count > 0)
+                if (conf.CorsOptions?.Policy?.Count > 0)
                 {
-                    foreach (var item in WtmConfigs.CorsOptions.Policy)
+                    foreach (var item in conf.CorsOptions.Policy)
                     {
                         string[] domains = item.Domain?.Split(',');
                         options.AddPolicy(item.Name,
@@ -507,22 +509,24 @@ namespace WalkingTec.Mvvm.Mvc
             });
             return services;
         }
-        public static IServiceCollection AddWtmSession(this IServiceCollection services,int timeout)
+        public static IServiceCollection AddWtmSession(this IServiceCollection services,int timeout, IConfiguration config)
         {
+            var conf = config.Get<Configs>();
             services.AddSession(options =>
             {
-                options.Cookie.Name = WtmConfigs.CookiePre + ".Session";
+                options.Cookie.Name = conf.CookiePre + ".Session";
                 options.IdleTimeout = TimeSpan.FromSeconds(timeout);
             });
             return services;
         }
-        public static IServiceCollection AddWtmAuthentication(this IServiceCollection services)
+        public static IServiceCollection AddWtmAuthentication(this IServiceCollection services, IConfiguration config)
         {
+            var conf = config.Get<Configs>();
             services.AddSingleton<ITokenService, TokenService>();
 
-            var jwtOptions = WtmConfigs.JwtOptions;
+            var jwtOptions = conf.JwtOptions;
 
-            var cookieOptions = WtmConfigs.CookieOptions;
+            var cookieOptions = conf.CookieOptions;
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -564,12 +568,13 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IServiceCollection AddWtmHttpClient(this IServiceCollection services)
+        public static IServiceCollection AddWtmHttpClient(this IServiceCollection services, IConfiguration config)
         {
+            var conf = config.Get<Configs>();
             services.AddHttpClient();
-            if (WtmConfigs.Domains != null)
+            if (conf.Domains != null)
             {
-                foreach (var item in WtmConfigs.Domains)
+                foreach (var item in conf.Domains)
                 {
                     services.AddHttpClient(item.Key, x =>
                     {
@@ -611,15 +616,16 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IServiceCollection AddWtmMultiLanguages(this IServiceCollection services, Action<WtmLocalizationOption> op = null)
+        public static IServiceCollection AddWtmMultiLanguages(this IServiceCollection services, IConfiguration config, Action<WtmLocalizationOption> op = null)
         {
+            var conf = config.Get<Configs>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.DefaultRequestCulture = new RequestCulture(WtmConfigs.SupportLanguages[0]);
-                options.SupportedCultures = WtmConfigs.SupportLanguages;
-                options.SupportedUICultures = WtmConfigs.SupportLanguages;
+                options.DefaultRequestCulture = new RequestCulture(conf.SupportLanguages[0]);
+                options.SupportedCultures = conf.SupportLanguages;
+                options.SupportedUICultures = conf.SupportLanguages;
             });
             WtmLocalizationOption loc = new WtmLocalizationOption();
             op?.Invoke(loc);
