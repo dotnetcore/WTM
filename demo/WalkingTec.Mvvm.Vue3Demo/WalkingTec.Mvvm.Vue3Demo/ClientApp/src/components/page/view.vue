@@ -15,7 +15,7 @@
     destroyOnClose
     @cancel="onCancel"
   >
-    <slot />
+    <slot v-if="visible" />
   </a-modal>
   <a-drawer
     v-else
@@ -27,7 +27,7 @@
     destroyOnClose
     @close="onCancel"
   >
-    <slot />
+    <slot v-if="visible" />
   </a-drawer>
 </template>
 
@@ -68,7 +68,7 @@ export default class extends Vue {
     return this.lodash.max([500, width > 800 ? 800 : width]);
   }
   onCancel() {
-    this.__wtmBackDetails();
+    this.__wtmBackDetails(this.visibleKey);
   }
   created() { }
   mounted() {

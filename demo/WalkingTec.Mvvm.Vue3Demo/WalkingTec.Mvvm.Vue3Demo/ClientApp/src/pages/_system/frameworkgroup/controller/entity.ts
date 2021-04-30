@@ -17,6 +17,7 @@ class Entity {
         name: ['Entity', 'GroupCode'],
         // label 字段描述
         label: EnumLocaleLabel.GroupCode,
+        rules: [{ required: true }],
     }
     readonly GroupCode_Filter: WTM_EntitiesField = {
         name: 'GroupCode',
@@ -25,6 +26,7 @@ class Entity {
     readonly GroupName: WTM_EntitiesField = {
         name: ['Entity', 'GroupName'],
         label: EnumLocaleLabel.GroupName,
+        rules: [{ required: true }],
     }
     readonly GroupName_Filter: WTM_EntitiesField = {
         name: 'GroupName',

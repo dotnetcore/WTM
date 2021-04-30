@@ -1,5 +1,5 @@
 
-import { $i18n, WTM_EntitiesField, WTM_ValueType, FieldRequest } from '@/client';
+import { $i18n, WTM_EntitiesField, WTM_ValueType, FieldRequest, EnumActionType } from '@/client';
 import { EnumLocaleLabel } from '../locales';
 
 /**
@@ -30,7 +30,7 @@ class Entity {
         // 输入框提示 非必填 默认如下
         // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.ITCode),
         // 校验规则
-        rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.ITCode) }],
+        rules: [{ required: true }],
     }
     /**
     * 备注预留
@@ -49,7 +49,8 @@ class Entity {
     readonly Password: WTM_EntitiesField = {
         name: ['Entity', 'Password'],
         label: EnumLocaleLabel.Password,
-        rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Password) }],
+        valueType: WTM_ValueType.password,
+        rules: [{ required: true }],
     }
     /**
     * 备注预留
@@ -59,8 +60,7 @@ class Entity {
     readonly Email: WTM_EntitiesField = {
         name: ['Entity', 'Email'],
         label: EnumLocaleLabel.Email,
-        valueType: WTM_ValueType.textarea,
-        rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Email) }],
+        // rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Email) }],
     }
     /**
     * 备注预留
@@ -70,7 +70,7 @@ class Entity {
     readonly Name: WTM_EntitiesField = {
         name: ['Entity', 'Name'],
         label: EnumLocaleLabel.Name,
-        rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Name) }],
+        rules: [{ required: true }],
     }
     /**
     * 备注预留
@@ -97,7 +97,33 @@ class Entity {
                 { label: $i18n.t(EnumLocaleLabel.Sex_Female), value: 'Female' }
             ]
         },
-        rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Sex) }],
+        rules: [{ required: true }],
+    }
+    readonly CellPhone: WTM_EntitiesField = {
+        name: ['Entity', 'CellPhone'],
+        label: EnumLocaleLabel.CellPhone,
+    }
+    readonly HomePhone: WTM_EntitiesField = {
+        name: ['Entity', 'HomePhone'],
+        label: EnumLocaleLabel.HomePhone,
+    }
+    readonly Address: WTM_EntitiesField = {
+        name: ['Entity', 'Address'],
+        label: EnumLocaleLabel.Address,
+    }
+    readonly ZipCode: WTM_EntitiesField = {
+        name: ['Entity', 'ZipCode'],
+        label: EnumLocaleLabel.ZipCode,
+    }
+    readonly PhotoId: WTM_EntitiesField = {
+        name: ['Entity', 'PhotoId'],
+        valueType: WTM_ValueType.image,
+        label: EnumLocaleLabel.Photo,
+    }
+    readonly IsValid: WTM_EntitiesField = {
+        name: ['Entity', 'IsValid'],
+        valueType: WTM_ValueType.switch,
+        label: EnumLocaleLabel.IsValid,
     }
     /**
     * 备注预留
@@ -107,9 +133,9 @@ class Entity {
     readonly SelectedRolesCodes: WTM_EntitiesField = {
         name: 'SelectedRolesCodes',
         label: EnumLocaleLabel.RoleName,
-        valueType: WTM_ValueType.checkbox,
+        valueType: WTM_ValueType.transfer,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
-        rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.RoleName), type: "array" }],
+        // rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.RoleName), type: "array" }],
     }
     /**
     * 备注预留
@@ -119,9 +145,9 @@ class Entity {
     readonly SelectedGroupCodes: WTM_EntitiesField = {
         name: 'SelectedGroupCodes',
         label: EnumLocaleLabel.GroupName,
-        valueType: WTM_ValueType.checkbox,
+        valueType: WTM_ValueType.transfer,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkGroups'),
-        rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.GroupName), type: "array" }],
+        // rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.GroupName), type: "array" }],
     }
 }
 export const PageEntity = new Entity()

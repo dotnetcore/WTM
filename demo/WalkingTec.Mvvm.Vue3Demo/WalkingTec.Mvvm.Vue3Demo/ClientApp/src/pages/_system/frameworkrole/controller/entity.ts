@@ -17,6 +17,7 @@ class Entity {
         name: ['Entity', 'RoleCode'],
         // label 字段描述
         label: EnumLocaleLabel.RoleCode,
+        rules: [{ required: true }],
     }
     readonly RoleCode_Filter: WTM_EntitiesField = {
         name: 'RoleCode',
@@ -25,6 +26,7 @@ class Entity {
     readonly RoleName: WTM_EntitiesField = {
         name: ['Entity', 'RoleName'],
         label: EnumLocaleLabel.RoleName,
+        rules: [{ required: true }],
     }
     readonly RoleName_Filter: WTM_EntitiesField = {
         name: 'RoleName',

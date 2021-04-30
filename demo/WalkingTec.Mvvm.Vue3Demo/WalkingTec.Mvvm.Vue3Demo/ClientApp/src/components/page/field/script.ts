@@ -92,7 +92,18 @@ export class FieldBasics extends Vue {
     }
     // form 校验规则
     get _rules() {
-        return this.lodash.get(this.PageEntity, `${this.entityKey}.rules`);
+        const rules = this.lodash.map(this.lodash.get(this.PageEntity, `${this.entityKey}.rules`), item => {
+            // 必填标识
+            if (item.required) {
+                // 没有 message
+                if (!this.lodash.has(item, 'message')) {
+                    this.lodash.assign(item, { message: this.toRulesMessage() })
+                }
+            }
+            return item
+        });
+
+        return rules;
     }
     // 属性值 v-model:value
     get value() {
@@ -116,6 +127,9 @@ export class FieldBasics extends Vue {
             `${this.entityKey}.request`,
             this.request
         );
+    }
+    toRulesMessage() {
+        return this.lodash.invoke(this.$i18n, 'toRulesMessage', this._label)
     }
     // 加载数据源
     async onRequest() {

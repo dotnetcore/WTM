@@ -29,6 +29,7 @@ import {
     Slider,
     Upload,
     DatePicker,
+    message,
     Rate,
     ConfigProvider
 } from 'ant-design-vue';
@@ -76,5 +77,7 @@ export default {
         // });
         app.use(ProLayout)
         app.component('PageContainer', PageContainer)
+        app.config.globalProperties.$message = message;
+
     }
 }

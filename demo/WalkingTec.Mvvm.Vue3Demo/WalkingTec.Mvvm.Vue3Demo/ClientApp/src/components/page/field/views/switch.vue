@@ -1,6 +1,13 @@
 <template>
   <template v-if="_readonly">
-    <span v-text="value"></span>
+    <a-switch :checked="value" disabled>
+      <template #checkedChildren>
+        <check-outlined />
+      </template>
+      <template #unCheckedChildren>
+        <close-outlined />
+      </template>
+    </a-switch>
   </template>
   <template v-else>
     <a-switch v-model:checked="value" :disabled="disabled">

@@ -3,6 +3,7 @@ import WtmAction from './page/action/index.vue';
 import WtmDetails from './page/details/index.vue';
 import WtmView from './page/view.vue';
 import WtmGrid from './page/grid/index.vue';
+import { frameworkComponents } from './page/grid/framework';
 import WtmFilter from './page/filter.vue';
 import WtmField from './page/field/index.vue';
 import antd from './plugins/antd';
@@ -18,5 +19,6 @@ export default {
         app.component('WtmAction', WtmAction)
         app.component('WtmFilter', WtmFilter)
         app.component('WtmField', WtmField)
+        app.config.globalProperties.$FrameworkComponents = frameworkComponents
     }
 }

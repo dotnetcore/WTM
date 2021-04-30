@@ -63,6 +63,12 @@ export default class extends Vue {
   @Prop({ default: false }) readonly loading;
   /** 数据 提交 函数 */
   @Prop({ type: Function, required: true }) readonly onFinish;
+  get successMsg() {
+    return this.$t('tips.success.operation')
+  }
+  get errorMsg() {
+    return this.$t('tips.error.operation')
+  }
   spinning = false;
   labelCol = { span: 24 };
   wrapperCol = { span: 24 };
@@ -87,6 +93,7 @@ export default class extends Vue {
   onComplete() {
     this.spinning = false;
     this.__wtmBackDetails();
+    this.$message.success(this.successMsg)
   }
   // 失败
   onFail(error) {
@@ -99,6 +106,7 @@ export default class extends Vue {
     });
     console.error("LENG  ~ onFail ", this.formRef, formErrors, error);
     this.spinning = false;
+    this.$message.error(this.errorMsg)
   }
   created() { }
   mounted() {
@@ -137,7 +145,7 @@ export default class extends Vue {
   }
 
   .ant-space-item {
-    flex: auto;
+    flex: 1;
   }
 }
 </style>

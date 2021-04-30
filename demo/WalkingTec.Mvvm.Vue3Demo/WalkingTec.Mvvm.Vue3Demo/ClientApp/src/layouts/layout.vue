@@ -55,7 +55,7 @@ export default class extends Vue {
   getMenuData() {
     const production = this.System.UserController.UserMenus.getMenus();
     if (this.$WtmConfig.production) {
-    console.log("🚀 ~ file: layout.vue ~ line 57 ~ extends ~ getMenuData ~ production", production)
+      console.log("🚀 ~ file: layout.vue ~ line 57 ~ extends ~ getMenuData ~ production", production)
       return production;
     }
     const menus = [
@@ -84,8 +84,8 @@ export default class extends Vue {
 
     return menus;
   }
-  created() {}
-  mounted() {}
+  created() { }
+  mounted() { }
   onCollapse(collapsed) {
     this.provider.collapsed = collapsed;
   }

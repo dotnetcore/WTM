@@ -1,6 +1,6 @@
 <template>
   <template v-if="_readonly">
-    <span v-text="value"></span>
+    <span v-text="'******'"></span>
   </template>
   <template v-else>
     <a-input-password

@@ -26,5 +26,21 @@ export class PageController extends WTM.ControllerBasics {
             template: '/api/_frameworkrole/GetExcelTemplate'
         })
     }
+    /**
+     * 获取权限
+     * @param body 
+     * @returns 
+     */
+    onGetPrivilege(ID) {
+        return this.$ajax.get('/api/_frameworkrole/GetPageActions/{ID}', { ID })
+    }
+    /**
+     * 保存权限
+     * @param params 
+     * @returns 
+     */
+    onSavePrivilege(params) {
+        return this.$ajax.put('/api/_frameworkrole/EditPrivilege', params)
+    }
 }
 export default new PageController()

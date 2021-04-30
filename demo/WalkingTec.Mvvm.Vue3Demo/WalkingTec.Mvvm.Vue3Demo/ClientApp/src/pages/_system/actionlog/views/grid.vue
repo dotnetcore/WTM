@@ -3,6 +3,7 @@
 </template>
 <script lang="ts">
 import { ColDef, ColGroupDef, GridOptions } from "ag-grid-community";
+import lodash from "lodash";
 import { Inject, Options, Vue } from "vue-property-decorator";
 import { PageController } from "../controller";
 import { EnumLocaleLabel } from "../locales";
@@ -42,6 +43,9 @@ export default class extends Vue {
     {
       headerName: EnumLocaleLabel.Duration,
       field: "Duration",
+      cellStyle: ({ data }) => {
+        return { color: lodash.get(data, 'Duration__forecolor') }
+      }
     },
     {
       headerName: EnumLocaleLabel.IP,

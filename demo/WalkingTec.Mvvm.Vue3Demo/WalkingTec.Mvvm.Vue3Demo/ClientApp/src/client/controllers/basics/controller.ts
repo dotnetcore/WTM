@@ -120,6 +120,7 @@ export class ControllerBasics<T = any> {
       this.onToggleLoading(false);
       return res
     } catch (error) {
+      console.error(error)
       this.onToggleLoading(false);
       throw error
     }
@@ -132,16 +133,17 @@ export class ControllerBasics<T = any> {
   async onUpdate(entities: T, msg?: string) {
     try {
       this.onToggleLoading(true);
-      const res = await this.$ajax.request(lodash.assign({ body: entities }, this.getAjaxRequest('update'))).toPromise()
+      const res = await this.$ajax.request<T>(lodash.assign({ body: entities }, this.getAjaxRequest('update'))).toPromise()
       this.Entities.onUpdate(old => {
-        return lodash.assign(old, entities)
+        return lodash.assign(old, res)
       })
-      this.Pagination.onUpdate(entities, old => {
-        return lodash.assign(old, entities)
+      this.Pagination.onUpdate(res, old => {
+        return lodash.assign(old, res)
       })
       ControllerBasics.$msg(msg)
       this.onToggleLoading(false);
     } catch (error) {
+      console.error(error)
       this.onToggleLoading(false);
       throw error
     }
@@ -159,6 +161,7 @@ export class ControllerBasics<T = any> {
       ControllerBasics.$msg(msg)
       this.onToggleLoading(false);
     } catch (error) {
+      console.error(error)
       this.onToggleLoading(false);
       throw error
     }
@@ -181,12 +184,15 @@ export class ControllerBasics<T = any> {
         ids = [key]
       }
       await this.$ajax.request(lodash.assign({ body: ids }, this.getAjaxRequest('delete'))).toPromise()
+      this.Pagination.onSelectionChanged([])
       this.Pagination.onRemove(key);
       ControllerBasics.$msg(msg)
+      this.onToggleLoading(false);
     } catch (error) {
       console.error(error)
+      this.onToggleLoading(false);
+      throw error
     }
-    this.onToggleLoading(false);
   }
   /**
    * 导出

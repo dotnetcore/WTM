@@ -35,6 +35,7 @@ class Entity {
     readonly ActionTime_Filter: WTM_EntitiesField = {
         name: 'ActionTime',
         label: EnumLocaleLabel.ActionTime,
+        valueType: WTM_ValueType.dateRange
     }
     readonly IP: WTM_EntitiesField = {
         name: ['Entity', 'IP'],

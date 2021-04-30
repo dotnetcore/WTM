@@ -10,12 +10,15 @@ export class PageDetailsBasics extends Vue {
       */
     readonly PageController: ControllerBasics;
     formState = {}
+    get queryKey() {
+        return this.$WtmConfig.detailsVisible
+    }
     get Entities() {
         return this.PageController.Entities
     }
     // 获取地址栏 ID 有 修改 没有 添加
     get ID() {
-        return this.lodash.get(this.$route.query, this.$WtmConfig.detailsVisible)
+        return this.lodash.get(this.$route.query, this.queryKey)
     }
     get IsEdit() {
         return !!this.ID

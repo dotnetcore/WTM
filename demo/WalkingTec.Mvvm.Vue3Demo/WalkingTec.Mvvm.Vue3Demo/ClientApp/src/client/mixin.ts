@@ -31,8 +31,8 @@ const options: ComponentOptions = {
          * 详情返回
          * 去除当前页面的 query 中 detailsVisible 触发隐藏
          */
-        __wtmBackDetails() {
-            const query = lodash.omit(lodash.assign({}, this.$route.query), [$WtmConfig.detailsVisible, '_readonly'])
+        __wtmBackDetails(queryKey?) {
+            const query = lodash.omit(lodash.assign({}, this.$route.query), [$WtmConfig.detailsVisible, '_readonly', queryKey])
             this.$router.replace({ query })
         },
         /**
@@ -76,7 +76,7 @@ declare module '@vue/runtime-core' {
          * 详情返回
          * 去除当前页面的 query 中 detailsVisible 触发隐藏
          */
-        readonly __wtmBackDetails: () => void
+        readonly __wtmBackDetails: (queryKey?) => void
         /**
          * 将组件转换为 row 组件
          * @param action  row 组件

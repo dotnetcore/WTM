@@ -1,15 +1,17 @@
 <template>
-  <template v-if="_readonly">
-    <span v-text="value"></span>
-  </template>
-  <template v-else>
-    <a-checkbox-group
-      v-model:value="value"
-      :placeholder="_placeholder"
-      :disabled="disabled"
-      :options="dataSource"
-    />
-  </template>
+  <a-spin :spinning="spinning">
+    <template v-if="_readonly">
+      <span v-text="readonlyText"></span>
+    </template>
+    <template v-else>
+      <a-checkbox-group
+        v-model:value="value"
+        :placeholder="_placeholder"
+        :disabled="disabled"
+        :options="dataSource"
+      />
+    </template>
+  </a-spin>
 </template>
 <script lang="ts">
 import { Vue, Options, Prop, mixins, Inject } from "vue-property-decorator";
@@ -22,6 +24,10 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly formValidate;
   // 实体
   @Inject() readonly PageEntity;
+  get readonlyText() {
+    const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, String(item.value)));
+    return this.lodash.map(filters, 'label').join(' / ')
+  }
   async mounted() {
     this.onRequest();
     if (this.debug) {
