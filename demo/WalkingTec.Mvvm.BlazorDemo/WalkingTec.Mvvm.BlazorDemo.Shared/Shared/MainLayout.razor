@@ -9,8 +9,8 @@
 <CascadingValue Value="this" IsFixed="true">
 
     <Layout SideWidth="0" IsPage="true" ShowGotoTop="true" ShowCollapseBar="true"
-            IsFullSide="@IsFullSide" IsFixedHeader="@IsFixedHeader" IsFixedFooter="@IsFixedFooter" ShowFooter="@ShowFooter"
-            Menus="@GetIconSideMenuItems()" UseTabSet="@UseTabSet" AdditionalAssemblies="new[] { GetType().Assembly }" class="@Theme">
+            IsFullSide="@IsFullSide" IsFixedHeader="@IsFixedHeader" IsFixedFooter="@IsFixedFooter" ShowFooter="@ShowFooter" 
+            Menus="@Menus" UseTabSet="@UseTabSet" AdditionalAssemblies="new[] { GetType().Assembly }" class="@Theme">
         <Header>
             <span class="ml-3 flex-sm-fill d-none d-sm-block"></span>
             <div class="header-right" style="width: 90px;">
@@ -172,6 +172,8 @@
 
     private bool ShowFooter { get; set; } = false;
 
+    private List<BootstrapBlazor.Components.MenuItem> Menus { get; set; }
+
     private string SelectedCulture
     {
         get
@@ -187,7 +189,6 @@
             return CultureInfo.CurrentUICulture.Name;
         }
     }
-    private List<BootstrapBlazor.Components.MenuItem> Menus { get; set; }
 
     [CascadingParameter]
     public LoginUserInfo UserInfo
@@ -209,11 +210,11 @@
         await wtmblazor.OpenDialog<Password>(wtmblazor.Localizer["Login.ChangePassword"], size: Size.Small);
     }
 
-    private List<BootstrapBlazor.Components.MenuItem> GetIconSideMenuItems()
+    protected override async Task OnInitializedAsync()
     {
         List<BootstrapBlazor.Components.MenuItem> menus = null;
         menus = new List<BootstrapBlazor.Components.MenuItem> { };
-        menus.Add(new BootstrapBlazor.Components.MenuItem() { Text = wtmblazor.Localizer["Sys.Home"], Icon = "fa fa-fw fa-home", Url = "/" });
+        menus.Add(new BootstrapBlazor.Components.MenuItem() { Text = wtmblazor.Localizer["Sys.Home"], Icon = "fa fa-fw fa-home", Url = "/", Match = NavLinkMatch.All });
         if (wtmblazor.ConfigInfo.IsQuickDebug == true)
         {
             var pages = wtmblazor.GetAllPages();
@@ -227,15 +228,89 @@
                 };
                 if (item.Children != null)
                 {
+                    var items = new List<BootstrapBlazor.Components.MenuItem>();
+
                     foreach (var child in item.Children)
                     {
-                        m.AddItem(new BootstrapBlazor.Components.MenuItem
+                        items.Add(new BootstrapBlazor.Components.MenuItem
                         {
                             Text = child.PageName,
                             Icon = child.Icon,
                             Url = child.Url
                         });
                     }
+                    m.Items = items;
+                }
+                menus.Add(m);
+            }
+        }
+        else
+        {
+            var usermenu = UserInfo.Attributes["Menus"] as WalkingTec.Mvvm.Core.Support.Json.SimpleMenuApi[];
+
+            var formatedmenu = new List<FrameworkMenu>();
+            foreach (var item in usermenu)
+            {
+                if (item.ParentId == null)
+                {
+                    formatedmenu.Add(new FrameworkMenu
+                    {
+                        ID = new Guid(item.Id),
+                        PageName = item.Text,
+                        Icon = item.Icon,
+                        Url = item.Url,
+                        Children = new List<FrameworkMenu>()
+                    });
+                }
+                else
+                {
+                    var parent = formatedmenu.Where(x => x.ID.ToString() == item.ParentId).FirstOrDefault();
+                    parent.Children.Add(new FrameworkMenu
+                    {
+                        ID = new Guid(item.Id),
+                        PageName = item.Text,
+                        Icon = item.Icon,
+                        Url = item.Url,
+                        Children = new List<FrameworkMenu>()
+                    });
+                }
+            }
+            GetMenuFromFrameworkMenu(formatedmenu).ForEach(x => menus.Add(x));
+        }
+        Menus = menus;
+        await base.OnInitializedAsync();
+    }
+
+    private List<BootstrapBlazor.Components.MenuItem> GetIconSideMenuItems()
+    {
+        List<BootstrapBlazor.Components.MenuItem> menus = null;
+        menus = new List<BootstrapBlazor.Components.MenuItem> { };
+        menus.Add(new BootstrapBlazor.Components.MenuItem() { Text = wtmblazor.Localizer["Sys.Home"], Icon = "fa fa-fw fa-home", Url = "/", Match = NavLinkMatch.All });
+        if (wtmblazor.ConfigInfo.IsQuickDebug == true)
+        {
+            var pages = wtmblazor.GetAllPages();
+            foreach (var item in pages)
+            {
+                BootstrapBlazor.Components.MenuItem m = new BootstrapBlazor.Components.MenuItem
+                {
+                    Text = item.PageName,
+                    Icon = item.Icon,
+                    Url = item.Url
+                };
+                if (item.Children != null)
+                {
+                    var items = new List<BootstrapBlazor.Components.MenuItem>();
+
+                    foreach (var child in item.Children)
+                    {
+                        items.Add(new BootstrapBlazor.Components.MenuItem
+                        {
+                            Text = child.PageName,
+                            Icon = child.Icon,
+                            Url = child.Url
+                        });
+                    }
+                    m.Items = items;
                 }
                 menus.Add(m);
             }
