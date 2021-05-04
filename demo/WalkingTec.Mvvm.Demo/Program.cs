@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,7 +26,11 @@ namespace WalkingTec.Mvvm.Demo
         {
             return
                 Host.CreateDefaultBuilder(args)
-                 .ConfigureLogging((hostingContext, logging) =>
+                  .ConfigureAppConfiguration((hostingContext, config) =>
+                  {
+                      config.AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", hostingContext.HostingEnvironment.ContentRootPath } });
+                  })
+                .ConfigureLogging((hostingContext, logging) =>
                  {
                      logging.ClearProviders();
                      logging.AddConsole();

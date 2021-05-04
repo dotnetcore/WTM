@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -33,12 +34,12 @@ namespace WalkingTec.Mvvm.VueDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-            services.AddWtmSession(3600);
-            services.AddWtmCrossDomain();
-            services.AddWtmAuthentication();
-            services.AddWtmHttpClient();
+            services.AddWtmSession(3600, ConfigRoot);
+            services.AddWtmCrossDomain(ConfigRoot);
+            services.AddWtmAuthentication(ConfigRoot);
+            services.AddWtmHttpClient(ConfigRoot);
             services.AddWtmSwagger();
-            services.AddWtmMultiLanguages();
+            services.AddWtmMultiLanguages(ConfigRoot);
 
             services.AddMvc(options =>
             {
@@ -134,8 +135,8 @@ namespace WalkingTec.Mvvm.VueDemo
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
             //指定哪些模型需要数据权限
-            pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
-            pris.Add(new DataPrivilegeInfo<Major>("专业权限", m => m.MajorName));
+            //pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
+            //pris.Add(new DataPrivilegeInfo<FrameworkRole>("角色权限", m => m.RoleName));
             return pris;
         }
 

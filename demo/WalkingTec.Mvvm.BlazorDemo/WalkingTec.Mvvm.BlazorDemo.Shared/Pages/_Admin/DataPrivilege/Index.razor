@@ -1,0 +1,135 @@
+@page "/_Admin/DataPrivilege"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
+@inherits BasePage
+@attribute [ActionDescription("MenuKey.DataPrivilege", "WalkingTec.Mvvm.Admin.Api,DataPrivilege")]
+
+<WTSearchPanel OnSearch="@DoSearch">
+    <ValidateForm Model="@SearchModel">
+        <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Inline">
+            <Select @bind-Value="@SearchModel.TableName" Items="@AllPrivileges" />
+            <Select @bind-Value="@SearchModel.DpType" />
+        </Row>
+    </ValidateForm>
+</WTSearchPanel>
+
+
+
+<Table @ref="dataTable" TItem="DataPrivilege_ListView" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;">
+    <TableColumns>
+        <TableColumn @bind-Field="@context.Name" Width="180" />
+        <TableColumn @bind-Field="@context.PName" />
+        <TableColumn @bind-Field="@context.RelateIDs" />
+
+    </TableColumns>
+    <TableToolbarTemplate>
+        @if (IsAccessable("/api/_DataPrivilege/add"))
+        {
+            <TableToolbarButton TItem="DataPrivilege_ListView" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
+        }
+        @if (IsAccessable("/api/_DataPrivilege/exportexcel"))
+        {
+            <TableToolbarButton TItem="DataPrivilege_ListView" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+        }
+    </TableToolbarTemplate>
+    <RowButtonTemplate>
+        <div style="padding-right:10px;">
+            @if (IsAccessable("/api/_DataPrivilege/edit"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
+            }
+            @if (IsAccessable("/api/_DataPrivilege/Get"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
+            }
+            @if (IsAccessable("/api/_DataPrivilege/batchdelete"))
+            {
+                <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+                                  Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
+            }
+        </div>
+    </RowButtonTemplate>
+</Table>
+
+@code{
+
+    private DataPrivilegeSearcher SearchModel = new DataPrivilegeSearcher();
+    private Table<DataPrivilege_ListView> dataTable;
+    private List<SelectedItem> AllPrivileges = new List<SelectedItem>();
+    private List<SelectedItem> AllDptypes = new List<SelectedItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
+        //AllDptypes.Add(new SelectedItem() { Text = WtmBlazor.Localizer["_Admin.UserDp"], Value = DpTypeEnum.User.ToString() });
+        //AllDptypes.Add(new SelectedItem() { Text = WtmBlazor.Localizer["_Admin.GroupDp"], Value = DpTypeEnum.UserGroup.ToString() });
+
+
+    }
+
+    private async Task<QueryData<DataPrivilege_ListView>> OnSearch(QueryPageOptions opts)
+    {
+        return await StartSearch<DataPrivilege_ListView>("/api/_DataPrivilege/search", SearchModel, opts);
+    }
+
+    private void DoSearch()
+    {
+        dataTable.QueryAsync();
+    }
+
+    private async Task OnCreateClick(IEnumerable<DataPrivilege_ListView> items)
+    {
+        if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"], x => x.dptype == SearchModel.DpType) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
+    }
+
+    private async Task OnEditClick(DataPrivilege_ListView item)
+    {
+        if (await OpenDialog<Edit>(WtmBlazor.Localizer["Sys.Edit"], x => x.TableName == item.TableName
+                    && x.TargetId == item.TargetId && x.DpType == item.DpType) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
+    }
+
+    private async Task OnDetailsClick(DataPrivilege_ListView item)
+    {
+        await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.TableName == item.TableName
+                   && x.TargetId == item.TargetId && x.DpType == item.DpType);
+    }
+
+    private async Task OnBatchDeleteClick()
+    {
+        if (dataTable.SelectedRows?.Any() == true)
+        {
+            await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/_DataPrivilege/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
+            await dataTable.QueryAsync();
+        }
+        else
+        {
+            await WtmBlazor.Toast.Information(WtmBlazor.Localizer["Sys.Info"], WtmBlazor.Localizer["Sys.SelectOneRowMin"]);
+        }
+    }
+
+    private async Task OnDeleteClick(DataPrivilege_ListView item)
+    {
+        await PostsData(new { ModelName = item.TableName, Id = item.TargetId, Type = item.DpType }, $"/api/_DataPrivilege/delete", (s) => "Sys.OprationSuccess");
+        await dataTable.QueryAsync();
+    }
+
+
+    private async Task OnExportClick(IEnumerable<DataPrivilege_ListView> items)
+    {
+        if (dataTable.SelectedRows?.Any() == true)
+        {
+            await Download("/api/_DataPrivilege/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
+        }
+        else
+        {
+            await Download("/api/_DataPrivilege/ExportExcel", SearchModel);
+        }
+    }
+
+}

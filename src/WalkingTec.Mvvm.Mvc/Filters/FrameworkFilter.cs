@@ -100,11 +100,15 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             string body = context.HttpContext.Items["DONOTUSE_REQUESTBODY"].ToString();
                             var joption = new JsonSerializerOptions();
                             joption.Converters.Add(new BodyConverter());
-                            var obj = JsonSerializer.Deserialize<PostedBody>(body,joption);
-                            foreach (var field in obj.ProNames)
+                            try
                             {
-                               model.FC.Add(field, null);
+                                var obj = JsonSerializer.Deserialize<PostedBody>(body, joption);
+                                foreach (var field in obj.ProNames)
+                                {
+                                    model.FC.Add(field, null);
+                                }
                             }
+                            catch { }
                         }
                     }
                     //if (model is IBaseCRUDVM<TopBasePoco> crud)
@@ -188,9 +192,19 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         foreach (var v in invalid)
                         {
-                            if (v?.StartsWith("Entity.") == true && model.FC.ContainsKey(v) == false)
+                            if (v?.StartsWith("Entity.") == true)
                             {
-                                ctrl.ModelState.Remove(v);
+                                Regex r = new Regex("(.*?)\\[.*?\\](.*?$)");
+                                var m = r.Match(v);
+                                var check = v;
+                                if (m.Success)
+                                {
+                                    check = m.Groups[1] + "[0]" + m.Groups[2];
+                                }
+                                if (model.FC.ContainsKey(check) == false)
+                                {
+                                    ctrl.ModelState.Remove(v);
+                                }
                             }
                         }
                     }

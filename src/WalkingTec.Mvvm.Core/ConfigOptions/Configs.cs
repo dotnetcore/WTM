@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core.ConfigOptions;
@@ -381,6 +382,25 @@ namespace WalkingTec.Mvvm.Core
             set
             {
                 _languages = value;
+            }
+        }
+
+        private List<CultureInfo> _supportLanguages;
+        public List<CultureInfo> SupportLanguages
+        {
+            get
+            {
+                if(_supportLanguages == null)
+                {
+                    _supportLanguages = new List<CultureInfo>();
+                    var lans = Languages.Split(",");
+                    foreach (var lan in lans)
+                    {
+                        _supportLanguages.Add(new CultureInfo(lan));
+                    }
+
+                }
+                return _supportLanguages;
             }
         }
 

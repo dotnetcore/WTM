@@ -1,0 +1,70 @@
+@namespace WtmBlazorUtils
+@inherits WTComponent
+@inject WtmBlazorContext WtmBlazor
+@using System.Linq.Expressions;
+
+<DateTimeRange @ref="dt" Value="innerValue" OnConfirm="SetDate" OnClearValue="SetDate" DisplayText="@LabelText"/>
+
+@code{
+
+    [Parameter]
+    public DateRange Value { get; set; }
+    [Parameter]
+    public EventCallback<DateRange> ValueChanged { get; set; }
+    [Parameter]
+    public Expression<Func<DateRange>> ValueExpression { get; set; }
+    private DateTimeRangeValue innerValue = new DateTimeRangeValue();
+
+    [Parameter]
+    public string LabelText { get; set; }
+
+    private DateTimeRange dt { get; set; }
+
+    protected DateRange CurrentValue
+    {
+        get => Value;
+        set
+        {
+            var hasChanged = !EqualityComparer<DateRange>.Default.Equals(value, Value);
+            if (hasChanged)
+            {
+                Value = value;
+                _ = ValueChanged.InvokeAsync(value);
+            }
+        }
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(LabelText))
+        {
+            LabelText = ValueExpression.GetPropertyDisplayName(WtmBlazor.Localizer);
+        }
+        return base.OnInitializedAsync();
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        if (Value != null && Value.GetStartTime() != null && Value.GetEndTime() != null) {
+            innerValue = new DateTimeRangeValue { Start = Value.GetStartTime().Value, End = Value.GetEndTime().Value };
+        }
+        else
+        {
+            innerValue = new DateTimeRangeValue();
+        }
+        return base.OnParametersSetAsync();
+    }
+
+    private async Task SetDate(DateTimeRangeValue v)
+    {
+        if (v.Start == DateTime.MinValue && v.End == DateTime.MinValue)
+        {
+            CurrentValue = null;
+        }
+        else
+        {
+            CurrentValue = new DateRange(v.Start, v.End);
+        }
+    }
+
+}

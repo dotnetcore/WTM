@@ -11,6 +11,7 @@ namespace WalkingTec.Mvvm.Core
         public string LoginPath { get; set; } = "/Login/Login";
         public string LogoutPath { get; set; } = "/Login/Logout";
         public string AccessDeniedPath { get; set; } = "/Login/Login";
+        public string Domain { get; set; } = "";
         public string ReturnUrlParameter { get; set; } = CookieAuthenticationDefaults.ReturnUrlParameter;
     }
 }

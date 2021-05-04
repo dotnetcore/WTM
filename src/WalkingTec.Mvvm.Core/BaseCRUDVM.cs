@@ -342,7 +342,14 @@ namespace WalkingTec.Mvvm.Core
         {
             DoEditPrepare(updateAllFields);
 
-            DC.SaveChanges();
+            try
+            {
+                DC.SaveChanges();
+            }
+            catch
+            {
+                MSD.AddModelError(" ", Localizer["Sys.EditFailed"]);
+            }
             //删除不需要的附件
             if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
@@ -450,9 +457,14 @@ namespace WalkingTec.Mvvm.Core
 
                             TModel _entity = null;
                             //打开新的数据库联接,获取数据库中的主表和子表数据
-                            using (var ndc = DC.CreateNew())
+                            //using (var ndc = DC.CreateNew())
+                            //{
+                                _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
+                            //}
+                            if(_entity == null)
                             {
-                                _entity = ndc.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
+                                MSD.AddModelError(" ", Localizer["Sys.EditFailed"]);
+                                return;
                             }
                             //比较子表原数据和新数据的区别
                             IEnumerable<TopBasePoco> toadd = null;

@@ -70,7 +70,7 @@ export default {
     },
     
     getValue(props: WTM.FormProps, fieId, defaultvalue = undefined) {
-        var rv = lodash.toString(props.form.getFieldValue(fieId) || lodash.get(props.defaultValues, fieId));
+        var rv = lodash.toString(props.form.getFieldValue(fieId)) || lodash.toString(lodash.get(props.defaultValues, fieId));
         if (rv == "") {
             rv = lodash.toString(defaultvalue);
         }

@@ -1,0 +1,32 @@
+@page "/_Admin/FrameworkGroup/Details/{id}"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model">
+    <Display @bind-Value="@Model.Entity.GroupCode" ShowLabel="true" />
+    <Display @bind-Value="@Model.Entity.GroupName" ShowLabel="true" />
+    <Display @bind-Value="@Model.Entity.GroupRemark" ShowLabel="true" />
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="关闭" OnClick="OnClose" />
+    </div>
+</ValidateForm>
+
+@code {
+    private FrameworkGroupVM Model = new FrameworkGroupVM();
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var rv = await WtmBlazor.Api.CallAPI<FrameworkGroupVM>($"/api/_FrameworkGroup/{id}");
+        Model = rv.Data;
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

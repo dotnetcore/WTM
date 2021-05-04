@@ -33,12 +33,12 @@ namespace WalkingTec.Mvvm.Vue3Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-            services.AddWtmSession(3600);
-            services.AddWtmCrossDomain();
-            services.AddWtmAuthentication();
-            services.AddWtmHttpClient();
+            services.AddWtmSession(3600, ConfigRoot);
+            services.AddWtmCrossDomain(ConfigRoot);
+            services.AddWtmAuthentication(ConfigRoot);
+            services.AddWtmHttpClient(ConfigRoot);
             services.AddWtmSwagger();
-            services.AddWtmMultiLanguages();
+            services.AddWtmMultiLanguages(ConfigRoot);
 
             services.AddMvc(options =>
             {

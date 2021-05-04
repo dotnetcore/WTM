@@ -1,0 +1,43 @@
+@page "/_Admin/ActionLog/Details/{id}"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model">
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+        <Display @bind-Value="@Model.Entity.ModuleName" ShowLabel="true" />
+        <Display @bind-Value="@Model.Entity.ActionName" ShowLabel="true" />
+        <Display @bind-Value="@Model.Entity.ITCode" ShowLabel="true" />
+        <Display @bind-Value="@Model.Entity.ActionUrl" ShowLabel="true" />
+        <Display @bind-Value="@Model.Entity.ActionTime" ShowLabel="true" />
+        <Display @bind-Value="@Model.Entity.Duration" ShowLabel="true" />
+        <Display @bind-Value="@Model.Entity.IP" ShowLabel="true" />
+        <Display @bind-Value="@Model.Entity.LogType" ShowLabel="true" />
+    </Row>
+    <Row  ItemsPerRow="ItemsPerRow.One" RowType="RowType.FormRow">
+        <Textarea @bind-Value="@Model.Entity.Remark" ShowLabel="true"  IsDisabled="true"/>
+    </Row>
+
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="关闭" OnClick="OnClose" />
+    </div>
+</ValidateForm>
+
+@code {
+    private ActionLogVM Model = new ActionLogVM();
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var rv = await WtmBlazor.Api.CallAPI<ActionLogVM>($"/api/_ActionLog/{id}");
+        Model = rv.Data;
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

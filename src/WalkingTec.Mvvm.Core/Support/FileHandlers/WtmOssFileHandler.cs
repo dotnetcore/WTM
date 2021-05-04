@@ -25,13 +25,13 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         {
             var ossSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "oss").Select(x => x.Value).FirstOrDefault();
             FileHandlerOptions groupInfo = null;
-            if (string.IsNullOrEmpty(file.ExtraInfo))
+            if (string.IsNullOrEmpty(file.HandlerInfo))
             {
                 groupInfo = ossSettings?.FirstOrDefault();
             }
             else
             {
-                groupInfo = ossSettings?.Where(x => x.GroupName.ToLower() == file.ExtraInfo.ToLower()).FirstOrDefault();
+                groupInfo = ossSettings?.Where(x => x.GroupName.ToLower() == file.HandlerInfo.ToLower()).FirstOrDefault();
                 if (groupInfo == null)
                 {
                     groupInfo = ossSettings?.FirstOrDefault();
@@ -111,13 +111,13 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         {
             var ossSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "oss").Select(x => x.Value).FirstOrDefault();
             FileHandlerOptions groupInfo = null;
-            if (string.IsNullOrEmpty(file.ExtraInfo))
+            if (string.IsNullOrEmpty(file.HandlerInfo))
             {
                 groupInfo = ossSettings?.FirstOrDefault();
             }
             else
             {
-                groupInfo = ossSettings?.Where(x => x.GroupName.ToLower() == file.ExtraInfo.ToLower()).FirstOrDefault();
+                groupInfo = ossSettings?.Where(x => x.GroupName.ToLower() == file.HandlerInfo.ToLower()).FirstOrDefault();
                 if (groupInfo == null)
                 {
                     groupInfo = ossSettings?.FirstOrDefault();

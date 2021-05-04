@@ -1,0 +1,76 @@
+@inherits BasePage
+
+@if (hasToken == true)
+{
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+            <CascadingValue Value="User" IsFixed="false">
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            </CascadingValue>
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+}
+@if (hasToken == false)
+{
+    <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }"/>
+}
+@code{
+
+    private LoginUserInfo User;
+
+    private bool? hasToken { get; set; }
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="firstRender"></param>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("$.loading");
+            var token = await GetToken();
+            if (string.IsNullOrEmpty(token))
+            {
+                hasToken = false;
+            }
+            else
+            {
+                var refreshtoken = await GetRefreshToken();
+                var rv = await WtmBlazor.Api.CallAPI<DynamicData>($"/api/_account/RefreshToken?refreshToken={refreshtoken}", HttpMethodEnum.POST, new { });
+                if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var t = rv.Data.Fields["access_token"].ToString();
+                    var r = rv.Data.Fields["refresh_token"].ToString();
+                    await SetToken(t, r);
+                    var userinfo = await WtmBlazor.Api.CallAPI<LoginUserInfo>("/api/_account/CheckUserInfo", HttpMethodEnum.GET, new { });
+
+                    if (userinfo.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        await SetUserInfo(userinfo.Data);
+                        User = await GetUserInfo();
+                        hasToken = true;
+                    }
+                    else
+                    {
+                        await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.Errors.Message[0]);
+                        hasToken = false;
+                    }
+                }
+                else
+                {
+                    await DeleteToken();
+                    hasToken = false;
+                }
+
+            }
+            StateHasChanged();
+        }
+    }
+}

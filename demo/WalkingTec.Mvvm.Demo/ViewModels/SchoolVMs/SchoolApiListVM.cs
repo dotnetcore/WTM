@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,6 +35,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeGridHeader(x => x.SchoolName),
                 this.MakeGridHeader(x => x.SchoolType),
                 this.MakeGridHeader(x => x.Remark),
+                this.MakeGridHeader(x=>x.Majors),
                 this.MakeGridHeaderAction(width: 200)
             };
         }
@@ -51,6 +52,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                     SchoolName = x.SchoolName,
                     SchoolType = x.SchoolType,
                     Remark = x.Remark,
+                    Majors = null
                 })
                 .OrderBy(x => x.ID);
             return query;

@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.VueDemo.BasicData.ViewModels.SchoolVMs
     }
 
 	/// <summary>
-    /// 批量编辑字段类
+    /// Class to define batch edit fields
     /// </summary>
     public class School_BatchEdit : BaseVM
     {

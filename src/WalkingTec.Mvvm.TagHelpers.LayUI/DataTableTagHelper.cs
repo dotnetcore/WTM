@@ -597,14 +597,7 @@ setTimeout(function(){{
 ")}
 ")}
 
-  {(VMType == null || string.IsNullOrEmpty(vmName) ? string.Empty : $@"function wtEditFunc_{Id}(o){{
-      var data = {{_DONOT_USE_VMNAME:'{vmName}',id:o.data.ID,field:o.field,value:o.value}};
-      $.post(""/_Framework/UpdateModelProperty"",data,function(a,b,c){{
-          if(a.code == 200){{ff.Msg('{THProgram._localizer["Sys.UpdateDone"]}');}}else{{ff.Msg(a.msg);}}
-      }});
-  }}")}
   table.on('tool({Id})',wtToolBarFunc_{Id});
-  {(VMType == null || string.IsNullOrEmpty(vmName) ? string.Empty : $"table.on('edit({Id})',wtEditFunc_{Id});")}
   {(string.IsNullOrEmpty(CheckedFunc) ? string.Empty : $"table.on('checkbox({Id})',{CheckedFunc});")}
     table.on('sort({Id})', function(obj){{
     var sortfilter = {{}};

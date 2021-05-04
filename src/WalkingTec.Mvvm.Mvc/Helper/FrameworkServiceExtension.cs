@@ -51,19 +51,19 @@ namespace WalkingTec.Mvvm.Mvc
     public static class FrameworkServiceExtension
     {
 
-        private static Configs _wtmconfigs;
-        private static Configs WtmConfigs
-        {
-            get
-            {
-                if(_wtmconfigs == null)
-                {
-                    ConfigurationBuilder cb = new ConfigurationBuilder();
-                    _wtmconfigs = cb.WTMConfig(null).Build().Get<Configs>();
-                }
-                return _wtmconfigs;
-            }
-        }
+        //private static Configs _wtmconfigs;
+        //private static Configs WtmConfigs
+        //{
+        //    get
+        //    {
+        //        if(_wtmconfigs == null)
+        //        {
+        //            ConfigurationBuilder cb = new ConfigurationBuilder();
+        //            _wtmconfigs = cb.WTMConfig(null).Build().Get<Configs>();
+        //        }
+        //        return _wtmconfigs;
+        //    }
+        //}
 
 
 
@@ -450,8 +450,9 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        public static IServiceCollection AddWtmContext(this IServiceCollection services,IConfigurationRoot config, Action<WtmContextOption> options = null)
+        public static IServiceCollection AddWtmContext(this IServiceCollection services,IConfiguration config, Action<WtmContextOption> options = null)
         {
+            var conf = config.Get<Configs>();
             WtmContextOption op = new WtmContextOption();
             options?.Invoke(op);
             services.Configure<Configs>(config);
@@ -470,17 +471,18 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 y.ValueCountLimit = 5000;
                 y.ValueLengthLimit = int.MaxValue - 20480;
-                y.MultipartBodyLengthLimit = WtmConfigs.FileUploadOptions.UploadLimit;
+                y.MultipartBodyLengthLimit = conf.FileUploadOptions.UploadLimit;
             });
             return services;
         }
-        public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services)
+        public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services, IConfiguration config)
         {
+            var conf = config.Get<Configs>();
             services.AddCors(options =>
             {
-                if (WtmConfigs.CorsOptions?.Policy?.Count > 0)
+                if (conf.CorsOptions?.Policy?.Count > 0)
                 {
-                    foreach (var item in WtmConfigs.CorsOptions.Policy)
+                    foreach (var item in conf.CorsOptions.Policy)
                     {
                         string[] domains = item.Domain?.Split(',');
                         options.AddPolicy(item.Name,
@@ -507,22 +509,24 @@ namespace WalkingTec.Mvvm.Mvc
             });
             return services;
         }
-        public static IServiceCollection AddWtmSession(this IServiceCollection services,int timeout)
+        public static IServiceCollection AddWtmSession(this IServiceCollection services,int timeout, IConfiguration config)
         {
+            var conf = config.Get<Configs>();
             services.AddSession(options =>
             {
-                options.Cookie.Name = WtmConfigs.CookiePre + ".Session";
+                options.Cookie.Name = conf.CookiePre + ".Session";
                 options.IdleTimeout = TimeSpan.FromSeconds(timeout);
             });
             return services;
         }
-        public static IServiceCollection AddWtmAuthentication(this IServiceCollection services)
+        public static IServiceCollection AddWtmAuthentication(this IServiceCollection services, IConfiguration config)
         {
+            var conf = config.Get<Configs>();
             services.AddSingleton<ITokenService, TokenService>();
 
-            var jwtOptions = WtmConfigs.JwtOptions;
+            var jwtOptions = conf.JwtOptions;
 
-            var cookieOptions = WtmConfigs.CookieOptions;
+            var cookieOptions = conf.CookieOptions;
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -550,7 +554,7 @@ namespace WalkingTec.Mvvm.Mvc
                         options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
                         options.Cookie.HttpOnly = true;
                         options.Cookie.SameSite = SameSiteMode.Strict;
-
+                        options.Cookie.Domain = string.IsNullOrEmpty(cookieOptions.Domain)?"": cookieOptions.Domain;
                         options.ClaimsIssuer = cookieOptions.Issuer;
                         options.SlidingExpiration = cookieOptions.SlidingExpiration;
                         options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
@@ -564,12 +568,13 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IServiceCollection AddWtmHttpClient(this IServiceCollection services)
+        public static IServiceCollection AddWtmHttpClient(this IServiceCollection services, IConfiguration config)
         {
+            var conf = config.Get<Configs>();
             services.AddHttpClient();
-            if (WtmConfigs.Domains != null)
+            if (conf.Domains != null)
             {
-                foreach (var item in WtmConfigs.Domains)
+                foreach (var item in conf.Domains)
                 {
                     services.AddHttpClient(item.Key, x =>
                     {
@@ -611,21 +616,16 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IServiceCollection AddWtmMultiLanguages(this IServiceCollection services, Action<WtmLocalizationOption> op = null)
+        public static IServiceCollection AddWtmMultiLanguages(this IServiceCollection services, IConfiguration config, Action<WtmLocalizationOption> op = null)
         {
+            var conf = config.Get<Configs>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-            List<CultureInfo> supportedCultures = new List<CultureInfo>();
-            var lans = WtmConfigs.Languages.Split(",");
-            foreach (var lan in lans)
-            {
-                supportedCultures.Add(new CultureInfo(lan));
-            }
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
+                options.DefaultRequestCulture = new RequestCulture(conf.SupportLanguages[0]);
+                options.SupportedCultures = conf.SupportLanguages;
+                options.SupportedUICultures = conf.SupportLanguages;
             });
             WtmLocalizationOption loc = new WtmLocalizationOption();
             op?.Invoke(loc);
@@ -655,7 +655,7 @@ namespace WalkingTec.Mvvm.Mvc
             return builder;
         }
 
-        public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app)
+        public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app, bool isspa=false)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
             var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
@@ -690,9 +690,8 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 programType = lop.LocalizationType;
             }
-            var coredll = gd.AllAssembly.Where(x => x.GetName().Name == "WalkingTec.Mvvm.Core.dll" || x.GetName().Name == "WalkingTec.Mvvm.Core").FirstOrDefault();
             var programLocalizer = localfactory.Create(programType);
-            coredll.GetType("WalkingTec.Mvvm.Core.CoreProgram").GetProperty("_localizer").SetValue(null, programLocalizer);
+            Core.CoreProgram._localizer = programLocalizer;
 
             var controllers = gd.GetTypesAssignableFrom <IBaseController>();
             gd.AllModule = GetAllModules(controllers);
@@ -751,12 +750,12 @@ namespace WalkingTec.Mvvm.Mvc
                     foreach (var item in cs)
                     {
                         var dc = item.CreateDC();
-                        dc.DataInit(gd.AllModule, test != null).Wait();
+                        dc.DataInit(gd.AllModule, isspa == true || test != null).Wait();
                     }
                 }
                 else
                 {
-                    fixdc.DataInit(gd.AllModule, test != null).Wait();
+                    fixdc.DataInit(gd.AllModule, isspa == true || test != null).Wait();
                 }
 
             }
@@ -767,21 +766,14 @@ namespace WalkingTec.Mvvm.Mvc
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;            
             if (string.IsNullOrEmpty(configs.Languages) == false)
             {
-                List<CultureInfo> supportedCultures = new List<CultureInfo>();
-                var lans = configs.Languages.Split(",");
-                foreach (var lan in lans)
-                {
-                    supportedCultures.Add(new CultureInfo(lan));
-                }
-
                 app.UseRequestLocalization(new RequestLocalizationOptions
                 {
-                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
-                    SupportedCultures = supportedCultures,
-                    SupportedUICultures = supportedCultures
+                    DefaultRequestCulture = new RequestCulture(configs.SupportLanguages[0]),
+                    SupportedCultures = configs.SupportLanguages,
+                    SupportedUICultures = configs.SupportLanguages
                 });
-                System.Threading.Thread.CurrentThread.CurrentCulture = supportedCultures[0];
-                System.Threading.Thread.CurrentThread.CurrentUICulture = supportedCultures[0];
+                System.Threading.Thread.CurrentThread.CurrentCulture = configs.SupportLanguages[0];
+                System.Threading.Thread.CurrentThread.CurrentUICulture = configs.SupportLanguages[0];
             }
             return app;
         }

@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             {
                 if (string.IsNullOrEmpty(Entity.UserCode))
                 {
-                    MSD.AddModelError("UserItCode", Localizer["Validate.{0}required", Localizer["_Admin.Account"]]);
+                    MSD.AddModelError("Entity.UserCode", Localizer["Validate.{0}required", Localizer["_Admin.Account"]]);
                 }
                 else
                 {

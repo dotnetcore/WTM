@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -47,14 +48,27 @@ namespace WalkingTec.Mvvm.Mvc
         {
             options.JsonSerializerOptions.PropertyNamingPolicy = null;
             options.JsonSerializerOptions.IgnoreNullValues = true;
-            options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+            options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
             options.JsonSerializerOptions.AllowTrailingCommas = true;
+            options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
             options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
             options.JsonSerializerOptions.Converters.Add(new PocoConverter());
             options.JsonSerializerOptions.Converters.Add(new TypeConverter());
             options.JsonSerializerOptions.Converters.Add(new DynamicDataConverter());
+            Core.CoreProgram.DefaultJsonOption = options.JsonSerializerOptions;
+            JsonSerializerOptions jsonOptions2 = new JsonSerializerOptions();
+            jsonOptions2.PropertyNamingPolicy = null;
+            jsonOptions2.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
+            jsonOptions2.AllowTrailingCommas = true;
+            jsonOptions2.Converters.Add(new DateTimeConverter());
+            jsonOptions2.Converters.Add(new JsonStringEnumConverter());
+            jsonOptions2.Converters.Add(new DateRangeConverter());
+            jsonOptions2.Converters.Add(new PocoConverter());
+            jsonOptions2.Converters.Add(new TypeConverter());
+            jsonOptions2.Converters.Add(new DynamicDataConverter());
+            CoreProgram.DefaultPostJsonOption = jsonOptions2;
         }
         public static void UseWtmApiOptions(this ApiBehaviorOptions options)
         {

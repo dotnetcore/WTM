@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Core
         /// 描述
         /// </summary>
         public string Description { get; set; }
-
+        public string ClassFullName { get; set; }
         public IStringLocalizer _localizer { get; set; }
         /// <summary>
         /// 新建一个描述
@@ -22,6 +22,12 @@ namespace WalkingTec.Mvvm.Core
         public ActionDescriptionAttribute(string desc)
         {
             this.Description = desc;
+        }
+
+        public ActionDescriptionAttribute(string desc, string classFullName)
+        {
+            this.Description = desc;
+            this.ClassFullName = classFullName;
         }
 
         public void SetLoccalizer(Type controllertype)

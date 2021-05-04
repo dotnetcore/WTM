@@ -72,6 +72,7 @@ namespace WalkingTec.Mvvm.Core
             base.OnModelCreating(modelBuilder);
             //菜单和菜单权限的级联删除
             modelBuilder.Entity<FunctionPrivilege>().HasOne(x => x.MenuItem).WithMany(x => x.Privileges).HasForeignKey(x => x.MenuItemId).OnDelete(DeleteBehavior.Cascade);
+            
             //modelBuilder.Entity<FrameworkUserBase>().HasIndex(x => x.ITCode).IsUnique();
         }
 

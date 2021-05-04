@@ -1,0 +1,65 @@
+@page "/_Admin/DataPrivilege/Details/{id}"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model">
+    @if (Model.DpType == DpTypeEnum.User)
+    {
+        <Row ItemsPerRow="ItemsPerRow.Two">
+            <Display @bind-Value="@Model.DpType" ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.UserCode" ShowLabel="true"/>
+        </Row>
+    }
+    else
+    {
+        <Row ItemsPerRow="ItemsPerRow.Two">
+            <Display @bind-Value="@Model.DpType" ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.GroupCode"  Data="@AllGroups" ShowLabel="true"/>
+        </Row>
+    }
+    <Row ItemsPerRow="ItemsPerRow.Two">
+        <Display @bind-Value="@Model.Entity.TableName" Data="AllPrivileges"  ShowLabel="true"/>
+        <Display @bind-Value="@Model.IsAll" Data="@WtmBlazor.GlobalSelectItems.BoolItems" ShowLabel="true"/>
+    </Row>
+    <Row>
+        <Display @ref="Select2" @bind-Value="@Model.SelectedItemsID" Data="AllPrivilegeTableNames" ShowLabel="true"/>
+    </Row>
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+    </div>
+</ValidateForm>
+
+@code {
+    private DataPrivilegeVM Model = new DataPrivilegeVM();
+
+    private ValidateForm vform { get; set; }
+
+    [Parameter]
+    public string TableName { get; set; }
+    [Parameter]
+    public string TargetId { get; set; }
+    [Parameter]
+    public int DpType { get; set; }
+
+    private List<SelectedItem> AllPrivileges ;
+    private List<SelectedItem> AllGroups;
+    private List<SelectedItem> AllPrivilegeTableNames;
+    private Display<List<string>> Select2 { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges");
+        AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetUserGroups");
+        var rv = await WtmBlazor.Api.CallAPI<DataPrivilegeVM>($"/api/_DataPrivilege/Get?TableName={TableName}&TargetId={TargetId}&DpType={DpType}");
+        AllPrivilegeTableNames = await WtmBlazor.Api.CallItemsApi($"/api/_DataPrivilege/GetPrivilegeByTableName?table={TableName}");
+        Model = rv.Data;
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

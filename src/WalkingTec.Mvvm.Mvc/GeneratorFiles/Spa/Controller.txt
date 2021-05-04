@@ -24,7 +24,7 @@ namespace $namespace$
         {
             if (ModelState.IsValid)
             {
-                var vm = Wtm.CreateVM<$controllername$ListVM>();
+                var vm = Wtm.CreateVM<$controllername$ListVM>(passInit: true);
                 vm.Searcher = searcher;
                 return Content(vm.GetJson());
             }

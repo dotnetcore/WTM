@@ -1,0 +1,76 @@
+@page "/_Admin/FrameworkMenu/Details"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model">
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+        <Display @bind-Value="@Model.Entity.IsInside" Data="@AllType" ShowLabel="true"/>
+    </Row>
+    @if (Model.Entity.IsInside != false)
+    {
+<Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+    <Display @bind-Value="@Model.SelectedModule" Data="@AllModels"   ShowLabel="true"/>
+    <div></div>
+    <Row ColSpan="2">
+        <Display @bind-Value="@Model.SelectedActionIDs" Data="@AllActions"  ShowLabel="true"/>
+    </Row>
+</Row>
+    }
+    else
+    {
+        <Row ItemsPerRow="ItemsPerRow.One" RowType="RowType.FormRow">
+            <Display @bind-Value="@Model.Entity.Url" ShowLabel="true" />
+        </Row>
+    }
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+        <Display @bind-Value="@Model.Entity.PageName"  ShowLabel="true"/>
+        <Display @bind-Value="@Model.Entity.ParentId" Data="@AllFolders"   ShowLabel="true"/>
+        <Display @bind-Value="@Model.Entity.DisplayOrder"  ShowLabel="true"/>
+    </Row>
+    <Row ItemsPerRow="ItemsPerRow.Four" RowType="RowType.FormRow">
+        <Switch @bind-Value="@Model.Entity.ShowOnMenu"  IsDisabled="true"/>
+        <Switch @bind-Value="@Model.Entity.FolderOnly"  IsDisabled="true"/>
+        <Switch @bind-Value="@Model.Entity.IsPublic"  IsDisabled="true"/>
+    </Row>
+        <div class="modal-footer table-modal-footer">
+            <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+        </div>
+</ValidateForm>
+
+@code {
+    private FrameworkMenuVM2 Model = new FrameworkMenuVM2();
+    private List<SelectedItem> AllType = new List<SelectedItem>();
+    private List<SelectedItem> AllModels = new List<SelectedItem>();
+    private List<SelectedItem> AllFolders = new List<SelectedItem>();
+    private List<SelectedItem> AllActions = new List<SelectedItem>();
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Inside"], Value = "true" });
+        AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Outside"], Value = "false" });
+        AllFolders = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetFolders", placeholder:WtmBlazor.Localizer["Sys.PleaseSelect"]);
+        var items = WtmBlazor.GetAllPages();
+        AllModels.Add(new SelectedItem { Text = WtmBlazor.Localizer["Sys.PleaseSelect"], Value = "" });
+        foreach (var item in items)
+        {
+            foreach (var sub in item.Children)
+            {
+                AllModels.Add(new SelectedItem { Text = sub.PageName, Value = sub.ClassName??sub.Url, GroupName = item.PageName });
+            }
+        }
+        var rv = await WtmBlazor.Api.CallAPI<FrameworkMenuVM2>($"/api/_FrameworkMenu/{id}");
+        AllActions = await WtmBlazor.Api.CallItemsApi($"/api/_FrameworkMenu/GetActionsByModel?ModelName={rv.Data.SelectedModule}");
+        Model = rv.Data;
+
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

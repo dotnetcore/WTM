@@ -1,0 +1,132 @@
+@page "/"
+@using System.Globalization
+@inherits BasePage
+
+    <style>
+        .index .welcome-header {
+            margin-bottom: 0;
+            margin-top: 0;
+            font-size: 1rem;
+            line-height: 2;
+        }
+
+        .index .welcome-footer {
+            display: flex;
+            flex-direction: column;
+            /* position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;*/
+            padding: 0 15px;
+            margin: 20px 10px;
+        }
+
+            .index .welcome-footer > div:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+
+            .index .welcome-footer > div {
+                justify-content: space-between;
+            }
+
+        .index .q-link > div {
+            padding: 8px 0;
+            background-color: #f0f0f4;
+            width: 92px
+        }
+
+            .index .q-link > div p {
+                margin-bottom: 0px;
+            }
+
+
+        .index .card {
+            text-align: center;
+            border-color: #dce3e8;
+            height: 263px;
+            width: 100%;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all .3s ease-in-out;
+        }
+
+        .index .intro p {
+            font-size: 15px;
+            color: #1a1a1a;
+            letter-spacing: .41px;
+            text-align: center;
+            line-height: 24px;
+        }
+
+        .index .intro h3 {
+            color: #1a1a1a;
+            letter-spacing: .1px;
+            text-align: center;
+            line-height: 25px;
+            font-weight: 400;
+            margin: 15px 0;
+            font-size: 1.25rem;
+        }
+
+        .index .container {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .index .q-link a {
+            color: #367fa9;
+            text-align: center;
+        }
+
+        .index .q-link i {
+            font-size: 3em;
+            display: block;
+        }
+
+        .index .d-sm-block i {
+            font-size: 4em;
+        }
+
+        .index .badge-widget {
+            display: inline;
+        }
+
+            .index .badge-widget i {
+                font-size: 2em;
+                display: block;
+            }
+
+        .index .badge {
+            display: block;
+            opacity: 0.8;
+        }
+    </style>
+
+    <CulturePage @bind-Model="@model" MainPageType="@this.GetType()" />
+
+    @code{
+
+        private githubpoco model = new githubpoco();
+        protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                var client = WtmBlazor.ClientFactory.CreateClient("github");
+                var info = await client.GetFromJsonAsync<githubpoco>("/repos/dotnetcore/wtm");
+                model = info;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public class githubpoco
+        {
+            public int stargazers_count { get; set; }
+            public int forks_count { get; set; }
+            public int subscribers_count { get; set; }
+            public int open_issues_count { get; set; }
+        } }

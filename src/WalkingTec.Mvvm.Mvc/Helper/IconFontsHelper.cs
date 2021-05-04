@@ -22,10 +22,13 @@ namespace WalkingTec.Mvvm.Mvc
         private static Dictionary<string, List<MenuItem>> _iconFontDicItems;
         public static Dictionary<string, List<MenuItem>> IconFontDicItems => _iconFontDicItems;
 
-        public static void GenerateIconFont()
+        public static void GenerateIconFont(params string[] dirs)
         {
             var baseDirs = new string[] { "wwwroot/font", "wwwroot/layui" };
-
+            if(dirs.Length > 0)
+            {
+                baseDirs = dirs;
+            }
             var iconFontHashSet = new HashSet<string>();
             var IconFontDic = new Dictionary<string, string[]>();
             foreach (var dir in baseDirs)

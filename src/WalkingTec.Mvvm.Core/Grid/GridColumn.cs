@@ -432,7 +432,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (needFormat == false)
                     {
-                        rv = JsonSerializer.Serialize(col);
+                        rv = JsonSerializer.Serialize(col, CoreProgram.DefaultJsonOption);
                     }
                     else
                     {

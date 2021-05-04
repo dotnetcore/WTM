@@ -1,0 +1,55 @@
+@page "/_Admin/FrameworkUser/Details/{id}"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model" >
+    <Tab IsBorderCard="true">
+        <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+                <Display @bind-Value="@Model.Entity.ITCode" ShowLabel="true" />
+                <div></div>
+                <Display @bind-Value="@Model.Entity.Name" ShowLabel="true" />
+                <Display @bind-Value="@Model.Entity.Gender" ShowLabel="true" />
+                <WTUploadImage IsDisabled="true" @bind-Value="@Model.Entity.PhotoId" />
+            </Row>
+                <Display @bind-Value="Model.SelectedRolesCodes" ShowLabel="true" Data="AllRoles"/>
+                <Display @bind-Value="Model.SelectedGroupCodes"  ShowLabel="true"  Data="AllGroups"/>
+        </TabItem>
+        <TabItem Text="@WtmBlazor.Localizer["_Admin.AdditionInfo"]">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+                <Display @bind-Value="@Model.Entity.CellPhone" ShowLabel="true" />
+                <Display @bind-Value="@Model.Entity.HomePhone"  ShowLabel="true"/>
+                <Display @bind-Value="@Model.Entity.Email"  ShowLabel="true"/>
+                <Display @bind-Value="@Model.Entity.ZipCode"  ShowLabel="true"/>
+            </Row>
+                <Display @bind-Value="@Model.Entity.Address"  ShowLabel="true"/>
+        </TabItem>
+    </Tab>
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="关闭" OnClick="OnClose" />
+    </div>
+</ValidateForm>
+
+@code {
+    private FrameworkUserVM Model = new FrameworkUserVM() { SelectedRolesCodes = new List<string>() };
+    private List<SelectedItem> AllRoles = new List<SelectedItem>();
+    private List<SelectedItem> AllGroups = new List<SelectedItem>();
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
+            AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
+            var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUserBase/{id}");
+            Model = rv.Data;
+        }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

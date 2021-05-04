@@ -1,0 +1,16 @@
+@namespace WtmBlazorUtils
+@inherits WTComponent
+@inject IStringLocalizer local
+<div @attributes="@AdditionalAttributes" class="@ClassName">
+    <div class="card-header " style="padding:0.5rem"   @onclick="Toggle"  >
+        <div class="row">
+            <div class="col-6 " style="margin-top:auto; margin-bottom:auto">
+                @local["Sys.SearchCondition"]
+            </div>
+            <div class="col-6 text-right"><Button Size="Size.Small" Icon="fa fa-search" Text="@local["Sys.Search"]" @onclick="OnSearch"  StopPropagation="true"/></div>
+        </div>
+    </div>
+    <div class="@BodyClassName @(Collapsed==true? "collapse": "" )" style="padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 1rem;padding-bottom:0px;">
+        @ChildContent
+    </div>
+</div>
