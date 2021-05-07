@@ -97,12 +97,10 @@
         border: 2px solid #28a745;
     }
 
-.color1,
 .layout.is-page.color1 .layout-header {
     background-color: #ffffff;
     color: #333;
     border-bottom: 1px solid #ccc;
-    height: 49px;
 }
 
 .layout.is-page.color1 .layout-side .layout-banner {
@@ -178,17 +176,24 @@
         float: right !important;
     }
 }
-    .btn-group .btn {
-        padding-left: 10px !important;
-    }
+
+.btn-group .btn {
+    padding-left: 10px !important;
+}
+
 .table-cell .btn-group .btn {
     margin-left: 3px !important;
 }
 
-    .table-modal-footer {
-        margin-top: 10px !important;
-    }
+.table-modal-footer {
+    margin-top: 10px !important;
+}
 
-    .toast {
-        background-color: white;
-    }
+.toast {
+    background-color: white;
+}
+
+/*.table-pagination {
+    right: 0px;
+    position: absolute;
+}*/

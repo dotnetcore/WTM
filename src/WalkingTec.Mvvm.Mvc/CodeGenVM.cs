@@ -2162,7 +2162,7 @@ namespace WalkingTec.Mvvm.Mvc
                         string prefix = "";
                         if (subtype == typeof(FileAttachment))
                         {
-                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon"))
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
                             {
                                 template = @"
             <Template Context=""data"">
@@ -2359,7 +2359,14 @@ namespace WalkingTec.Mvvm.Mvc
                         var subtype = Type.GetType(item.RelatedField);
                         if (item.SubField == "`file")
                         {
-                            controltype = "WTUploadImage";
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
+                            {
+                                controltype = "WTUploadImage";
+                            }
+                            else
+                            {
+                                controltype = "WTUploadFile";
+                            }
                         }
                         else
                         {
@@ -2486,7 +2493,14 @@ namespace WalkingTec.Mvvm.Mvc
                         var subtype = Type.GetType(item.RelatedField);
                         if (item.SubField == "`file")
                         {
-                            controltype = "WTUploadImage";
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
+                            {
+                                controltype = "WTUploadImage";
+                            }
+                            else
+                            {
+                                controltype = "WTUploadFile";
+                            }
                             disabled = "IsDisabled=\"true\"";
                         }
                         else
@@ -2514,9 +2528,21 @@ namespace WalkingTec.Mvvm.Mvc
                             disabled = "IsDisabled=\"true\"";
                         }
                     }
-
-                    fieldstr.Append($@"
+                    if (controltype == "WTUploadFile")
+                    {
+                        string label = property.GetPropertyDisplayName();
+                        fieldstr.Append($@"
+                <div>
+                      <label class=""control-label is-display"">{label}</label>
+                      <div><Button Size=""Size.Small"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{{Model.{bindfield}}}"",null, HttpMethodEnum.GET))"" /></div>
+                </div>
+");
+                    }
+                    else
+                    {
+                        fieldstr.Append($@"
             <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {disabled} ShowLabel=""true""/>");
+                    }
                 }
 
                 StringBuilder apiinit = new StringBuilder();

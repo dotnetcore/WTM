@@ -7,9 +7,10 @@
 
             <BootstrapInput @bind-Value="@Model.Entity.SchoolCode"  />
             <BootstrapInput @bind-Value="@Model.Entity.SchoolName"  />
-            <Select @bind-Value="@Model.Entity.SchoolType"  PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
+            <Select @bind-Value="@Model.Entity.SchoolType"  PlaceHolder="@WtmBlazor.Localizer["Sys.PleaseSelect"]"/>
             <BootstrapInput @bind-Value="@Model.Entity.Remark"  />
             <WTUploadImage @bind-Value="@Model.Entity.PhotoId"  />
+            <WTUploadFile @bind-Value="@Model.Entity.FileId"  />
     </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />

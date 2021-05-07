@@ -31,6 +31,12 @@
                 <Avatar @key="data.Value" Size="Size.ExtraSmall" GetUrlAsync="()=>WtmBlazor.GetBase64Image(data.Value.ToString(),150,150)" />
             </Template>
         </TableColumn>
+        <TableColumn @bind-Field="@context.FileId"  >
+
+            <Template Context="data">
+                <Button Size="Size.ExtraSmall" Text="@WtmBlazor.Localizer["Sys.Download"]" OnClick="@(async x => await Download($"/api/_file/DownloadFile/{data.Value}",null, HttpMethodEnum.GET))" />
+            </Template>
+        </TableColumn>
     </TableColumns>
     <TableToolbarTemplate>
         @if (IsAccessable("/api/School/add"))

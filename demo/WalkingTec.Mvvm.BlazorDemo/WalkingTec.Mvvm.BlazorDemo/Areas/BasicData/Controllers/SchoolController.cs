@@ -12,7 +12,7 @@ using WalkingTec.Mvvm.Demo.Models;
 namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 {
     [Area("BasicData")]
-    [AuthorizeJwt]
+    [AuthorizeJwtWithCookie]
     [ActionDescription("学校管理")]
     [ApiController]
     [Route("api/School")]

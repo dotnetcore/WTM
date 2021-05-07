@@ -22,6 +22,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
                 this.MakeGridHeader(x => x.SchoolType),
                 this.MakeGridHeader(x => x.Remark),
                 this.MakeGridHeader(x => x.PhotoId).SetFormat(PhotoIdFormat),
+                this.MakeGridHeader(x => x.FileId).SetFormat(FileIdFormat),
                 this.MakeGridHeaderAction(width: 200)
             };
         }
@@ -31,6 +32,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
             {
                 ColumnFormatInfo.MakeDownloadButton(ButtonTypesEnum.Button,entity.PhotoId),
                 ColumnFormatInfo.MakeViewButton(ButtonTypesEnum.Button,entity.PhotoId,640,480),
+            };
+        }
+
+        private List<ColumnFormatInfo> FileIdFormat(School_View entity, object val)
+        {
+            return new List<ColumnFormatInfo>
+            {
+                ColumnFormatInfo.MakeDownloadButton(ButtonTypesEnum.Button,entity.FileId),
+                ColumnFormatInfo.MakeViewButton(ButtonTypesEnum.Button,entity.FileId,640,480),
             };
         }
 
@@ -50,6 +60,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
                     SchoolType = x.SchoolType,
                     Remark = x.Remark,
                     PhotoId = x.PhotoId,
+                    FileId = x.FileId,
                 })
                 .OrderBy(x => x.ID);
             return query;
