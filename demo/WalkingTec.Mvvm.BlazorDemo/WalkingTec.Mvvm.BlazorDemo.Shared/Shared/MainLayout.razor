@@ -10,7 +10,7 @@
 
     <Layout SideWidth="0" IsPage="true" ShowGotoTop="true" ShowCollapseBar="true"
             IsFullSide="@IsFullSide" IsFixedHeader="@IsFixedHeader" IsFixedFooter="@IsFixedFooter" ShowFooter="@ShowFooter" 
-            Menus="@Menus" UseTabSet="@UseTabSet" AdditionalAssemblies="new[] { GetType().Assembly }" class="@Theme">
+            Menus="@Menus" UseTabSet="@UseTabSet" AdditionalAssemblies="new[] { GetType().Assembly }" class="color1">
         <Header>
             <span class="ml-3 flex-sm-fill d-none d-sm-block"></span>
             <div class="header-right" style="width: 90px;">
@@ -39,7 +39,7 @@
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#">
                                     @if (!string.IsNullOrEmpty(UserInfo.PhotoId.ToString()))
                                     {
-                                        <Avatar style="margin-top:3px;display:inline-table;" GetUrlAsync="()=>wtmblazor.GetBase64Image(UserInfo.PhotoId.ToString(),150,150)" IsCircle="true" Size="Size.ExtraSmall" />
+                                        <Avatar style="margin-top:3px;" GetUrlAsync="()=>wtmblazor.GetBase64Image(UserInfo.PhotoId.ToString(),150,150)" IsCircle="true" Size="Size.ExtraSmall" />
                                     }
                                     <span class="mx-1" style="">@UserInfo.Name</span>
                                 </a>
@@ -112,30 +112,6 @@
 
             </GroupBox>
 
-
-            <GroupBox Title="@wtmblazor.Localizer["Sys.Theme"]">
-                <div class="row">
-                    <div class="col-2">
-                        <span class="color color1" @onclick="@(e => Theme = "color1")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color2" @onclick="@(e => Theme = "color2")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color3" @onclick="@(e => Theme = "color3")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color4" @onclick="@(e => Theme = "color4")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color5" @onclick="@(e => Theme = "color5")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color6" @onclick="@(e => Theme = "color6")"></span>
-                    </div>
-                </div>
-            </GroupBox>
-
             <GroupBox Title="@wtmblazor.Localizer["Sys.MoreSettings"]">
                 <div class="row">
                     <div class="col-6 d-flex align-items-center">
@@ -159,8 +135,6 @@
 {
 
     private bool UseTabSet { get; set; } = true;
-
-    private string Theme { get; set; } = "";
 
     private bool IsOpen { get; set; }
 
