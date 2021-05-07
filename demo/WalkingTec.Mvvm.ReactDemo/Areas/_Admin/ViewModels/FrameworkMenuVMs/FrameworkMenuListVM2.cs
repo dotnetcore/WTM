@@ -78,6 +78,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public int ExtraOrder { get; set; }
 
         public new List<FrameworkMenu_ListView> Children { get; set; }
+        public new bool HasChildren
+        {
+            get
+            {
+                return Children?.Any() == true;
+            }
+        }
     }
 
 }
