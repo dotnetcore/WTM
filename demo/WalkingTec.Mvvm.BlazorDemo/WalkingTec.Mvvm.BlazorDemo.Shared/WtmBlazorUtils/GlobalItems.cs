@@ -23,8 +23,8 @@ namespace WtmBlazorUtils
                 {
                     _searcherBoolItems = new List<SelectedItem> {
                     new SelectedItem{ Text = _local["Sys.All"], Value = ""},
-                    new SelectedItem{ Text = _local["Sys.Yes"], Value = "true"},
-                    new SelectedItem{ Text = _local["Sys.No"], Value = "false"},
+                    new SelectedItem{ Text = _local["Sys.Yes"], Value = "True"},
+                    new SelectedItem{ Text = _local["Sys.No"], Value = "False"},
                 };
                 }
                 else

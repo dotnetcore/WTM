@@ -9,10 +9,10 @@
     <TableColumns>
         <TableColumn @bind-Field="@context.PageName" Width="180" />
         <TableColumn @bind-Field="@context.ModuleName" />
-        <TableColumn @bind-Field="@context.ShowOnMenu" Sortable="true" />
-        <TableColumn @bind-Field="@context.FolderOnly" />
-        <TableColumn @bind-Field="@context.IsPublic" />
-        <TableColumn @bind-Field="@context.DisplayOrder" />
+        <TableColumn @bind-Field="@context.ShowOnMenu" ComponentType="@typeof(Switch)"/>
+        <TableColumn @bind-Field="@context.FolderOnly"   ComponentType="@typeof(Switch)"/>
+        <TableColumn @bind-Field="@context.IsPublic"   ComponentType="@typeof(Switch)"/>
+        <TableColumn @bind-Field="@context.DisplayOrder" Sortable="true"  />
         <TableColumn @bind-Field="@context.Icon">
             <Template Context="value">
                 <span><i class="@value.Value"></i></span>

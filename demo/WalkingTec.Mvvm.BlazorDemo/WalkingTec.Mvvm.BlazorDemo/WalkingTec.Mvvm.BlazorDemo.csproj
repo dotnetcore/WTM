@@ -16,6 +16,10 @@
     <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.Shared\WalkingTec.Mvvm.BlazorDemo.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 

@@ -2151,6 +2151,11 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         render = "ComponentType=\"@typeof(Switch)\"";
                     }
+                    if (mpro.PropertyType == typeof(DateTime) || mpro.PropertyType == typeof(DateTime?))
+                    {
+                        render = "FormatString=\"yyyy-MM-dd HH: mm: ss\"";
+
+                    }
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
@@ -2413,7 +2418,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     if (controltype == "Select" || controltype == "MultiSelect")
                     {
-                        ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.All\"]\"";
+                        ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.PleaseSelect\"]\"";
                     }
                     if (controltype == "Transfer")
                     {
