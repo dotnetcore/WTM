@@ -38,10 +38,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             MajorVM vm = _controller.Wtm.CreateVM<MajorVM>();
             Major v = new Major();
             
-            v.MajorCode = "RUkUgqsa6";
-            v.MajorName = "H7GHS";
+            v.MajorCode = "xbldv";
+            v.MajorName = "CuzEQs";
             v.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-            v.Remark = "asc9my9G";
+            v.Remark = "hwWDxpzS";
             v.SchoolId = AddSchool();
             vm.Entity = v;
             var rv = _controller.Add(vm);
@@ -51,10 +51,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<Major>().Find(v.ID);
                 
-                Assert.AreEqual(data.MajorCode, "RUkUgqsa6");
-                Assert.AreEqual(data.MajorName, "H7GHS");
+                Assert.AreEqual(data.MajorCode, "xbldv");
+                Assert.AreEqual(data.MajorName, "CuzEQs");
                 Assert.AreEqual(data.MajorType, WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional);
-                Assert.AreEqual(data.Remark, "asc9my9G");
+                Assert.AreEqual(data.Remark, "hwWDxpzS");
                 Assert.AreEqual(data.CreateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
             }
@@ -67,10 +67,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.MajorCode = "RUkUgqsa6";
-                v.MajorName = "H7GHS";
+                v.MajorCode = "xbldv";
+                v.MajorName = "CuzEQs";
                 v.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-                v.Remark = "asc9my9G";
+                v.Remark = "hwWDxpzS";
                 v.SchoolId = AddSchool();
                 context.Set<Major>().Add(v);
                 context.SaveChanges();
@@ -81,10 +81,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             v = new Major();
             v.ID = oldID;
        		
-            v.MajorCode = "4XLGZmw";
-            v.MajorName = "YoByxXR";
+            v.MajorCode = "XFU0PmP";
+            v.MajorName = "mzMe";
             v.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-            v.Remark = "o3Q0f";
+            v.Remark = "T1nh6";
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
 			
@@ -100,10 +100,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<Major>().Find(v.ID);
  				
-                Assert.AreEqual(data.MajorCode, "4XLGZmw");
-                Assert.AreEqual(data.MajorName, "YoByxXR");
+                Assert.AreEqual(data.MajorCode, "XFU0PmP");
+                Assert.AreEqual(data.MajorName, "mzMe");
                 Assert.AreEqual(data.MajorType, WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional);
-                Assert.AreEqual(data.Remark, "o3Q0f");
+                Assert.AreEqual(data.Remark, "T1nh6");
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
             }
@@ -117,10 +117,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.MajorCode = "RUkUgqsa6";
-                v.MajorName = "H7GHS";
+                v.MajorCode = "xbldv";
+                v.MajorName = "CuzEQs";
                 v.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-                v.Remark = "asc9my9G";
+                v.Remark = "hwWDxpzS";
                 v.SchoolId = AddSchool();
                 context.Set<Major>().Add(v);
                 context.SaveChanges();
@@ -137,15 +137,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.MajorCode = "RUkUgqsa6";
-                v1.MajorName = "H7GHS";
+                v1.MajorCode = "xbldv";
+                v1.MajorName = "CuzEQs";
                 v1.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-                v1.Remark = "asc9my9G";
+                v1.Remark = "hwWDxpzS";
                 v1.SchoolId = AddSchool();
-                v2.MajorCode = "4XLGZmw";
-                v2.MajorName = "YoByxXR";
+                v2.MajorCode = "XFU0PmP";
+                v2.MajorName = "mzMe";
                 v2.MajorType = WalkingTec.Mvvm.Demo.Models.MajorTypeEnum.Optional;
-                v2.Remark = "o3Q0f";
+                v2.Remark = "T1nh6";
                 v2.SchoolId = v1.SchoolId; 
                 context.Set<Major>().Add(v1);
                 context.Set<Major>().Add(v2);
@@ -168,19 +168,19 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
 
         }
 
-        private Guid AddPhoto()
+        private Guid AddFileAttachment()
         {
             FileAttachment v = new FileAttachment();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 
-                v.FileName = "416W2";
-                v.FileExt = "XdiB";
-                v.Path = "MXaemt";
-                v.Length = 39;
-                v.SaveMode = "WZV";
-                v.ExtraInfo = "Sc4X5";
-                v.HandlerInfo = "P01FKePP";
+                v.FileName = "Y7fMd";
+                v.FileExt = "0BXq";
+                v.Path = "5JA";
+                v.Length = 73;
+                v.SaveMode = "sCsI6LqIU";
+                v.ExtraInfo = "sD7R1n";
+                v.HandlerInfo = "Em7";
                 context.Set<FileAttachment>().Add(v);
                 context.SaveChanges();
             }
@@ -193,12 +193,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 
-                v.ID = 86;
-                v.SchoolCode = "6fCGHLj";
-                v.SchoolName = "3Hit";
+                v.ID = 67;
+                v.SchoolCode = "B1ctRzpoi";
+                v.SchoolName = "AboONF8b";
                 v.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PUB;
-                v.Remark = "ZCf14v6y";
-                v.PhotoId = AddPhoto();
+                v.Remark = "pb3PrGDj";
+                v.PhotoId = AddFileAttachment();
+                v.FileId = AddFileAttachment();
                 context.Set<School>().Add(v);
                 context.SaveChanges();
             }

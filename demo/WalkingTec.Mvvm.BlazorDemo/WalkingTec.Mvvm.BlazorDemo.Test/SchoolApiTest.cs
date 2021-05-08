@@ -38,13 +38,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             SchoolVM vm = _controller.Wtm.CreateVM<SchoolVM>();
             School v = new School();
             
-            v.ID = 65;
-            v.SchoolCode = "iWWDf4m";
-            v.SchoolName = "lq28aB";
-            v.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PUB;
-            v.Remark = "oitbPoM6";
-            v.PhotoId = AddPhoto();
-            v.FileId = AddFile();
+            v.ID = 22;
+            v.SchoolCode = "0Ma";
+            v.SchoolName = "LrZ";
+            v.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PRI;
+            v.Remark = "adz1SdJO";
+            v.PhotoId = AddFileAttachment();
+            v.FileId = AddFileAttachment();
             vm.Entity = v;
             var rv = _controller.Add(vm);
             Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
@@ -53,11 +53,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<School>().Find(v.ID);
                 
-                Assert.AreEqual(data.ID, 65);
-                Assert.AreEqual(data.SchoolCode, "iWWDf4m");
-                Assert.AreEqual(data.SchoolName, "lq28aB");
-                Assert.AreEqual(data.SchoolType, WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PUB);
-                Assert.AreEqual(data.Remark, "oitbPoM6");
+                Assert.AreEqual(data.ID, 22);
+                Assert.AreEqual(data.SchoolCode, "0Ma");
+                Assert.AreEqual(data.SchoolName, "LrZ");
+                Assert.AreEqual(data.SchoolType, WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PRI);
+                Assert.AreEqual(data.Remark, "adz1SdJO");
                 Assert.AreEqual(data.CreateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
             }
@@ -70,13 +70,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.ID = 65;
-                v.SchoolCode = "iWWDf4m";
-                v.SchoolName = "lq28aB";
-                v.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PUB;
-                v.Remark = "oitbPoM6";
-                v.PhotoId = AddPhoto();
-                v.FileId = AddFile();
+                v.ID = 22;
+                v.SchoolCode = "0Ma";
+                v.SchoolName = "LrZ";
+                v.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PRI;
+                v.Remark = "adz1SdJO";
+                v.PhotoId = AddFileAttachment();
+                v.FileId = AddFileAttachment();
                 context.Set<School>().Add(v);
                 context.SaveChanges();
             }
@@ -86,10 +86,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             v = new School();
             v.ID = oldID;
        		
-            v.SchoolCode = "nzXz8AFqB";
-            v.SchoolName = "8XTytqhmX";
+            v.SchoolCode = "Iz6jn";
+            v.SchoolName = "cE9T";
             v.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PRI;
-            v.Remark = "WNReYCb";
+            v.Remark = "mfB";
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
 			
@@ -107,10 +107,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<School>().Find(v.ID);
  				
-                Assert.AreEqual(data.SchoolCode, "nzXz8AFqB");
-                Assert.AreEqual(data.SchoolName, "8XTytqhmX");
+                Assert.AreEqual(data.SchoolCode, "Iz6jn");
+                Assert.AreEqual(data.SchoolName, "cE9T");
                 Assert.AreEqual(data.SchoolType, WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PRI);
-                Assert.AreEqual(data.Remark, "WNReYCb");
+                Assert.AreEqual(data.Remark, "mfB");
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
             }
@@ -124,13 +124,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.ID = 65;
-                v.SchoolCode = "iWWDf4m";
-                v.SchoolName = "lq28aB";
-                v.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PUB;
-                v.Remark = "oitbPoM6";
-                v.PhotoId = AddPhoto();
-                v.FileId = AddFile();
+                v.ID = 22;
+                v.SchoolCode = "0Ma";
+                v.SchoolName = "LrZ";
+                v.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PRI;
+                v.Remark = "adz1SdJO";
+                v.PhotoId = AddFileAttachment();
+                v.FileId = AddFileAttachment();
                 context.Set<School>().Add(v);
                 context.SaveChanges();
             }
@@ -146,18 +146,18 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.ID = 65;
-                v1.SchoolCode = "iWWDf4m";
-                v1.SchoolName = "lq28aB";
-                v1.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PUB;
-                v1.Remark = "oitbPoM6";
-                v1.PhotoId = AddPhoto();
-                v1.FileId = AddFile();
-                v2.ID = 49;
-                v2.SchoolCode = "nzXz8AFqB";
-                v2.SchoolName = "8XTytqhmX";
+                v1.ID = 22;
+                v1.SchoolCode = "0Ma";
+                v1.SchoolName = "LrZ";
+                v1.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PRI;
+                v1.Remark = "adz1SdJO";
+                v1.PhotoId = AddFileAttachment();
+                v1.FileId = AddFileAttachment();
+                v2.ID = 70;
+                v2.SchoolCode = "Iz6jn";
+                v2.SchoolName = "cE9T";
                 v2.SchoolType = WalkingTec.Mvvm.Demo.Models.SchoolTypeEnum.PRI;
-                v2.Remark = "WNReYCb";
+                v2.Remark = "mfB";
                 v2.PhotoId = v1.PhotoId; 
                 v2.FileId = v1.FileId; 
                 context.Set<School>().Add(v1);
@@ -181,19 +181,19 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
 
         }
 
-        private Guid AddPhoto()
+        private Guid AddFileAttachment()
         {
             FileAttachment v = new FileAttachment();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 
-                v.FileName = "4hip";
-                v.FileExt = "oVsGQkLjM";
-                v.Path = "W30lRlkIr";
-                v.Length = 97;
-                v.SaveMode = "0brZA";
-                v.ExtraInfo = "nXGeNGf";
-                v.HandlerInfo = "mUtmg8fQ";
+                v.FileName = "VKb7";
+                v.FileExt = "mrgWw";
+                v.Path = "ribSmzfVt";
+                v.Length = 56;
+                v.SaveMode = "AkZPwW3Ds";
+                v.ExtraInfo = "McB6J";
+                v.HandlerInfo = "NMk";
                 context.Set<FileAttachment>().Add(v);
                 context.SaveChanges();
             }

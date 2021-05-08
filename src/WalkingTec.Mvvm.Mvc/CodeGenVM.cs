@@ -1181,12 +1181,13 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (pro.Value == "$fk$")
                     {
+                        var fktype = modelType.GetSingleProperty(pro.Key[0..^2])?.PropertyType;
                         cpros += $@"
-            v.{pro.Key} = Add{pro.Key[0..^2]}();";
+            v.{pro.Key} = Add{fktype.Name}();";
                         pros += $@"
-                v.{pro.Key} = Add{pro.Key[0..^2]}();";
+                v.{pro.Key} = Add{fktype.Name}();";
                         mpros += $@"
-                v1.{pro.Key} = Add{pro.Key[0..^2]}();";
+                v1.{pro.Key} = Add{fktype.Name}();";
                     }
                     else
                     {
@@ -1304,7 +1305,7 @@ namespace WalkingTec.Mvvm.Mvc
                     if (fktype != t)
                     {
                         cpros += $@"
-                v.{pro.Key} = Add{pro.Key[0..^2]}();";
+                v.{pro.Key} = Add{fktype.Name}();";
                     }
                 }
                 else
@@ -1315,7 +1316,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var idpro = t.GetSingleProperty("ID");
             rv += $@"
-        private {idpro.PropertyType.Name} Add{keyname}()
+        private {idpro.PropertyType.Name} Add{t.Name}()
         {{
             {mname} v = new {mname}();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
