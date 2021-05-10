@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Core.Json
                     }
                     if (reader.IsFinalBlock && level == 0)
                     {
-                        reader.Read();
+                        //reader.Read();
                         break;
                     }
                     reader.Read();
