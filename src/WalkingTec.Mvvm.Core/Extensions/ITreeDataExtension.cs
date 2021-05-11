@@ -28,8 +28,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             if (children != null && children.Count() > 0)
             {
-                var dictinct = children.Where(x => x.GetID().ToString() != self.GetID().ToString()).ToList();
-                foreach (var item in dictinct)
+                //var dictinct = children.Where(x => x.GetID().ToString() != self.GetID().ToString()).ToList();
+                foreach (var item in children)
                 {
                     rv.Add(item);
                     //递归添加子节点的子节点

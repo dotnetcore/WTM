@@ -183,33 +183,36 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     var modules = Wtm.GlobaInfo.AllModule;
 
                     var mo = modules.Where(x => x.FullName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
-                    Entity.ModuleName = mo.ModuleName;
-                    Entity.ClassName = mo.FullName;
-                    Entity.MethodName = null;
-
-                    var otherActions = mo.Actions;
-                    int order = 1;
-                    Entity.Children = new List<FrameworkMenu>();
-                    foreach (var action in otherActions)
+                    if (mo != null)
                     {
-                        if (SelectedActionIDs != null && SelectedActionIDs.Contains(action.MethodName))
+                        Entity.ModuleName = mo.ModuleName;
+                        Entity.ClassName = mo.FullName;
+                        Entity.MethodName = null;
+
+                        var otherActions = mo.Actions;
+                        int order = 1;
+                        Entity.Children = new List<FrameworkMenu>();
+                        foreach (var action in otherActions)
                         {
-                            FrameworkMenu menu = new FrameworkMenu();
-                            menu.FolderOnly = false;
-                            menu.IsPublic = false;
-                            menu.Parent = Entity;
-                            menu.ShowOnMenu = false;
-                            menu.DisplayOrder = order++;
-                            menu.Privileges = new List<FunctionPrivilege>();
-                            menu.IsInside = true;
-                            menu.Domain = Entity.Domain;
-                            menu.PageName = action.ActionDes?.Description ?? action.ActionName;
-                            menu.ModuleName = action.Module.ModuleName;
-                            menu.ActionName = action.ActionDes?.Description ?? action.ActionName;
-                            menu.Url = action.Url;
-                            menu.ClassName = action.Module.FullName;
-                            menu.MethodName = action.MethodName;
-                            Entity.Children.Add(menu);
+                            if (SelectedActionIDs != null && SelectedActionIDs.Contains(action.MethodName))
+                            {
+                                FrameworkMenu menu = new FrameworkMenu();
+                                menu.FolderOnly = false;
+                                menu.IsPublic = false;
+                                menu.Parent = Entity;
+                                menu.ShowOnMenu = false;
+                                menu.DisplayOrder = order++;
+                                menu.Privileges = new List<FunctionPrivilege>();
+                                menu.IsInside = true;
+                                menu.Domain = Entity.Domain;
+                                menu.PageName = action.ActionDes?.Description ?? action.ActionName;
+                                menu.ModuleName = action.Module.ModuleName;
+                                menu.ActionName = action.ActionDes?.Description ?? action.ActionName;
+                                menu.Url = action.Url;
+                                menu.ClassName = action.Module.FullName;
+                                menu.MethodName = action.MethodName;
+                                Entity.Children.Add(menu);
+                            }
                         }
                     }
                 }

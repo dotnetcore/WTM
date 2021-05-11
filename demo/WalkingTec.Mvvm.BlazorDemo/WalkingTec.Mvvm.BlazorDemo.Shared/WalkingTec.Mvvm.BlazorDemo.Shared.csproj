@@ -21,8 +21,4 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\BasicData\" />
-  </ItemGroup>
-
 </Project>
