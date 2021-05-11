@@ -472,7 +472,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 csName = "default";
             }
-            var cs = Connections.Where(x => x.Key.ToLower() == csName.ToLower()).SingleOrDefault();
+            var cs = Connections.Where(x => x.Key.ToLower() == csName.ToLower()).FirstOrDefault();
             return cs?.CreateDC();
         }
 
