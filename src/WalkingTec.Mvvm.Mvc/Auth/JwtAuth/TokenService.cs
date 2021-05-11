@@ -68,9 +68,11 @@ namespace WalkingTec.Mvvm.Mvc.Auth
             _dc.AddEntity(refreshToken);
             await _dc.SaveChangesAsync();
 
+            var token = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+
             return await Task.FromResult(new Token()
             {
-                AccessToken = new JwtSecurityTokenHandler().WriteToken(tokeOptions),
+                AccessToken = token,
                 ExpiresIn = _jwtOptions.Expires,
                 TokenType = AuthConstants.JwtTokenType,
                 RefreshToken = refreshToken.RefreshToken

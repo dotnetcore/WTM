@@ -454,6 +454,13 @@ namespace WalkingTec.Mvvm.Core
             set
             {
                 _jwtOption = value;
+                if(_jwtOption.SecurityKey.Length < 18)
+                {
+                    var count = 18 - _jwtOption.SecurityKey.Length;
+                    for (int i = 0; i < count; i++){
+                        _jwtOption.SecurityKey += "x";
+                    }
+                }
             }
         }
 
