@@ -47,5 +47,19 @@
     "Text": "学生管理",
     "Url": "/student"
     }
+,{
+    "Id": "5359c7e7-f25a-4bd7-8f1a-7fda3d5b4f2f",
+    "ParentId": null,
+    "Text": "学校管理",
+    "Url": "/school"
+    }
+,{
+    "Id": "43640dcf-04f5-4969-8e80-c1bd75ca135f",
+    "ParentId": null,
+    "Text": "专业管理",
+    "Url": "/major"
+    }
+
+
 
 ]

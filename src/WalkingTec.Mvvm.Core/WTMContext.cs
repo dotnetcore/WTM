@@ -235,15 +235,15 @@ namespace WalkingTec.Mvvm.Core
             }
 
 
-            var code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>new { x.ITCode, x.ID }).SingleOrDefaultAsync();
+            var code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>new { itcode = x.ITCode, id= x.GetID() }).SingleOrDefaultAsync();
             if (code == null)
             {
                 return null;
             }
             LoginUserInfo rv = new LoginUserInfo
             {
-                ITCode = code.ITCode,
-                UserId = code.ID.ToString()
+                ITCode = code.itcode,
+                UserId = code.id?.ToString()
             };
             await rv.LoadBasicInfoAsync(this);
             return rv;
@@ -788,17 +788,6 @@ namespace WalkingTec.Mvvm.Core
                     return rv;
                 }
                 rv.StatusCode = res.StatusCode;
-                JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
-                jsonOptions.PropertyNamingPolicy = null;
-                jsonOptions.IgnoreNullValues = true;
-                jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
-                jsonOptions.AllowTrailingCommas = true;
-                jsonOptions.Converters.Add(new StringIgnoreLTGTConverter());
-                jsonOptions.Converters.Add(new JsonStringEnumConverter());
-                jsonOptions.Converters.Add(new DateRangeConverter());
-                jsonOptions.Converters.Add(new PocoConverter());
-                jsonOptions.Converters.Add(new TypeConverter());
-                jsonOptions.Converters.Add(new DynamicDataConverter());
                 if (res.IsSuccessStatusCode == true)
                 {
                     Type dt = typeof(T);
@@ -815,7 +804,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else
                         {
-                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt, jsonOptions);
+                            rv.Data = JsonSerializer.Deserialize<T>(responseTxt, CoreProgram.DefaultJsonOption);
                         }
                     }
                 }
@@ -827,7 +816,7 @@ namespace WalkingTec.Mvvm.Core
 
                         try
                         {
-                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt, jsonOptions);
+                            rv.Errors = JsonSerializer.Deserialize<ErrorObj>(responseTxt, CoreProgram.DefaultJsonOption);
                         }
                         catch { }
                     }
@@ -899,7 +888,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns></returns>
         public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url, HttpMethodEnum method, object postdata,  int? timeout = null, string proxy = null) where T : class
         {
-            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata, CoreProgram.DefaultPostJsonOption), System.Text.Encoding.UTF8, "application/json");
             return await CallAPI<T>(domainName, url, method, content,  timeout, proxy);
         }
 

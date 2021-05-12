@@ -171,7 +171,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [AllRights]
         public ActionResult GetFrameworkRoles()
         {
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x=>x.RoleCode));
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x => x.RoleCode));
         }
 
         [HttpGet("GetFrameworkGroups")]
@@ -179,7 +179,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [AllRights]
         public ActionResult GetFrameworkGroups()
         {
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName, x=>x.GroupCode));
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
 
     }

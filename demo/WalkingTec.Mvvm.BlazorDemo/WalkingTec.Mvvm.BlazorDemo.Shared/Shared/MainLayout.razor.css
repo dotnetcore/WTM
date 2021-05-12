@@ -1,0 +1,16 @@
+
+.header-right .menu {
+    border: none;
+}
+
+.header-right .dropdown-menu a {
+    text-align: left;
+}
+
+.header-right .nav-item .nav-link {
+    color: white;
+}
+
+    .header-right .nav-item .nav-link:hover {
+        color: black;
+    }

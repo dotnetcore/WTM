@@ -1,0 +1,124 @@
+@page "/_Admin/ActionLog"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
+@using System.ComponentModel.DataAnnotations;
+@inherits BasePage
+@attribute [ActionDescription("MenuKey.ActionLog", "WalkingTec.Mvvm.Admin.Api,ActionLog")]
+
+<WTSearchPanel OnSearch="@DoSearch">
+    <ValidateForm Model="@SearchModel">
+        <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
+            <MultiSelect @bind-Value="@SearchModel.LogType" PlaceHolder="@WtmBlazor.Localizer["Sys.All"]" />
+            <BootstrapInput @bind-Value="@SearchModel.ITCode" />
+            <BootstrapInput @bind-Value="@SearchModel.ActionUrl" />
+            <WTDateRange @bind-Value="@SearchModel.ActionTime" />
+            <BootstrapInput @bind-Value="@SearchModel.IP" />
+            <BootstrapInput @bind-Value="@SearchModel.Duration" />
+        </Row>
+    </ValidateForm>
+</WTSearchPanel>
+
+
+
+<Table @ref="dataTable" TItem="ActionLog" ShowLineNo="true" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" FixedExtendButtonsColumn="true" ShowDefaultButtons="false" style="margin-top:10px;">
+    <TableColumns>
+        <TableColumn @bind-Field="@context.LogType" Width="120" />
+        <TableColumn @bind-Field="@context.ModuleName" Width="120" />
+        <TableColumn @bind-Field="@context.ActionName" Width="120" />
+        <TableColumn @bind-Field="@context.ITCode" Width="120" />
+        <TableColumn @bind-Field="@context.ActionUrl" Width="200" />
+        <TableColumn @bind-Field="@context.ActionTime" Width="180" Sortable="true" FormatString="yyyy-MM-dd HH:mm:ss" />
+        <TableColumn @bind-Field="@context.Duration" Width="120" Formatter="IntFormatter" />
+        <TableColumn @bind-Field="@context.IP" Width="120" />
+        @*<TableColumn @bind-Field="@context.Remark" Width="320"  AllowTextWrap="true" />*@
+    </TableColumns>
+    <TableToolbarTemplate>
+        @if (IsAccessable("/api/_ActionLog/batchdelete"))
+        {
+            <TableToolbarPopconfirmButton TItem="ActionLog" Color="Color.Primary"
+                                          Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
+                                          OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
+                                          ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
+        }
+        @if (IsAccessable("/api/_ActionLog/exportexcel"))
+        {
+            <TableToolbarButton TItem="ActionLog" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+        }
+    </TableToolbarTemplate>
+    <RowButtonTemplate>
+        <div style="padding-right:10px;">
+            @if (IsAccessable("/api/_ActionLog/{id}"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
+            }
+            @if (IsAccessable("/api/_ActionLog/batchdelete"))
+            {
+                <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+                                  Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
+            }
+        </div>
+    </RowButtonTemplate>
+</Table>
+
+@code{
+
+    private ActionLogSearcher SearchModel = new ActionLogSearcher();
+    private Table<ActionLog> dataTable;
+
+
+    private async Task<QueryData<ActionLog>> OnSearch(QueryPageOptions opts)
+    {
+        return await StartSearch<ActionLog>("/api/_ActionLog/search", SearchModel, opts);
+    }
+
+    private void DoSearch()
+    {
+        dataTable.QueryAsync();
+    }
+
+    private static Task<string> IntFormatter(object d)
+    {
+        var data = (double?)d;
+        return Task.FromResult(data?.ToString("F2") ?? "");
+    }
+
+
+
+    private async Task OnDetailsClick(ActionLog item)
+    {
+        await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());
+    }
+
+    private async Task OnBatchDeleteClick()
+    {
+        if (dataTable.SelectedRows?.Any() == true)
+        {
+            await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/_ActionLog/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
+            await dataTable.QueryAsync();
+        }
+        else
+        {
+            await WtmBlazor.Toast.Information(WtmBlazor.Localizer["Sys.Info"], WtmBlazor.Localizer["Sys.SelectOneRowMin"]);
+        }
+    }
+
+    private async Task OnDeleteClick(ActionLog item)
+    {
+        await PostsData(new List<string> { item.ID.ToString() }, $"/api/_ActionLog/batchdelete", (s) => "Sys.OprationSuccess");
+        await dataTable.QueryAsync();
+    }
+
+
+    private async Task OnExportClick(IEnumerable<ActionLog> items)
+    {
+        if (dataTable.SelectedRows?.Any() == true)
+        {
+            await Download("/api/_ActionLog/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
+        }
+        else
+        {
+            await Download("/api/_ActionLog/ExportExcel", SearchModel);
+        }
+    }
+
+}

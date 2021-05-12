@@ -514,10 +514,10 @@ namespace WalkingTec.Mvvm.Core
                                     //TryValidateObject(SubTypeEntity, context, validationResults);
                                     //if (validationResults.Count == 0)
                                     //{
-                                        //将付好值得SubTableType实例添加到List中
-                                        list.Add(SubTypeEntity);
+                                    //将付好值得SubTableType实例添加到List中
+                                    list.Add(SubTypeEntity);
 
-                                        PropertyHelper.SetPropertyValue(entity, pro.Name, list);
+                                    PropertyHelper.SetPropertyValue(entity, pro.Name, list);
                                     //}
                                     //else
                                     //{
@@ -534,7 +534,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 entity.ExcelIndex = item.ExcelIndex;
                 if (isMainData)
-                {                   
+                {
                     EntityList.Add(entity);
                 }
             }
@@ -632,7 +632,7 @@ namespace WalkingTec.Mvvm.Core
                         ep.Value = processResult.EntityValues[0].FieldValue;
                         if (!string.IsNullOrEmpty(processResult.EntityValues[0].ErrorMsg))
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = processResult.EntityValues[0].ErrorMsg, ExcelIndex = rowIndex,Index = rowIndex });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = processResult.EntityValues[0].ErrorMsg, ExcelIndex = rowIndex, Index = rowIndex });
                         }
                         PropertyHelper.SetPropertyValue(entity, fieldName, ep.Value, stringBasedValue: true);
                     }
@@ -809,7 +809,7 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
-        private  void TryValidateObject(object model, ValidationContext context, ICollection<ValidationResult> results)
+        private void TryValidateObject(object model, ValidationContext context, ICollection<ValidationResult> results)
         {
             var modelType = model.GetType();
             foreach (var p in modelType.GetProperties())
@@ -819,7 +819,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        private  void TryValidateProperty(object value, ValidationContext context, ICollection<ValidationResult> results, PropertyInfo? propertyInfo = null)
+        private void TryValidateProperty(object value, ValidationContext context, ICollection<ValidationResult> results, PropertyInfo? propertyInfo = null)
         {
             var modelType = context.ObjectType;
             if (propertyInfo == null)
@@ -907,7 +907,7 @@ namespace WalkingTec.Mvvm.Core
                 TryValidateObject(entity, context, validationResults);
                 if (validationResults.Count > 0)
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = entity.ExcelIndex , Index = entity.ExcelIndex});
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = entity.ExcelIndex, Index = entity.ExcelIndex });
                 }
             }
             if (ErrorListVM.EntityList.Count > 0)
@@ -928,11 +928,11 @@ namespace WalkingTec.Mvvm.Core
             List<P> ListAdd = new List<P>();
             foreach (var item in EntityList)
             {
+                //根据唯一性的设定查找数据库中是否有同样的数据
+                P exist = IsDuplicateData(item, finalInfo);
                 //如果设置了覆盖功能
                 if (IsOverWriteExistData)
                 {
-                    //根据唯一性的设定查找数据库中是否有同样的数据
-                    P exist = IsDuplicateData(item, finalInfo);
                     if (exist != null)
                     {
                         //如果有重复数据，则进行修改
@@ -975,17 +975,29 @@ namespace WalkingTec.Mvvm.Core
 
                         continue;
                     }
+                    else
+                    {
+                        if (typeof(IPersistPoco).IsAssignableFrom(item.GetType()))
+                        {
+                            (item as IPersistPoco).IsValid = true;
+                        }
+                    }
                 }
-
+                else
+                {
+                    if (exist == null)
+                    {
+                        if (typeof(IPersistPoco).IsAssignableFrom(item.GetType()))
+                        {
+                            (item as IPersistPoco).IsValid = true;
+                        }
+                    }
+                }
                 //进行添加操作
                 if (typeof(IBasePoco).IsAssignableFrom(item.GetType()))
                 {
                     (item as IBasePoco).CreateTime = DateTime.Now;
                     (item as IBasePoco).CreateBy = LoginUserInfo?.ITCode;
-                }
-                if (typeof(IPersistPoco).IsAssignableFrom(item.GetType()))
-                {
-                    (item as IPersistPoco).IsValid = true;
                 }
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
                 if (ConfigInfo.Connections.Where(x => x.Key == (CurrentCS ?? "default")).FirstOrDefault().DbType == DBTypeEnum.SqlServer && !HasSubTable && UseBulkSave == true)
@@ -996,6 +1008,12 @@ namespace WalkingTec.Mvvm.Core
                 {
                     DC.Set<P>().Add(item);
                 }
+            }
+
+            if (ErrorListVM.EntityList.Count > 0)
+            {
+                DoReInit();
+                return false;
             }
 
             //如果没有错误，更新数据库
@@ -1261,8 +1279,34 @@ namespace WalkingTec.Mvvm.Core
                         //       Expression.Lambda<Func<P, long>>(Expression.PropertyOrField(para, "Id"), new ParameterExpression[] { para }));
 
                         var result = baseExp.Provider.CreateQuery(whereCallExpression);
+
                         foreach (var res in result)
                         {
+                            if (IsOverWriteExistData == false)
+                            {
+                                //循环拼接所有字段名
+                                string AllName = "";
+                                foreach (var prop in props)
+                                {
+                                    string name = PropertyHelper.GetPropertyDisplayName(prop);
+                                    AllName += name + ",";
+                                }
+                                if (AllName.EndsWith(","))
+                                {
+                                    AllName = AllName.Remove(AllName.Length - 1);
+                                }
+                                //如果只有一个字段重复，则拼接形成 xxx字段重复 这种提示
+                                if (props.Count == 1)
+                                {
+                                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.DuplicateError", AllName], Index = Entity.ExcelIndex });
+                                }
+                                //如果多个字段重复，则拼接形成 xx，yy，zz组合字段重复 这种提示
+                                else if (props.Count > 1)
+                                {
+                                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.DuplicateGroupError", AllName], Index = Entity.ExcelIndex });
+                                }
+
+                            }
                             return res as P;
                         }
                     }

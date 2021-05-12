@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         PRI
     }
 
-    public class School : BasePoco
+    public class School : PersistPoco
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         public Guid FileId { get; set; }
         public FileAttachment File { get; set; }
-        public int order { get; set; }
+        public int Order { get; set; }
     }
 
 }

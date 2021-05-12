@@ -1,0 +1,32 @@
+@page "/_Admin/FrameworkRole/Details/{id}"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model">
+    <Display @bind-Value="@Model.Entity.RoleCode" ShowLabel="true" />
+    <Display @bind-Value="@Model.Entity.RoleName" ShowLabel="true" />
+    <Display @bind-Value="@Model.Entity.RoleRemark" ShowLabel="true" />
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="关闭" OnClick="OnClose" />
+    </div>
+</ValidateForm>
+
+@code {
+    private FrameworkRoleVM Model = new FrameworkRoleVM() ;
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            var rv = await WtmBlazor.Api.CallAPI<FrameworkRoleVM>($"/api/_FrameworkRole/{id}");
+            Model = rv.Data;
+        }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

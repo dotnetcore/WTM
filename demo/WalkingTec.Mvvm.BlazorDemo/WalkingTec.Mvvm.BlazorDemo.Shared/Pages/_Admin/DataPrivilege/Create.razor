@@ -1,0 +1,76 @@
+@page "/_Admin/DataPrivilege/Create"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
+    @if (Model.DpType == DpTypeEnum.User)
+    {
+        <Row ItemsPerRow="ItemsPerRow.Two">
+            <Select @bind-Value="@Model.DpType" />
+            <BootstrapInput @bind-Value="@Model.Entity.UserCode" />
+        </Row>
+    }
+    else
+    {
+        <Row ItemsPerRow="ItemsPerRow.Two">
+            <Select @bind-Value="@Model.DpType" />
+            <Select @bind-Value="@Model.Entity.GroupCode" Items="@AllGroups" />
+        </Row>
+    }
+    <Row ItemsPerRow="ItemsPerRow.Two">
+        <Select @bind-Value="@Model.Entity.TableName" Items="AllPrivileges" OnSelectedItemChanged="OnCascadeBindSelectClick" />
+        <Select @bind-Value="@Model.IsAll" Items="@WtmBlazor.GlobalSelectItems.BoolItems" />
+    </Row>
+    <Row>
+        <MultiSelect @bind-Value="@Model.SelectedItemsID" Items="AllPrivilegeTableNames" PlaceHolder="@WtmBlazor.Localizer["Sys.PleaseSelect"]" />
+    </Row>
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Create"]" IsAsync="true" />
+    </div>
+</ValidateForm>
+
+@code {
+
+    [Parameter]
+    public DpTypeEnum dptype { get; set; }
+
+    private DataPrivilegeVM Model = new DataPrivilegeVM();
+
+    private ValidateForm vform { get; set; }
+
+
+    private List<SelectedItem> AllPrivileges = new List<SelectedItem>();
+    private List<SelectedItem> AllGroups = new List<SelectedItem>();
+    private List<SelectedItem> AllPrivilegeTableNames = new List<SelectedItem>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model.DpType = dptype;
+        AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
+        AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetUserGroups");
+    }
+
+    /// <summary>
+    /// 级联绑定菜单
+    /// </summary>
+    /// <param name="item"></param>
+    private async Task OnCascadeBindSelectClick(SelectedItem item)
+    {
+        AllPrivilegeTableNames = await WtmBlazor.Api.CallItemsApi($"/api/_DataPrivilege/GetPrivilegeByTableName?table={item.Value}");
+        StateHasChanged();
+    }
+
+    private async Task Submit(EditContext context)
+    {
+        await PostsForm(vform, "/api/_DataPrivilege/add", (s) => "Sys.OprationSuccess");
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

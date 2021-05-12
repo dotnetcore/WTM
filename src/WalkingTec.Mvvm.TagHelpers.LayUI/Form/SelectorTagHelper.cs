@@ -273,6 +273,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 { "_DONOT_USE_FIELD", Field.Name },
                 { "_DONOT_USE_MULTI_SEL", MultiSelect },
                 { "_DONOT_USE_SEL_ID", Id },
+                {"_DONOT_USE_CURRENTCS",  listVM?.CurrentCS},
                 { "Ids", list }
             };
                 if (!string.IsNullOrEmpty(SubmitFunc))

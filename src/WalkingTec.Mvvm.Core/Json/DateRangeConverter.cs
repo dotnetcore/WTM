@@ -50,7 +50,11 @@ namespace WalkingTec.Mvvm.Core.Json
             }
             else
             {
-                writer.WriteStringValue(JsonSerializer.Serialize(value));
+                //writer.WriteStringValue(JsonSerializer.Serialize(value),);
+                writer.WriteStartArray();
+                writer.WriteStringValue(value.GetStartTime().ToString());
+                writer.WriteStringValue(value.GetEndTime().ToString());
+                writer.WriteEndArray();
             }
         }
     }

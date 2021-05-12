@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +6,8 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.VueDemo.BasicData.ViewModels.SchoolVMs;
+using WalkingTec.Mvvm.Demo.Models;
+
 
 namespace WalkingTec.Mvvm.VueDemo.Controllers
 {
@@ -16,16 +18,23 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
     [Route("api/School")]
 	public partial class SchoolController : BaseApiController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public string Search(SchoolSearcher searcher)
+		public IActionResult Search(SchoolSearcher searcher)
         {
-            var vm = Wtm.CreateVM<SchoolListVM>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<SchoolListVM>();
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
         public SchoolVM Get(string id)
         {
@@ -33,7 +42,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
             return vm;
         }
 
-        [ActionDescription("新建")]
+        [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
         public IActionResult Add(SchoolVM vm)
         {
@@ -56,7 +65,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
 
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
         public IActionResult Edit(SchoolVM vm)
         {
@@ -79,7 +88,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         }
 
 		[HttpPost("BatchDelete")]
-        [ActionDescription("删除")]
+        [ActionDescription("Sys.Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<SchoolBatchVM>();
@@ -102,18 +111,17 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         }
 
 
-        [ActionDescription("导出")]
+        [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(SchoolSearcher searcher)
         {
             var vm = Wtm.CreateVM<SchoolListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_School_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [ActionDescription("勾选导出")]
+        [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
@@ -123,11 +131,10 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_School_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [ActionDescription("下载模板")]
+        [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
@@ -142,7 +149,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [ActionDescription("导入")]
+        [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
         public ActionResult Import(SchoolImportVM vm)
         {

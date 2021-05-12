@@ -1,0 +1,98 @@
+@namespace WtmBlazorUtils
+@inherits WTComponent
+@inject WtmBlazorContext WtmBlazor
+@using System.Threading;
+@using System.Linq.Expressions;
+@using System.IO;
+@typeparam TValue
+<ButtonUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="*/*" IsSingle="true" ShowProgress="true" OnChange="@OnAvatarUpload" OnDelete="@OnAvatarDelete" DisplayText="@LabelText"  DefaultFileList="@dlist"></ButtonUpload>
+
+@code{
+
+    [Parameter]
+    public int? ThumbWidth { get; set; }
+    [Parameter]
+    public int? ThumbHeight { get; set; }
+    [Parameter]
+    public TValue Value { get; set; }
+    [Parameter]
+    public EventCallback<TValue> ValueChanged { get; set; }
+    [Parameter]
+    public Expression<Func<TValue>> ValueExpression { get; set; }
+
+    [Parameter]
+    public string LabelText { get; set; }
+
+    private Dictionary<string, string> files { get; set; } = new Dictionary<string, string>();
+    private List<UploadFile> dlist = new List<UploadFile>();
+    private ButtonUpload<TValue> uploader { get; set; }
+
+    protected TValue CurrentValue
+    {
+        get => Value;
+        set
+        {
+            var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
+            if (hasChanged)
+            {
+                Value = value;
+                _ = ValueChanged.InvokeAsync(value);
+            }
+        }
+    }
+
+    private async Task OnAvatarUpload(UploadFile file)
+    {
+        bool suc = false;
+        if (file != null && file.File != null)
+        {
+            byte[] filedata = await GetFileData(file.File);
+            var rv = await WtmBlazor.Api.CallAPI<DynamicData>("/api/_file/Upload", HttpMethodEnum.POST, null, filedata, file.File.Name);
+            if (rv.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var idstr = files.Select(x => x.Key);
+                foreach (var id in idstr)
+                {
+                    _ = await WtmBlazor.Api.CallAPI($"/api/_file/DeletedFile/{idstr}");
+                    files.Remove(id);
+
+                }
+                files.Add(rv.Data.Fields["Id"].ToString(), file.File.Name);
+                CurrentValue = (TValue)(object)(files.First().Key);
+                suc = true;
+            }
+        }
+        if (suc == false)
+        {
+            await WtmBlazor.Toast.Error(content: WtmBlazor.Localizer["Sys.UploadFailed"]);
+        }
+
+    }
+
+    private async Task<bool> OnAvatarDelete(string filename)
+    {
+        var idstr = files.Where(x => x.Value == filename).Select(x => x.Key).FirstOrDefault();
+        if (idstr != null)
+        {
+            var rv = await WtmBlazor.Api.CallAPI($"/api/_file/DeletedFile/{idstr}");
+            files.Remove(idstr);
+        }
+        return true;
+    }
+
+    private bool CheckValidAvatarFormat(string format)
+    {
+        return "jpg;png;bmp;gif;jpeg".Split(';').Any(f => format.Contains(f, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<byte[]> GetFileData(IBrowserFile file)
+    {
+        using var fileStream = file.OpenReadStream();
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+        byte[] rv = memoryStream.ToArray();
+        memoryStream.Dispose();
+        fileStream.Dispose();
+        return rv;
+    }
+}

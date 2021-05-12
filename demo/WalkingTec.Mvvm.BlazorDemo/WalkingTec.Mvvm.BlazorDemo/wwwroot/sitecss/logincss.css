@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+input::-webkit-input-placeholder {
+    color: #ccc;
+}
+
+input:-webkit-autofill {
+    box-shadow: 0 0 0px 1000px white inset !important;
+}
+
+/* login */
+.loginBody {
+    background: url(../images/login-bj.png) no-repeat top center #9BBCF3;
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    overflow: hidden;
+}
+
+.loginDiv {
+    background-color: #fff;
+    position: relative;
+    border-radius: 6px;
+    margin: 10% auto;
+    width: 425px;
+    padding: 60px;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+    .loginDiv h4 {
+        position: relative;
+        margin: 0 auto 20px;
+        text-align: center;
+        font-size: 18px;
+        color: #333;
+        width: 100%;
+        padding-top: 40px;
+    }
+
+        .loginDiv h4::before {
+            content: "";
+            position: absolute;
+            width: 56px;
+            height: 52px;
+            background-size: 100%;
+            left: 50%;
+            margin-left: -28px;
+            bottom: 25px;
+        }
+
+.loginForm {
+    margin: 0 auto;
+}
+
+.login-input {
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    outline: none;
+    padding-left: 26px;
+    height: 32px;
+    box-sizing: border-box;
+}
+
+.loginForm li {
+    position: relative;
+    display: block;
+    margin-bottom: 28px;
+}
+
+    .loginForm li i {
+        position: absolute;
+        left: 0;
+        width: 17px;
+        top: 5px;
+        display: block;
+    }
+
+li i.login-code {
+    right: 0;
+    left: auto;
+    cursor: pointer;
+}
+
+.login-codeImg {
+    right: 26px;
+    position: absolute;
+    bottom: 2px;
+    height: 34px;
+}
+
+.loginForm li i img {
+    width: 100%;
+}
+
+.loginForm li .login-button {
+    margin-top: 10px;
+}
+
+.login-button {
+    width: 100%;
+    background-color: #5C99FF;
+    color: #fff;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.login-error {
+    color: red;
+    margin-top: 8px;
+    display: block;
+}

@@ -40,38 +40,8 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public enum TabModeEnum { Default, Simple }
 
-    public enum BlazorModeEnum { Server, WSAM}
-    public enum OrmTypeEnum { EF,FreeSql}
-    /// <summary>
-    /// Notification出现的位置
-    /// </summary>
-    public enum ExtPosition
-    {
-        b = 0, //下
-        bl = 1,//左下
-        br = 2,//右下
-        t = 3,//上
-        tl = 4,//左上
-        tr = 5,//右上
-        l = 6,//左
-        r = 7//右
-    }
-    /// <summary>
-    /// Grid的选择模式
-    /// </summary>
-    public enum SelectionModeEnum
-    {
-        SINGLE,
-        SIMPLE,
-        MULTI
-    };
+    public enum BlazorModeEnum { Server, Wasm}
 
-    public enum SortType
-    {
-        Local,
-        Remote,
-        Disable
-    }
     /// <summary>
     /// 按钮
     /// </summary>
@@ -91,31 +61,6 @@ namespace WalkingTec.Mvvm.Core
         NewWindow,
         NewTab,
     };
-
-
-    /// <summary>
-    /// 按钮类型
-    /// </summary>
-    public enum ButtonOperationEnum
-    {
-        Submit,
-        Button
-    };
-
-    ///// <summary>
-    ///// 上传类型
-    ///// </summary>
-    //public enum UploadTypesEnum
-    //{
-    //    AllFiles,
-    //    ImageFile,
-    //    ZipFile,
-    //    ExcelFile,
-    //    WordFile,
-    //    PDFFile,
-    //    TextFile,
-    //    Custom
-    //};
 
     /// <summary>
     /// 日期类型
@@ -185,34 +130,9 @@ namespace WalkingTec.Mvvm.Core
     }
 
     public enum UIEnum
-    { LayUI, React, VUE }
+    { LayUI, React, VUE,Blazor }
 
-    public enum NoRightEnum
-    {
-        /// <summary>
-        /// 隐藏
-        /// </summary>
-        Invisible,
-        /// <summary>
-        /// 禁用
-        /// </summary>
-        Disable
-    }
 
-    public enum VTypeEnum { url, email, Date, Time, IPaddress, Int, UInt, Double, UDouble, Color, Phone, Tel }
-    public enum HiddenModeEnum { Display, Visibility, Offsets }
-    public enum RegionEnum { North, South, West, East, Center }
-    public enum LayoutEnum { absolute, border, box, fit, center }
-    public enum LabelAlignEnum { left, right, top }
-    public enum DockDirEnum { top, left, right, bottom }
-    public enum BoxAlignEnum { Stretch, Begin, Middle, End, StretchMax }
-    public enum BoxPackEnum { Start, Middle, End }
-    public enum BoxDirectionEnum { H, V }
-    public enum MsgTargetEnum { qtip, title, under, side, none }
-    public enum FieldTypeEnum { String, Int, Bool, Date }
-    public enum IconAlignEnum { Left, Right, Bottom, Top }
-    public enum UploadTypeEnum { AllFiles, ImageFile, ZipFile, ExcelFile, WordFile, PDFFile, TextFile }
-    public enum ComponentRenderMode { Normal, Declare, Get, Reference }
 
     public enum BoolComboTypes { YesNo, ValidInvalid, MaleFemale, HaveNotHave, Custom }
 

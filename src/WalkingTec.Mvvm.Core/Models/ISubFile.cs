@@ -8,6 +8,6 @@ namespace WalkingTec.Mvvm.Core
     {
         Guid FileId { get; set; }
         FileAttachment File { get; set; }
-        int order { get; set; }
+        int Order { get; set; }
     }
 }

@@ -15,6 +15,12 @@
   <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\Spa\Vue\**\*.txt" />
     <EmbeddedResource Include="Views\**\*.cshtml" />
+    <None Remove="GeneratorFiles\Spa\Blazor\Controller.txt" />
+    <None Remove="GeneratorFiles\Spa\Blazor\Create.txt" />
+    <None Remove="GeneratorFiles\Spa\Blazor\Details.txt" />
+    <None Remove="GeneratorFiles\Spa\Blazor\Edit.txt" />
+    <None Remove="GeneratorFiles\Spa\Blazor\Import.txt" />
+    <None Remove="GeneratorFiles\Spa\Blazor\Index.txt" />
     <EmbeddedResource Include="framework_layui.js" />
     <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
@@ -32,6 +38,12 @@
     <EmbeddedResource Include="GeneratorFiles\Mvc\ImportView.txt" />
     <EmbeddedResource Include="GeneratorFiles\Mvc\ListView.txt" />
     <EmbeddedResource Include="GeneratorFiles\Searcher.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Blazor\Controller.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Blazor\Details.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Blazor\Import.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Blazor\Edit.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Blazor\Create.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Blazor\Index.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\Controller.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\index.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\store\index.txt" />
@@ -48,10 +60,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.3" />
     <PackageReference Include="VueCliMiddleware" Version="5.0.0" />
   </ItemGroup>
 

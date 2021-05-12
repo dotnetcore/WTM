@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +19,11 @@ namespace WalkingTec.Mvvm.Demo
 {
     public class Startup
     {
-        public IConfigurationRoot ConfigRoot { get; }
+        public IConfiguration ConfigRoot { get; }
 
-        public Startup(IWebHostEnvironment env)
+        public Startup(IWebHostEnvironment env, IConfiguration config)
         {
-            var configBuilder = new ConfigurationBuilder();
-            ConfigRoot = configBuilder.WTMConfig(env).Build();
+            ConfigRoot = config;
         }
 
 
@@ -31,13 +31,12 @@ namespace WalkingTec.Mvvm.Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-            services.AddWtmSession(3600);
-            services.AddWtmCrossDomain();
-            services.AddWtmAuthentication();
-            services.AddWtmHttpClient();
+            services.AddWtmSession(3600, ConfigRoot);
+            services.AddWtmCrossDomain(ConfigRoot);
+            services.AddWtmAuthentication(ConfigRoot);
+            services.AddWtmHttpClient(ConfigRoot);
             services.AddWtmSwagger();
-            services.AddWtmMultiLanguages();
-
+            services.AddWtmMultiLanguages(ConfigRoot);
             services.AddMvc(options =>
             {
                 options.UseWtmMvcOptions();
@@ -59,7 +58,6 @@ namespace WalkingTec.Mvvm.Demo
                 options.FileSubDirSelector = SubDirSelector;
                 options.ReloadUserFunc = ReloadUser;
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,7 +76,6 @@ namespace WalkingTec.Mvvm.Demo
             app.UseSession();
             app.UseWtmSwagger();
             app.UseWtm();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
