@@ -1,5 +1,6 @@
 @page "/_Admin/FrameworkMenu/Edit/{id}"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
+@using WalkingTec.Mvvm.Core.Extensions
 @inherits BasePage
 
 
@@ -56,6 +57,7 @@
     private List<SelectedItem> AllActions = new List<SelectedItem>();
     private List<SelectedItem> IconTypes = new List<SelectedItem>();
     private List<SelectedItem> Icons = new List<SelectedItem>();
+    private List<FrameworkMenu> ClientPages;
     private string SelectedIconType = "";
 
     private ValidateForm vform { get; set; }
@@ -66,19 +68,20 @@
     {
         AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Inside"], Value = "true" });
         AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Outside"], Value = "false" });
-        AllFolders = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetFolders", placeholder:WtmBlazor.Localizer["Sys.PleaseSelect"]);
+        AllFolders = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetFolders", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         IconTypes = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetIcons", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         var items = WtmBlazor.GetAllPages();
+        ClientPages = WtmBlazor.GetAllPages();
         AllModels.Add(new SelectedItem { Text = WtmBlazor.Localizer["Sys.PleaseSelect"], Value = "" });
-        foreach (var item in items)
+        foreach (var item in ClientPages)
         {
             foreach (var sub in item.Children)
             {
-                AllModels.Add(new SelectedItem { Text = sub.PageName, Value = sub.ClassName??sub.Url, GroupName = item.PageName });
+                AllModels.Add(new SelectedItem { Text = sub.PageName, Value = sub.ClassName ?? sub.Url, GroupName = item.PageName });
             }
         }
         var rv = await WtmBlazor.Api.CallAPI<FrameworkMenuVM2>($"/api/_FrameworkMenu/{id}");
-        if(string.IsNullOrEmpty(rv?.Data?.Entity?.Icon) == false)
+        if (string.IsNullOrEmpty(rv?.Data?.Entity?.Icon) == false)
         {
             rv.Data.Entity.Icon = rv.Data.Entity.Icon.Trim();
             var iconinfo = rv.Data.Entity.Icon.Split(" ");
@@ -92,7 +95,9 @@
 
     private async Task OnModelChange(SelectedItem item)
     {
+        var url = ClientPages.FlatTree().Where(x => x.ClassName == item.Value || x.Url == item.Value).Select(x => x.Url).FirstOrDefault();
         AllActions = await WtmBlazor.Api.CallItemsApi($"/api/_FrameworkMenu/GetActionsByModel?ModelName={item.Value}");
+        Model.Entity.Url = url;
         StateHasChanged();
     }
 

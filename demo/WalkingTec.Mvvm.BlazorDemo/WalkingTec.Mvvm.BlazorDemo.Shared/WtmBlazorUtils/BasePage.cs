@@ -22,8 +22,6 @@ namespace WtmBlazorUtils
         public WtmBlazorContext WtmBlazor { get; set; }
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
-        [Inject]
-        public NavigationManager navigationManager { get; set; }
 
         [CascadingParameter]
         public LoginUserInfo UserInfo
@@ -155,13 +153,17 @@ namespace WtmBlazorUtils
         }
 
 
-        public void SetError(ValidateForm form, ErrorObj errors)
+        public async void SetError(ValidateForm form, ErrorObj errors)
         {
             if (errors != null)
             {
                 foreach (var item in errors.Form)
                 {
                     form.SetError(item.Key, item.Value);
+                }
+                if (errors.Message != null && errors.Message.Count > 0)
+                {
+                    await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], errors.Message[0]);
                 }
             }
         }
