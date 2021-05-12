@@ -13,12 +13,14 @@ export class UserMenus {
     private ParallelMenu: Array<any> = [];
     // @action.bound
     onInit(ParallelMenu) {
-        ParallelMenu = lodash.map(ParallelMenu, item => {
-            return lodash.assign({ ParentId: null }, lodash.cloneDeep(item))
-        })
-        const menus = this.recursionTree(ParallelMenu, null, [])
-        this.menus = lodash.clone(menus);
-        this.ParallelMenu = lodash.clone(ParallelMenu);
+        if (ParallelMenu) {
+            ParallelMenu = lodash.map(ParallelMenu, item => {
+                return lodash.assign({ ParentId: null }, lodash.cloneDeep(item))
+            })
+            const menus = this.recursionTree(ParallelMenu, null, [])
+            this.menus = lodash.clone(menus);
+            this.ParallelMenu = lodash.clone(ParallelMenu);
+        }
     }
     getMenus() {
         return this.menus
@@ -34,10 +36,10 @@ export class UserMenus {
             data = lodash.assign({
                 path: data.Url,
                 name: data.Url ? undefined : data.Id,
-                meta: { 
+                meta: {
                     // icon: data.Icon, 
                     title: data.Text
-                 },
+                },
             }, data)
             data.children = this.recursionTree(datalist, data.Id, data.children || []);
             children.push(data);

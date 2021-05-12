@@ -20,7 +20,7 @@ export class UserController extends UserEntity {
     }
     onSetUserInfo(info) {
         this.UserInfo = info;
-        this.UserMenus.onInit(this.UserInfo.Attributes.Menus)
+        this.UserMenus.onInit(this.UserInfo?.Attributes?.Menus)
         this.onToggleLoading(false)
     }
     /**

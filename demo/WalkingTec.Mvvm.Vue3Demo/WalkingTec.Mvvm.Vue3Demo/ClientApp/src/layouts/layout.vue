@@ -61,7 +61,7 @@ export default class extends Vue {
     const menus = [
       {
         name: "development",
-        meta: { icon: "SaveOutlined", title: "开发测试", target: "a" },
+        meta: { icon: "SaveOutlined", title: "本地页面", target: "a" },
         children: lodash.map(router.RouterConfig, item => {
           const data = lodash.assign(lodash.pick(item, ["path", "name"]), {
             meta: {
