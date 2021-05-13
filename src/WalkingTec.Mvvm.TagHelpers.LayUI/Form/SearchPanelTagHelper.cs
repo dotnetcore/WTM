@@ -160,6 +160,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     $('#{tempSearchTitleId}').parents('form').append(""<input type='hidden' name='Searcher.IsExpanded' value='{show.ToString().ToLower()}' />"");
 layui.element.on('collapse({tempSearchTitleId}x)', function(data){{
     $('#{tempSearchTitleId}').parents('form').find(""input[name='Searcher.IsExpanded']"").val(data.show+'');
+    ff.triggerResize();
 }});
 
 {(OldPost == true ? $"" : $@"
