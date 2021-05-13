@@ -1,6 +1,6 @@
 @page "/_Admin/FrameworkMenu/Create"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
-@using WalkingTec.Mvvm.Core.Extensions 
+@using WalkingTec.Mvvm.Core.Extensions
 @inherits BasePage
 
 
@@ -10,13 +10,13 @@
     </Row>
     @if (Model.Entity.IsInside != false)
     {
-<Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
-    <Select @bind-Value="@Model.SelectedModule" Items="@AllModels" OnSelectedItemChanged="OnModelChange" />
-    <div></div>
-    <Row ColSpan="2">
-        <Transfer @bind-Value="@Model.SelectedActionIDs" Items="@AllActions" />
-    </Row>
-</Row>
+        <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+            <Select @bind-Value="@Model.SelectedModule" Items="@AllModels" OnSelectedItemChanged="OnModelChange" />
+            <div></div>
+            <Row ColSpan="2">
+                <Transfer @bind-Value="@Model.SelectedActionIDs" Items="@AllActions" />
+            </Row>
+        </Row>
     }
     else
     {
@@ -30,11 +30,11 @@
         <Select @bind-Value="@SelectedIconType" Items="@IconTypes" OnSelectedItemChanged="OnIconChange" DisplayText="@WtmBlazor.Localizer["_Admin.IconFont"]" />
         <Select TValue="string" @bind-Value="@Model.Entity.Icon" Items="@Icons">
             <ItemTemplate>
-                    <div class="dropdown-item-demo">
-                        <i class="@context.Value"></i>
-                        <span>@context.Text</span>
-                    </div>
-                </ItemTemplate>
+                <div class="dropdown-item-demo">
+                    <i class="@context.Value"></i>
+                    <span>@context.Text</span>
+                </div>
+            </ItemTemplate>
         </Select>
         <BootstrapInputNumber @bind-Value="@Model.Entity.DisplayOrder" />
     </Row>
@@ -74,7 +74,7 @@
         {
             foreach (var sub in item.Children)
             {
-                AllModels.Add(new SelectedItem { Text = sub.PageName, Value = sub.ClassName??sub.Url, GroupName = item.PageName });
+                AllModels.Add(new SelectedItem { Text = sub.PageName, Value = sub.ClassName ?? sub.Url, GroupName = item.PageName });
             }
         }
     }
