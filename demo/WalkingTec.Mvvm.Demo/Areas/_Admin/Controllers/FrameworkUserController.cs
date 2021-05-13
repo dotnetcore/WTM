@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     [ActionDescription("MenuKey.UserManagement")]
     public class FrameworkUserController : BaseController
     {
-        [ActionDescription("Sys.Search")]
+        [ActionDescription("Sys.Search", IsPage = true)]
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<FrameworkUserListVM>();
@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Login.ChangePassword")]
         public ActionResult Password(Guid id)
         {
-            var vm = Wtm.CreateVM<FrameworkUserVM>(id,passInit:true);
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id, passInit: true);
             vm.Entity.Password = null;
             return PartialView(vm);
         }
@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var keys = ModelState.Keys.ToList();
             foreach (var item in keys)
             {
-                if(item != "Entity.Password")
+                if (item != "Entity.Password")
                 {
                     ModelState.Remove(item);
                 }
@@ -257,7 +257,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [AllRights]
         public ActionResult GetUserById(string keywords)
         {
-            var users = DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x=>x.Name +"("+x.ITCode+")", x => x.ITCode);
+            var users = DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
             return JsonMore(users);
 
         }

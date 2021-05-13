@@ -70,12 +70,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (p.Text.StartsWith("MenuKey."))
                 {
-                        p.Text = Localizer[p.Text];
+                    p.Text = Localizer[p.Text];
                 }
             }
 
             var modules = Wtm.GlobaInfo.AllModule;
-
             var toRemove = new List<SimpleModule>();
             foreach (var item in modules)
             {
@@ -84,16 +83,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     toRemove.Add(item);
                 }
             }
-            var m = modules.ToList();
+            var m = Utils.ResetModule(modules);
             toRemove.ForEach(x => m.Remove(x));
+
             AllModules = m.ToListItems(y => y.ModuleName, y => y.FullName);
             if (string.IsNullOrEmpty(SelectedModule) == false || (string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true))
             {
                 if (string.IsNullOrEmpty(SelectedModule))
                 {
-                    SelectedModule = modules.Where(x => (x.FullName == Entity.ClassName)).FirstOrDefault()?.FullName;
+                    SelectedModule = m.Where(x => (x.FullName == Entity.ClassName)).FirstOrDefault()?.FullName;
                 }
-                var mm = modules.Where(x => x.FullName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
+                var mm = m.Where(x => x.FullName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
                 AllActions = mm.ToListItems(y => y.ActionName, y => y.Url);
                 if (SelectedActionIDs == null)
                 {
@@ -101,6 +101,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
             }
         }
+
+
 
         public override void Validate()
         {
@@ -127,12 +129,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             FC.Add("Entity.Icon", " ");
             if (Entity.IsInside == false)
             {
-                if (Entity.Url != null && Entity.Url != ""  && Entity.Url.StartsWith("/") == false)
+                if (Entity.Url != null && Entity.Url != "" && Entity.Url.StartsWith("/") == false)
                 {
-                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
-                        {
-                            Entity.Url = "http://" + Entity.Url;
-                        }
+                    if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
+                    {
+                        Entity.Url = "http://" + Entity.Url;
+                    }
                 }
             }
             else
@@ -140,31 +142,34 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = Wtm.GlobaInfo.AllModule;
+                    var m = Utils.ResetModule(modules, false);
                     List<SimpleAction> otherActions = null;
-                    var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
-                    if (mainAction == null && Entity.ShowOnMenu == true)
-                    {
-                        MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
-                        return;
-                    }
-                    if (mainAction == null && Entity.ShowOnMenu == false)
-                    {
-                        var model = modules.Where(x => x.FullName == this.SelectedModule)
-                                            .FirstOrDefault();
-                        mainAction = new SimpleAction();
-                        mainAction.Module = model;
-                        mainAction.MethodName = null;
-                    }
+                    ////var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
+                    ////if (mainAction == null && Entity.ShowOnMenu == true)
+                    ////{
+                    ////    MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
+                    ////    return;
+                    ////}
+                    //if (mainAction == null && Entity.ShowOnMenu == false)
+                    //{
+                    //    var model = modules.Where(x => x.FullName == this.SelectedModule)
+                    //                        .FirstOrDefault();
+                    //    mainAction = new SimpleAction();
+                    //    mainAction.Module = model;
+                    //    mainAction.MethodName = null;
+                    //}
+                    var mainModule = m.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
+                    var mainAction = mainModule.Actions.FirstOrDefault();
 
                     Entity.Url = mainAction.Url;
-                    Entity.ModuleName = mainAction.Module.ModuleName;
+                    Entity.ModuleName = mainModule.ModuleName;
                     Entity.ActionName = mainAction.ActionDes?.Description ?? mainAction.ActionName;
-                    Entity.ClassName = mainAction.Module.FullName;
+                    Entity.ClassName = mainModule.FullName;
                     Entity.MethodName = null;
 
-                    otherActions = modules.Where(x => x.FullName == this.SelectedModule)
+                    otherActions = m.Where(x => x.FullName == this.SelectedModule)
                                             .SelectMany(x => x.Actions)
-                                            .Where(x => x.MethodName != "Index")
+                                            .Where(x => x.MethodName != mainAction.MethodName)
                                             .ToList();
                     var actionsInDB = DC.Set<FrameworkMenu>().AsNoTracking().Where(x => x.ParentId == Entity.ID).ToList();
                     int order = 1;
@@ -189,9 +194,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.IsInside = true;
                             menu.Domain = Entity.Domain;
                             menu.PageName = action.ActionDes?.Description ?? action.ActionName;
-                            menu.ModuleName = action.Module.ModuleName;
+                            menu.ModuleName = mainModule.ModuleName;
                             menu.ActionName = action.ActionDes?.Description ?? action.ActionName;
-                            menu.ClassName = action.Module.FullName;
+                            menu.ClassName = mainModule.FullName;
                             menu.MethodName = action.MethodName;
                             menu.Url = action.Url;
                             menu.ID = aid;
@@ -209,7 +214,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 FC.Add("Entity.Children", 0);
             }
-            FC.Add("Entity.ModuleName",0);
+            FC.Add("Entity.ModuleName", 0);
             base.DoEdit();
             List<Guid> guids = new List<Guid>();
             guids.Add(Entity.ID);
@@ -227,10 +232,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (Entity.Url != null && Entity.Url != "" && Entity.Url.StartsWith("/") == false)
                 {
-                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
-                        {
-                            Entity.Url = "http://" + Entity.Url;
-                        }
+                    if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
+                    {
+                        Entity.Url = "http://" + Entity.Url;
+                    }
                 }
             }
             else
@@ -239,28 +244,31 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = Wtm.GlobaInfo.AllModule;
+                    var m = Utils.ResetModule(modules, false);
                     List<SimpleAction> otherActions = null;
-                    var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
-                    if (mainAction == null && Entity.ShowOnMenu == true)
-                    {
-                        MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
-                        return;
-                    }
-                    if (mainAction == null && Entity.ShowOnMenu == false)
-                    {
-                        var model = modules.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
-                        mainAction = new SimpleAction();
-                        mainAction.Module = model;
-                        mainAction.MethodName = null;
-                    }
+                    //var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
+                    //if (mainAction == null && Entity.ShowOnMenu == true)
+                    //{
+                    //    MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
+                    //    return;
+                    //}
+                    //if (mainAction == null && Entity.ShowOnMenu == false)
+                    //{
+                    //    var model = modules.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
+                    //    mainAction = new SimpleAction();
+                    //    mainAction.Module = model;
+                    //    mainAction.MethodName = null;
+                    //}
+                    var mainModule = m.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
+                    var mainAction = mainModule.Actions.FirstOrDefault();
                     Entity.Url = mainAction.Url;
-                    Entity.ModuleName = mainAction.Module.ModuleName;
+                    Entity.ModuleName = mainModule.ModuleName;
                     Entity.ActionName = mainAction.ActionDes?.Description ?? mainAction.ActionName;
-                    Entity.ClassName = mainAction.Module.FullName;
+                    Entity.ClassName = mainModule.FullName;
                     Entity.MethodName = null;
                     Entity.Children = new List<FrameworkMenu>();
 
-                    otherActions = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
+                    otherActions = m.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != mainAction.MethodName).ToList();
                     int order = 1;
                     foreach (var action in otherActions)
                     {
@@ -276,9 +284,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.IsInside = true;
                             menu.Domain = Entity.Domain;
                             menu.PageName = action.ActionDes?.Description ?? action.ActionName;
-                            menu.ModuleName = action.Module.ModuleName;
+                            menu.ModuleName = mainModule.ModuleName;
                             menu.ActionName = action.ActionDes?.Description ?? action.ActionName;
-                            menu.ClassName = action.Module.FullName;
+                            menu.ClassName = mainModule.FullName;
                             menu.MethodName = action.MethodName;
                             menu.Url = action.Url;
                             Entity.Children.Add(menu);
@@ -315,7 +323,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
 
                 if (SelectedRolesIds != null)
-                {                    
+                {
                     foreach (var code in codes)
                     {
                         FunctionPrivilege fp = new FunctionPrivilege();
