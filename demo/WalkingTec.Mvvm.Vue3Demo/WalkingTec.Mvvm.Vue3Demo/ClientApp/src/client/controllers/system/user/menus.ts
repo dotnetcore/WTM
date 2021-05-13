@@ -33,9 +33,12 @@ export class UserMenus {
      */
     recursionTree(datalist, ParentId, children = []) {
         lodash.filter(datalist, ['ParentId', ParentId]).map(data => {
-            data = lodash.assign({
+            const router = {
                 path: data.Url,
                 name: data.Url ? undefined : data.Id,
+            }
+            data = lodash.assign(router, {
+                router: { to: router },
                 meta: {
                     // icon: data.Icon, 
                     title: data.Text

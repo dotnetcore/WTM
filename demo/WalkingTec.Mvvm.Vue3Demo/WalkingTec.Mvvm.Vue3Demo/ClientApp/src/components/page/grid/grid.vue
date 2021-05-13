@@ -51,7 +51,7 @@ export default class AgGrid extends Vue {
   &.ag-theme-material,
   &.ag-theme-alpine {
     transition: height 0.2s;
-    min-height: 350px;
+    // min-height: 350px;
 
     .ag-checkbox-input-wrapper.ag-checked::after {
       color: @primary-color;

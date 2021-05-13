@@ -61,9 +61,15 @@ export default class extends Vue {
     const menus = [
       {
         name: "development",
+        path: "development",
+        // <router-link> Props
+        router: {},
         meta: { icon: "SaveOutlined", title: "本地页面", target: "a" },
         children: lodash.map(router.RouterConfig, item => {
-          const data = lodash.assign(lodash.pick(item, ["path", "name"]), {
+          const router = lodash.pick(item, ["path", "name"])
+          const data = lodash.assign(router, {
+            // <router-link> Props
+            router: { to: router },
             meta: {
               icon: "SaveOutlined",
               title: this.$t(`PageName.${lodash.get(item, "name") as any}`)
@@ -72,11 +78,32 @@ export default class extends Vue {
           // console.log("LENG ~ extends ~ data ~ data", data)
           return data;
         })
-      }
+      },
+      {
+        name: "test",
+        path: "test",
+        meta: { icon: "SaveOutlined", title: "测试菜单" },
+        children: [
+          {
+            path: "/test/1",
+            router: { to: {} },
+            meta: { icon: "SaveOutlined", title: "二级菜单" },
+            children: [
+              {
+                path: "/test/2",
+                router: { to: { path: '/test' } },
+                meta: { icon: "SaveOutlined", title: "三级菜单" },
+              }
+            ]
+          }
+        ]
+      },
     ];
     if (production.length) {
       menus.push({
         name: "production",
+        path: "production",
+        router: {},
         meta: { icon: "SaveOutlined", title: "正式菜单", target: "a" },
         children: production
       });
@@ -85,14 +112,20 @@ export default class extends Vue {
     return menus;
   }
   created() { }
-  mounted() { }
+  mounted() {
+    console.log("LENG ~ extends ~ mounted ~ this", this.$route.name)
+    this.provider.openKeys = [this.$route.path]
+    this.provider.selectedKeys = [this.$route.path]
+  }
   onCollapse(collapsed) {
     this.provider.collapsed = collapsed;
   }
   onSelect(event) {
+    console.log("LENG ~ extends ~ onSelect ~ event", event)
     this.provider.selectedKeys = event;
   }
   onOpenKeys(event) {
+    console.log("LENG ~ extends ~ onOpenKeys ~ event", event)
     this.provider.openKeys = event;
   }
 }

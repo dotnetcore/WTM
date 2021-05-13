@@ -65,7 +65,8 @@ const BREAKPOINTS = {
     // [breakpoint, cols, layout]
     [513, 1, "vertical"],
     [785, 2, "vertical"],
-    [1057, 3, "horizontal"],
+    [1057, 2, "horizontal"],
+    [1352, 3, "horizontal"],
     [Infinity, 4, "horizontal"],
   ],
   default: [

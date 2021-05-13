@@ -11,7 +11,8 @@
     "build:test": "cross-env DEPLOY_ENV=test vue-cli-service build --report",
     "build:uat": "cross-env DEPLOY_ENV=uat vue-cli-service build --report",
     "clean": "rimraf node_modules",
-    "clean:cache": "rimraf node_modules/.cache"
+    "clean:cache": "rimraf node_modules/.cache",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@ant-design-vue/pro-layout": "^3.0.0-beta.6",
@@ -24,12 +25,13 @@
     "core-js": "^3.11.1",
     "crypto-js": "^4.0.0",
     "file-saver": "^2.0.5",
-    "lodash-decorators": "^6.0.1",
     "lodash": "^4.17.21",
+    "lodash-decorators": "^6.0.1",
     "mobx": "^5.15.7",
     "mobx-persist": "^0.4.1",
     "moment": "^2.29.1",
     "nprogress": "^0.2.0",
+    "patch-package": "^6.4.7",
     "qiankun": "^2.4.1",
     "qrcode": "^1.4.4",
     "query-string": "^7.0.0",
