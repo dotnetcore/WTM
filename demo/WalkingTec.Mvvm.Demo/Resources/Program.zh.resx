@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -832,7 +832,7 @@
     <value>姓名</value>
   </data>
   <data name="_Admin.NoIndexInModule" xml:space="preserve">
-    <value>模块中没有找到Index页面</value>
+    <value>模块中没有找到页面</value>
   </data>
   <data name="_Admin.NoPris" xml:space="preserve">
     <value>无权限</value>

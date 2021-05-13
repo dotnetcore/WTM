@@ -142,22 +142,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = Wtm.GlobaInfo.AllModule;
+                    var actionPage = modules.Where(x => x.FullName == this.SelectedModule)
+                       .SelectMany(x => x.Actions).Where(x => x.MethodName == "Index" || x.ActionDes.IsPage)
+                       .FirstOrDefault();
+                    if (actionPage == null && Entity.ShowOnMenu == true)
+                    {
+                        MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
+                        return;
+                    }
                     var m = Utils.ResetModule(modules, false);
                     List<SimpleAction> otherActions = null;
-                    ////var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
-                    ////if (mainAction == null && Entity.ShowOnMenu == true)
-                    ////{
-                    ////    MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
-                    ////    return;
-                    ////}
-                    //if (mainAction == null && Entity.ShowOnMenu == false)
-                    //{
-                    //    var model = modules.Where(x => x.FullName == this.SelectedModule)
-                    //                        .FirstOrDefault();
-                    //    mainAction = new SimpleAction();
-                    //    mainAction.Module = model;
-                    //    mainAction.MethodName = null;
-                    //}
+                 
                     var mainModule = m.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
                     var mainAction = mainModule.Actions.FirstOrDefault();
 
@@ -244,14 +239,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = Wtm.GlobaInfo.AllModule;
+                    var actionPage = modules.Where(x => x.FullName == this.SelectedModule)
+                       .SelectMany(x => x.Actions).Where(x => x.MethodName == "Index" || x.ActionDes.IsPage)
+                       .FirstOrDefault();
+                    if (actionPage == null && Entity.ShowOnMenu == true)
+                    {
+                        MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
+                        return;
+                    }
                     var m = Utils.ResetModule(modules, false);
                     List<SimpleAction> otherActions = null;
-                    //var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
-                    //if (mainAction == null && Entity.ShowOnMenu == true)
-                    //{
-                    //    MSD.AddModelError("Entity.ModuleId", Localizer["_Admin.NoIndexInModule"]);
-                    //    return;
-                    //}
+                   
                     //if (mainAction == null && Entity.ShowOnMenu == false)
                     //{
                     //    var model = modules.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
@@ -261,6 +259,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     //}
                     var mainModule = m.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
                     var mainAction = mainModule.Actions.FirstOrDefault();
+
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainModule.ModuleName;
                     Entity.ActionName = mainAction.ActionDes?.Description ?? mainAction.ActionName;

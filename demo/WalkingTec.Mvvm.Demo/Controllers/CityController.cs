@@ -13,32 +13,32 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     public partial class CityController : BaseController
     {
         #region Search
-        [ActionDescription("Sys.Search")]
-        public ActionResult Index()
-        {
-            var vm = Wtm.CreateVM<CityListVM>();
-            return PartialView(vm);
-        }
+        //[ActionDescription("Sys.Search")]
+        //public ActionResult Index()
+        //{
+        //    var vm = Wtm.CreateVM<CityListVM>();
+        //    return PartialView(vm);
+        //}
 
-        [ActionDescription("Codegen.FieldDes", IsPage = true)]
-        public ActionResult CityPage()
-        {
-            var vm = Wtm.CreateVM<CityListVM>();
-            return PartialView(vm);
-        }
+        //[ActionDescription("Codegen.FieldDes", IsPage = true)]
+        //public ActionResult CityPage()
+        //{
+        //    var vm = Wtm.CreateVM<CityListVM>();
+        //    return PartialView(vm);
+        //}
 
-        [ActionDescription("Codegen.Gen", IsPage = true)]
-        public ActionResult LookPage()
-        {
-            var vm = Wtm.CreateVM<CityListVM>();
-            return PartialView(vm);
-        }
-        [ActionDescription("Login.RememberMe", IsPage = true)]
-        public ActionResult LookMe()
-        {
-            var vm = Wtm.CreateVM<CityListVM>();
-            return PartialView(vm);
-        }
+        //[ActionDescription("Codegen.Gen", IsPage = true)]
+        //public ActionResult LookPage()
+        //{
+        //    var vm = Wtm.CreateVM<CityListVM>();
+        //    return PartialView(vm);
+        //}
+        //[ActionDescription("Login.RememberMe", IsPage = true)]
+        //public ActionResult LookMe()
+        //{
+        //    var vm = Wtm.CreateVM<CityListVM>();
+        //    return PartialView(vm);
+        //}
 
 
 
