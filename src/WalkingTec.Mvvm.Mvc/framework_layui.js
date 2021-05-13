@@ -1066,6 +1066,7 @@ window.ff = {
     triggerResize: function () {
         setTimeout(function () {
             {
+                debugger;
                 if (typeof (Event) === 'function') {
                     {
                         window.dispatchEvent(new Event('resize'));
@@ -1078,7 +1079,7 @@ window.ff = {
                     }
                 }
             }
-        }, 10);
+        }, 100);
     },
 
     getTreeChecked: function (items) {
