@@ -136,6 +136,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         Entity.Url = "http://" + Entity.Url;
                     }
                 }
+                if(Entity.Url != null)
+                {
+                    Entity.Url = Entity.Url.TrimEnd('/');
+                }
             }
             else
             {
@@ -236,6 +240,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     {
                         Entity.Url = "http://" + Entity.Url;
                     }
+                }
+                if(Entity.Url != null)
+                {
+                    Entity.Url = Entity.Url.TrimEnd('/');
                 }
             }
             else

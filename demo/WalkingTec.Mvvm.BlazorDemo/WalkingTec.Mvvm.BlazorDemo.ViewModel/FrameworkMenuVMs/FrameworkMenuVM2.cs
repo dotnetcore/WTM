@@ -91,6 +91,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             Entity.Url = "/" + Entity.Url;
                         }
                     }
+                    Entity.Url = Entity.Url.TrimEnd('/');
                 }
             }
             else
@@ -189,6 +190,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             Entity.Url = "/" + Entity.Url;
                         }
                     }
+                    Entity.Url = Entity.Url.TrimEnd('/');
                 }
             }
             else

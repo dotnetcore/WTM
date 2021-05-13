@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
