@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
@@ -8,7 +8,7 @@ using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-    
+
     [ActionDescription("城市管理")]
     public partial class CityController : BaseController
     {
@@ -19,6 +19,28 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             var vm = Wtm.CreateVM<CityListVM>();
             return PartialView(vm);
         }
+
+        [ActionDescription("Codegen.FieldDes", IsPage = true)]
+        public ActionResult CityPage()
+        {
+            var vm = Wtm.CreateVM<CityListVM>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("Codegen.Gen", IsPage = true)]
+        public ActionResult LookPage()
+        {
+            var vm = Wtm.CreateVM<CityListVM>();
+            return PartialView(vm);
+        }
+        [ActionDescription("Login.RememberMe", IsPage = true)]
+        public ActionResult LookMe()
+        {
+            var vm = Wtm.CreateVM<CityListVM>();
+            return PartialView(vm);
+        }
+
+
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
@@ -152,7 +174,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
             {
-                return PartialView("BatchEdit",vm);
+                return PartialView("BatchEdit", vm);
             }
             else
             {
@@ -176,7 +198,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
-                return PartialView("BatchDelete",vm);
+                return PartialView("BatchDelete", vm);
             }
             else
             {
@@ -186,7 +208,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #endregion
 
         #region Import
-		[ActionDescription("Sys.Import")]
+        [ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
             var vm = Wtm.CreateVM<CityImportVM>();

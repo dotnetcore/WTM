@@ -92,18 +92,24 @@ namespace WalkingTec.Mvvm.Mvc
                         PageName = area ?? localizer["Sys.DefaultArea"]
                     };
                     menus.Add(modelmenu);
-                    var pages = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api" && x.Area?.AreaName == area).SelectMany(x => x.Actions).Where(x => x.MethodName.ToLower() == "index").ToList();
-                    foreach (var page in pages)
+                    var cModules = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api" && x.Area?.AreaName == area).ToList();
+                    foreach (var item in cModules)
                     {
-                        var url = page.Url;
-                        menus.Add(new SimpleMenu
+                        var pages = item.Actions.Where(x => x.MethodName.ToLower() == "index" || x.ActionDes?.IsPage == true).ToList();
+                        foreach (var page in pages)
                         {
-                            ID = Guid.NewGuid(),
-                            ParentId = modelmenu.ID,
-                            PageName = page.Module.ActionDes == null ? page.Module.ModuleName : page.Module.ActionDes.Description,
-                            Url = url
-                        }) ;
+                            var url = page.Url;
+                            menus.Add(new SimpleMenu
+                            {
+                                ID = Guid.NewGuid(),
+                                ParentId = modelmenu.ID,
+                                PageName = item.ActionDes == null ? item.ModuleName : item.ActionDes.Description,
+                                Url = url
+                            });
+                        }
                     }
+
+
                 }
             }
             else
@@ -450,7 +456,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        public static IServiceCollection AddWtmContext(this IServiceCollection services,IConfiguration config, Action<WtmContextOption> options = null)
+        public static IServiceCollection AddWtmContext(this IServiceCollection services, IConfiguration config, Action<WtmContextOption> options = null)
         {
             var conf = config.Get<Configs>();
             WtmContextOption op = new WtmContextOption();
@@ -460,7 +466,7 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddHttpContextAccessor();
             services.AddSingleton(gd);
             services.AddLayui();
-            services.AddSingleton(op.DataPrivileges??new List<IDataPrivilege>());
+            services.AddSingleton(op.DataPrivileges ?? new List<IDataPrivilege>());
             DataContextFilter._csfunc = op.CsSelector;
             WtmFileProvider._subDirFunc = op.FileSubDirSelector;
             WTMContext.ReloadUserFunc = op.ReloadUserFunc;
@@ -500,7 +506,7 @@ namespace WalkingTec.Mvvm.Mvc
                     options.AddPolicy("_donotusedefault",
                         builder =>
                         {
-                            builder.SetIsOriginAllowed((a)=>true)
+                            builder.SetIsOriginAllowed((a) => true)
                                                 .AllowAnyHeader()
                                                 .AllowAnyMethod()
                                                 .AllowCredentials();
@@ -509,7 +515,7 @@ namespace WalkingTec.Mvvm.Mvc
             });
             return services;
         }
-        public static IServiceCollection AddWtmSession(this IServiceCollection services,int timeout, IConfiguration config)
+        public static IServiceCollection AddWtmSession(this IServiceCollection services, int timeout, IConfiguration config)
         {
             var conf = config.Get<Configs>();
             services.AddSession(options =>
@@ -554,7 +560,7 @@ namespace WalkingTec.Mvvm.Mvc
                         options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
                         options.Cookie.HttpOnly = true;
                         options.Cookie.SameSite = SameSiteMode.Strict;
-                        options.Cookie.Domain = string.IsNullOrEmpty(cookieOptions.Domain)?"": cookieOptions.Domain;
+                        options.Cookie.Domain = string.IsNullOrEmpty(cookieOptions.Domain) ? "" : cookieOptions.Domain;
                         options.ClaimsIssuer = cookieOptions.Issuer;
                         options.SlidingExpiration = cookieOptions.SlidingExpiration;
                         options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
@@ -648,14 +654,14 @@ namespace WalkingTec.Mvvm.Mvc
                      //}
                      //else
                      //{
-                         return factory.Create(programType);
+                     return factory.Create(programType);
                      //}
                  };
              });
             return builder;
         }
 
-        public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app, bool isspa=false)
+        public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app, bool isspa = false)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
             var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
@@ -693,10 +699,11 @@ namespace WalkingTec.Mvvm.Mvc
             var programLocalizer = localfactory.Create(programType);
             Core.CoreProgram._localizer = programLocalizer;
 
-            var controllers = gd.GetTypesAssignableFrom <IBaseController>();
+            var controllers = gd.GetTypesAssignableFrom<IBaseController>();
             gd.AllModule = GetAllModules(controllers);
+            var modules = Utils.ResetModule(gd.AllModule, false);
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
-            gd.CustomUserType = gd.GetTypesAssignableFrom<FrameworkUserBase>().Where(x=>x.Name.ToLower() == "frameworkuser").FirstOrDefault();
+            gd.CustomUserType = gd.GetTypesAssignableFrom<FrameworkUserBase>().Where(x => x.Name.ToLower() == "frameworkuser").FirstOrDefault();
             gd.SetMenuGetFunc(() =>
             {
                 var menus = new List<SimpleMenu>();
@@ -704,8 +711,9 @@ namespace WalkingTec.Mvvm.Mvc
                 var menuCacheKey = "FFMenus";
                 if (cache.TryGetValue(menuCacheKey, out List<SimpleMenu> rv) == false)
                 {
-                    var data = GetAllMenus(gd.AllModule, configs);
-                    cache.Add(menuCacheKey, data,new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
+
+                    var data = GetAllMenus(modules, configs);
+                    cache.Add(menuCacheKey, data, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                     menus = data;
                 }
                 else
@@ -763,7 +771,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         public static IApplicationBuilder UseWtmMultiLanguages(this IApplicationBuilder app)
         {
-            var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;            
+            var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
             if (string.IsNullOrEmpty(configs.Languages) == false)
             {
                 app.UseRequestLocalization(new RequestLocalizationOptions
