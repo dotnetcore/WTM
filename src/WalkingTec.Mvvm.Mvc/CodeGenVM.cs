@@ -2174,7 +2174,9 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 template = @"
             <Template Context=""data"">
-                <Button Size=""Size.ExtraSmall"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{data.Value}"",null, HttpMethodEnum.GET))"" />
+                @if (data.Value.HasValue){
+                    <Button Size=""Size.ExtraSmall"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{data.Value}"",null, HttpMethodEnum.GET))"" />
+                }
             </Template>";
                             }
                             var fk = DC.GetFKName2(modelType, item.FieldName);
@@ -2533,10 +2535,12 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         string label = property.GetPropertyDisplayName();
                         fieldstr.Append($@"
-                <div>
-                      <label class=""control-label is-display"">{label}</label>
-                      <div><Button Size=""Size.Small"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{{Model.{bindfield}}}"",null, HttpMethodEnum.GET))"" /></div>
-                </div>
+                @if (Model.{bindfield}.HasValue){{
+                    <div>
+                          <label class=""control-label is-display"">{label}</label>
+                          <div><Button Size=""Size.Small"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{{Model.{bindfield}}}"",null, HttpMethodEnum.GET))"" /></div>
+                    </div>
+                }}
 ");
                     }
                     else

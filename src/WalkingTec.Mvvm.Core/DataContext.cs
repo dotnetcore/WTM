@@ -3,6 +3,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
@@ -72,8 +73,80 @@ namespace WalkingTec.Mvvm.Core
             base.OnModelCreating(modelBuilder);
             //菜单和菜单权限的级联删除
             modelBuilder.Entity<FunctionPrivilege>().HasOne(x => x.MenuItem).WithMany(x => x.Privileges).HasForeignKey(x => x.MenuItemId).OnDelete(DeleteBehavior.Cascade);
-            
-            //modelBuilder.Entity<FrameworkUserBase>().HasIndex(x => x.ITCode).IsUnique();
+
+            var modelAsms = Utils.GetAllAssembly();
+
+            var allTypes = new List<Type>();// 所有 DbSet<> 的泛型类型
+
+            #region 获取所有 DbSet<T> 的泛型类型 T 及其 List<T> 类型属性对应的类型 T
+
+            // 获取所有 DbSet<T> 的泛型类型 T
+            foreach (var asm in modelAsms)
+            {
+                var dcModule = asm.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x)).ToList();
+                if (dcModule != null && dcModule.Count > 0)
+                {
+                    foreach (var module in dcModule)
+                    {
+                        foreach (var pro in module.GetProperties())
+                        {
+                            if (pro.PropertyType.IsGeneric(typeof(DbSet<>)))
+                            {
+                                if (!allTypes.Contains(pro.PropertyType.GenericTypeArguments[0], new TypeComparer()))
+                                {
+                                    allTypes.Add(pro.PropertyType.GenericTypeArguments[0]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 获取类型 T 下 List<S> 类型的属性对应的类型 S，且S 必须是 TopBasePoco 的子类，只有这些类会生成库
+            for (int i = 0; i < allTypes.Count; i++) // 
+            {
+                var item = allTypes[i];
+                var pros = item.GetProperties();
+                foreach (var pro in pros)
+                {
+                    if (typeof(TopBasePoco).IsAssignableFrom(pro.PropertyType))
+                    {
+                        if (allTypes.Contains(pro.PropertyType) == false)
+                        {
+                            allTypes.Add(pro.PropertyType);
+                        }
+                    }
+                    else
+                    {
+                        if (pro.PropertyType.IsGenericType && pro.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                        {
+                            var inner = pro.PropertyType.GetGenericArguments()[0];
+                            if (typeof(TopBasePoco).IsAssignableFrom(inner))
+                            {
+                                if (allTypes.Contains(inner) == false)
+                                {
+                                    allTypes.Add(inner);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            #endregion
+            foreach (var item in allTypes)
+            {
+                if (typeof(TopBasePoco).IsAssignableFrom(item) && typeof(ISubFile).IsAssignableFrom(item) == false)
+                {
+                    //将所有关联附件的外键设为不可级联删除
+                    var pros = item.GetProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
+                    foreach (var filepro in pros)
+                    {
+                        var builder = typeof(ModelBuilder).GetMethod("Entity", Type.EmptyTypes).MakeGenericMethod(item).Invoke(modelBuilder, null) as EntityTypeBuilder;
+                        builder.HasOne(filepro.Name).WithMany().OnDelete(DeleteBehavior.Restrict);
+                    }
+                }
+            }
         }
 
 
