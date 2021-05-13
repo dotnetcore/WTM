@@ -147,7 +147,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     var modules = Wtm.GlobaInfo.AllModule;
                     var actionPage = modules.Where(x => x.FullName == this.SelectedModule)
-                       .SelectMany(x => x.Actions).Where(x => x.MethodName == "Index" || x.ActionDes.IsPage)
+                       .SelectMany(x => x.Actions).Where(x => x.MethodName == "Index" || x.ActionDes?.IsPage == true)
                        .FirstOrDefault();
                     if (actionPage == null && Entity.ShowOnMenu == true)
                     {
@@ -248,7 +248,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     var modules = Wtm.GlobaInfo.AllModule;
                     var actionPage = modules.Where(x => x.FullName == this.SelectedModule)
-                       .SelectMany(x => x.Actions).Where(x => x.MethodName == "Index" || x.ActionDes.IsPage)
+                       .SelectMany(x => x.Actions).Where(x => x.MethodName == "Index" || x.ActionDes?.IsPage == true)
                        .FirstOrDefault();
                     if (actionPage == null && Entity.ShowOnMenu == true)
                     {
