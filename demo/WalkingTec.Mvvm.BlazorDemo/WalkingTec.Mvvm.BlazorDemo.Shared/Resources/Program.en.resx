@@ -862,7 +862,7 @@
     <value>Name</value>
   </data>
   <data name="_Admin.NoIndexInModule" xml:space="preserve">
-    <value>There is no Index View in this Module</value>
+    <value>There is no View in this Module</value>
   </data>
   <data name="_Admin.NoPris" xml:space="preserve">
     <value>No privilege</value>
