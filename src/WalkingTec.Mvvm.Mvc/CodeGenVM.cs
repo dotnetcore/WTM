@@ -866,16 +866,18 @@ namespace WalkingTec.Mvvm.Mvc
                         var protype = modelType.GetSingleProperty(pro.FieldName);
                         prostr += $@"
         [Display(Name = ""{protype.GetPropertyDisplayName()}"")]
-        public List<{pro.GetFKType(DC, modelType)}> Selected{pro.FieldName}IDs {{ get; set; }}";
+        public List<string> Selected{pro.FieldName}IDs {{ get; set; }}";
                         initstr += $@"
-            Selected{pro.FieldName}IDs = Entity.{pro.FieldName}?.Select(x => x.{pro.SubIdField}).ToList();";
+            Selected{pro.FieldName}IDs = Entity.{pro.FieldName}?.Select(x => x.{pro.SubIdField}.ToString()).ToList();";
                         addstr += $@"
             Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
             if (Selected{pro.FieldName}IDs != null)
             {{
                 foreach (var id in Selected{pro.FieldName}IDs)
                 {{
-                    Entity.{pro.FieldName}.Add(new {protype.PropertyType.GetGenericArguments()[0].Name} {{ {pro.SubIdField} = id }});
+                     {protype.PropertyType.GetGenericArguments()[0].Name} middle = new {protype.PropertyType.GetGenericArguments()[0].Name}();
+                    middle.SetPropertyValue(""{pro.SubIdField}"", id);
+                    Entity.{pro.FieldName}.Add(middle);
                 }}
             }}
 ";
@@ -883,7 +885,12 @@ namespace WalkingTec.Mvvm.Mvc
             Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
             if(Selected{pro.FieldName}IDs != null )
             {{
-                Selected{pro.FieldName}IDs.ForEach(x => Entity.{pro.FieldName}.Add(new {protype.PropertyType.GetGenericArguments()[0].Name} {{ {pro.SubIdField} = x }}));
+                 foreach (var item in SelectedStudentMajorIDs)
+                {{
+                    {protype.PropertyType.GetGenericArguments()[0].Name} middle = new {protype.PropertyType.GetGenericArguments()[0].Name}();
+                    middle.SetPropertyValue(""{pro.SubIdField}"", item);
+                    Entity.{pro.FieldName}.Add(middle);
+                }}
             }}
 ";
                     }

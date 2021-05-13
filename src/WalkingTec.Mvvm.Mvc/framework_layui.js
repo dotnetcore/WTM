@@ -1066,7 +1066,6 @@ window.ff = {
     triggerResize: function () {
         setTimeout(function () {
             {
-                debugger;
                 if (typeof (Event) === 'function') {
                     {
                         window.dispatchEvent(new Event('resize'));

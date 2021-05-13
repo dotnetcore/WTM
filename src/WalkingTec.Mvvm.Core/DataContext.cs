@@ -83,23 +83,27 @@ namespace WalkingTec.Mvvm.Core
             // 获取所有 DbSet<T> 的泛型类型 T
             foreach (var asm in modelAsms)
             {
-                var dcModule = asm.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x)).ToList();
-                if (dcModule != null && dcModule.Count > 0)
+                try
                 {
-                    foreach (var module in dcModule)
+                    var dcModule = asm.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x)).ToList();
+                    if (dcModule != null && dcModule.Count > 0)
                     {
-                        foreach (var pro in module.GetProperties())
+                        foreach (var module in dcModule)
                         {
-                            if (pro.PropertyType.IsGeneric(typeof(DbSet<>)))
+                            foreach (var pro in module.GetProperties())
                             {
-                                if (!allTypes.Contains(pro.PropertyType.GenericTypeArguments[0], new TypeComparer()))
+                                if (pro.PropertyType.IsGeneric(typeof(DbSet<>)))
                                 {
-                                    allTypes.Add(pro.PropertyType.GenericTypeArguments[0]);
+                                    if (!allTypes.Contains(pro.PropertyType.GenericTypeArguments[0], new TypeComparer()))
+                                    {
+                                        allTypes.Add(pro.PropertyType.GenericTypeArguments[0]);
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                catch { }
             }
 
             // 获取类型 T 下 List<S> 类型的属性对应的类型 S，且S 必须是 TopBasePoco 的子类，只有这些类会生成库
