@@ -58,6 +58,7 @@ export default class extends Vue {
       console.log("🚀 ~ file: layout.vue ~ line 57 ~ extends ~ getMenuData ~ production", production)
       return production;
     }
+    const RouterConfig = router.RouterConfig.filter(item => !lodash.eq(item.name, 'NotFound'))
     const menus = [
       {
         name: "development",
@@ -65,7 +66,7 @@ export default class extends Vue {
         // <router-link> Props
         router: {},
         meta: { icon: "SaveOutlined", title: "本地页面", target: "a" },
-        children: lodash.map(router.RouterConfig, item => {
+        children: lodash.map(RouterConfig, item => {
           const router = lodash.pick(item, ["path", "name"])
           const data = lodash.assign(router, {
             // <router-link> Props

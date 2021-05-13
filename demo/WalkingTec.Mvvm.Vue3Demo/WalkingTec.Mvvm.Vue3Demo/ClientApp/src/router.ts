@@ -1,6 +1,8 @@
 import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
 import { action, observable } from 'mobx';
+import error from './layouts/error.vue';
+import home from './layouts/home.vue';
 import { BehaviorSubject } from 'rxjs';
 import { createRouter, createWebHistory, RouteLocationNormalized, Router, RouteRecordRaw } from 'vue-router';
 // Vue.registerHooks([
@@ -70,7 +72,19 @@ class AppRouter {
   }
 
   onInit() {
-    this.RouterConfig = this.createRouters()
+    this.RouterConfig = lodash.concat([
+      {
+        path: '/',
+        name: 'home',
+        component: home
+      }
+    ], this.createRouters(), [
+      {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: error
+      }
+    ])
     this.Router = createRouter({
       history: createWebHistory(process.env.BASE_URL),
       routes: this.RouterConfig

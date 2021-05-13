@@ -31,6 +31,7 @@ import {
     DatePicker,
     message,
     Rate,
+    Result,
     ConfigProvider
 } from 'ant-design-vue';
 import ProLayout, { PageContainer } from '@ant-design-vue/pro-layout';
@@ -70,6 +71,7 @@ export default {
             Slider,
             DatePicker,
             Rate,
+            Result,
             ConfigProvider
         ].map(x => app.use(x));
         // Spin.setDefaultIndicator({

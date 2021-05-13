@@ -24,10 +24,10 @@ export default class extends Vue {
   }
   getTab(pane) {
     const name = this.lodash.get(pane, 'name')
-    if (name) {
+    if (name && !this.lodash.eq(name, "NotFound")) {
       return this.$t(`PageName.${name}`)
     }
-    return this.lodash.get(pane, 'path')
+    return this.lodash.get(pane, 'path', 'NotFound')
   }
   onEdit() { }
   @action
