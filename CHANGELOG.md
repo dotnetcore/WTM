@@ -1,6 +1,15 @@
 # 更新日志
 ## v5.x.x 
 
+##5.2.0 (2021-5-14) 
+* **新增：**  新增对Blazor的支持，现在可以在官网生成Blazor模式的项目，代码生成器现在也可以生成Blazor的代码，具体请见文档http://wtmdoc.walkingtec.cn/#/Blazor/Intro
+* **新增：**  [ActionDescription]中加入了IsPage属性，设置了这个属性的方法可以在菜单管理中添加，解决了一个Controller下只能配置一个主页面的问题
+* **修改：**  修改了代码生成器的一些内部实现
+* **修改：**  修复了默认代码中非管理员设置数据权限出现的错误
+* **修改：**  修复了DynamicDataConverter读取数据报错的问题
+* **修改：**  修复了在配置文件中将jwt的SecurityKey设置的过短会报错的问题
+* **修改：**  修复了Layui模式下，搜索框折叠后下方列表错位的问题
+
 ##5.1.9 (2021-4-30) 
 * **修改：**  移除了默认的 wt:grid onedit 方法重载，用户可以自己写js来实现功能
 * **修改：**  修复了OssFileHandler读取文件时没有正确使用groupname的问题
