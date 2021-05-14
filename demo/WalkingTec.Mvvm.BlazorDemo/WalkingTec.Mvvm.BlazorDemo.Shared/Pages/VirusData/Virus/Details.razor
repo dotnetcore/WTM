@@ -1,0 +1,43 @@
+﻿@page "/VirusData/Virus/Details/{id}"
+@using WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs;
+@inherits BasePage
+
+<ValidateForm @ref="vform" Model="@Model" >
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+
+            <Display @bind-Value="@Model.Entity.VirtusName"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.VirtusCode"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.Remark"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.VirtusType"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.SelectedPatientsIDs" Data="@AllPatients"  ShowLabel="true"/>
+    </Row>
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+    </div>
+</ValidateForm>
+
+@code {
+
+    private VirusVM Model = new VirusVM();
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+    private List<SelectedItem> AllPatients = new List<SelectedItem>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        AllPatients = await WtmBlazor.Api.CallItemsApi("/api/Virus/GetPatients", placeholder: WtmBlazor.Localizer["Sys.All"]);
+
+        var rv = await WtmBlazor.Api.CallAPI<VirusVM>($"/api/Virus/{id}");
+        Model = rv.Data;
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

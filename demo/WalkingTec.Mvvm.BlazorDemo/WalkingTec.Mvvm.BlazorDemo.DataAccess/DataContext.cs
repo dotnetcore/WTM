@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Demo.Models.Virus;
 
 namespace WalkingTec.Mvvm.BlazorDemo.DataAccess
 {
@@ -33,6 +34,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.DataAccess
         public DbSet<Major> Majors { get; set; }
         public DbSet<Student> Students { get; set; }
 
+        public DbSet<Virus> Viruses { get; set; }
+        public DbSet<Hospital> Hospitals { get; set; }
+        public DbSet<ControlCenter> ControlCenters { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {

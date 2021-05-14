@@ -1,0 +1,158 @@
+﻿@page "/VirusData/Virus"
+@using WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs;
+@inherits BasePage
+@attribute [ActionDescription("病毒管理", "WalkingTec.Mvvm.BlazorDemo.Controllers,Virus")]
+
+<WTSearchPanel OnSearch="@DoSearch">
+    <ValidateForm Model="@SearchModel">
+        <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
+
+            <BootstrapInput @bind-Value="@SearchModel.VirtusName"  />
+            <BootstrapInput @bind-Value="@SearchModel.VirtusCode"  />
+            <BootstrapInput @bind-Value="@SearchModel.Remark"  />
+            <Select @bind-Value="@SearchModel.VirtusType"  PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
+            <MultiSelect @bind-Value="@SearchModel.SelectedPatientsIDs" Items="@AllPatients" PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
+        </Row>
+    </ValidateForm>
+</WTSearchPanel>
+
+
+
+<Table @ref="dataTable" TItem="Virus_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;">
+    <TableColumns>
+
+        <TableColumn @bind-Field="@context.VirtusName"  />
+        <TableColumn @bind-Field="@context.VirtusCode"  />
+        <TableColumn @bind-Field="@context.Remark"  />
+        <TableColumn @bind-Field="@context.VirtusType"  />
+        <TableColumn @bind-Field="@context.PatientName_view"  />
+    </TableColumns>
+    <TableToolbarTemplate>
+        @if (IsAccessable("/api/Virus/add"))
+        {
+            <TableToolbarButton TItem="Virus_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
+        }
+        @if (IsAccessable("/api/Virus/BatchDelete"))
+        {
+            <TableToolbarPopconfirmButton TItem="Virus_View" Color="Color.Primary"
+                                          Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
+                                          OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
+                                          ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
+        }
+        
+        @if (IsAccessable("/api/Virus/Import"))
+        {
+            <TableToolbarButton TItem="Virus_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
+        }
+        @if (IsAccessable("/api/Virus/ExportExcel"))
+        {
+            <TableToolbarButton TItem="Virus_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+        }
+    </TableToolbarTemplate>
+    <RowButtonTemplate>
+        <div style="padding-right:10px;">
+            @if (IsAccessable("/api/Virus/Edit"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
+            }
+            @if (IsAccessable("/api/Virus/{id}"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
+            }
+            @if (IsAccessable("/api/Virus/BatchDelete"))
+            {
+                <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+                                  Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
+            }
+        </div>
+    </RowButtonTemplate>
+</Table>
+
+@code{
+
+    private VirusSearcher SearchModel = new VirusSearcher();
+    private Table<Virus_View> dataTable;
+
+    private List<SelectedItem> AllPatients = new List<SelectedItem>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        AllPatients = await WtmBlazor.Api.CallItemsApi("/api/Virus/GetPatients");
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task<QueryData<Virus_View>> OnSearch(QueryPageOptions opts)
+    {
+        return await StartSearch<Virus_View>("/api/Virus/search", SearchModel, opts);
+    }
+
+    private void DoSearch()
+    {
+        dataTable.QueryAsync();
+    }
+
+    private async Task OnCreateClick(IEnumerable<Virus_View> items)
+    {
+        if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"]) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
+    }
+
+    private async Task OnEditClick(Virus_View item)
+    {
+        if (await OpenDialog<Edit>(WtmBlazor.Localizer["Sys.Edit"], x => x.id == item.ID.ToString()) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
+    }
+
+    private async Task OnDetailsClick(Virus_View item)
+    {
+        await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());
+    }
+
+    private async Task OnBatchDeleteClick()
+    {
+        if (dataTable.SelectedRows?.Any() == true)
+        {
+            await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/Virus/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
+            await dataTable.QueryAsync();
+        }
+        else
+        {
+            await WtmBlazor.Toast.Information(WtmBlazor.Localizer["Sys.Info"], WtmBlazor.Localizer["Sys.SelectOneRowMin"]);
+        }
+    }
+
+    private async Task OnDeleteClick(Virus_View item)
+    {
+        await PostsData(new List<string> { item.ID.ToString() }, $"/api/Virus/batchdelete", (s) => "Sys.OprationSuccess");
+        await dataTable.QueryAsync();
+    }
+
+
+    private async Task OnExportClick(IEnumerable<Virus_View> items)
+    {
+        if (dataTable.SelectedRows?.Any() == true)
+        {
+            await Download("/api/Virus/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
+        }
+        else
+        {
+            await Download("/api/Virus/ExportExcel", SearchModel);
+        }
+    }
+    private async Task OnImportClick(IEnumerable<Virus_View> items)
+    {
+        if (await OpenDialog<Import>(WtmBlazor.Localizer["Sys.Import"]) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
+    }
+
+}

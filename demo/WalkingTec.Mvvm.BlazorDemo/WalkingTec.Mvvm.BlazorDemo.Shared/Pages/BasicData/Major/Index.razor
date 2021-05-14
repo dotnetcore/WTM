@@ -8,9 +8,6 @@
         <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
 
             <BootstrapInput @bind-Value="@SearchModel.MajorCode"  />
-            <BootstrapInput @bind-Value="@SearchModel.MajorName"  />
-            <Select @bind-Value="@SearchModel.MajorType"  PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
-            <BootstrapInput @bind-Value="@SearchModel.Remark"  />
             <Select @bind-Value="@SearchModel.SchoolId" Items="@AllSchools" PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
             <MultiSelect @bind-Value="@SearchModel.SelectedStudentMajorsIDs" Items="@AllStudents" PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
         </Row>
