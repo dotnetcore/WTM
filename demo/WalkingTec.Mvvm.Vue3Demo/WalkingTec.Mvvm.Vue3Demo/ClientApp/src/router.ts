@@ -1,8 +1,8 @@
 import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
 import { action, observable } from 'mobx';
-import error from './layouts/error.vue';
-import home from './layouts/home.vue';
+import error from './layouts/pages/error/index.vue';
+import home from './layouts/pages/home/index.vue';
 import { BehaviorSubject } from 'rxjs';
 import { createRouter, createWebHistory, RouteLocationNormalized, Router, RouteRecordRaw } from 'vue-router';
 // Vue.registerHooks([

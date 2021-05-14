@@ -5,16 +5,17 @@
  * @modify date 2021-04-02 11:49:08
  * @desc 用户管理
  */
-import { globalProperties } from "@/client";
+import { AjaxBasics, globalProperties } from "@/client";
 import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
 import { UserEntity } from './entity';
 import { UserMenus } from './menus';
 @BindAll()
 export class UserController extends UserEntity {
-    $ajax = globalProperties.$Ajax;
     UserMenus = new UserMenus()
+    $ajax: AjaxBasics;
     async onInit() {
+        this.$ajax = globalProperties.$Ajax;
         await this.onPersist()
         this.onCheckLogin()
     }

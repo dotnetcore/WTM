@@ -13,7 +13,7 @@
   </a-config-provider>
 </template>
 <script lang="ts">
-import { SystemController } from "@/client";
+import { SystemController, $System } from "@/client";
 import en from "ant-design-vue/es/locale/en_US";
 import zh from "ant-design-vue/es/locale/zh_CN";
 import { Options, Provide, Vue } from "vue-property-decorator";
@@ -22,7 +22,7 @@ import Login from "./layouts/login.vue";
 @Options({ components: { Layout, Login } })
 export default class extends Vue {
   // 系统管理
-  @Provide({ to: SystemController.Symbol, reactive: true }) System = new SystemController();
+  @Provide({ to: SystemController.Symbol, reactive: true }) System = $System;
   get locale() {
     return { en, zh }[this.$i18n.locale];
   }

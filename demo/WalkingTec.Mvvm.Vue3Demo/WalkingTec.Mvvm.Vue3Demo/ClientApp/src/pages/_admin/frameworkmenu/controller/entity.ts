@@ -32,7 +32,7 @@ class Entity {
     readonly SelectedActionIDs: WTM_EntitiesField = {
         name: 'SelectedActionIDs',
         label: EnumLocaleLabel.SelectedActionIDs,
-        // 联动 SelectedModule
+        // 联动 SelectedModule  ['Entity', 'FolderOnly'] name 使用 Entity.FolderOnly
         linkage: ['SelectedModule'],
         request: async (formState) => {
             // console.log("LENG ~ Entity ~ request: ~ formState", formState)

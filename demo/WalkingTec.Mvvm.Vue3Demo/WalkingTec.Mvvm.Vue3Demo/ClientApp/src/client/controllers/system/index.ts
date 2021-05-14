@@ -24,3 +24,4 @@ export class SystemController {
         this.UserController.onInit()
     }
 }
+export const $System = new SystemController()

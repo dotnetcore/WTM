@@ -2,29 +2,29 @@
   <a-space :size="size">
     <!-- 添加 -->
     <slot name="insert" v-if="onShow(EnumActionType.Insert)">
-      <ActionInsert :PageController="PageController" :params="params" />
+      <ActionInsert :debug="debug" :PageController="PageController" :params="params" />
     </slot>
     <!-- 查看 -->
     <slot name="update" v-if="onShow(EnumActionType.Info)">
-      <ActionInfo :PageController="PageController" :params="params" />
+      <ActionInfo :debug="debug" :PageController="PageController" :params="params" />
     </slot>
     <slot v-bind="slotProps" />
 
     <!-- 修改 -->
     <slot name="update" v-if="onShow(EnumActionType.Update)">
-      <ActionUpdate :PageController="PageController" :params="params" />
+      <ActionUpdate :debug="debug" :PageController="PageController" :params="params" />
     </slot>
     <!-- 删除 -->
     <slot name="delete" v-if="onShow(EnumActionType.Delete)">
-      <ActionDelete :PageController="PageController" :params="params" />
+      <ActionDelete :debug="debug" :PageController="PageController" :params="params" />
     </slot>
     <!-- 导入  -->
     <slot name="import" v-if="onShow(EnumActionType.Import)">
-      <ActionExport :PageController="PageController" :params="params" />
+      <ActionExport :debug="debug" :PageController="PageController" :params="params" />
     </slot>
     <!-- 导出 -->
     <slot name="export" v-if="onShow(EnumActionType.Export)">
-      <ActionImport :PageController="PageController" :params="params" />
+      <ActionImport :debug="debug" :PageController="PageController" :params="params" />
     </slot>
     <!-- 追加内容 -->
   </a-space>
@@ -50,6 +50,8 @@ import { ActionBasics } from "./script";
   },
 })
 export default class extends mixins(ActionBasics) {
+  /** 调试 不鉴权 */
+  @Prop({ default: false }) debug;
   /** 包含 */
   @Prop({ default: () => [EnumActionType.Info, EnumActionType.Insert, EnumActionType.Update, EnumActionType.Delete, EnumActionType.Import, EnumActionType.Export] }) include;
   /** 排除 */

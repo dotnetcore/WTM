@@ -5,11 +5,12 @@
  * @modify date 2021-04-02 13:55:12
  * @desc 全局扩展函数
  */
-import { ComponentOptions, defineComponent } from "vue"
-import lodash from "lodash"
-import $WtmConfig, { WtmConfig } from './config';
-import { SystemController } from './controllers';
+import lodash from "lodash";
+import { ComponentOptions, defineComponent } from "vue";
 import { NavigationFailure } from "vue-router";
+import $WtmConfig from './config';
+import { $System } from './controllers';
+import { EnumActionType } from "./enum";
 const options: ComponentOptions = {
     // data: function () {
     //     return {}
@@ -51,6 +52,18 @@ const options: ComponentOptions = {
             })
         },
         /**
+         * 鉴权
+         * @param type 操作类型
+         * @param PageController 页面控制器
+         * @returns 
+         */
+        __wtmAuthority(type: EnumActionType | string, PageController) {
+            let ActionUrl = lodash.get(PageController.options, type)
+            ActionUrl = lodash.toLower(lodash.isString(ActionUrl) ? ActionUrl : ActionUrl.url)
+            // 转换成小写比较
+            return lodash.some($System.UserController.UserInfo?.Attributes?.Actions, item => lodash.eq(lodash.toLower(item), ActionUrl))
+        },
+        /**
          * 记录 参数 到 url query
          * @param values 
          */
@@ -65,7 +78,7 @@ const options: ComponentOptions = {
 }
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
-        readonly $System: SystemController;
+        // readonly $System: SystemController;
         /**
          * 跳转详情
          * 合并当前页面的 query 追加 detailsVisible 触发显示
@@ -84,6 +97,13 @@ declare module '@vue/runtime-core' {
          * @returns 
          */
         readonly __wtmToRowAction: (action, PageController) => any
+        /**
+          * 鉴权
+          * @param type 操作类型
+          * @param PageController 页面控制器
+          * @returns 
+          */
+        readonly __wtmAuthority: (action, PageController) => any
         /**
          * 记录 参数 到 url query
          * $router.replace

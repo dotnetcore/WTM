@@ -23,7 +23,11 @@ export class PageController extends WTM.ControllerBasics {
             // 筛选导出
             exportIds: '/api/_frameworkrole/ExportExcelByIds',
             // 数据模板
-            template: '/api/_frameworkrole/GetExcelTemplate'
+            template: '/api/_frameworkrole/GetExcelTemplate',
+            // 获取权限
+            GetPageActions: '/api/_frameworkrole/GetPageActions/{ID}',
+            // 权限
+            EditPrivilege: '/api/_frameworkrole/EditPrivilege'
         })
     }
     /**
@@ -32,7 +36,7 @@ export class PageController extends WTM.ControllerBasics {
      * @returns 
      */
     onGetPrivilege(ID) {
-        return this.$ajax.get('/api/_frameworkrole/GetPageActions/{ID}', { ID })
+        return this.$ajax.get<{ Pages: Array<any>, Entity: any }>(this.getAjaxRequest('GetPageActions').url, { ID })
     }
     /**
      * 保存权限
@@ -40,7 +44,7 @@ export class PageController extends WTM.ControllerBasics {
      * @returns 
      */
     onSavePrivilege(params) {
-        return this.$ajax.put('/api/_frameworkrole/EditPrivilege', params)
+        return this.$ajax.put(this.getAjaxRequest('EditPrivilege').url, params)
     }
 }
 export default new PageController()

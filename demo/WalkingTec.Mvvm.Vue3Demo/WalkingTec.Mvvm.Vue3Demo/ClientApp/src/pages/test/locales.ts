@@ -1,4 +1,4 @@
-import { $i18n, WTM_EntitiesField, WTM_ValueType, FieldRequest } from '@/client';
+import { WTM_ValueType } from '@/client';
 
 /**
  * 字段描述 枚举

@@ -1,5 +1,5 @@
 
-import { $i18n, WTM_EntitiesField, WTM_ValueType, FieldRequest, EnumActionType } from '@/client';
+import { $i18n, FieldRequest, WTM_EntitiesField, WTM_ValueType } from '@/client';
 import { EnumLocaleLabel } from '../locales';
 
 /**

@@ -21,6 +21,7 @@ export interface ControllerBasicsOptions {
   template?: string | AjaxRequest;
   PaginationOptions?: PaginationOptions;
   BasicsOptions?: BasicsOptions;
+  [key: string]: string | AjaxRequest | PaginationOptions | BasicsOptions;
 }
 @BindAll()
 
@@ -80,7 +81,7 @@ export class ControllerBasics<T = any> {
    * @param type 
    * @returns 
    */
-  getAjaxRequest(type: 'search' | 'details' | 'insert' | 'update' | 'delete' | 'import' | 'export' | 'exportIds' | 'template'): AjaxRequest {
+  getAjaxRequest(type: 'search' | 'details' | 'insert' | 'update' | 'delete' | 'import' | 'export' | 'exportIds' | 'template' | string): AjaxRequest {
     let options = lodash.get(this.options, type);
     if (lodash.isString(options)) {
       const defaultRequest: { [key: string]: AjaxRequest } = {

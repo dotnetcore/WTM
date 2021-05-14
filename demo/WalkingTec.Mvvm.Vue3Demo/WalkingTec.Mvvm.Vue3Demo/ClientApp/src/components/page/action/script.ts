@@ -1,15 +1,10 @@
-import { ControllerBasics, EnumActionType } from "@/client";
+import { $System, ControllerBasics, EnumActionType } from "@/client";
 import { ICellRendererParams } from "ag-grid-community";
 import { ButtonProps } from "ant-design-vue/lib/button/buttonTypes";
 import { mixins, Options, Prop, Vue } from "vue-property-decorator";
 @Options({ components: {} })
 export class PageActionBasics extends Vue {
-    /** 包含 */
-    // @Prop({ default: () => [EnumActionType.Info, EnumActionType.Insert, EnumActionType.Update, EnumActionType.Delete, EnumActionType.Import, EnumActionType.Export] }) include;
-    // /** 排除 */
-    // @Prop({ default: () => [] }) exclude;
-    /** 页面操作枚举 */
-    // readonly EnumActionType = EnumActionType
+    @Prop({ default: false }) debug;
     /**
       * 页面控制器
       */
@@ -31,7 +26,10 @@ export class PageActionBasics extends Vue {
      * @returns 
      */
     onAuthority(type: EnumActionType) {
-        return true
+        if (this.debug || this.debug == '') {
+            return true
+        }
+        return this.__wtmAuthority(type, this.PageController)
     }
 }
 

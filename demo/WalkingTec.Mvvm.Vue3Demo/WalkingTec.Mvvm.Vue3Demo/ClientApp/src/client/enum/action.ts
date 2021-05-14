@@ -2,10 +2,20 @@
  * 页面操作 枚举
  */
 export enum EnumActionType {
-    Info = 'Action_Info',
-    Insert = 'Action_Insert',
-    Update = 'Action_Update',
-    Delete = 'Action_Delete',
-    Import = 'Action_Import',
-    Export = 'Action_Export',
+    /** 详情 */
+    Info = 'details',
+    /** 添加 */
+    Insert = 'insert',
+    /** 修改编辑 */
+    Update = 'update',
+    /** 删除 */
+    Delete = 'delete',
+    /** 导入 */
+    Import = 'import',
+    /** 模板 */
+    Template = 'template',
+    /** 导出 */
+    Export = 'export',
+    /** 选择导出 */
+    ExportIds = 'exportIds',
 }

@@ -53,5 +53,17 @@ class Entity {
         name: 'LogType',
         label: EnumLocaleLabel.LogType,
     }
+    readonly ActionName: WTM_EntitiesField = {
+        name: ['Entity', 'ActionName'],
+        label: EnumLocaleLabel.ActionName,
+    }
+    readonly Duration: WTM_EntitiesField = {
+        name: ['Entity', 'Duration'],
+        label: EnumLocaleLabel.Duration,
+    }
+    readonly ModuleName: WTM_EntitiesField = {
+        name: ['Entity', 'ModuleName'],
+        label: EnumLocaleLabel.ModuleName,
+    }
 }
 export const PageEntity = new Entity()

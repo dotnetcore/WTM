@@ -3,14 +3,12 @@
     <template v-show="false">
       <WtmField entityKey="ID" />
     </template>
-    <WtmField entityKey="ITCode" />
-    <WtmField entityKey="LogType" />
-    <WtmField entityKey="ActionUrl" />
-    <WtmField entityKey="ActionTime" />
-    <WtmField entityKey="ActionName" />
-    <WtmField entityKey="Duration" />
-    <WtmField entityKey="ModuleName" />
-    <WtmField entityKey="IP" />
+    <WtmField entityKey="DpType" />
+    <WtmField entityKey="TableName" />
+    <WtmField entityKey="SelectedItemsID" />
+    <WtmField entityKey="IsAll" />
+    <WtmField entityKey="UserCode" />
+    <WtmField entityKey="GroupCode" />
   </WtmDetails>
 </template>
 <script lang="ts">

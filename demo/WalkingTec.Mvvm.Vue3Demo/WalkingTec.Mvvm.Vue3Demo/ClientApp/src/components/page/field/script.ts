@@ -64,7 +64,7 @@ export class FieldBasics extends Vue {
             this.label,
             // 获取 Entity 配置
             this.lodash.get(this.PageEntity, `${this.entityKey}.label`),
-            'label 未配置'
+            `label 未配置 (${this.entityKey})`
         ]))
         return label;
     }
@@ -75,9 +75,9 @@ export class FieldBasics extends Vue {
             this.name,
             // 获取 Entity 配置
             this.lodash.get(this.PageEntity, `${this.entityKey}.name`),
-            '__name'
+            '__name_' + this.entityKey
         ]));
-        if (name === '__name') {
+        if (name === '__name_' + this.entityKey) {
             console.warn('name 未配置', this)
         }
         return name;

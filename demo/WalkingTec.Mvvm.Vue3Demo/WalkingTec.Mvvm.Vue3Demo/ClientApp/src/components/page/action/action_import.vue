@@ -4,7 +4,7 @@
       <div></div>
     </template>
     <template #title>
-      <div>
+      <div v-if="__wtmAuthority(EnumActionType.Template, PageController)">
         <i18n-t keypath="tips.text.importExplain" />
         <a-divider type="vertical" />
         <a-button @click="onGetTemplate">
@@ -13,8 +13,8 @@
           </template>
           <i18n-t keypath="action.downloadTemplate" />
         </a-button>
+        <a-divider style="margin:8px" />
       </div>
-      <a-divider style="margin:8px" />
       <a-upload-dragger
         name="file"
         :multiple="true"

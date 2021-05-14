@@ -64,6 +64,7 @@ export default class extends Vue {
   @Prop({ default: () => [] }) readonly rules;
   /** 加载中 */
   @Prop({ default: false }) readonly loading;
+  @Prop() readonly queryKey: string;
   /** 数据 提交 函数 */
   @Prop({ type: Function, required: true }) readonly onFinish;
   // 只读
@@ -99,7 +100,7 @@ export default class extends Vue {
   // 成功
   onComplete() {
     this.spinning = false;
-    this.__wtmBackDetails();
+    this.__wtmBackDetails(this.queryKey);
     this.$message.success(this.successMsg)
   }
   // 失败

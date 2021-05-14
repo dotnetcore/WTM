@@ -27,9 +27,15 @@ export class PageController extends WTM.ControllerBasics {
             exportIds: '/api/_frameworkmenu/ExportExcelByIds',
             // 数据模板
             template: '/api/_frameworkmenu/GetExcelTemplate',
+            // 分页数据配置
             PaginationOptions: { onMapValues: this.onMapValues }
         })
     }
+    /**
+     * 分页数据过滤重组
+     * @param res 
+     * @returns 
+     */
     onMapValues(res) {
         res.dataSource = lodash.map(res.dataSource, value => {
             value.treePath = [value.PageName];

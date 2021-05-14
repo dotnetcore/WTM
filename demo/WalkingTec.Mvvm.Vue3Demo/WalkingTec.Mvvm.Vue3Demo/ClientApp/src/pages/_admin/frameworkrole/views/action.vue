@@ -2,7 +2,12 @@
   <WtmAction :PageController="PageController" :params="params">
     <!-- 作用域插槽 -->
     <template v-slot:default="{ isPageAction, ButtonProps }">
-      <a-button v-bind="ButtonProps" :disabled="disabled" @click="onPrivilege">
+      <a-button
+        v-if="__wtmAuthority('EditPrivilege', PageController)"
+        v-bind="ButtonProps"
+        :disabled="disabled"
+        @click="onPrivilege"
+      >
         <template #icon v-if="isPageAction">
           <EditOutlined />
         </template>

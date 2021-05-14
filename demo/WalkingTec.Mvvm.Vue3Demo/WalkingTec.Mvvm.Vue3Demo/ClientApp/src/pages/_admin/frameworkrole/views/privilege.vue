@@ -1,11 +1,23 @@
 <template>
-  <WtmDetails :loading="Entities.loading" :onFinish="onFinish">
-    <template v-show="false">
-      <WtmField entityKey="ID" />
-    </template>
-    <WtmField entityKey="RoleCode" />
-    <WtmField entityKey="RoleName" />
-    <WtmField entityKey="RoleRemark" />
+  <WtmDetails queryKey="privilege" :loading="loading" :onFinish="onFinish">
+    <a-list item-layout="horizontal" :dataSource="dataSource">
+      <template #renderItem="{ item }">
+        <a-list-item :class="`list-item-` + item.Level">
+          <a-list-item-meta>
+            <template #title>
+              <div v-text="item.Name"></div>
+            </template>
+            <template #description>
+              <a-checkbox-group
+                v-model:value="item.Actions"
+                :name="item.ID"
+                :options="getOptions(item.AllActions)"
+              />
+            </template>
+          </a-list-item-meta>
+        </a-list-item>
+      </template>
+    </a-list>
   </WtmDetails>
 </template>
 <script lang="ts">
@@ -16,22 +28,53 @@ import { PageController } from "../controller";
 export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
-    Entity: {
-
-    },
+    Entity: {},
   };
+  loading = true
+  dataSource = []
   get queryKey() {
     return 'privilege'
   }
   created() { }
   async onLoading() {
-    const res = await this.PageController.onGetPrivilege(this.ID)
-    console.log("LENG ~ extends ~ onLoading ~ onLoading", res, this)
+    try {
+      this.loading = true
+      const res = await this.PageController.onGetPrivilege(this.ID)
+      this.dataSource = res.Pages;
+      this.formState.Entity = res.Entity;
+      console.log("LENG ~ extends ~ onLoading ~ onLoading", res, this)
+    } catch (error) {
+
+    }
+    this.loading = false
+  }
+  /**
+    * 传递给 details 组件的 提交函数 返回一个 Promise
+    * @param values 
+    * @returns 
+    */
+  async onFinish(values) {
+    return this.PageController.onSavePrivilege(this.lodash.assign({}, this.formState, { Pages: this.dataSource }))
+  }
+  getOptions(AllActions) {
+    return this.lodash.map(AllActions, item => ({ label: item.Text, value: item.Value }))
   }
   mounted() {
     this.onLoading()
   }
 }
 </script>
-<style lang="less">
+
+<style lang="less" >
+.list-item {
+  &-1 {
+    padding-left: 30px;
+  }
+  &-2 {
+    padding-left: 60px;
+  }
+  &-3 {
+    padding-left: 90px;
+  }
+}
 </style>
