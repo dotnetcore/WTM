@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs
     public partial class StudentVM : BaseCRUDVM<Student>
     {
         [Display(Name = "专业")]
-        public List<Guid> SelectedStudentMajorIDs { get; set; }
+        public List<string> SelectedStudentMajorIDs { get; set; }
 
         public StudentVM()
         {
@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs
 
         protected override void InitVM()
         {
-            SelectedStudentMajorIDs = Entity.StudentMajor?.Select(x => x.MajorId).ToList();
+            SelectedStudentMajorIDs = Entity.StudentMajor?.Select(x => x.MajorId.ToString()).ToList();
         }
 
         public override void DoAdd()
@@ -32,7 +32,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs
             {
                 foreach (var id in SelectedStudentMajorIDs)
                 {
-                    Entity.StudentMajor.Add(new StudentMajor { MajorId = id });
+                     StudentMajor middle = new StudentMajor();
+                    middle.SetPropertyValue("MajorId", id);
+                    Entity.StudentMajor.Add(middle);
                 }
             }
            
@@ -44,7 +46,12 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs
             Entity.StudentMajor = new List<StudentMajor>();
             if(SelectedStudentMajorIDs != null )
             {
-                SelectedStudentMajorIDs.ForEach(x => Entity.StudentMajor.Add(new StudentMajor { MajorId = x }));
+                 foreach (var item in SelectedStudentMajorIDs)
+                {
+                    StudentMajor middle = new StudentMajor();
+                    middle.SetPropertyValue("MajorId", item);
+                    Entity.StudentMajor.Add(middle);
+                }
             }
 
             base.DoEdit(updateAllFields);

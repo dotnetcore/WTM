@@ -55,13 +55,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Demo.Test",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Vue3Demo", "demo\WalkingTec.Mvvm.Vue3Demo\WalkingTec.Mvvm.Vue3Demo\WalkingTec.Mvvm.Vue3Demo.csproj", "{46309A77-6127-4ED9-95BE-C830B3E6FD0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.BlazorDemo.Model", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.Model\WalkingTec.Mvvm.BlazorDemo.Model.csproj", "{341561A3-B563-4DFC-9EC5-702F85AAC174}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo.Model", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.Model\WalkingTec.Mvvm.BlazorDemo.Model.csproj", "{341561A3-B563-4DFC-9EC5-702F85AAC174}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.BlazorDemo.DataAccess", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess.csproj", "{94352C3E-899A-44A2-A052-578DC6A7159F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo.DataAccess", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.DataAccess\WalkingTec.Mvvm.BlazorDemo.DataAccess.csproj", "{94352C3E-899A-44A2-A052-578DC6A7159F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.BlazorDemo.ViewModel", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.ViewModel\WalkingTec.Mvvm.BlazorDemo.ViewModel.csproj", "{D4104589-85BE-446A-A123-1E0FD1538A7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo.ViewModel", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.ViewModel\WalkingTec.Mvvm.BlazorDemo.ViewModel.csproj", "{D4104589-85BE-446A-A123-1E0FD1538A7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.BlazorDemo.Test", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.Test\WalkingTec.Mvvm.BlazorDemo.Test.csproj", "{22C2CB15-1537-47D2-86BF-A7FFEE3A0677}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.BlazorDemo.Test", "demo\WalkingTec.Mvvm.BlazorDemo\WalkingTec.Mvvm.BlazorDemo.Test\WalkingTec.Mvvm.BlazorDemo.Test.csproj", "{22C2CB15-1537-47D2-86BF-A7FFEE3A0677}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -66,7 +66,7 @@ namespace WalkingTec.Mvvm.Demo.Models
 
     public class SchoolPhoto : TopBasePoco, ISubFile
     {
-        public int? SchoolId { get; set; }
+        public int SchoolId { get; set; }
         public School School { get; set; }
 
         public Guid FileId { get; set; }

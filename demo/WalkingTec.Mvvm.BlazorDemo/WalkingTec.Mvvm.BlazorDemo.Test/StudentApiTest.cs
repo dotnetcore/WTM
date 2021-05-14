@@ -38,16 +38,16 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             StudentVM vm = _controller.Wtm.CreateVM<StudentVM>();
             Student v = new Student();
             
-            v.ID = "OeeYQDD4r";
-            v.Password = "fAgazy5R";
-            v.Email = "eLXQUxW";
-            v.Name = "Wb1ibH";
-            v.Sex = WalkingTec.Mvvm.Core.GenderEnum.Female;
-            v.CellPhone = "orJ";
-            v.Address = "jzFj";
-            v.ZipCode = "pI6X25dv";
+            v.ID = "P2eM9";
+            v.Password = "TyTX0V";
+            v.Email = "ersxm7";
+            v.Name = "Vs4";
+            v.Sex = WalkingTec.Mvvm.Core.GenderEnum.Male;
+            v.CellPhone = "87ZU";
+            v.Address = "AJ5rL";
+            v.ZipCode = "iutU5Rga";
             v.PhotoId = AddFileAttachment();
-            v.IsValid = true;
+            v.IsValid = false;
             vm.Entity = v;
             var rv = _controller.Add(vm);
             Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
@@ -56,15 +56,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<Student>().Find(v.ID);
                 
-                Assert.AreEqual(data.ID, "OeeYQDD4r");
-                Assert.AreEqual(data.Password, "fAgazy5R");
-                Assert.AreEqual(data.Email, "eLXQUxW");
-                Assert.AreEqual(data.Name, "Wb1ibH");
-                Assert.AreEqual(data.Sex, WalkingTec.Mvvm.Core.GenderEnum.Female);
-                Assert.AreEqual(data.CellPhone, "orJ");
-                Assert.AreEqual(data.Address, "jzFj");
-                Assert.AreEqual(data.ZipCode, "pI6X25dv");
-                Assert.AreEqual(data.IsValid, true);
+                Assert.AreEqual(data.ID, "P2eM9");
+                Assert.AreEqual(data.Password, "TyTX0V");
+                Assert.AreEqual(data.Email, "ersxm7");
+                Assert.AreEqual(data.Name, "Vs4");
+                Assert.AreEqual(data.Sex, WalkingTec.Mvvm.Core.GenderEnum.Male);
+                Assert.AreEqual(data.CellPhone, "87ZU");
+                Assert.AreEqual(data.Address, "AJ5rL");
+                Assert.AreEqual(data.ZipCode, "iutU5Rga");
+                Assert.AreEqual(data.IsValid, false);
                 Assert.AreEqual(data.CreateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
             }
@@ -77,16 +77,16 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.ID = "OeeYQDD4r";
-                v.Password = "fAgazy5R";
-                v.Email = "eLXQUxW";
-                v.Name = "Wb1ibH";
-                v.Sex = WalkingTec.Mvvm.Core.GenderEnum.Female;
-                v.CellPhone = "orJ";
-                v.Address = "jzFj";
-                v.ZipCode = "pI6X25dv";
+                v.ID = "P2eM9";
+                v.Password = "TyTX0V";
+                v.Email = "ersxm7";
+                v.Name = "Vs4";
+                v.Sex = WalkingTec.Mvvm.Core.GenderEnum.Male;
+                v.CellPhone = "87ZU";
+                v.Address = "AJ5rL";
+                v.ZipCode = "iutU5Rga";
                 v.PhotoId = AddFileAttachment();
-                v.IsValid = true;
+                v.IsValid = false;
                 context.Set<Student>().Add(v);
                 context.SaveChanges();
             }
@@ -96,13 +96,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             v = new Student();
             v.ID = oldID;
        		
-            v.Password = "M618xY";
-            v.Email = "4rsZnVM";
-            v.Name = "jpqDL";
-            v.Sex = WalkingTec.Mvvm.Core.GenderEnum.Male;
-            v.CellPhone = "PDHo";
-            v.Address = "0t14";
-            v.ZipCode = "lFd";
+            v.Password = "tjs2nvvk";
+            v.Email = "Qw15cTS1";
+            v.Name = "R0p";
+            v.Sex = WalkingTec.Mvvm.Core.GenderEnum.Female;
+            v.CellPhone = "atR";
+            v.Address = "EwS";
+            v.ZipCode = "2Rjk0aIR";
             v.IsValid = false;
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
@@ -124,13 +124,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<Student>().Find(v.ID);
  				
-                Assert.AreEqual(data.Password, "M618xY");
-                Assert.AreEqual(data.Email, "4rsZnVM");
-                Assert.AreEqual(data.Name, "jpqDL");
-                Assert.AreEqual(data.Sex, WalkingTec.Mvvm.Core.GenderEnum.Male);
-                Assert.AreEqual(data.CellPhone, "PDHo");
-                Assert.AreEqual(data.Address, "0t14");
-                Assert.AreEqual(data.ZipCode, "lFd");
+                Assert.AreEqual(data.Password, "tjs2nvvk");
+                Assert.AreEqual(data.Email, "Qw15cTS1");
+                Assert.AreEqual(data.Name, "R0p");
+                Assert.AreEqual(data.Sex, WalkingTec.Mvvm.Core.GenderEnum.Female);
+                Assert.AreEqual(data.CellPhone, "atR");
+                Assert.AreEqual(data.Address, "EwS");
+                Assert.AreEqual(data.ZipCode, "2Rjk0aIR");
                 Assert.AreEqual(data.IsValid, false);
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
@@ -145,16 +145,16 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.ID = "OeeYQDD4r";
-                v.Password = "fAgazy5R";
-                v.Email = "eLXQUxW";
-                v.Name = "Wb1ibH";
-                v.Sex = WalkingTec.Mvvm.Core.GenderEnum.Female;
-                v.CellPhone = "orJ";
-                v.Address = "jzFj";
-                v.ZipCode = "pI6X25dv";
+                v.ID = "P2eM9";
+                v.Password = "TyTX0V";
+                v.Email = "ersxm7";
+                v.Name = "Vs4";
+                v.Sex = WalkingTec.Mvvm.Core.GenderEnum.Male;
+                v.CellPhone = "87ZU";
+                v.Address = "AJ5rL";
+                v.ZipCode = "iutU5Rga";
                 v.PhotoId = AddFileAttachment();
-                v.IsValid = true;
+                v.IsValid = false;
                 context.Set<Student>().Add(v);
                 context.SaveChanges();
             }
@@ -170,24 +170,24 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.ID = "OeeYQDD4r";
-                v1.Password = "fAgazy5R";
-                v1.Email = "eLXQUxW";
-                v1.Name = "Wb1ibH";
-                v1.Sex = WalkingTec.Mvvm.Core.GenderEnum.Female;
-                v1.CellPhone = "orJ";
-                v1.Address = "jzFj";
-                v1.ZipCode = "pI6X25dv";
+                v1.ID = "P2eM9";
+                v1.Password = "TyTX0V";
+                v1.Email = "ersxm7";
+                v1.Name = "Vs4";
+                v1.Sex = WalkingTec.Mvvm.Core.GenderEnum.Male;
+                v1.CellPhone = "87ZU";
+                v1.Address = "AJ5rL";
+                v1.ZipCode = "iutU5Rga";
                 v1.PhotoId = AddFileAttachment();
-                v1.IsValid = true;
-                v2.ID = "DS5Hwe8i";
-                v2.Password = "M618xY";
-                v2.Email = "4rsZnVM";
-                v2.Name = "jpqDL";
-                v2.Sex = WalkingTec.Mvvm.Core.GenderEnum.Male;
-                v2.CellPhone = "PDHo";
-                v2.Address = "0t14";
-                v2.ZipCode = "lFd";
+                v1.IsValid = false;
+                v2.ID = "IAjRO";
+                v2.Password = "tjs2nvvk";
+                v2.Email = "Qw15cTS1";
+                v2.Name = "R0p";
+                v2.Sex = WalkingTec.Mvvm.Core.GenderEnum.Female;
+                v2.CellPhone = "atR";
+                v2.Address = "EwS";
+                v2.ZipCode = "2Rjk0aIR";
                 v2.PhotoId = v1.PhotoId; 
                 v2.IsValid = false;
                 context.Set<Student>().Add(v1);
@@ -217,13 +217,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 
-                v.FileName = "JHVR";
-                v.FileExt = "pKtzB";
-                v.Path = "OuiCgwi";
-                v.Length = 88;
-                v.SaveMode = "6aOrWth1";
-                v.ExtraInfo = "hn1GBF";
-                v.HandlerInfo = "A5wLih";
+                v.FileName = "YhtZfnWBt";
+                v.FileExt = "6vmrChVJy";
+                v.Path = "BJuyVm";
+                v.Length = 79;
+                v.SaveMode = "7FQ";
+                v.ExtraInfo = "xScWsm6";
+                v.HandlerInfo = "xTBqXEf8C";
                 context.Set<FileAttachment>().Add(v);
                 context.SaveChanges();
             }

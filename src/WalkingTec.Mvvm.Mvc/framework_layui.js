@@ -1078,7 +1078,7 @@ window.ff = {
                     }
                 }
             }
-        }, 10);
+        }, 100);
     },
 
     getTreeChecked: function (items) {
