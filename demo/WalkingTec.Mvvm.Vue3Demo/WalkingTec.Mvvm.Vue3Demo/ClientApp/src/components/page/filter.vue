@@ -136,9 +136,7 @@ export default class extends Vue {
     );
   }
   breakPoint() {
-    const length = this.$slots
-      .default()
-      .filter((x) => typeof x.type !== "symbol").length;
+    const length = this.lodash.isFunction(this.$slots.default) ? this.$slots.default().filter((x) => typeof x.type !== "symbol").length : 0;
     const width = window.innerWidth;
     const breakPoint: [number, number, string] = this.lodash.find<any>(
       BREAKPOINTS.vertical,

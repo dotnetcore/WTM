@@ -47,7 +47,8 @@ export default class extends Vue {
     return this.queryKey || this.$WtmConfig.detailsVisible;
   }
   get isModal() {
-    return false;
+    const width = window.innerWidth;
+    return this.lodash.eq(this.$WtmConfig.modalType, 'modal') && width > 701;
   }
   get query() {
     return this.lodash.clone(this.$route.query);
@@ -78,6 +79,14 @@ export default class extends Vue {
 </script>
 <style  lang="less">
 .w-view {
+  &.ant-modal {
+    min-width: 800px;
+    .ant-modal-body {
+      max-height: 80vh;
+      // position: relative;
+      overflow: auto;
+    }
+  }
   &.ant-drawer {
     .ant-drawer-content-wrapper {
       max-width: 100vw;

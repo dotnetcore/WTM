@@ -65,7 +65,7 @@ export function getColumnDefsAction(frameworkComponents): (ColGroupDef | ColDef)
             field: 'RowAction',
             cellRenderer: 'RowAction',
             cellClass: 'w-row-action',
-            pinned: 'right',
+            pinned: window.innerWidth > 701 ? 'right' : '',
             sortable: false,
             suppressMenu: true,
             suppressColumnsToolPanel: true,
@@ -83,7 +83,7 @@ export function getColumnDefsCheckbox(checkboxSelection, theme: 'balham' | 'alpi
     }
     const width = { material: 65, alpine: 50, balham: 40 }[theme]
     return [{
-        pinned: "left",
+        pinned: window.innerWidth > 701 ? "left" : '',
         rowDrag: false,
         dndSource: false,
         lockPosition: true,

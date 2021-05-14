@@ -3,7 +3,7 @@
  */
 export enum EnumLocaleLabel {
     /** 当前页面名称 */
-    PageName = "PageName.system-frameworkuser",
+    PageName = "PageName.admin-frameworkuser",
     ID = "frameworkuser.ID",
     /** 用户ITCode */
     ITCode = "frameworkuser.ITCode",

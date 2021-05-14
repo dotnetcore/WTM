@@ -1,4 +1,5 @@
 export default {
+    'Group': 'Group',
     'update.pwd.new': 'New password',
     'update.pwd.old': 'Old password',
     'update.pwd.confirm': 'Confirm pwd',

@@ -24,6 +24,10 @@ import ViewGrid from "./views/grid.vue";
 })
 export default class extends Vue {
   /**
+   * 后端控制器标识
+   */
+   static controller = "WalkingTec.Mvvm.Admin.Api,FrameworkUser"
+  /**
    * 当前页面控制器
    * 子组件 通过 Inject 均可访问
    */

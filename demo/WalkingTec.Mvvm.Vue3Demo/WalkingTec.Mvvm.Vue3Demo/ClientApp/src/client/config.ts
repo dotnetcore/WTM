@@ -17,6 +17,12 @@ export class WtmConfig {
      */
     readonly detailsVisible = "details"
     /**
+     * 模态框类型
+     * @type {("modal" | "drawer")}
+     * @memberof WtmConfig
+     */
+    readonly modalType: "modal" | "drawer" = "modal"
+    /**
      * api 地址
      * @memberof XTGlobal
      */
@@ -35,59 +41,24 @@ export class WtmConfig {
      * 版本信息
      * @memberof XTGlobal
      */
-    readonly version = lodash.get(window, '__xt__env.version', process.env.version);
+    readonly version = process.env.version;
     /**
      * 构建时间戳
      * @memberof XTGlobal
      */
-    readonly timestamp = lodash.get(window, '__xt__env.timestamp', process.env.timestamp);
+    readonly timestamp = process.env.timestamp;
     /**
      * Node env
      * @memberof XTGlobal
      */
-    readonly NODE_ENV: typeof process.env.NODE_ENV = lodash.get(window, '__xt__env.NODE_ENV', process.env.NODE_ENV);
+    readonly NODE_ENV = process.env.NODE_ENV;
     /**
      * 环境
      * @memberof XTGlobal
      */
-    readonly DEPLOY_ENV: typeof process.env.DEPLOY_ENV = lodash.get(window, '__xt__env.DEPLOY_ENV', process.env.DEPLOY_ENV);
-    /**
-     * Android
-     * @readonly
-     * @memberof XTGlobal
-     */
-    get isAndroid() {
-        return lodash.eq(this.userAgent.os.name, Bowser.OS_MAP.Android)
-    }
-    /**
-     * iOS
-     * @readonly
-     * @memberof XTGlobal
-     */
-    get isiOS() {
-        return lodash.eq(this.userAgent.os.name, Bowser.OS_MAP.iOS)
-    }
-    /**
-     * 本地 dev
-     * @memberof XTGlobal
-     */
-    get dev() {
-        return this.NODE_ENV === 'development'
-    }
-    /**
-     *生产环境
-     * @memberof XTGlobal
-     */
+    // readonly DEPLOY_ENV = process.env.DEPLOY_ENV;
     get production() {
-        return this.DEPLOY_ENV === 'pro'
-    }
-    /**
-     * 微信浏览器
-     * @readonly
-     * @memberof XTGlobal
-     */
-    get WechatBowser() {
-        return lodash.eq(this.userAgent.browser.name, Bowser.BROWSER_MAP.wechat)
+        return this.NODE_ENV === 'production'
     }
     /**
      * 检查版本信息 

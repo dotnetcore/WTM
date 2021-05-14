@@ -16,7 +16,7 @@
 <script lang="ts">
 import { SystemController } from "@/client";
 import lodash from "lodash";
-import { Inject, Options, Vue } from "vue-property-decorator";
+import { Inject, Options, Vue, Watch } from "vue-property-decorator";
 import router from "../router";
 import Container from "./views/container.vue";
 import RightContentRender from "./views/rightContentRender.vue";
@@ -73,7 +73,7 @@ export default class extends Vue {
             router: { to: router },
             meta: {
               icon: "SaveOutlined",
-              title: this.$t(`PageName.${lodash.get(item, "name") as any}`)
+              title: this.$t(`PageName.${lodash.get<any, any>(item, "name")}`)
             }
           });
           // console.log("LENG ~ extends ~ data ~ data", data)
@@ -114,21 +114,28 @@ export default class extends Vue {
   }
   created() { }
   mounted() {
-    console.log("LENG ~ extends ~ mounted ~ this", this.$route.name)
+    // console.log("LENG ~ extends ~ mounted ~ this", this.$route.name)
     this.provider.openKeys = [this.$route.path]
     this.provider.selectedKeys = [this.$route.path]
+  }
+  @Watch("$route.path")
+  onRoute(val, old) {
+    this.provider.selectedKeys = [val]
   }
   onCollapse(collapsed) {
     this.provider.collapsed = collapsed;
   }
   onSelect(event) {
-    console.log("LENG ~ extends ~ onSelect ~ event", event)
-    this.provider.selectedKeys = event;
+    // console.log("LENG ~ extends ~ onSelect ~ event", event)
+    // this.provider.selectedKeys = event;
   }
   onOpenKeys(event) {
-    console.log("LENG ~ extends ~ onOpenKeys ~ event", event)
+    // console.log("LENG ~ extends ~ onOpenKeys ~ event", event)
     this.provider.openKeys = event;
   }
+}
+function toMenus(){
+
 }
 </script>
 <style lang="less">

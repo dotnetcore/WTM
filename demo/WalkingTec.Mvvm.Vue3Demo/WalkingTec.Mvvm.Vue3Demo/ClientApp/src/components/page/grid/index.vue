@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { ControllerBasics } from "@/client";
-import { GridApi, GridOptions, GridReadyEvent, RowDataChangedEvent } from "ag-grid-community";
+import { ColumnApi, GridApi, GridOptions, GridReadyEvent, RowDataChangedEvent } from "ag-grid-community";
 import lodash from "lodash";
 import { fromEvent, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
@@ -34,7 +34,8 @@ import Pagination from "./pagination.vue";
     }),
   },
 })
-export default class extends Vue {
+export default class Grid extends Vue {
+  static Cache = new Map<string, any>()
   @Prop({ required: true }) readonly PageController: ControllerBasics;
   @Prop({ default: () => [] }) readonly columnDefs;
   @Prop({ default: () => ({}) }) readonly gridOptions: GridOptions;
@@ -43,8 +44,10 @@ export default class extends Vue {
   theme: "balham" | "alpine" | "material" = "alpine";
   style = { height: "500px" };
   GridApi: GridApi = null;
+  ColumnApi: ColumnApi = null;
   ResizeEvent: Subscription;
   isAutoSizeColumn = true;
+  pageKey = '';
   get Pagination() {
     return this.PageController.Pagination;
   }
@@ -90,6 +93,7 @@ export default class extends Vue {
       // 初始化完成
       onGridReady: (event: GridReadyEvent) => {
         this.GridApi = event.api;
+        this.ColumnApi = event.columnApi;
         event.api.sizeColumnsToFit();
         if (this.Pagination.loading) {
           this.GridApi.showLoadingOverlay();
@@ -115,10 +119,10 @@ export default class extends Vue {
    * 计算 表格高度
    */
   onReckon() {
-    // console.dir(this);
     let height = 500;
     height = window.innerHeight - this.gridContent.offsetTop - 125;
     this.style.height = height + "px";
+    Grid.Cache.set(this.pageKey, height)
   }
   @Watch("Pagination.loading")
   onLoading(val, old) {
@@ -130,7 +134,23 @@ export default class extends Vue {
       }
     }
   }
-  created() { }
+  @Watch("$route.path")
+  onRoute(val, old) {
+    if (this.lodash.eq(val, this.pageKey)) {
+      // this.autoSizeColumn()
+    }
+  }
+  // autoSizeColumn = lodash.debounce(() => {
+  //   this.onReckon()
+  //   this.GridApi?.sizeColumnsToFit();
+  //   this.ColumnApi?.autoSizeColumn("RowAction");
+  // }, 300)
+  created() {
+    this.pageKey = this.$route.path
+    if (Grid.Cache.has(this.pageKey)) {
+      this.style.height = Grid.Cache.get(this.pageKey) + "px";
+    }
+  }
   mounted() {
     this.$nextTick(() => this.onReckon())
     this.ResizeEvent = fromEvent(window, "resize")

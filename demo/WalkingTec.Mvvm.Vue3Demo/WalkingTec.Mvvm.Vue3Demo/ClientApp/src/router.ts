@@ -16,6 +16,12 @@ class AppRouter {
   readonly PageFiles = require.context('./pages', true, /\.vue$/, 'sync') // 根据目录结构去搜索文件
   readonly PagePath = this.PageFiles.keys().filter(file => !lodash.includes(file, 'views'));
   /**
+   * 路由的文件信息
+   * @type {Array<any>}
+   * @memberof AppRouter
+   */
+  RouterFiles: Array<any>;
+  /**
    * 创建的路由
    * @type {Router}
    * @memberof AppRouter
@@ -92,6 +98,10 @@ class AppRouter {
     this.Router.beforeEach(this.beforeEach)
     this.Router.beforeResolve(this.beforeResolve)
     this.Router.afterEach(this.afterEach)
+    this.PagesCache.set('/', {
+      path: '/',
+      name: 'home',
+    } as any)
     console.log('')
     console.group('Router')
     console.log(this)
@@ -128,6 +138,7 @@ class AppRouter {
         routes.push(this.getRoute(item, childrenPage))
       })
     })
+    this.RouterFiles = routes
     // console.log("LENG: getRoutes -> routes", routes)
     return routes
   }

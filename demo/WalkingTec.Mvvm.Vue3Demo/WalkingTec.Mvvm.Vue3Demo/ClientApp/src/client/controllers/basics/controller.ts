@@ -4,8 +4,8 @@ import { BindAll } from 'lodash-decorators';
 import { action, observable } from "mobx";
 import { AjaxRequest } from 'rxjs/ajax';
 import { AjaxBasics, Regulars } from "../../helpers";
-import { EntitiesBasics } from "./entities";
-import { Pagination } from "./pagination";
+import { BasicsOptions, EntitiesBasics } from "./entities";
+import { Pagination, PaginationOptions } from "./pagination";
 import { globalProperties } from "@/client";
 export interface ControllerBasicsOptions {
   /** 数据唯一标识 key */
@@ -19,6 +19,8 @@ export interface ControllerBasicsOptions {
   export?: string | AjaxRequest;
   exportIds?: string | AjaxRequest;
   template?: string | AjaxRequest;
+  PaginationOptions?: PaginationOptions;
+  BasicsOptions?: BasicsOptions;
 }
 @BindAll()
 
@@ -68,8 +70,8 @@ export class ControllerBasics<T = any> {
   */
   onReset(options?: ControllerBasicsOptions) {
     this.options = lodash.merge({}, this.options, options);
-    this.Pagination = new Pagination(this.$ajax, { key: this.key, ...this.getAjaxRequest('search') });
-    this.Entities = new EntitiesBasics(this.$ajax, this.getAjaxRequest('details'));
+    this.Pagination = new Pagination(this.$ajax, lodash.assign({ key: this.key }, this.getAjaxRequest('search'), options.PaginationOptions));
+    this.Entities = new EntitiesBasics(this.$ajax, lodash.assign({}, this.getAjaxRequest('details'), options));
     this.onToggleLoading(false)
     return this;
   }

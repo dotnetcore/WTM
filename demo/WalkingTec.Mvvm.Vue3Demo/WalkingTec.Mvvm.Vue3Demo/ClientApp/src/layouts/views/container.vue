@@ -1,9 +1,9 @@
 <template>
   <router-view v-if="keep" v-slot="{ Component }">
     <!-- <transition name="fade"> -->
-    <keep-alive>
+    <!-- <keep-alive> -->
       <component :is="Component" />
-    </keep-alive>
+    <!-- </keep-alive> -->
     <!-- </transition> -->
   </router-view>
   <router-view v-else />

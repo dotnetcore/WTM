@@ -27,19 +27,22 @@
         <template v-slot:indicator>
           <div></div>
         </template>
-        <a-button type="primary" html-type="submit">
-          <template v-slot:icon>
-            <SaveOutlined />
-          </template>
-          <i18n-t keypath="action.submit" />
-        </a-button>
-        <a-divider type="vertical" />
-        <a-button @click.stop.prevent="onReset">
-          <template v-slot:icon>
-            <RedoOutlined />
-          </template>
-          <i18n-t keypath="action.reset" />
-        </a-button>
+        <!-- 非只读状态显示底部按钮 -->
+        <template v-if="!readonly">
+          <a-button type="primary" html-type="submit">
+            <template v-slot:icon>
+              <SaveOutlined />
+            </template>
+            <i18n-t keypath="action.submit" />
+          </a-button>
+          <a-divider type="vertical" />
+          <a-button @click.stop.prevent="onReset">
+            <template v-slot:icon>
+              <RedoOutlined />
+            </template>
+            <i18n-t keypath="action.reset" />
+          </a-button>
+        </template>
       </a-spin>
     </a-space>
   </a-form>
@@ -63,6 +66,10 @@ export default class extends Vue {
   @Prop({ default: false }) readonly loading;
   /** 数据 提交 函数 */
   @Prop({ type: Function, required: true }) readonly onFinish;
+  // 只读
+  get readonly() {
+    return this.lodash.has(this.$route.query, '_readonly')
+  }
   get successMsg() {
     return this.$t('tips.success.operation')
   }
@@ -122,6 +129,7 @@ export default class extends Vue {
 }
 </style>
 <style lang="less">
+.ant-modal-body,
 .ant-drawer-body {
   .w-form {
     padding-bottom: 55px;

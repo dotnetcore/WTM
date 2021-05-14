@@ -1,4 +1,6 @@
 import { WTM_ValueType } from "@/client";
+import { of } from "rxjs";
+import { delay } from "rxjs/operators";
 import { Inject, Options, Prop, Vue } from "vue-property-decorator";
 @Options({ components: {} })
 export class FieldBasics extends Vue {
@@ -8,8 +10,12 @@ export class FieldBasics extends Vue {
     @Prop({ type: String }) readonly name;
     // 输入提示
     @Prop({ type: String }) readonly placeholder;
+    // 联动
+    @Prop({ type: Array }) readonly linkage;
     // 当前实体对应的 属性key
     @Prop({ type: String }) readonly entityKey;
+    /** 给 field组件的 fieldProps */
+    @Prop({}) readonly fieldProps;
     // 值类型
     @Prop({ type: String, default: "text" }) readonly valueType: WTM_ValueType;
     // 只读
@@ -90,6 +96,17 @@ export class FieldBasics extends Vue {
         ]));
         return placeholder;
     }
+    // 联动
+    get _linkage() {
+        const linkage = this.lodash.head(this.lodash.compact([
+            // 优先获取 Props 配置
+            this.linkage,
+            // 获取 Entity 配置
+            this.lodash.get(this.PageEntity, `${this.entityKey}.linkage`),
+            []
+        ]));
+        return linkage;
+    }
     // form 校验规则
     get _rules() {
         const rules = this.lodash.map(this.lodash.get(this.PageEntity, `${this.entityKey}.rules`), item => {
@@ -134,6 +151,7 @@ export class FieldBasics extends Vue {
     // 加载数据源
     async onRequest() {
         this.spinning = true;
+        const startTime = Date.now()
         try {
             const res = await this.lodash.invoke(
                 this,
@@ -144,6 +162,32 @@ export class FieldBasics extends Vue {
         } catch (error) {
             console.error("LENG ~ onRequest", error)
         }
+        if (this.dataSource.length > 0) {
+            const endTime = Date.now()
+            const diffTime = 400 - (endTime - startTime);
+            // 保证动画最少500考秒
+            await of(1).pipe(delay(diffTime > 0 ? diffTime : 0)).toPromise()
+        }
         this.spinning = false;
+    }
+    /**
+     * 联动
+     */
+    onLinkage() {
+        const onRequest = this.lodash.debounce(this.onRequest, 200)
+        // linkage
+        this.lodash.map(this._linkage, link => {
+            // 顶层property 名
+            this.$watch(() => this.lodash.get(this.formState, link), (newVal, oldVal) => {
+                // 有值切 值更新
+                if (!this.lodash.eq(newVal, oldVal)) {
+                    onRequest()
+                    if (oldVal) {
+                        this.value = undefined
+                    }
+                }
+            })
+        })
+
     }
 }

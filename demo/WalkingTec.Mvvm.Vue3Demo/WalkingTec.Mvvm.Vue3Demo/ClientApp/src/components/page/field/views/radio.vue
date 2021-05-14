@@ -29,6 +29,7 @@ export default class extends mixins(FieldBasics) {
   }
   async mounted() {
     this.onRequest();
+    this.onLinkage();
     if (this.debug) {
       console.log("");
       console.group(`Field ~ ${this.entityKey} ${this._name} `);

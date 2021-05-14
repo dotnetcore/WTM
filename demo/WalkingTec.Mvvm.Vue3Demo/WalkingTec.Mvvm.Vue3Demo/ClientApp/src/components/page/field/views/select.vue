@@ -9,6 +9,8 @@
         :placeholder="_placeholder"
         :disabled="disabled"
         :options="dataSource"
+        allowClear
+        v-bind="fieldProps"
       />
     </template>
   </a-spin>
@@ -25,11 +27,16 @@ export default class extends mixins(FieldBasics) {
   // 实体
   @Inject() readonly PageEntity;
   get readonlyText() {
+    // if (this.lodash.isArray(this.value)) {
+    //   const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, String(item.value)));
+    //   return this.lodash.map(filters, 'label').join(' / ')
+    // }
     const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, String(item.value)));
     return this.lodash.map(filters, 'label').join(' / ')
   }
   async mounted() {
     this.onRequest();
+    this.onLinkage();
     if (this.debug) {
       console.log("");
       console.group(`Field ~ ${this.entityKey} ${this._name} `);

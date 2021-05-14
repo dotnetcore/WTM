@@ -247,6 +247,10 @@ export class Pagination<T = any> {
     // @Bind()
     protected onMapValues(res): PaginationResponse<T> {
         const { onMapValues } = this.options;
+        // wtm
+        if (lodash.hasIn(res, 'Data')) {
+            lodash.set(res, 'dataSource', lodash.get(res, 'Data'))
+        }
         if (lodash.isFunction(onMapValues)) {
             return onMapValues(res);
         }
@@ -258,10 +262,7 @@ export class Pagination<T = any> {
         if (lodash.isArray(res)) {
             return { dataSource: res }
         }
-        // wtm
-        if (lodash.hasIn(res, 'Data')) {
-            return { dataSource: lodash.get(res, 'Data'), ...res };
-        }
+
         return res
     }
     /**
