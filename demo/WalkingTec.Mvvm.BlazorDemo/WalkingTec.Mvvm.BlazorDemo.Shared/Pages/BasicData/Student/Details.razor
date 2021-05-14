@@ -1,0 +1,50 @@
+﻿@page "/BasicData/Student/Details/{id}"
+@using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs;
+@inherits BasePage
+
+<ValidateForm @ref="vform" Model="@Model" >
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+
+            <Display @bind-Value="@Model.Entity.ID"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.Password"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.Email"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.Name"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.Sex"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.CellPhone"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.Address"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.ZipCode"   ShowLabel="true"/>
+            <WTUploadImage @bind-Value="@Model.Entity.PhotoId"  IsDisabled="true" ShowLabel="true"/>
+            <Switch @bind-Value="@Model.Entity.IsValid"  IsDisabled="true" ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.EnRollDate"   ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.StudentMajor" Data="@AllMajors"  ShowLabel="true"/>
+    </Row>
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+    </div>
+</ValidateForm>
+
+@code {
+
+    private StudentVM Model = new StudentVM();
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+    private List<SelectedItem> AllMajors = new List<SelectedItem>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        AllMajors = await WtmBlazor.Api.CallItemsApi("/api/Student/GetMajors", placeholder: WtmBlazor.Localizer["Sys.All"]);
+
+        var rv = await WtmBlazor.Api.CallAPI<StudentVM>($"/api/Student/{id}");
+        Model = rv.Data;
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

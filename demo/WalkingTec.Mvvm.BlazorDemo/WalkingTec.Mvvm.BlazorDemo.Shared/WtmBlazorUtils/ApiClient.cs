@@ -257,7 +257,7 @@ namespace WtmBlazorUtils
         {
             searcher.Page = options.PageIndex;
             searcher.Limit = options.PageItems;
-            if (string.IsNullOrEmpty(options.SortName) && options.SortOrder != SortOrder.Unset)
+            if (string.IsNullOrEmpty(options.SortName) == false && options.SortOrder != SortOrder.Unset)
             {
                 searcher.SortInfo = new SortInfo
                 {

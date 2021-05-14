@@ -850,7 +850,7 @@ namespace WalkingTec.Mvvm.Mvc
                         continue;
                     }
                     var fname = "All" + pro.FieldName + "s";
-                    if (UI != UIEnum.Blazor)
+                    if (UI == UIEnum.LayUI)
                     {
                         prostr += $@"
         public List<ComboSelectListItem> {fname} {{ get; set; }}";
@@ -866,16 +866,18 @@ namespace WalkingTec.Mvvm.Mvc
                         var protype = modelType.GetSingleProperty(pro.FieldName);
                         prostr += $@"
         [Display(Name = ""{protype.GetPropertyDisplayName()}"")]
-        public List<{pro.GetFKType(DC, modelType)}> Selected{pro.FieldName}IDs {{ get; set; }}";
+        public List<string> Selected{pro.FieldName}IDs {{ get; set; }}";
                         initstr += $@"
-            Selected{pro.FieldName}IDs = Entity.{pro.FieldName}?.Select(x => x.{pro.SubIdField}).ToList();";
+            Selected{pro.FieldName}IDs = Entity.{pro.FieldName}?.Select(x => x.{pro.SubIdField}.ToString()).ToList();";
                         addstr += $@"
             Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
             if (Selected{pro.FieldName}IDs != null)
             {{
                 foreach (var id in Selected{pro.FieldName}IDs)
                 {{
-                    Entity.{pro.FieldName}.Add(new {protype.PropertyType.GetGenericArguments()[0].Name} {{ {pro.SubIdField} = id }});
+                     {protype.PropertyType.GetGenericArguments()[0].Name} middle = new {protype.PropertyType.GetGenericArguments()[0].Name}();
+                    middle.SetPropertyValue(""{pro.SubIdField}"", id);
+                    Entity.{pro.FieldName}.Add(middle);
                 }}
             }}
 ";
@@ -883,7 +885,12 @@ namespace WalkingTec.Mvvm.Mvc
             Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
             if(Selected{pro.FieldName}IDs != null )
             {{
-                Selected{pro.FieldName}IDs.ForEach(x => Entity.{pro.FieldName}.Add(new {protype.PropertyType.GetGenericArguments()[0].Name} {{ {pro.SubIdField} = x }}));
+                 foreach (var item in Selected{pro.FieldName}IDs)
+                {{
+                    {protype.PropertyType.GetGenericArguments()[0].Name} middle = new {protype.PropertyType.GetGenericArguments()[0].Name}();
+                    middle.SetPropertyValue(""{pro.SubIdField}"", item);
+                    Entity.{pro.FieldName}.Add(middle);
+                }}
             }}
 ";
                     }
@@ -1181,12 +1188,13 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (pro.Value == "$fk$")
                     {
+                        var fktype = modelType.GetSingleProperty(pro.Key[0..^2])?.PropertyType;
                         cpros += $@"
-            v.{pro.Key} = Add{pro.Key[0..^2]}();";
+            v.{pro.Key} = Add{fktype.Name}();";
                         pros += $@"
-                v.{pro.Key} = Add{pro.Key[0..^2]}();";
+                v.{pro.Key} = Add{fktype.Name}();";
                         mpros += $@"
-                v1.{pro.Key} = Add{pro.Key[0..^2]}();";
+                v1.{pro.Key} = Add{fktype.Name}();";
                     }
                     else
                     {
@@ -1304,7 +1312,7 @@ namespace WalkingTec.Mvvm.Mvc
                     if (fktype != t)
                     {
                         cpros += $@"
-                v.{pro.Key} = Add{pro.Key[0..^2]}();";
+                v.{pro.Key} = Add{fktype.Name}();";
                     }
                 }
                 else
@@ -1315,7 +1323,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var idpro = t.GetSingleProperty("ID");
             rv += $@"
-        private {idpro.PropertyType.Name} Add{keyname}()
+        private {idpro.PropertyType.Name} Add{t.Name}()
         {{
             {mname} v = new {mname}();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
@@ -2151,13 +2159,18 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         render = "ComponentType=\"@typeof(Switch)\"";
                     }
+                    if (mpro.PropertyType == typeof(DateTime) || mpro.PropertyType == typeof(DateTime?))
+                    {
+                        render = "FormatString=\"yyyy-MM-dd HH: mm: ss\"";
+
+                    }
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
                         string prefix = "";
                         if (subtype == typeof(FileAttachment))
                         {
-                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon"))
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
                             {
                                 template = @"
             <Template Context=""data"">
@@ -2168,7 +2181,9 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 template = @"
             <Template Context=""data"">
-                <Button Size=""Size.ExtraSmall"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{data.Value}"",null, HttpMethodEnum.GET))"" />
+                @if (data.Value.HasValue){
+                    <Button Size=""Size.ExtraSmall"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{data.Value}"",null, HttpMethodEnum.GET))"" />
+                }
             </Template>";
                             }
                             var fk = DC.GetFKName2(modelType, item.FieldName);
@@ -2354,7 +2369,14 @@ namespace WalkingTec.Mvvm.Mvc
                         var subtype = Type.GetType(item.RelatedField);
                         if (item.SubField == "`file")
                         {
-                            controltype = "WTUploadImage";
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
+                            {
+                                controltype = "WTUploadImage";
+                            }
+                            else
+                            {
+                                controltype = "WTUploadFile";
+                            }
                         }
                         else
                         {
@@ -2413,7 +2435,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     if (controltype == "Select" || controltype == "MultiSelect")
                     {
-                        ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.All\"]\"";
+                        ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.PleaseSelect\"]\"";
                     }
                     if (controltype == "Transfer")
                     {
@@ -2467,21 +2489,35 @@ namespace WalkingTec.Mvvm.Mvc
                     string disabled = "";
                     var property = modelType.GetSingleProperty(item.FieldName);
 
-                    if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
-                        var fk = DC.GetFKName2(modelType, item.FieldName);
-                        bindfield = $"Entity.{fk}";
+                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        {
+                            var fk = DC.GetFKName2(modelType, item.FieldName);
+                            bindfield = "Entity." + fk;
+                        }
+                        else
+                        {
+                            bindfield = $"Selected{item.FieldName}IDs";
+                        }
                     }
                     else
                     {
-                        bindfield = $"Entity.{item.FieldName}";
+                        bindfield = "Entity." + item.FieldName;
                     }
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
                         if (item.SubField == "`file")
                         {
-                            controltype = "WTUploadImage";
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
+                            {
+                                controltype = "WTUploadImage";
+                            }
+                            else
+                            {
+                                controltype = "WTUploadFile";
+                            }
                             disabled = "IsDisabled=\"true\"";
                         }
                         else
@@ -2492,7 +2528,6 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
                             }
-
                         }
                     }
                     else
@@ -2509,9 +2544,23 @@ namespace WalkingTec.Mvvm.Mvc
                             disabled = "IsDisabled=\"true\"";
                         }
                     }
-
-                    fieldstr.Append($@"
+                    if (controltype == "WTUploadFile")
+                    {
+                        string label = property.GetPropertyDisplayName();
+                        fieldstr.Append($@"
+                @if (Model.{bindfield}.HasValue){{
+                    <div>
+                          <label class=""control-label is-display"">{label}</label>
+                          <div><Button Size=""Size.Small"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{{Model.{bindfield}}}"",null, HttpMethodEnum.GET))"" /></div>
+                    </div>
+                }}
+");
+                    }
+                    else
+                    {
+                        fieldstr.Append($@"
             <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {disabled} ShowLabel=""true""/>");
+                    }
                 }
 
                 StringBuilder apiinit = new StringBuilder();

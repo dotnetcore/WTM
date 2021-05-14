@@ -86,10 +86,11 @@ namespace WalkingTec.Mvvm.Core
                     {
                         AssemblyLoadContext.Default.LoadFromAssemblyPath(dll.FullName);
                     }
-                    catch {
+                    catch
+                    {
                     }
                 }
-                var dlllist = AssemblyLoadContext.Default.Assemblies.Where(x => systemdll.Any(y=>x.FullName.StartsWith(y)) == false).ToList();
+                var dlllist = AssemblyLoadContext.Default.Assemblies.Where(x => systemdll.Any(y => x.FullName.StartsWith(y)) == false).ToList();
                 _allAssemblies.AddRange(dlllist);
             }
             return _allAssemblies;
@@ -97,12 +98,12 @@ namespace WalkingTec.Mvvm.Core
 
         public static SimpleMenu FindMenu(string url, List<SimpleMenu> menus)
         {
-            if(url == null)
+            if (url == null)
             {
                 return null;
             }
             url = url.ToLower();
-            if(menus == null)
+            if (menus == null)
             {
                 return null;
             }
@@ -116,7 +117,7 @@ namespace WalkingTec.Mvvm.Core
                 if (pos > 0)
                 {
                     url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.Url != null && (x.Url.ToLower() == url || x.Url.ToLower()+"async" == url)).FirstOrDefault();
+                    menu = menus.Where(x => x.Url != null && (x.Url.ToLower() == url || x.Url.ToLower() + "async" == url)).FirstOrDefault();
                 }
             }
 
@@ -541,7 +542,7 @@ namespace WalkingTec.Mvvm.Core
 
         public static string GetCS(string cs, string mode, Configs config)
         {
-            if (string.IsNullOrEmpty(cs) || config.Connections.Any(x=>x.Key.ToLower() == cs.ToLower()) == false)
+            if (string.IsNullOrEmpty(cs) || config.Connections.Any(x => x.Key.ToLower() == cs.ToLower()) == false)
             {
                 cs = "default";
             }
@@ -552,7 +553,7 @@ namespace WalkingTec.Mvvm.Core
             }
             if (mode?.ToLower() == "read")
             {
-                var reads = config.Connections.Where(x => x.Key.StartsWith(cs + "_")).Select(x=>x.Key).ToList();
+                var reads = config.Connections.Where(x => x.Key.StartsWith(cs + "_")).Select(x => x.Key).ToList();
                 if (reads.Count > 0)
                 {
                     Random r = new Random();
@@ -569,8 +570,8 @@ namespace WalkingTec.Mvvm.Core
             var fileAttachment = dc.Set<FileAttachment>().Where(x => x.ID == fileAttachmentId.Value).FirstOrDefault();
             if (fileAttachment != null)
             {
-                    url = "/_Framework/GetFile/" + fileAttachmentId.ToString();
-                
+                url = "/_Framework/GetFile/" + fileAttachmentId.ToString();
+
             }
             return url;
         }
@@ -735,6 +736,78 @@ namespace WalkingTec.Mvvm.Core
             return sb.ToString();
         }
         #endregion
+
+        /// <summary>
+        /// 重新处理 返回所有ispage模块
+        /// </summary>
+        /// <param name="modules"></param>
+        /// <param name="submit">是否需要action</param>
+        /// <returns></returns>
+        public static List<SimpleModule> ResetModule(List<SimpleModule> modules, bool submit = true)
+        {
+            var m = modules.Select(x => new SimpleModule
+            {
+                ActionDes = x.ActionDes,
+                Actions = x.Actions.Select(y => new SimpleAction
+                {
+                    ActionDes = y.ActionDes,
+                    ActionName = y.ActionName,
+                    Url = y.Url,
+                    MethodName = y.MethodName,
+
+                }).ToList(),
+                Area = x.Area,
+                AreaId = x.AreaId,
+                ClassName = x.ClassName,
+                _name = x._name,
+                ID = x.ID,
+                IgnorePrivillege = x.IgnorePrivillege,
+                IsApi = x.IsApi,
+                ModuleName = x.ModuleName,
+                NameSpace = x.NameSpace,
+            }).ToList();
+            var mCount = m.Count;
+            var toRemove = new List<SimpleModule>();
+            for (int i = 0; i < mCount; i++)
+            {
+                var pages = m[i].Actions?.Where(x => x.ActionDes?.IsPage == true).ToList();
+                if (pages != null)
+                {
+                    for (int j = 0; j < pages.Count; j++)
+                    {
+                        if (j == 0 && !m[i].Actions.Any(x => x.MethodName.ToLower() == "index"))
+                        {
+                            m.Add(new SimpleModule
+                            {
+                                ModuleName = pages[j].ActionDes._localizer[pages[j].ActionDes.Description],
+                                NameSpace = m[i].NameSpace,
+                                ClassName = pages[j].MethodName,
+                                Actions = m[i].Actions
+                            });
+                            if (submit)
+                                m[i].Actions.Remove(pages[j]);
+                            toRemove.Add(m[i]);
+                        }
+                        else
+                        {
+                            if (pages[j].MethodName.ToLower() != "index")
+                            {
+                                m.Add(new SimpleModule
+                                {
+                                    ModuleName = pages[j].ActionDes._localizer[pages[j].ActionDes.Description],
+                                    NameSpace = m[i].NameSpace,
+                                    ClassName = pages[j].MethodName,
+                                    Actions = submit ? new List<SimpleAction>() : new List<SimpleAction>() { pages[j] }
+                                });
+                                m[i].Actions.Remove(pages[j]);
+                            }
+                        }
+                    }
+                }
+            }
+            toRemove.ForEach(x => m.Remove(x));
+            return m;
+        }
 
     }
 }

@@ -6,15 +6,13 @@
 @using System.IO;
 @typeparam TValue
 
-@if (dlist != null)
-{
-    <AvatarUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="image/*" IsSingle="!IsMultiple" ShowProgress="true" OnChange="@OnAvatarUpload"
-                  OnDelete="@OnAvatarDelete" DisplayText="@LabelText" DefaultFileList="@dlist" IsDisabled="@IsDisabled" ></AvatarUpload>
-}
-else
-{
-
-}
+<div>
+    @if (dlist != null)
+    {
+        <AvatarUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="image/*" IsSingle="!IsMultiple" ShowProgress="true" OnChange="@OnAvatarUpload"
+                      OnDelete="@OnAvatarDelete" DisplayText="@LabelText" DefaultFileList="@dlist" IsDisabled="@IsDisabled"></AvatarUpload>
+    }
+</div>
 @code{
 
     [Parameter]

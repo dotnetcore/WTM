@@ -454,6 +454,13 @@ namespace WalkingTec.Mvvm.Core
             set
             {
                 _jwtOption = value;
+                if(_jwtOption.SecurityKey.Length < 18)
+                {
+                    var count = 18 - _jwtOption.SecurityKey.Length;
+                    for (int i = 0; i < count; i++){
+                        _jwtOption.SecurityKey += "x";
+                    }
+                }
             }
         }
 
@@ -465,7 +472,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 csName = "default";
             }
-            var cs = Connections.Where(x => x.Key.ToLower() == csName.ToLower()).SingleOrDefault();
+            var cs = Connections.Where(x => x.Key.ToLower() == csName.ToLower()).FirstOrDefault();
             return cs?.CreateDC();
         }
 

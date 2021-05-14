@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
     [AuthorizeJwtWithCookie]
-    [ActionDescription("city")]
+    [ActionDescription("city api")]
     [ApiController]
     [Route("api/City")]
 	public partial class CityApiController : BaseApiController

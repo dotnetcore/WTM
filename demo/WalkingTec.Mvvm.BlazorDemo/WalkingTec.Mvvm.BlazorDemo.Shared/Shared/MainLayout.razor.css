@@ -7,10 +7,6 @@
     text-align: left;
 }
 
-.header-right .nav-item .nav-link {
-    color: white;
-}
-
     .header-right .nav-item .nav-link:hover {
         color: black;
     }

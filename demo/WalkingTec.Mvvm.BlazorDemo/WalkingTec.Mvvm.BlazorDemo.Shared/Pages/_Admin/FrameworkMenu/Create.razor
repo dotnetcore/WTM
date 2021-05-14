@@ -1,5 +1,6 @@
 @page "/_Admin/FrameworkMenu/Create"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
+@using WalkingTec.Mvvm.Core.Extensions
 @inherits BasePage
 
 
@@ -9,13 +10,13 @@
     </Row>
     @if (Model.Entity.IsInside != false)
     {
-<Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
-    <Select @bind-Value="@Model.SelectedModule" Items="@AllModels" OnSelectedItemChanged="OnModelChange" />
-    <div></div>
-    <Row ColSpan="2">
-        <Transfer @bind-Value="@Model.SelectedActionIDs" Items="@AllActions" />
-    </Row>
-</Row>
+        <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+            <Select @bind-Value="@Model.SelectedModule" Items="@AllModels" OnSelectedItemChanged="OnModelChange" />
+            <div></div>
+            <Row ColSpan="2">
+                <Transfer @bind-Value="@Model.SelectedActionIDs" Items="@AllActions" />
+            </Row>
+        </Row>
     }
     else
     {
@@ -29,11 +30,11 @@
         <Select @bind-Value="@SelectedIconType" Items="@IconTypes" OnSelectedItemChanged="OnIconChange" DisplayText="@WtmBlazor.Localizer["_Admin.IconFont"]" />
         <Select TValue="string" @bind-Value="@Model.Entity.Icon" Items="@Icons">
             <ItemTemplate>
-                    <div class="dropdown-item-demo">
-                        <i class="@context.Value"></i>
-                        <span>@context.Text</span>
-                    </div>
-                </ItemTemplate>
+                <div class="dropdown-item-demo">
+                    <i class="@context.Value"></i>
+                    <span>@context.Text</span>
+                </div>
+            </ItemTemplate>
         </Select>
         <BootstrapInputNumber @bind-Value="@Model.Entity.DisplayOrder" />
     </Row>
@@ -56,18 +57,20 @@
     private List<SelectedItem> AllActions = new List<SelectedItem>();
     private List<SelectedItem> IconTypes = new List<SelectedItem>();
     private List<SelectedItem> Icons = new List<SelectedItem>();
+    private List<FrameworkMenu> ClientPages;
     private string SelectedIconType = "";
     private ValidateForm vform { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        Model.Entity = new FrameworkMenu { ShowOnMenu = true };
         AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Inside"], Value = "true" });
         AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Outside"], Value = "false" });
         AllFolders = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetFolders", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         IconTypes = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetIcons", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
-        var items = WtmBlazor.GetAllPages();
+        ClientPages = WtmBlazor.GetAllPages();
         AllModels.Add(new SelectedItem { Text = WtmBlazor.Localizer["Sys.PleaseSelect"], Value = "" });
-        foreach (var item in items)
+        foreach (var item in ClientPages)
         {
             foreach (var sub in item.Children)
             {
@@ -78,7 +81,9 @@
 
     private async Task OnModelChange(SelectedItem item)
     {
+        var url = ClientPages.FlatTree().Where(x => x.ClassName == item.Value || x.Url == item.Value).Select(x => x.Url).FirstOrDefault();
         AllActions = await WtmBlazor.Api.CallItemsApi($"/api/_FrameworkMenu/GetActionsByModel?ModelName={item.Value}");
+        Model.Entity.Url = url;
         StateHasChanged();
     }
 

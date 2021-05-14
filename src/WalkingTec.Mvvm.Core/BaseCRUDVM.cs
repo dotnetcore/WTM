@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Core
     /// 单表增删改查VM的接口
     /// </summary>
     /// <typeparam name="T">继承TopBasePoco的类</typeparam>
-    public interface IBaseCRUDVM<out T> where T : TopBasePoco,new()
+    public interface IBaseCRUDVM<out T> where T : TopBasePoco, new()
     {
         T Entity { get; }
         /// <summary>
@@ -72,14 +72,14 @@ namespace WalkingTec.Mvvm.Core
         bool ByPassBaseValidation { get; set; }
 
         void Validate();
-        IModelStateService MSD { get;}
+        IModelStateService MSD { get; }
     }
 
     /// <summary>
     /// 单表增删改查基类，所有单表操作的VM应该继承这个基类
     /// </summary>
     /// <typeparam name="TModel">继承TopBasePoco的类</typeparam>
-    public class BaseCRUDVM<TModel> : BaseVM, IBaseCRUDVM<TModel> where TModel : TopBasePoco,new()
+    public class BaseCRUDVM<TModel> : BaseVM, IBaseCRUDVM<TModel> where TModel : TopBasePoco, new()
     {
         public TModel Entity { get; set; }
         [JsonIgnore]
@@ -208,7 +208,7 @@ namespace WalkingTec.Mvvm.Core
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fp.DeleteFile(item.ToString(),DC);
+                    fp.DeleteFile(item.ToString(), DC);
                 }
             }
             DC.SaveChanges();
@@ -224,7 +224,7 @@ namespace WalkingTec.Mvvm.Core
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fp.DeleteFile(item.ToString(),DC.ReCreate());
+                    fp.DeleteFile(item.ToString(), DC.ReCreate());
                 }
             }
             await DC.SaveChangesAsync();
@@ -357,7 +357,7 @@ namespace WalkingTec.Mvvm.Core
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fp.DeleteFile(item.ToString(),DC.ReCreate());
+                    fp.DeleteFile(item.ToString(), DC.ReCreate());
                 }
             }
 
@@ -375,7 +375,7 @@ namespace WalkingTec.Mvvm.Core
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fp.DeleteFile(item.ToString(),DC);
+                    fp.DeleteFile(item.ToString(), DC);
                 }
             }
         }
@@ -395,7 +395,7 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
             var pros = typeof(TModel).GetAllProperties();
-
+            pros = pros.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(NotMappedAttribute)) == false).ToList();
             #region 更新子表
             foreach (var pro in pros)
             {
@@ -459,9 +459,9 @@ namespace WalkingTec.Mvvm.Core
                             //打开新的数据库联接,获取数据库中的主表和子表数据
                             //using (var ndc = DC.CreateNew())
                             //{
-                                _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
+                            _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
                             //}
-                            if(_entity == null)
+                            if (_entity == null)
                             {
                                 MSD.AddModelError(" ", Localizer["Sys.EditFailed"]);
                                 return;
@@ -559,7 +559,7 @@ namespace WalkingTec.Mvvm.Core
                                 DC.AddEntity(item);
                             }
                         }
-                        else if ( (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
+                        else if ((pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
                         {
                             var itemPros = ftype.GetAllProperties();
                             var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
@@ -615,7 +615,7 @@ namespace WalkingTec.Mvvm.Core
                         string name = f.Replace("entity.", "");
                         try
                         {
-                            DC.UpdateProperty(Entity, pros.Where(x=>x.Name.ToLower() == name).Select(x=>x.Name).FirstOrDefault());
+                            DC.UpdateProperty(Entity, pros.Where(x => x.Name.ToLower() == name).Select(x => x.Name).FirstOrDefault());
                         }
                         catch (Exception)
                         {
@@ -646,7 +646,7 @@ namespace WalkingTec.Mvvm.Core
         public virtual void DoDelete()
         {
             //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
-            if (typeof(IPersistPoco).IsAssignableFrom( typeof(TModel)))
+            if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
             {
                 FC.Add("Entity.IsValid", 0);
                 (Entity as IPersistPoco).IsValid = false;
@@ -672,7 +672,7 @@ namespace WalkingTec.Mvvm.Core
         public virtual async Task DoDeleteAsync()
         {
             //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
-            if (typeof(IPersistPoco).IsAssignableFrom( typeof(TModel)))
+            if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
             {
                 FC.Add("Entity.IsValid", 0);
                 (Entity as IPersistPoco).IsValid = false;
@@ -730,7 +730,7 @@ namespace WalkingTec.Mvvm.Core
                 foreach (var f in fas)
                 {
                     var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
-                    if(subs == null)
+                    if (subs == null)
                     {
                         var fullEntity = DC.Set<TModel>().AsQueryable().Include(f.Name).AsNoTracking().CheckID(Entity.ID).FirstOrDefault();
                         subs = f.GetValue(fullEntity) as IEnumerable<ISubFile>;
@@ -759,7 +759,7 @@ namespace WalkingTec.Mvvm.Core
                 var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                 foreach (var item in fileids)
                 {
-                    fp.DeleteFile(item.ToString(),DC.ReCreate());
+                    fp.DeleteFile(item.ToString(), DC.ReCreate());
                 }
             }
             catch (Exception)
@@ -812,7 +812,7 @@ namespace WalkingTec.Mvvm.Core
                 var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                 foreach (var item in fileids)
                 {
-                    fp.DeleteFile(item.ToString(),DC.ReCreate());
+                    fp.DeleteFile(item.ToString(), DC.ReCreate());
                 }
             }
             catch (Exception)
@@ -955,11 +955,11 @@ namespace WalkingTec.Mvvm.Core
                         props.AddRange(field.GetProperties());
                     }
                     //如果要求判断id不重复，则去掉id不相等的判断，加入id相等的判断
-                    if(props.Any(x=>x.Name.ToLower() == "id"))
+                    if (props.Any(x => x.Name.ToLower() == "id"))
                     {
                         conditions.RemoveAt(0);
                         BinaryExpression idEqual = Expression.Equal(idLeft, idRight);
-                        conditions.Insert(0,idEqual);
+                        conditions.Insert(0, idEqual);
                     }
                     int count = 0;
                     if (conditions.Count > 1)
@@ -1005,7 +1005,7 @@ namespace WalkingTec.Mvvm.Core
                         //如果多个字段重复，则拼接形成 xx，yy，zz组合字段重复 这种提示
                         else if (props.Count > 1)
                         {
-                             MSD.AddModelError(GetValidationFieldName(props.First())[0], CoreProgram._localizer?["Sys.DuplicateGroupError", AllName]);
+                            MSD.AddModelError(GetValidationFieldName(props.First())[0], CoreProgram._localizer?["Sys.DuplicateGroupError", AllName]);
                         }
                     }
                 }

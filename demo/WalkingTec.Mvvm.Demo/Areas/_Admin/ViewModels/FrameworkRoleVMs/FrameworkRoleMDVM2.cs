@@ -1,6 +1,7 @@
 // WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -21,8 +22,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
         protected override void InitVM()
         {
             var allowedids = DC.Set<FunctionPrivilege>()
-                                    .Where(x => x.RoleCode == Entity.RoleCode && x.Allowed == true).Select(x => x.MenuItemId)
-                                    .ToList();
+                                        .Where(x => x.RoleCode == Entity.RoleCode && x.Allowed == true).Select(x => x.MenuItemId)
+                                        .ToList();
             var data = DC.Set<FrameworkMenu>().ToList();
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || x.MethodName == null).ToList();
             int order = 0;
@@ -33,6 +34,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 AllActions = x.FolderOnly == true ? null : x.Children.ToListItems(y => y.ActionName, y => y.ID, null),
                 ParentID = x.ParentId,
                 Level = x.GetLevel(),
+                IsFolder = x.FolderOnly,
                 ExtraOrder = order++
             }).OrderBy(x => x.ExtraOrder).ToList();
 
@@ -40,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             {
                 if (item.Name?.StartsWith("MenuKey.") == true)
                 {
-                        item.Name = Localizer[item.Name];
+                    item.Name = Localizer[item.Name];
                 }
                 if (item.AllActions == null)
                 {
@@ -48,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 }
                 foreach (var act in item.AllActions)
                 {
-                        act.Text = Localizer[act.Text];
+                    act.Text = Localizer[act.Text];
                 }
                 item.AllActions.Insert(0, new ComboSelectListItem { Text = Localizer["Sys.MainPage"], Value = item.ID.ToString() });
                 var ids = item.AllActions.Select(x => Guid.Parse(x.Value.ToString()));
@@ -101,12 +103,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
     public class Page_View : TopBasePoco
     {
+        [Display(Name = "_Admin.PageName")]
         public string Name { get; set; }
         public List<Guid> Actions { get; set; }
+        [Display(Name = "_Admin.PageFunction")]
         public List<ComboSelectListItem> AllActions { get; set; }
 
         public List<Page_View> Children { get; set; }
 
+        public bool IsFolder { get; set; }
         [JsonIgnore]
         public int ExtraOrder { get; set; }
 

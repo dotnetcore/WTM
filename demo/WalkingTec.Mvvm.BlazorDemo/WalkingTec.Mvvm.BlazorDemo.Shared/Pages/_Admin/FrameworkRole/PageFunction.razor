@@ -16,10 +16,9 @@
                 <TableColumn @bind-Field="@context.Name" Width="200" />
                 <TableColumn @bind-Field="@context.AllActions" Width="800" AllowTextWrap="true">
                     <Template Context="value">
-                        @*<Checkbox TValue="string" State="CheckboxState.Checked" DisplayText="选中" ShowLabel="true" Color="@Color.Dark"></Checkbox>*@
                         @{
                             var row = (Page_View)value.Row;
-                            @if (row.Level == 1)
+                            @if (row.IsFolder == false)
                             {
                                 @foreach (var item in value.Value)
                                 {

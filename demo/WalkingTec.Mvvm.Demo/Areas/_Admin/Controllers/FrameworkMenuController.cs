@@ -185,9 +185,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public JsonResult GetActionsByModelId(string Id)
         {
             var modules = Wtm.GlobaInfo.AllModule;
-            var m = modules.Where(x => x.FullName == Id).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
-            var AllActions = m.ToListItems(y => y.ActionName, y => y.Url);
-            AllActions.ForEach(x => x.Selected = true);
+            var m =Utils.ResetModule(modules);
+
+            List<ComboSelectListItem> AllActions = new List<ComboSelectListItem>();
+            var action = m.Where(x => x.FullName == Id)?.FirstOrDefault().Actions;
+            if (action != null)
+            {
+                var mList = action?.Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false)?.ToList();
+                AllActions = mList.ToListItems(y => y.ActionName, y => y.Url);
+                AllActions.ForEach(x => x.Selected = true);
+            }
+
             return JsonMore(AllActions);
         }
 

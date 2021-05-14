@@ -52,13 +52,21 @@ namespace WalkingTec.Mvvm.Demo.Models
         public FileAttachment Photo { get; set; }
 
 
+        [Display(Name = "文件")]
+        public Guid? FileId { get; set; }
+
+        [Display(Name = "文件")]
+        [JsonIgnore]
+        public FileAttachment File { get; set; }
+
+
         [Display(Name = "_Admin.Photo")]
         public List<SchoolPhoto> Photos { get; set; }
     }
 
     public class SchoolPhoto : TopBasePoco, ISubFile
     {
-        public int? SchoolId { get; set; }
+        public int SchoolId { get; set; }
         public School School { get; set; }
 
         public Guid FileId { get; set; }

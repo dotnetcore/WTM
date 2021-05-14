@@ -67,30 +67,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         }
 
     }
-    public class FrameworkMenu_ListView : TopBasePoco
+    public class FrameworkMenu_ListView : FrameworkMenu
     {
-        [Display(Name = "_Admin.PageName")]
-        public string PageName { get; set; }
-
-        [Display(Name = "Codegen.ModuleName")]
-        public string ModuleName { get; set; }
-
-        [Display(Name = "_Admin.ActionName")]
-        public string ActionName { get; set; }
-
-        [Display(Name = "_Admin.ShowOnMenu")]
-        public bool? ShowOnMenu { get; set; }
-
-        [Display(Name = "_Admin.FolderOnly")]
-        public bool? FolderOnly { get; set; }
-
-        [Display(Name = "_Admin.IsPublic")]
-        public bool? IsPublic { get; set; }
-
-        [Display(Name = "_Admin.DisplayOrder")]
-        public int? DisplayOrder { get; set; }
-        [Display(Name = "_Admin.Icon")]
-        public string Icon { get; set; }
         public bool Allowed { get; set; }
 
         public bool Denied { get; set; }
@@ -99,10 +77,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public int ExtraOrder { get; set; }
 
-        public Guid? ParentId { get; set; }
-
-        public List<FrameworkMenu_ListView> Children { get; set; }
-        public  bool HasChildren
+        public new List<FrameworkMenu_ListView> Children { get; set; }
+        public new bool HasChildren
         {
             get
             {

@@ -76,8 +76,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public string IconClass { get; set; }
 
         public int ExtraOrder { get; set; }
-        public new List<FrameworkMenu_ListView> Children { get; set; }
 
+        public new List<FrameworkMenu_ListView> Children { get; set; }
+        public new bool HasChildren
+        {
+            get
+            {
+                return Children?.Any() == true;
+            }
+        }
     }
 
 }

@@ -198,7 +198,7 @@
   <data name="Codegen.SubField" xml:space="preserve">
     <value>Display field of linked poco</value>
   </data>
-  <data name="CodeGen.Success" xml:space="preserve">
+  <data name="Codegen.Success" xml:space="preserve">
     <value>Code has been generated, please close the debug and rebuild the solution.</value>
   </data>
   <data name="Codegen.TestNs" xml:space="preserve">
@@ -862,7 +862,7 @@
     <value>Name</value>
   </data>
   <data name="_Admin.NoIndexInModule" xml:space="preserve">
-    <value>There is no Index View in this Module</value>
+    <value>There is no View in this Module</value>
   </data>
   <data name="_Admin.NoPris" xml:space="preserve">
     <value>No privilege</value>

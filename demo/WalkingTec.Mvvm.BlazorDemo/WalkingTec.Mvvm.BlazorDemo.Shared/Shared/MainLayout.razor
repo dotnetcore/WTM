@@ -10,7 +10,7 @@
 
     <Layout SideWidth="0" IsPage="true" ShowGotoTop="true" ShowCollapseBar="true"
             IsFullSide="@IsFullSide" IsFixedHeader="@IsFixedHeader" IsFixedFooter="@IsFixedFooter" ShowFooter="@ShowFooter" 
-            Menus="@Menus" UseTabSet="@UseTabSet" AdditionalAssemblies="new[] { GetType().Assembly }" class="@Theme">
+            Menus="@Menus" UseTabSet="@UseTabSet" AdditionalAssemblies="new[] { GetType().Assembly }" class="color1">
         <Header>
             <span class="ml-3 flex-sm-fill d-none d-sm-block"></span>
             <div class="header-right" style="width: 90px;">
@@ -39,7 +39,7 @@
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#">
                                     @if (!string.IsNullOrEmpty(UserInfo.PhotoId.ToString()))
                                     {
-                                        <Avatar style="margin-top:3px;display:inline-table;" GetUrlAsync="()=>wtmblazor.GetBase64Image(UserInfo.PhotoId.ToString(),150,150)" IsCircle="true" Size="Size.ExtraSmall" />
+                                        <Avatar style="margin-top:3px;" GetUrlAsync="()=>wtmblazor.GetBase64Image(UserInfo.PhotoId.ToString(),150,150)" IsCircle="true" Size="Size.ExtraSmall" />
                                     }
                                     <span class="mx-1" style="">@UserInfo.Name</span>
                                 </a>
@@ -64,8 +64,9 @@
         </Header>
         <Side>
             <div class="layout-banner">
+                <img class="layout-logo" src="/images/logo.png" style="width:30px;height:24px" />
                 <div class="layout-title">
-                    <span><img src="_content/WalkingTec.Mvvm.BlazorDemo.Shared/images/logo.png" width="30" height="24" /> WTM</span>
+                    <span>WTM</span>
                 </div>
             </div>
         </Side>
@@ -112,30 +113,6 @@
 
             </GroupBox>
 
-
-            <GroupBox Title="@wtmblazor.Localizer["Sys.Theme"]">
-                <div class="row">
-                    <div class="col-2">
-                        <span class="color color1" @onclick="@(e => Theme = "color1")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color2" @onclick="@(e => Theme = "color2")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color3" @onclick="@(e => Theme = "color3")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color4" @onclick="@(e => Theme = "color4")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color5" @onclick="@(e => Theme = "color5")"></span>
-                    </div>
-                    <div class="col-2">
-                        <span class="color color6" @onclick="@(e => Theme = "color6")"></span>
-                    </div>
-                </div>
-            </GroupBox>
-
             <GroupBox Title="@wtmblazor.Localizer["Sys.MoreSettings"]">
                 <div class="row">
                     <div class="col-6 d-flex align-items-center">
@@ -159,8 +136,6 @@
 {
 
     private bool UseTabSet { get; set; } = true;
-
-    private string Theme { get; set; } = "";
 
     private bool IsOpen { get; set; }
 
@@ -281,76 +256,6 @@
         await base.OnInitializedAsync();
     }
 
-    private List<BootstrapBlazor.Components.MenuItem> GetIconSideMenuItems()
-    {
-        List<BootstrapBlazor.Components.MenuItem> menus = null;
-        menus = new List<BootstrapBlazor.Components.MenuItem> { };
-        menus.Add(new BootstrapBlazor.Components.MenuItem() { Text = wtmblazor.Localizer["Sys.Home"], Icon = "fa fa-fw fa-home", Url = "/", Match = NavLinkMatch.All });
-        if (wtmblazor.ConfigInfo.IsQuickDebug == true)
-        {
-            var pages = wtmblazor.GetAllPages();
-            foreach (var item in pages)
-            {
-                BootstrapBlazor.Components.MenuItem m = new BootstrapBlazor.Components.MenuItem
-                {
-                    Text = item.PageName,
-                    Icon = item.Icon,
-                    Url = item.Url
-                };
-                if (item.Children != null)
-                {
-                    var items = new List<BootstrapBlazor.Components.MenuItem>();
-
-                    foreach (var child in item.Children)
-                    {
-                        items.Add(new BootstrapBlazor.Components.MenuItem
-                        {
-                            Text = child.PageName,
-                            Icon = child.Icon,
-                            Url = child.Url
-                        });
-                    }
-                    m.Items = items;
-                }
-                menus.Add(m);
-            }
-        }
-        else
-        {
-            var usermenu = UserInfo.Attributes["Menus"] as WalkingTec.Mvvm.Core.Support.Json.SimpleMenuApi[];
-
-            var formatedmenu = new List<FrameworkMenu>();
-            foreach (var item in usermenu)
-            {
-                if (item.ParentId == null)
-                {
-                    formatedmenu.Add(new FrameworkMenu
-                    {
-                        ID = new Guid(item.Id),
-                        PageName = item.Text,
-                        Icon = item.Icon,
-                        Url = item.Url,
-                        Children = new List<FrameworkMenu>()
-                    });
-                }
-                else
-                {
-                    var parent = formatedmenu.Where(x => x.ID.ToString() == item.ParentId).FirstOrDefault();
-                    parent.Children.Add(new FrameworkMenu
-                    {
-                        ID = new Guid(item.Id),
-                        PageName = item.Text,
-                        Icon = item.Icon,
-                        Url = item.Url,
-                        Children = new List<FrameworkMenu>()
-                    });
-                }
-            }
-            GetMenuFromFrameworkMenu(formatedmenu).ForEach(x => menus.Add(x));
-        }
-        return menus;
-
-    }
 
     private List<BootstrapBlazor.Components.MenuItem> GetMenuFromFrameworkMenu(List<FrameworkMenu> input)
     {
