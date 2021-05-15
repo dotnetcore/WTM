@@ -1,6 +1,10 @@
 # 更新日志
 ## v5.x.x 
 
+##5.2.1 (2021-5-15) 
+* **修改：**  修复了代码生成器生成中间表相关ViewModel和页面错误的bug
+* **修改：**  修复了BaseCrudVM中默认修改方法没有过滤掉[NotMapped]字段的错误
+
 ##5.2.0 (2021-5-14) 
 * **新增：**  新增对Blazor的支持，现在可以在官网生成Blazor模式的项目，代码生成器现在也可以生成Blazor的代码，具体请见文档http://wtmdoc.walkingtec.cn/#/Blazor/Intro
 * **新增：**  [ActionDescription]中加入了IsPage属性，设置了这个属性的方法可以在菜单管理中添加，解决了一个Controller下只能配置一个主页面的问题
