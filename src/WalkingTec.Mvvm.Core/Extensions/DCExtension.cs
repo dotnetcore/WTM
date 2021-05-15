@@ -666,7 +666,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(null)), pe));
         }
 
-
+        /// <summary>
+        /// val不为空时，附加查询条件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="S"></typeparam>
+        /// <param name="baseQuery"></param>
+        /// <param name="val"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
         public static IQueryable<T> CheckWhere<T, S>(this IQueryable<T> baseQuery, S val, Expression<Func<T, bool>> where)
         {
             if (val == null)
@@ -688,6 +696,23 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
                 return baseQuery.Where(where);
             }
+        }
+
+        /// <summary>
+        /// 条件为true时，附加查询条件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="baseQuery"></param>
+        /// <param name="val">bool?</param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public static IQueryable<T> WhereIf<T>(this IQueryable<T> baseQuery, bool? val, Expression<Func<T, bool>> where)
+        {
+            if (val == null || val == false)
+            {
+                return baseQuery;
+            }
+            return baseQuery.Where(where);
         }
 
         public static IQueryable<T> CheckEqual<T>(this IQueryable<T> baseQuery, string val, Expression<Func<T, string>> field)
