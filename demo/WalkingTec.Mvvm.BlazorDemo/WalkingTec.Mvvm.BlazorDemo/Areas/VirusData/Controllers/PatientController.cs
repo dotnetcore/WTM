@@ -13,7 +13,7 @@ using WalkingTec.Mvvm.Demo.Models;
 namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 {
     [Area("VirusData")]
-    [AuthorizeJwtWithCookie]
+    [AuthorizeJwt]
     [ActionDescription("病人管理")]
     [ApiController]
     [Route("api/Patient")]

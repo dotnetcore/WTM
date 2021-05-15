@@ -1328,9 +1328,12 @@ namespace WalkingTec.Mvvm.Mvc
             {mname} v = new {mname}();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {{
+                try{{
 {cpros}
                 context.Set<{mname}>().Add(v);
                 context.SaveChanges();
+                }}
+                catch{{}}
             }}
             return v.ID;
         }}

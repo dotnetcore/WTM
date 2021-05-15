@@ -39,11 +39,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             PatientVM vm = _controller.Wtm.CreateVM<PatientVM>();
             Patient v = new Patient();
             
-            v.ID = 92;
-            v.PatientName = "QtzTKpN";
-            v.IdNumber = "HKPW4QpoK";
+            v.ID = 7;
+            v.PatientName = "OIagR5Q";
+            v.IdNumber = "jrVYOUdsn";
             v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Male;
-            v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+            v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.QueZhen;
             v.LocationId = AddCity();
             v.HospitalId = AddHospital();
             v.PhotoId = AddFileAttachment();
@@ -55,11 +55,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<Patient>().Find(v.ID);
                 
-                Assert.AreEqual(data.ID, 92);
-                Assert.AreEqual(data.PatientName, "QtzTKpN");
-                Assert.AreEqual(data.IdNumber, "HKPW4QpoK");
+                Assert.AreEqual(data.ID, 7);
+                Assert.AreEqual(data.PatientName, "OIagR5Q");
+                Assert.AreEqual(data.IdNumber, "jrVYOUdsn");
                 Assert.AreEqual(data.Gender, WalkingTec.Mvvm.Core.GenderEnum.Male);
-                Assert.AreEqual(data.Status, WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang);
+                Assert.AreEqual(data.Status, WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.QueZhen);
                 Assert.AreEqual(data.CreateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
             }
@@ -72,11 +72,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.ID = 92;
-                v.PatientName = "QtzTKpN";
-                v.IdNumber = "HKPW4QpoK";
+                v.ID = 7;
+                v.PatientName = "OIagR5Q";
+                v.IdNumber = "jrVYOUdsn";
                 v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Male;
-                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.QueZhen;
                 v.LocationId = AddCity();
                 v.HospitalId = AddHospital();
                 v.PhotoId = AddFileAttachment();
@@ -89,10 +89,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             v = new Patient();
             v.ID = oldID;
        		
-            v.PatientName = "ljxnp";
-            v.IdNumber = "7mV";
+            v.PatientName = "Od5FFFT";
+            v.IdNumber = "F6F7epAx";
             v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
-            v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.ZhiYu;
+            v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.YiSi;
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
 			
@@ -111,10 +111,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<Patient>().Find(v.ID);
  				
-                Assert.AreEqual(data.PatientName, "ljxnp");
-                Assert.AreEqual(data.IdNumber, "7mV");
+                Assert.AreEqual(data.PatientName, "Od5FFFT");
+                Assert.AreEqual(data.IdNumber, "F6F7epAx");
                 Assert.AreEqual(data.Gender, WalkingTec.Mvvm.Core.GenderEnum.Female);
-                Assert.AreEqual(data.Status, WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.ZhiYu);
+                Assert.AreEqual(data.Status, WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.YiSi);
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
             }
@@ -128,11 +128,11 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.ID = 92;
-                v.PatientName = "QtzTKpN";
-                v.IdNumber = "HKPW4QpoK";
+                v.ID = 7;
+                v.PatientName = "OIagR5Q";
+                v.IdNumber = "jrVYOUdsn";
                 v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Male;
-                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.QueZhen;
                 v.LocationId = AddCity();
                 v.HospitalId = AddHospital();
                 v.PhotoId = AddFileAttachment();
@@ -151,19 +151,19 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.ID = 92;
-                v1.PatientName = "QtzTKpN";
-                v1.IdNumber = "HKPW4QpoK";
+                v1.ID = 7;
+                v1.PatientName = "OIagR5Q";
+                v1.IdNumber = "jrVYOUdsn";
                 v1.Gender = WalkingTec.Mvvm.Core.GenderEnum.Male;
-                v1.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+                v1.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.QueZhen;
                 v1.LocationId = AddCity();
                 v1.HospitalId = AddHospital();
                 v1.PhotoId = AddFileAttachment();
-                v2.ID = 26;
-                v2.PatientName = "ljxnp";
-                v2.IdNumber = "7mV";
+                v2.ID = 80;
+                v2.PatientName = "Od5FFFT";
+                v2.IdNumber = "F6F7epAx";
                 v2.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
-                v2.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.ZhiYu;
+                v2.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.YiSi;
                 v2.LocationId = v1.LocationId; 
                 v2.HospitalId = v1.HospitalId; 
                 v2.PhotoId = v1.PhotoId; 
@@ -193,12 +193,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             City v = new City();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
+                try{
 
-                v.ID = 72;
-                v.Name = "9vVpVuk";
-                v.Test = "6XnA";
+                v.ID = 73;
+                v.Name = "av7";
+                v.Test = "dLh6GEPa";
                 context.Set<City>().Add(v);
                 context.SaveChanges();
+                }
+                catch{}
             }
             return v.ID;
         }
@@ -208,12 +211,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             Hospital v = new Hospital();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
+                try{
 
-                v.Name = "Utb";
+                v.Name = "5qb";
                 v.Level = WalkingTec.Mvvm.Demo.Models.Virus.HospitalLevel.Class1;
                 v.LocationId = AddCity();
                 context.Set<Hospital>().Add(v);
                 context.SaveChanges();
+                }
+                catch{}
             }
             return v.ID;
         }
@@ -223,16 +229,19 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             FileAttachment v = new FileAttachment();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
+                try{
 
-                v.FileName = "3aX";
-                v.FileExt = "VxRAa";
-                v.Path = "6FjF";
-                v.Length = 29;
-                v.SaveMode = "sONfcRL8D";
-                v.ExtraInfo = "xa5viZd";
-                v.HandlerInfo = "Y4hFty";
+                v.FileName = "JWooDRv6";
+                v.FileExt = "4yCx0nS";
+                v.Path = "XPJai";
+                v.Length = 1;
+                v.SaveMode = "HO9";
+                v.ExtraInfo = "sAS";
+                v.HandlerInfo = "68obg";
                 context.Set<FileAttachment>().Add(v);
                 context.SaveChanges();
+                }
+                catch{}
             }
             return v.ID;
         }
