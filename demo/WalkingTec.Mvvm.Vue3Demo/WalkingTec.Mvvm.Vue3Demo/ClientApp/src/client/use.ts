@@ -9,7 +9,7 @@ export default {
         app.use(locales)
         app.use(globalProperties)
         AjaxBasics.onError = function (error) {
-
+            console.log("🚀 ~ file: use.ts ~ line 12 ~ install ~ error", error)
         }
     }
 }

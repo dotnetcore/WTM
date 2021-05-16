@@ -17,6 +17,7 @@ declare module '@vue/runtime-core' {
         lodash: typeof lodash
         EnumActionType: typeof EnumActionType
         EnumValueType: typeof WTM_ValueType
+        FieldRequest: typeof FieldRequest
     }
 }
 export const $Ajax = new AjaxBasics({ target: $WtmConfig.target })
@@ -38,7 +39,8 @@ export const globalProperties = {
     moment,
     lodash,
     EnumActionType,
-    EnumValueType: WTM_ValueType
+    EnumValueType: WTM_ValueType,
+    FieldRequest
 }
 export default {
     install(app: App) {

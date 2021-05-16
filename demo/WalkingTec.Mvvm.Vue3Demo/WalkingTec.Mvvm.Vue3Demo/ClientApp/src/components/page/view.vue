@@ -80,9 +80,9 @@ export default class extends Vue {
 <style  lang="less">
 .w-view {
   &.ant-modal {
-    min-width: 800px;
+    min-width: 650px;
     .ant-modal-body {
-      max-height: 80vh;
+      max-height: 75vh;
       // position: relative;
       overflow: auto;
     }

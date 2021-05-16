@@ -29,8 +29,13 @@ export class UserController extends UserEntity {
      */
     async onSignIn(body: { account: string, password: string }) {
         this.onToggleLoading(true)
-        const res = await this.$ajax.post<any>('/api/_Account/Login', { rememberLogin: false, ...body }, { 'Content-Type': null })
-        this.onSetUserInfo(res)
+        try {
+            const res = await this.$ajax.post<any>('/api/_Account/Login', { rememberLogin: false, ...body }, { 'Content-Type': null })
+            this.onSetUserInfo(res)
+        } catch (error) {
+            console.log("🚀 ~ file: index.ts ~ line 47 ~ UserController ~ onSignIn ~ error", error)
+        }
+        this.onToggleLoading(false)
     }
     /**
      * 校验登录状态
