@@ -56,9 +56,10 @@ WTM provides 4 types of ViewModel, covering all of the common functionalities of
 
 | Mode | UI | Status  |
 |--------- |------------- |---------|
-|Server-side |LayUI |Stable|
-|Client-side |React |Stable|
-|Client-side |VUE |RTM|
+|Server-side   |LayUI |Stable|
+|Client-side   |React |Stable|
+|Client-side   |VUE |RTM|
+|Server/Client |Blazor |RTM|
 
 
 Under WTM framework's client-side mode, you can also use code generator to generate server-side and client-side code at the same time, greatly reducing the communication cost of front-end and back-end developers, essentially improving the development efficiency, so that "separation" is no longer complex and expensive.
