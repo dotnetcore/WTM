@@ -68,7 +68,7 @@ Framework document address: http://wtmdoc.walkingtec.cn
 
 Framework Q&A community: https://community.walkingtec.cn
 
-Frame QQ communication group: 694148336
+Frame QQ communication group: 694148336(full), 892848149 (group2)
 
 ## Click <a href="http://wtmdoc.walkingtec.cn/setup">here</a>  to generate a WTM project online and experience the beauty of WTM immediately~~~
 
