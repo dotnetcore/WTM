@@ -21,11 +21,11 @@ const options: ComponentOptions = {
          * 合并当前页面的 query 追加 detailsVisible 触发显示
          * @param {*} [query='0']
          */
-        __wtmToDetails(query: any = '', more?) {
+        __wtmToDetails(query: any = '') {
             if (!lodash.isObject(query)) {
                 query = { [$WtmConfig.detailsVisible]: query }
             }
-            this.__queryCache = lodash.assign({}, more, query)
+            this.__queryCache = lodash.cloneDeep(query)
             query = lodash.assign({}, this.$route.query, query)
             this.$router.replace({ query })
         },
