@@ -75,7 +75,8 @@ namespace WalkingTec.Mvvm.Admin.Test
             v = new FrameworkUser();
             v.ID = oldID;
             v.Name = "name1";
-            vm.Entity = v;
+            v.ITCode = "abc";
+            vm.Entity = v;            
             vm.FC = new Dictionary<string, object>();
             vm.FC.Add("Entity.Name", "");
             var rv = _controller.Edit(vm);
