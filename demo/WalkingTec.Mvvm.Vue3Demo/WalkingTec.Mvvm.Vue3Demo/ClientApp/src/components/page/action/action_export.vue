@@ -3,7 +3,7 @@
     <template #icon v-if="isPageAction">
       <CloudDownloadOutlined />
     </template>
-    <i18n-t keypath="action.export" />
+    <i18n-t :keypath="$locales.action_export" />
   </a-button>
 </template>
 <script lang="ts">

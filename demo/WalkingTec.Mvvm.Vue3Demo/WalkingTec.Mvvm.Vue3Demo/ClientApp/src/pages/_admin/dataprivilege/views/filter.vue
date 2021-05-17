@@ -1,6 +1,6 @@
 <template>
   <WtmFilter :PageController="PageController" @finish="onFinish" @reset="onReset">
-    <WtmField entityKey="TableName_Filter" />
+    <WtmField entityKey="TableName_Filter" debug />
     <WtmField entityKey="DpType_Filter" />
   </WtmFilter>
 </template>
@@ -12,8 +12,8 @@ import { EnumLocaleLabel } from "../locales";
 export default class extends Vue {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) readonly formState = {
-    ITCode: "",
-    Name: "",
+    TableName: undefined,
+    DpType: "UserGroup",
   };
   readonly EnumLocaleLabel = EnumLocaleLabel;
   get Pagination() {

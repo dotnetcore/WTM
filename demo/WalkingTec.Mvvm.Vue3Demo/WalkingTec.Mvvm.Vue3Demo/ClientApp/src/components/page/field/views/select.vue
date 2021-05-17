@@ -31,7 +31,7 @@ export default class extends mixins(FieldBasics) {
     //   const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, String(item.value)));
     //   return this.lodash.map(filters, 'label').join(' / ')
     // }
-    const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, String(item.value)));
+    const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, item.value));
     return this.lodash.map(filters, 'label').join(' / ')
   }
   async mounted() {

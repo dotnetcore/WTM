@@ -2,29 +2,29 @@
   <a-space :size="size">
     <!-- 添加 -->
     <slot name="insert" v-if="onShow(EnumActionType.Insert)">
-      <ActionInsert :debug="debug" :PageController="PageController" :params="params" />
+      <ActionInsert v-bind="$props" />
     </slot>
     <!-- 查看 -->
     <slot name="update" v-if="onShow(EnumActionType.Info)">
-      <ActionInfo :debug="debug" :PageController="PageController" :params="params" />
+      <ActionInfo v-bind="$props" />
     </slot>
     <slot v-bind="slotProps" />
 
     <!-- 修改 -->
     <slot name="update" v-if="onShow(EnumActionType.Update)">
-      <ActionUpdate :debug="debug" :PageController="PageController" :params="params" />
+      <ActionUpdate v-bind="$props" />
     </slot>
     <!-- 删除 -->
     <slot name="delete" v-if="onShow(EnumActionType.Delete)">
-      <ActionDelete :debug="debug" :PageController="PageController" :params="params" />
+      <ActionDelete v-bind="$props" />
     </slot>
     <!-- 导入  -->
     <slot name="import" v-if="onShow(EnumActionType.Import)">
-      <ActionExport :debug="debug" :PageController="PageController" :params="params" />
+      <ActionExport v-bind="$props" />
     </slot>
     <!-- 导出 -->
     <slot name="export" v-if="onShow(EnumActionType.Export)">
-      <ActionImport :debug="debug" :PageController="PageController" :params="params" />
+      <ActionImport v-bind="$props" />
     </slot>
     <!-- 追加内容 -->
   </a-space>
@@ -87,7 +87,9 @@ export default class extends mixins(ActionBasics) {
     return this.lodash.includes(this.include, type) && !this.lodash.includes(this.exclude, type)
   }
   created() { }
-  mounted() { }
+  mounted() { 
+    // console.log("LENG ~ extends ~ mounted ~ this.$props", this.$props)
+  }
 }
 </script>
 <style lang="less">

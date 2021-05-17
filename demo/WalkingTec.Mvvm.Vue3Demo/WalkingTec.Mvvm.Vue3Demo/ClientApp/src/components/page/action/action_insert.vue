@@ -3,7 +3,7 @@
     <template #icon v-if="isPageAction">
       <FormOutlined />
     </template>
-    <i18n-t keypath="action.insert" />
+    <i18n-t :keypath="$locales.action_insert" />
   </a-button>
 </template>
 <script lang="ts">

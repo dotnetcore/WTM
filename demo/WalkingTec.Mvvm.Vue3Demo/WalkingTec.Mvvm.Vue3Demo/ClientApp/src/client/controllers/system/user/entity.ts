@@ -4,6 +4,7 @@ import { create, persist } from "mobx-persist"
 interface UserInfo {
     ITCode: string
     Name: string
+    PhotoId: string
     Roles: Array<{
         ID: string
         RoleCode: string

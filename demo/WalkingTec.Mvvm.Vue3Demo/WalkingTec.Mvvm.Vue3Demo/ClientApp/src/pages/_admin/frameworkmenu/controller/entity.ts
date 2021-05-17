@@ -22,11 +22,7 @@ class Entity {
     readonly SelectedModule: WTM_EntitiesField = {
         name: 'SelectedModule',
         label: EnumLocaleLabel.SelectedModule,
-        request: async (formState) => {
-            return lodash.map(router.RouterFiles, item => {
-                return { label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'component.controller') }
-            })
-        },
+        request: router.onGetRequest,
         valueType: WTM_ValueType.select
     }
     readonly SelectedActionIDs: WTM_EntitiesField = {
@@ -71,7 +67,7 @@ class Entity {
                 { label: $i18n.t(EnumLocaleLabel.IsInside_1), value: false }
             ]
         },
-        rules: [{ required: true }],
+        rules: [{ required: true, type: 'boolean' }],
     }
     readonly Url: WTM_EntitiesField = {
         name: ['Entity', 'Url'],

@@ -5,6 +5,7 @@ import error from './layouts/pages/error/index.vue';
 import home from './layouts/pages/home/index.vue';
 import { BehaviorSubject } from 'rxjs';
 import { createRouter, createWebHistory, RouteLocationNormalized, Router, RouteRecordRaw } from 'vue-router';
+import { $i18n } from './client';
 // Vue.registerHooks([
 //   'beforeRouteEnter',
 //   'beforeRouteLeave',
@@ -107,6 +108,15 @@ class AppRouter {
     console.log(this)
     console.groupEnd()
     console.log('')
+  }
+  /**
+   * 获取带有 controller 属性的 页面
+   * @returns 
+   */
+  async onGetRequest(): Promise<Array<{ label: string, value: string } & RouteRecordRaw>> {
+    return lodash.map(lodash.filter(this.RouterFiles, 'component.controller'), item => {
+      return lodash.assign({ label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'component.controller') }, item)
+    })
   }
   toArray() {
     let PagesCache = []

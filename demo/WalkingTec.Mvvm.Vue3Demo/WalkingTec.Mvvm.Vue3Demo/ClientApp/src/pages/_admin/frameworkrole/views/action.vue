@@ -11,7 +11,7 @@
         <template #icon v-if="isPageAction">
           <EditOutlined />
         </template>
-        <i18n-t keypath="action.privilege" />
+        <i18n-t :keypath="$locales.action_privilege" />
       </a-button>
     </template>
   </WtmAction>

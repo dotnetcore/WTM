@@ -8,6 +8,7 @@
 import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
 import { UserController } from './user';
+import { FilesController } from './files';
 @BindAll()
 export class SystemController {
     /** SystemController 唯一标识  */
@@ -18,10 +19,16 @@ export class SystemController {
      */
     UserController = new UserController();
     /**
+     * 文件管理控制器
+     * @memberof SystemController
+     */
+    FilesController = new FilesController();
+    /**
      * 初始化
      */
     onInit() {
         this.UserController.onInit()
+        this.FilesController.onInit()
     }
 }
 export const $System = new SystemController()

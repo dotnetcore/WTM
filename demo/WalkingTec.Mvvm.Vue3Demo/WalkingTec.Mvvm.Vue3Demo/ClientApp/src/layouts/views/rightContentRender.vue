@@ -6,11 +6,12 @@
       </template>
     </a-button>
     <div>
-      <a-avatar size="small">
-        <template #icon>
+      <a-avatar size="small" :src="getAvatar(System.UserController.UserInfo)">
+        <!-- <template #icon>
           <UserOutlined />
-        </template>
+        </template>-->
       </a-avatar>
+      <a-divider type="vertical" style="margin: 0 3px;" />
       <span v-text="System.UserController.UserInfo.Name"></span>
     </div>
     <a-dropdown>
@@ -39,8 +40,12 @@ export default class extends Vue {
   get languages() {
     return this.lodash.keys(this.lodash.get(this.$i18n, "messages"));
   }
+  getAvatar(Info) {
+    return Info.PhotoId ? this.System.FilesController.getDownloadUrl(Info.PhotoId) : require('@/assets/img/user.png')
+  }
   changeLanguage(event) {
     this.$i18n.locale = event.key;
+    localStorage.setItem('locale', event.key)
   }
   created() { }
   mounted() { }

@@ -26,7 +26,7 @@ export default class extends Vue {
       },
       {
         headerName: EnumLocaleLabel.Photo,
-        field: "Photo",
+        field: "PhotoId",
         cellRenderer: this.$FrameworkComponents.image,
       },
       {

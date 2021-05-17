@@ -21,10 +21,11 @@ const options: ComponentOptions = {
          * 合并当前页面的 query 追加 detailsVisible 触发显示
          * @param {*} [query='0']
          */
-        __wtmToDetails(query: any = '') {
+        __wtmToDetails(query: any = '', more?) {
             if (!lodash.isObject(query)) {
                 query = { [$WtmConfig.detailsVisible]: query }
             }
+            this.__queryCache = lodash.assign({}, more, query)
             query = lodash.assign({}, this.$route.query, query)
             this.$router.replace({ query })
         },
@@ -33,7 +34,13 @@ const options: ComponentOptions = {
          * 去除当前页面的 query 中 detailsVisible 触发隐藏
          */
         __wtmBackDetails(queryKey?) {
-            const query = lodash.omit(lodash.assign({}, this.$route.query), [$WtmConfig.detailsVisible, '_readonly', queryKey])
+            const query = lodash.omit(lodash.assign({}, this.$route.query), lodash.concat(
+                lodash.keys(this.__queryCache), [
+                $WtmConfig.detailsVisible,
+                '_readonly',
+                queryKey,
+
+            ]))
             this.$router.replace({ query })
         },
         /**

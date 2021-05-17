@@ -1,7 +1,7 @@
 import { WTM_ValueType } from "@/client";
 import { of } from "rxjs";
 import { delay } from "rxjs/operators";
-import { Inject, Options, Prop, Vue } from "vue-property-decorator";
+import { Emit, Inject, Options, Prop, Vue } from "vue-property-decorator";
 @Options({ components: {} })
 export class FieldBasics extends Vue {
     // form label 没有 取 name 数据
@@ -128,6 +128,7 @@ export class FieldBasics extends Vue {
     }
     set value(value) {
         this.lodash.set(this.formState, this._name, value);
+        this.onChangeValue()
     }
     // 属性值类型
     get _valueType(): WTM_ValueType {
@@ -147,6 +148,10 @@ export class FieldBasics extends Vue {
     }
     toRulesMessage() {
         return this.lodash.invoke(this.$i18n, 'toRulesMessage', this._label)
+    }
+    @Emit('change')
+    onChangeValue() {
+        return this.value
     }
     // 加载数据源
     async onRequest() {

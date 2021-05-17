@@ -61,7 +61,7 @@ export function getColumnDefsAction(frameworkComponents): (ColGroupDef | ColDef)
     if (lodash.has(frameworkComponents, 'RowAction')) {
         return [{
             minWidth: 0,
-            headerName: 'action.name',
+            headerName: 'action_name',
             field: 'RowAction',
             cellRenderer: 'RowAction',
             cellClass: 'w-row-action',

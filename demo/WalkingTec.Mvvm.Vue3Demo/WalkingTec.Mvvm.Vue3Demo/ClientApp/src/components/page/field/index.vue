@@ -4,7 +4,7 @@
       <a-form-item v-bind="itemBind">
         <slot>
           <keep-alive v-if="includeComponent">
-            <component :is="componentIs" v-bind="$props"></component>
+            <component :is="componentIs" v-bind="$props" @change="onChangeValue"></component>
           </keep-alive>
           <!-- 未配置 -->
           <template v-else>

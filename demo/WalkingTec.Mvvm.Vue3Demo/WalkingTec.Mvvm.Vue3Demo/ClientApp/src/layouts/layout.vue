@@ -33,8 +33,9 @@ export default class extends Vue {
     // menuData: this.menuData,
     headerHeight: 48,
     sideWidth: 208,
+    logo: require('@/assets/img/logo.png'),
     // layout: "top",
-    title: "暄桐小程序",
+    title: "WTM",
     collapsed: false,
     fixSiderbar: true,
     fixedHeader: true,
@@ -65,7 +66,7 @@ export default class extends Vue {
         path: "development",
         // <router-link> Props
         router: {},
-        meta: { icon: "SaveOutlined", title: "本地页面", target: "a" },
+        meta: { icon: "SaveOutlined", title: this.$t(this.$locales["PageName.development"]), target: "a" },
         children: lodash.map(RouterConfig, item => {
           const router = lodash.pick(item, ["path", "name"])
           const data = lodash.assign(router, {
@@ -83,7 +84,7 @@ export default class extends Vue {
       {
         name: "test",
         path: "test",
-        meta: { icon: "SaveOutlined", title: "测试菜单" },
+        meta: { icon: "SaveOutlined", title: this.$t(this.$locales["PageName.test"]) },
         children: [
           {
             path: "/test/1",
@@ -105,7 +106,7 @@ export default class extends Vue {
         name: "production",
         path: "production",
         router: {},
-        meta: { icon: "SaveOutlined", title: "正式菜单", target: "a" },
+        meta: { icon: "SaveOutlined", title: this.$t(this.$locales["PageName.production"]), target: "a" },
         children: production
       });
     }
@@ -134,7 +135,7 @@ export default class extends Vue {
     this.provider.openKeys = event;
   }
 }
-function toMenus(){
+function toMenus() {
 
 }
 </script>

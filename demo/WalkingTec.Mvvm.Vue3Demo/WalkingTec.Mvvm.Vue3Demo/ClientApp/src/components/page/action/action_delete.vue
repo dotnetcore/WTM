@@ -4,7 +4,7 @@
       <template #icon v-if="isPageAction">
         <DeleteOutlined />
       </template>
-      <i18n-t keypath="action.delete" />
+      <i18n-t :keypath="$locales.action_delete" />
     </a-button>
   </a-popconfirm>
 </template>
@@ -22,13 +22,13 @@ export default class extends mixins(ActionBasics) {
     return !this.Pagination.selectionDataSource.length;
   }
   get title() {
-    return this.$t('action.deleteConfirm', { text: this.isRowAction ? 1 : this.Pagination.selectionDataSource.length })
+    return this.$t(this.$locales.action_deleteConfirm, { text: this.isRowAction ? 1 : this.Pagination.selectionDataSource.length })
   }
   get successMsg() {
-    return this.$t('tips.success.operation')
+    return this.$t(this.$locales.tips_success_operation)
   }
   get errorMsg() {
-    return this.$t('tips.error.operation')
+    return this.$t(this.$locales.tips_error_operation)
   }
   async onConfirm() {
     // 得先获取 内容 删除后获取 组件卸载就娶不到了

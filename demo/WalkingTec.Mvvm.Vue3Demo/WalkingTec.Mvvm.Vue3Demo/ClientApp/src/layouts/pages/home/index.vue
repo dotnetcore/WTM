@@ -1,7 +1,7 @@
 <template>
     <div v-if="locale === 'zh'">
         <a-row :gutter="20">
-            <a-col :span="12">
+            <a-col :md="12">
                 <a-card title="WTM—做最好的.netcore开源框架" :bordered="false">
                     <p>WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 和 最早的Entity Framework, 当初主要是为了解决公司内部开发效率低，代码风格不统一的问题。经历了四年间数十个项目的考验，框架逐步的完善，推出了四个主要版本。</p>
                     <p>2017年9月，我们将代码移植到了.Net Core上，并进行了深度优化和重构，推出了基于Asp.net Core和EF Core的全新框架，新框架在架构，稳定性，速度上都有长足进步，真正成为一款高效开发的利器。</p>
@@ -14,7 +14,7 @@
                     </p>
                 </a-card>
             </a-col>
-            <a-col :span="12">
+            <a-col :md="12">
                 <a-card title="WTM解决的问题" :bordered="false">
                     <p>WTM框架把常规编码结构化，重复编码自动化，极大地提高了开发效率</p>
                     <p>在不分离的模式下，它连通了前台UI和后台代码。你不需要前后台分离，不需要两个人配合，减少成本，缩短工期。</p>
@@ -24,7 +24,7 @@
         </a-row>
         <a-divider></a-divider>
         <a-row :gutter="20">
-            <a-col :span="12">
+            <a-col :md="12">
                 <a-card title="框架特点" :bordered="false">
                     <p>一键生成WTM项目</p>
                     <p>一键生成增删改查，导入导出，批量操作代码</p>
@@ -38,7 +38,7 @@
                     <p>支持读写分离和数据库分库</p>
                 </a-card>
             </a-col>
-            <a-col :span="12">
+            <a-col :md="12">
                 <a-card title="作者的话" :bordered="false">
                     <p>WTM框架，全称WalkingTec MVVM（不是“我特么”的拼音首字母），WTM是一个快速开发框架，有多快？至少目前dotnetcore的开源项目中，我还没有见到更接地气，开发速度更快的框架。WTM的设计理念就是最大程度的加快开发速度，降低开发成本。</p>
                     <p>国内Java一家独大原因很多，有BAT的示范效应，也有微软自己战略的失误。好在微软这两年终于想明白了， dotnet core的横空出世和收购github都是非常正确的方向。当然要想达到java一样的生态还有很长的路要走，那我就贡献一点绵薄之力吧。</p>
@@ -71,7 +71,7 @@
     </div>
     <div v-else>
         <a-row :gutter="20">
-            <a-col :span="12">
+            <a-col :md="12">
                 <a-card
                     title="WTM -- make the best. NETCORE open source framework"
                     :bordered="false"
@@ -87,7 +87,7 @@
                     </p>
                 </a-card>
             </a-col>
-            <a-col :span="12">
+            <a-col :md="12">
                 <a-card title="Problems solved by WTM" :bordered="false">
                     <p>WTM framework greatly improves development efficiency by structures conventional coding and automates repetitive coding.</p>
                     <p>In non-separation mode, it connects front-end UI with back-end code. You don't need to separate the front and back platform. You don't need two people to cooperate. WTM helps you to reduce the cost and shorten the R&D period.</p>
@@ -97,7 +97,7 @@
         </a-row>
         <a-divider></a-divider>
         <a-row :gutter="20">
-            <a-col :span="12">
+            <a-col :md="12">
                 <a-card title="Framework features" :bordered="false">
                     <p>One click to generate WTM project</p>
                     <p>One click to generate add, delete, modify and query</p>
@@ -111,7 +111,7 @@
                     <p>Supportread/ write splitting ;Support database sub Library</p>
                 </a-card>
             </a-col>
-            <a-col :span="12">
+            <a-col :md="12">
                 <a-card title="Author's words" :bordered="false">
                     <p>WTM framework, full name walkingtec MVVM. Walkingtec is my own company. WTM is a rapid development framework.How fast ? At least at present, in the open source project of DotNetcore, I haven't seen another faster one. Our goal of WTM is to speed up the development and reduce cost to the greatest extent.</p>
                     <p>WTM has been loved by more and more developers since its open source. WTM will surely repay your love with a more mature and stable version.Specially thanks to（layui.com Improve yourself, benefit others, we am not alone!</p>

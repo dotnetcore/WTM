@@ -11,7 +11,7 @@
           <template #icon>
             <CloudUploadOutlined />
           </template>
-          <i18n-t keypath="action.downloadTemplate" />
+          <i18n-t :keypath="$locales.action_downloadTemplate" />
         </a-button>
         <a-divider style="margin:8px" />
       </div>
@@ -25,7 +25,7 @@
           <inbox-outlined />
         </p>
         <p class="ant-upload-text">
-          <i18n-t keypath="tips.text.upload" />
+          <i18n-t :keypath="$locales.tips_text_upload" />
         </p>
       </a-upload-dragger>
     </template>
@@ -33,7 +33,7 @@
       <template #icon v-if="isPageAction">
         <CloudUploadOutlined />
       </template>
-      <i18n-t keypath="action.import" />
+      <i18n-t :keypath="$locales.action_import" />
     </a-button>
   </a-popconfirm>
 </template>

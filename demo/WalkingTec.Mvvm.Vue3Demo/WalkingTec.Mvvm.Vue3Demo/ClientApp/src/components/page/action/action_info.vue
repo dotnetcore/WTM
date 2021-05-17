@@ -3,7 +3,7 @@
     <template #icon v-if="isPageAction">
       <EditOutlined />
     </template>
-    <i18n-t keypath="action.info" />
+    <i18n-t :keypath="$locales.action_info" />
   </a-button>
 </template>
 <script lang="ts">

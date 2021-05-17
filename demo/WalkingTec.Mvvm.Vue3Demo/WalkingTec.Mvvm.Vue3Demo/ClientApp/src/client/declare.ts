@@ -4,7 +4,7 @@ import { NamePath } from 'ant-design-vue/lib/form/interface';
 /**
  * 类型定义
  */
-export declare type ProFieldRequestData<U = any> = (params: U, props: any) => Promise<{
+export declare type ProFieldRequestData = (props?: any) => Promise<{
     label: any;
     value: any;
     [key: string]: any;
@@ -21,7 +21,7 @@ export declare type WTM_EntitiesField = {
     /** 校验规则 */
     rules?: ValidationRule[];
     /** 数据源 */
-    request?: ProFieldRequestData<any> | undefined;
+    request?: ProFieldRequestData | undefined;
     /** 联动字段 */
     linkage?: Array<string>;
     /** 数据类型 */

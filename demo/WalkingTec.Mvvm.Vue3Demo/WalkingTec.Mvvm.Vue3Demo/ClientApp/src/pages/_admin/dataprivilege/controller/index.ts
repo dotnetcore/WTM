@@ -9,7 +9,7 @@ export class PageController extends WTM.ControllerBasics {
             // 搜索
             search: '/api/_dataprivilege/search',
             // 详情
-            details: '/api/_dataprivilege/{ID}',
+            details: '/api/_dataprivilege/get',
             // 添加
             insert: '/api/_dataprivilege/add',
             // 修改

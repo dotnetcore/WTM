@@ -33,14 +33,14 @@
             <template v-slot:icon>
               <SaveOutlined />
             </template>
-            <i18n-t keypath="action.submit" />
+            <i18n-t :keypath="$locales.action_submit" />
           </a-button>
           <a-divider type="vertical" />
           <a-button @click.stop.prevent="onReset">
             <template v-slot:icon>
               <RedoOutlined />
             </template>
-            <i18n-t keypath="action.reset" />
+            <i18n-t :keypath="$locales.action_reset" />
           </a-button>
         </template>
       </a-spin>
@@ -72,10 +72,10 @@ export default class extends Vue {
     return this.lodash.has(this.$route.query, '_readonly')
   }
   get successMsg() {
-    return this.$t('tips.success.operation')
+    return this.$t(this.$locales.tips_success_operation)
   }
   get errorMsg() {
-    return this.$t('tips.error.operation')
+    return this.$t(this.$locales.tips_error_operation)
   }
   spinning = false;
   labelCol = { span: 24 };

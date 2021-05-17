@@ -2,7 +2,6 @@ import defaultEn from './en/default';
 import defaultZh from './zh/default';
 import lodash from 'lodash';
 import { createI18n } from 'vue-i18n'
-
 const locales = {
     en: lodash.assign({}, defaultEn),
     zh: lodash.assign({}, defaultZh),
@@ -14,8 +13,9 @@ files.keys().map(x => {
     lodash.assign(locales.en, locale.en)
     lodash.assign(locales.zh, locale.zh)
 })
+const locale = localStorage.getItem('locale') || 'zh'
 const i18n = createI18n({
-    locale: 'zh', // set locale
+    locale: locale, // set locale
     fallbackLocale: 'en', // set fallback locale
     messages: locales, // set locale messages
     // If you need to specify other options, you can set other options
@@ -29,7 +29,7 @@ export const $i18n = i18n.global
  * @param localesKey 默认 tips.error.required
  * @returns 
  */
-$i18n.toRulesMessage = function (label, localesKey = 'tips.error.required') {
+$i18n.toRulesMessage = function (label, localesKey = 'tips_error_required') {
     try {
         return $i18n.t(localesKey, { label: $i18n.t(label) })
     } catch (error) {
@@ -42,14 +42,15 @@ $i18n.toRulesMessage = function (label, localesKey = 'tips.error.required') {
  * @param localesKey 默认 tips.placeholder.input
  * @returns 
  */
-$i18n.toPlaceholder = function (label, localesKey = 'tips.placeholder.input') {
+$i18n.toPlaceholder = function (label, localesKey = 'tips_placeholder_input') {
     try {
         return $i18n.t(localesKey, { label: $i18n.t(label) })
     } catch (error) {
         console.log("LENG ~ error", error, label)
     }
 }
-
+export declare type Enumlocales = Readonly<typeof defaultZh>
+export const $locales = lodash.mapValues(lodash.cloneDeep(defaultZh), (val, key) => key)
 export default i18n
 
 

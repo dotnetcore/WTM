@@ -37,7 +37,7 @@ export enum EnumLocaleLabel {
 export default {
     en: {
         [EnumLocaleLabel.ID]: 'ID',
-        [EnumLocaleLabel.PageName]: 'UserManage',
+        [EnumLocaleLabel.PageName]: 'User Manage',
         [EnumLocaleLabel.ITCode]: 'Account',
         [EnumLocaleLabel.Password]: 'Password',
         [EnumLocaleLabel.Email]: 'Email',

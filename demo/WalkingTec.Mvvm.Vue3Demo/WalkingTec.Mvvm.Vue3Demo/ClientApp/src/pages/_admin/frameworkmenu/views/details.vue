@@ -5,10 +5,11 @@
     </template>
     <a-space>
       <WtmField entityKey="IsInside" />
+      <WtmField entityKey="PageName" />
     </a-space>
     <a-space>
-      <WtmField entityKey="PageName" />
-      <WtmField entityKey="SelectedModule" />
+      <WtmField entityKey="SelectedModule" v-if="IsInside" @change="onModuleChange" />
+      <WtmField entityKey="Url" :readonly="IsInside" />
     </a-space>
     <a-space>
       <WtmField
@@ -23,11 +24,10 @@
       <WtmField entityKey="IsPublic" />
     </a-space>
     <a-space>
-      <WtmField entityKey="DisplayOrder" />
       <WtmField entityKey="ParentId" />
+      <WtmField entityKey="DisplayOrder" />
     </a-space>
     <a-space>
-      <WtmField entityKey="Url" />
       <WtmField entityKey="Icon" />
     </a-space>
   </WtmDetails>
@@ -36,15 +36,26 @@
 import { PageDetailsBasics } from "@/components";
 import { Inject, mixins, Options, Provide } from "vue-property-decorator";
 import { PageController } from "../controller";
+import router from "@/router";
 @Options({ components: {} })
 export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
     Entity: {
-
+      IsInside: true,
+      Url: undefined
     },
     SelectedModule: undefined
   };
+  get IsInside() {
+    const IsInside = this.lodash.get(this.formState, 'Entity.IsInside', true)
+    return IsInside
+  }
+  async onModuleChange(value) {
+    const pages = await router.onGetRequest()
+    const find = this.lodash.find(pages, ['value', value])
+    this.formState.Entity.Url = find.path;
+  }
   created() { }
   mounted() {
     this.onLoading()

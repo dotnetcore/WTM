@@ -1,7 +1,9 @@
 <template>
-    <a-layout class="w-login">
-        <!-- <a-layout-header>Header</a-layout-header> -->
-        <a-layout-content class="w-login-content" :class="contentClass">
+    <a-layout class="w-login" :class="contentClass">
+        <a-layout-header class="w-login-header">
+            <img :src="logo" class="w-login-logo" />
+        </a-layout-header>
+        <a-layout-content class="w-login-content">
             <a-form
                 class="w-login-form"
                 :wrapper-col="wrapperCol"
@@ -33,11 +35,19 @@
                         html-type="submit"
                         :loading="System.UserController.loading"
                         :disabled="disabled"
-                    >Log in</a-button>
+                    >
+                        <i18n-t :keypath="$locales.action_login" />
+                    </a-button>
                 </a-form-item>
             </a-form>
         </a-layout-content>
-        <a-layout-footer>Footer</a-layout-footer>
+        <a-layout-footer>
+            <a-descriptions>
+                <a-descriptions-item v-for="item in links">
+                    <a slot="label" :href="item.url" target="_blank" v-text="item.name"></a>
+                </a-descriptions-item>
+            </a-descriptions>
+        </a-layout-footer>
     </a-layout>
 </template>
 <script lang="ts">
@@ -54,8 +64,23 @@ export default class extends Vue {
         password: '000000'
     }
     wrapperCol = { span: 24 }
-    onFinish(values) {
-        this.System.UserController.onSignIn(this.formState)
+    get logo() {
+        return require('@/assets/img/logo.png')
+    }
+    links = [
+        { name: 'GitHub', url: 'https://github.com/dotnetcore/WTM' },
+        { name: "Vue", url: 'https://vue3js.cn/docs/zh/' },
+        { name: "Ant Design", url: 'https://2x.antdv.com/components/overview/' },
+        { name: "Rxjs", url: 'https://rxjs.dev/' },
+        { name: "Mobx", url: 'https://mobx.js.org/' },
+        { name: "Lodash", url: ' https://lodash.com/' },
+    ]
+    async onFinish(values) {
+        try {
+            await this.System.UserController.onSignIn(this.formState)
+        } catch (error) {
+            this.$message.error(this.$t(this.$locales.tips_request_error, { label: this.$t(this.$locales.action_login) }))
+        }
     }
     get disabled() {
         return this.formState.account === '' || this.formState.password === ''
@@ -70,8 +95,18 @@ export default class extends Vue {
 <style lang="less" scoped>
 .w-login {
     height: 100%;
+    &-logo {
+        width: 80px;
+    }
+    &-header {
+        background: transparent;
+        padding: 0;
+    }
     &-content {
         transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     &-form {
         background: fade(white, 90%);
@@ -80,7 +115,7 @@ export default class extends Vue {
         padding: 20px;
         text-align: center;
         // margin-left: auto;
-        margin: 30vh 50px auto auto;
+        // margin: 30vh 50px auto auto;
     }
 }
 .w-login-back-1 {

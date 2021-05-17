@@ -34,6 +34,8 @@ import {
     Result,
     List,
     Card,
+    Collapse,
+    Descriptions,
     ConfigProvider
 } from 'ant-design-vue';
 import ProLayout, { PageContainer } from '@ant-design-vue/pro-layout';
@@ -76,6 +78,8 @@ export default {
             Result,
             List,
             Card,
+            Collapse,
+            Descriptions,
             ConfigProvider
         ].map(x => app.use(x));
         // Spin.setDefaultIndicator({

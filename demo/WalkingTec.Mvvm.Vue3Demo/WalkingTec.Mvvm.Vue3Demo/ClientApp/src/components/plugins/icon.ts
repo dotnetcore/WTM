@@ -1,5 +1,6 @@
 import {
     DownloadOutlined,
+    UpOutlined,
     DownOutlined,
     EditOutlined,
     SaveOutlined,
@@ -24,6 +25,7 @@ export default {
         lodash.map({
             DownloadOutlined,
             LockOutlined,
+            UpOutlined,
             DownOutlined,
             EditOutlined,
             SaveOutlined,

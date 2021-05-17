@@ -61,8 +61,8 @@ export default class extends Vue {
       return this.title;
     }
     return this.lodash.get(this.query, this.visibleKey)
-      ? this.$t("action.update")
-      : this.$t("action.insert");
+      ? this.$t(this.$locales.action_update)
+      : this.$t(this.$locales.action_insert);
   }
   get _width() {
     const width = window.innerWidth * 0.5;

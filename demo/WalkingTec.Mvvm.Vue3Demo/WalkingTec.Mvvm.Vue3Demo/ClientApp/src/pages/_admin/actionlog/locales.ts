@@ -18,7 +18,7 @@ export enum EnumLocaleLabel {
 export default {
     en: {
         [EnumLocaleLabel.ID]: 'ID',
-        [EnumLocaleLabel.PageName]: 'GroupManagement',
+        [EnumLocaleLabel.PageName]: 'Log',
         [EnumLocaleLabel.ModuleName]: 'ModuleName',
         [EnumLocaleLabel.ActionName]: 'ActionName',
         [EnumLocaleLabel.ITCode]: 'ITCode',

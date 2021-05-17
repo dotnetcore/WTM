@@ -12,7 +12,7 @@ export enum EnumLocaleLabel {
 export default {
     en: {
         [EnumLocaleLabel.ID]: 'ID',
-        [EnumLocaleLabel.PageName]: 'GroupManagement',
+        [EnumLocaleLabel.PageName]: 'Group Management',
         [EnumLocaleLabel.GroupCode]: 'GroupCode',
         [EnumLocaleLabel.GroupName]: 'GroupName',
         [EnumLocaleLabel.GroupRemark]: 'GroupRemark',

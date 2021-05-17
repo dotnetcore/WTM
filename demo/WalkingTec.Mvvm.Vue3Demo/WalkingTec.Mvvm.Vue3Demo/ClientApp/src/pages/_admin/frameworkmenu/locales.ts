@@ -23,7 +23,7 @@ export enum EnumLocaleLabel {
 export default {
     en: {
         [EnumLocaleLabel.ID]: 'ID',
-        [EnumLocaleLabel.PageName]: 'MenuMangement',
+        [EnumLocaleLabel.PageName]: 'Menu Mangement',
         [EnumLocaleLabel.Name]: 'PageName',
         [EnumLocaleLabel.SelectedModule]: 'Module',
         [EnumLocaleLabel.SelectedActionIDs]: 'Actions',

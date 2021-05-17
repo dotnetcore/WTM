@@ -15,7 +15,7 @@ export enum EnumLocaleLabel {
 export default {
     en: {
         [EnumLocaleLabel.ID]: 'ID',
-        [EnumLocaleLabel.PageName]: 'RoleManage',
+        [EnumLocaleLabel.PageName]: 'Role Manage',
         [EnumLocaleLabel.RoleCode]: 'RoleCode',
         [EnumLocaleLabel.RoleName]: 'RoleName',
         [EnumLocaleLabel.RoleRemark]: 'RoleRemark',

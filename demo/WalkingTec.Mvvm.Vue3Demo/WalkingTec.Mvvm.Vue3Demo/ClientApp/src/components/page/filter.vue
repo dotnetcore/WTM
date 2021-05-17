@@ -6,6 +6,8 @@
  * @desc 搜索条件 表单
  */
 <template>
+  <!-- <a-collapse class="w-filter-collapse" v-model:activeKey="activeKey" @change="onCollapseChange"> -->
+  <!-- <a-collapse-panel key="search" :header="$t($locales.action_search)"> -->
   <a-form
     ref="formRef"
     :layout="layout"
@@ -17,30 +19,44 @@
   >
     <a-row type="flex" :gutter="8">
       <slot />
+      <slot name="more" v-if="moreOpen" />
       <a-col :offset="offset" :span="colProps.colSpan" style="text-align: right">
         <a-form-item :wrapper-col="{ span: 22 }">
           <a-space align="center">
+            <!-- 搜索按钮 -->
             <a-button type="primary" html-type="submit">
               <template v-slot:icon>
                 <SearchOutlined />
               </template>
-              <i18n-t keypath="action.submit" />
+              <i18n-t :keypath="$locales.action_submit" />
             </a-button>
+            <!-- 重置按钮 -->
             <a-button @click.stop.prevent="onReset">
               <template v-slot:icon>
                 <RedoOutlined />
               </template>
-              <i18n-t keypath="action.reset" />
+              <i18n-t :keypath="$locales.action_reset" />
+            </a-button>
+            <!-- 展开按钮 -->
+            <a-button @click.stop.prevent="onMoreOpen" type="link" v-show="moreShow">
+              <template v-slot:icon>
+                <UpOutlined v-if="moreOpen" />
+                <DownOutlined v-else />
+              </template>
+              <i18n-t :keypath="moreOpen ? $locales.action_retract : $locales.action_open" />
             </a-button>
           </a-space>
         </a-form-item>
       </a-col>
     </a-row>
   </a-form>
+  <!-- </a-collapse-panel> -->
+  <!-- </a-collapse> -->
 </template>
 
 <script lang="ts">
 import { ControllerBasics } from "@/client";
+import lodash from "lodash";
 import { fromEvent, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import {
@@ -98,12 +114,21 @@ export default class extends Vue {
     colItem: true,
     colSpan: 6,
   };
-
   labelCol = { xs: 24, sm: 24, md: 7, lg: 7, xl: 7, xxl: 7 };
   wrapperCol = { xs: 24, sm: 24, md: 15, lg: 15, xl: 15, xxl: 15 };
   layout: "vertical" | "horizontal" = "vertical";
   offset = 0;
+  // activeKey = 'search'
+  // 更多条件
+  moreOpen = false
   ResizeEvent: Subscription;
+  // 显示 展开更多按钮
+  get moreShow() {
+    if (lodash.isFunction(this.$slots.more)) {
+      return this.$slots.more().filter((x) => typeof x.type !== "symbol").length
+    }
+    return false
+  }
   get formEl(): HTMLFormElement {
     return this.$el;
   }
@@ -128,6 +153,14 @@ export default class extends Vue {
     // this.onFinish(values);
     return values;
   }
+  onMoreOpen() {
+    this.moreOpen = !this.moreOpen
+    this.breakPoint()
+    this.onCollapseChange()
+  }
+  onCollapseChange = lodash.debounce(() => {
+    dispatchEvent(new CustomEvent('resize'));
+  }, 500)
   /** 回填 url 数据 */
   backfillQuery() {
     this.lodash.assign(
@@ -136,7 +169,16 @@ export default class extends Vue {
     );
   }
   breakPoint() {
-    const length = this.lodash.isFunction(this.$slots.default) ? this.$slots.default().filter((x) => typeof x.type !== "symbol").length : 0;
+    let length = 0;
+    // 默认搜索条件 x.type !== "symbol" 排除空格
+    if (this.lodash.isFunction(this.$slots.default)) {
+      length = this.$slots.default().filter((x) => typeof x.type !== "symbol").length
+    }
+    // 隐藏的搜索条件
+    if (this.moreOpen && this.lodash.isFunction(this.$slots.more)) {
+      length += this.$slots.more().filter((x) => typeof x.type !== "symbol").length
+    }
+
     const width = window.innerWidth;
     const breakPoint: [number, number, string] = this.lodash.find<any>(
       BREAKPOINTS.vertical,
@@ -177,4 +219,12 @@ export default class extends Vue {
 }
 </script>
 <style  lang="less">
+.w-filter-collapse {
+  .ant-collapse-content-box {
+    @media screen and (min-width: 785px) {
+      padding: 16px 8px 0 8px !important;
+    }
+  }
+  margin-bottom: 8px !important;
+}
 </style>
