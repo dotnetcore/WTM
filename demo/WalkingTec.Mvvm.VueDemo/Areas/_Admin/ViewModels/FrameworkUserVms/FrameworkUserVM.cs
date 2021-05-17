@@ -135,7 +135,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 if (MSD.IsValid)
                 {
                     trans.Commit();
-                    await Wtm.RemoveUserCache(Entity.ID.ToString());
+                    await Wtm.RemoveUserCache(Entity.ITCode.ToString());
                 }
                 else
                 {
@@ -147,7 +147,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         public override async Task DoDeleteAsync()
         {
             await base.DoDeleteAsync();
-            await Wtm.RemoveUserCache(Entity.ID.ToString());
+            await Wtm.RemoveUserCache(Entity.ITCode.ToString());
         }
 
         public void ChangePassword()

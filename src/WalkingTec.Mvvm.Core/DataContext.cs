@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
@@ -722,95 +723,34 @@ namespace WalkingTec.Mvvm.Core
         public DataTable Run(string sql, CommandType commandType, params object[] paras)
         {
             DataTable table = new DataTable();
-            switch (this.DBType)
+            var connection = this.Database.GetDbConnection();
+            var isClosed = connection.State == ConnectionState.Closed;
+            if (isClosed)
             {
-                case DBTypeEnum.SqlServer:
-                    SqlConnection con = this.Database.GetDbConnection() as SqlConnection;
-                    SqlDataAdapter adapter = new SqlDataAdapter();
-                    using (SqlCommand cmd = new SqlCommand(sql, con))
-                    {
-                        adapter.SelectCommand = cmd;
-                        cmd.CommandTimeout = 2400;
-                        cmd.CommandType = commandType;
-                        if (paras != null)
-                        {
-                            foreach (var param in paras)
-                                cmd.Parameters.Add(param);
-                        }
-                        adapter.Fill(table);
-                        adapter.SelectCommand.Parameters.Clear();
-                    }
-                    break;
-                case DBTypeEnum.MySql:
-                    MySqlConnection mySqlCon = this.Database.GetDbConnection() as MySqlConnection;
-                    using (MySqlCommand cmd = new MySqlCommand(sql, mySqlCon))
-                    {
-                        if (mySqlCon.State == ConnectionState.Closed)
-                        {
-                            mySqlCon.Open();
-                        }
-                        cmd.CommandTimeout = 2400;
-                        cmd.CommandType = commandType;
-                        if (paras != null)
-                        {
-                            foreach (var param in paras)
-                                cmd.Parameters.Add(param);
-                        }
-                        MySqlDataReader dr = cmd.ExecuteReader();
-                        table.Load(dr);
-                        dr.Close();
-                        mySqlCon.Close();
-                    }
-                    break;
-                case DBTypeEnum.PgSql:
-                    Npgsql.NpgsqlConnection npgCon = this.Database.GetDbConnection() as Npgsql.NpgsqlConnection;
-                    using (Npgsql.NpgsqlCommand cmd = new Npgsql.NpgsqlCommand(sql, npgCon))
-                    {
-                        if (npgCon.State == ConnectionState.Closed)
-                        {
-                            npgCon.Open();
-                        }
-                        cmd.CommandTimeout = 2400;
-                        cmd.CommandType = commandType;
-                        if (paras != null)
-                        {
-                            foreach (var param in paras)
-                                cmd.Parameters.Add(param);
-                        }
-                        Npgsql.NpgsqlDataReader dr = cmd.ExecuteReader();
-                        table.Load(dr);
-                        dr.Close();
-                        npgCon.Close();
-                    }
-                    break;
-                case DBTypeEnum.SQLite:
-                case DBTypeEnum.Oracle:
-                    var connection = this.Database.GetDbConnection();
-                    var isClosed = connection.State == ConnectionState.Closed;
-                    if (isClosed)
-                    {
-                        connection.Open();
-                    }
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText = sql;
-                        command.CommandTimeout = 2400;
-                        command.CommandType = commandType;
-                        if (paras != null)
-                        {
-                            foreach (var param in paras)
-                                command.Parameters.Add(param);
-                        }
-                        using (var reader = command.ExecuteReader())
-                        {
-                            table.Load(reader);
-                        }
-                    }
-                    if (isClosed)
-                    {
-                        connection.Close();
-                    }
-                    break;
+                connection.Open();
+            }
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.CommandTimeout = 2400;
+                command.CommandType = commandType;
+                if (this.Database.CurrentTransaction != null)
+                {
+                    command.Transaction = this.Database.CurrentTransaction.GetDbTransaction();
+                }
+                if (paras != null)
+                {
+                    foreach (var param in paras)
+                        command.Parameters.Add(param);
+                }
+                using (var reader = command.ExecuteReader())
+                {
+                    table.Load(reader);
+                }
+            }
+            if (isClosed)
+            {
+                connection.Close();
             }
             return table;
         }
