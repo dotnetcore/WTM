@@ -850,7 +850,7 @@ namespace WalkingTec.Mvvm.Mvc
                         continue;
                     }
                     var fname = "All" + pro.FieldName + "s";
-                    if (UI != UIEnum.Blazor)
+                    if (UI == UIEnum.LayUI)
                     {
                         prostr += $@"
         public List<ComboSelectListItem> {fname} {{ get; set; }}";
@@ -885,7 +885,7 @@ namespace WalkingTec.Mvvm.Mvc
             Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
             if(Selected{pro.FieldName}IDs != null )
             {{
-                 foreach (var item in SelectedStudentMajorIDs)
+                 foreach (var item in Selected{pro.FieldName}IDs)
                 {{
                     {protype.PropertyType.GetGenericArguments()[0].Name} middle = new {protype.PropertyType.GetGenericArguments()[0].Name}();
                     middle.SetPropertyValue(""{pro.SubIdField}"", item);
@@ -1328,9 +1328,12 @@ namespace WalkingTec.Mvvm.Mvc
             {mname} v = new {mname}();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {{
+                try{{
 {cpros}
                 context.Set<{mname}>().Add(v);
                 context.SaveChanges();
+                }}
+                catch{{}}
             }}
             return v.ID;
         }}
@@ -2489,14 +2492,21 @@ namespace WalkingTec.Mvvm.Mvc
                     string disabled = "";
                     var property = modelType.GetSingleProperty(item.FieldName);
 
-                    if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
-                        var fk = DC.GetFKName2(modelType, item.FieldName);
-                        bindfield = $"Entity.{fk}";
+                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        {
+                            var fk = DC.GetFKName2(modelType, item.FieldName);
+                            bindfield = "Entity." + fk;
+                        }
+                        else
+                        {
+                            bindfield = $"Selected{item.FieldName}IDs";
+                        }
                     }
                     else
                     {
-                        bindfield = $"Entity.{item.FieldName}";
+                        bindfield = "Entity." + item.FieldName;
                     }
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
@@ -2521,7 +2531,6 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
                             }
-
                         }
                     }
                     else
