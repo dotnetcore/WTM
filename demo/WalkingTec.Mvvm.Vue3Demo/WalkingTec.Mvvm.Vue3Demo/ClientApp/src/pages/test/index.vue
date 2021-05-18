@@ -1,7 +1,7 @@
 <template>
   <!-- <ViewFilter /> -->
+  <a-divider>表单测试</a-divider>
   <ViewAction />
-  <a-divider />
   <!-- <ViewGrid /> -->
   <WtmView>
     <ViewDetails />

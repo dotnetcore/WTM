@@ -18,7 +18,7 @@ export default class extends Vue {
    * 包含的操作按钮
    */
   get include() {
-    return [this.EnumActionType.Info, this.EnumActionType.Delete]
+    return [this.EnumActionType.Info, this.EnumActionType.Delete, this.EnumActionType.Export]
   }
   mounted() { }
 }

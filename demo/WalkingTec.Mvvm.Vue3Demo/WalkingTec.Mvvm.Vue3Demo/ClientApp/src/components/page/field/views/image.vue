@@ -39,6 +39,8 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly formValidate;
   // 实体
   @Inject() readonly PageEntity;
+  // 表单类型
+  @Inject({ default: '' }) readonly formType;
   imageUrl = "";
   get action() {
     return $System.FilesController.getUploadUrl()

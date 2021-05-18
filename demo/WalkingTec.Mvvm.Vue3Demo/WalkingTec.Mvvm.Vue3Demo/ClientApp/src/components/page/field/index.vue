@@ -39,6 +39,7 @@ import Field_slider from "./views/slider.vue";
 import Field_switch from "./views/switch.vue";
 import Field_transfer from "./views/transfer.vue";
 import Field_image from "./views/image.vue";
+import Field_upload from "./views/upload.vue";
 @Options({
   components: {
     Item,
@@ -56,7 +57,8 @@ import Field_image from "./views/image.vue";
     Field_slider,
     Field_switch,
     Field_transfer,
-    Field_image
+    Field_image,
+    Field_upload
   }
 })
 export default class extends mixins(FieldBasics) {
@@ -66,6 +68,8 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly formValidate;
   // 实体
   @Inject() readonly PageEntity;
+  // 表单类型
+  @Inject({ default: '' }) readonly formType;
   /**
    * 包含注册的组件
    */
@@ -79,7 +83,6 @@ export default class extends mixins(FieldBasics) {
     return `Field_${this._valueType}`
   }
   async mounted() {
-
   }
 }
 </script>

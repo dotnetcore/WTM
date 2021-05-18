@@ -58,7 +58,7 @@ export class UserController extends UserEntity {
         }
     }
     async onLogOut() {
-        this.$ajax.get("/api/_Account/Logout");
+        // this.$ajax.get("/api/_Account/Logout");
         this.onSetUserInfo({})
     }
 }

@@ -13,29 +13,29 @@ import { ActionBasics } from "./script";
 @Options({ components: {} })
 export default class extends mixins(ActionBasics) {
   @Prop() readonly PageController: ControllerBasics;
+  /** 请求参数 */
+  @Prop({}) toQuery;
   get disabled() {
     if (this.isRowAction) {
       return false;
     }
     return !this.lodash.eq(this.Pagination.selectionDataSource.length, 1);
   }
-  get dateKey() {
-    let rowKey = ''
+  getRowData() {
     if (this.isRowAction) {
-      rowKey = this.rowKey
-    } else {
-      rowKey = this.lodash.get(
-        this.lodash.head(this.Pagination.selectionDataSource),
-        this.PageController.key
-      )
+      return this.lodash.cloneDeep(this.rowParams.data);
     }
-    return {
-      [this.$WtmConfig.detailsVisible]: rowKey,
-      _readonly: ''
-    };
+    return this.lodash.cloneDeep(this.lodash.head(this.Pagination.selectionDataSource))
   }
   onToDetails() {
-    this.__wtmToDetails(this.dateKey)
+    const rowData = this.getRowData()
+    let query = {
+
+    }
+    if (this.lodash.hasIn(this.$props, 'toQuery')) {
+      query = this.lodash.invoke(this.$props, 'toQuery', rowData, this)
+    }
+    this.__wtmToDetails(this.lodash.assign({ [this.$WtmConfig.detailsVisible]: this.lodash.get(rowData, this.PageController.key) }, query, { _readonly: '' }))
   }
   created() { }
   mounted() { }

@@ -17,7 +17,7 @@ export class FilesController {
             method: "post"
         },
         fileDelete: {
-            url: "/api/_file/DeletedFile/{id}",
+            url: "/api/_file/DeletedFile/{Id}",
             method: "get"
         },
         fileGet: {
@@ -25,7 +25,7 @@ export class FilesController {
             method: "get"
         },
         fileDownload: {
-            url: "/api/_file/downloadFile/{id}",
+            url: "/api/_file/downloadFile/{Id}",
             method: "get"
         }
     }
@@ -45,15 +45,15 @@ export class FilesController {
      * @returns 
      */
     deleteFiles(body) {
-        return this.$ajax.request(lodash.assign(body, this.options.fileDelete))
+        return this.$ajax.request(lodash.assign({ body }, this.options.fileDelete)).toPromise()
     }
     /**
     * 获取文件
     * @param id
     */
-    getDownloadUrl(id) {
-        if (id) {
-            return AjaxBasics.onCompatibleUrl(lodash.assign({ body: { id } }, this.options.fileDownload), this.$ajax.options).url;
+    getDownloadUrl(Id) {
+        if (Id) {
+            return AjaxBasics.onCompatibleUrl(lodash.assign({ body: { Id } }, this.options.fileDownload), this.$ajax.options).url;
         }
     }
 

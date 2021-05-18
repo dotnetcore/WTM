@@ -9,6 +9,7 @@ import $WtmConfig, { WtmConfig } from './config';
 import { WTM_ValueType } from './declare';
 import { EnumActionType } from './enum';
 import { AjaxBasics } from './helpers';
+import { $System } from './controllers';
 import i18n, { $locales, Enumlocales } from './locales';
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
@@ -40,6 +41,10 @@ AjaxBasics.onNProgress = function (type) {
     }
 }
 AjaxBasics.onError = function (error) {
+    console.error("LENG ~ error", error)
+    if (lodash.get(error, 'status') === 401) {
+        return $System.UserController.onLogOut()
+    }
     if (error.response) {
         // message.error('')
     }

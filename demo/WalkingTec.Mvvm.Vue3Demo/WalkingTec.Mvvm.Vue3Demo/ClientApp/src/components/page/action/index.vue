@@ -1,5 +1,5 @@
 <template>
-  <a-space :size="size">
+  <a-space class="w-action-space" :size="size">
     <!-- 添加 -->
     <slot name="insert" v-if="onShow(EnumActionType.Insert)">
       <ActionInsert v-bind="$props" />
@@ -20,11 +20,11 @@
     </slot>
     <!-- 导入  -->
     <slot name="import" v-if="onShow(EnumActionType.Import)">
-      <ActionExport v-bind="$props" />
+      <ActionImport v-bind="$props" />
     </slot>
     <!-- 导出 -->
     <slot name="export" v-if="onShow(EnumActionType.Export)">
-      <ActionImport v-bind="$props" />
+      <ActionExport v-bind="$props" />
     </slot>
     <!-- 追加内容 -->
   </a-space>
@@ -56,6 +56,8 @@ export default class extends mixins(ActionBasics) {
   @Prop({ default: () => [EnumActionType.Info, EnumActionType.Insert, EnumActionType.Update, EnumActionType.Delete, EnumActionType.Import, EnumActionType.Export] }) include;
   /** 排除 */
   @Prop({ default: () => [] }) exclude;
+  /** 请求参数 */
+  @Prop({}) toQuery;
   /** 页面控制器 */
   @Prop() readonly PageController;
   /**
@@ -87,10 +89,17 @@ export default class extends mixins(ActionBasics) {
     return this.lodash.includes(this.include, type) && !this.lodash.includes(this.exclude, type)
   }
   created() { }
-  mounted() { 
+  mounted() {
     // console.log("LENG ~ extends ~ mounted ~ this.$props", this.$props)
   }
 }
 </script>
 <style lang="less">
+.w-action-space {
+  width: 100%;
+  display: block;
+  > .ant-space-item {
+    display: inline-block;
+  }
+}
 </style>

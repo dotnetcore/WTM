@@ -26,7 +26,7 @@ export class PageActionBasics extends Vue {
      * @returns 
      */
     onAuthority(type: EnumActionType) {
-        if (this.debug || this.debug == '') {
+        if (this.debug || this.debug === '') {
             return true
         }
         return this.__wtmAuthority(type, this.PageController)

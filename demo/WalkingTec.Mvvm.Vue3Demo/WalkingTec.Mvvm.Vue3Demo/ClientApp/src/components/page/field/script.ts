@@ -4,6 +4,7 @@ import { delay } from "rxjs/operators";
 import { Emit, Inject, Options, Prop, Vue } from "vue-property-decorator";
 @Options({ components: {} })
 export class FieldBasics extends Vue {
+
     // form label 没有 取 name 数据
     @Prop({ type: String }) readonly label;
     // form name
@@ -35,6 +36,8 @@ export class FieldBasics extends Vue {
     // 实体
     // @Inject() 组件内 Inject
     readonly PageEntity;
+    // 表单类型
+    readonly formType: 'details';
     // 数据加载
     spinning = false;
     // 数据源
@@ -55,7 +58,10 @@ export class FieldBasics extends Vue {
     }
     // 只读
     get _readonly() {
-        return this.readonly || this.lodash.has(this.$route.query, '_readonly')
+        if (this.formType === 'details' && this.lodash.has(this.$route.query, '_readonly')) {
+            return true
+        }
+        return this.readonly// || this.lodash.has(this.$route.query, '_readonly')
     }
     // form-item lable
     get _label() {

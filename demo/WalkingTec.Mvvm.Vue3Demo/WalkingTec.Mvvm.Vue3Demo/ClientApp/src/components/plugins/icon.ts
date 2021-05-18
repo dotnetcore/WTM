@@ -16,7 +16,9 @@ import {
     CheckOutlined,
     CloseOutlined,
     PlusOutlined,
-    LockOutlined
+    LockOutlined,
+    UploadOutlined,
+    GlobalOutlined
 } from '@ant-design/icons-vue';
 import lodash from 'lodash';
 import { App } from 'vue';
@@ -40,7 +42,9 @@ export default {
             CheckOutlined,
             CloseOutlined,
             PlusOutlined,
-            FormOutlined
+            UploadOutlined,
+            FormOutlined,
+            GlobalOutlined
         }, (icon, key) => app.component(key, icon))
     }
 }

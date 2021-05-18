@@ -6,7 +6,7 @@ configure({ enforceActions: "observed" });
 @BindAll()
 export class WtmConfig {
     constructor() {
-        this.onInspectVersion();
+        // this.onInspectVersion();
         console.group('WtmGlobal')
         console.log(this)
         console.groupEnd()
@@ -56,9 +56,19 @@ export class WtmConfig {
      * 环境
      * @memberof XTGlobal
      */
-    // readonly DEPLOY_ENV = process.env.DEPLOY_ENV;
     get production() {
         return this.NODE_ENV === 'production'
+    }
+    /**
+     * 鉴权开关 production 开启
+     * @readonly
+     * @memberof WtmConfig
+     */
+    get authority() {
+        if (this.production) {
+            return true
+        }
+        return false
     }
     /**
      * 检查版本信息 

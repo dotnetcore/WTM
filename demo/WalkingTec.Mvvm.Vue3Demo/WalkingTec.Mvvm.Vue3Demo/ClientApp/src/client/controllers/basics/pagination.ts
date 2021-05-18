@@ -125,6 +125,8 @@ export class Pagination<T = any> {
      */
     @observable
     pageSize = 10;
+    @observable
+    sory: any = undefined;
     /**
      * 数据总数
      * @memberof Pagination
@@ -187,8 +189,12 @@ export class Pagination<T = any> {
             body = lodash.merge(body, {
                 // 转换 current pageSize 对应 的字段名
                 [this.options.currentKey]: this.current,
-                [this.options.pageSizeKey]: this.pageSize
+                [this.options.pageSizeKey]: this.pageSize,
+                [this.options.soryKey]: this.sory,
             });
+            if (lodash.isEmpty(lodash.get(body, this.options.soryKey))) {
+                lodash.unset(body, this.options.soryKey)
+            }
             // await new Promise((res) => {
             //     lodash.delay(res, 3000);
             //   });
@@ -228,13 +234,18 @@ export class Pagination<T = any> {
         }
     }
     @action
-    onCurrentChange(params: { current?: number, pageSize?: number, body?}, loading = true) {
-        const { body, current, pageSize } = params
+    onCurrentChange(params: { current?: number, pageSize?: number, sory?, body?}, loading = true) {
+        const { body, current, pageSize, sory } = params
         if (lodash.isNumber(current) || lodash.isString(current)) {
             this.current = lodash.toInteger(current);
         }
         if (lodash.isNumber(pageSize) || lodash.isString(pageSize)) {
             this.pageSize = lodash.toInteger(pageSize)
+        }
+        if (sory) {
+            this.sory = sory
+        } else {
+            this.sory = undefined
         }
         return this.onLoading(body || this.oldBody)
     }

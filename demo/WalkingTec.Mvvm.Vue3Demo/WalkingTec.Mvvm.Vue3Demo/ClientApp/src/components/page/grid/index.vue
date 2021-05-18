@@ -46,6 +46,7 @@ export default class Grid extends Vue {
   GridApi: GridApi = null;
   ColumnApi: ColumnApi = null;
   ResizeEvent: Subscription;
+  LanguagesEvent: Subscription;
   isAutoSizeColumn = true;
   pageKey = '';
   get Pagination() {
@@ -81,6 +82,10 @@ export default class Grid extends Vue {
   get GridEvents(): GridOptions {
     return {
       onSortChanged: (event) => {
+        const SortModel = lodash.head(event.api.getSortModel());
+        // console.log("LENG ~ Grid ~ getGridEvents ~ event", SortModel)
+        const sory = SortModel && SortModel.sort ? { Direction: lodash.capitalize(SortModel.sort), Property: SortModel.colId } : {}
+        this.Pagination.onCurrentChange({ current: 1, sory })
         lodash.invoke(this.gridOptions, "onSortChanged", event);
       },
       // 数据选择
@@ -156,6 +161,11 @@ export default class Grid extends Vue {
     this.ResizeEvent = fromEvent(window, "resize")
       .pipe(debounceTime(200))
       .subscribe(this.onReckon);
+    // this.LanguagesEvent = fromEvent(window, "languages")
+    //   .pipe(debounceTime(200))
+    //   .subscribe(obx => {
+    //     this.ColumnApi?.autoSizeColumn("RowAction");
+    //   })
   }
   unmounted() {
     this.ResizeEvent && this.ResizeEvent.unsubscribe();

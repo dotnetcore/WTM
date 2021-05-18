@@ -46,6 +46,7 @@ export enum WTM_ValueType {
     switch = "switch",
     image = "image",
     transfer = "transfer",
+    upload = "upload",
     // money = "money",
     // option = "option",
     // dateQuarter = "dateQuarter",

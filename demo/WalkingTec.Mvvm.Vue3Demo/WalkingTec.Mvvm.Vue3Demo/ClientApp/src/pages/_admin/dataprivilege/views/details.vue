@@ -30,11 +30,8 @@ export default class extends mixins(PageDetailsBasics) {
   get IsGroupCode() {
     return this.formState.DpType == 'UserGroup'
   }
-  async onLoading() {
-    if (this.ID) {
-      await this.Entities.onLoading(this.PageController.Pagination.onFind(this.ID));
-      this.formState = this.lodash.assign({}, this.formState, this.Entities.dataSource)
-    }
+  get body() {
+    return this.lodash.assign({ ID: this.ID }, this.lodash.pick(this.$route.query, ['TableName', 'TargetId']));
   }
   created() { }
   mounted() {

@@ -2,17 +2,18 @@
   <WtmDetails :loading="Entities.loading" :onFinish="onFinish">
     <a-row>
       <a-col :span="8">
-        <span>readonly</span>
+        <span>readonly (只读) </span>
         <a-switch checked-children="开" un-checked-children="关" v-model:checked="readonly" />
       </a-col>
       <a-col :span="8">
-        <span>disabled</span>
+        <span>disabled (禁用) </span>
         <a-switch checked-children="开" un-checked-children="关" v-model:checked="disabled" />
       </a-col>
       <a-col :span="8">
         <!-- <a-switch checked-children="开" un-checked-children="关" v-model:checked="checked1" /> -->
       </a-col>
     </a-row>
+    <a-divider>WtmField</a-divider>
     <WtmField
       v-for="item in PageEntitys"
       :key="item.name"

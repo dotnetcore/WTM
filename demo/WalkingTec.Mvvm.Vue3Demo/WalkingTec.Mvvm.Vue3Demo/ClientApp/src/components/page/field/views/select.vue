@@ -26,6 +26,8 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly formValidate;
   // 实体
   @Inject() readonly PageEntity;
+  // 表单类型
+  @Inject({ default: '' }) readonly formType;
   get readonlyText() {
     // if (this.lodash.isArray(this.value)) {
     //   const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, String(item.value)));

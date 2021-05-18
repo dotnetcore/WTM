@@ -42,7 +42,7 @@ export default class extends Vue {
       this.lodash.unset(values, this.pageSizeKey);
     }
     this.__wtmToQuery(values);
-    this.Pagination.onCurrentChange({ current, pageSize });
+    this.Pagination.onCurrentChange({ current, pageSize, sory: this.Pagination.sory });
   }
   created() { }
 }

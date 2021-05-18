@@ -11,6 +11,7 @@ import { NavigationFailure } from "vue-router";
 import $WtmConfig from './config';
 import { $System } from './controllers';
 import { EnumActionType } from "./enum";
+const queryCache = new Map();
 const options: ComponentOptions = {
     // data: function () {
     //     return {}
@@ -25,7 +26,13 @@ const options: ComponentOptions = {
             if (!lodash.isObject(query)) {
                 query = { [$WtmConfig.detailsVisible]: query }
             }
-            this.__queryCache = lodash.cloneDeep(query)
+            // 路由中已经存在 参数 且 值相同
+            lodash.mapKeys(this.$route.query, (value, key) => {
+                if (lodash.has(query, key) && lodash.eq(value, lodash.get(query, key))) {
+                    lodash.unset(query, key)
+                }
+            })
+            queryCache.set(this.$route.path, query)
             query = lodash.assign({}, this.$route.query, query)
             this.$router.replace({ query })
         },
@@ -34,13 +41,16 @@ const options: ComponentOptions = {
          * 去除当前页面的 query 中 detailsVisible 触发隐藏
          */
         __wtmBackDetails(queryKey?) {
+            const cache = queryCache.get(this.$route.path)
+            console.log("LENG ~ __wtmBackDetails ~ cache", cache)
             const query = lodash.omit(lodash.assign({}, this.$route.query), lodash.concat(
-                lodash.keys(this.__queryCache), [
-                $WtmConfig.detailsVisible,
-                '_readonly',
-                queryKey,
-
-            ]))
+                lodash.keys(cache),
+                [
+                    $WtmConfig.detailsVisible,
+                    '_readonly',
+                    queryKey,
+                ]
+            ))
             this.$router.replace({ query })
         },
         /**
@@ -65,8 +75,13 @@ const options: ComponentOptions = {
          * @returns 
          */
         __wtmAuthority(type: EnumActionType | string, PageController) {
+            // 鉴权开关关闭
+            if (!$WtmConfig.authority) {
+                return true
+            }
             let ActionUrl = lodash.get(PageController.options, type)
             ActionUrl = lodash.toLower(lodash.isString(ActionUrl) ? ActionUrl : ActionUrl.url)
+            // console.log("LENG ~ __wtmAuthority ~ ActionUrl",type, ActionUrl)
             // 转换成小写比较
             return lodash.some($System.UserController.UserInfo?.Attributes?.Actions, item => lodash.eq(lodash.toLower(item), ActionUrl))
         },

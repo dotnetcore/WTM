@@ -60,6 +60,11 @@ class Entity {
         label: WTM_ValueType.image,
         valueType: WTM_ValueType.image,
     }
+    readonly [WTM_ValueType.upload]: WTM_EntitiesField = {
+        name: WTM_ValueType.upload,
+        label: WTM_ValueType.upload,
+        valueType: WTM_ValueType.upload,
+    }
     readonly [WTM_ValueType.select]: WTM_EntitiesField = {
         name: WTM_ValueType.select,
         label: WTM_ValueType.select,

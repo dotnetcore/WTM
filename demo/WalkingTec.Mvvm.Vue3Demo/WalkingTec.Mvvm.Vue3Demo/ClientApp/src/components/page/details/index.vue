@@ -58,6 +58,8 @@ export default class extends Vue {
   @Inject() readonly formState = {};
   /** 自定义 校验状态 用于服务器返回 错误*/
   @Provide({ reactive: true }) formValidate = {}
+  // 只读
+  @Provide({ reactive: true }) formType = 'details';
   /** 表单 ref */
   @Ref("formRef") readonly formRef;
   /** 表单 rules */
