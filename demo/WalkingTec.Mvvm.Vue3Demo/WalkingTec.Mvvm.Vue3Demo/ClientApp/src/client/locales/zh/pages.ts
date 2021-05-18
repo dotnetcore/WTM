@@ -4,4 +4,5 @@ export default {
     'PageName.production': '正式页面',
     'PageName.home': '首页',
     'PageName.NotFound': '404',
+    'PageName.webview': 'webview',
 };

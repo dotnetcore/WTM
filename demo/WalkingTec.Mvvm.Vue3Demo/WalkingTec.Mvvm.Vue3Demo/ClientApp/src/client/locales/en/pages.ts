@@ -4,4 +4,5 @@ export default {
     'PageName.production': 'production',
     'PageName.home': 'Home',
     'PageName.NotFound': '404',
+    'PageName.webview': 'webview',
 };

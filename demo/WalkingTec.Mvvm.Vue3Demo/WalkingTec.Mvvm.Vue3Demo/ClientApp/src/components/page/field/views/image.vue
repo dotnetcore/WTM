@@ -1,6 +1,6 @@
 <template>
   <template v-if="_readonly">
-    <a-image :width="100" :src="imageUrl" />
+    <a-image :width="100" :src="imageUrl" :fallback="imagefallback" />
   </template>
   <template v-else>
     <div class="w-avatar-uploader">
@@ -16,7 +16,14 @@
           :before-upload="beforeUpload"
           @change="onChange"
         >
-          <img v-if="imageUrl" :src="imageUrl" class="w-upload-img" />
+          <!-- <img v-if="imageUrl" :src="imageUrl" class="w-upload-img" /> -->
+          <a-image
+            v-if="imageUrl"
+            :width="104"
+            class="w-upload-img"
+            :src="imageUrl"
+            :fallback="imagefallback"
+          />
           <div v-else>
             <!-- <loading-outlined v-if="loading"></loading-outlined> -->
             <plus-outlined></plus-outlined>

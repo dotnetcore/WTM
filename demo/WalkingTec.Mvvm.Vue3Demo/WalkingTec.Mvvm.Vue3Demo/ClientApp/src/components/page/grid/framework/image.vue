@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-image :width="40" :src="src" />
+    <a-image :width="40" :src="src" :fallback="imagefallback" />
   </div>
 </template>
 

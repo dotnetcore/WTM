@@ -11,6 +11,8 @@ export class FieldBasics extends Vue {
     @Prop({ type: String }) readonly name;
     // 输入提示
     @Prop({ type: String }) readonly placeholder;
+    // 校验
+    @Prop({ type: Array }) readonly rules;
     // 联动
     @Prop({ type: Array }) readonly linkage;
     // 当前实体对应的 属性key
@@ -115,7 +117,7 @@ export class FieldBasics extends Vue {
     }
     // form 校验规则
     get _rules() {
-        const rules = this.lodash.map(this.lodash.get(this.PageEntity, `${this.entityKey}.rules`), item => {
+        const rules = this.lodash.map(this.lodash.get(this.PageEntity, `${this.entityKey}.rules`, this.rules), item => {
             // 必填标识
             if (item.required) {
                 // 没有 message

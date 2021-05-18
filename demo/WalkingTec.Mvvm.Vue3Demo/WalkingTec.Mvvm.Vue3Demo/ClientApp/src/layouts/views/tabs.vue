@@ -2,7 +2,7 @@
   <a-tabs v-model:activeKey="activeKey" type="editable-card" hide-add @edit="onEdit">
     <a-tab-pane
       v-for="pane in PagesCache"
-      :key="pane.path"
+      :key="pane.pageKey"
       :tab="getTab(pane)"
       :closable="isClosable(pane)"
     ></a-tab-pane>
@@ -17,27 +17,34 @@ export default class extends Vue {
   keep = true;
   PagesCache = [];
   get activeKey() {
+    if (this.lodash.eq(this.$route.name, 'webview')) {
+      return `${this.$route.path}_${this.lodash.get(this.$route, 'query.src')}`
+    }
     return this.$route.path;
   }
   set activeKey(value) {
-    this.$router.replace(this.lodash.find(this.PagesCache, ["path", value]));
+    this.$router.replace(AppRouter.PagesCache.get(value));
   }
   isClosable(pane: _RouteRecordBase) {
     return !this.lodash.includes(['/'], pane.path)
   }
   getTab(pane: _RouteRecordBase) {
     const name = this.lodash.get<any, any>(pane, 'name')
+    if (this.lodash.eq(name, 'webview')) {
+      return this.$t(this.lodash.get(pane, 'query.name', this.lodash.get(pane, 'query.src', 'webview')))
+    }
     if (name && !this.lodash.eq(name, "NotFound")) {
       return this.$t(`PageName.${name}`)
     }
     return this.lodash.get(pane, 'path', 'NotFound')
   }
   onEdit(event) {
-    const index = this.lodash.findIndex(this.PagesCache, ['path', event])
-    this.lodash.remove(this.PagesCache, ['path', event])
+    const predicate = ['pageKey', event]
+    const index = this.lodash.findIndex(this.PagesCache, predicate)
+    this.lodash.remove(this.PagesCache, predicate)
     AppRouter.PagesCache.delete(event)
     // 停留在被关闭的页面
-    if (this.lodash.eq(this.$route.path, event)) {
+    if (this.lodash.eq(this.activeKey, event)) {
       const to = this.lodash.nth(this.PagesCache, index) || this.lodash.last(this.PagesCache);
       this.$router.replace(to)
     }

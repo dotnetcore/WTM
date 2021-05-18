@@ -6,11 +6,19 @@
     @openKeys="onOpenKeys"
     @collapse="onCollapse"
   >
+    <!-- 标题栏右侧选项 -->
     <template v-slot:rightContentRender>
       <RightContentRender />
     </template>
+    <!-- <template v-slot:headerContentRender>
+      <Tabs />
+    </template>-->
+    <!-- 标签页 -->
     <Tabs />
+    <!-- 主界面 -->
     <Container />
+    <!-- 修改密码 -->
+    <ChangePassword />
   </pro-layout>
 </template>
 <script lang="ts">
@@ -21,8 +29,9 @@ import router from "../router";
 import Container from "./views/container.vue";
 import RightContentRender from "./views/rightContentRender.vue";
 import Tabs from "./views/tabs.vue";
+import ChangePassword from "./views/changePassword.vue";
 @Options({
-  components: { RightContentRender, Container, Tabs }
+  components: { RightContentRender, Container, Tabs, ChangePassword }
 })
 export default class extends Vue {
   /**

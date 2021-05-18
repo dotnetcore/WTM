@@ -3,6 +3,7 @@ import { BindAll } from 'lodash-decorators';
 import { action, observable } from 'mobx';
 import error from './layouts/pages/error/index.vue';
 import home from './layouts/pages/home/index.vue';
+import webview from './layouts/pages/webview/index.vue';
 import { BehaviorSubject } from 'rxjs';
 import { createRouter, createWebHistory, RouteLocationNormalized, Router, RouteRecordRaw } from 'vue-router';
 import { $i18n } from './client';
@@ -72,7 +73,14 @@ class AppRouter {
    */
   afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
     console.log("afterEach", to, from)
-    this.PagesCache.set(to.path, to)
+    // webview 取 src
+    let pageKey = to.path;
+    const pageTo = lodash.assign({ pageKey }, to)
+    if (lodash.eq(to.name, 'webview')) {
+      pageKey = `${to.path}_${lodash.get(to.query, 'src')}`;
+      lodash.set(pageTo, 'pageKey', pageKey)
+    }
+    this.PagesCache.set(pageKey, pageTo)
     this.RouterBehaviorSubject.next(this.toArray())
     console.groupEnd()
     console.log('')
@@ -84,6 +92,11 @@ class AppRouter {
         path: '/',
         name: 'home',
         component: home
+      },
+      {
+        path: '/webview',
+        name: 'webview',
+        component: webview
       }
     ], this.createRouters(), [
       {
@@ -100,6 +113,7 @@ class AppRouter {
     this.Router.beforeResolve(this.beforeResolve)
     this.Router.afterEach(this.afterEach)
     this.PagesCache.set('/', {
+      pageKey: '/',
       path: '/',
       name: 'home',
     } as any)

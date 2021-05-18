@@ -25,6 +25,7 @@
     "core-js": "^3.11.1",
     "crypto-js": "^4.0.0",
     "file-saver": "^2.0.5",
+    "iframe-resizer": "^4.3.2",
     "lodash": "^4.17.21",
     "lodash-decorators": "^6.0.1",
     "mobx": "^5.15.7",
