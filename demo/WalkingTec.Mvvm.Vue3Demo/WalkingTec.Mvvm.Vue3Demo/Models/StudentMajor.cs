@@ -1,9 +1,9 @@
-﻿using System;
-
+using System;
+using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Attributes;
 
-namespace WalkingTec.Mvvm.Demo.Models
+namespace WalkingTec.Mvvm.ReactDemo.Models
 {
     [MiddleTable]
     public class StudentMajor : BasePoco
@@ -13,6 +13,7 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         public Guid MajorId { get; set; }
 
-        public Guid StudentId { get; set; }
+        [Required()]
+        public string StudentId { get; set; }
     }
 }

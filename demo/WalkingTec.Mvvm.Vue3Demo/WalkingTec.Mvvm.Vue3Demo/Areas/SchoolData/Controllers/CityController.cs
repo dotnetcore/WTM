@@ -1,29 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs;
+using WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs;
 using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.ReactDemo.Controllers
 {
     
     [AuthorizeJwtWithCookie]
-    [ActionDescription("学校管理")]
+    [ActionDescription("城市管理")]
     [ApiController]
-    [Route("api/School")]
-	public partial class SchoolController : BaseApiController
+    [Route("api/City")]
+	public partial class CityController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(SchoolSearcher searcher)
+		public IActionResult Search(CitySearcher searcher)
         {
             if (ModelState.IsValid)
             {
-                var vm = Wtm.CreateVM<SchoolListVM>();
+                var vm = Wtm.CreateVM<CityListVM>();
                 vm.Searcher = searcher;
                 return Content(vm.GetJson());
             }
@@ -35,15 +35,15 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public SchoolVM Get(string id)
+        public CityVM Get(string id)
         {
-            var vm = Wtm.CreateVM<SchoolVM>(id);
+            var vm = Wtm.CreateVM<CityVM>(id);
             return vm;
         }
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(SchoolVM vm)
+        public IActionResult Add(CityVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(SchoolVM vm)
+        public IActionResult Edit(CityVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [ActionDescription("Sys.Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
-            var vm = Wtm.CreateVM<SchoolBatchVM>();
+            var vm = Wtm.CreateVM<CityBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -112,9 +112,9 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(SchoolSearcher searcher)
+        public IActionResult ExportExcel(CitySearcher searcher)
         {
-            var vm = Wtm.CreateVM<SchoolListVM>();
+            var vm = Wtm.CreateVM<CityListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             return vm.GetExportData();
@@ -124,7 +124,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = Wtm.CreateVM<SchoolListVM>();
+            var vm = Wtm.CreateVM<CityListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -133,26 +133,11 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             return vm.GetExportData();
         }
 
-        [HttpPost("BatchEdit")]
-        [ActionDescription("Sys.BatchEdit")]
-        public ActionResult DoBatchEdit(SchoolBatchVM vm)
-        {
-            if (!ModelState.IsValid || !vm.DoBatchEdit())
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(vm.Ids.Count());
-            }
-        }
-
-
         [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = Wtm.CreateVM<SchoolImportVM>();
+            var vm = Wtm.CreateVM<CityImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
@@ -165,7 +150,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(SchoolImportVM vm)
+        public ActionResult Import(CityImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -183,6 +168,12 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         public ActionResult GetCitys()
         {
             return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+        }
+
+        [HttpGet("GetCitysTree")]
+        public ActionResult GetCitysTree()
+        {
+            return Ok(DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name));
         }
 
     }

@@ -13,8 +13,8 @@ using VueCliMiddleware;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
-using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.Vue3Demo
 {

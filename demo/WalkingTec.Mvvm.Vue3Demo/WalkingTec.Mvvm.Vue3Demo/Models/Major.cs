@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.Demo.Models
+namespace WalkingTec.Mvvm.ReactDemo.Models
 {
 
     public enum MajorTypeEnum

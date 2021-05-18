@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.Vue3Demo
 {
@@ -15,6 +15,8 @@ namespace WalkingTec.Mvvm.Vue3Demo
         public DbSet<Major> Majors { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<Student> Students { get; set; }
+
+        public DbSet<City> Cities { get; set; }
 
 
         public DataContext(CS cs)
