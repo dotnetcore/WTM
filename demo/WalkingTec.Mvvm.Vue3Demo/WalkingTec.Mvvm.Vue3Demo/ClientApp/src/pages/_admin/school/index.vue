@@ -1,22 +1,15 @@
 <template>
-  <!-- <ViewFilter /> -->
-  <!-- <ViewAction /> -->
-  <!-- <ViewGrid /> -->
-  <!-- <WtmView>
+  <ViewFilter />
+  <ViewAction />
+  <a-divider />
+  <ViewGrid />
+  <WtmView>
     <ViewDetails />
-  </WtmView>-->
-  <a-tabs v-model:activeKey="activeKey" tab-position="left">
-    <a-tab-pane key="1" tab="表单">
-      <a-divider>表单测试</a-divider>
-      <ViewDetails />
-    </a-tab-pane>
-    <a-tab-pane key="2" tab="Tab 2">Content of Tab 2</a-tab-pane>
-    <a-tab-pane key="3" tab="Tab 3">Content of Tab 3</a-tab-pane>
-  </a-tabs>
+  </WtmView>
 </template>
 <script lang="ts">
-import { Options, Provide, Vue } from "vue-property-decorator";
-import PageController, { PageEntity } from "./controller";
+import { Options,Provide,Vue } from "vue-property-decorator";
+import PageController,{ PageEntity } from "./controller";
 import ViewAction from "./views/action.vue";
 import ViewDetails from "./views/details.vue";
 import ViewFilter from "./views/filter.vue";
@@ -31,6 +24,10 @@ import ViewGrid from "./views/grid.vue";
 })
 export default class extends Vue {
   /**
+   * 后端控制器标识
+   */
+   static controller = "WalkingTec.Mvvm.Admin.Api,FrameworkUser"
+  /**
    * 当前页面控制器
    * 子组件 通过 Inject 均可访问
    */
@@ -40,8 +37,7 @@ export default class extends Vue {
    * 子组件 通过 Inject 均可访问
    */
   @Provide({ reactive: true }) readonly PageEntity = PageEntity;
-  activeKey = "1"
-  created() { }
+  created() {}
   mounted() {
     console.log("");
     console.group(this.$route.name);

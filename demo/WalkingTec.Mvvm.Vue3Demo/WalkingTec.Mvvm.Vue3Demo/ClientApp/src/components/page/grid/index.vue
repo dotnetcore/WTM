@@ -60,9 +60,9 @@ export default class Grid extends Vue {
     );
   }
 
-  get options() {
+  get options(): GridOptions {
     const { frameworkComponents = {}, ...gridOptions } = this.gridOptions;
-    const options = this.lodash.assign(
+    const options: GridOptions = this.lodash.assign(
       {
         frameworkComponents: this.lodash.assign(
           {},
@@ -127,7 +127,10 @@ export default class Grid extends Vue {
     let height = 500;
     height = window.innerHeight - this.gridContent.offsetTop - 125;
     this.style.height = height + "px";
-    Grid.Cache.set(this.pageKey, height)
+    if (lodash.eq(this.$WtmConfig.userAgent.platform.type, "mobile")) {
+      this.style.height = "70vh";
+    }
+    Grid.Cache.set(this.pageKey, this.style.height)
   }
   @Watch("Pagination.loading")
   onLoading(val, old) {
@@ -153,7 +156,7 @@ export default class Grid extends Vue {
   created() {
     this.pageKey = this.$route.path
     if (Grid.Cache.has(this.pageKey)) {
-      this.style.height = Grid.Cache.get(this.pageKey) + "px";
+      this.style.height = Grid.Cache.get(this.pageKey);
     }
   }
   mounted() {

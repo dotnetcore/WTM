@@ -1,12 +1,22 @@
 <template>
-  <a-tabs v-model:activeKey="activeKey" type="editable-card" hide-add @edit="onEdit">
-    <a-tab-pane
-      v-for="pane in PagesCache"
-      :key="pane.pageKey"
-      :tab="getTab(pane)"
-      :closable="isClosable(pane)"
-    ></a-tab-pane>
-  </a-tabs>
+  <a-affix :offsetTop="48">
+    <!-- <div > -->
+    <a-tabs
+      class="w-affix-tabs"
+      v-model:activeKey="activeKey"
+      type="editable-card"
+      hide-add
+      @edit="onEdit"
+    >
+      <a-tab-pane
+        v-for="pane in PagesCache"
+        :key="pane.pageKey"
+        :tab="getTab(pane)"
+        :closable="isClosable(pane)"
+      ></a-tab-pane>
+    </a-tabs>
+    <!-- </div> -->
+  </a-affix>
 </template>
 <script lang="ts">
 import { Vue, Options } from "vue-property-decorator";
@@ -60,4 +70,9 @@ export default class extends Vue {
 }
 </script>
 <style lang="less">
+.w-affix-tabs {
+  .ant-tabs-bar {
+    background: white;
+  }
+}
 </style>

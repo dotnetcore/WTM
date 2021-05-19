@@ -45,6 +45,7 @@ export default class extends Vue {
     logo: require('@/assets/img/logo.png'),
     // layout: "top",
     title: "WTM",
+    // navTheme:"light",
     collapsed: false,
     fixSiderbar: true,
     fixedHeader: true,

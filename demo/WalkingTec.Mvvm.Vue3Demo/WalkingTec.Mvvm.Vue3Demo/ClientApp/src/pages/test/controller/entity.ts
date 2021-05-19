@@ -9,6 +9,7 @@ class Entity {
     readonly [WTM_ValueType.text]: WTM_EntitiesField = {
         name: WTM_ValueType.text,
         label: WTM_ValueType.text,
+        rules: [{ required: true }]
     }
     readonly [WTM_ValueType.password]: WTM_EntitiesField = {
         name: WTM_ValueType.password,
@@ -82,6 +83,7 @@ class Entity {
                 { label: $i18n.t(EnumLocaleLabel.Sex_Female), value: 'Female' }
             ]
         },
+        rules: [{ required: true }]
     }
     readonly [WTM_ValueType.checkbox]: WTM_EntitiesField = {
         name: WTM_ValueType.checkbox,

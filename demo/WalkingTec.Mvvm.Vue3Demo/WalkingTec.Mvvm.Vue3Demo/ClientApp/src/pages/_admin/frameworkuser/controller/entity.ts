@@ -14,6 +14,8 @@ class Entity {
     readonly ID: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'ID'],
+        // 输入框提示 非必填 默认如下
+        // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.ID),
         // label 字段描述
         label: EnumLocaleLabel.ID,
     }
@@ -23,13 +25,8 @@ class Entity {
     * @memberof Entity
     */
     readonly ITCode: WTM_EntitiesField = {
-        // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'ITCode'],
-        // label 字段描述
         label: EnumLocaleLabel.ITCode,
-        // 输入框提示 非必填 默认如下
-        // placeholder: $i18n.toPlaceholder(EnumLocaleLabel.ITCode),
-        // 校验规则
         rules: [{ required: true }],
     }
     /**
@@ -60,7 +57,6 @@ class Entity {
     readonly Email: WTM_EntitiesField = {
         name: ['Entity', 'Email'],
         label: EnumLocaleLabel.Email,
-        // rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.Email) }],
     }
     /**
     * 备注预留
@@ -135,7 +131,6 @@ class Entity {
         label: EnumLocaleLabel.RoleName,
         valueType: WTM_ValueType.transfer,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
-        // rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.RoleName), type: "array" }],
     }
     /**
     * 备注预留
@@ -147,7 +142,6 @@ class Entity {
         label: EnumLocaleLabel.GroupName,
         valueType: WTM_ValueType.transfer,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkGroups'),
-        // rules: [{ required: true, message: $i18n.toRulesMessage(EnumLocaleLabel.GroupName), type: "array" }],
     }
 }
 export const PageEntity = new Entity()

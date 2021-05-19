@@ -29,24 +29,37 @@ export declare type WTM_EntitiesField = {
 }
 // https://procomponents.ant.design/components/field-set
 export enum WTM_ValueType {
+    /** 密码框 */
     password = "password",
+    /** 文本域 */
     textarea = "textarea",
+    /** 时间 */
     date = "date",
     dateWeek = "dateWeek",
     dateMonth = "dateMonth",
     dateRange = "dateRange",
+    /** 文本 */
     text = "text",
+    /** 选择框 */
     select = "select",
+    /** 滑动输入 */
     slider = "slider",
+    /** 多选框 */
     checkbox = "checkbox",
+    /** 评分 */
     rate = "rate",
+    /** 单选 */
     radio = "radio",
+    /** 开关 */
+    switch = "switch",
+    /** 图片上传 */
+    image = "image",
+    /** 穿梭框 */
+    transfer = "transfer",
+    /** 文件 */
+    upload = "upload",
     // radioButton = "radioButton",
     // progress = "progress",
-    switch = "switch",
-    image = "image",
-    transfer = "transfer",
-    upload = "upload",
     // money = "money",
     // option = "option",
     // dateQuarter = "dateQuarter",

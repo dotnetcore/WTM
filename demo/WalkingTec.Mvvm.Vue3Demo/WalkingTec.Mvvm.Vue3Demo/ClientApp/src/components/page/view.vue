@@ -41,6 +41,8 @@ export default class extends Vue {
   @Prop() readonly queryKey: string;
   /** 标题  */
   @Prop() readonly title: string;
+  /** 弹框类型 */
+  @Prop() readonly modalType: "modal" | "drawer";
   /** 记录创建 时的 page */
   PageKey = null;
   get visibleKey() {
@@ -48,7 +50,8 @@ export default class extends Vue {
   }
   get isModal() {
     const width = window.innerWidth;
-    return this.lodash.eq(this.$WtmConfig.modalType, 'modal') && width > 701;
+    const modalType = this.modalType || this.$WtmConfig.modalType
+    return this.lodash.eq(modalType, 'modal') && width > 701;
   }
   get query() {
     return this.lodash.clone(this.$route.query);

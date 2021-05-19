@@ -1,34 +1,20 @@
 <template>
-  <!-- <template v-if="_readonly">
-    <a-list item-layout="horizontal" :data-source="value">
-      <template #renderItem="{ item }">
-        <a-list-item>
-          <a-list-item-meta :title="item.name"></a-list-item-meta>
-        </a-list-item>
-      </template>
-    </a-list>
-  </template>-->
-  <!-- <template v-else> -->
   <div class="w-uploader" :class="{ 'w-uploader-readonly': _readonly }">
-    <!-- <a-spin :spinning="spinning"> -->
-      <!--  -->
-      <a-upload
-        v-model:fileList="value"
-        :disabled="disabled || _readonly"
-        :multiple="true"
-        :action="action"
-        :before-upload="beforeUpload"
-        :remove="onRemove"
-        @change="onChange"
-        v-bind="fieldProps"
-      >
-        <a-button>
-          <upload-outlined />Upload
-        </a-button>
-      </a-upload>
-    <!-- </a-spin> -->
+    <a-upload
+      v-model:fileList="value"
+      :disabled="disabled || _readonly"
+      :multiple="true"
+      :action="action"
+      :before-upload="beforeUpload"
+      :remove="onRemove"
+      @change="onChange"
+      v-bind="fieldProps"
+    >
+      <a-button>
+        <upload-outlined />Upload
+      </a-button>
+    </a-upload>
   </div>
-  <!-- </template> -->
 </template>
 <script lang="ts">
 import { Vue, Options, Watch, mixins, Inject } from "vue-property-decorator";
@@ -53,12 +39,7 @@ export default class extends mixins(FieldBasics) {
   set value(value) {
     this.lodash.set(this.formState, this._name, value);
   }
-  // fileList = [this.value]
   async mounted() {
-    // this.onRequest();
-    // if (this.value) {
-    //   this.imageUrl = $System.FilesController.getDownloadUrl(this.value)
-    // }
     if (this.debug) {
       console.log("");
       console.group(`Field ~ ${this.entityKey} ${this._name} `);

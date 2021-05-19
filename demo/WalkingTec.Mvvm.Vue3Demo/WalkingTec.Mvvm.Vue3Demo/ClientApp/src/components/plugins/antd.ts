@@ -1,4 +1,5 @@
 import {
+    Affix,
     Avatar,
     Button,
     Col,
@@ -44,6 +45,7 @@ export default {
     install(app: App) {
         /**    use antd 组件    */
         [
+            Affix,
             Avatar,
             Popconfirm,
             Button,
