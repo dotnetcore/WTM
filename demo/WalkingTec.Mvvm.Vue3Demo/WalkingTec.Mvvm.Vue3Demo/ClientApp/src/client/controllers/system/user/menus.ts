@@ -23,7 +23,7 @@ export class UserMenus {
         }
     }
     getMenus() {
-        console.log("LENG ~ UserMenus ~ getMenus ~ this.menus", this.menus)
+        // console.log("LENG ~ UserMenus ~ getMenus ~ this.menus", this.menus)
         return this.menus
     }
     /**
@@ -34,11 +34,15 @@ export class UserMenus {
      */
     recursionTree(datalist, ParentId, children = []) {
         lodash.filter(datalist, ['ParentId', ParentId]).map(data => {
-            const router = {
-                path: this.getPath(data.Url, data.Text),
+            let router: any = {
+                path: data.Url,
                 name: data.Url ? undefined : data.Id,
             }
-            data = lodash.assign({}, router, {
+            // 外部链接地址
+            if (Regulars.url.test(data.Url)) {
+                router = queryString.stringifyUrl({ url: '/webview', query: { src: data.Url, name: data.Text } })
+            }
+            data = lodash.assign({}, {
                 router: { to: router },
                 meta: {
                     // icon: data.Icon, 
@@ -49,11 +53,5 @@ export class UserMenus {
             children.push(data);
         });
         return children;
-    }
-    getPath(url, name: string) {
-        if (Regulars.url.test(url)) {
-            return queryString.stringifyUrl({ url: '/webview', query: { src: url, name } })
-        }
-        return url
     }
 }
