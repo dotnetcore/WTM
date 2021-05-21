@@ -1,4 +1,4 @@
-import { message } from 'ant-design-vue';
+import { message, notification } from 'ant-design-vue';
 import lodash from 'lodash';
 import moment from 'moment';
 import NProgress from 'nprogress';
@@ -46,8 +46,12 @@ AjaxBasics.onError = function (error) {
     if (lodash.get(error, 'status') === 401) {
         return $System.UserController.onLogOut()
     }
-    if (error.response) {
-        // message.error('')
+    const Message = lodash.get(error, 'response.Message', []);
+    if (Message.length) {
+        notification.error({
+            message: i18n.global.t($locales.tips_error_operation),
+            description: lodash.join(Message, '\n')
+        })
     }
 }
 export const $Ajax = new AjaxBasics({ target: $WtmConfig.target })

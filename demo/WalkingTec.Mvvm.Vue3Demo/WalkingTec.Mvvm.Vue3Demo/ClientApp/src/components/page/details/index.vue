@@ -116,7 +116,7 @@ export default class extends Vue {
     });
     console.error("LENG  ~ onFail ", this.formRef, formErrors, error);
     this.spinning = false;
-    this.$message.error(this.errorMsg)
+    // this.$message.error(this.errorMsg)
   }
   created() { }
   mounted() {

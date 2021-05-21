@@ -9,7 +9,7 @@
     </a-space>
     <a-space>
       <WtmField entityKey="SelectedModule" v-if="IsInside" @change="onModuleChange" />
-      <WtmField entityKey="Url" :readonly="IsInside" />
+      <WtmField entityKey="Url" :disabled="IsInside" />
     </a-space>
     <a-space>
       <WtmField

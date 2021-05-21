@@ -3,7 +3,7 @@ import { $i18n, WTM_EntitiesField, WTM_ValueType, FieldRequest } from '@/client'
 import { EnumLocaleLabel } from '../locales';
 import router from '@/router';
 import lodash from 'lodash';
-import { defer, of } from 'rxjs';
+import { async, defer, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
 /**
@@ -56,6 +56,7 @@ class Entity {
     readonly DisplayOrder: WTM_EntitiesField = {
         name: ['Entity', 'DisplayOrder'],
         label: EnumLocaleLabel.DisplayOrder,
+        rules: [{ required: true }],
     }
     readonly IsInside: WTM_EntitiesField = {
         name: ['Entity', 'IsInside'],
@@ -80,6 +81,8 @@ class Entity {
     readonly ParentId: WTM_EntitiesField = {
         name: ['Entity', 'ParentId'],
         label: EnumLocaleLabel.ParentId,
+        valueType: WTM_ValueType.select,
+        request: async () => FieldRequest("/api/_FrameworkMenu/GetFolders")
     }
 
 }
