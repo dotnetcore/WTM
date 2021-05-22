@@ -15,11 +15,13 @@ export default {
     en: {
         [EnumLocaleLabel.ID]: 'ID',
         [EnumLocaleLabel.PageName]: 'school',
-       
+        [EnumLocaleLabel.SchoolCode]: 'SchoolCode',
+        [EnumLocaleLabel.Majors]:'Majors'
     },
     zh: {
         [EnumLocaleLabel.ID]: 'ID',
         [EnumLocaleLabel.PageName]: '学校',
-        
+        [EnumLocaleLabel.SchoolCode]: 'SchoolCode',
+        [EnumLocaleLabel.Majors]:'Majors'
     }
 }

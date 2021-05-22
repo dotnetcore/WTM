@@ -8,13 +8,15 @@ import { App } from 'vue';
 import $WtmConfig, { WtmConfig } from './config';
 import { WTM_ValueType } from './declare';
 import { EnumActionType } from './enum';
-import { AjaxBasics } from './helpers';
+import { AjaxBasics, Encryption, Regulars } from './helpers';
 import { $System } from './controllers';
 import i18n, { $locales, Enumlocales } from './locales';
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
         $WtmConfig: WtmConfig
         $Ajax: AjaxBasics
+        $Encryption:typeof Encryption
+        $Regulars:typeof Regulars
         $locales: Enumlocales
         moment: typeof moment
         $message: typeof message
@@ -70,6 +72,8 @@ export function FieldRequest(request: string | AjaxRequest) {
 export const globalProperties = {
     $WtmConfig,
     $Ajax,
+    $Encryption: Encryption,
+    $Regulars: Regulars,
     $locales,
     moment,
     lodash,

@@ -17,6 +17,12 @@ class Entity {
         // label 字段描述
         label: EnumLocaleLabel.ID,
     }
-    
+    readonly Majors: WTM_EntitiesField = {
+        // form 的 name 属性 解析为 Entity.ITCode
+        name: 'Majors',
+        // label 字段描述
+        label: EnumLocaleLabel.Majors,
+        valueType: WTM_ValueType.grid
+    }
 }
 export const PageEntity = new Entity()

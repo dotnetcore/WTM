@@ -36,7 +36,9 @@ export default class AgGrid extends Vue {
   get GridKey() {
     return this.$i18n.locale;
   }
-  created() { }
+  created() { 
+    console.log(this)
+  }
 }
 </script>
 <style lang="less">

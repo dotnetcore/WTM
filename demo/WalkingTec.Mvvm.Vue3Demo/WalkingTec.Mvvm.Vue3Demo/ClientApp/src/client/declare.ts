@@ -62,6 +62,8 @@ export enum WTM_ValueType {
     transfer = "transfer",
     /** 文件 */
     upload = "upload",
+    /** 可编辑表格 */
+    grid = "grid",
     // radioButton = "radioButton",
     // progress = "progress",
     // money = "money",

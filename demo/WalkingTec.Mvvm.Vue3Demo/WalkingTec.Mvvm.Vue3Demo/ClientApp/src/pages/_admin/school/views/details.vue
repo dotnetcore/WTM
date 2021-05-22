@@ -3,14 +3,12 @@
     <template v-show="false">
       <WtmField entityKey="ID" />
     </template>
-    <WtmField entityKey="SchoolCode" />
-    <WtmField entityKey="SchoolName" />
-    <WtmField entityKey="SchoolType" />
-    <WtmField entityKey="Remark" />
+    <WtmField entityKey="Majors" :fieldProps="{ columnDefs, gridOptions }" />
   </WtmDetails>
 </template>
 <script lang="ts">
 import { PageDetailsBasics } from "@/components";
+import { ColDef, ColGroupDef, GridOptions } from "ag-grid-community";
 import { Inject, mixins, Options, Provide } from "vue-property-decorator";
 import { PageController } from "../controller";
 @Options({ components: {} })
@@ -18,26 +16,40 @@ export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
     Entity: {
-      ID: "",
-      ITCode: "",
-      Password: "",
-      Email: "",
-      Name: "",
-      Gender: "Male",
-      CellPhone: "",
-      HomePhone: "",
-      Address: "",
-      ZipCode: "",
-      PhotoId: undefined,
+      ID: ""
     },
-    SelectedRolesCodes: [],
-    SelectedGroupCodes: [],
+    Majors: []
   };
-  created() { }
+  // 编辑表格配置 https://www.ag-grid.com/vue-grid/cell-editing/
+  get columnDefs(): (ColDef | ColGroupDef)[] {
+    return [
+      { field: "Name", headerName: "Name" },
+      { field: "Age", headerName: "Age" },
+      {
+        field: "Sex",
+        headerName: "Sex",
+        cellEditor: "agRichSelectCellEditor",
+        cellEditorParams: {
+          values: ["男", "女"]
+        }
+      }
+    ];
+  }
+  get gridOptions(): GridOptions {
+    return {};
+  }
+  /**
+   * 传递给 details 组件的 提交函数 返回一个 Promise
+   * @param values
+   * @returns
+   */
+  async onFinish(values) {
+    console.log("LENG ~ extends ~ onFinish ~ values", values);
+  }
+  created() {}
   mounted() {
-    this.onLoading()
+    this.onLoading();
   }
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>
