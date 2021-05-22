@@ -4,19 +4,29 @@ using System.Text.Json.Serialization;
 using BootstrapBlazor.Components;
 using Microsoft.Extensions.DependencyInjection;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.ConfigOptions;
 using WalkingTec.Mvvm.Core.Json;
 
 namespace WtmBlazorUtils
 {
     public static class ServiceExtension
     {
-        public static void AddWtmBlazor(this IServiceCollection self, Configs config)
+        public static void AddWtmBlazor(this IServiceCollection self, Configs config, string baseAddress="")
         {
             self.AddScoped<GlobalItems>();
             self.AddSingleton<Configs>(config);
+            string url = "";
+            Domain domain = null;
+            if(config.Domains.TryGetValue("server",out domain) && string.IsNullOrEmpty(domain?.Url) == false){
+                url = domain.Url;
+            }
+            else
+            {
+                url = baseAddress;
+            }
             self.AddHttpClient<ApiClient>(x =>
             {
-                x.BaseAddress = new Uri(config.Domains["server"].Url);
+                x.BaseAddress = new Uri(url);
                 x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
                 x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
             });

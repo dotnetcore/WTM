@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Client
             builder.RootComponents.Add<Shared.App>("app");
             builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
             builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(Shared.Program); });
-            builder.Services.AddWtmBlazor(configs);
+            builder.Services.AddWtmBlazor(configs, builder.HostEnvironment.BaseAddress);
             var host = builder.Build();
             var jsInterop = host.Services.GetRequiredService<IJSRuntime>();
             var result = await jsInterop.InvokeAsync<string>("localStorageFuncs.get", "wtmculture");
