@@ -9,6 +9,7 @@
         :placeholder="_placeholder"
         :disabled="disabled"
         :options="dataSource"
+        v-bind="_fieldProps"
       />
     </template>
   </a-spin>
@@ -25,10 +26,12 @@ export default class extends mixins(FieldBasics) {
   // 实体
   @Inject() readonly PageEntity;
   // 表单类型
-  @Inject({ default: '' }) readonly formType;
+  @Inject({ default: "" }) readonly formType;
   get readonlyText() {
-    const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, String(item.value)));
-    return this.lodash.map(filters, 'label').join(' / ')
+    const filters = this.lodash.filter(this.dataSource, item =>
+      this.lodash.includes(this.value, String(item.value))
+    );
+    return this.lodash.map(filters, "label").join(" / ");
   }
   async mounted() {
     this.onRequest();
@@ -42,5 +45,4 @@ export default class extends mixins(FieldBasics) {
   }
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

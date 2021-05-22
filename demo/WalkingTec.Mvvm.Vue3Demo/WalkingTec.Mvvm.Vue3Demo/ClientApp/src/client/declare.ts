@@ -25,7 +25,11 @@ export declare type WTM_EntitiesField = {
     /** 联动字段 */
     linkage?: Array<string>;
     /** 数据类型 */
-    valueType?: WTM_ValueType
+    valueType?: WTM_ValueType;
+    /**
+     * 传递给 Field 的 props
+     */
+    fieldProps?: any;
 }
 // https://procomponents.ant.design/components/field-set
 export enum WTM_ValueType {

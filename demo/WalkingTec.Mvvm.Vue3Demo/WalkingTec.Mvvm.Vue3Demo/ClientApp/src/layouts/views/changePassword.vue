@@ -1,5 +1,9 @@
 <template>
-  <WtmView queryKey="changePassword" :title="$t($locales.action_user_changePassword)">
+  <WtmView
+    queryKey="changePassword"
+    :fixedPage="false"
+    :title="$t($locales.action_user_changePassword)"
+  >
     <WtmDetails queryKey="changePassword" :onFinish="onFinish">
       <WtmField
         name="OldPassword"
@@ -35,21 +39,20 @@ export default class extends Vue {
   @Provide({ reactive: true }) formState = {
     OldPassword: undefined,
     NewPassword: undefined,
-    NewPasswordComfirm: undefined,
+    NewPasswordComfirm: undefined
   };
   async validator(rule, value) {
     if (value && value !== this.formState.NewPassword) {
-      throw this.$t(this.$locales.update_pwd_inconsistent)
+      throw this.$t(this.$locales.update_pwd_inconsistent);
     } else {
-      return true
+      return true;
     }
   }
   onFinish(formState) {
-    return this.System.UserController.onChangePassword(formState)
+    return this.System.UserController.onChangePassword(formState);
   }
-  created() { }
-  mounted() { }
+  created() {}
+  mounted() {}
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

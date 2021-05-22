@@ -26,6 +26,9 @@ export class UserMenus {
         // console.log("LENG ~ UserMenus ~ getMenus ~ this.menus", this.menus)
         return this.menus
     }
+    findMenus(path) {
+        return lodash.find(this.ParallelMenu, ['Url', path])
+    }
     /**
      * 递归 格式化 树
      * @param datalist 
@@ -34,16 +37,13 @@ export class UserMenus {
      */
     recursionTree(datalist, ParentId, children = []) {
         lodash.filter(datalist, ['ParentId', ParentId]).map(data => {
-            let router: any = {
-                path: data.Url,
-                name: data.Url ? undefined : data.Id,
-            }
+            let path = data.Url
             // 外部链接地址
             if (Regulars.url.test(data.Url)) {
-                router = queryString.stringifyUrl({ url: '/webview', query: { src: data.Url, name: data.Text } })
+                path = queryString.stringifyUrl({ url: '/webview', query: { src: data.Url, name: data.Text } })
             }
-            data = lodash.assign({}, {
-                router: { to: router },
+            data = lodash.assign({ path }, {
+                router: { to: path },
                 meta: {
                     // icon: data.Icon, 
                     title: data.Text

@@ -1,5 +1,7 @@
 
 import { $i18n, WTM_EntitiesField, WTM_ValueType, FieldRequest } from '@/client';
+import router from '@/router';
+import lodash from 'lodash';
 import { EnumLocaleLabel } from '../locales';
 
 /**
@@ -71,6 +73,26 @@ class Entity {
         label: WTM_ValueType.select,
         valueType: WTM_ValueType.select,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
+    }
+    readonly SelectedModule: WTM_EntitiesField = {
+        name: 'SelectedModule',
+        label: EnumLocaleLabel.SelectedModule,
+        request: router.onGetRequest,
+        valueType: WTM_ValueType.select
+    }
+    readonly SelectedActionIDs: WTM_EntitiesField = {
+        name: 'SelectedActionIDs',
+        label: EnumLocaleLabel.SelectedActionIDs,
+        // 联动 SelectedModule  ['Entity', 'FolderOnly'] name 使用 Entity.FolderOnly
+        linkage: ['SelectedModule'],
+        request: async (formState) => {
+            // console.log("LENG ~ Entity ~ request: ~ formState", formState)
+            // await of(1).pipe(delay(1000)).toPromise() 模拟网速慢
+            const ModelName = lodash.get(formState, 'SelectedModule');
+            return ModelName ? FieldRequest({ url: "/api/_FrameworkMenu/GetActionsByModel", body: { ModelName } }) : []
+        },
+        valueType: WTM_ValueType.select,
+        fieldProps: { mode: 'tags' }
     }
     readonly [WTM_ValueType.radio]: WTM_EntitiesField = {
         name: WTM_ValueType.radio,

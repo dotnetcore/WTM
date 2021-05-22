@@ -14,7 +14,6 @@
     <a-space>
       <WtmField
         entityKey="SelectedActionIDs"
-        :fieldProps="{ mode: 'tags' }"
         :disabled="!formState.SelectedModule"
       />
     </a-space>

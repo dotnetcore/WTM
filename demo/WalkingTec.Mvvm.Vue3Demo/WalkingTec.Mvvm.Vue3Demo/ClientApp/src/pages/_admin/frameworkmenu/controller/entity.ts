@@ -36,7 +36,8 @@ class Entity {
             const ModelName = lodash.get(formState, 'SelectedModule');
             return ModelName ? FieldRequest({ url: "/api/_FrameworkMenu/GetActionsByModel", body: { ModelName } }) : []
         },
-        valueType: WTM_ValueType.select
+        valueType: WTM_ValueType.select,
+        fieldProps: { mode: 'tags' }
     }
     readonly FolderOnly: WTM_EntitiesField = {
         name: ['Entity', 'FolderOnly'],

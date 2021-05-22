@@ -18,7 +18,7 @@ export class FieldBasics extends Vue {
     // 当前实体对应的 属性key
     @Prop({ type: String }) readonly entityKey;
     /** 给 field组件的 fieldProps */
-    @Prop({}) readonly fieldProps;
+    @Prop({ type: Object, default: () => { } }) readonly fieldProps;
     // 值类型
     @Prop({ type: String, default: "text" }) readonly valueType: WTM_ValueType;
     // 只读
@@ -129,6 +129,16 @@ export class FieldBasics extends Vue {
         });
 
         return rules;
+    }
+    /** 给 field组件的 fieldProps */
+    get _fieldProps() {
+        const fieldProps = this.lodash.head(this.lodash.compact([
+            // 优先获取 Props 配置
+            this.fieldProps,
+            // 获取 Entity 配置
+            this.lodash.get(this.PageEntity, `${this.entityKey}.fieldProps`),
+        ]));
+        return fieldProps;
     }
     // 属性值 v-model:value
     get value() {

@@ -10,7 +10,7 @@
       <a-divider>表单测试</a-divider>
       <ViewDetails />
     </a-tab-pane>
-    <a-tab-pane key="2" tab="Tab 2">Content of Tab 2</a-tab-pane>
+    <a-tab-pane key="2" tab="树结构">Content of Tab 2</a-tab-pane>
     <a-tab-pane key="3" tab="Tab 3">Content of Tab 3</a-tab-pane>
   </a-tabs>
 </template>

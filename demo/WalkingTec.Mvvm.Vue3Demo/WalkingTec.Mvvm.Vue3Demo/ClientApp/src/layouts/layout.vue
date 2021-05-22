@@ -23,6 +23,7 @@
 </template>
 <script lang="ts">
 import { SystemController } from "@/client";
+import queryString from "query-string";
 import lodash from "lodash";
 import { Inject, Options, Vue, Watch } from "vue-property-decorator";
 import router from "../router";
@@ -42,7 +43,7 @@ export default class extends Vue {
     // menuData: this.menuData,
     headerHeight: 48,
     sideWidth: 208,
-    logo: require('@/assets/img/logo.png'),
+    logo: require("@/assets/img/logo.png"),
     // layout: "top",
     title: "WTM",
     // navTheme:"light",
@@ -66,19 +67,28 @@ export default class extends Vue {
   getMenuData() {
     const production = this.System.UserController.UserMenus.getMenus();
     if (this.$WtmConfig.production) {
-      console.log("🚀 ~ file: layout.vue ~ line 57 ~ extends ~ getMenuData ~ production", production)
+      console.log(
+        "🚀 ~ file: layout.vue ~ line 57 ~ extends ~ getMenuData ~ production",
+        production
+      );
       return production;
     }
-    const RouterConfig = router.RouterConfig.filter(item => !lodash.eq(item.name, 'NotFound'))
+    const RouterConfig = router.RouterConfig.filter(
+      item => !lodash.eq(item.name, "NotFound")
+    );
     const menus = [
       {
         name: "development",
         path: "development",
         // <router-link> Props
         router: {},
-        meta: { icon: "SaveOutlined", title: this.$t(this.$locales["PageName.development"]), target: "a" },
+        meta: {
+          icon: "SaveOutlined",
+          title: this.$t(this.$locales["PageName.development"]),
+          target: "a"
+        },
         children: lodash.map(RouterConfig, item => {
-          const router = lodash.pick(item, ["path", "name"])
+          const router = lodash.pick(item, ["path", "name"]);
           const data = lodash.assign(router, {
             // <router-link> Props
             router: { to: router },
@@ -94,7 +104,10 @@ export default class extends Vue {
       {
         name: "test",
         path: "test",
-        meta: { icon: "SaveOutlined", title: this.$t(this.$locales["PageName.test"]) },
+        meta: {
+          icon: "SaveOutlined",
+          title: this.$t(this.$locales["PageName.test"])
+        },
         children: [
           {
             path: "/test/1",
@@ -103,35 +116,46 @@ export default class extends Vue {
             children: [
               {
                 path: "/test/2",
-                router: { to: { path: '/test' } },
-                meta: { icon: "SaveOutlined", title: "三级菜单" },
+                router: { to: { path: "/test" } },
+                meta: { icon: "SaveOutlined", title: "三级菜单" }
               }
             ]
           }
         ]
-      },
+      }
     ];
     if (production.length) {
       menus.push({
         name: "production",
         path: "production",
         router: {},
-        meta: { icon: "SaveOutlined", title: this.$t(this.$locales["PageName.production"]), target: "a" },
+        meta: {
+          icon: "SaveOutlined",
+          title: this.$t(this.$locales["PageName.production"]),
+          target: "a"
+        },
         children: production
       });
     }
 
     return menus;
   }
-  created() { }
+  created() {}
   mounted() {
     // console.log("LENG ~ extends ~ mounted ~ this", this.$route.name)
-    this.provider.openKeys = [this.$route.path]
-    this.provider.selectedKeys = [this.$route.path]
+    this.provider.openKeys = [this.$route.path];
+    this.onRoute();
   }
-  @Watch("$route.path")
-  onRoute(val, old) {
-    this.provider.selectedKeys = [val]
+  @Watch("$route")
+  onRoute(val?, old?) {
+    let selectedKeys = this.$route.path;
+    if (lodash.eq(this.$route.path, "/webview")) {
+      selectedKeys = queryString.stringifyUrl({
+        url: "/webview",
+        query: lodash.pick(this.$route.query, ["src", "name"])
+      });
+    }
+    this.provider.selectedKeys = [selectedKeys];
   }
   onCollapse(collapsed) {
     this.provider.collapsed = collapsed;
@@ -145,9 +169,7 @@ export default class extends Vue {
     this.provider.openKeys = event;
   }
 }
-function toMenus() {
-
-}
+function toMenus() {}
 </script>
 <style lang="less">
 .w-app {

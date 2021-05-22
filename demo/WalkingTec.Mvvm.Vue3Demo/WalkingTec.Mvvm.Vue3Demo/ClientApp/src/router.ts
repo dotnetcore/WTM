@@ -1,12 +1,12 @@
 import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
-import { action, observable } from 'mobx';
+import { BehaviorSubject } from 'rxjs';
+import { createRouter, createWebHistory, RouteLocationNormalized, Router, RouteRecordRaw } from 'vue-router';
+import queryString from 'query-string';
+import { $i18n, $System } from './client';
 import error from './layouts/pages/error/index.vue';
 import home from './layouts/pages/home/index.vue';
 import webview from './layouts/pages/webview/index.vue';
-import { BehaviorSubject } from 'rxjs';
-import { createRouter, createWebHistory, RouteLocationNormalized, Router, RouteRecordRaw } from 'vue-router';
-import { $i18n } from './client';
 // Vue.registerHooks([
 //   'beforeRouteEnter',
 //   'beforeRouteLeave',
@@ -74,10 +74,17 @@ class AppRouter {
   afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
     console.log("afterEach", to, from)
     // webview 取 src
-    let pageKey = to.path;
-    const pageTo = lodash.assign({ pageKey }, to)
+    let pageKey = to.path,
+      // server 返回的 page 名字
+      pageName = undefined;
+    // 菜单名称
+    const menus = $System.UserController.UserMenus.findMenus(to.path);
+    if (menus && menus.Text) {
+      pageName = menus.Text
+    }
+    const pageTo = lodash.assign({ pageKey, pageName }, to)
     if (lodash.eq(to.name, 'webview')) {
-      pageKey = `${to.path}_${lodash.get(to.query, 'src')}`;
+      pageKey = queryString.stringifyUrl({ url: '/webview', query: lodash.pick(to.query, ['src', 'name']) });
       lodash.set(pageTo, 'pageKey', pageKey)
     }
     this.PagesCache.set(pageKey, pageTo)

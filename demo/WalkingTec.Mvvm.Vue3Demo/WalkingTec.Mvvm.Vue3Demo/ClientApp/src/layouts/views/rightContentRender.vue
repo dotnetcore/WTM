@@ -102,7 +102,7 @@ export default class extends Vue {
         this.$router.push({ name: 'webview', query: { src: encodeURIComponent('http://localhost:8598/swagger/index.html'), name: this.$locales.action_user_apiDocument } })
         break;
       case this.$locales.action_user_changePassword:
-        this.$router.replace({ query: { changePassword: '' } })
+        this.$router.replace({ query: this.lodash.assign({},this.$route.query,{ changePassword: '' }) })
         break;
       case this.$locales.action_user_logout:
         this.System.UserController.onLogOut()

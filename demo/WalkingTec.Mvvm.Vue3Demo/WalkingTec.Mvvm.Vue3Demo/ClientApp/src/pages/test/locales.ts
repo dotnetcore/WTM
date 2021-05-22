@@ -6,7 +6,8 @@ import { WTM_ValueType } from '@/client';
 export enum EnumLocaleLabel {
     /** 当前页面名称 */
     PageName = "PageName.test",
-
+    SelectedModule = "frameworkmenu.SelectedModule",
+    SelectedActionIDs = "frameworkmenu.SelectedActionIDs",
     Sex_Male = "frameworkuser.Sex_Male",
     Sex_Female = "frameworkuser.Sex_Female",
 
@@ -32,6 +33,8 @@ export default {
         [WTM_ValueType.textarea]: 'textarea',
         [WTM_ValueType.transfer]: 'transfer',
         [WTM_ValueType.upload]: 'upload',
+        [EnumLocaleLabel.SelectedModule]: 'Module',
+        [EnumLocaleLabel.SelectedActionIDs]: 'Actions',
     },
     zh: {
         [EnumLocaleLabel.PageName]: '测试',
@@ -53,5 +56,7 @@ export default {
         [WTM_ValueType.textarea]: '文本域',
         [WTM_ValueType.transfer]: '穿梭框',
         [WTM_ValueType.upload]: '文件上传',
+        [EnumLocaleLabel.SelectedModule]: '模块名称 (联动)',
+        [EnumLocaleLabel.SelectedActionIDs]: '动作名称 （联动多选）',
     }
 }

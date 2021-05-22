@@ -10,7 +10,7 @@
         :disabled="disabled"
         :options="dataSource"
         allowClear
-        v-bind="fieldProps"
+        v-bind="_fieldProps"
       />
     </template>
   </a-spin>

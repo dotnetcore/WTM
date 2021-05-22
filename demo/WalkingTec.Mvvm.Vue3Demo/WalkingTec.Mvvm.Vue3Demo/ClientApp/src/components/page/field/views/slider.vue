@@ -3,7 +3,13 @@
     <span v-text="value"></span>
   </template>
   <template v-else>
-    <a-slider range v-model:value="value" :placeholder="_placeholder" :disabled="disabled" />
+    <a-slider
+      range
+      v-model:value="value"
+      :placeholder="_placeholder"
+      :disabled="disabled"
+      v-bind="_fieldProps"
+    />
   </template>
 </template>
 <script lang="ts">
@@ -18,7 +24,7 @@ export default class extends mixins(FieldBasics) {
   // 实体
   @Inject() readonly PageEntity;
   // 表单类型
-  @Inject({ default: '' }) readonly formType;
+  @Inject({ default: "" }) readonly formType;
   async mounted() {
     // this.onRequest();
     if (this.debug) {
@@ -30,5 +36,4 @@ export default class extends mixins(FieldBasics) {
   }
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

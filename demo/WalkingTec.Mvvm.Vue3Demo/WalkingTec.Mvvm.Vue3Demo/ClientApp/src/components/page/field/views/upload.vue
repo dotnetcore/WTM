@@ -8,7 +8,7 @@
       :before-upload="beforeUpload"
       :remove="onRemove"
       @change="onChange"
-      v-bind="fieldProps"
+      v-bind="_fieldProps"
     >
       <a-button>
         <upload-outlined />Upload

@@ -8,6 +8,7 @@
       :placeholder="_placeholder"
       :disabled="disabled"
       autocomplete="off"
+      v-bind="_fieldProps"
     />
   </template>
 </template>
@@ -23,7 +24,7 @@ export default class extends mixins(FieldBasics) {
   // 实体
   @Inject() readonly PageEntity;
   // 表单类型
-  @Inject({ default: '' }) readonly formType;
+  @Inject({ default: "" }) readonly formType;
   async mounted() {
     // this.onRequest();
     if (this.debug) {
@@ -35,5 +36,4 @@ export default class extends mixins(FieldBasics) {
   }
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>
