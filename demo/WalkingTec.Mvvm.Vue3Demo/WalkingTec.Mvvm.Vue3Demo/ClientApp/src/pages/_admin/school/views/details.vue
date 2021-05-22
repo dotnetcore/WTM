@@ -28,7 +28,7 @@ export default class extends mixins(PageDetailsBasics) {
       {
         field: "Sex",
         headerName: "Sex",
-        cellEditor: "agRichSelectCellEditor",
+        cellEditor: "agSelectCellEditor",
         cellEditorParams: {
           values: ["男", "女"]
         }
