@@ -67,11 +67,14 @@ export default class extends mixins(FieldBasics) {
         frameworkComponents: {
           RowAction: Action
         },
+        context: {
+          onRemove: this.onRemove
+        },
         domLayout: "autoHeight",
         editType: "fullRow",
         // enableCellChangeFlash: true,
         stopEditingWhenGridLosesFocus: true,
-        singleClickEdit: true,
+        // singleClickEdit: true,
         defaultColDef: {
           headerValueGetter: params => {
             try {
@@ -100,6 +103,14 @@ export default class extends mixins(FieldBasics) {
       ? this.lodash.clone(this.value)
       : [];
     rowData.push({ _rowKey: rowData.length + 1 });
+    this.value = rowData;
+  }
+  onRemove(params) {
+    const { rowIndex } = params;
+    const rowData = this.lodash.clone(this.value);
+    this.lodash.remove(rowData, (item, index) =>
+      this.lodash.eq(index, rowIndex)
+    );
     this.value = rowData;
   }
   async mounted() {

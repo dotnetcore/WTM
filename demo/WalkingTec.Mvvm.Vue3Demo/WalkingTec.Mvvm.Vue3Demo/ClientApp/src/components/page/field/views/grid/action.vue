@@ -26,7 +26,9 @@ export default class extends Vue {
   get errorMsg() {
     return this.$t(this.$locales.tips_error_operation);
   }
-  onConfirm() {}
+  onConfirm() {
+    this.lodash.invoke(this.params, "context.onRemove", this.params);
+  }
   mounted() {}
 }
 </script>
