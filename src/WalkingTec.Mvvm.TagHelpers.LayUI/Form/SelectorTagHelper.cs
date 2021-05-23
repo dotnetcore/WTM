@@ -235,6 +235,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 output.Attributes.Add("type", "text");
                 output.Attributes.Add("id", Id + "_Display");
                 output.Attributes.Add("name", Field.Name + "_Display");
+                output.Attributes.SetAttribute("readonly", string.Empty);
 
                 if (listVM.Searcher != null)
                 {
@@ -262,7 +263,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 output.Attributes.Add("value", string.Join(",", value));
                 output.Attributes.Add("placeholder", EmptyText ?? THProgram._localizer["Sys.PleaseSelect"]);
                 output.Attributes.Add("class", "layui-input");
-                this.Disabled = true;
                 var vmQualifiedName = ListVM.Metadata.ModelType.AssemblyQualifiedName;
                 vmQualifiedName = vmQualifiedName.Substring(0, vmQualifiedName.LastIndexOf(", Version="));
                 var Filter = new Dictionary<string, object>
@@ -333,8 +333,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 output.PostElement.AppendHtml($@"
 {hiddenStr}
 </div>
-<button class='layui-btn layui-btn-sm layui-btn-warm' type='button' id='{Id}_Select' style='color:white;position:absolute;right:0px'>{SelectButtonText ?? " . . . "}</button>
 <hidden id='{Id}' name='{Field.Name}' />
+");
+                if(Disabled == true)
+                {
+                    output.PostElement.AppendHtml($@"
+<button class='layui-btn layui-btn-sm layui-btn-disabled' type='button' id='{Id}_Select' style='color:gray;position:absolute;right:0px'>{SelectButtonText ?? " . . . "}</button>
+");
+                }
+               else
+                {
+                    output.PostElement.AppendHtml($@"
+<button class='layui-btn layui-btn-sm layui-btn-warm' type='button' id='{Id}_Select' style='color:white;position:absolute;right:0px'>{SelectButtonText ?? " . . . "}</button>
 <script>
 var {Id}filter = {{}};
 $('#{Id}_Select').on('click',function(){{
@@ -351,6 +361,7 @@ $('#{Id}_Select').on('click',function(){{
 </script>
 {searchPanelTemplate}
 ");
+                };
                 base.Process(context, output);
             }
         }

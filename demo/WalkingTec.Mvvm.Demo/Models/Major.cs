@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -37,6 +38,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Required()]
         public int? SchoolId { get; set; }
 
+        public DateTime TestDate { get; set; }
 
         [Display(Name = "所属学校")]
         public School School { get; set; }

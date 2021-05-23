@@ -959,14 +959,14 @@ window.ff = {
                 data[val] = ff.guid();
             }
         }
-        var re = /(<input .*?)\s*\/>/ig;
+        var re = /(<input .*?)\s*\/>(.*?)/ig;
         var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
         var re3 = /(.*?)<input hidden name='(.*?)\.id' .*?\/>(.*?)/ig;
         for (val in data) {
             if (typeof (data[val]) == 'string') {
                 data[val] = data[val].replace(/\[\d?\]/ig, "[" + loaddata.length + "]");
                 data[val] = data[val].replace(/_\d?_/ig, "_" + loaddata.length + "_");
-                data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />");
+                data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />$2");
                 data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >$2");
                 data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value='" + data["ID"] + "'/> $3");
             }
@@ -976,6 +976,20 @@ window.ff = {
         option.data = loaddata;
         option.limit = 9999;
         layui.table.render(option);
+    },
+
+    SetGridCellDate: function (id) {
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#'+id
+                , show: true 
+                , closeStop: '#' + id
+                , done: function (value, date, endDate) {
+                    document.getElementById(id).onchange();
+                }
+            });
+        });
     },
 
     LoadLocalData: function (gridid, option, datas, isnormaltable) {

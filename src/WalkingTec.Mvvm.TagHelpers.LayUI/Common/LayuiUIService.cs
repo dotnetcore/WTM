@@ -102,8 +102,25 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
         {
             var disable = isReadOnly ? " disabled='' class='layui-disabled'" : " ";
             return $@"<input class='layui-input' style='height:28px'  name='{name ?? ""}' id='{(name == null ? "" : Utils.GetIdByName(name))}' value='{value ?? ""}' {disable} />";
-
         }
+
+        public string MakeDateTime(string name = null, string value = null, string emptyText = null, bool isReadOnly = false)
+        {
+            var id = (name == null ? "" : Utils.GetIdByName(name));
+            var disable = isReadOnly ? " disabled='' class='layui-disabled'" : " ";
+            if (string.IsNullOrEmpty(value) == false)
+            {
+                DateTime p = DateTime.MinValue;
+                DateTime.TryParse(value, out p);
+                if(p == DateTime.MinValue)
+                {
+                    value = "";
+                }
+            }
+            return $@"<input class='layui-input' style='height:28px'  name='{name ?? ""}' id='{id}' value='{value ?? ""}' {disable}  onclick='ff.SetGridCellDate(""{id}"")'/>";
+        }
+
+
         public string MakeButton(ButtonTypesEnum buttonType, string url, string buttonText, int? width, int? height, string title = null, string buttonID = null, bool resizable = true, bool max = false, string currentdivid = "", string buttonClass = null, string style = null, RedirectTypesEnum rtype= RedirectTypesEnum.Layer)
         {
             if (buttonID == null)

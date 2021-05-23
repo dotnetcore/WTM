@@ -292,6 +292,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             case EditTypeEnum.ComboBox:
                                 html = (self as BaseVM).UIService.MakeCombo(name, col.ListItems, val);
                                 break;
+                            case EditTypeEnum.Datetime:
+                                html = (self as BaseVM).UIService.MakeDateTime(name, val);
+                                break;
                             default:
                                 break;
                         }

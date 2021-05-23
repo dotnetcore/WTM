@@ -50,5 +50,10 @@ namespace WalkingTec.Mvvm.Core.Implement
         {
             return "";
         }
+
+        public string MakeDateTime(string name = null, string value = null, string emptyText = null, bool isReadOnly = false)
+        {
+            return "";
+        }
     }
 }
