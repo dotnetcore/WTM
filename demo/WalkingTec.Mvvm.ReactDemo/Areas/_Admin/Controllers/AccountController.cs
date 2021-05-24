@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] bool rememberLogin = false)
         {
 
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
 
             if (rv == null)
             {

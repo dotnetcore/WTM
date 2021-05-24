@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] bool rememberLogin = false)
         {
 
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password)).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
 
             if (rv == null)
             {
@@ -77,32 +77,38 @@ namespace WalkingTec.Mvvm.Admin.Api
             forapi.Roles = user.Roles;
             forapi.Groups = user.Groups;
             forapi.PhotoId = user.PhotoId;
-            var menus = DC.Set<FunctionPrivilege>()
-                .Where(x => x.RoleCode != null && user.Roles.Select(x => x.RoleCode).Contains(x.RoleCode))
-                .Select(x => x.MenuItem)
-                .Where(x => x.MethodName == null)
-                .OrderBy(x => x.DisplayOrder)
-                .Select(x => new SimpleMenuApi
+            var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
+            var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
+            var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
+            var allowed = DC.Set<FunctionPrivilege>()
+                            .AsNoTracking()
+                            .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
+                            .Select(x => new { x.MenuItem.ID, x.MenuItem.Url })
+                            .ToList();
+
+            var allowedids = allowed.Select(x => x.ID).ToList();
+            foreach (var item in topdata)
+            {
+                if (allowedids.Contains(item.ID))
                 {
-                    Id = x.ID.ToString().ToLower(),
-                    ParentId = x.ParentId.ToString().ToLower(),
-                    Text = x.PageName,
-                    Url = x.Url,
-                    Icon = x.Icon
-                }).ToList();
-            LocalizeMenu(menus);
-            ms.AddRange(menus);
+                    ms.Add(new SimpleMenuApi
+                    {
+                        Id = item.ID.ToString().ToLower(),
+                        ParentId = item.ParentId?.ToString()?.ToLower(),
+                        Text = item.PageName,
+                        Url = item.Url,
+                        Icon = item.Icon
+                    });
+                }
+            }
+
+            LocalizeMenu(ms);
 
             List<string> urls = new List<string>();
-            urls.AddRange(DC.Set<FunctionPrivilege>()
-                .Where(x => x.RoleCode != null && user.Roles.Select(x => x.RoleCode).Contains(x.RoleCode))
-                .Select(x => x.MenuItem)
-                .Where(x => x.MethodName != null)
-                .Select(x => x.Url)
-                );
+            urls.AddRange(allowed.Select(x => x.Url).Distinct());
             urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
             forapi.Attributes = new Dictionary<string, object>();
-            forapi.Attributes.Add("Menus", menus);
+            forapi.Attributes.Add("Menus", ms);
             forapi.Attributes.Add("Actions", urls);
 
             return Ok(forapi);
