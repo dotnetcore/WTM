@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Core
                                             UserRoles = DC.Set<FrameworkUserRole>().Where(y => y.UserCode == x.ITCode).ToList(),
                                             UserGroups = DC.Set<FrameworkUserGroup>().Where(y => y.UserCode == x.ITCode).ToList(),
                                         })
-                                        .SingleOrDefaultAsync();
+                                        .FirstOrDefaultAsync();
 
             if (userInfo != null)
             {

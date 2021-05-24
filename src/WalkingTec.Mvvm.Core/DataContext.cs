@@ -618,7 +618,7 @@ namespace WalkingTec.Mvvm.Core
                     ServerVersion sv = null;
                     if (string.IsNullOrEmpty(Version) == false)
                     {
-                        ServerVersion.TryFromString(Version, out sv);
+                        ServerVersion.TryParse(Version, out sv);
                     }
                     if (sv == null)
                     {

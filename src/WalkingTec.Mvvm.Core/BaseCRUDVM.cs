@@ -965,18 +965,17 @@ namespace WalkingTec.Mvvm.Core
                     if (conditions.Count > 1)
                     {
                         //循环添加条件并生成Where语句
-                        Expression conExp = conditions[0];
-                        for (int i = 1; i < conditions.Count; i++)
+                        //Expression conExp = conditions[0];
+                        Expression whereCallExpression = baseExp.Expression;
+                        for (int i = 0; i < conditions.Count; i++)
                         {
-                            conExp = Expression.And(conExp, conditions[i]);
+                            whereCallExpression = Expression.Call(
+                                 typeof(Queryable),
+                                 "Where",
+                                 new Type[] { modelType },
+                                 whereCallExpression,
+                                 Expression.Lambda<Func<TModel, bool>>(conditions[i], new ParameterExpression[] { para }));
                         }
-
-                        MethodCallExpression whereCallExpression = Expression.Call(
-                             typeof(Queryable),
-                             "Where",
-                             new Type[] { modelType },
-                             baseExp.Expression,
-                             Expression.Lambda<Func<TModel, bool>>(conExp, new ParameterExpression[] { para }));
                         var result = baseExp.Provider.CreateQuery(whereCallExpression);
 
                         foreach (var res in result)
