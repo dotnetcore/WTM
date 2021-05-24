@@ -80,6 +80,36 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
+        [ActionDescription("Login.ChangePassword")]
+        [HttpPut("[action]")]
+        public async Task<IActionResult> Password(FrameworkUserVM vm)
+        {
+            var keys = ModelState.Keys.ToList();
+            foreach (var item in keys)
+            {
+                if (item != "Entity.Password")
+                {
+                    ModelState.Remove(item);
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                await vm.ChangePassword();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+                else
+                {
+                    return Ok(vm.Entity);
+                }
+            }
+        }
+
         [HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
