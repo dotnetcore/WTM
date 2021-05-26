@@ -41,6 +41,7 @@ import Field_transfer from "./views/transfer.vue";
 import Field_image from "./views/image.vue";
 import Field_upload from "./views/upload.vue";
 import Field_grid from "./views/grid/index.vue";
+import Field_editor from "./views/editor.vue";
 @Options({
   components: {
     Item,
@@ -60,7 +61,8 @@ import Field_grid from "./views/grid/index.vue";
     Field_transfer,
     Field_image,
     Field_upload,
-    Field_grid
+    Field_grid,
+    Field_editor
   }
 })
 export default class extends mixins(FieldBasics) {

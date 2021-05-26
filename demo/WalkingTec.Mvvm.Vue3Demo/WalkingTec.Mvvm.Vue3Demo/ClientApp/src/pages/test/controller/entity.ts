@@ -119,5 +119,15 @@ class Entity {
         valueType: WTM_ValueType.transfer,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
     }
+    readonly [WTM_ValueType.editor]: WTM_EntitiesField = {
+        name: WTM_ValueType.editor,
+        label: WTM_ValueType.editor,
+        valueType: WTM_ValueType.editor,
+    }
+    // readonly [WTM_ValueType.grid]: WTM_EntitiesField = {
+    //     name: WTM_ValueType.grid,
+    //     label: WTM_ValueType.grid,
+    //     valueType: WTM_ValueType.grid,
+    // }
 }
 export const PageEntity = new Entity()
