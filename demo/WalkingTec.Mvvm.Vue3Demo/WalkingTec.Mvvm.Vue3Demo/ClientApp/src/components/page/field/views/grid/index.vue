@@ -1,10 +1,10 @@
 <template>
   <!-- <template v-if="_readonly">
     <span v-text="value"></span>
-  </template> -->
+  </template>-->
   <!-- <template v-else> -->
   <div>
-    <a-button @click="onAddGrid">
+    <a-button @click="onAddGrid" v-if="!isReadonly">
       <template #icon>
         <FormOutlined />
       </template>
@@ -41,11 +41,19 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly PageEntity;
   // 表单类型
   @Inject({ default: "" }) readonly formType;
+  get GridKey() {
+    return this.$Encryption.MD5(this.lodash.assign({}, { columnDefs: this.columnDefs }, this.gridOptions))
+  }
+  get isReadonly() {
+    return this._readonly || this.disabled
+  }
   get columnDefs(): (ColDef | ColGroupDef)[] {
-    return this.lodash.concat<ColDef | ColGroupDef>(
+    let columnDefs = this.lodash.concat<ColDef | ColGroupDef>(
       [{ field: "_rowKey", headerName: "No", width: 80, editable: false }],
-      this.lodash.get(this._fieldProps, "columnDefs"),
-      [
+      this.lodash.get(this._fieldProps, "columnDefs")
+    );
+    if (!this.isReadonly) {
+      columnDefs = this.lodash.concat(columnDefs, [
         {
           width: 80,
           headerName: "action_name",
@@ -58,8 +66,25 @@ export default class extends mixins(FieldBasics) {
           editable: false,
           suppressColumnsToolPanel: true
         }
-      ]
-    );
+      ])
+    }
+    return columnDefs;
+  }
+  get defaultColDef(): ColDef {
+    return {
+      headerValueGetter: params => {
+        try {
+          return this.$t(this.lodash.get(params, "colDef.headerName"));
+        } catch (error) {
+          return "";
+        }
+      },
+      filter: false,
+      resizable: true,
+      sortable: false,
+      editable: !this.isReadonly,
+      minWidth: 80
+    }
   }
   get gridOptions(): GridOptions {
     return this.lodash.assign<GridOptions, GridOptions>(
@@ -75,20 +100,7 @@ export default class extends mixins(FieldBasics) {
         // enableCellChangeFlash: true,
         stopEditingWhenGridLosesFocus: true,
         // singleClickEdit: true,
-        defaultColDef: {
-          headerValueGetter: params => {
-            try {
-              return this.$t(this.lodash.get(params, "colDef.headerName"));
-            } catch (error) {
-              return "";
-            }
-          },
-          filter: false,
-          resizable: true,
-          sortable: false,
-          editable: true,
-          minWidth: 80
-        },
+        defaultColDef: this.defaultColDef,
         onGridReady: (event: GridReadyEvent) => {
           // this.GridApi = event.api;
           // this.ColumnApi = event.columnApi;

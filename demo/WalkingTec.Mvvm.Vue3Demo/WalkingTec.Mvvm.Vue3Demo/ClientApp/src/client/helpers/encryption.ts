@@ -5,6 +5,7 @@ import cryptoMd5 from 'crypto-js/md5';
 export const Encryption = {
     /** 随机 guid  */
     uniqueId: uniqueId,
+    MD5: (obj) => cryptoMd5(JSON.stringify(obj)).toString()
 }
 function uniqueId() {
     function GUID() {

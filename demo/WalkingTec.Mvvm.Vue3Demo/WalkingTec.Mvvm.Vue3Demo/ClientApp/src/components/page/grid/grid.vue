@@ -34,9 +34,9 @@ export default class AgGrid extends Vue {
     return `ag-theme-${this.theme}`;
   }
   get GridKey() {
-    return this.$i18n.locale;
+    return this.$Encryption.MD5(this.lodash.assign({ __locale: this.$i18n.locale, columnDefs: this.columnDefs }, this.gridOptions))//this.$i18n.locale;
   }
-  created() { 
+  created() {
     console.log(this)
   }
 }

@@ -1,6 +1,8 @@
 
 import { $i18n, WTM_EntitiesField, WTM_ValueType, FieldRequest } from '@/client';
 import router from '@/router';
+import { ColGroupDef, GridOptions } from 'ag-grid-community';
+import { ColDef } from 'ag-grid-community';
 import lodash from 'lodash';
 import { EnumLocaleLabel } from '../locales';
 
@@ -124,10 +126,28 @@ class Entity {
         label: WTM_ValueType.editor,
         valueType: WTM_ValueType.editor,
     }
-    // readonly [WTM_ValueType.grid]: WTM_EntitiesField = {
-    //     name: WTM_ValueType.grid,
-    //     label: WTM_ValueType.grid,
-    //     valueType: WTM_ValueType.grid,
-    // }
+    readonly [WTM_ValueType.grid]: WTM_EntitiesField = {
+        name: WTM_ValueType.grid,
+        label: WTM_ValueType.grid,
+        valueType: WTM_ValueType.grid,
+        fieldProps: { columnDefs: this.columnDefs, gridOptions: this.gridOptions }
+    }
+    get columnDefs(): (ColDef | ColGroupDef)[] {
+        return [
+            { field: "Name", headerName: "Name" },
+            { field: "Age", headerName: "Age" },
+            {
+                field: "Sex",
+                headerName: "Sex",
+                cellEditor: "agSelectCellEditor",
+                cellEditorParams: {
+                    values: ["男", "女"]
+                }
+            }
+        ];
+    }
+    get gridOptions(): GridOptions {
+        return {};
+    }
 }
 export const PageEntity = new Entity()
