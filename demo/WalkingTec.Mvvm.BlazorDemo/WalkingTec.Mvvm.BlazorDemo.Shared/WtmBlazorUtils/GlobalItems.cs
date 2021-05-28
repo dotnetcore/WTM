@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BootstrapBlazor.Components;
 using Microsoft.Extensions.Localization;
+using WalkingTec.Mvvm.Core;
 
 namespace WtmBlazorUtils
 {
@@ -60,5 +61,22 @@ namespace WtmBlazorUtils
             }
         }
 
+    }
+
+    public static class UtilsExtensions
+    {
+        public static List<SelectedItem> ToBBItems(this IEnumerable<ComboSelectListItem> self)
+        {
+            List<SelectedItem> rv = new List<SelectedItem>();
+            if (self == null)
+            {
+                return rv;
+            }
+            foreach (var item in self)
+            {
+                rv.Add(new SelectedItem { Text = item.Text, Value = item.Value.ToString(), Active = item.Selected, IsDisabled = item.Disabled });
+            }
+            return rv;
+        }
     }
 }
