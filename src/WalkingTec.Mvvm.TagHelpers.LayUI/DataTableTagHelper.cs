@@ -380,6 +380,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 Filter.Add("_DONOT_USE_VMNAME", vmQualifiedName);
                 Filter.Add("_DONOT_USE_CS", ListVM.CurrentCS);
                 Filter.Add("SearcherMode", ListVM.SearcherMode);
+                Filter.Add("SelectorValueField", ListVM.SelectorValueField);
                 Filter.Add("ViewDivId", ListVM.ViewDivId);
                 if (ListVM.Ids != null && ListVM.Ids.Count > 0)
                 {

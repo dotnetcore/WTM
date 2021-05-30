@@ -49,6 +49,7 @@ namespace WalkingTec.Mvvm.Core
         where TSearcher : BaseSearcher
     {
 
+
         [JsonIgnore]
         public string TotalText { get; set; } = CoreProgram._localizer?["Sys.Total"];
 
@@ -418,7 +419,7 @@ namespace WalkingTec.Mvvm.Core
         ///记录批量操作时列表中选择的Id
         /// </summary>
         public List<string> Ids { get; set; }
-
+        public string SelectorValueField { get; set; }
         /// <summary>
         /// 是否已经搜索过
         /// </summary>
@@ -906,10 +907,21 @@ namespace WalkingTec.Mvvm.Core
             {
                 foreach (var item in EntityList)
                 {
-                    var id = item.GetID();
-                    if (Ids.Contains(id.ToString()))
+                    if (string.IsNullOrEmpty(SelectorValueField) || SelectorValueField.ToLower() == "id")
                     {
-                        item.Checked = true;
+                        var id = item.GetID();
+                        if (Ids.Contains(id.ToString()))
+                        {
+                            item.Checked = true;
+                        }
+                    }
+                    else
+                    {
+                        var v = item.GetPropertyValue(SelectorValueField);
+                        if (Ids.Contains(v.ToString()))
+                        {
+                            item.Checked = true;
+                        }
                     }
                 }
             }
@@ -1063,6 +1075,8 @@ namespace WalkingTec.Mvvm.Core
         }
 
         public string DetailGridPrix { get; set; }
+
+        public Type ModelType => typeof(TModel);
 
         #endregion
 

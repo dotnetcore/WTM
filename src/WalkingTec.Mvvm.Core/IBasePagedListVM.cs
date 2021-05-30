@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.Core
         where T : TopBasePoco
         where S : ISearcher
     {
+        Type ModelType { get; }
 
         /// <summary>
         /// 多级表头深度  默认 1级
@@ -45,6 +46,7 @@ namespace WalkingTec.Mvvm.Core
         ///记录批量操作时列表中选择的Id
         /// </summary>
         List<string> Ids { get; set; }
+        string SelectorValueField { get; set; }
 
         /// <summary>
         /// 获取Model集合

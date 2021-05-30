@@ -274,7 +274,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 { "_DONOT_USE_MULTI_SEL", MultiSelect },
                 { "_DONOT_USE_SEL_ID", Id },
                 {"_DONOT_USE_CURRENTCS",  listVM?.CurrentCS},
-                { "Ids", list }
+                { "Ids", list },
+                    {"SelectorValueField",  ValBind == null ? "ID" : ValBind?.Metadata.PropertyName}
             };
                 if (!string.IsNullOrEmpty(SubmitFunc))
                 {
@@ -335,13 +336,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 </div>
 <hidden id='{Id}' name='{Field.Name}' />
 ");
-                if(Disabled == true)
+                if (Disabled == true)
                 {
                     output.PostElement.AppendHtml($@"
 <button class='layui-btn layui-btn-sm layui-btn-disabled' type='button' id='{Id}_Select' style='color:gray;position:absolute;right:0px'>{SelectButtonText ?? " . . . "}</button>
 ");
                 }
-               else
+                else
                 {
                     output.PostElement.AppendHtml($@"
 <button class='layui-btn layui-btn-sm layui-btn-warm' type='button' id='{Id}_Select' style='color:white;position:absolute;right:0px'>{SelectButtonText ?? " . . . "}</button>

@@ -146,7 +146,23 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override async Task DoDeleteAsync()
         {
-            await base.DoDeleteAsync();
+            using (var tran = DC.BeginTransaction())
+            {
+                try
+                {
+                    await base.DoDeleteAsync();
+                    var ur = DC.Set<FrameworkUserRole>().Where(x => x.UserCode == Entity.ITCode);
+                    DC.Set<FrameworkUserRole>().RemoveRange(ur);
+                    var ug = DC.Set<FrameworkUserGroup>().Where(x => x.UserCode == Entity.ITCode);
+                    DC.Set<FrameworkUserGroup>().RemoveRange(ug);
+                    DC.SaveChanges();
+                    tran.Commit();
+                }
+                catch
+                {
+                    tran.Rollback();
+                }
+            }
             await Wtm.RemoveUserCache(Entity.ITCode.ToString());
         }
 

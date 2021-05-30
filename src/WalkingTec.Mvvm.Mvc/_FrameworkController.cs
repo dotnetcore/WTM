@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -67,14 +68,25 @@ namespace WalkingTec.Mvvm.Mvc
             ViewBag.CurrentCS = cs;
             #region 获取选中的数据
             ViewBag.SelectData = "[]";
+            ViewBag.SelectorValueField = _DONOT_USE_VFIELD;
             if (listVM.Ids?.Count > 0)
             {
+                var tst = DC.Set<FrameworkRole>().Where(x => listVM.Ids.Contains(x.RoleName)).ToList();
                 listVM.DC = Wtm.CreateDC();
                 var originNeedPage = listVM.NeedPage;
                 listVM.NeedPage = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Batch;
+                Type modelType = listVM.ModelType;
+                var para = Expression.Parameter(modelType);
+                var idproperty = modelType.GetSingleProperty(_DONOT_USE_VFIELD);
+                var pro = Expression.Property(para, idproperty);
+                var tostring =  Expression.Call(pro, "ToString", new Type[] { });
+                var vmids = Expression.Constant(listVM.Ids);
+                var exp = Expression.Call(vmids, "Contains", null, pro);
+                listVM.ReplaceWhere = Expression.Lambda<Func<TopBasePoco, bool>>(exp, Expression.Parameter(typeof(TopBasePoco)));
                 Regex r = new Regex("<script>.*?</script>");
-                ViewBag.SelectData = r.Replace((listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");
+                string selectData = r.Replace((listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");
+                ViewBag.SelectData = selectData;
                 listVM.IsSearched = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Selector;
                 listVM.NeedPage = originNeedPage;

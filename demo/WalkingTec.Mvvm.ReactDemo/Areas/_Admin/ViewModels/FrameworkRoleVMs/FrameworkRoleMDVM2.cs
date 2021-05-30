@@ -105,6 +105,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
     {
         [Display(Name = "_Admin.PageName")]
         public string Name { get; set; }
+        [Display(Name = "_Admin.PageFunction")]
         public List<Guid> Actions { get; set; }
         [Display(Name = "_Admin.PageFunction")]
         public List<ComboSelectListItem> AllActions { get; set; }
@@ -115,7 +116,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
         [JsonIgnore]
         public int ExtraOrder { get; set; }
 
-        [JsonIgnore]
         public Guid? ParentID { get; set; }
 
         [JsonIgnore]

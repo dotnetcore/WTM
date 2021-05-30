@@ -267,6 +267,20 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public static object GetPropertyValue(this object obj, string property)
+        {
+            //获取表达式的值，并过滤单引号
+            try
+            {
+                return obj.GetType().GetSingleProperty(property).GetValue(obj); ;
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+
         public static List<string> GetPropertySiblingValues(this object obj, string propertyName)
         {
             Regex reg = new Regex("(.*?)\\[\\d?\\]\\.(.*?)$");
