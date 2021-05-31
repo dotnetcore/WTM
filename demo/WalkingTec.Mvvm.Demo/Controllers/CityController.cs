@@ -8,7 +8,7 @@ using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-
+    [Area("ccc")]
     [ActionDescription("城市管理")]
     public partial class CityController : BaseController
     {
@@ -20,12 +20,12 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         //    return PartialView(vm);
         //}
 
-        //[ActionDescription("Codegen.FieldDes", IsPage = true)]
-        //public ActionResult CityPage()
-        //{
-        //    var vm = Wtm.CreateVM<CityListVM>();
-        //    return PartialView(vm);
-        //}
+        [ActionDescription("Codegen.FieldDes", IsPage = true)]
+        public ActionResult CityPage()
+        {
+            var vm = Wtm.CreateVM<CityListVM>();
+            return PartialView(vm);
+        }
 
         //[ActionDescription("Codegen.Gen", IsPage = true)]
         //public ActionResult LookPage()

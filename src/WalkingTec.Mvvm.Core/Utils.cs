@@ -782,7 +782,8 @@ namespace WalkingTec.Mvvm.Core
                                 ModuleName = pages[j].ActionDes._localizer[pages[j].ActionDes.Description],
                                 NameSpace = m[i].NameSpace,
                                 ClassName = pages[j].MethodName,
-                                Actions = m[i].Actions
+                                Actions = m[i].Actions,
+                                Area = m[i].Area
                             });
                             if (submit)
                                 m[i].Actions.Remove(pages[j]);
@@ -797,7 +798,8 @@ namespace WalkingTec.Mvvm.Core
                                     ModuleName = pages[j].ActionDes._localizer[pages[j].ActionDes.Description],
                                     NameSpace = m[i].NameSpace,
                                     ClassName = pages[j].MethodName,
-                                    Actions = submit ? new List<SimpleAction>() : new List<SimpleAction>() { pages[j] }
+                                    Actions = submit ? new List<SimpleAction>() : new List<SimpleAction>() { pages[j] },
+                                    Area = m[i].Area
                                 });
                                 m[i].Actions.Remove(pages[j]);
                             }
