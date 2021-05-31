@@ -933,7 +933,14 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                                 }
                                 else
                                 {
-                                    actionScript = $"ff.BgRequest(tempUrl, isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                                    if (item.ForcePost == true)
+                                    {
+                                        actionScript = $"ff.BgRequest(tempUrl, ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                                    }
+                                    else
+                                    {
+                                        actionScript = $"ff.BgRequest(tempUrl, isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                                    }
                                 }
                             }
                         }

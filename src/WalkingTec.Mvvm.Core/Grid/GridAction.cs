@@ -182,6 +182,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public GridActionParameterTypesEnum ParameterType { get; set; }
 
+        public bool ForcePost { get; set; }
         #endregion
 
         #region 暂时无用

@@ -51,6 +51,8 @@ namespace WalkingTec.Mvvm.Core
             var hideOnToolBar = false;
             var showDialog = true;
             string msg = null;
+            var ispost = false;
+            string qs = null;
             switch (standardType)
             {
                 case GridActionStandardTypesEnum.Create:
@@ -84,7 +86,9 @@ namespace WalkingTec.Mvvm.Core
                     showInRow = true;
                     hideOnToolBar = true;
                     showDialog = false;
-                    actionName = "BatchDelete?sd=1";
+                    actionName = "BatchDelete";
+                    qs = "_donotuse_sd=1";
+                    ispost = true;
                     msg = CoreProgram._localizer?["Sys.DeleteConfirm"];
                     break;
 
@@ -119,6 +123,7 @@ namespace WalkingTec.Mvvm.Core
                     showDialog = false;
                     msg = CoreProgram._localizer?["Sys.BatchDeleteConfirm"];
                     actionName = "BatchDelete";
+                    ispost = true;
                     break;
                 case GridActionStandardTypesEnum.Import:
                     iconcls = "layui-icon layui-icon-templeate-1";
@@ -165,6 +170,8 @@ namespace WalkingTec.Mvvm.Core
                 ShowDialog = showDialog,
                 HideOnToolBar = hideOnToolBar,
                 PromptMessage = msg,
+                ForcePost = ispost,
+                QueryString = qs,
                 whereStr = list.ToArray()
             };
         }
