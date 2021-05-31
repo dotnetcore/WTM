@@ -94,11 +94,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public async Task<ActionResult> Delete(Guid id, IFormCollection noUse)
         {
             var vm = Wtm.CreateVM<FrameworkRoleVM>(id);
-            vm.DoDelete();
+            await vm.DoDeleteAsync();
             if (!ModelState.IsValid)
             {
-                var userids = DC.Set<FrameworkUserRole>().Where(x => DC.Set<FrameworkRole>().Where(y => y.ID == id).Select(y => y.RoleCode).FirstOrDefault() == x.RoleCode).Select(x => x.UserCode).ToArray();
-                await Wtm.RemoveUserCache(userids);
                 return PartialView(vm);
             }
             else
@@ -119,19 +117,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public async Task<ActionResult> DoBatchDelete(FrameworkRoleBatchVM vm, IFormCollection noUse)
         {
+            List<string> RoleCode = DC.Set<FrameworkRole>().CheckIDs(new List<string>(vm.Ids)).Select(x => x.RoleCode).ToList();
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
                 return PartialView("BatchDelete", vm);
             }
             else
             {
-                List<Guid?> roleids = new List<Guid?>();
-                foreach (var item in vm?.Ids)
-                {
-                    roleids.Add(Guid.Parse(item));
-                }
-                var userids = DC.Set<FrameworkUserRole>().Where(x => DC.Set<FrameworkRole>().Where(y => roleids.Contains(y.ID)).Select(y => y.RoleCode).Contains(x.RoleCode)).Select(x => x.UserCode).ToArray();
-                await Wtm.RemoveUserCache(userids);
+                var ur = DC.Set<FrameworkUserRole>().Where(x => RoleCode.Contains(x.RoleCode)).ToList();
+                var itcodes = ur.Select(x => x.UserCode).ToArray();
+                DC.Set<FrameworkUserRole>().RemoveRange(ur);
+                DC.SaveChanges();
+                await Wtm.RemoveUserCache(itcodes);
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }

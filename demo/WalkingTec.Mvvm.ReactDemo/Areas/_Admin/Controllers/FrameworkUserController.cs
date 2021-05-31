@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
@@ -12,9 +13,9 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("MenuKey.UserManagement")]
+    [ActionDescription("_Admin.UserApi")]
     [ApiController]
-    [Route("api/_FrameworkUserBase")]
+    [Route("api/_FrameworkUser")]
     public class FrameworkUserController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
@@ -30,7 +31,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("{id}")]
         public FrameworkUserVM Get(Guid id)
         {
-            var vm = Wtm.CreateVM<FrameworkUserVM>(id);
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id, passInit:true);
             return vm;
         }
 
@@ -69,36 +70,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             else
             {
                 await vm.DoEditAsync(false);
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState.GetErrorJson());
-                }
-                else
-                {
-                    return Ok(vm.Entity);
-                }
-            }
-        }
-
-        [ActionDescription("Login.ChangePassword")]
-        [HttpPut("[action]")]
-        public async Task<IActionResult> Password(FrameworkUserVM vm)
-        {
-            var keys = ModelState.Keys.ToList();
-            foreach (var item in keys)
-            {
-                if (item != "Entity.Password")
-                {
-                    ModelState.Remove(item);
-                }
-            }
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                await vm.ChangePassword();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -201,7 +172,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [AllRights]
         public ActionResult GetFrameworkRoles()
         {
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x=>x.RoleCode));
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName));
         }
 
         [HttpGet("GetFrameworkGroups")]
@@ -209,7 +180,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [AllRights]
         public ActionResult GetFrameworkGroups()
         {
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName, x=>x.GroupCode));
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName));
         }
 
     }

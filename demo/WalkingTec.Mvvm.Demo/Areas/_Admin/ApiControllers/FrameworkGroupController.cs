@@ -84,8 +84,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkGroupBatchVM>();
+            List<string> GroupCode = new List<string>();
             if (ids != null && ids.Count() > 0)
             {
+                GroupCode = DC.Set<FrameworkGroup>().CheckIDs(new List<string>(ids)).Select(x => x.GroupCode).ToList();
                 vm.Ids = ids;
             }
             else
@@ -98,13 +100,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                List<Guid?> groupids = new List<Guid?>();
-                foreach (var item in vm?.Ids)
-                {
-                    groupids.Add(Guid.Parse(item));
-                }
-                var userids = DC.Set<FrameworkUserGroup>().Where(x => DC.Set<FrameworkGroup>().Where(y => groupids.Contains(y.ID)).Select(y => y.GroupCode).Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
-                await Wtm.RemoveUserCache(userids);
+                var gr = DC.Set<FrameworkUserGroup>().Where(x => GroupCode.Contains(x.GroupCode)).ToList();
+                var itcodes = gr.Select(x => x.UserCode).ToArray();
+                DC.Set<FrameworkUserGroup>().RemoveRange(gr);
+                DC.SaveChanges();
+                await Wtm.RemoveUserCache(itcodes);
                 return Ok(ids.Count());
             }
         }

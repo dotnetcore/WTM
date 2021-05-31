@@ -116,9 +116,11 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkUserBatchVM>();
+            List<string> itcode = new List<string>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
+                itcode = DC.Set<FrameworkUser>().CheckIDs(new List<string>(ids)).Select(x => x.ITCode).ToList();
             }
             else
             {
@@ -130,13 +132,24 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                List<Guid?> tempids = new List<Guid?>();
-                foreach (var item in vm?.Ids)
+                using (var tran = DC.BeginTransaction())
                 {
-                    tempids.Add(Guid.Parse(item));
+                    try
+                    {
+                        var ur = DC.Set<FrameworkUserRole>().Where(x => itcode.Contains(x.UserCode));
+                        DC.Set<FrameworkUserRole>().RemoveRange(ur);
+                        var ug = DC.Set<FrameworkUserGroup>().Where(x => itcode.Contains(x.UserCode));
+                        DC.Set<FrameworkUserGroup>().RemoveRange(ug);
+                        DC.SaveChanges();
+                        tran.Commit();
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                    }
                 }
-                var userids = DC.Set<FrameworkUser>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
-                await Wtm.RemoveUserCache(userids);
+
+                await Wtm.RemoveUserCache(itcode.ToArray());
                 return Ok(ids.Count());
             }
         }

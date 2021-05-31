@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 {
@@ -25,5 +26,26 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
             base.DoEdit(updateAllFields);
         }
+
+        public override async Task DoDeleteAsync()
+        {
+            using (var tran = DC.BeginTransaction())
+            {
+                try
+                {
+                    await base.DoDeleteAsync();
+                    var ur = DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == Entity.GroupCode);
+                    DC.Set<FrameworkUserGroup>().RemoveRange(ur);
+                    DC.SaveChanges();
+                    tran.Commit();
+                    await Wtm.RemoveUserCache(ur.Select(x => x.UserCode).ToArray());
+                }
+                catch
+                {
+                    tran.Rollback();
+                }
+            }
+        }
+
     }
 }

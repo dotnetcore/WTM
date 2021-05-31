@@ -98,11 +98,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public async Task<ActionResult> Delete(Guid id, IFormCollection noUse)
         {
             var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
-            vm.DoDelete();
+            await vm.DoDeleteAsync();
             if (!ModelState.IsValid)
             {
-                var userids = DC.Set<FrameworkUserGroup>().Where(x => DC.Set<FrameworkGroup>().Where(y => y.ID == id).Select(y => y.GroupCode).FirstOrDefault() == x.GroupCode).Select(x => x.UserCode).ToArray();
-                await Wtm.RemoveUserCache(userids);
                 return PartialView(vm);
             }
             else
@@ -123,20 +121,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public async Task<ActionResult> DoBatchDelete(FrameworkGroupBatchVM vm, IFormCollection noUse)
         {
+            List<string> GroupCode = DC.Set<FrameworkGroup>().CheckIDs(new List<string>(vm.Ids)).Select(x => x.GroupCode).ToList();
             if (!ModelState.IsValid || !vm.DoBatchDelete())
-            {
-
+            {                
                 return PartialView("BatchDelete", vm);
             }
             else
             {
-                List<Guid?> groupids = new List<Guid?>();
-                foreach (var item in vm?.Ids)
-                {
-                    groupids.Add(Guid.Parse(item));
-                }
-                var userids = DC.Set<FrameworkUserGroup>().Where(x => DC.Set<FrameworkGroup>().Where(y => groupids.Contains(y.ID)).Select(y => y.GroupCode).Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
-                await Wtm.RemoveUserCache(userids);
+                var gr = DC.Set<FrameworkUserGroup>().Where(x => GroupCode.Contains(x.GroupCode)).ToList();
+                var itcodes = gr.Select(x => x.UserCode).ToArray();
+                DC.Set<FrameworkUserGroup>().RemoveRange(gr);
+                DC.SaveChanges();
+                await Wtm.RemoveUserCache(itcodes);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.OprationSuccess"]);
             }
         }

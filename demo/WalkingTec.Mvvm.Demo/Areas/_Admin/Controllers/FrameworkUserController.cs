@@ -206,19 +206,32 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public async Task<ActionResult> DoBatchDelete(FrameworkUserBatchVM vm, IFormCollection nouse)
         {
+            List<string> itcode = new List<string>();
+            itcode = DC.Set<FrameworkUser>().CheckIDs(new List<string>(vm.Ids)).Select(x => x.ITCode).ToList();
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
                 return PartialView("BatchDelete", vm);
             }
             else
             {
-                List<Guid?> tempids = new List<Guid?>();
-                foreach (var item in vm?.Ids)
+                using (var tran = DC.BeginTransaction())
                 {
-                    tempids.Add(Guid.Parse(item));
+                    try
+                    {
+                        var ur = DC.Set<FrameworkUserRole>().Where(x => itcode.Contains(x.UserCode));
+                        DC.Set<FrameworkUserRole>().RemoveRange(ur);
+                        var ug = DC.Set<FrameworkUserGroup>().Where(x => itcode.Contains(x.UserCode));
+                        DC.Set<FrameworkUserGroup>().RemoveRange(ug);
+                        DC.SaveChanges();
+                        tran.Commit();
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                    }
                 }
-                var userids = DC.Set<FrameworkUser>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
-                await Wtm.RemoveUserCache(userids);
+
+                await Wtm.RemoveUserCache(itcode.ToArray());
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.OprationSuccess"]);
             }
         }
