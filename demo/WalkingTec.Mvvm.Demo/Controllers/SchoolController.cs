@@ -26,6 +26,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Index(SchoolListVM vm)
         {
+            vm.DoInit();
             return PartialView(vm);
         }
 
@@ -198,25 +199,27 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(string[] IDs)
+        public ActionResult BatchDelete(string[] ids)
         {
-            var vm = Wtm.CreateVM<SchoolBatchVM>(Ids: IDs);
-            return PartialView(vm);
-        }
-
-        [HttpPost]
-        [ActionDescription("批量删除")]
-        public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
-        {
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            var vm = Wtm.CreateVM<SchoolBatchVM>();
+            if (ids != null && ids.Length > 0)
             {
-                return PartialView("BatchDelete", vm);
+                vm.Ids = ids;
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有" + vm.Ids.Length + "条数据被删除");
+                return Ok();
+            }
+            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            {
+                return FFResult().Alert(ModelState.GetErrorJson().GetFirstError());
+            }
+            else
+            {
+                return FFResult().RefreshGrid().Alert(Localizer["Sys.BatchDeleteSuccess",vm.Ids.Length]);
             }
         }
+
         #endregion
 
         #region 导入

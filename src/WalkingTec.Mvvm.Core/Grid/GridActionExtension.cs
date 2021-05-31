@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Core
             var showInRow = false;
             var hideOnToolBar = false;
             var showDialog = true;
-
+            string msg = null;
             switch (standardType)
             {
                 case GridActionStandardTypesEnum.Create:
@@ -77,6 +77,17 @@ namespace WalkingTec.Mvvm.Core
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
+                case GridActionStandardTypesEnum.SimpleDelete:
+                    iconcls = "layui-icon layui-icon-delete";
+                    gridname = CoreProgram._localizer?["Sys.Delete"];
+                    paraType = GridActionParameterTypesEnum.SingleIdWithNull;
+                    showInRow = true;
+                    hideOnToolBar = true;
+                    showDialog = false;
+                    actionName = "BatchDelete?sd=1";
+                    msg = CoreProgram._localizer?["Sys.DeleteConfirm"];
+                    break;
+
                 case GridActionStandardTypesEnum.RemoveRow:
                     iconcls = "layui-icon layui-icon-delete";
                     gridname = CoreProgram._localizer?["Sys.Delete"];
@@ -100,6 +111,14 @@ namespace WalkingTec.Mvvm.Core
                     iconcls = "layui-icon layui-icon-delete";
                     gridname = CoreProgram._localizer?["Sys.BatchDelete"];
                     paraType = GridActionParameterTypesEnum.MultiIds;
+                    break;
+                case GridActionStandardTypesEnum.SimpleBatchDelete:
+                    iconcls = "layui-icon layui-icon-delete";
+                    gridname = CoreProgram._localizer?["Sys.BatchDelete"];
+                    paraType = GridActionParameterTypesEnum.MultiIds;
+                    showDialog = false;
+                    msg = CoreProgram._localizer?["Sys.BatchDeleteConfirm"];
+                    actionName = "BatchDelete";
                     break;
                 case GridActionStandardTypesEnum.Import:
                     iconcls = "layui-icon layui-icon-templeate-1";
@@ -139,13 +158,13 @@ namespace WalkingTec.Mvvm.Core
                 ControllerName = controllerName,
                 ActionName = actionName,
                 ParameterType = paraType,
-
                 IconCls = iconcls,
                 DialogWidth = dialogWidth ?? 800,
                 DialogHeight = dialogHeight,
                 ShowInRow = showInRow,
                 ShowDialog = showDialog,
                 HideOnToolBar = hideOnToolBar,
+                PromptMessage = msg,
                 whereStr = list.ToArray()
             };
         }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace WalkingTec.Mvvm.Core
@@ -49,6 +50,19 @@ namespace WalkingTec.Mvvm.Core
     {
         public Dictionary<string, string> Form { get; set; }
         public List<string> Message { get; set; }
+
+        public string GetFirstError()
+        {
+            if(Message != null && Message.Any())
+            {
+                return Message.First();
+            }
+            if(Form != null && Form.Any())
+            {
+                return Form.First().Value;
+            }
+            return "";
+        }
     }
 
 }
