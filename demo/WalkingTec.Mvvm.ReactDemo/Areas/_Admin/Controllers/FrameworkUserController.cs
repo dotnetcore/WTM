@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
@@ -13,25 +12,25 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("_Admin.UserApi")]
+    [ActionDescription("MenuKey.UserManagement")]
     [ApiController]
-    [Route("api/_FrameworkUser")]
+    [Route("api/_FrameworkUserBase")]
     public class FrameworkUserController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
         public string Search(FrameworkUserSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkUserListVM>();
+            var vm = Wtm.CreateVM<FrameworkUserListVM>(passInit: true);
             vm.Searcher = searcher;
-            return vm.GetJson();
+            return vm.GetJson(enumToString: false);
         }
 
         [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
         public FrameworkUserVM Get(Guid id)
         {
-            var vm = Wtm.CreateVM<FrameworkUserVM>(id, passInit:true);
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id);
             return vm;
         }
 
@@ -81,14 +80,47 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
+        [ActionDescription("Login.ChangePassword")]
+        [HttpPut("[action]")]
+        public async Task<IActionResult> Password(FrameworkUserVM vm)
+        {
+            var keys = ModelState.Keys.ToList();
+            foreach (var item in keys)
+            {
+                if (item != "Entity.Password")
+                {
+                    ModelState.Remove(item);
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                await vm.ChangePassword();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+                else
+                {
+                    return Ok(vm.Entity);
+                }
+            }
+        }
+
+
         [HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkUserBatchVM>();
+            List<string> itcode = new List<string>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
+                itcode = DC.Set<FrameworkUser>().CheckIDs(new List<string>(ids)).Select(x => x.ITCode).ToList();
             }
             else
             {
@@ -100,13 +132,24 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                List<Guid?> tempids = new List<Guid?>();
-                foreach (var item in vm?.Ids)
+                using (var tran = DC.BeginTransaction())
                 {
-                    tempids.Add(Guid.Parse(item));
+                    try
+                    {
+                        var ur = DC.Set<FrameworkUserRole>().Where(x => itcode.Contains(x.UserCode));
+                        DC.Set<FrameworkUserRole>().RemoveRange(ur);
+                        var ug = DC.Set<FrameworkUserGroup>().Where(x => itcode.Contains(x.UserCode));
+                        DC.Set<FrameworkUserGroup>().RemoveRange(ug);
+                        DC.SaveChanges();
+                        tran.Commit();
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                    }
                 }
-                var userids = DC.Set<FrameworkUser>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
-                await Wtm.RemoveUserCache(userids);
+
+                await Wtm.RemoveUserCache(itcode.ToArray());
                 return Ok(ids.Count());
             }
         }
@@ -172,7 +215,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [AllRights]
         public ActionResult GetFrameworkRoles()
         {
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName));
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x=>x.RoleCode));
         }
 
         [HttpGet("GetFrameworkGroups")]
@@ -180,7 +223,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [AllRights]
         public ActionResult GetFrameworkGroups()
         {
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName));
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName, x=>x.GroupCode));
         }
 
     }

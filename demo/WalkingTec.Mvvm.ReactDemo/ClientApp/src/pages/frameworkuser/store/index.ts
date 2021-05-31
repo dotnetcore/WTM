@@ -9,40 +9,40 @@ export class Store extends DataSource {
             // Target: "/api", 默认 /api
             Apis: {
                 search: {
-                    url: "/_frameworkuser/search",
+                    url: "/_frameworkuserbase/search",
                     method: "post"
                 },
                 details: {
                     // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
-                    url: "/_frameworkuser/{ID}",
+                    url: "/_frameworkuserbase/{ID}",
                     method: "get"
                 },
                 insert: {
-                    url: "/_frameworkuser/add",
+                    url: "/_frameworkuserbase/add",
                     method: "post"
                 },
                 update: {
-                    url: "/_frameworkuser/edit",
+                    url: "/_frameworkuserbase/edit",
                     method: "put"
                 },
                 delete: {
-                    url: "/_frameworkuser/BatchDelete",
+                    url: "/_frameworkuserbase/BatchDelete",
                     method: "post"
                 },
                 import: {
-                    url: "/_frameworkuser/import",
+                    url: "/_frameworkuserbase/import",
                     method: "post"
                 },
                 export: {
-                    url: "/_frameworkuser/ExportExcel",
+                    url: "/_frameworkuserbase/ExportExcel",
                     method: "post"
                 },
                 exportIds: {
-                    url: "/_frameworkuser/ExportExcelByIds",
+                    url: "/_frameworkuserbase/ExportExcelByIds",
                     method: "post"
                 },
                 template: {
-                    url: "/_frameworkuser/GetExcelTemplate",
+                    url: "/_frameworkuserbase/GetExcelTemplate",
                     method: "get"
                 }
             }
