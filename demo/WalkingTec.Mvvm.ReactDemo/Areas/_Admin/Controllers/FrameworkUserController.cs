@@ -21,9 +21,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public string Search(FrameworkUserSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkUserListVM>(passInit: true);
+            var vm = Wtm.CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
-            return vm.GetJson(enumToString: false);
+            return vm.GetJson();
         }
 
         [ActionDescription("Sys.Get")]

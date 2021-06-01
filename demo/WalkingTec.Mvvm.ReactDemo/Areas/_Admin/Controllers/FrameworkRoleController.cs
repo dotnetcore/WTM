@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             var vm = Wtm.CreateVM<FrameworkRoleListVM>(passInit: true);
             vm.Searcher = searcher;
-            return vm.GetJson(enumToString: false);
+            return vm.GetJson();
         }
 
         [ActionDescription("Sys.Get")]
