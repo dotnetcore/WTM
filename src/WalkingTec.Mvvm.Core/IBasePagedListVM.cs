@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// ReplaceWhere
         /// </summary>
-        Expression<Func<TopBasePoco, bool>> ReplaceWhere { get; set; }
+        Expression ReplaceWhere { get; set; }
 
         /// <summary>
         /// SetFullRowColor

@@ -491,7 +491,7 @@ namespace WalkingTec.Mvvm.Core
         /// 替换查询条件，如果被赋值，则列表会使用里面的Lambda来替换原有Query里面的Where条件
         /// </summary>
         [JsonIgnore()]
-        public Expression<Func<TopBasePoco, bool>> ReplaceWhere { get; set; }
+        public Expression ReplaceWhere { get; set; }
 
         /// <summary>
         /// 构造函数
@@ -672,7 +672,7 @@ namespace WalkingTec.Mvvm.Core
                 //如果设定了替换条件，则使用替换条件替换Query中的Where语句
                 if (ReplaceWhere != null)
                 {
-                    var mod = new WhereReplaceModifier<TopBasePoco>(ReplaceWhere);
+                    var mod = new WhereReplaceModifier<TModel>(ReplaceWhere as Expression<Func<TModel,bool>>);
                     var newExp = mod.Modify(query.Expression);
                     query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 }

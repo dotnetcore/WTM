@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var para = Expression.Parameter(modelType);
                 var idproperty = modelType.GetSingleProperty(_DONOT_USE_VFIELD);
                 var pro = Expression.Property(para, idproperty);
-                listVM.ReplaceWhere = listVM.Ids.GetContainIdExpression(typeof(TopBasePoco), Expression.Parameter(typeof(TopBasePoco)), pro) as Expression<Func<TopBasePoco, bool>>;
+                listVM.ReplaceWhere = listVM.Ids.GetContainIdExpression(modelType, Expression.Parameter(modelType), pro);
                 Regex r = new Regex("<script>.*?</script>");
                 string selectData = r.Replace((listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");
                 ViewBag.SelectData = selectData;
