@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.TagName = "label";
                     output.TagMode = TagMode.StartTagAndEndTag;
                     output.Attributes.Add("class", "layui-form-label");
-                    output.Attributes.Add("style", "text-align:left;padding:9px 0;width:unset");
+                    output.Attributes.Add("style", "text-align:left;padding:9px 0;width:unset;word-break:break-all;");
                     output.Content.AppendHtml(THProgram._localizer["Sys.None"]);
                 }
             }
@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.TagName = "label";
                 output.TagMode = TagMode.StartTagAndEndTag;
                 output.Attributes.Add("class", "layui-form-label");
-                output.Attributes.Add("style", "text-align:left;padding:9px 0;width:unset");
+                output.Attributes.Add("style", "text-align:left;padding:9px 0;width:unset;word-break:break-all;");
                 var val = string.Empty;
                 if (Field?.Model != null)
                 {
