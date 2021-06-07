@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
 
         public SchoolVM()
         {
-            SetInclude(x => x.Place);
+            SetInclude(x => x.Place, x=>x.Majors);
         }
 
         protected override void InitVM()

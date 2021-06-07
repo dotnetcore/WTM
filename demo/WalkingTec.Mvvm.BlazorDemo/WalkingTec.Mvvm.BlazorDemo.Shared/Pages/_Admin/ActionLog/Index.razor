@@ -20,7 +20,7 @@
 
 
 <Table @ref="dataTable" TItem="ActionLog" ShowLineNo="true" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" FixedExtendButtonsColumn="true" ShowDefaultButtons="false" style="margin-top:10px;">
+       ShowToolbar="true" IsMultipleSelect="true" PageItems="WtmBlazor.ConfigInfo.UIOptions.DataTable.RPP"  ShowExtendButtons="true" FixedExtendButtonsColumn="true" ShowDefaultButtons="false" style="margin-top:10px;">
     <TableColumns>
         <TableColumn @bind-Field="@context.LogType" Width="120" />
         <TableColumn @bind-Field="@context.ModuleName" Width="120" />
