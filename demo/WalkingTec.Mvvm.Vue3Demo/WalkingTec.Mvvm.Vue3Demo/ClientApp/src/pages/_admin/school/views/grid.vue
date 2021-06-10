@@ -13,8 +13,20 @@ export default class extends Vue {
   get columnDefs(): (ColDef | ColGroupDef)[] {
     return [
       {
+        headerName: EnumLocaleLabel.ID,
+        field: "ID",
+      },
+      {
         headerName: EnumLocaleLabel.SchoolCode,
-        field: "ITCode",
+        field: "SchoolCode",
+      },
+      {
+        headerName: EnumLocaleLabel.SchoolName,
+        field: "SchoolName",
+      },
+      {
+        headerName: EnumLocaleLabel.SchoolType,
+        field: "SchoolType",
       },
     ]
   };

@@ -41,9 +41,9 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly PageEntity;
   // 表单类型
   @Inject({ default: "" }) readonly formType;
-  get GridKey() {
-    return this.$Encryption.MD5(this.lodash.assign({}, { columnDefs: this.columnDefs }, this.gridOptions))
-  }
+  // get GridKey() {
+  //   return this.$Encryption.MD5(this.lodash.assign({}, { columnDefs: this.columnDefs }, this.gridOptions))
+  // }
   get isReadonly() {
     return this._readonly || this.disabled
   }

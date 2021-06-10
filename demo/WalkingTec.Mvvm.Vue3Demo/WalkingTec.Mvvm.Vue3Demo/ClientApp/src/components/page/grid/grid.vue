@@ -4,9 +4,9 @@
     style="height: 100%"
     class="ag-grid-card"
     :class="themeClass"
-    :columnDefs="columnDefs"
+    :columnDefs="option.columnDefs"
     :rowData="rowData"
-    :gridOptions="gridOptions"
+    :gridOptions="option.gridOptions"
   ></ag-grid-vue>
 </template>
 
@@ -21,8 +21,8 @@ LicenseManager.setLicenseKey(
 );
 @Options({
   components: {
-    AgGridVue,
-  },
+    AgGridVue
+  }
 })
 export default class AgGrid extends Vue {
   @Prop({ default: false }) loading;
@@ -30,14 +30,24 @@ export default class AgGrid extends Vue {
   @Prop({ default: () => [] }) columnDefs;
   @Prop({}) rowData;
   @Prop({ default: () => ({}) }) gridOptions: GridOptions;
+  option = {
+    columnDefs: [],
+    gridOptions: {}
+  };
   get themeClass() {
     return `ag-theme-${this.theme}`;
   }
   get GridKey() {
-    return this.$Encryption.MD5(this.lodash.assign({ __locale: this.$i18n.locale, columnDefs: this.columnDefs }, this.gridOptions))//this.$i18n.locale;
+    return this.$Encryption.MD5(
+      this.lodash.assign(
+        { __locale: this.$i18n.locale, columnDefs: this.columnDefs },
+        this.gridOptions
+      )
+    ); //this.$i18n.locale;
   }
   created() {
-    console.log(this)
+    this.option.columnDefs = this.lodash.cloneDeep(this.columnDefs);
+    this.option.gridOptions = this.lodash.cloneDeep(this.gridOptions);
   }
 }
 </script>
