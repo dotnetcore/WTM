@@ -5,6 +5,7 @@
     </a-col>
     <a-col :span="18">
       <WtmFilter
+        ref="WtmFilter"
         :PageController="PageController"
         @finish="onFinish"
         @reset="onReset"
@@ -16,12 +17,13 @@
   </a-row>
 </template>
 <script lang="ts">
-import { Vue, Options, Provide, Inject } from "vue-property-decorator";
+import { Vue, Options, Provide, Inject, Ref } from "vue-property-decorator";
 import ViewTree from "./tree.vue";
 import { PageController } from "../controller";
 import { EnumLocaleLabel } from "../locales";
 @Options({ components: { ViewTree } })
 export default class extends Vue {
+  @Ref("WtmFilter") WtmFilter;
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) readonly formState = {
     ParentId: null
@@ -39,7 +41,7 @@ export default class extends Vue {
   }
   onTreeSelect(ParentId) {
     this.formState.ParentId = ParentId;
-    this.onFinish(this.formState);
+    this.WtmFilter.onFinish(this.formState);
   }
   mounted() {}
 }
