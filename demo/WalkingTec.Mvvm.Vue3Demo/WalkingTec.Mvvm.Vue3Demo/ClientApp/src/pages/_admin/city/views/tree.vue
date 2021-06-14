@@ -1,8 +1,8 @@
 <template>
-  <a-directory-tree :tree-data="treeData" @select="onSelect" />
+  <a-tree :tree-data="treeData" @select="onSelect" />
 </template>
 <script lang="ts">
-import { Vue, Options, Provide, Inject,Emit } from "vue-property-decorator";
+import { Vue, Options, Provide, Inject, Emit } from "vue-property-decorator";
 import { PageController } from "../controller";
 @Options({ components: {} })
 export default class extends Vue {
@@ -12,9 +12,9 @@ export default class extends Vue {
     const res = await this.PageController.onGetTree();
     this.treeData = this.$Encryption.toTree(res);
   }
-  @Emit('select')
+  @Emit("select")
   onSelect(event) {
-    return this.lodash.head(event);
+    return this.lodash.head(event) || null;
   }
 }
 </script>
