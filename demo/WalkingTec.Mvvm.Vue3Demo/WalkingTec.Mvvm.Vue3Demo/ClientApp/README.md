@@ -7,10 +7,18 @@
 -   [views/details.vue] WtmView 展示的 表单页面 Provide formState 供 WtmField 使用
 -   [views/filter.vue] grid 搜索条件 默认slot展开的条件 slot#more 是收起条件
 -   [views/grid.vue] grid 表格
+## 一个基础页面由以上部分组成。
+- 每个页面都有自己的 entity 和 controller 。
+- entity中定义了当前页面所需要的 Field 字段。
+- controller 继承 ControllerBasics 基础控制器，里面包含了 基础页面所需要的【数据状态】和【添加，修改，删除，导入，导出】等方法。
+- 在每个页面的 index.vue 初始化好了当前页面的 PageController & PageEntity 在所有需要使用的子页面中使用 [Provide/Inject](https://vue3js.cn/docs/zh/guide/component-provide-inject.html) 使用。
+- 数据的初始化 也就是第一次 拉取数据 在 filter.vue onFinish 函数中。当filter.vue初始化完成和查询按钮都会调用这个方法。
+- 详情页面通过路由和【WtmView】组件控制，它会检测路由中的参数显示对应的页面，默认参数是 details 如需其他配置 通过props 更改。示例 【frameworkrole>views>privilege.vue】权限配置
+-  
 # 组件列表
--   [WtmView]
--   [WtmAction]
--   [WtmField]
+-   [WtmView] 弹出框 视图 
+-   [WtmAction] 页面&数据操作
+-   [WtmField] 表单项
 # Entity 配置
   ```ts
   // 类型定义 详见：src/client/declare.ts

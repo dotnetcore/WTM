@@ -13,7 +13,7 @@
     <a-divider style="margin: 3px;" />
     <WtmAgGrid
       theme="alpine"
-      :rowData="value"
+      :rowData="rowData"
       :columnDefs="columnDefs"
       :gridOptions="gridOptions"
     />
@@ -45,7 +45,10 @@ export default class extends mixins(FieldBasics) {
   //   return this.$Encryption.MD5(this.lodash.assign({}, { columnDefs: this.columnDefs }, this.gridOptions))
   // }
   get isReadonly() {
-    return this._readonly || this.disabled
+    return this._readonly || this.disabled;
+  }
+  get rowData() {
+    return this.value || [];
   }
   get columnDefs(): (ColDef | ColGroupDef)[] {
     let columnDefs = this.lodash.concat<ColDef | ColGroupDef>(
@@ -66,7 +69,7 @@ export default class extends mixins(FieldBasics) {
           editable: false,
           suppressColumnsToolPanel: true
         }
-      ])
+      ]);
     }
     return columnDefs;
   }
@@ -84,7 +87,7 @@ export default class extends mixins(FieldBasics) {
       sortable: false,
       editable: !this.isReadonly,
       minWidth: 80
-    }
+    };
   }
   get gridOptions(): GridOptions {
     return this.lodash.assign<GridOptions, GridOptions>(
