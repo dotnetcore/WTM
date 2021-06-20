@@ -1,6 +1,10 @@
 # 更新日志
 ## v5.x.x 
 
+##5.2.5 (2021-6-20) 
+* **修改：**  修复了layui模式下slider控件无法提交的bug
+* **修改：**  修复了GetSelectListItems and GetTreeSelectListItems 方法在sqlite下有可能引发错误的bug
+
 ##5.2.4 (2021-6-9) 
 * **修改：**  修复了Layui的Selector读取数据的bug
 * **修改：**  修复了Layui的Display没有自动换行的问题
