@@ -947,7 +947,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     }
                     else
                     {
-                        actionScript = $"{item.OnClickFunc}(ids,objs);";
+                        actionScript = $"{item.OnClickFunc}(ids,ff.GetSelectionData('{Id}'));";
                     }
                     if (string.IsNullOrEmpty(item.PromptMessage) == false)
                     {

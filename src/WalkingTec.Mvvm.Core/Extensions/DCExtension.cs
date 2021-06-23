@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //根据Text对下拉菜单数据排序
             if (SortByName == true)
             {
-                rv = query.Select(lambda).OrderBy(x => x.Text).ToList();
+                rv = query.Select(lambda).ToList().OrderBy(x => x.Text).ToList();
             }
             else
             {
@@ -245,18 +245,18 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var lambda = Expression.Lambda<Func<T, ComboSelectListItem>>(init, pe);
 
 
-            IQueryable<ComboSelectListItem> rv = null;
+            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
             //根据Text对下拉菜单数据排序
             if (SortByName == true)
             {
-                rv = query.Select(lambda).OrderBy(x => x.Text);
+                rv = query.Select(lambda).ToList().OrderBy(x => x.Text).ToList();
             }
             else
             {
-                rv = query.Select(lambda);
+                rv = query.Select(lambda).ToList();
             }
 
-            return rv.ToList();
+            return rv;
         }
 
         #endregion
