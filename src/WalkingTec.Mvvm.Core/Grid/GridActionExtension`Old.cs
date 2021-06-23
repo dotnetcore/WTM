@@ -119,6 +119,13 @@ namespace WalkingTec.Mvvm.Core
             self.ShowDialog = showDialog;
             return self;
         }
+        public static GridAction SetForcePost(this GridAction self, bool forcepost = true)
+        {
+            self.ForcePost = forcepost;
+            return self;
+        }
+
+
         /// <summary>
         /// 是否跳转到新页面
         /// </summary>
