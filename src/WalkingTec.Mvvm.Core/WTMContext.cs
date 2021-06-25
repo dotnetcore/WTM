@@ -50,10 +50,6 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                if (_cache == null)
-                {
-                    _cache = (IDistributedCache)HttpContext.RequestServices.GetService(typeof(IDistributedCache));
-                }
                 return _cache;
             }
         }
@@ -274,11 +270,12 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null, WtmLocalizationOption lop=null)
+        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null, WtmLocalizationOption lop=null, IDistributedCache cache=null)
         {
             _configInfo = _config?.CurrentValue ?? new Configs();
             _globaInfo = _gd ?? new GlobalData();
             _httpContext = _http?.HttpContext;
+            _cache = cache;
             _stringLocalizerFactory = stringLocalizer;
             _loggerFactory = loggerFactory;
             _localizerType = lop?.LocalizationType;
