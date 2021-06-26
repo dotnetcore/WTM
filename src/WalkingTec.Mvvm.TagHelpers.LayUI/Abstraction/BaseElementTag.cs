@@ -49,7 +49,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     Style += " overflow:auto;";
                 }
-                output.Attributes.SetAttribute("style", Style);
+                TagHelperAttribute prestyle = null;
+                if(output.Attributes.TryGetAttribute("style", out prestyle))
+                {
+                    Style = prestyle.Value+Style;
+                }
+                
+                output.Attributes.SetAttribute("style",  Style);
             }
 
             if (context.Items.ContainsKey("ipr"))
@@ -70,6 +76,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 ";
                     output.PreElement.SetHtmlContent(preHtml + output.PreElement.GetContent());
                     output.PostElement.AppendHtml(postHtml);
+                }
+                if(this is CardTagHelper || this is FormTagHelper || this is ContainerTagHelper || this is TreeContainerTagHelper || this is SearchPanelTagHelper)
+                {
+                    context.Items.Remove("ipr");
                 }
             }
             //输出事件
