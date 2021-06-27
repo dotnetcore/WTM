@@ -112,6 +112,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 <script>
 ff.RenderForm('{Id}');
 ");
+
+            if(BeforeSubmit != null && BeforeSubmit.Contains("(") == false)
+            {
+                BeforeSubmit += "()";
+            }
             // 使用传统表单提交方式提交，而不使用 AJAX 提交
             // 比如登陆页面，提交后校验成功会跳转其他页面，而不是返会 PartialView
             if (OldPost == false && !(this is SearchPanelTagHelper))
