@@ -1,6 +1,11 @@
 # 更新日志
 ## v5.x.x 
 
+##5.2.6 (2021-6-27) 
+* **修改：**  修复了layui模式下设置组件style和class有时无效的问题
+* **修改：**  Layui模式下添加了wt:card组件
+* **修改：**  修复了Wtm中的Cache依赖HttpContext的问题
+
 ##5.2.5 (2021-6-20) 
 * **修改：**  修复了layui模式下slider控件无法提交的bug
 * **修改：**  修复了GetSelectListItems and GetTreeSelectListItems 方法在sqlite下有可能引发错误的bug
