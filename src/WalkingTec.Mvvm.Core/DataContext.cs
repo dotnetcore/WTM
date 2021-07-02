@@ -205,12 +205,12 @@ namespace WalkingTec.Mvvm.Core
                         if (IsSpa == false)
                         {
                             systemManagement.Icon = "layui-icon layui-icon-set";
-                            logList.Icon = "layui-icon layui-icon-form";
-                            userList.Icon = "layui-icon layui-icon-friends";
-                            roleList.Icon = "layui-icon layui-icon-user";
-                            groupList.Icon = "layui-icon layui-icon-group";
-                            menuList.Icon = "layui-icon layui-icon-menu-fill";
-                            dpList.Icon = "layui-icon layui-icon-auz";
+                            logList?.SetPropertyValue("Icon", "layui-icon layui-icon-form");
+                            userList?.SetPropertyValue("Icon", "layui-icon layui-icon-friends");
+                            roleList?.SetPropertyValue("Icon", "layui-icon layui-icon-user");
+                            groupList?.SetPropertyValue("Icon", "layui-icon layui-icon-group");
+                            menuList?.SetPropertyValue("Icon", "layui-icon layui-icon-menu-fill");
+                            dpList?.SetPropertyValue("Icon", "layui-icon layui-icon-auz");
 
                             var apifolder = GetFolderMenu("Api", new List<FrameworkRole> { adminRole });
                             apifolder.ShowOnMenu = false;
@@ -236,13 +236,12 @@ namespace WalkingTec.Mvvm.Core
                         else
                         {
                             systemManagement.Icon = " _wtmicon _wtmicon-icon_shezhi";
-                            logList.Icon = " _wtmicon _wtmicon-chaxun";
-                            userList.Icon = " _wtmicon _wtmicon-zhanghaoquanxianguanli";
-                            roleList.Icon = " _wtmicon _wtmicon-quanxianshenpi";
-                            groupList.Icon = " _wtmicon _wtmicon-zuzhiqunzu";
-                            menuList.Icon = " _wtmicon _wtmicon--lumingpai";
-                            dpList.Icon = " _wtmicon _wtmicon-anquan";
-
+                            logList?.SetPropertyValue("Icon", " _wtmicon _wtmicon-chaxun");
+                            userList?.SetPropertyValue("Icon", " _wtmicon _wtmicon-zhanghaoquanxianguanli");
+                            roleList?.SetPropertyValue("Icon", " _wtmicon _wtmicon-quanxianshenpi");
+                            groupList?.SetPropertyValue("Icon", " _wtmicon _wtmicon-zuzhiqunzu");
+                            menuList?.SetPropertyValue("Icon", " _wtmicon _wtmicon--lumingpai");
+                            dpList?.SetPropertyValue("Icon", " _wtmicon _wtmicon-anquan");
                         }
                     }
 
