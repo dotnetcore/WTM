@@ -81,7 +81,11 @@ namespace WalkingTec.Mvvm.Mvc.Auth
 
         private IDataContext CreateDC()
         {
-            string cs = "default";
+            string cs = "tokendefault";
+            if(_configs.Connections.Any(x=>x.Key.ToLower() == cs) == false)
+            {
+                cs = "default";
+            }
             return _configs.Connections.Where(x=>x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
         }
 
