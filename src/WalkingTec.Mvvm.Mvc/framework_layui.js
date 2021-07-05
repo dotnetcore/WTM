@@ -941,7 +941,7 @@ window.ff = {
             tab = " .layadmin-tabsbody-item.layui-show";
         }
         var tables = $('#' + dialogid + tab + ' table[id]');
-        var searchBtns = $('#' + dialogid + tab + ' form a[class*=layui-btn]');
+        var searchBtns = $('#' + dialogid + tab + ' form a[IsSearchButton]');
         if (searchBtns.length > index) {
             searchBtns[index].click();
         }
