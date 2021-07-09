@@ -151,14 +151,13 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public ActionResult Import(FrameworkGroupImportVM vm)
         {
-
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm != null && (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData()))
             {
                 return BadRequest(vm.GetErrorJson());
             }
             else
             {
-                return Ok(vm.EntityList.Count);
+                return Ok(vm?.EntityList?.Count ?? 0);
             }
         }
 
