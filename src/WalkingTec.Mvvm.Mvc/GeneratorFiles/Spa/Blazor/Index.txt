@@ -19,7 +19,7 @@ $searchfields$
 $columns$
     </TableColumns>
     <TableToolbarTemplate>
-        @if (IsAccessable("/api/$modelname$/add"))
+        @if (IsAccessable("/api/$modelname$/Add"))
         {
             <TableToolbarButton TItem="$modelname$_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }
@@ -73,7 +73,7 @@ $init$
 
     private async Task<QueryData<$modelname$_View>> OnSearch(QueryPageOptions opts)
     {
-        return await StartSearch<$modelname$_View>("/api/$modelname$/search", SearchModel, opts);
+        return await StartSearch<$modelname$_View>("/api/$modelname$/Search", SearchModel, opts);
     }
 
     private void DoSearch()
