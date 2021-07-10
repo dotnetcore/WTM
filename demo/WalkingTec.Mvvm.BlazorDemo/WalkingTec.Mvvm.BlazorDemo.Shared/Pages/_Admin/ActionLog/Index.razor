@@ -33,14 +33,14 @@
         @*<TableColumn @bind-Field="@context.Remark" Width="320"  AllowTextWrap="true" />*@
     </TableColumns>
     <TableToolbarTemplate>
-        @if (IsAccessable("/api/_ActionLog/batchdelete"))
+        @if (IsAccessable("/api/_ActionLog/BatchDelete"))
         {
             <TableToolbarPopconfirmButton TItem="ActionLog" Color="Color.Primary"
                                           Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }
-        @if (IsAccessable("/api/_ActionLog/exportexcel"))
+        @if (IsAccessable("/api/_ActionLog/ExportExcel"))
         {
             <TableToolbarButton TItem="ActionLog" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
@@ -51,7 +51,7 @@
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
             }
-            @if (IsAccessable("/api/_ActionLog/batchdelete"))
+            @if (IsAccessable("/api/_ActionLog/BatchDelete"))
             {
                 <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                                   Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
@@ -68,7 +68,7 @@
 
     private async Task<QueryData<ActionLog>> OnSearch(QueryPageOptions opts)
     {
-        return await StartSearch<ActionLog>("/api/_ActionLog/search", SearchModel, opts);
+        return await StartSearch<ActionLog>("/api/_ActionLog/Search", SearchModel, opts);
     }
 
     private void DoSearch()

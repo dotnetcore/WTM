@@ -23,29 +23,29 @@
 
     </TableColumns>
     <TableToolbarTemplate>
-        @if (IsAccessable("/api/_FrameworkGroup/add"))
+        @if (IsAccessable("/api/_FrameworkGroup/Add"))
         {
             <TableToolbarButton TItem="FrameworkGroup" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }
-        @if (IsAccessable("/api/_FrameworkGroup/batchdelete"))
+        @if (IsAccessable("/api/_FrameworkGroup/BatchDelete"))
         {
             <TableToolbarPopconfirmButton TItem="FrameworkGroup" Color="Color.Primary"
                                           Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }
-        @if (IsAccessable("/api/_FrameworkGroup/import"))
+        @if (IsAccessable("/api/_FrameworkGroup/Import"))
         {
             <TableToolbarButton TItem="FrameworkGroup" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
         }
-        @if (IsAccessable("/api/_FrameworkGroup/exportexcel"))
+        @if (IsAccessable("/api/_FrameworkGroup/ExportExcel"))
         {
             <TableToolbarButton TItem="FrameworkGroup" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            @if (IsAccessable("/api/_FrameworkGroup/edit"))
+            @if (IsAccessable("/api/_FrameworkGroup/Edit"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
             }
@@ -53,7 +53,7 @@
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
             }
-            @if (IsAccessable("/api/_FrameworkGroup/batchdelete"))
+            @if (IsAccessable("/api/_FrameworkGroup/BatchDelete"))
             {
                 <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                                   Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
@@ -71,7 +71,7 @@
 
     private async Task<QueryData<FrameworkGroup>> OnSearch(QueryPageOptions opts)
     {
-        return await StartSearch<FrameworkGroup>("/api/_FrameworkGroup/search", SearchModel, opts);
+        return await StartSearch<FrameworkGroup>("/api/_FrameworkGroup/Search", SearchModel, opts);
     }
 
     private void DoSearch()

@@ -396,6 +396,16 @@ namespace WalkingTec.Mvvm.Core
             }
             var pros = typeof(TModel).GetAllProperties();
             pros = pros.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(NotMappedAttribute)) == false).ToList();
+            if (typeof(TModel) != typeof(FileAttachment))
+            {
+                foreach (var pro in pros)
+                {
+                    if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+                    {
+                        pro.SetValue(Entity, null);
+                    }
+                }
+            }
             #region 更新子表
             foreach (var pro in pros)
             {

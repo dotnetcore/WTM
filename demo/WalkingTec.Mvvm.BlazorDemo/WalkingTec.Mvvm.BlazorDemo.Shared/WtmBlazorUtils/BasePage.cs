@@ -85,7 +85,7 @@ namespace WtmBlazorUtils
 
         public async Task<bool> PostsForm(ValidateForm form, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
         {            
-            var rv = await WtmBlazor.Api.CallAPI(url, method, form.Model.GetCleanCrudVM());
+            var rv = await WtmBlazor.Api.CallAPI(url, method, form.Model);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 if (Msg != null)

@@ -32,7 +32,7 @@
         <TableColumn @bind-Field="@context.IsValid" ComponentType="@typeof(Switch)" />
     </TableColumns>
     <TableToolbarTemplate>
-        @if (IsAccessable("/api/_frameworkuserbase/add"))
+        @if (IsAccessable("/api/_frameworkuserbase/Add"))
         {
             <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }

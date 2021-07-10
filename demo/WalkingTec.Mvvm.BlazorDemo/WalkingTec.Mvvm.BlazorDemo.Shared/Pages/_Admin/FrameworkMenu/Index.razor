@@ -20,18 +20,18 @@
         </TableColumn>
     </TableColumns>
     <TableToolbarTemplate>
-        @if (IsAccessable("/api/_frameworkmenu/add"))
+        @if (IsAccessable("/api/_frameworkmenu/Add"))
         {
             <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }
-        @if (IsAccessable("/api/_frameworkmenu/batchdelete"))
+        @if (IsAccessable("/api/_frameworkmenu/BatchDelete"))
         {
             <TableToolbarPopconfirmButton TItem="FrameworkMenu_ListView" Color="Color.Primary"
                                           Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }
-        @if (IsAccessable("/api/_frameworkmenu/exportexcel"))
+        @if (IsAccessable("/api/_frameworkmenu/ExportExcel"))
         {
             <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
@@ -40,7 +40,7 @@
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            @if (IsAccessable("/api/_frameworkmenu/edit"))
+            @if (IsAccessable("/api/_frameworkmenu/Edit"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
             }
@@ -48,7 +48,7 @@
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
             }
-            @if (IsAccessable("/api/_frameworkmenu/batchdelete"))
+            @if (IsAccessable("/api/_frameworkmenu/BatchDelete"))
             {
                 <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                                   Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
@@ -66,7 +66,7 @@
 
     private async Task<QueryData<FrameworkMenu_ListView>> OnSearch(QueryPageOptions opts)
     {
-        return await StartSearchTree<FrameworkMenu_ListView>("/api/_frameworkmenu/search", SearchModel, opts);
+        return await StartSearchTree<FrameworkMenu_ListView>("/api/_frameworkmenu/Search", SearchModel, opts);
     }
 
     private async Task<IEnumerable<FrameworkMenu_ListView>> OnTreeExpand(FrameworkMenu_ListView data)
