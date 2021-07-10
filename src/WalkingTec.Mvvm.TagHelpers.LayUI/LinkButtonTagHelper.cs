@@ -4,7 +4,7 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
-    public enum ButtonTargetEnum { Layer, self, newwindow }
+    public enum ButtonTargetEnum { Layer, self, newwindow,currentwindow }
 
     [HtmlTargetElement("wt:linkbutton", TagStructure = TagStructure.WithoutEndTag)]
     public class LinkButtonTagHelper : BaseButtonTag
@@ -121,6 +121,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     Click = $"ff.SetCookie('#{Url}','{WindowTitle ?? ""}',true);window.open('/Home/PIndex#{Url}')";
                 }
+            }
+            else if(Target == ButtonTargetEnum.currentwindow)
+            {
+                Click = $"ff.LoadPage('{Url}',false,'{WindowTitle ?? ""}');";
             }
             base.Process(context, output);
         }
