@@ -32,7 +32,7 @@
 </ValidateForm>
 
 @code {
-    private FrameworkUserVM Model = new FrameworkUserVM() { SelectedRolesCodes = new List<string>() };
+    private FrameworkUserVM Model = null;
     private List<SelectedItem> AllRoles = new List<SelectedItem>();
     private List<SelectedItem> AllGroups = new List<SelectedItem>();
     private ValidateForm vform { get; set; }

@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModel.HomeVMs
         public string ITCode { get; set; }
 
         [Display(Name = "_Admin.Password")]
-        [Required(AllowEmptyStrings = false)]
+        [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Password { get; set; }
 

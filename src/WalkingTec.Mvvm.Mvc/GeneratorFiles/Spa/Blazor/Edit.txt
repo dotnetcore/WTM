@@ -14,7 +14,7 @@ $formfields$
 
 @code {
 
-    private $modelname$VM Model = new $modelname$VM();
+    private $modelname$VM Model = null;
     private ValidateForm vform { get; set; }
     [Parameter]
     public string id { get; set; }
