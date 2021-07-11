@@ -30,15 +30,13 @@ class requestBase {
     let data = {};
     if (!_.isArray(params)) {
       for (const key in params || {}) {
-        const item = params[key]
-        if (
-          item !== undefined &&
-          item !== ""
-        ) {
+        const item = params[key];
+        if (item !== undefined && item !== "" && item !== null) {
           data[key] = _.isObject(item) ? this.requestData(item) : item;
-        } else {
-          data[key] = null;
         }
+        // else {
+        //   data[key] = null;
+        // }
       }
     } else {
       data = params;
@@ -102,17 +100,17 @@ class requestBase {
       }
    */
   requestError(res) {
-    let msg: string = i18n.t('errorMsg.error').toString();
+    let msg: string = i18n.t("errorMsg.error").toString();
     const { response, message } = res;
-    console.log('response, message', response, message)
+    console.log("response, message", response, message);
     // 导入文件错误信息
     const filterError = (ID?: string) => {
-      let notifyMsg: string = i18n.t('errorMsg.template').toString();
+      let notifyMsg: string = i18n.t("errorMsg.template").toString();
       if (ID) {
         notifyMsg = `导入时发生错误, 请查看<a style="text-decoration: underline;" href="/api/_file/downloadFile/${ID}"><i>错误文件</i></a>`;
       }
       Notification({
-        title: i18n.t('errorMsg.import').toString(),
+        title: i18n.t("errorMsg.import").toString(),
         dangerouslyUseHTMLString: true,
         type: "error",
         message: notifyMsg
@@ -128,7 +126,7 @@ class requestBase {
         return;
       } else if (Form && Form !== {}) {
         const cxts = Object.keys(Form).map(key => Form[key]);
-        msg = cxts.join(',');
+        msg = cxts.join(",");
       } else {
         msg = response.data;
       }
@@ -166,7 +164,6 @@ const _request = (option, serverHost?) => {
 
   if (option.contentType === contentType.stream) {
     axiosReq["responseType"] = "blob";
-    axiosReq.data = option.data;
   } else if (option.contentType === contentType.multipart) {
     return rBase.serviceFormData(url, option, axiosReq.headers);
   } else if (option.contentType === contentType.form) {
@@ -176,7 +173,7 @@ const _request = (option, serverHost?) => {
   return axios({ ...axiosReq })
     .then(res => {
       if (option.contentType === contentType.stream) {
-          return res;
+        return res;
       }
       return res.data;
     })
