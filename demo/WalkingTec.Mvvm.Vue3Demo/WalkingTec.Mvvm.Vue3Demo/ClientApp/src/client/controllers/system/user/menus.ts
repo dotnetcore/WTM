@@ -1,12 +1,20 @@
 import { Regulars } from "@/client/helpers";
 import lodash from "lodash";
 import queryString from 'query-string';
+import { Subject } from "rxjs";
+import { createApp, createVNode } from 'vue';
 /**
  * 用户菜单
  */
 export class UserMenus {
     constructor() {
     }
+    /**
+     * 用户异步数据加载订阅
+     * @type {Promise<any>}
+     * @memberof ControllerUser
+     */
+    MenusAsync = new Subject()
     /** 菜单 */
     private menus: Array<any> = [];
     // 平行数据菜单
@@ -20,6 +28,7 @@ export class UserMenus {
             const menus = this.recursionTree(ParallelMenu, null, [])
             this.menus = lodash.clone(menus);
             this.ParallelMenu = lodash.clone(ParallelMenu);
+            this.MenusAsync.complete()
         }
     }
     getMenus() {
@@ -45,7 +54,7 @@ export class UserMenus {
             data = lodash.assign({ path }, {
                 router: { to: path },
                 meta: {
-                    // icon: data.Icon, 
+                    icon: createVNode('span', { class: data.Icon, style: 'margin-right:10px' }),//createApp({ template: `<span class="${data.Icon}">` }),
                     title: data.Text
                 },
             }, data)

@@ -1,5 +1,9 @@
 <template>
-  <WtmGrid :PageController="PageController" :columnDefs="columnDefs" :gridOptions="gridOptions" />
+  <WtmGrid
+    :PageController="PageController"
+    :columnDefs="columnDefs"
+    :gridOptions="gridOptions"
+  />
 </template>
 <script lang="ts">
 import { ColDef, ColGroupDef, GridOptions } from "ag-grid-community";
@@ -10,28 +14,40 @@ import RowAction from "./action.vue";
 @Options({ components: {} })
 export default class extends Vue {
   @Inject() readonly PageController: PageController;
-  columnDefs: (ColDef | ColGroupDef)[] = [
-    {
-      headerName: EnumLocaleLabel.DisplayOrder,
-      field: "DisplayOrder",
-    },
-    {
-      headerName: EnumLocaleLabel.Icon,
-      field: "Icon",
-    },
-  ];
+  get columnDefs(): (ColDef | ColGroupDef)[] {
+    return [
+      {
+        headerName: EnumLocaleLabel.DisplayOrder,
+        field: "DisplayOrder"
+      },
+      {
+        headerName: EnumLocaleLabel.Icon,
+        field: "Icon",
+        cellRenderer: this.$FrameworkComponents.icons
+      },
+      {
+        headerName: EnumLocaleLabel.IsPublic,
+        field: "IsPublic",
+        cellRenderer: this.$FrameworkComponents.switch
+      },
+      {
+        headerName: EnumLocaleLabel.ShowOnMenu,
+        field: "ShowOnMenu",
+        cellRenderer: this.$FrameworkComponents.switch
+      }
+    ];
+  }
   get gridOptions(): GridOptions {
     return {
       treeData: true,
       groupDefaultExpanded: -1,
       getDataPath: data => data.treePath,
       frameworkComponents: {
-        RowAction: this.__wtmToRowAction(RowAction, this.PageController),
-      },
+        RowAction: this.__wtmToRowAction(RowAction, this.PageController)
+      }
     };
   }
-  created() { }
+  created() {}
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

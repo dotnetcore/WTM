@@ -64,9 +64,9 @@ function getSocket(env = DEPLOY_ENV) {
  */
 function getLogger(env = DEPLOY_ENV) {
     const config = {
-        pro: "eezf26fnf7@866805f08bd19fc",
-        test: "eezf26fnf7@1b43a7dd797194a",
-        dev: "eezf26fnf7@0f14a104d3a7215"
+        pro: "",
+        test: "",
+        dev: ""
     }
     return lodash.get(config, env, config.dev)
 }
@@ -76,10 +76,10 @@ function getLogger(env = DEPLOY_ENV) {
  */
 function getWXAppid(env = DEPLOY_ENV) {
     const config = {
-        // pro: 'wx86b9c08d1269ab6e',
-        // uat: 'wxe3c9b33fb107e610',
-        // test: 'wxe3c9b33fb107e610',
-        dev: 'wx1f0f91b6c707018b'
+        // pro: '',
+        // uat: '',
+        // test: '',
+        dev: ''
     }
     return lodash.get(config, env, config.dev)
 }

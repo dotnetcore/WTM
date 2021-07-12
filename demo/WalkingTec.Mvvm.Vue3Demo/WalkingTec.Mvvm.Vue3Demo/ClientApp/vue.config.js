@@ -1,7 +1,9 @@
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
+const createFonts = require('./config/createFonts');
 const themes = path.join(__dirname, 'src/assets/themes/index.less')
+createFonts()
 module.exports = {
     outputDir: 'build',
     filenameHashing: true,

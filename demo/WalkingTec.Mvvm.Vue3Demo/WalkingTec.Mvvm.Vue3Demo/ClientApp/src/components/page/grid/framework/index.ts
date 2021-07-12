@@ -2,14 +2,16 @@ import headerIcon from './headerIcon.vue';
 import noRowsOverlay from './noRowsOverlay.vue';
 import loadingOverlay from './loadingOverlay.vue';
 import image from './image.vue';
-import renWwitch from './switch.vue';
+import icons from './icons.vue';
+import renSwitch from './switch.vue';
 
 export default {
     headerIcon,
     noRowsOverlay,
     loadingOverlay,
     image,
-    switch: renWwitch
+    icons,
+    switch: renSwitch
 }
 /**
  * 枚举
@@ -21,6 +23,7 @@ export enum frameworkComponents {
     noRowsOverlay = 'noRowsOverlay',
     loadingOverlay = 'loadingOverlay',
     image = 'image',
+    icons = 'icons',
     switch = 'switch',
 }
 declare module '@vue/runtime-core' {

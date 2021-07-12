@@ -17,7 +17,7 @@ export class UserController extends UserEntity {
     async onInit() {
         this.$ajax = globalProperties.$Ajax;
         await this.onPersist()
-        this.onCheckLogin()
+        await this.onCheckLogin()
     }
     onSetUserInfo(info) {
         this.UserInfo = info;
@@ -66,7 +66,7 @@ export class UserController extends UserEntity {
         return this.$ajax.post("/api/_Account/ChangePassword", body);
     }
     async onLogOut() {
-        // this.$ajax.get("/api/_Account/Logout");
+        this.$ajax.get("/api/_Account/Logout");
         this.onSetUserInfo({})
     }
 }

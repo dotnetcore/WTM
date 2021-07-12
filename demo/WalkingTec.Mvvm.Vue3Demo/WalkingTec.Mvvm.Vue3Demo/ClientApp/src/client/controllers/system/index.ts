@@ -26,9 +26,9 @@ export class SystemController {
     /**
      * 初始化
      */
-    onInit() {
-        this.UserController.onInit()
+    async onInit() {
         this.FilesController.onInit()
+        await this.UserController.onInit()
     }
 }
 export const $System = new SystemController()

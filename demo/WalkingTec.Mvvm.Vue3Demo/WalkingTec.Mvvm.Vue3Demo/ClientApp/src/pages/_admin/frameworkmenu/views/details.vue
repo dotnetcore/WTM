@@ -4,24 +4,29 @@
       <WtmField entityKey="ID" />
     </template>
     <a-space>
-      <WtmField entityKey="IsInside" />
+      <WtmField entityKey="IsInside" v-if="!formState.Entity.FolderOnly" />
       <WtmField entityKey="PageName" />
-    </a-space>
-    <a-space>
-      <WtmField entityKey="SelectedModule" v-if="IsInside" @change="onModuleChange" />
-      <WtmField entityKey="Url" :disabled="IsInside" />
-    </a-space>
-    <a-space>
-      <WtmField
-        entityKey="SelectedActionIDs"
-        :disabled="!formState.SelectedModule"
-      />
     </a-space>
     <a-space>
       <WtmField entityKey="FolderOnly" />
       <WtmField entityKey="ShowOnMenu" />
       <WtmField entityKey="IsPublic" />
     </a-space>
+    <a-space v-if="!formState.Entity.FolderOnly">
+      <WtmField
+        entityKey="SelectedModule"
+        v-if="IsInside"
+        @change="onModuleChange"
+      />
+      <WtmField entityKey="Url" :disabled="IsInside" />
+    </a-space>
+    <a-space v-if="!formState.Entity.FolderOnly">
+      <WtmField
+        entityKey="SelectedActionIDs"
+        :disabled="!formState.SelectedModule"
+      />
+    </a-space>
+
     <a-space>
       <WtmField entityKey="ParentId" />
       <WtmField entityKey="DisplayOrder" />
@@ -41,25 +46,25 @@ export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
     Entity: {
+      FolderOnly: false,
       IsInside: true,
       Url: undefined
     },
     SelectedModule: undefined
   };
   get IsInside() {
-    const IsInside = this.lodash.get(this.formState, 'Entity.IsInside', true)
-    return IsInside
+    const IsInside = this.lodash.get(this.formState, "Entity.IsInside", true);
+    return IsInside;
   }
   async onModuleChange(value) {
-    const pages = await router.onGetRequest()
-    const find = this.lodash.find(pages, ['value', value])
+    const pages = await router.onGetRequest();
+    const find = this.lodash.find(pages, ["value", value]);
     this.formState.Entity.Url = find.path;
   }
-  created() { }
+  created() {}
   mounted() {
-    this.onLoading()
+    this.onLoading();
   }
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

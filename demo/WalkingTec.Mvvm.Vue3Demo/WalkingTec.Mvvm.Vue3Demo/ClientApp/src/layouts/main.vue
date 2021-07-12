@@ -68,7 +68,7 @@ export default class extends Vue {
     const production = this.System.UserController.UserMenus.getMenus();
     if (this.$WtmConfig.production) {
       console.log(
-        "🚀 ~ file: layout.vue ~ line 57 ~ extends ~ getMenuData ~ production",
+        "🚀 ~ file: main.vue ~ line 69 ~ extends ~ getMenuData ~ production",
         production
       );
       return production;
@@ -142,7 +142,7 @@ export default class extends Vue {
   }
   created() {}
   mounted() {
-    // console.log("LENG ~ extends ~ mounted ~ this", this.$route.name)
+    // console.error("LENG ~ extends ~ mounted ~ this", this.$route.name)
     this.provider.openKeys = [this.$route.path];
     this.onRoute();
   }

@@ -76,7 +76,7 @@ export default class Grid extends Vue {
       gridOptions,
       this.GridEvents
     );
-    // console.log("LENG ~ extends ~ getoptions ~ options", options);
+    console.log("LENG ~ extends ~ getoptions ~ options", options);
     return options;
   }
   get GridEvents(): GridOptions {

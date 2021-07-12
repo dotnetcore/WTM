@@ -28,7 +28,11 @@ class AppRouter {
    * @type {Router}
    * @memberof AppRouter
    */
-  Router: Router;
+  Router: Router
+  //  = createRouter({
+  //   history: createWebHistory(process.env.BASE_URL),
+  //   routes: []
+  // });
   /**
    * 路由配置
    * @type {Array<RouteRecordRaw>}
@@ -54,6 +58,13 @@ class AppRouter {
   async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
     console.log('')
     console.group(to.path)
+    if (to.path && !lodash.includes(['/', '/webview'], to.path)) {
+      // 等待菜单获取完成
+      await $System.UserController.UserMenus.MenusAsync.toPromise()
+      // 校验用户菜单
+      const menus = $System.UserController.UserMenus.findMenus(to.path);
+      return !lodash.isEmpty(menus)
+    }
     // console.log("beforeEach", to, from)
   }
   /**
@@ -64,6 +75,7 @@ class AppRouter {
    */
   async beforeResolve(to: RouteLocationNormalized) {
     // console.log("beforeResolve", to)
+
   }
   /**
    * 全局后置钩子
@@ -116,6 +128,7 @@ class AppRouter {
       history: createWebHistory(process.env.BASE_URL),
       routes: this.RouterConfig
     })
+    // this.RouterConfig.map(this.Router.addRoute);
     this.Router.beforeEach(this.beforeEach)
     this.Router.beforeResolve(this.beforeResolve)
     this.Router.afterEach(this.afterEach)
@@ -166,7 +179,9 @@ class AppRouter {
       // 根页面
       const page = lodash.filter(value, rem => !lodash.includes(rem, `/children/`));
       lodash.forEach(page, item => {
-        routes.push(this.getRoute(item, childrenPage))
+        const route = this.getRoute(item, childrenPage)
+
+        routes.push(route)
       })
     })
     this.RouterFiles = routes
