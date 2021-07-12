@@ -35,7 +35,7 @@
         {
             <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
-        <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-refresh" Text="@WtmBlazor.Localizer["Sys.Refresh"]" OnClickCallback="@DoSearch" IsAsync="true" />
+        <TableToolbarButton TItem="FrameworkMenu_ListView" Color="Color.Primary" Icon="fa fa-fw fa-refresh" Text="@WtmBlazor.Localizer["Sys.Refresh"]" OnClickCallback="@OnRefresh" IsAsync="true" />
 
     </TableToolbarTemplate>
     <RowButtonTemplate>
@@ -130,6 +130,12 @@
         {
             await Download("/api/_frameworkmenu/ExportExcel", SearchModel);
         }
+    }
+
+    private async Task OnRefresh(IEnumerable<FrameworkMenu_ListView> items)
+    {
+        var msg = await WtmBlazor.Api.CallAPI($"/api/_frameworkmenu/RefreshMenu");
+        await WtmBlazor.Toast.Information(WtmBlazor.Localizer["Sys.Info"], msg.Data);
     }
 
 }
