@@ -231,7 +231,7 @@ namespace WalkingTec.Mvvm.Core
             }
 
 
-            var code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>new { itcode = x.ITCode, id= x.GetID() }).SingleOrDefaultAsync();
+            var code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>new { itcode = x.ITCode, id= x.GetID(), photoid=x.PhotoId, name=x.Name }).SingleOrDefaultAsync();
             if (code == null)
             {
                 return null;
@@ -239,7 +239,9 @@ namespace WalkingTec.Mvvm.Core
             LoginUserInfo rv = new LoginUserInfo
             {
                 ITCode = code.itcode,
-                UserId = code.id?.ToString()
+                UserId = code.id?.ToString(),
+                Name = code.name,
+                PhotoId = code.photoid
             };
             await rv.LoadBasicInfoAsync(this);
             return rv;
