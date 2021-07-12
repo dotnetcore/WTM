@@ -4,7 +4,7 @@
       <WtmField entityKey="ID" />
     </template>
     <a-space>
-      <WtmField entityKey="IsInside" v-if="!formState.Entity.FolderOnly" />
+      <WtmField entityKey="IsInside" v-if="!IsFolderOnly" />
       <WtmField entityKey="PageName" />
     </a-space>
     <a-space>
@@ -12,20 +12,22 @@
       <WtmField entityKey="ShowOnMenu" />
       <WtmField entityKey="IsPublic" />
     </a-space>
-    <a-space v-if="!formState.Entity.FolderOnly">
-      <WtmField
-        entityKey="SelectedModule"
-        v-if="IsInside"
-        @change="onModuleChange"
-      />
-      <WtmField entityKey="Url" :disabled="IsInside" />
-    </a-space>
-    <a-space v-if="!formState.Entity.FolderOnly">
-      <WtmField
-        entityKey="SelectedActionIDs"
-        :disabled="!formState.SelectedModule"
-      />
-    </a-space>
+    <template v-if="!IsFolderOnly">
+      <a-space>
+        <WtmField
+          entityKey="SelectedModule"
+          v-if="IsInside"
+          @change="onModuleChange"
+        />
+        <WtmField entityKey="Url" :disabled="IsInside" />
+      </a-space>
+      <a-space>
+        <WtmField
+          entityKey="SelectedActionIDs"
+          :disabled="!formState.SelectedModule"
+        />
+      </a-space>
+    </template>
 
     <a-space>
       <WtmField entityKey="ParentId" />
@@ -53,8 +55,10 @@ export default class extends mixins(PageDetailsBasics) {
     SelectedModule: undefined
   };
   get IsInside() {
-    const IsInside = this.lodash.get(this.formState, "Entity.IsInside", true);
-    return IsInside;
+    return this.lodash.get(this.formState, "Entity.IsInside", true);
+  }
+  get IsFolderOnly() {
+    return this.lodash.get(this.formState, "Entity.FolderOnly", true);
   }
   async onModuleChange(value) {
     const pages = await router.onGetRequest();
