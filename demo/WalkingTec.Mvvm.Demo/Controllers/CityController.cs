@@ -8,17 +8,16 @@ using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-    [Area("ccc")]
     [ActionDescription("城市管理")]
     public partial class CityController : BaseController
     {
         #region Search
-        //[ActionDescription("Sys.Search")]
-        //public ActionResult Index()
-        //{
-        //    var vm = Wtm.CreateVM<CityListVM>();
-        //    return PartialView(vm);
-        //}
+        [ActionDescription("Sys.Search")]
+        public ActionResult Index()
+        {
+            var vm = Wtm.CreateVM<CityListVM>();
+            return PartialView(vm);
+        }
 
         [ActionDescription("Codegen.FieldDes", IsPage = true)]
         public ActionResult CityPage()

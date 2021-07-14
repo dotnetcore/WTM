@@ -113,8 +113,9 @@ namespace WalkingTec.Mvvm.Core
 
         public List<string> GetTreeSubIds(WTMContext wtmcontext, List<string> pids)
         {
-            Expression<Func<TreePoco, object>> parentid = x => x.ParentId;
-            return wtmcontext.DC.Set<T>().Where(pids.GetContainIdExpression<T>(parentid.Body)).DynamicSelect("ID").ToList();
+            ParameterExpression pe = Expression.Parameter(typeof(T));
+            Expression parentid = Expression.Property(pe, typeof(T).GetSingleProperty("ParentId"));
+            return wtmcontext.DC.Set<T>().Where(pids.GetContainIdExpression<T>(parentid)).DynamicSelect("ID").ToList();
         }
     }
 

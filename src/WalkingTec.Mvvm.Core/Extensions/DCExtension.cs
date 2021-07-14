@@ -993,7 +993,7 @@ where S : struct
             }
             if (peid == null)
             {
-                peid = Expression.Property(pe, modeltype.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
+                peid = Expression.Property(pe, modeltype.GetSingleProperty("ID"));
             }
             else
             {
