@@ -16,6 +16,7 @@ import { LicenseManager } from "ag-grid-enterprise";
 import { Options, Prop, Vue } from "vue-property-decorator";
 // import { AgGridVue } from "ag-grid-vue3";
 import { AgGridVue } from "./agGridVue/AgGridVue";
+// 'CompanyName=CROPLAND,LicensedGroup=Cropland,LicenseType=MultipleApplications,LicensedConcurrentDeveloperCount=1,LicensedProductionInstancesCount=1,AssetReference=AG-016521,ExpiryDate=15_June_2022_[v2]_MTY1NTI0NzYwMDAwMA==a2408a3e80d1e62fc6a847821ffef8e4';
 LicenseManager.setLicenseKey(
   "ag-Grid_Evaluation_License_Not_for_Production_100Devs30_August_2037__MjU4ODczMzg3NzkyMg==9e93ed5f03b0620b142770f2594a23a2"
 );
