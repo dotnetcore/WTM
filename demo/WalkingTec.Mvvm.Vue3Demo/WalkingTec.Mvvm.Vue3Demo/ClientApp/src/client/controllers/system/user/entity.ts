@@ -60,6 +60,10 @@ export class UserEntity {
      */
     @action.bound
     protected onToggleLoading(loading: boolean = !this.loading) {
+        // console.log("🚀 ~ file: entity.ts ~ line 63 ~ UserEntity ~ onToggleLoading ~ loading", loading)
+        // if (lodash.eq(loading, false)) {
+        //     return lodash.delay(action(() => { this.loading = loading }), 5000)
+        // }
         this.loading = loading;
     }
     /**

@@ -1,6 +1,10 @@
 <template>
   <a-config-provider :locale="locale">
-    <div class="w-user-spin" v-if="System.UserController.LoginStatus && System.UserController.loading">
+    <keep-alive>
+    <div
+      class="w-user-spin"
+      v-if="System.UserController.loading && System.UserController.LoginStatus"
+    >
       <!-- System.UserController.LoginStatus && System.UserController.loading -->
       <div>
         <img :src="logo" />
@@ -9,9 +13,10 @@
       </div>
     </div>
     <!-- 主界面 -->
-    <Layout v-else-if="System.UserController.LoginStatus" />
+    <Main key="Main" v-else-if="!System.UserController.loading && System.UserController.LoginStatus" />
     <!-- 登录界面 -->
-    <Login v-else />
+    <Login key="Login" v-else/>
+  </keep-alive>
   </a-config-provider>
 </template>
 <script lang="ts">
@@ -19,9 +24,10 @@ import { SystemController, $System } from "@/client";
 import en from "ant-design-vue/es/locale/en_US";
 import zh from "ant-design-vue/es/locale/zh_CN";
 import { Options, Provide, Vue } from "vue-property-decorator";
-import Layout from "./layouts/layout.vue";
+import Main from "./layouts/main.vue";
 import Login from "./layouts/login.vue";
-@Options({ components: { Layout, Login } })
+import router from "./router";
+@Options({ components: { Main, Login } })
 export default class extends Vue {
   // 系统管理
   @Provide({ to: SystemController.Symbol, reactive: true }) System = $System;
@@ -29,14 +35,14 @@ export default class extends Vue {
     return { en, zh }[this.$i18n.locale];
   }
   get logo() {
-    return require('@/assets/img/logo.png')
+    return require("@/assets/img/logo.png");
   }
-  created() {
-    this.System.onInit()
-    console.log("LENG ~ extends ~ created ~ this.System", this.System)
+  async created() {
+    await this.System.onInit();
+    // router.onInit();
+    // console.error("LENG ~ extends ~ created ~ this.System");
   }
-  mounted() {
-  }
+  mounted() {}
 }
 </script>
 <style lang="less">

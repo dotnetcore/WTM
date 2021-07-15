@@ -78,6 +78,7 @@ class Entity {
     readonly Icon: WTM_EntitiesField = {
         name: ['Entity', 'Icon'],
         label: EnumLocaleLabel.Icon,
+        valueType: WTM_ValueType.icons,
     }
     readonly ParentId: WTM_EntitiesField = {
         name: ['Entity', 'ParentId'],

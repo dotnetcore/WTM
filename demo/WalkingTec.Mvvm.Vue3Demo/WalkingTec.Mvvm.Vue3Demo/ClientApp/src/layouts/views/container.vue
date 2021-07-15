@@ -1,12 +1,12 @@
 <template>
-  <router-view v-if="keep" v-slot="{ Component }">
+  <router-view v-slot="{ Component }">
     <!-- <transition name="fade"> -->
     <!-- <keep-alive> -->
-      <component :is="Component" />
+    <component :is="Component" />
     <!-- </keep-alive> -->
     <!-- </transition> -->
   </router-view>
-  <router-view v-else />
+  <!-- <router-view v-else /> -->
 </template>
 <script lang="ts">
 import { Vue, Options } from "vue-property-decorator";
@@ -17,5 +17,4 @@ export default class extends Vue {
   created() {}
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>
