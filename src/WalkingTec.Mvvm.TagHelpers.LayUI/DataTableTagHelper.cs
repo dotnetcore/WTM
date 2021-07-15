@@ -315,6 +315,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagName = "table";
             output.Attributes.Add("id", Id);
             output.Attributes.Add("lay-filter", Id);
+            output.Attributes.Add("subpro", ListVM?.DetailGridPrix??"");
             output.TagMode = TagMode.StartTagAndEndTag;
 
             var config = ListVM.ConfigInfo;

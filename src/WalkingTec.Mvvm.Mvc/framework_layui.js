@@ -798,6 +798,19 @@ window.ff = {
             }
         }
         var searchForm = $('#' + formId), filter = {}, filterback = {}, fieldElem = searchForm.find('input,select,textarea');
+
+        var tables = $('#' + formId + ' table[id]');
+        for (var i = 0; i < tables.length; i++) {
+            var tableid = tables[i].id;
+            var loaddata = layui.table.cache[tableid];
+            if (loaddata.length == 0) {
+                var subpro = tables[i].attributes["subpro"].value;
+                if (subpro != undefined && subpro != "") {
+                    filter[subpro+ ".length"] = "0";
+                }
+            }
+        }
+
         var check = {};
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
