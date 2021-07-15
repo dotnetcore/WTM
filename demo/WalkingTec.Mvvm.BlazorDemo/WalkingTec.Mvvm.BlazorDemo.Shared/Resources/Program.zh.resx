@@ -738,6 +738,9 @@
   <data name="_Admin.CheckPage" xml:space="preserve">
     <value>检查页面</value>
   </data>
+  <data name="_Admin.Children" xml:space="preserve">
+    <value>子项</value>
+  </data>
   <data name="_Admin.ClassName" xml:space="preserve">
     <value>类名</value>
   </data>

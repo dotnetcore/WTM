@@ -23,6 +23,7 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public T Parent { get; set; }
         [InverseProperty("Parent")]
+        [Display(Name = "_Admin.Children")]
         public List<T> Children { get; set; }
 
         [NotMapped]

@@ -736,7 +736,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
                     }
-                    if (u != null && u.EndsWith("/0"))
+                    if (u != null && (u.EndsWith("/0")))
                     {
                         u = u.Substring(0, u.Length - 2);
                         if (m.IsApi == true)
@@ -744,6 +744,15 @@ namespace WalkingTec.Mvvm.Mvc
                             u = u + "/{id}";
                         }
                     }
+                    if (u != null && (u.ToLower().EndsWith("?id=0")))
+                    {
+                        u = u[0..^5];
+                        if (m.IsApi == true)
+                        {
+                            u = u + "/{id}";
+                        }
+                    }
+
                     a.Url = u;
                 }
             }

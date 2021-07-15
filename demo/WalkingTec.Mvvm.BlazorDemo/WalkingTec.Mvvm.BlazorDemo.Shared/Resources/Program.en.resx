@@ -735,6 +735,9 @@
   <data name="_Admin.CheckPage" xml:space="preserve">
     <value>Check Page</value>
   </data>
+  <data name="_Admin.Children" xml:space="preserve">
+    <value>Children</value>
+  </data>
   <data name="_Admin.ClassName" xml:space="preserve">
     <value>ClassName</value>
   </data>
