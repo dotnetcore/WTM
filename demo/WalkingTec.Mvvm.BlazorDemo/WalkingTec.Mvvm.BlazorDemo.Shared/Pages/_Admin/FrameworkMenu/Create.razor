@@ -64,8 +64,8 @@
     protected override async Task OnInitializedAsync()
     {
         Model.Entity = new FrameworkMenu { ShowOnMenu = true };
-        AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Inside"], Value = "true" });
-        AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Outside"], Value = "false" });
+        AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Inside"], Value = "True" });
+        AllType.Add(new SelectedItem { Text = WtmBlazor.Localizer["_Admin.Outside"], Value = "False" });
         AllFolders = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetFolders", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         IconTypes = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkMenu/GetIcons", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         ClientPages = WtmBlazor.GetAllPages();

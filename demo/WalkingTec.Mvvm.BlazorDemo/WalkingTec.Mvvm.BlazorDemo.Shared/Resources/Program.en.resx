@@ -829,7 +829,7 @@
     <value>Inherit</value>
   </data>
   <data name="_Admin.IsInside" xml:space="preserve">
-    <value>Inside</value>
+    <value>Domain</value>
   </data>
   <data name="_Admin.IsPublic" xml:space="preserve">
     <value>Public</value>

@@ -259,7 +259,6 @@
         await base.OnInitializedAsync();
     }
 
-
     private List<BootstrapBlazor.Components.MenuItem> GetMenuFromFrameworkMenu(List<FrameworkMenu> input)
     {
         List<BootstrapBlazor.Components.MenuItem> rv = new List<BootstrapBlazor.Components.MenuItem>();
@@ -271,6 +270,14 @@
                 Icon = item.Icon,
                 Url = item.Url
             };
+            if (m.Url != null)
+            {
+                if (m.Url.ToLower().StartsWith("http://") || m.Url.ToLower().StartsWith("https://"))
+                {
+                    m.Url = "/Outside/" + System.Web.HttpUtility.UrlEncode(m.Url);
+                    m.Match = NavLinkMatch.All;
+                }
+            }
             if (item.Children?.Any() == true)
             {
                 GetMenuFromFrameworkMenu(item.Children).ForEach(x => m.AddItem(x));

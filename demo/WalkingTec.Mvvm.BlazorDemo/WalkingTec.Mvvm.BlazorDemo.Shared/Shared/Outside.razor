@@ -1,0 +1,11 @@
+@page "/Outside/{url}"
+@inherits BasePage
+
+<iframe src='@System.Web.HttpUtility.UrlDecode(url)' frameborder='0' width="100%" height="800"></iframe>
+
+<Toast />
+
+@code {
+    [Parameter]
+    public string url { get; set; }
+}

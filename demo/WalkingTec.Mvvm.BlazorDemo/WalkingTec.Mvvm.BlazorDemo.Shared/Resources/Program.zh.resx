@@ -832,7 +832,7 @@
     <value>继承</value>
   </data>
   <data name="_Admin.IsInside" xml:space="preserve">
-    <value>内部地址</value>
+    <value>地址类型</value>
   </data>
   <data name="_Admin.IsPublic" xml:space="preserve">
     <value>公开</value>
