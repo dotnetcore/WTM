@@ -71,7 +71,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
                 if (Disabled )
                 {
+                if (this is DateTimeTagHelper)
+                {
+                    output.Attributes.SetAttribute("disabled", string.Empty);
+                }
+                else
+                {
                     output.Attributes.SetAttribute("readonly", string.Empty);
+                }
                     output.Attributes.TryGetAttribute("class", out TagHelperAttribute oldclass);
                     output.Attributes.SetAttribute("class", "layui-disabled " + (oldclass?.Value ?? string.Empty));
                 }

@@ -84,7 +84,7 @@ namespace WtmBlazorUtils
         }
 
         public async Task<bool> PostsForm(ValidateForm form, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
-        {            
+        {
             var rv = await WtmBlazor.Api.CallAPI(url, method, form.Model);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -229,7 +229,7 @@ namespace WtmBlazorUtils
 
         public bool IsAccessable(string url)
         {
-            if(WtmBlazor.ConfigInfo.IsQuickDebug == true)
+            if (WtmBlazor.ConfigInfo.IsQuickDebug == true)
             {
                 return true;
             }
@@ -313,6 +313,27 @@ namespace WtmBlazorUtils
                 }
             }
             return menus;
+        }
+
+        public List<string> GetPublicPages()
+        {
+            var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
+            var rv = new List<string>();
+            foreach (var item in pages)
+            {
+                var route = item.GetCustomAttribute<RouteAttribute>();
+                var ispublic = item.GetCustomAttribute<PublicAttribute>();
+                if (ispublic != null)
+                {
+                    var url = route.Template.ToLower();
+                    if (url.StartsWith("/"))
+                    {
+                        url = url[1..];
+                    }
+                    rv.Add(url);
+                }
+            }
+            return rv;
         }
 
         public async Task<string> GetBase64Image(string fileid, int? width = null, int? height = null)

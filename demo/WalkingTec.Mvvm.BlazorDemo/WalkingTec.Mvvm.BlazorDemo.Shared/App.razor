@@ -1,6 +1,7 @@
 @inherits BasePage
+@inject NavigationManager NavigationManager
 
-@if (hasToken == true)
+@if (hasToken == true || IsPublic == true)
 {
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
@@ -15,19 +16,31 @@
         </NotFound>
     </Router>
 }
-@if (hasToken == false)
+else if (hasToken == false)
 {
-    <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }"/>
+    <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }" />
 }
 @code{
 
     private LoginUserInfo User;
-
+    private List<string> publicPages;
     private bool? hasToken { get; set; }
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="firstRender"></param>
+    private bool? IsPublic { get; set; }
+
+    protected override void OnInitialized()
+    {
+        publicPages = this.WtmBlazor.GetPublicPages();
+        if (publicPages.Contains(NavigationManager.ToBaseRelativePath(NavigationManager.Uri)))
+        {
+            IsPublic = true;
+        }
+        else
+        {
+            IsPublic = false;
+        }
+        base.OnInitialized();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
