@@ -353,10 +353,6 @@ namespace WalkingTec.Mvvm.Core
                 {
                     cs = "defaultlog";
                 }
-                else
-                {
-                    cs = "default";
-                }
             }
             if (cs == null)
             {

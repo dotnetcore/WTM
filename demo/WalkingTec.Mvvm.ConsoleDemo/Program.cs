@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.ConsoleDemo
             Console.WriteLine(DateTime.Now.Subtract(check).TotalSeconds);
             //var context = GetWtmContext();
             //var test = context.CallAPI("baidu","/").Result;
-            //AddSchool();
+            AddSchool();
             Upload();
             Console.ReadLine();
         }

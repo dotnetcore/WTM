@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -23,29 +24,18 @@ namespace WalkingTec.Mvvm.Core
 
     public class WTMLoggerProvider : ILoggerProvider
     {
-        private CS cs = null;
+        private IServiceProvider sp = null;
         private LoggerFilterOptions logConfig;
 
-        public WTMLoggerProvider(IOptionsMonitor<Configs> _configs, IOptionsMonitor<LoggerFilterOptions> _logConfig)
+        public WTMLoggerProvider( IOptionsMonitor<LoggerFilterOptions> _logConfig, IServiceProvider sp)
         {
-            if (_configs.CurrentValue != null)
-            {
-                cs = _configs.CurrentValue.Connections.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault();
-                if (cs == null)
-                {
-                    cs = _configs.CurrentValue.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault();
-                }
-                if (cs == null)
-                {
-                    cs = _configs.CurrentValue.Connections.FirstOrDefault();
-                }
-                logConfig = _logConfig.CurrentValue;
-            }
+            this.sp = sp;
+            logConfig = _logConfig.CurrentValue;
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new WTMLogger(categoryName, cs, logConfig);
+            return new WTMLogger(categoryName, logConfig,sp);
         }
         public void Dispose() { }
     }
@@ -53,14 +43,14 @@ namespace WalkingTec.Mvvm.Core
     public class WTMLogger : ILogger
     {
         private readonly string categoryName;
-        private CS cs;
+        private IServiceProvider sp;
         private LoggerFilterOptions logConfig;
 
-        public WTMLogger(string categoryName, CS cs, LoggerFilterOptions logConfig)
+        public WTMLogger(string categoryName, LoggerFilterOptions logConfig, IServiceProvider sp)
         {
             this.categoryName = categoryName;
-            this.cs = cs;
             this.logConfig = logConfig;
+            this.sp = sp;
         }
 
         public bool IsEnabled(LogLevel logLevel)
@@ -123,13 +113,28 @@ namespace WalkingTec.Mvvm.Core
                     log = state as ActionLog;
                 }
 
-                if (cs != null)
+                WTMContext wtm = null;
+                var hc = sp.GetRequiredService<IHttpContextAccessor>().HttpContext;
+                if (hc == null)
                 {
-                    using var dc = cs.CreateDC();
-                    if (dc != null)
+                    using (var scope = sp.CreateScope())
                     {
-                        dc.AddEntity<ActionLog>(log);
-                        dc.SaveChanges();
+                        wtm = scope.ServiceProvider.GetRequiredService<WTMContext>();
+                    }
+                }
+                else
+                {
+                    wtm = hc.RequestServices.GetRequiredService<WTMContext>();
+                }
+                if (wtm != null)
+                {
+                    using (var dc = wtm.CreateDC(true))
+                    {
+                        if (dc != null)
+                        {
+                            dc.AddEntity<ActionLog>(log);
+                            dc.SaveChanges();
+                        }
                     }
                 }
             }

@@ -12,6 +12,7 @@ using WalkingTec.Mvvm.Mvc.Binders;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     [AuthorizeJwtWithCookie]
+    [FixConnection(CsName ="abc")]
     public class SchoolController : BaseController
     {
         #region 搜索

@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo
         {
         }
 
-
+        public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<Major> Majors { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<Student> Students { get; set; }
