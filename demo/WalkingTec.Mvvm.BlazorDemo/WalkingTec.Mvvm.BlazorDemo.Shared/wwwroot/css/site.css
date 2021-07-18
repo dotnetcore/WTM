@@ -193,6 +193,17 @@
     background-color: white;
 }
 
+.tabs-body {
+    display: flex;
+    flex: auto;
+    flex-direction: column;
+}
+
+    .tabs-body .tabs-body-content {
+        flex: auto;
+        display: flex;
+        flex-direction: column;
+    }
 /*.table-pagination {
     right: 0px;
     position: absolute;
