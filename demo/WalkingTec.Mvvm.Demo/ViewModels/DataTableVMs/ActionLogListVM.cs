@@ -16,6 +16,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
                 this.MakeAction("ActionLog","Details","详情(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetShowInRow(true).SetQueryString("a=1"),
                 this.MakeAction("ActionLog","Details","详情(新窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=2"),
                 this.MakeAction("ActionLog","Details","详情(本窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(false).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=3"),
+                this.MakeAction("ActionLog","Index","测试","测试", GridActionParameterTypesEnum.NoId,"_Admin").SetMax(),
                 this.MakeStandardAction("DataTable", GridActionStandardTypesEnum.ExportExcel, "导出","")
             };
             return actions;
