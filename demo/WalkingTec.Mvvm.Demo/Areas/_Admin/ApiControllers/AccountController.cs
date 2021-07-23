@@ -158,7 +158,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpPost("[action]")]
-        [AllRights]
+        [Public]
         [ProducesResponseType(typeof(Token), StatusCodes.Status200OK)]
         public async Task<IActionResult> RefreshToken(string refreshToken)
         {
