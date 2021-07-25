@@ -284,7 +284,7 @@ namespace WalkingTec.Mvvm.Core
                     //        i = i + 1;
                     //    }
                     //    i = i - 1;
-                    //    pIndex++;
+                        pIndex++;
                     //}
                 }
 

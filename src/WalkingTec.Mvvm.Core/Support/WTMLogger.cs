@@ -132,8 +132,12 @@ namespace WalkingTec.Mvvm.Core
                     {
                         if (dc != null)
                         {
-                            dc.AddEntity<ActionLog>(log);
-                            dc.SaveChanges();
+                            try
+                            {
+                                dc.AddEntity<ActionLog>(log);
+                                dc.SaveChanges();
+                            }
+                            catch { }
                         }
                     }
                 }
