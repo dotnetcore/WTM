@@ -790,7 +790,7 @@ window.ff = {
 
     GetFormData: function (formId) {
         var richtextbox = $("#" + formId + " textarea");
-       for (var i = 0; i < richtextbox.length; i++) {
+        for (var i = 0; i < richtextbox.length; i++) {
             var ra = richtextbox[i].attributes['layeditindex'];
             if (ra !== undefined && ra != null) {
                 var rindex = ra.value;
@@ -803,10 +803,10 @@ window.ff = {
         for (var i = 0; i < tables.length; i++) {
             var tableid = tables[i].id;
             var loaddata = layui.table.cache[tableid];
-            if (loaddata.length == 0) {
+            if (loaddata == undefined || loaddata.length == 0) {
                 var subpro = tables[i].attributes["subpro"].value;
                 if (subpro != undefined && subpro != "") {
-                    filter[subpro+ ".length"] = "0";
+                    filter[subpro + ".length"] = "0";
                 }
             }
         }
@@ -818,7 +818,7 @@ window.ff = {
                 if (item.value === "true") {
                     filter[item.name] = false;
                 }
-               return;
+                return;
             }
             var itemname = item.name;
             if (/_WTMMultiCombo_(.*?)_(.*?)$/.test(itemname)) {
@@ -831,7 +831,7 @@ window.ff = {
                 if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1 + "[" + number + "]." + name2) == false) {
                     filterback[name1] = 1;
                 }
-               return;
+                return;
             }
             if (/_DONOTUSE_(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
@@ -840,42 +840,45 @@ window.ff = {
                 }
                 return;
             }
-
+            var issub = false;
             if (/(.*?)\[(\d?)\]\.(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
                 var number = RegExp.$2;
                 var name2 = RegExp.$3;
-                var checkname = itemname;
-                if (check.hasOwnProperty(checkname) == false) {
-                    check[checkname] = 0;
-                }
-                if (filterback.hasOwnProperty(name1) == true) {
-                    filterback[name1] = undefined;
-                }
-                if (filterback.hasOwnProperty(itemname) == true) {
-                    filterback[itemname] = undefined;
-                }
-                var newname = itemname;
-                if (number == "0") {
+                if (number == "-1") {
+                    var checkname = itemname;
+                    if (check.hasOwnProperty(checkname) == false) {
+                        check[checkname] = 0;
+                    }
+                    if (filterback.hasOwnProperty(name1) == true) {
+                        filterback[name1] = undefined;
+                    }
+                    if (filterback.hasOwnProperty(itemname) == true) {
+                        filterback[itemname] = undefined;
+                    }
+                    var newname = itemname;
                     newname = name1 + "[" + check[checkname] + "]." + name2;
-                }
-                filter[newname] = item.value;
-                check[checkname] = check[checkname] + 1;
-            }
-            else if (filter.hasOwnProperty(itemname)) {
-                var temp = filter[itemname];
-                if (!(temp instanceof Array))
-                    temp = [temp];
-                temp.push(item.value);
-                filter[itemname] = temp;
-            }
-            else {
-                filter[itemname] = item.value;
-                if (filterback.hasOwnProperty(itemname) == true) {
-                    filterback[itemname] = undefined;
+                    filter[newname] = item.value;
+                    check[checkname] = check[checkname] + 1;
+                    issub = true;
                 }
             }
-            });
+            if (issub == false) {
+                if (filter.hasOwnProperty(itemname)) {
+                    var temp = filter[itemname];
+                    if (!(temp instanceof Array))
+                        temp = [temp];
+                    temp.push(item.value);
+                    filter[itemname] = temp;
+                }
+                else {
+                    filter[itemname] = item.value;
+                    if (filterback.hasOwnProperty(itemname) == true) {
+                        filterback[itemname] = undefined;
+                    }
+                }
+            }
+        });
 
         for (item in filterback) {
             if (filterback[item] !== undefined) {
@@ -995,8 +998,8 @@ window.ff = {
         layui.use('laydate', function () {
             var laydate = layui.laydate;
             laydate.render({
-                elem: '#'+id
-                , show: true 
+                elem: '#' + id
+                , show: true
                 , closeStop: '#' + id
                 , done: function (value, date, endDate) {
                     document.getElementById(id).onchange();

@@ -8,7 +8,7 @@
     <wt:hidden field="DpLists[i].List.Searcher.TableName" />
     <wt:combobox multi-select="false" field="DpLists[i].IsAll" yes-text="@Localizer["_Admin.AllPris"]" no-text="@Localizer["_Admin.SelectPris"]" empty-text="@Localizer["_Admin.NoPris"]" label-text="@Model.DpLists[i].DpName" change-func="IsAllChange@(i)" />
     <wt:row id="selector@(i)">
-      <wt:selector list-vm="DpLists[i].List" field="DpLists[i].SelectedIds" text-bind="DpLists[i].List.EntityList[0].Name" label-text="">
+      <wt:selector list-vm="DpLists[i].List" field="DpLists[i].SelectedIds" text-bind="DpLists[i].List.EntityList[0].Name" val-bind="DpLists[i].List.EntityList[0].ID" label-text="">
         <wt:searchpanel vm="DpLists[i].List">
           <wt:row items-per-row=" ItemsPerRowEnum.Two">
             <wt:textbox field="DpLists[i].List.Searcher.Filter" />
