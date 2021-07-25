@@ -71,6 +71,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("class", "layui-btn layui-btn-sm");
             output.Attributes.Add("type", "button");
             output.TagMode = TagMode.StartTagAndEndTag;
+            if (Disabled == true)
+            {
+                output.Attributes.Add("style", "display:none");
+            }
             if (string.IsNullOrEmpty(ButtonText))
             {
                 output.Content.SetHtmlContent(THProgram._localizer["Sys.Select"]);
@@ -185,6 +189,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     $('#{Id}').val('');
     $('.layui-progress .layui-progress-bar').css('width', '0%');
   }}
+function {Id}DoPreview(fileid){{
+    ff.OpenDialog('/_Framework/ViewFile/'+ fileid+'?_DONOT_USE_CS={(vm != null ? vm.CurrentCS : "")}','{Guid.NewGuid().ToString().Replace("-", "")}','{THProgram._localizer["Sys.Preview"]}',600,600,undefined,false);;return false;
+}}
   var index = 0;
   var {Id}preview;
 
@@ -218,10 +225,13 @@ layui.use(['upload'],function(){{
         $('#{Id}').val(res.Data.Id);
       {(ShowPreview == true ? $@"
        {Id}preview.preview(function(index, file, result){{
-            $('#{Id}label').append('<img src=""'+ result +'"" alt=""'+ file.name +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} />');
+            $('#{Id}label').append('<img src=""'+ result +'"" alt=""'+ file.name +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""{Id}preview"" style=""cursor:pointer""/>');
             $('#{Id}label').append('<i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:absolute;left:{(PreviewWidth ?? 64) - 10}px;top:-10px;color: #ff0000;"" id=""{Id}del""></i> ');
             $('#{Id}del').on('click',function(){{
               {Id}DoDelete(res.Data.Id);
+            }});
+            $('#{Id}preview').on('click',function(){{
+              {Id}DoPreview(res.Data.Id);
             }});
           }});
       " : $@"
@@ -258,9 +268,11 @@ layui.use(['upload'],function(){{
             if (Field.Model != null && Field.Model.ToString() != Guid.Empty.ToString())
             {
                 var geturl = $"/_Framework/GetFileName/{Field.Model}";
+                var downloadurl = $"/_Framework/GetFile/{Field.Model}";
                 if (vm != null)
                 {
                     geturl += $"?_DONOT_USE_CS={vm.CurrentCS}";
+                    downloadurl += $"?_DONOT_USE_CS={vm.CurrentCS}";
                 }
                 var picurl = $"/_Framework/GetFile?id={Field.Model}&stream=true&width={PreviewWidth ?? 64}&height={PreviewHeight ?? 64}";
                 if (vm != null)
@@ -275,17 +287,29 @@ $.ajax({{
   url: '{geturl}',
   async: false,
   success: function(data) {{
-    {(ShowPreview == true ? $@"
-      $('#{Id}label').append('<img src=""{picurl}"" alt=""'+ data +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} />');
+    {(ShowPreview == true ? $@"{(Disabled == true?$@"
+      $('#{Id}label').append('<img src=""{picurl}"" alt=""'+ data +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64}  id=""{Id}preview"" style=""cursor:pointer""/>');
+            $('#{Id}preview').on('click',function(){{
+              {Id}DoPreview('{Field.Model}');
+            }});
+" :$@"
+      $('#{Id}label').append('<img src=""{picurl}"" alt=""'+ data +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64}  id=""{Id}preview"" style=""cursor:pointer""/>');
       $('#{Id}label').append('<i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:absolute;left:{(PreviewWidth ?? 64) - 10}px;top:-10px;color: #ff0000;"" id=""{Id}del""></i> ');
-      $('#{Id}del').on('click',function(){{
+            $('#{Id}preview').on('click',function(){{
+              {Id}DoPreview('{Field.Model}');
+            }});
+     $('#{Id}del').on('click',function(){{
         {Id}DoDelete('{Field.Model}');
       }});
-    " : $@"
+")}
+    " : $@"{(Disabled == true? $@"
+        $('#{Id}label').append(""<a class='layui-btn layui-btn-primary layui-btn-xs' style='margin:9px 0;width:unset width:300px;' href='{downloadurl}'>""+data+""</a>"");
+" :$@"
         $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  {THProgram._localizer["Sys.Delete"]}</button>"");
         $('#{Id}del').on('click',function(){{
           {Id}DoDelete('{Field.Model}');
         }});
+")}
     ")}
   }}
 }});

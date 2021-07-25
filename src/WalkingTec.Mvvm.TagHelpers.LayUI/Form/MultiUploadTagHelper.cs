@@ -80,6 +80,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("type", "button");
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Content.SetHtmlContent(WalkingTec.Mvvm.TagHelpers.LayUI.THProgram._localizer["Sys.Select"]);
+            if (Disabled == true)
+            {
+                output.Attributes.Add("style", "display:none");
+            }
             string ext = "";
             if (string.IsNullOrEmpty(CustomType))
             {
@@ -154,7 +158,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 url = url.AppendQuery($"sm={UploadMode}");
             }
             url = url.AppendQuery(ExtraQuery);
-
             output.PreElement.SetHtmlContent($@"
 <div id='{Id}label'></div>
 ");
@@ -235,7 +238,10 @@ layui.use(['upload'],function(){{
         {Id}selected.push(res.Data.Id);
         {Id}SetValues();
         {(ShowPreview == true ? $@"
-            $('#{Id}label').append('<label id=""label'+res.Data.Id+'""><img src=""/_Framework/GetFile?id='+ res.Data.Id+'&stream=true&width={PreviewWidth ?? 64}&height={PreviewHeight ?? 64}""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} /><i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:relative;left:{(PreviewWidth ?? 64) - 74}px;top:-27px;color: #ff0000;cursor: pointer;"" id=""del'+res.Data.Id+'""></i></label> ');
+            $('#{Id}label').append('<label id=""label'+res.Data.Id+'""><img src=""/_Framework/GetFile?id='+ res.Data.Id+'&stream=true&width={PreviewWidth ?? 64}&height={PreviewHeight ?? 64}&_DONOT_USE_CS={(vm!=null?vm.CurrentCS:"")}""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview'+res.Data.Id+'"" style=""cursor:pointer"" /><i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:relative;left:{(PreviewWidth ?? 64) - 74}px;top:-27px;color: #ff0000;cursor: pointer;"" id=""del'+res.Data.Id+'""></i></label> ');
+            $('#preview'+res.Data.Id).on('click',function(){{
+                ff.OpenDialog('/_Framework/ViewFile/'+ res.Data.Id+'?_DONOT_USE_CS={(vm != null ? vm.CurrentCS : "")}','{Guid.NewGuid().ToString().Replace("-", "")}','{THProgram._localizer["Sys.Preview"]}',600,600,undefined,false);;return false;
+            }});
             $('#del'+res.Data.Id).on('click',function(){{
               {Id}DoDelete(res.Data.Id);
             }});
@@ -260,9 +266,13 @@ layui.use(['upload'],function(){{
                 foreach (var fileId in idstring.Split('|', StringSplitOptions.RemoveEmptyEntries))
                 {
                     var geturl = $"/_Framework/GetFileName/{fileId}";
+                    var downloadurl = $"/_Framework/GetFile/{fileId}";
+                    var previewurl = $"/_Framework/ViewFile/{fileId}";
                     if (vm != null)
                     {
                         geturl += $"?_DONOT_USE_CS={vm.CurrentCS}";
+                        downloadurl += $"?_DONOT_USE_CS={vm.CurrentCS}";
+                        previewurl += $"?_DONOT_USE_CS={vm.CurrentCS}";
                     }
                     var picurl = $"/_Framework/GetFile?id={fileId}&stream=true&width={PreviewWidth ?? 64}&height={PreviewHeight ?? 64}";
                     if (vm != null)
@@ -277,16 +287,28 @@ $.ajax({{
   url: '{geturl}',
   async: false,
   success: function(data) {{
-    {(ShowPreview == true ? $@"
-      $('#{Id}label').append('<label id=""label{fileId}""><img src=""{picurl}""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} /><i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:relative;left:{(PreviewWidth ?? 64) - 74}px;top:-27px;color: #ff0000;"" id=""del{fileId}""></i></label> ');
+    {(ShowPreview == true ? $@" {(Disabled == true? $@"
+      $('#{Id}label').append('<label id=""label{fileId}""><img src=""{picurl}""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview{fileId}"" style=""cursor:pointer""/></label> ');
+            $('#preview{fileId}').on('click',function(){{
+                ff.OpenDialog('{previewurl}','{Guid.NewGuid().ToString().Replace("-","")}','{THProgram._localizer["Sys.Preview"]}',600,600,undefined,false);;return false;
+            }});
+" :$@"
+      $('#{Id}label').append('<label id=""label{fileId}""><img src=""{picurl}""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview{fileId}"" style=""cursor:pointer""/><i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:relative;left:{(PreviewWidth ?? 64) - 74}px;top:-27px;color: #ff0000;cursor:pointer"" id=""del{fileId}""></i></label> ');
             $('#del{fileId}').on('click',function(){{
               {Id}DoDelete('{fileId}');
             }});
-    " : $@"
+            $('#preview{fileId}').on('click',function(){{
+                ff.OpenDialog('{previewurl}','{Guid.NewGuid().ToString().Replace("-", "")}','{THProgram._localizer["Sys.Preview"]}',600,600,undefined,false);;return false;
+            }});
+")}
+    " : $@"{(Disabled == true? $@"
+        $('#{Id}label').append(""<label id='label{fileId}'><a class='layui-btn layui-btn-primary layui-btn-xs' style='margin:9px 0;width:unset width:300px;' href='{downloadurl}'>""+data+""</a></label>"");
+" :$@"
         $('#{Id}label').append(""<label id='label{fileId}'><button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del{fileId}' style='color:white'>""+data+""  {WalkingTec.Mvvm.TagHelpers.LayUI.THProgram._localizer["Sys.Delete"]}</button><br/></label>"");
         $('#del{fileId}').on('click',function(){{
           {Id}DoDelete('{fileId}');
         }});
+")}
     ")}
   }}
 }});

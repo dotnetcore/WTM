@@ -445,7 +445,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                html = $@"<img id='FileObject' style='{(string.IsNullOrEmpty(width) ? "" : $"width:{width}px")}'  border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'/>";
+                html = $@"<img id='FileObject' style='flex:auto;{(string.IsNullOrEmpty(width) ? "" : $"width:{width}px")}'  border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'/>";
             }
             return Content(html);
 
