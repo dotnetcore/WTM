@@ -186,13 +186,13 @@ layui.use(['tree'],function(){{
             {
                 var news = new LayuiTreeItem
                 {
-                    Id = s.Id.ToLower(),
+                    Id = s.Value.ToString().ToLower(),
                     Title = s.Text,
                     Url = s.Url,
                     Expand = s.Expended,
                     //Children = new List<LayuiTreeItem>()
                 };
-                if (values.Contains(s.Id.ToString().ToLower()))
+                if (values.Contains(s.Value.ToString().ToLower()))
                 {
                     news.Checked = true;
                 }

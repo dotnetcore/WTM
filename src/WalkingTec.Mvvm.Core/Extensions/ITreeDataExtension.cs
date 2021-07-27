@@ -111,7 +111,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="self">树形结构实例</param>
         /// <param name="order">排序字段，可以为空</param>
         /// <returns>返回标准列表，所有节点都在同一级上</returns>
-        public static List<TreeSelectListItem> FlatTreeSelectList(this List<TreeSelectListItem> self, Func<TreeSelectListItem, object> order = null)
+        public static IEnumerable<TreeSelectListItem> FlatTreeSelectList(this IEnumerable<TreeSelectListItem> self, Func<TreeSelectListItem, object> order = null)
         {
             List<TreeSelectListItem> rv = new List<TreeSelectListItem>();
             if (order != null)
@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             if (children != null && children.Count() > 0)
             {
-                var dictinct = children.Where(x => x.Id != self.Id).ToList();
+                var dictinct = children.Where(x => x.Value != self.Value).ToList();
                 foreach (var item in dictinct)
                 {
                     rv.Add(item);

@@ -176,9 +176,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     selectVal.AddRange(DefaultValue.Split(',').Select(x => x.ToLower()));
                 }
-                if (Items.Metadata.ModelType == typeof(List<ComboSelectListItem>))
+                if ( typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom( Items.Metadata.ModelType))
                 {
-                    listItems = Items.Model as List<ComboSelectListItem>;
+                    if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+                    {
+                        listItems = (Items.Model as IEnumerable<TreeSelectListItem>).FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
+                    }
+                    else
+                    {
+                        listItems = (Items.Model as IEnumerable<ComboSelectListItem>).ToList();
+                    }
                     foreach (var item in listItems)
                     {
                         if (selectVal.Contains(item.Value?.ToString().ToLower()))

@@ -63,11 +63,22 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("id", $"{_idPrefix}{Id}");
+            List<ComboSelectListItem> listItems = null;
 
             #region 添加下拉数据 并 设置默认选中
 
             var modeltype = Field.Metadata.ModelType;
-            var listItems = Items?.Model as List<ComboSelectListItem>;
+            if (typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+            {
+                if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+                {
+                    listItems = (Items.Model as IEnumerable<TreeSelectListItem>).FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
+                }
+                else
+                {
+                    listItems = (Items.Model as IEnumerable<ComboSelectListItem>).ToList();
+                }
+            }
 
             if (listItems == null)
             {

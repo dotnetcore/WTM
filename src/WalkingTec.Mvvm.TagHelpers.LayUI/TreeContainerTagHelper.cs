@@ -170,7 +170,7 @@ layui.use(['tree'],function(){{
             {
                 var news = new LayuiTreeItem
                 {
-                    Id = s.Id,
+                    Id = s.Value.ToString(),
                     Title = s.Text,
                     Url = s.Url,
                     Expand = s.Expended,

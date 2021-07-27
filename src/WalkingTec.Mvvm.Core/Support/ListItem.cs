@@ -57,17 +57,13 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// 树形下拉菜单项
     /// </summary>
-    public class TreeSelectListItem
+    public class TreeSelectListItem: ComboSelectListItem
     {
-        public string Id { get; set; }
-        public string ParentId { get; set; }
-        public string Text { get; set; }
         public bool Expended { get; set; }
         public string Url { get; set; }
-        public string Icon { get; set; }
         public string Tag { get; set; }
         public bool Leaf => Children == null || Children.Count() == 0;
-        public bool Selected { get; set; }
         public List<TreeSelectListItem> Children { get; set; }
     }
+
 }

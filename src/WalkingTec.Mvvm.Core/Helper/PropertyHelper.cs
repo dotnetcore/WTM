@@ -690,7 +690,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else if (propertyType == typeof(Guid))
             {
-                bool suc = Guid.TryParse(value.ToString(), out Guid g);
+                bool suc = Guid.TryParse(value?.ToString(), out Guid g);
                 if (suc)
                 {
                     val = g;

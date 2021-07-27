@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -64,7 +65,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             else
             {
                 string sv = "";
-                if(DefaultValue == null)
+                if (DefaultValue == null)
                 {
                     sv = Field.Model?.ToString();
                 }
@@ -73,9 +74,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     sv = DefaultValue;
                 }
 
-                if (Items.Metadata.ModelType == typeof(List<ComboSelectListItem>))
+                if (typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
                 {
-                    listItems = Items.Model as List<ComboSelectListItem>;
+                    if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+                    {
+                        listItems = (Items.Model as IEnumerable<TreeSelectListItem>).FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
+                    }
+                    else
+                    {
+                        listItems = (Items.Model as IEnumerable<ComboSelectListItem>).ToList();
+                    }
                     foreach (var item in listItems)
                     {
                         if (item.Value.ToString().ToLower() == sv?.ToLower())

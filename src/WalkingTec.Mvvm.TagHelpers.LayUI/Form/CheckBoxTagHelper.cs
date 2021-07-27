@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             var modelType = Field.Metadata.ModelType;
-            var listitems = new List<ComboSelectListItem>();
+            var listItems = new List<ComboSelectListItem>();
             List<string> values = null;
             if (DefaultValue != null)
             {
@@ -52,27 +52,34 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     var innerType = modelType.GetGenericArguments()[0];
                     if (innerType.IsEnumOrNullableEnum())
                     {
-                        listitems = innerType.ToListItems();
-                        SetSelected(listitems, values ?? Field.Model as IList);
+                        listItems = innerType.ToListItems();
+                        SetSelected(listItems, values ?? Field.Model as IList);
                     }
                 }
                 else if (modelType.IsBoolOrNullableBool())
                 {
-                    listitems = new List<ComboSelectListItem>() { new ComboSelectListItem { Value = "true", Text = "|", Selected = Field.Model?.ToString().ToLower() == "true" } };
+                    listItems = new List<ComboSelectListItem>() { new ComboSelectListItem { Value = "true", Text = "|", Selected = Field.Model?.ToString().ToLower() == "true" } };
                 }
             }
             else
             {
-                if (Items.Metadata.ModelType == typeof(List<ComboSelectListItem>))
+                if (typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
                 {
-                    listitems = Items.Model as List<ComboSelectListItem>;
+                    if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+                    {
+                        listItems = (Items.Model as IEnumerable<TreeSelectListItem>).FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
+                    }
+                    else
+                    {
+                        listItems = (Items.Model as IEnumerable<ComboSelectListItem>).ToList();
+                    }
                 }
                 else if (Items.Metadata.ModelType.IsList())
                 {
                     var exports = (Items.Model as IList);
                     foreach (var item in exports)
                     {
-                        listitems.Add(new ComboSelectListItem
+                        listItems.Add(new ComboSelectListItem
                         {
                             Text = item?.ToString(),
                             Value = item?.ToString()
@@ -90,16 +97,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             Required = false;
                         }
-                        SetSelected(listitems, values ?? Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                        SetSelected(listItems, values ?? Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
                     }
                     else if (Field.Model is IList == false && Field.Model != null)
                     {
                         checkvalue = new List<string> { Field.Model.ToString() };
-                        SetSelected(listitems, values ?? checkvalue);
+                        SetSelected(listItems, values ?? checkvalue);
                     }
                     else
                     {
-                        SetSelected(listitems, values ?? Field.Model as IList);
+                        SetSelected(listItems, values ?? Field.Model as IList);
                     }
                 }
                 catch {
@@ -115,9 +122,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.Add("wtm-cf", FormatFuncName(ChangeFunc, false));
             }
-            for (int i = 0; i < listitems.Count; i++)
+            for (int i = 0; i < listItems.Count; i++)
             {
-                var item = listitems[i];
+                var item = listItems[i];
                 var selected = item.Selected ? " checked" : " ";
                 output.PostContent.AppendHtml($@"
 <input type=""checkbox"" name=""{Field.Name}"" value=""{item.Value}"" title=""{item.Text}"" {selected} {(Disabled ? "disabled=\"\"" : string.Empty)}/>");

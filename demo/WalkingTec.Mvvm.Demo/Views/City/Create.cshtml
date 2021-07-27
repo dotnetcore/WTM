@@ -2,13 +2,14 @@
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
-<wt:row items-per-row="ItemsPerRowEnum.Two">
-<wt:textbox field="Entity.Name" />
-<wt:textbox field="Entity.Test" />
-<wt:tree field="Entity.ParentId" items="AllParents"/>
-</wt:row>
-    <wt:row align="AlignEnum.Right">
-        <wt:submitbutton />
-        <wt:closebutton />
-    </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:textbox field="Entity.Name" />
+    <wt:textbox field="Entity.Test" />
+    <wt:tree field="Entity.ParentId" items="AllParents" />
+  </wt:row>
+  <wt:grid use-local-data="true" hidden-panel="true" hidden-checkbox="true" height="-400" vm="CityChildrenList" id="CityChildrenList" />
+  <wt:row align="AlignEnum.Right">
+    <wt:submitbutton />
+    <wt:closebutton />
+  </wt:row>
 </wt:form>

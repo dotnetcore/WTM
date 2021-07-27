@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             MemberBinding textBind = Expression.Bind(textMI, cp.Change(textField.Body, pe));
 
             //绑定Value字段，形成类似 Value = valueField 的表达式
-            var valueMI = typeof(TreeSelectListItem).GetMember("Id")[0];
+            var valueMI = typeof(TreeSelectListItem).GetMember("Value")[0];
             MemberBinding valueBind = Expression.Bind(valueMI, cp.Change(valueField.Body, pe));
 
             //绑定ParentId字段，形成类似 Value = valueField 的表达式
@@ -158,7 +158,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
             rv.ForEach(x =>
             {
-                x.Children = rv.Where(y => y.ParentId == x.Id).ToList();
+                x.Children = rv.Where(y => y.ParentId == x.Value.ToString()).ToList();
             });
             return rv.Where(x => string.IsNullOrEmpty(x.ParentId)).ToList();
         }
