@@ -1032,30 +1032,37 @@ namespace WalkingTec.Mvvm.Core
             List<string> keys = new List<string>();
             if (string.IsNullOrEmpty(DetailGridPrix) == false)
             {
-                foreach (var item in MSD.Keys)
+                if (EntityList.Any(x => x.BatchError != null))
                 {
-                    if (item.StartsWith(DetailGridPrix))
+                    haserror = true;
+                }
+                else
+                {
+                    foreach (var item in MSD.Keys)
                     {
-                        var errors = MSD[item];
-                        if (errors.Count > 0)
+                        if (item.StartsWith(DetailGridPrix+"["))
                         {
-                            Regex r = new Regex($"{DetailGridPrix}\\[(.*?)\\]");
-                            try
+                            var errors = MSD[item];
+                            if (errors.Count > 0)
                             {
-                                if (int.TryParse(r.Match(item).Groups[1].Value, out int index))
+                                Regex r = new Regex($"{DetailGridPrix}\\[(.*?)\\]");
+                                try
                                 {
-                                    EntityList[index].BatchError = errors.Select(x => x.ErrorMessage).ToSepratedString();
-                                    keys.Add(item);
-                                    haserror = true;
+                                    if (int.TryParse(r.Match(item).Groups[1].Value, out int index))
+                                    {
+                                        EntityList[index].BatchError = errors.Select(x => x.ErrorMessage).ToSepratedString();
+                                        keys.Add(item);
+                                        haserror = true;
+                                    }
                                 }
+                                catch { }
                             }
-                            catch { }
                         }
                     }
-                }
-                foreach (var item in keys)
-                {
-                    MSD.RemoveModelError(item);
+                    foreach (var item in keys)
+                    {
+                        MSD.RemoveModelError(item);
+                    }
                 }
                 if (haserror)
                 {
