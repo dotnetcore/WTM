@@ -61,5 +61,6 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "专业")]
         public List<StudentMajor> StudentMajor { get; set; }
+        public List<LinkTestStudent> LinkStudent { get; set; }
     }
 }

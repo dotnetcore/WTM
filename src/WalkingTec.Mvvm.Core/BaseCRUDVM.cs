@@ -161,7 +161,7 @@ namespace WalkingTec.Mvvm.Core
             if (_toInclude != null)
             {
                 foreach (var item in _toInclude)
-                {
+                {                    
                     query = query.Include(item);
                 }
             }

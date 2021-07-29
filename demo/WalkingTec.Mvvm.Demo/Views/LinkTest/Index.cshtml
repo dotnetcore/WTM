@@ -1,0 +1,10 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.LinkTestVMs.LinkTestListVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:textbox field="Searcher.name" />
+<wt:combobox field="Searcher.StudentId" items="Searcher.AllStudents" empty-text="@Localizer["Sys.All"]" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" url="/LinkTest/Search"/>

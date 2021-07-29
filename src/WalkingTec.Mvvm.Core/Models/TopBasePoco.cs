@@ -53,6 +53,28 @@ namespace WalkingTec.Mvvm.Core
             return id;
         }
 
+        public bool HasID()
+        {
+            bool rv = false;
+            var id = this.GetID();
+            switch (id)
+            {
+                case Guid g1 when g1 != Guid.Empty:
+                    rv = true;
+                    break;
+                case string s when string.IsNullOrEmpty(s) == false:
+                    rv = true;
+                    break;
+                case int i when i>0:
+                    rv = true;
+                    break;
+                case long l when l > 0:
+                    rv = true;
+                    break;
+            }
+            return rv;
+        }
+
         public object GetParentID()
         {
             var idpro = this.GetType().GetSingleProperty("ParentId");

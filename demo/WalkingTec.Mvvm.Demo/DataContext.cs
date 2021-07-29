@@ -41,7 +41,8 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<ControlCenter> ControlCenters { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Report> Reports { get; set; }
-
+        public DbSet<LinkTest> LinkTests { get; set; }
+        public DbSet<LinkTest2> LinkTest2 { get; set; }
 
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {

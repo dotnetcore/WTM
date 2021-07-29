@@ -587,7 +587,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
-        public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val, MemberExpression member = null)
+        public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val, Expression<Func<T, object>> member=null)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
             PropertyInfo idproperty = null;
@@ -597,7 +597,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             else
             {
-                idproperty = typeof(T).GetSingleProperty(member.Member.Name);
+                idproperty = member.GetPropertyInfo();
             }
             Expression peid = Expression.Property(pe, idproperty);
             var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
@@ -622,7 +622,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
 
-        public static IQueryable<T> CheckIDs<T>(this IQueryable<T> baseQuery, List<string> val, MemberExpression member = null)
+        public static IQueryable<T> CheckIDs<T>(this IQueryable<T> baseQuery, List<string> val, Expression<Func<T, object>> member = null)
         {
             if(val == null)
             {
@@ -636,7 +636,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             else
             {
-                idproperty = typeof(T).GetSingleProperty(member.Member.Name);
+                idproperty = member.GetPropertyInfo();
             }
             Expression peid = Expression.Property(pe, idproperty);
             var exp = val.GetContainIdExpression(typeof(T), pe, peid).Body;
