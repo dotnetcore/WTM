@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.Core
 
         public static string GetIdByName(string fieldName)
         {
-            return fieldName == null ? "" : fieldName.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+            return fieldName == null ? "" : fieldName.Replace(".", "_").Replace("[", "_").Replace("]", "_").Replace("-","minus");
         }
 
         public static void CheckDifference<T>(IEnumerable<T> oldList, IEnumerable<T> newList, out IEnumerable<T> ToRemove, out IEnumerable<T> ToAdd) where T : TopBasePoco

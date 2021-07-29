@@ -14,7 +14,7 @@
     <wt:upload field="Entity.PhotoId" />
     <wt:switch field="Entity.IsValid" />
     <wt:datetime field="Entity.EnRollDate" />
-      <wt:selector list-vm="MajorList" field="Entity.StudentMajor[0].MajorId" text-bind="MajorList.EntityList[0].MajorName" val-bind="MajorList.EntityList[0].ID">
+      <wt:selector list-vm="MajorList" field="Entity.StudentMajor[-1].MajorId" text-bind="MajorList.EntityList[-1].MajorName" val-bind="MajorList.EntityList[-1].ID" multi-select="true">
     <wt:searchpanel vm="MajorList">
       <wt:row items-per-row=" ItemsPerRowEnum.Two">
         <wt:combobox field="MajorList.Searcher.SchoolId" items="MajorList.Searcher.AllSchools" />

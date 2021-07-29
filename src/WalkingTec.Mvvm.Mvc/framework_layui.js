@@ -841,8 +841,8 @@ window.ff = {
                 return;
             }
             var issub = false;
-            if (/(.*?)\[(\d?)\]\.(.*?)$/.test(itemname)) {
-                var name1 = RegExp.$1;
+            if (/(.*?)\[(\-?\d?)\]\.(.*?)$/.test(itemname)) {
+              var name1 = RegExp.$1;
                 var number = RegExp.$2;
                 var name2 = RegExp.$3;
                 if (number == "-1") {
