@@ -86,13 +86,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 if (Items.Metadata.ModelType.IsList())
                 {
                     var exports = (Items.Model as IList);
-                    foreach (var item in exports)
+                    if (exports != null)
                     {
-                        listItems.Add(new ComboSelectListItem
+                        foreach (var item in exports)
                         {
-                            Text = item?.ToString(),
-                            Value = item?.ToString()
-                        });
+                            listItems.Add(new ComboSelectListItem
+                            {
+                                Text = item?.ToString(),
+                                Value = item?.ToString()
+                            });
+                        }
                     }
                 }
             }
