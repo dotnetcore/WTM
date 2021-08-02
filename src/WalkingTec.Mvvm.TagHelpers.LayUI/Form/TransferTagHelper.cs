@@ -72,11 +72,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
                 {
-                    listItems = (Items.Model as IEnumerable<TreeSelectListItem>).FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
+                    listItems = (Items.Model as IEnumerable<TreeSelectListItem>)?.FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
                 }
                 else
                 {
-                    listItems = (Items.Model as IEnumerable<ComboSelectListItem>).ToList();
+                    listItems = (Items.Model as IEnumerable<ComboSelectListItem>)?.ToList();
                 }
             }
 
@@ -114,7 +114,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     Required = false;
                 }
-                selectVal.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                if (Field?.ModelExplorer?.Container?.Model != null)
+                {
+                    selectVal.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                }
             }
 
             // 赋默认值

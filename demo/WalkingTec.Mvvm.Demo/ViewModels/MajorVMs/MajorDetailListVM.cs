@@ -34,6 +34,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
                 this.MakeGridHeader(x => x.MajorType).SetEditType(EditTypeEnum.ComboBox,typeof(MajorTypeEnum).ToListItems(null,true)),
                 this.MakeGridHeader(x => x.MajorName).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.TestDate).SetEditType(EditTypeEnum.Datetime),
+                this.MakeGridHeader(x => x.IsTrue).SetEditType(EditTypeEnum.ComboBox,Utils.GetBoolCombo(BoolComboTypes.YesNo, selectText:Wtm.Localizer?["Sys.PleaseSelect"])),
                 this.MakeGridHeader(x => "click").SetHeader("单击单元格事件").SetEditType(EditTypeEnum.TextBox).SetEvent("setSign"),  //SetEvent设置 事件名称，在layui数据表格进行事件监听
                this.MakeGridHeaderAction(width: 200)
             };

@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public bool AutoComplete { get; set; }
 
         public string YesText { get; set; }
-
+        
         public string NoText { get; set; }
 
         /// <summary>

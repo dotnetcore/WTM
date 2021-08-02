@@ -284,6 +284,10 @@ namespace WalkingTec.Mvvm.Core
             {
                 noItem.Selected = true;
             }
+            if(selectText != null)
+            {
+                rv.Add(new ComboSelectListItem { Text = selectText, Value = "" });
+            }
             rv.Add(yesItem);
             rv.Add(noItem);
             return rv;

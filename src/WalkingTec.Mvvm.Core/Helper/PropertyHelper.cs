@@ -283,6 +283,10 @@ namespace WalkingTec.Mvvm.Core
 
         public static List<string> GetPropertySiblingValues(this object obj, string propertyName)
         {
+            if(obj == null)
+            {
+                return new List<string>();
+            }
             Regex reg = new Regex("(.*?)\\[\\-?\\d?\\]\\.(.*?)$");
             var match = reg.Match(propertyName);
             if (match.Success)
