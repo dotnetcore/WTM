@@ -3,7 +3,7 @@
 @inherits BasePage
 
 <ValidateForm @ref="vform" Model="@Model" >
-    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
 $formfields$
     </Row>
     <div class="modal-footer table-modal-footer">
