@@ -32,6 +32,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public ModelExpression LinkField { get; set; }
 
+        public string LinkId { get; set; }
         public string TriggerUrl { get; set; }
 
         /// <summary>
@@ -101,7 +102,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (LinkField != null)
             {
-                output.Attributes.Add("wtm-linkto", $"{Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name)}");
+                var linkto = "";
+                if (string.IsNullOrEmpty(LinkId))
+                {
+                    linkto = Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name);
+                }
+                else {
+                    linkto = LinkId;
+                }
+                output.Attributes.Add("wtm-linkto", $"{linkto}");
                 output.Attributes.Add("wtm-tname", $"{LinkField.Name}");
             }
             if (TriggerUrl != null)
