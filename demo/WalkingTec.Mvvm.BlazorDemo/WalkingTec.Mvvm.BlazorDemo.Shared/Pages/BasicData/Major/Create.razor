@@ -1,9 +1,9 @@
-﻿@page "/BasicData/Major/Create"
+@page "/BasicData/Major/Create"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.MajorVMs;
 @inherits BasePage
 
 <ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
-    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
 
             <BootstrapInput @bind-Value="@Model.Entity.MajorCode"  />
             <BootstrapInput @bind-Value="@Model.Entity.MajorName"  />

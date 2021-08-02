@@ -4,7 +4,7 @@
 
 
 <ValidateForm @ref="vform" Model="@Model">
-    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
         <Display @bind-Value="@Model.Entity.ModuleName" ShowLabel="true" />
         <Display @bind-Value="@Model.Entity.ActionName" ShowLabel="true" />
         <Display @bind-Value="@Model.Entity.ITCode" ShowLabel="true" />
@@ -14,7 +14,7 @@
         <Display @bind-Value="@Model.Entity.IP" ShowLabel="true" />
         <Display @bind-Value="@Model.Entity.LogType" ShowLabel="true" />
     </Row>
-    <Row  ItemsPerRow="ItemsPerRow.One" RowType="RowType.FormRow">
+    <Row  ItemsPerRow="ItemsPerRow.One" RowType="RowType.Normal">
         <Textarea @bind-Value="@Model.Entity.Remark" ShowLabel="true"  IsDisabled="true"/>
     </Row>
 

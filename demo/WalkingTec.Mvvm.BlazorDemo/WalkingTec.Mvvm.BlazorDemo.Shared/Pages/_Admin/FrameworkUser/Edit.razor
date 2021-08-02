@@ -5,7 +5,7 @@
 <ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
     <Tab IsBorderCard="true">
         <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
-            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
                 <BootstrapInput @bind-Value="@Model.Entity.ITCode" />
                 <div></div>
                 <BootstrapInput @bind-Value="@Model.Entity.Name" />
@@ -18,7 +18,7 @@
             <CheckboxList @bind-Value="Model.SelectedGroupCodes" Items="@AllGroups" />
         </TabItem>
         <TabItem Text="@WtmBlazor.Localizer["_Admin.AdditionInfo"]">
-            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
                 <BootstrapInput @bind-Value="@Model.Entity.CellPhone" />
                 <BootstrapInput @bind-Value="@Model.Entity.HomePhone" />
                 <BootstrapInput @bind-Value="@Model.Entity.Email" />

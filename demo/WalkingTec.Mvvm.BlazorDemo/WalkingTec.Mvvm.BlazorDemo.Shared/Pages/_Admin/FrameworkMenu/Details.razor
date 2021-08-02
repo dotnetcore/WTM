@@ -4,12 +4,12 @@
 
 
 <ValidateForm @ref="vform" Model="@Model">
-    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
         <Display @bind-Value="@Model.Entity.IsInside" Data="@AllType" ShowLabel="true"/>
     </Row>
     @if (Model.Entity.IsInside != false)
     {
-<Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+<Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
     <Display @bind-Value="@Model.SelectedModule" Data="@AllModels"   ShowLabel="true"/>
     <div></div>
     <Row ColSpan="2">
@@ -19,16 +19,16 @@
     }
     else
     {
-        <Row ItemsPerRow="ItemsPerRow.One" RowType="RowType.FormRow">
+        <Row ItemsPerRow="ItemsPerRow.One" RowType="RowType.Normal">
             <Display @bind-Value="@Model.Entity.Url" ShowLabel="true" />
         </Row>
     }
-    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
         <Display @bind-Value="@Model.Entity.PageName"  ShowLabel="true"/>
-        <Display @bind-Value="@Model.Entity.ParentId" Data="@AllFolders"   ShowLabel="true"/>
+        <Display @bind-Value="@Model.Entity.ParentId" Lookup="@AllFolders"   ShowLabel="true"/>
         <Display @bind-Value="@Model.Entity.DisplayOrder"  ShowLabel="true"/>
     </Row>
-    <Row ItemsPerRow="ItemsPerRow.Four" RowType="RowType.FormRow">
+    <Row ItemsPerRow="ItemsPerRow.Four" RowType="RowType.Normal">
         <Switch @bind-Value="@Model.Entity.ShowOnMenu"  IsDisabled="true"/>
         <Switch @bind-Value="@Model.Entity.FolderOnly"  IsDisabled="true"/>
         <Switch @bind-Value="@Model.Entity.IsPublic"  IsDisabled="true"/>

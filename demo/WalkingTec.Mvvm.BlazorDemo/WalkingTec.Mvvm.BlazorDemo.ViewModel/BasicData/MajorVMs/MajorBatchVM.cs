@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -25,11 +25,16 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.MajorVMs
     /// </summary>
     public class Major_BatchEdit : BaseVM
     {
+        [Display(Name = "备注")]
+        public String Remark { get; set; }
+        public List<ComboSelectListItem> AllSchools { get; set; }
+        [Display(Name = "所属学校")]
+        public int? SchoolId { get; set; }
 
         protected override void InitVM()
         {
+            AllSchools = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
         }
-
     }
 
 }

@@ -1,4 +1,4 @@
-﻿@page "/BasicData/Major"
+@page "/BasicData/Major"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.MajorVMs;
 @inherits BasePage
 @attribute [ActionDescription("专业管理", "WalkingTec.Mvvm.BlazorDemo.Controllers,Major")]
@@ -32,6 +32,10 @@
         {
             <TableToolbarButton TItem="Major_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }
+        @if (IsAccessable("/api/Major/BatchEdit"))
+        {
+            <TableToolbarButton TItem="Major_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.BatchEdit"]" OnClickCallback="OnBatchEditClick" />
+        }
         @if (IsAccessable("/api/Major/BatchDelete"))
         {
             <TableToolbarPopconfirmButton TItem="Major_View" Color="Color.Primary"
@@ -39,7 +43,7 @@
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }
-        
+
         @if (IsAccessable("/api/Major/Import"))
         {
             <TableToolbarButton TItem="Major_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
@@ -131,6 +135,15 @@
             await WtmBlazor.Toast.Information(WtmBlazor.Localizer["Sys.Info"], WtmBlazor.Localizer["Sys.SelectOneRowMin"]);
         }
     }
+
+    private async Task OnBatchEditClick(IEnumerable<Major_View> items)
+    {
+        if( await OpenDialog<BatchEdit>(WtmBlazor.Localizer["Sys.BatchEdit"], x => x.ids == dataTable.SelectedRows.Select(x => x.ID.ToString()).ToArray()) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
+    }
+
 
     private async Task OnDeleteClick(Major_View item)
     {

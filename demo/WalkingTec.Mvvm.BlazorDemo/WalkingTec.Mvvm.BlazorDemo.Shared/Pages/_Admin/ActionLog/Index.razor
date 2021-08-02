@@ -78,8 +78,9 @@
 
     private static Task<string> IntFormatter(object d)
     {
-        var data = (double?)d;
-        return Task.FromResult(data?.ToString("F2") ?? "");
+        var data = (d as TableColumnContext<ActionLog, object>).Value;
+        var val = (double?)data;
+        return Task.FromResult(val?.ToString("F2") ?? "");
     }
 
 

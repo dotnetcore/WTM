@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -161,6 +161,20 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
             else
             {
                 return Ok(vm.EntityList.Count);
+            }
+        }
+
+        [HttpPost("BatchEdit")]
+        [ActionDescription("Sys.BatchEdit")]
+        public ActionResult DoBatchEdit(MajorBatchVM vm)
+        {
+            if (!ModelState.IsValid || !vm.DoBatchEdit())
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                return Ok(vm.Ids.Count());
             }
         }
 

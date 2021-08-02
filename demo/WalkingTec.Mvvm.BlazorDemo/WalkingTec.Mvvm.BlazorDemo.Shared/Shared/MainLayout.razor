@@ -280,7 +280,7 @@
             }
             if (item.Children?.Any() == true)
             {
-                GetMenuFromFrameworkMenu(item.Children).ForEach(x => m.AddItem(x));
+                m.Items = GetMenuFromFrameworkMenu(item.Children);
             }
             rv.Add(m);
         }

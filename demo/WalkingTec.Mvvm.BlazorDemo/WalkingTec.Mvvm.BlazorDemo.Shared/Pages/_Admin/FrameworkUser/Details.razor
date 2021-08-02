@@ -6,7 +6,7 @@
 <ValidateForm @ref="vform" Model="@Model" >
     <Tab IsBorderCard="true">
         <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
-            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
                 <Display @bind-Value="@Model.Entity.ITCode" ShowLabel="true" />
                 <div></div>
                 <Display @bind-Value="@Model.Entity.Name" ShowLabel="true" />
@@ -17,7 +17,7 @@
                 <Display @bind-Value="Model.SelectedGroupCodes"  ShowLabel="true"  Data="AllGroups"/>
         </TabItem>
         <TabItem Text="@WtmBlazor.Localizer["_Admin.AdditionInfo"]">
-            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
                 <Display @bind-Value="@Model.Entity.CellPhone" ShowLabel="true" />
                 <Display @bind-Value="@Model.Entity.HomePhone"  ShowLabel="true"/>
                 <Display @bind-Value="@Model.Entity.Email"  ShowLabel="true"/>

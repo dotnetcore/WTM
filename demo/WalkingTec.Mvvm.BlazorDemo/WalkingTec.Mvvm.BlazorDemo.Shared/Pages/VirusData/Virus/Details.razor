@@ -3,7 +3,7 @@
 @inherits BasePage
 
 <ValidateForm @ref="vform" Model="@Model" >
-    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.FormRow">
+    <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
 
             <Display @bind-Value="@Model.Entity.VirtusName"   ShowLabel="true"/>
             <Display @bind-Value="@Model.Entity.VirtusCode"   ShowLabel="true"/>
