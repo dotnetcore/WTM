@@ -17,6 +17,7 @@ using WalkingTec.Mvvm.Core.Support.Json;
 using System.Text.Json;
 using WalkingTec.Mvvm.Core.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -259,6 +260,26 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             ctrl.ViewData["DONOTUSE_COOKIEPRE"] = ctrl.Wtm.ConfigInfo.CookiePre;
             var ctrlActDesc = context.ActionDescriptor as ControllerActionDescriptor;
+            //get viewname
+            string viewName = "";
+            if(context.Result is PartialViewResult pvr)
+            {
+                viewName = pvr.ViewName??"";
+                if (viewName?.StartsWith("/") == false)
+                {
+                    var viewEngine = context.HttpContext.RequestServices.GetRequiredService<ICompositeViewEngine>();
+                    viewName = viewEngine.FindView(context, string.IsNullOrEmpty(viewName) ? ctrlActDesc.ActionName : viewName, false)?.View?.Path;
+                }
+            }
+            if (context.Result is ViewResult vr)
+            {
+                viewName = vr.ViewName??"";
+                if (viewName?.StartsWith("/") == false)
+                {
+                    var viewEngine = context.HttpContext.RequestServices.GetRequiredService<ICompositeViewEngine>();
+                    viewName = viewEngine.FindView(context, string.IsNullOrEmpty(viewName) ? ctrlActDesc.ActionName : viewName, false)?.View?.Path;
+                }
+            }
             if (context.Result is PartialViewResult)
             {
                 var model = (context.Result as PartialViewResult).ViewData?.Model as BaseVM;
@@ -270,6 +291,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 // 为所有 PartialView 加上最外层的 Div
                 if (model != null)
                 {
+                    model.FromView = viewName;
                     string pagetitle = string.Empty;
                     var menu = Utils.FindMenu(context.HttpContext.Request.Path,ctrl.GlobaInfo.AllMenus);
                     if (menu == null)
@@ -313,10 +335,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 if (model == null && (context.Result as ViewResult).Model == null && (context.Result as ViewResult).ViewData != null)
                 {
                     model = ctrl.Wtm.CreateVM<BaseVM>();
+                    model.FromView = (context.Result as ViewResult).ViewName;
                     (context.Result as ViewResult).ViewData.Model = model;
                 }
                if (model != null)
                 {
+                    model.FromView = viewName;
                     context.HttpContext.Response.Cookies.Append("divid", model?.ViewDivId);
                 }
             }

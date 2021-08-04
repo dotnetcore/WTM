@@ -173,6 +173,11 @@ namespace WalkingTec.Mvvm.Core
         public string CurrentUrl { get => Wtm?.BaseUrl; }
 
         /// <summary>
+        /// 记录原始提交页面
+        /// </summary>
+        [JsonIgnore]
+        public string FromView { get; set; }
+        /// <summary>
         /// Session信息
         /// </summary>
         [JsonIgnore]
