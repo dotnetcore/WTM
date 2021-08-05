@@ -177,6 +177,13 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         [JsonIgnore]
         public string FromView { get; set; }
+
+        /// <summary>
+        /// 记录当前页面
+        /// </summary>
+        [JsonIgnore]
+        public string CurrentView { get; set; }
+
         /// <summary>
         /// Session信息
         /// </summary>

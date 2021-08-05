@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.Attributes.SetAttribute("action", baseVM?.CurrentUrl ?? "#");
                 }
             }
-            output.PostContent.AppendHtml($"<input type='hidden' name='FromView' value='{baseVM?.FromView}' />");
+            output.PostContent.AppendHtml($"<input type='hidden' name='FromView' value='{baseVM?.CurrentView}' />");
 
             output.PostElement.AppendHtml($@"
 <script>

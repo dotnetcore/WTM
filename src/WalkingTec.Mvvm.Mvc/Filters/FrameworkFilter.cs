@@ -286,12 +286,13 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 if (model == null && (context.Result as PartialViewResult).Model == null && (context.Result as PartialViewResult).ViewData != null)
                 {
                     model = ctrl.Wtm.CreateVM<BaseVM>();
+                    model.CurrentView = viewName;
                     (context.Result as PartialViewResult).ViewData.Model = model;
                 }
                 // 为所有 PartialView 加上最外层的 Div
                 if (model != null)
                 {
-                    model.FromView = viewName;
+                    model.CurrentView = viewName;
                     string pagetitle = string.Empty;
                     var menu = Utils.FindMenu(context.HttpContext.Request.Path,ctrl.GlobaInfo.AllMenus);
                     if (menu == null)
@@ -335,12 +336,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 if (model == null && (context.Result as ViewResult).Model == null && (context.Result as ViewResult).ViewData != null)
                 {
                     model = ctrl.Wtm.CreateVM<BaseVM>();
-                    model.FromView = (context.Result as ViewResult).ViewName;
+                    model.CurrentView = viewName;
                     (context.Result as ViewResult).ViewData.Model = model;
                 }
                if (model != null)
                 {
-                    model.FromView = viewName;
+                    model.CurrentView = viewName;
                     context.HttpContext.Response.Cookies.Append("divid", model?.ViewDivId);
                 }
             }
