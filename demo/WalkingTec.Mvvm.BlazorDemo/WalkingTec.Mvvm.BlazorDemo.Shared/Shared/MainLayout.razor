@@ -18,7 +18,7 @@
                     <div class="navbar navbar-expand d-flex">
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" href="#">
                                     <span class="mx-1" style="">@SelectedCulture</span>
                                 </a>
                                 <div class="dropdown-menu">
@@ -36,7 +36,7 @@
                     <div class="navbar navbar-expand d-flex">
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" href="#">
                                     @if (!string.IsNullOrEmpty(UserInfo.PhotoId.ToString()))
                                     {
                                         <Avatar style="margin-top:3px;" GetUrlAsync="()=>wtmblazor.GetBase64Image(UserInfo.PhotoId.ToString(),150,150)" IsCircle="true" Size="Size.ExtraSmall" />
@@ -83,7 +83,7 @@
             <GroupBox Title="@wtmblazor.Localizer["Sys.Layout"]">
                 <div class="row">
                     <div class="col-6">
-                        <div class="layout-item @(IsFullSide ? "active d-flex" : "d-flex")" @onclick="@(e => IsFullSide = true)" data-toggle="tooltip" title="@wtmblazor.Localizer["Sys.LeftRight"]">
+                        <div class="layout-item @(IsFullSide ? "active d-flex" : "d-flex")" @onclick="@(e => IsFullSide = true)" data-bs-toggle="tooltip" title="@wtmblazor.Localizer["Sys.LeftRight"]">
                             <div class="layout-left d-flex flex-column">
                                 <div class="layout-left-header"></div>
                                 <div class="layout-left-body flex-fill"></div>
