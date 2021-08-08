@@ -117,12 +117,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         foreach (var item in Field.Model as dynamic)
                         {
-                            vals.Add(item.ToString().ToLower());
+                            vals.Add(item.ToString());
                         }
                     }
                     else
                     {
-                        vals.Add(Field.Model.ToString().ToLower());
+                        vals.Add(Field.Model.ToString());
                     }
                 }
                 List<LayuiTreeItem> treeitems = GetLayuiTree(mm, vals);
@@ -186,13 +186,13 @@ layui.use(['tree'],function(){{
             {
                 var news = new LayuiTreeItem
                 {
-                    Id = s.Value.ToString().ToLower(),
+                    Id = s.Value.ToString(),
                     Title = s.Text,
                     Url = s.Url,
                     Expand = s.Expended,
                     //Children = new List<LayuiTreeItem>()
                 };
-                if (values.Contains(s.Value.ToString().ToLower()))
+                if (values.Contains(s.Value.ToString()))
                 {
                     news.Checked = true;
                 }

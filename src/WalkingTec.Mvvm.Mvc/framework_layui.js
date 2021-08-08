@@ -679,7 +679,8 @@ window.ff = {
         if (linkto == undefined) {
             return;
         }
-        var target = $('#' + linkto.value);
+        var formid = self.closest("form").id
+        var target = $('#'+formid).find('#' + linkto.value);
         if (target.length == 0) {
             return;
         }
