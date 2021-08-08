@@ -67,9 +67,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //处理后面要使用的expression
             //if (valueField == null)
             //{
-            valueField = x => x.GetID().ToString().ToLower();
+            valueField = x => x.GetID().ToString();
             //}
-            Expression<Func<T, string>> parentField = x => x.ParentId.ToString().ToLower();
+            Expression<Func<T, string>> parentField = x => x.GetParentID().ToString();
 
             //定义PE
             ParameterExpression pe = Expression.Parameter(typeof(T));
