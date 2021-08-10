@@ -156,11 +156,16 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 rv = query.Select(lambda).ToList();
             }
 
+            List<TreeSelectListItem> toDel = new List<TreeSelectListItem>();
+
             rv.ForEach(x =>
             {
-                x.Children = rv.Where(y => y.ParentId == x.Value.ToString()).ToList();
+                var c = rv.Where(y => y.ParentId == x.Value.ToString()).ToList();
+                x.Children = c;
+                toDel.AddRange(c);
             });
-            return rv.Where(x => string.IsNullOrEmpty(x.ParentId)).ToList();
+            toDel.ForEach(x => rv.Remove(x));
+            return rv.ToList();
         }
 
         #endregion

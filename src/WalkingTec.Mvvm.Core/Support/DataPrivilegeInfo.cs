@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.Core
         {
             var ids = dps.Where(x => x.TableName == this.ModelName).Select(x => x.RelateId).ToList();
             var idscheck = ids.GetContainIdExpression<T>();
-            var modified = wtmcontext.DC.Set<T>().Where(idscheck).CheckNotNull("ParentId").DynamicSelect("ParentId").Select(x => x.ToLower());
+            var modified = wtmcontext.DC.Set<T>().Where(idscheck).CheckNotNull("ParentId").DynamicSelect("ParentId");
             var skipids = modified.ToList();
             return skipids;
         }
