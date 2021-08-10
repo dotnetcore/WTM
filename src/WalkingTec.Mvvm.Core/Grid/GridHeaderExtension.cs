@@ -204,7 +204,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="self"></param>
         /// <param name="fixed">如果设置 Left 或 Right，则对应的列将会被固定在左或右，不随滚动条而滚动。</param>
         /// <returns></returns>
-        public static GridColumn<T> SetFixed<T>(this GridColumn<T> self, GridColumnFixedEnum @fixed)
+        public static GridColumn<T> SetFixed<T>(this GridColumn<T> self, GridColumnFixedEnum? @fixed)
             where T : TopBasePoco
         {
             self.Fixed = @fixed;
