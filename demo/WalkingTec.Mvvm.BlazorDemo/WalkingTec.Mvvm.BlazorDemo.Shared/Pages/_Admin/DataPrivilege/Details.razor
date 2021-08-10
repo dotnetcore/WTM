@@ -15,15 +15,15 @@
     {
         <Row ItemsPerRow="ItemsPerRow.Two">
             <Display @bind-Value="@Model.DpType" ShowLabel="true"/>
-            <Display @bind-Value="@Model.Entity.GroupCode"  Data="@AllGroups" ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.GroupCode"  Lookup="@AllGroups" ShowLabel="true"/>
         </Row>
     }
     <Row ItemsPerRow="ItemsPerRow.Two">
-        <Display @bind-Value="@Model.Entity.TableName" Data="AllPrivileges"  ShowLabel="true"/>
-        <Display @bind-Value="@Model.IsAll" Data="@WtmBlazor.GlobalSelectItems.BoolItems" ShowLabel="true"/>
+        <Display @bind-Value="@Model.Entity.TableName" Lookup="AllPrivileges"  ShowLabel="true"/>
+        <Display @bind-Value="@Model.IsAll" Lookup="@WtmBlazor.GlobalSelectItems.BoolItems" ShowLabel="true"/>
     </Row>
     <Row>
-        <Display @ref="Select2" @bind-Value="@Model.SelectedItemsID" Data="AllPrivilegeTableNames" ShowLabel="true"/>
+        <Display @ref="Select2" @bind-Value="@Model.SelectedItemsID" Lookup="AllPrivilegeTableNames" ShowLabel="true"/>
     </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />

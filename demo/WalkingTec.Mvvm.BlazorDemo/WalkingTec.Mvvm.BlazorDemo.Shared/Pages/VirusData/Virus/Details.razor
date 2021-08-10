@@ -1,4 +1,4 @@
-﻿@page "/VirusData/Virus/Details/{id}"
+@page "/VirusData/Virus/Details/{id}"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs;
 @inherits BasePage
 
@@ -9,7 +9,7 @@
             <Display @bind-Value="@Model.Entity.VirtusCode"   ShowLabel="true"/>
             <Display @bind-Value="@Model.Entity.Remark"   ShowLabel="true"/>
             <Display @bind-Value="@Model.Entity.VirtusType"   ShowLabel="true"/>
-            <Display @bind-Value="@Model.SelectedPatientsIDs" Data="@AllPatients"  ShowLabel="true"/>
+            <Display @bind-Value="@Model.SelectedPatientsIDs" Lookup="@AllPatients"  ShowLabel="true"/>
     </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />

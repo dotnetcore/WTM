@@ -2526,7 +2526,7 @@ namespace WalkingTec.Mvvm.Mvc
                         else
                         {
                             var tempname = $"All{subtype.Name}s";
-                            sitems = $"Data=\"@{tempname}\"";
+                            sitems = $"Lookup=\"@{tempname}\"";
                             if (apis.ContainsKey(tempname) == false)
                             {
                                 apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");

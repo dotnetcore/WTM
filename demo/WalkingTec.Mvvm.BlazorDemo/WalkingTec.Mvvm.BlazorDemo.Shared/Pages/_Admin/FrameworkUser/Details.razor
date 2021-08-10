@@ -13,8 +13,8 @@
                 <Display @bind-Value="@Model.Entity.Gender" ShowLabel="true" />
                 <WTUploadImage IsDisabled="true" @bind-Value="@Model.Entity.PhotoId" />
             </Row>
-                <Display @bind-Value="Model.SelectedRolesCodes" ShowLabel="true" Data="AllRoles"/>
-                <Display @bind-Value="Model.SelectedGroupCodes"  ShowLabel="true"  Data="AllGroups"/>
+                <Display @bind-Value="Model.SelectedRolesCodes" ShowLabel="true" Lookup="AllRoles"/>
+                <Display @bind-Value="Model.SelectedGroupCodes"  ShowLabel="true"  Lookup="AllGroups"/>
         </TabItem>
         <TabItem Text="@WtmBlazor.Localizer["_Admin.AdditionInfo"]">
             <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">

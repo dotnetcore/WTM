@@ -1,4 +1,4 @@
-﻿@page "/VirusData/Patient/Details/{id}"
+@page "/VirusData/Patient/Details/{id}"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.PatientVMs;
 @inherits BasePage
 
@@ -10,10 +10,10 @@
             <Display @bind-Value="@Model.Entity.Gender"   ShowLabel="true"/>
             <Display @bind-Value="@Model.Entity.Status"   ShowLabel="true"/>
             <Display @bind-Value="@Model.Entity.Birthday"   ShowLabel="true"/>
-            <Display @bind-Value="@Model.Entity.LocationId" Data="@AllCitys"  ShowLabel="true"/>
-            <Display @bind-Value="@Model.Entity.HospitalId" Data="@AllHospitals"  ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.LocationId" Lookup="@AllCitys"  ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.HospitalId" Lookup="@AllHospitals"  ShowLabel="true"/>
             <WTUploadImage @bind-Value="@Model.Entity.PhotoId"  IsDisabled="true" ShowLabel="true"/>
-            <Display @bind-Value="@Model.SelectedVirusesIDs" Data="@AllViruss"  ShowLabel="true"/>
+            <Display @bind-Value="@Model.SelectedVirusesIDs" Lookup="@AllViruss"  ShowLabel="true"/>
     </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />

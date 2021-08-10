@@ -5,15 +5,15 @@
 
 <ValidateForm @ref="vform" Model="@Model">
     <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
-        <Display @bind-Value="@Model.Entity.IsInside" Data="@AllType" ShowLabel="true"/>
+        <Display @bind-Value="@Model.Entity.IsInside" Lookup="@AllType" ShowLabel="true"/>
     </Row>
     @if (Model.Entity.IsInside != false)
     {
 <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
-    <Display @bind-Value="@Model.SelectedModule" Data="@AllModels"   ShowLabel="true"/>
+    <Display @bind-Value="@Model.SelectedModule" Lookup="@AllModels"   ShowLabel="true"/>
     <div></div>
     <Row ColSpan="2">
-        <Display @bind-Value="@Model.SelectedActionIDs" Data="@AllActions"  ShowLabel="true"/>
+        <Display @bind-Value="@Model.SelectedActionIDs" Lookup="@AllActions"  ShowLabel="true"/>
     </Row>
 </Row>
     }

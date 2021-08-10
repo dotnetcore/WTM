@@ -1,4 +1,4 @@
-﻿@page "/BasicData/Major/Details/{id}"
+@page "/BasicData/Major/Details/{id}"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.MajorVMs;
 @inherits BasePage
 
@@ -9,8 +9,8 @@
             <Display @bind-Value="@Model.Entity.MajorName"   ShowLabel="true"/>
             <Display @bind-Value="@Model.Entity.MajorType"   ShowLabel="true"/>
             <Display @bind-Value="@Model.Entity.Remark"   ShowLabel="true"/>
-            <Display @bind-Value="@Model.Entity.SchoolId" Data="@AllSchools"  ShowLabel="true"/>
-            <Display @bind-Value="@Model.SelectedStudentMajorsIDs" Data="@AllStudents"  ShowLabel="true"/>
+            <Display @bind-Value="@Model.Entity.SchoolId" Lookup="@AllSchools"  ShowLabel="true"/>
+            <Display @bind-Value="@Model.SelectedStudentMajorsIDs" Lookup="@AllStudents"  ShowLabel="true"/>
     </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
