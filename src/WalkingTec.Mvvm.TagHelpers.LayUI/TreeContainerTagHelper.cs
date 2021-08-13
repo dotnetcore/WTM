@@ -110,10 +110,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 ,click: function(data){{
                     var ele = null;
                     if(data.elem != undefined){{
-                        ele = data.elem.find('.layui-tree-entry:first');
+                        ele = data.elem.find('.layui-tree-main:first');
                     }}
                     else{{
-                        ele = $('#div{Id}').find(""div[data-id='""+data.data.id+""']"").find('.layui-tree-entry:first');
+                        ele = $('#div{Id}').find(""div[data-id='""+data.data.id+""']"").find('.layui-tree-main:first');
                     }}
                     if(last{Id} != null){{
                         last{Id}.css('background-color','');

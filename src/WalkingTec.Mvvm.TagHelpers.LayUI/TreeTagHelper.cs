@@ -66,7 +66,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
                 onclick = $@"
                 ,click: function(data){{
-                    var ele = data.elem.find('.layui-tree-entry:first');
+                    var ele = data.elem.find('.layui-tree-main:first');
                     if(last{Id} != null){{
                         last{Id}.css('background-color','');
                         last{Id}.find('.layui-tree-txt').css('color','');
@@ -140,7 +140,7 @@ layui.use(['tree'],function(){{
                 {
                     script += $@"
     var selected = $(""div[data-id='{Field.Model.ToString()}']"");
-    var selected2 = selected.find('.layui-tree-entry:first');
+    var selected2 = selected.find('.layui-tree-main:first');
     selected2.css('background-color','#5fb878');
     selected2.find('.layui-tree-txt').css('color','#fff');
     last{Id} = selected2;
