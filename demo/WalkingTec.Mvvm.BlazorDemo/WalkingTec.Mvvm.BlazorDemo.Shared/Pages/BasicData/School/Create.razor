@@ -13,28 +13,32 @@
         <WTUploadImage @bind-Value="@Model.Entity.PhotoId" />
         <WTUploadFile @bind-Value="@Model.Entity.FileId" />
     </Row>
+    <Table TItem="Major"
+           IsPagination="false" IsTracking=true
+           IsStriped="true" IsBordered="true" IsMultipleSelect="true" @bind-Items="@list"
+           ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true"
+           EditMode="EditMode.InCell">
+        <TableColumns>
+            <TableColumn @bind-Field="@context.MajorCode" />
+            <TableColumn @bind-Field="@context.MajorName" />
+            <TableColumn @bind-Field="@context.MajorType">
+                <EditTemplate Context="value">
+                    <Select @bind-Value="@value" PlaceHolder="@WtmBlazor.Localizer["Sys.PleaseSelect"]" />
+                </EditTemplate>
+            </TableColumn>
+        </TableColumns>
+    </Table>
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Create"]" IsAsync="true" />
+    </div>
 </ValidateForm>
-<Table TItem="Major"
-       IsPagination="false" IsTracking=true
-       IsStriped="true" IsBordered="true" IsMultipleSelect="true" Items="@Model.Entity.Majors"
-       ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true"
-       EditMode="EditMode.EditForm"  >
-    <TableColumns>
-        <TableColumn @bind-Field="@context.MajorCode" />
-        <TableColumn @bind-Field="@context.MajorName" />
-        <TableColumn @bind-Field="@context.MajorType" />
-    </TableColumns>
-</Table>
-<div class="modal-footer table-modal-footer">
-    <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
-    <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Create"]" IsAsync="true" />
-</div>
 
 @code {
 
     private SchoolVM Model = new SchoolVM();
     private ValidateForm vform { get; set; }
-
+    private IEnumerable<Major> list { get; set; } = new List<Major>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -45,6 +49,7 @@
 
     private async Task Submit(EditContext context)
     {
+        Model.Entity.Majors = list.ToList();
         await PostsForm(vform, "/api/School/add", (s) => "Sys.OprationSuccess");
     }
 
