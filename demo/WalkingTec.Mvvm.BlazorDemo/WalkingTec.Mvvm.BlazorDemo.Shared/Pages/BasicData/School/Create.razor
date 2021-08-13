@@ -15,11 +15,10 @@
     </Row>
 </ValidateForm>
 <Table TItem="Major"
-       IsPagination="true"
+       IsPagination="false" IsTracking=true
        IsStriped="true" IsBordered="true" IsMultipleSelect="true" Items="@Model.Entity.Majors"
        ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true"
-       AddModalTitle="增加测试数据窗口" EditModalTitle="编辑测试数据窗口"
-       EditMode="EditMode.InCell" OnQueryAsync="OnSearch" OnAddAsync="@OnAddAsync" OnSaveAsync="@OnSaveAsync" OnDeleteAsync="@OnDeleteAsync" >
+       EditMode="EditMode.EditForm"  >
     <TableColumns>
         <TableColumn @bind-Field="@context.MajorCode" />
         <TableColumn @bind-Field="@context.MajorName" />

@@ -231,5 +231,16 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return JsonMore(rv);
         }
 
+        public IActionResult GetAllSchools()
+        {
+            var rv = DC.Set<School>().GetSelectListItems(Wtm, x => x.SchoolName);
+            return JsonMore(rv);
+        }
+        public IActionResult GetStudentById(List<string> id)
+        {
+
+            var rv = DC.Set<Student>().CheckIDs(id).GetSelectListItems(Wtm, x => x.Name);
+            return JsonMore(rv);
+        }
     }
 }

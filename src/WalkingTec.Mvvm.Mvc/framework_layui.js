@@ -680,7 +680,7 @@ window.ff = {
             return;
         }
         var formid = self.closest("form").id
-        var target = $('#'+formid).find('#' + linkto.value);
+        var target = $('#' + formid).find('#' + linkto.value);
         if (target.length == 0) {
             return;
         }
@@ -730,7 +730,7 @@ window.ff = {
                     if (controltype === "combo") {
                         target.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
                         var arr = [];
-                         if (data.Data !== undefined && data.Data !== null) {
+                        if (data.Data !== undefined && data.Data !== null) {
                             for (i = 0; i < data.Data.length; i++) {
                                 item = data.Data[i];
                                 var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
@@ -741,12 +741,12 @@ window.ff = {
                                     target.append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
                                 }
                                 arr.push({ name: item.Text, val: item.Value });
-                                }
+                            }
                         }
                         form.render('select', targetfilter);
-                   if (ismulticombo) {
-                       var mm = layui.formSelects.selects[target.attr("lay-filter")];
-                       ff.refreshcombobox(mm, []);
+                        if (ismulticombo) {
+                            var mm = layui.formSelects.selects[target.attr("lay-filter")];
+                            ff.refreshcombobox(mm, []);
                         }
                     }
                     if (controltype === "checkbox") {
@@ -784,6 +784,43 @@ window.ff = {
         ff.ChainChange("", target[0], "");
     },
 
+    LoadComboItems: function (url, comboid, svals) {
+        var target = $("#" + comboid);
+        var targetfilter = target.attr("lay-filter");
+       var ismulticombo = target.attr("wtm-combo") != undefined;
+       $.get(url, {}, function (data, status) {
+            if (status === "success") {
+                var i = 0;
+                var item = null;
+
+                target.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
+                var arr = [];
+                if (data.Data !== undefined && data.Data !== null) {
+                    for (i = 0; i < data.Data.length; i++) {
+                        item = data.Data[i];
+                        var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
+                        if (item.Selected === true || svals.indexOf(item.Value) > -1) {
+                            target.append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
+                        }
+                        else {
+                            target.append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
+                        }
+                        arr.push({ name: item.Text, val: item.Value });
+                    }
+                }
+                layui.form.render('select');
+                if (ismulticombo) {
+                    var mm = layui.formSelects.selects[targetfilter];
+                    ff.refreshcombobox(mm, []);
+                }
+            }
+
+            else {
+                layer.alert(ff.DONOTUSE_Text_FailedLoadData);
+            }
+        });
+
+    },
 
     GetFormArray: function (formId) {
         var searchForm = $('#' + formId), filter = [], fieldElem = searchForm.find('input,select,textarea');
@@ -850,7 +887,7 @@ window.ff = {
             }
             var issub = false;
             if (/(.*?)\[(\-?\d?)\]\.(.*?)$/.test(itemname)) {
-              var name1 = RegExp.$1;
+                var name1 = RegExp.$1;
                 var number = RegExp.$2;
                 var name2 = RegExp.$3;
                 if (number == "-1") {
@@ -1198,7 +1235,7 @@ window.ff = {
         }
     },
 
-    refreshcombobox: function (select,arr) {
+    refreshcombobox: function (select, arr) {
         layui.formSelects.on({
             layFilter: select.layFilter, left: '', right: '', separator: ',', arr: arr,
             url: select.url, self: select.self, targetname: select.targetname, linkto: select.linkto, cf: select.cf,

@@ -8,12 +8,15 @@ using System.Linq;
 using System.Text;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
     [HtmlTargetElement("wt:combobox", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
     public class ComboBoxTagHelper : BaseFieldTag
     {
+        public string ItemUrl { get; set; }
         public string EmptyText { get; set; }
 
         public bool AutoComplete { get; set; }
@@ -56,13 +59,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public string ChangeFunc { get; set; }
 
-        public ComboBoxTagHelper(IOptionsMonitor<Configs> configs)
+        private WTMContext _wtm;
+        public ComboBoxTagHelper(IOptionsMonitor<Configs> configs, WTMContext wtm)
         {
             if (EmptyText == null)
             {
                 EmptyText = THProgram._localizer["Sys.PleaseSelect"];
             }
             EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
+            _wtm = wtm;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -100,7 +105,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.Add("wtm-cf", FormatFuncName(ChangeFunc, false));
             }
-            if (LinkField != null)
+            if (LinkField != null || string.IsNullOrEmpty(LinkId) == false)
             {
                 var linkto = "";
                 if (string.IsNullOrEmpty(LinkId))
@@ -129,99 +134,109 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             #region 添加下拉数据 并 设置默认选中
 
             var listItems = new List<ComboSelectListItem>();
-
-            if (Items?.Model == null) // 添加默认下拉数据源
+            var selectVal = new List<string>();
+            if (DefaultValue == null)
             {
-                var checktype = modeltype;
-                if ((modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
+                if (Field.Name.Contains("[") && modeltype.IsList() == false && modeltype.IsArray == false)
                 {
-                    checktype = modeltype.GetGenericArguments()[0];
-                }
-
-                if (checktype.IsEnumOrNullableEnum())
-                {
-                    listItems = checktype.ToListItems(DefaultValue ?? Field.Model);
-                }
-                else if (checktype == typeof(bool) || checktype == typeof(bool?))
-                {
-                    bool? df = null;
-                    if (bool.TryParse(DefaultValue ?? "", out bool test) == true)
+                    //默认多对多不必填
+                    if (Required == null)
                     {
-                        df = test;
+                        Required = false;
                     }
-                    listItems = Utils.GetBoolCombo(BoolComboTypes.Custom, df ?? (bool?)Field.Model, YesText, NoText);
+                    selectVal.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
                 }
-            }
-            else // 添加用户设置的设置源
-            {
-                var selectVal = new List<string>();
-                if (DefaultValue == null)
+                else if (Field.Model != null)
                 {
-                    if (Field.Name.Contains("[") && modeltype.IsList() == false && modeltype.IsArray == false)
+                    if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
                     {
-                        //默认多对多不必填
-                        if (Required == null)
+                        foreach (var item in Field.Model as dynamic)
                         {
-                            Required = false;
+                            selectVal.Add(item.ToString().ToLower());
                         }
-                        selectVal.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
-                    }
-                    else if (Field.Model != null)
-                    {
-                        if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
-                        {
-                            foreach (var item in Field.Model as dynamic)
-                            {
-                                selectVal.Add(item.ToString().ToLower());
-                            }
-                        }
-                        else
-                        {
-                            selectVal.Add(Field.Model.ToString().ToLower());
-                        }
-                    }
-                }
-                else
-                {
-                    selectVal.AddRange(DefaultValue.Split(',').Select(x => x.ToLower()));
-                }
-                if ( typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom( Items.Metadata.ModelType))
-                {
-                    if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
-                    {
-                        listItems = (Items.Model as IEnumerable<TreeSelectListItem>).FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
                     }
                     else
                     {
-                        listItems = (Items.Model as IEnumerable<ComboSelectListItem>).ToList();
-                    }
-                    foreach (var item in listItems)
-                    {
-                        if (selectVal.Contains(item.Value?.ToString().ToLower()))
-                        {
-                            item.Selected = true;
-                        }
-                        else
-                        {
-                            item.Selected = false;
-                        }
-                    }
-                }
-                else if (Items.Metadata.ModelType.IsList())
-                {
-                    var exports = (Items.Model as IList);
-                    foreach (var item in exports)
-                    {
-                        listItems.Add(new ComboSelectListItem
-                        {
-                            Text = item?.ToString(),
-                            Value = item?.ToString(),
-                            Selected = selectVal.Contains(item?.ToString().ToLower())
-                        });
+                        selectVal.Add(Field.Model.ToString().ToLower());
                     }
                 }
             }
+            else
+            {
+                selectVal.AddRange(DefaultValue.Split(',').Select(x => x.ToLower()));
+            }
 
+            if (string.IsNullOrEmpty(ItemUrl) == false) {
+                if (_wtm.HttpContext?.Request?.Host != null)
+                {
+                    ItemUrl = _wtm.HttpContext.Request.IsHttps ? "https://" : "http://" + _wtm.HttpContext?.Request?.Host.ToString() + ItemUrl;
+                }
+                output.PostElement.AppendHtml($"<script>ff.LoadComboItems('{ItemUrl}','{Id}',{JsonSerializer.Serialize(selectVal)})</script>");
+            }
+
+            else
+            {
+                if (Items?.Model == null) // 添加默认下拉数据源
+                {
+                    var checktype = modeltype;
+                    if ((modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
+                    {
+                        checktype = modeltype.GetGenericArguments()[0];
+                    }
+
+                    if (checktype.IsEnumOrNullableEnum())
+                    {
+                        listItems = checktype.ToListItems(DefaultValue ?? Field.Model);
+                    }
+                    else if (checktype == typeof(bool) || checktype == typeof(bool?))
+                    {
+                        bool? df = null;
+                        if (bool.TryParse(DefaultValue ?? "", out bool test) == true)
+                        {
+                            df = test;
+                        }
+                        listItems = Utils.GetBoolCombo(BoolComboTypes.Custom, df ?? (bool?)Field.Model, YesText, NoText);
+                    }
+                }
+                else // 添加用户设置的设置源
+                {
+                    if (typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+                    {
+                        if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+                        {
+                            listItems = (Items.Model as IEnumerable<TreeSelectListItem>).FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
+                        }
+                        else
+                        {
+                            listItems = (Items.Model as IEnumerable<ComboSelectListItem>).ToList();
+                        }
+                        foreach (var item in listItems)
+                        {
+                            if (selectVal.Contains(item.Value?.ToString().ToLower()))
+                            {
+                                item.Selected = true;
+                            }
+                            else
+                            {
+                                item.Selected = false;
+                            }
+                        }
+                    }
+                    else if (Items.Metadata.ModelType.IsList())
+                    {
+                        var exports = (Items.Model as IList);
+                        foreach (var item in exports)
+                        {
+                            listItems.Add(new ComboSelectListItem
+                            {
+                                Text = item?.ToString(),
+                                Value = item?.ToString(),
+                                Selected = selectVal.Contains(item?.ToString().ToLower())
+                            });
+                        }
+                    }
+                }
+            }
             if (MultiSelect==true)
             {
                 foreach (var item in listItems)
@@ -253,9 +268,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")} {(item.Disabled==true ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
                     }
                 }
+            
             }
             output.Content.SetHtmlContent(contentBuilder.ToString());
-
             #endregion
 
 
