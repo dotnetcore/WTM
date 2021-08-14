@@ -16,7 +16,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     [HtmlTargetElement("wt:combobox", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
     public class ComboBoxTagHelper : BaseFieldTag
     {
-        public string ItemUrl { get; set; }
         public string EmptyText { get; set; }
 
         public bool AutoComplete { get; set; }
@@ -116,7 +115,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     linkto = LinkId;
                 }
                 output.Attributes.Add("wtm-linkto", $"{linkto}");
-                output.Attributes.Add("wtm-tname", $"{LinkField.Name}");
             }
             if (TriggerUrl != null)
             {
@@ -171,7 +169,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     ItemUrl = _wtm.HttpContext.Request.IsHttps ? "https://" : "http://" + _wtm.HttpContext?.Request?.Host.ToString() + ItemUrl;
                 }
-                output.PostElement.AppendHtml($"<script>ff.LoadComboItems('{ItemUrl}','{Id}',{JsonSerializer.Serialize(selectVal)})</script>");
+                output.PostElement.AppendHtml($"<script>ff.LoadComboItems('combo','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(selectVal)})</script>");
             }
 
             else

@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
-    [HtmlTargetElement("wt:tree", Attributes = "items", TagStructure = TagStructure.WithoutEndTag)]
+    [HtmlTargetElement("wt:tree",  TagStructure = TagStructure.WithoutEndTag)]
     public class TreeTagHelper : BaseFieldTag
     {
         public ModelExpression Items { get; set; }
@@ -107,9 +107,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagName = "div";
             output.Attributes.Add("id", "div" + Id);
             output.TagMode = TagMode.StartTagAndEndTag;
+            output.Attributes.Add("wtm-ctype", "tree");
+            output.Attributes.Add("wtm-name", Field.Name);
             Id = string.IsNullOrEmpty(Id) ? Guid.NewGuid().ToNoSplitString() : Id;
-            if (Items.Model is List<TreeSelectListItem> mm)
-            {
+
                 List<object> vals = new List<object>();
                 if (Field?.Model != null)
                 {
@@ -125,32 +126,52 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         vals.Add(Field.Model.ToString());
                     }
                 }
-                List<LayuiTreeItem> treeitems = GetLayuiTree(mm, vals);
+                List<LayuiTreeItem> treeitems = new List<LayuiTreeItem>();
+
+                if (string.IsNullOrEmpty(ItemUrl) == true && Items?.Model is List<TreeSelectListItem> mm)
+                {
+                    treeitems = GetLayuiTree(mm, vals);
+                }
                 var script = $@"
 <script>
 layui.use(['tree'],function(){{
   var last{Id} = null;
   var loaded{Id} = false;
   layui.tree.render({{
-    id:'tree{Id}',elem: '#div{Id}',onlyIconControl:{(!MultiSelect).ToString().ToLower()}, showCheckbox:{MultiSelect.ToString().ToLower()},showLine:{ShowLine.ToString().ToLower()}
+    id:'{Id}',elem: '#div{Id}',onlyIconControl:{(!MultiSelect).ToString().ToLower()}, showCheckbox:{MultiSelect.ToString().ToLower()},showLine:{ShowLine.ToString().ToLower()}
     ,data: {JsonSerializer.Serialize(treeitems)} {oncheck} {onclick}
   }});
   loaded{Id} = true;";
-                if(MultiSelect == false && Field.Model != null)
-                {
-                    script += $@"
+
+            var defaultselect = "";
+            if (Field.Model != null) {
+               defaultselect = $@"
     var selected = $(""div[data-id='{Field.Model.ToString()}']"");
     var selected2 = selected.find('.layui-tree-main:first');
     selected2.css('background-color','#5fb878');
     selected2.find('.layui-tree-txt').css('color','#fff');
     last{Id} = selected2;
 ";
+            }
+
+            if (MultiSelect == false && Field.Model != null)
+                {
+                script += defaultselect;
                 }
                 script += $@"
 }})
 </script>
 ";
                 output.PostElement.AppendHtml(script);
+                if (string.IsNullOrEmpty(ItemUrl) == false)
+                {
+                    output.PostElement.AppendHtml($@"<script>
+ff.LoadComboItems('tree','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(vals)},function(){{
+    {defaultselect}
+}})
+
+</script>");
+                }
                 string hidden = $"<p id='tree{Id}hidden'>";
                 if (Field?.Model != null)
                 {
@@ -170,12 +191,7 @@ layui.use(['tree'],function(){{
                 }
 
                 output.PostElement.AppendHtml(hidden);
-            }
-            else
-            {
-                output.Content.SetContent("Error：items must be set and must be of type List<ITreeData<>>");
 
-            }
             base.Process(context, output);
         }
 

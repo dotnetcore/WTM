@@ -100,8 +100,7 @@ layui.use(['form'],function(){{
   var form = layui.form;
   form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
     {FormatFuncName(item.ChangeFunc)};
-    ff.ChainChange('{item.TriggerUrl}/'+data.value,data.elem, '{item.LinkField.Name}')
-   // ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.ModelExplorer.Container.ModelType.Name + "." + item.LinkField.Name)}','{item.LinkField.Name}');
+    ff.ChainChange('{item.TriggerUrl}/'+data.value,data.elem)
     ff.changeComboIcon(data);
   }});
 }})
@@ -188,7 +187,7 @@ layui.use(['autocomplete'],function(){{
     onselect: function (data) {{
       $('#{item.Id}').val(data.Value);
      {FormatFuncName(item.ChangeFunc)};
-    ff.LinkedChange('{item.TriggerUrl}/'+data.Value,'{Core.Utils.GetIdByName(item.LinkField.ModelExplorer.Container.ModelType.Name + "." + item.LinkField.Name)}','{item.LinkField.Name}');
+     ff.ChainChange('{item.TriggerUrl}/'+data.Value, data.elem);
     }}
   }});
 }})

@@ -13,6 +13,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 绑定的字段 必填
         /// </summary>
         public ModelExpression Field { get; set; }
+        public string ItemUrl { get; set; }
 
         public bool Disabled { get; set; }
 

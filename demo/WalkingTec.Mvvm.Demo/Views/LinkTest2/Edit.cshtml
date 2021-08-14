@@ -6,7 +6,7 @@
     <wt:textbox field="Entity.name" />
     <wt:combobox field="SelectedSchool" items="AllSchools" link-field="SelectedMajor" trigger-url="/LinkTest/GetMajorBySchool" />
     <wt:combobox field="SelectedMajor" items="AllMajors" link-field="Entity.LinkStudent[-1].StudentId" trigger-url="/LinkTest/GetStudentByMajor" />
-    <wt:combobox field="Entity.LinkStudent[-1].StudentId" items="AllStudents" />
+    <wt:transfer field="Entity.LinkStudent[-1].StudentId" id="bb" item-url="/LinkTest/GetAllStudents" />
   </wt:row>
     <wt:hidden field="Entity.ID" />
     <wt:row align="AlignEnum.Right">

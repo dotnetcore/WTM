@@ -282,22 +282,18 @@ window.ff = {
                     var changefuncattr = comboxs[i].attributes['wtm-cf'];
                     var linktoattr = comboxs[i].attributes['wtm-linkto'];
                     var urlattr = comboxs[i].attributes['wtm-turl'];
-                    var targetnameattr = comboxs[i].attributes['wtm-tname'];
                     if (changefuncattr != undefined) {
                         changefunc = changefuncattr.value + "(a)";
                     }
                     if (urlattr != undefined) {
                         url = urlattr.value;
                     }
-                    if (targetnameattr != undefined) {
-                        targetname = targetnameattr.value;
-                    }
                     if (linktoattr != undefined) {
                         linkto = true;
                     }
                     formSelects.on({
                         layFilter: filter, left: '', right: '', separator: ',', arr: arr,
-                        url: url, self: comboxs[i], targetname: targetname, linkto: linkto, cf: changefunc,
+                        url: url, self: comboxs[i],  linkto: linkto, cf: changefunc,
                         selectFunc: function (a) {
                             try {
                                 if (eval(this.cf) && this.linkto == true) {
@@ -308,7 +304,7 @@ window.ff = {
                                     for (var i = 0; i < a.length; i++) {
                                         u += "&id=" + a[i].val;
                                     }
-                                    ff.ChainChange(u, this.self, this.targetname)
+                                    ff.ChainChange(u, this.self)
                                 }
                             }
                             catch (e) { }
@@ -585,95 +581,7 @@ window.ff = {
         }
     },
 
-    LinkedChange: function (url, target, targetname) {
-        $.get(url, {}, function (data, status) {
-            if (status === "success") {
-                var i = 0;
-                var item = null;
-                var form = layui.form;
-                var controltype = "";
-                var ele = $('#' + target);
-                if (ele.length > 0) {
-                    if (ele[0].localName === "select") {
-                        controltype = "combo";
-                    }
-                    if (ele.attr("div-for") === "checkbox") {
-                        controltype = "checkbox";
-                    }
-                    if (ele.attr("div-for") === "radio") {
-                        controltype = "radio";
-                    }
-                }
-                else {
-                    if ($('#div' + target).length > 0) {
-                        controltype = "tree";
-                    }
-                }
-
-                if (controltype === "tree") {
-                    layui.tree.reload('tree' + target, {
-                        data: ff.getTreeItems(data.Data)
-                    });
-                }
-
-                if (controltype === "combo") {
-                    $('#' + target).html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
-                    if (data.Data !== undefined && data.Data !== null) {
-                        for (i = 0; i < data.Data.length; i++) {
-                            item = data.Data[i];
-                            var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
-                            if (item.Selected === true) {
-                                $('#' + target).append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
-                            }
-                            else {
-                                $('#' + target).append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
-                            }
-                        }
-                    }
-                    var linkto = $('#' + target).attr("linkto");
-                    while (linkto !== undefined) {
-                        var t = $('#' + linkto);
-                        t.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
-                        linkto = t.attr("linkto");
-                    }
-                    form.render('select');
-                }
-                if (controltype === "checkbox") {
-                    $('#' + target).html('');
-                    for (i = 0; i < data.Data.length; i++) {
-                        item = data.Data[i];
-                        if (item.Selected === true) {
-                            $('#' + target).append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
-                        }
-                        else {
-                            $('#' + target).append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
-                        }
-                    }
-                    form.render('checkbox');
-                }
-                if (controltype === "radio") {
-                    $('#' + target).html('');
-                    for (i = 0; i < data.Data.length; i++) {
-                        item = data.Data[i];
-                        if (item.Selected === true) {
-                            $('#' + target).append("<input type='radio'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
-                        }
-                        else {
-                            $('#' + target).append("<input type='radio' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
-                        }
-                    }
-                    form.render('radio');
-                }
-
-            }
-            else {
-                layer.alert(ff.DONOTUSE_Text_FailedLoadData);
-            }
-        });
-
-    },
-
-    ChainChange: function (url, self, targetname) {
+    ChainChange: function (url, self) {
         var form = layui.form;
         var linkto = self.attributes["wtm-linkto"];
         if (linkto == undefined) {
@@ -686,7 +594,9 @@ window.ff = {
         }
         var controltype = target.attr("wtm-ctype");
         var targetfilter = target.attr("lay-filter");
+        var targetname = target.attr("wtm-name");
         var ismulticombo = target.attr("wtm-combo") != undefined;
+        var targetid = target.attr("id");
         if (controltype == undefined) {
             controltype = "";
         }
@@ -709,10 +619,14 @@ window.ff = {
                 form.render('radio', targetfilter);
                 break;
             case "tree":
-                layui.tree.reload('tree' + target.id, {
+                layui.tree.reload(targetid, {
                     data: []
                 });
                 break;
+            case "transfer":
+                layui.transfer.reload(targetid, {
+                    data: []
+                });
             default:
         }
         if (url != "") {
@@ -722,8 +636,13 @@ window.ff = {
                     var item = null;
 
                     if (controltype === "tree") {
-                        layui.tree.reload('tree' + target.id, {
+                        layui.tree.reload(targetid, {
                             data: ff.getTreeItems(data.Data)
+                        });
+                    }
+                    if (controltype === "transfer") {
+                        layui.transfer.reload(targetid, {
+                            data: ff.getTransferItems(data.Data)
                         });
                     }
 
@@ -784,36 +703,79 @@ window.ff = {
         ff.ChainChange("", target[0], "");
     },
 
-    LoadComboItems: function (url, comboid, svals) {
-        var target = $("#" + comboid);
+    LoadComboItems: function (controltype,url, controlid, targetname,svals, cb) {
+        var target = $("#" + controlid);
         var targetfilter = target.attr("lay-filter");
-       var ismulticombo = target.attr("wtm-combo") != undefined;
+        var ismulticombo = target.attr("wtm-combo") != undefined;
+        if (svals == undefined || svals == null) {
+            svals = [];
+        }
        $.get(url, {}, function (data, status) {
-            if (status === "success") {
-                var i = 0;
-                var item = null;
+           if (status === "success") {
+               var i = 0;
+               var item = null;
+               if (controltype === "tree") {
+                   layui.tree.reload(controlid, {
+                       data: ff.getTreeItems(data.Data,svals)
+                   });
+                   if (cb !== undefined && cb != null) {
+                       cb();
+                   }
+               }
+               if (controltype == "transfer") {
+                   layui.transfer.reload(controlid, {
+                       data: ff.getTransferItems(data.Data, svals)
+                   });
+               }
+               if (controltype === "combo") {
 
-                target.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
-                var arr = [];
-                if (data.Data !== undefined && data.Data !== null) {
-                    for (i = 0; i < data.Data.length; i++) {
-                        item = data.Data[i];
-                        var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
-                        if (item.Selected === true || svals.indexOf(item.Value) > -1) {
-                            target.append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
-                        }
-                        else {
-                            target.append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
-                        }
-                        arr.push({ name: item.Text, val: item.Value });
-                    }
-                }
-                layui.form.render('select');
-                if (ismulticombo) {
-                    var mm = layui.formSelects.selects[targetfilter];
-                    ff.refreshcombobox(mm, []);
-                }
-            }
+                   target.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
+                   var arr = [];
+                   if (data.Data !== undefined && data.Data !== null) {
+                       for (i = 0; i < data.Data.length; i++) {
+                           item = data.Data[i];
+                           var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
+                           if (item.Selected === true || svals.indexOf(item.Value) > -1) {
+                               target.append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
+                           }
+                           else {
+                               target.append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
+                           }
+                           arr.push({ name: item.Text, val: item.Value });
+                       }
+                   }
+                   layui.form.render('select');
+                   if (ismulticombo) {
+                       var mm = layui.formSelects.selects[targetfilter];
+                       ff.refreshcombobox(mm, []);
+                   }
+               }
+               if (controltype === "checkbox") {
+                   for (i = 0; i < data.Data.length; i++) {
+                       item = data.Data[i];
+                       if (item.Selected === true || svals.indexOf(item.Value) > -1) {
+                           target.append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                       }
+                       else {
+                           target.append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                       }
+                   }
+                   layui.form.render('checkbox');
+               }
+               if (controltype === "radio") {
+                   for (i = 0; i < data.Data.length; i++) {
+                       item = data.Data[i];
+                       if (item.Selected === true || svals.indexOf(item.Value) > -1) {
+                           target.append("<input type='radio'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                       }
+                       else {
+                           target.append("<input type='radio' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                       }
+                   }
+                   layui.form.render('radio');
+               }
+
+           }
 
             else {
                 layer.alert(ff.DONOTUSE_Text_FailedLoadData);
@@ -1169,23 +1131,52 @@ window.ff = {
         return rv;
     },
 
-    getTreeItems: function (data) {
+    getTreeItems: function (data,svals) {
         var rv = [];
+        if (svals == undefined || svals == null) {
+            svals = [];
+        }
+
         for (var i = 0; i < data.length; i++) {
             var item = {};
             item.id = data[i].Value;
             item.title = data[i].Text;
             item.href = data[i].Url;
             item.spread = data[i].Expended;
-            item.checked = data[i].Checked;
+            item.checked = data[i].Checked || svals.indexOf(data[i].Value) > -1;
 
             if (data[i].Children != null && data[i].Children.length > 0) {
-                item.children = this.getTreeItems(data[i].Children);
+                item.children = this.getTreeItems(data[i].Children, svals);
+
+                for (var j = 0; j < item.children.length; j++) {
+                    if (item.children[j].checked == true || item.children[j].spread == true) {
+                        item.spread = true;
+                        break;
+                    }
+                }
             }
             rv.push(item);
         }
         return rv;
     },
+
+    getTransferItems: function (data, svals) {
+        var rv = [];
+        if (svals == undefined || svals == null) {
+            svals = [];
+        }
+
+        for (var i = 0; i < data.length; i++) {
+            var item = {};
+            item.value = data[i].Value;
+            item.title = data[i].Text;
+            item.disabled = data[i].Disabled;
+            item.checked = data[i].Checked || svals.indexOf(data[i].Value) > -1;
+            rv.push(item);
+        }
+        return rv;
+    },
+
 
     changeComboIcon: function (data) {
         for (var i = 0; i < data.elem.length; i++) {

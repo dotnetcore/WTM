@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string SearchUrl { get; set; }
 
         public ModelExpression LinkField { get; set; }
-
+        public string LinkId { get; set; }
         public string TriggerUrl { get; set; }
 
 
@@ -36,6 +36,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagOnly;
             output.Attributes.Add("type", type);
             output.Attributes.Add("name", Field.Name);
+            output.Attributes.Add("wtm-name", Field.Name);
             if (DefaultValue != null)
             {
                 output.Attributes.Add("value", DefaultValue);
@@ -50,6 +51,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.Add("autocomplete", "off");
             }
+            if (LinkField != null || string.IsNullOrEmpty(LinkId) == false)
+            {
+                var linkto = "";
+                if (string.IsNullOrEmpty(LinkId))
+                {
+                    linkto = Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name);
+                }
+                else
+                {
+                    linkto = LinkId;
+                }
+                output.Attributes.Add("wtm-linkto", $"{linkto}");
+            }
+
             base.Process(context, output);
         }
     }

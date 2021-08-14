@@ -5,6 +5,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
+using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -234,6 +235,11 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public IActionResult ExportExcel(CityListVM vm)
         {
             return vm.GetExportData();
+        }
+        public IActionResult GetAllCities()
+        {
+            var rv = DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name);
+            return JsonMore(rv);
         }
 
     }

@@ -4,9 +4,9 @@
 <wt:form vm="@Model">
   <wt:row items-per-row="ItemsPerRowEnum.Two">
     <wt:textbox field="Entity.name" />
-    <wt:combobox field="SelectedSchool" multi-select="true" item-url="/LinkTest/GetAllSchools"  link-field="SelectedMajor" trigger-url="/LinkTest/GetMajorBySchool"/>
+    <wt:combobox field="SelectedSchool" multi-select="false" item-url="/LinkTest/GetAllSchools"  link-field="SelectedMajor" trigger-url="/LinkTest/GetMajorBySchool"/>
     <wt:combobox field="SelectedMajor" link-field="Entity.StudentId" trigger-url="/LinkTest/GetStudentByMajor"/>
-    <wt:combobox field="Entity.StudentId"  />
+    <wt:radio field="Entity.StudentId"  />
   </wt:row>
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />

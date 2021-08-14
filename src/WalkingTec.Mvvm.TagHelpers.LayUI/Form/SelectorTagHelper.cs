@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
         public string EmptyText { get; set; }
 
         public ModelExpression LinkField { get; set; }
-
+        public string LinkId { get; set; }
         public string TriggerUrl { get; set; }
 
         /// <summary>
@@ -281,10 +281,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 {
                     Filter.Add("_DONOT_USE_SUBMIT", SubmitFunc);
                 }
-                if (!string.IsNullOrEmpty(TriggerUrl) && LinkField != null)
+                if (!string.IsNullOrEmpty(TriggerUrl) && (LinkField != null || string.IsNullOrEmpty(LinkId) == false))
                 {
-                    Filter.Add("_DONOT_USE_LINK_FIELD_MODEL", LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name);
-                    Filter.Add("_DONOT_USE_LINK_FIELD", LinkField.Name);
+                    var linkto = "";
+                    if (string.IsNullOrEmpty(LinkId))
+                    {
+                        linkto = Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name);
+                    }
+                    else
+                    {
+                        linkto = LinkId;
+                    }
+                    Filter.Add("_DONOT_USE_LINK_FIELD", linkto);
                     Filter.Add("_DONOT_USE_TRIGGER_URL", TriggerUrl);
                 }
                 if (listVM.Searcher != null)

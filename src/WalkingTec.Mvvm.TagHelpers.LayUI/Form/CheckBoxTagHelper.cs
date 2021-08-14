@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Attributes;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -40,84 +41,123 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             var modelType = Field.Metadata.ModelType;
             var listItems = new List<ComboSelectListItem>();
-            List<string> values = null;
+            List<string> values = new List<string>();
             if (DefaultValue != null)
             {
                 values = DefaultValue.Split(',').ToList();
             }
-            if (Items?.Model == null)
+            else
             {
-                if (modelType.IsList())
+                if (Field?.Name?.Contains("[") == true)
                 {
-                    var innerType = modelType.GetGenericArguments()[0];
-                    if (innerType.IsEnumOrNullableEnum())
+                    values.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                }
+                else
+                {
+                    if (modelType.IsList())
                     {
-                        listItems = innerType.ToListItems();
-                        SetSelected(listItems, values ?? Field.Model as IList);
+                        var ilist = Field.Model as IList;
+                        if (ilist != null)
+                        {
+                            foreach (var item in ilist)
+                            {
+                                values.Add(item.ToString());
+                            }
+                        }
+                    }
+                    else if (modelType.IsBoolOrNullableBool())
+                    {
+                        values.Add("true");
+                    }
+                    else
+                    {
+                        if (Field.Model != null)
+                        {
+                            values.Add(Field.Model.ToString());
+                        }
                     }
                 }
-                else if (modelType.IsBoolOrNullableBool())
-                {
-                    listItems = new List<ComboSelectListItem>() { new ComboSelectListItem { Value = "true", Text = "|", Selected = Field.Model?.ToString().ToLower() == "true" } };
-                }
+            }
+            if (string.IsNullOrEmpty(ItemUrl) == false)
+            {
+                output.PostElement.AppendHtml($"<script>ff.LoadComboItems('checkbox','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(values)})</script>");
             }
             else
             {
-                if (typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
-                {
-                    if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
-                    {
-                        listItems = (Items.Model as IEnumerable<TreeSelectListItem>).FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
-                    }
-                    else
-                    {
-                        listItems = (Items.Model as IEnumerable<ComboSelectListItem>).ToList();
-                    }
-                }
-                else if (Items.Metadata.ModelType.IsList())
-                {
-                    var exports = (Items.Model as IList);
-                    foreach (var item in exports)
-                    {
-                        listItems.Add(new ComboSelectListItem
-                        {
-                            Text = item?.ToString(),
-                            Value = item?.ToString()
-                        });
-                    }
-                }
-                try
-                {
-                    List<string> checkvalue = null;
-                    //如果是Entity.xxList[0].xxxid的格式，使用GetPropertySiblingValues方法获取Entity.xxxList.Select(x=>x.xxxid).ToList()的结果
-                    if (Field.Name.Contains("["))
-                    {
-                        //默认多对多不必填
-                        if(Required == null)
-                        {
-                            Required = false;
-                        }
-                        SetSelected(listItems, values ?? Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
-                    }
-                    else if (Field.Model is IList == false && Field.Model != null)
-                    {
-                        checkvalue = new List<string> { Field.Model.ToString() };
-                        SetSelected(listItems, values ?? checkvalue);
-                    }
-                    else
-                    {
-                        SetSelected(listItems, values ?? Field.Model as IList);
-                    }
-                }
-                catch {
-                }
-            }
 
+                if (Items?.Model == null)
+                {
+                    if (modelType.IsList())
+                    {
+                        var innerType = modelType.GetGenericArguments()[0];
+                        if (innerType.IsEnumOrNullableEnum())
+                        {
+                            listItems = innerType.ToListItems();
+                        }
+                    }
+                    else if (modelType.IsBoolOrNullableBool())
+                    {
+                        listItems = new List<ComboSelectListItem>() { new ComboSelectListItem { Value = "true", Text = "|"} };
+                    }
+                }
+                else
+                {
+                    if (typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+                    {
+                        if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+                        {
+                            listItems = (Items.Model as IEnumerable<TreeSelectListItem>).FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
+                        }
+                        else
+                        {
+                            listItems = (Items.Model as IEnumerable<ComboSelectListItem>).ToList();
+                        }
+                    }
+                    else if (Items.Metadata.ModelType.IsList())
+                    {
+                        var exports = (Items.Model as IList);
+                        foreach (var item in exports)
+                        {
+                            listItems.Add(new ComboSelectListItem
+                            {
+                                Text = item?.ToString(),
+                                Value = item?.ToString()
+                            });
+                        }
+                    }
+                    try
+                    {
+                        List<string> checkvalue = null;
+                        //如果是Entity.xxList[0].xxxid的格式，使用GetPropertySiblingValues方法获取Entity.xxxList.Select(x=>x.xxxid).ToList()的结果
+                        if (Field.Name.Contains("["))
+                        {
+                            //默认多对多不必填
+                            if (Required == null)
+                            {
+                                Required = false;
+                            }
+                        }
+                        else if (Field.Model is IList == false && Field.Model != null)
+                        {
+                            checkvalue = new List<string> { Field.Model.ToString() };
+                        }
+                        else
+                        {
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+                SetSelected(listItems, values);
+            }
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Clear();
             output.Attributes.Add("div-for", "checkbox");
             output.Attributes.Add("wtm-ctype", "checkbox");
+            output.Attributes.Add("wtm-name", Field.Name);
+
             if (string.IsNullOrEmpty(ChangeFunc) == false)
             {
                 output.Attributes.Add("wtm-cf", FormatFuncName(ChangeFunc, false));

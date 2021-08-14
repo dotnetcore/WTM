@@ -15,9 +15,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     [HtmlTargetElement("wt:transfer", Attributes = REQUIRED_ATTR_NAMES, TagStructure = TagStructure.WithoutEndTag)]
     public class TransferTagHelper : BaseFieldTag
     {
-        private const string REQUIRED_ATTR_NAMES = "field,items";
-
-        private const string _idPrefix = "_transfer";
+        private const string REQUIRED_ATTR_NAMES = "field";
 
         /// <summary>
         /// 左侧穿梭框上方标题
@@ -62,44 +60,53 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.Attributes.Add("id", $"{_idPrefix}{Id}");
+            output.Attributes.Add("id", $"{Id}");
+            output.Attributes.Add("wtm-ctype", "transfer");
+            output.Attributes.Add("wtm-name", Field.Name);
             List<ComboSelectListItem> listItems = null;
 
             #region 添加下拉数据 并 设置默认选中
 
             var modeltype = Field.Metadata.ModelType;
-            if (typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+            if (Items != null)
             {
-                if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
+                if (typeof(IEnumerable<ComboSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
                 {
-                    listItems = (Items.Model as IEnumerable<TreeSelectListItem>)?.FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
-                }
-                else
-                {
-                    listItems = (Items.Model as IEnumerable<ComboSelectListItem>)?.ToList();
-                }
-            }
-
-            if (listItems == null)
-            {
-                listItems = new List<ComboSelectListItem>();
-                if (Items.Metadata.ModelType.IsList())
-                {
-                    var exports = (Items.Model as IList);
-                    if (exports != null)
+                    if (typeof(IEnumerable<TreeSelectListItem>).IsAssignableFrom(Items.Metadata.ModelType))
                     {
-                        foreach (var item in exports)
+                        listItems = (Items.Model as IEnumerable<TreeSelectListItem>)?.FlatTreeSelectList().Cast<ComboSelectListItem>().ToList();
+                    }
+                    else
+                    {
+                        listItems = (Items.Model as IEnumerable<ComboSelectListItem>)?.ToList();
+                    }
+                }
+
+                if (listItems == null)
+                {
+                    listItems = new List<ComboSelectListItem>();
+                    if (Items.Metadata.ModelType.IsList())
+                    {
+                        var exports = (Items.Model as IList);
+                        if (exports != null)
                         {
-                            listItems.Add(new ComboSelectListItem
+                            foreach (var item in exports)
                             {
-                                Text = item?.ToString(),
-                                Value = item?.ToString()
-                            });
+                                listItems.Add(new ComboSelectListItem
+                                {
+                                    Text = item?.ToString(),
+                                    Value = item?.ToString()
+                                });
+                            }
                         }
                     }
                 }
             }
 
+            if(listItems == null)
+            {
+                listItems = new List<ComboSelectListItem>();
+            }
             var data = listItems.Select(x => new
             {
                 x.Value,
@@ -130,12 +137,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     foreach (var item in Field.Model as dynamic)
                     {
-                        selectVal.Add($"{item.ToString().ToLower()}");
+                        selectVal.Add($"{item.ToString()}");
                     }
                 }
                 else
                 {
-                    selectVal.Add(Field.Model.ToString().ToLower());
+                    selectVal.Add(Field.Model.ToString());
                 }
             }
             DefaultValue = $"[{string.Join(",", selectVal.Select(x=> "'"+x+"'"))}]";
@@ -147,7 +154,7 @@ layui.use(['transfer'],function(){{
   var $ = layui.$;
   var transfer = layui.transfer;
   var name = '{Field.Name}';
-  var _id = '{_idPrefix}{Id}';
+  var _id = '{Id}';
   var container = $('#'+_id);
   function defaultFunc(data,index,transferIns) {{
     var selectVals = transfer.getData('{Id}');
@@ -193,6 +200,11 @@ layui.use(['transfer'],function(){{
 ";
             output.PostElement.AppendHtml(content);
             output.PostElement.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
+            if (string.IsNullOrEmpty(ItemUrl) == false)
+            {
+                output.PostElement.AppendHtml($"<script>ff.LoadComboItems('transfer','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(selectVal)})</script>");
+            }
+
             base.Process(context, output);
         }
     }

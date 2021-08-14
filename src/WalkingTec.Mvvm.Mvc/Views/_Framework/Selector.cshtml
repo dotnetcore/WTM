@@ -44,7 +44,7 @@
             for (var i = 0; i < selected.length; i++) {{
               url += '&id=' +selected[i]['{ViewBag.ValName}'];
               }}
-            ff.LinkedChange(url, '{WalkingTec.Mvvm.Core.Utils.GetIdByName(ViewBag.LinkFieldModel)}', '{ViewBag.LinkField}');
+          ff.ChainChange(url, $('#Selector_{ViewBag.FieldName}'));
   ";
           }
       @Html.Raw(linkscript);
@@ -93,7 +93,7 @@
     }
 </script>
 
-<wt:container style="margin:0px 10px 0px 10px" class='donotuse_pdiv'>
+<wt:container style="margin:0px 10px 0px 10px" class='donotuse_pdiv' wtm-name="@ViewBag.FieldName" wtm-linkto="@ViewBag.LinkField" id="Selector_@ViewBag.FieldName">
   <div style="height:10px">&nbsp;</div>
   $$SearchPanel$$
   <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" url="/_Framework/GetPagingData" need-show-filter="false" need-show-print="false" />
