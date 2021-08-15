@@ -922,7 +922,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                         }
                         else
                         {
-                            if ( (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel") || item.ActionName == "ExportExcel")
+                            if ( (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel") || item.IsExport == true)
                             {
                                 actionScript = $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{Id}defaultfilter.where,ids);";
                             }

@@ -131,6 +131,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public string Area { get; set; }
 
+        public bool IsExport { get; set; }
         /// <summary>
         /// 动作的Controller
         /// </summary>

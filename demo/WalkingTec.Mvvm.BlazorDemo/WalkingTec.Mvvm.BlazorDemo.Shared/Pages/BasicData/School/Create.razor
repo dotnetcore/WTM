@@ -21,11 +21,7 @@
         <TableColumns>
             <TableColumn @bind-Field="@context.MajorCode" />
             <TableColumn @bind-Field="@context.MajorName" />
-            <TableColumn @bind-Field="@context.MajorType">
-                <EditTemplate Context="value">
-                    <Select @bind-Value="@value" PlaceHolder="@WtmBlazor.Localizer["Sys.PleaseSelect"]" />
-                </EditTemplate>
-            </TableColumn>
+            <TableColumn @bind-Field="@context.MajorType" />
         </TableColumns>
     </Table>
     <div class="modal-footer table-modal-footer">
@@ -42,7 +38,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Model.Entity.Majors = new List<Major>();
         await base.OnInitializedAsync();
     }
 
@@ -58,31 +53,4 @@
         CloseDialog();
     }
 
-    private Task<QueryData<Major>> OnSearch(QueryPageOptions opts)
-    {
-        return Task.FromResult(new QueryData<Major> { Items = Model.Entity.Majors, TotalCount = Model.Entity.Majors.Count });
-    }
-
-
-    private Task<Major> OnAddAsync() => Task.FromResult(new Major());
-
-    private Task<bool> OnSaveAsync(Major item)
-    {
-        var old = Model.Entity.Majors.Where(x => x.GetID() == item.GetID()).FirstOrDefault();
-        if (old == null)
-        {
-            Model.Entity.Majors.Add(item);
-        }
-        else
-        {
-            old = item;
-        }
-        return Task.FromResult(true);
-    }
-
-    private Task<bool> OnDeleteAsync(IEnumerable<Major> items)
-    {
-        items.ToList().ForEach(i => Model.Entity.Majors.Remove(i));
-        return Task.FromResult(true);
-    }
 }

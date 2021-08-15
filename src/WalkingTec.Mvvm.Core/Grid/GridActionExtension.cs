@@ -50,6 +50,7 @@ namespace WalkingTec.Mvvm.Core
             var showInRow = false;
             var hideOnToolBar = false;
             var showDialog = true;
+            var isexport = false;
             string msg = null;
             var ispost = false;
             string qs = null;
@@ -134,10 +135,11 @@ namespace WalkingTec.Mvvm.Core
                     iconcls = "layui-icon layui-icon-download-circle";
                     gridname = CoreProgram._localizer?["Sys.Export"];
                     paraType = GridActionParameterTypesEnum.MultiIdWithNull;
-                    name = CoreProgram._localizer?["Sys.ExportExcel"];
+                    name = CoreProgram._localizer?["Sys.ExportExcel"];                    
                     showInRow = false;
                     showDialog = false;
                     hideOnToolBar = false;
+                    isexport = true;
                    break;
                 default:
                     break;
@@ -172,6 +174,7 @@ namespace WalkingTec.Mvvm.Core
                 PromptMessage = msg,
                 ForcePost = ispost,
                 QueryString = qs,
+                IsExport = isexport,
                 whereStr = list.ToArray()
             };
         }
@@ -362,6 +365,13 @@ namespace WalkingTec.Mvvm.Core
             self.IsDownload = isDownload;
             return self;
         }
+
+        public static GridAction SetIsExport(this GridAction self, bool isExport= true)
+        {
+            self.IsExport = isExport;
+            return self;
+        }
+
 
         /// <summary>
         /// Set prompt message

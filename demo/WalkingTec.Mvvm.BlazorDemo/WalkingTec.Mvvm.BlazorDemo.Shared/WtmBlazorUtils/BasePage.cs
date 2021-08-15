@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BootstrapBlazor.Components;
 using Microsoft.AspNetCore.Components;
@@ -159,7 +160,18 @@ namespace WtmBlazorUtils
             {
                 foreach (var item in errors.Form)
                 {
-                    form.SetError(item.Key, item.Value);
+                    Regex r = new Regex("(.*?)\\[(\\-?\\d?)\\]\\.(.*?)$");
+                    var match = r.Match(item.Key);
+                    if (match.Success)
+                    {
+                        int index = 0;
+                        int.TryParse(match.Groups[2].Value, out index);
+                        await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], $"{index+1}:{item.Value}" );
+                    }
+                    else
+                    {
+                        form.SetError(item.Key, item.Value);
+                    }
                 }
                 if (errors.Message != null && errors.Message.Count > 0)
                 {

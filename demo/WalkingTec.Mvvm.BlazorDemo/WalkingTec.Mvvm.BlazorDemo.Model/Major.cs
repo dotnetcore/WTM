@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Required(ErrorMessage = "{0}是必填项")]
         public string MajorName { get; set; }
 
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Required(ErrorMessage = "Validate.{0}required")]
         [Display(Name = "专业类别")]
         public MajorTypeEnum? MajorType { get; set; }
 
