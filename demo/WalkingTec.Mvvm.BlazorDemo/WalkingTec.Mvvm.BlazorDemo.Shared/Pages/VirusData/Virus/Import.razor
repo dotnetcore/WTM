@@ -1,18 +1,18 @@
-﻿@page "/VirusData/Virus/Import"
+@page "/VirusData/Virus/Import"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs;
 @inherits BasePage
 
     <ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
         <Row ItemsPerRow="ItemsPerRow.Three" >
-            <span style="font-size:18px;position:absolute;top:5px;"><Badge Color="Color.Info">1</Badge>@WtmBlazor.Localizer["Sys.ImportStep1"] </span>
+            <span style="font-size: 18px; position: relative;top:5px;"><Badge Color="Color.Info">1</Badge>@WtmBlazor.Localizer["Sys.ImportStep1"] </span>
             <Button type="button" Size="Size.Small" OnClick="DownloadTemplate" Text="@WtmBlazor.Localizer["Sys.DownloadTemplate"]" IsAsync="true"/>
         </Row>
         <Row ItemsPerRow="ItemsPerRow.Three">
-            <span style="font-size:18px;position:absolute;top:30px;"><Badge Color="Color.Info">2</Badge>@WtmBlazor.Localizer["Sys.ImportStep2"] </span>
+            <span style="font-size: 18px; position: relative;top:30px;"><Badge Color="Color.Info">2</Badge>@WtmBlazor.Localizer["Sys.ImportStep2"] </span>
             <WTSimpleUpload @bind-Value="Model.UploadFileId" LabelText=""></WTSimpleUpload>
         </Row>
         <Row ItemsPerRow="ItemsPerRow.Two" style="@ErrorRowStyle">
-            <span style="font-size:18px;position:absolute;top:5px;"><Badge Color="Color.Danger">3</Badge>@WtmBlazor.Localizer["Sys.ImportStep3"] </span>
+            <span style="font-size: 18px; position: relative;top:5px;"><Badge Color="Color.Danger">3</Badge>@WtmBlazor.Localizer["Sys.ImportStep3"] </span>
             <Button type="button" Size="Size.Small" OnClick="DownloadErrorFile" Text="@WtmBlazor.Localizer["Sys.Download"]" IsAsync="true" />
         </Row>
         <div class="modal-footer table-modal-footer">
