@@ -90,7 +90,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         break;
                     }
-                    if (item.LinkField != null)
+                    if (item.LinkField != null || item.LinkId != null)
                     {
                         if (!string.IsNullOrEmpty(item.TriggerUrl))
                         {

@@ -744,7 +744,7 @@ window.ff = {
                            arr.push({ name: item.Text, val: item.Value });
                        }
                    }
-                   layui.form.render('select');
+                   layui.form.render('select', targetfilter+"div");
                    if (ismulticombo) {
                        var mm = layui.formSelects.selects[targetfilter];
                        ff.refreshcombobox(mm, []);
@@ -760,7 +760,7 @@ window.ff = {
                            target.append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
                        }
                    }
-                   layui.form.render('checkbox');
+                   layui.form.render('checkbox', targetfilter + "div");
                }
                if (controltype === "radio") {
                    for (i = 0; i < data.Data.length; i++) {
@@ -772,7 +772,7 @@ window.ff = {
                            target.append("<input type='radio' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
                        }
                    }
-                   layui.form.render('radio');
+                   layui.form.render('radio', targetfilter + "div");
                }
 
            }

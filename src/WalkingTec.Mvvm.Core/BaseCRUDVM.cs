@@ -179,7 +179,8 @@ namespace WalkingTec.Mvvm.Core
                 throw new Exception("数据不存在");
             }
             //如果TopBasePoco有关联的附件，则自动Include 附件名称
-            var fa = typeof(TModel).GetAllProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
+            var pros = typeof(TModel).GetAllProperties();
+            var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
             foreach (var f in fa)
             {
                 var fname = DC.GetFKName2<TModel>(f.Name);
@@ -191,7 +192,6 @@ namespace WalkingTec.Mvvm.Core
                     rv.SetPropertyValue(f.Name, file);
                 }
             }
-
             return rv;
         }
 

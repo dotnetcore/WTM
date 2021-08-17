@@ -205,5 +205,26 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return self;
         }
 
+        public static string ToQueryString(this IEnumerable self, string name=null)
+        {
+            if(self == null)
+            {
+                return "";
+            }
+            if (string.IsNullOrEmpty(name))
+            {
+                name = "id";
+            }
+            string rv = "";
+            foreach (var item in self)
+            {
+                rv += $"{name}={item?.ToString()}&";
+            }
+            if(rv.Length > 0)
+            {
+                rv = rv[0..^1];
+            }
+            return rv;
+        }
     }
 }
