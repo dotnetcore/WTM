@@ -593,7 +593,7 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IServiceCollection AddWtmSwagger(this IServiceCollection services)
+        public static IServiceCollection AddWtmSwagger(this IServiceCollection services, bool useFullName=false)
         {
             services.AddSwaggerGen(c =>
             {
@@ -618,6 +618,10 @@ namespace WalkingTec.Mvvm.Mvc
                 }, new string[] { });
                 c.AddSecurityRequirement(sr);
                 c.SchemaFilter<SwaggerFilter>();
+                if (useFullName == true)
+                {
+                    c.CustomSchemaIds(i => i.FullName);
+                }
             });
             return services;
         }
@@ -829,7 +833,7 @@ namespace WalkingTec.Mvvm.Mvc
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
             if (configs.IsQuickDebug == true || showInDebugOnly == false)
             {
-                app.UseSwagger();
+                app.UseSwagger();          
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
