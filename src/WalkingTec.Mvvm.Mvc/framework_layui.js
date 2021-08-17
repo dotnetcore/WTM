@@ -715,8 +715,9 @@ window.ff = {
                var i = 0;
                var item = null;
                if (controltype === "tree") {
+                   var da = ff.getTreeItems(data.Data, svals);
                    layui.tree.reload(controlid, {
-                       data: ff.getTreeItems(data.Data,svals)
+                       data: da
                    });
                    if (cb !== undefined && cb != null) {
                        cb();
@@ -1143,7 +1144,7 @@ window.ff = {
             item.title = data[i].Text;
             item.href = data[i].Url;
             item.spread = data[i].Expended;
-            item.checked = data[i].Checked || svals.indexOf(data[i].Value) > -1;
+            item.checked = data[i].Selected  || svals.indexOf(data[i].Value) > -1;
 
             if (data[i].Children != null && data[i].Children.length > 0) {
                 item.children = this.getTreeItems(data[i].Children, svals);
@@ -1171,7 +1172,7 @@ window.ff = {
             item.value = data[i].Value;
             item.title = data[i].Text;
             item.disabled = data[i].Disabled;
-            item.checked = data[i].Checked || svals.indexOf(data[i].Value) > -1;
+            item.checked = data[i].Selected || svals.indexOf(data[i].Value) > -1;
             rv.push(item);
         }
         return rv;
