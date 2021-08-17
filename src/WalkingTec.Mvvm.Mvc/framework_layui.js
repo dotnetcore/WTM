@@ -738,17 +738,17 @@ window.ff = {
                            var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
                            if (item.Selected === true || svals.indexOf(item.Value) > -1) {
                                target.append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
-                           }
+                               arr.push({ name: item.Text, val: item.Value });
+                          }
                            else {
                                target.append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
                            }
-                           arr.push({ name: item.Text, val: item.Value });
                        }
                    }
                    layui.form.render('select', targetfilter+"div");
                    if (ismulticombo) {
                        var mm = layui.formSelects.selects[targetfilter];
-                       ff.refreshcombobox(mm, []);
+                       ff.refreshcombobox(mm, arr);
                    }
                }
                if (controltype === "checkbox") {
