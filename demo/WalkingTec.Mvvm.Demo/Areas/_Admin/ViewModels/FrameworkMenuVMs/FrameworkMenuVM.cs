@@ -158,7 +158,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     List<SimpleAction> otherActions = null;
                  
                     var mainModule = m.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
-                    var mainAction = mainModule.Actions.FirstOrDefault();
+                    var mainAction = actionPage;
 
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainModule.ModuleName;
@@ -267,7 +267,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     //    mainAction.MethodName = null;
                     //}
                     var mainModule = m.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
-                    var mainAction = mainModule.Actions.FirstOrDefault();
+                    var mainAction = actionPage;
 
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainModule.ModuleName;
