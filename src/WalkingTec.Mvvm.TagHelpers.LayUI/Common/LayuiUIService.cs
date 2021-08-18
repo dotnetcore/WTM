@@ -79,7 +79,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             {
                 foreach (var item in value)
                 {
-                    if (item.Value.ToString().ToLower() == selectedValue.ToLower())
+                    if (item.Value.ToString().ToLower() == selectedValue?.ToLower())
                     {
                         rv += $@"
 <option value='{item.Value}' selected>{item.Text}</option>";
