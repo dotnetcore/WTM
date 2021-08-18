@@ -81,8 +81,8 @@ window.ff = {
     },
 
     GetNonSelections: function (gridId) {
-        var nums = 0 // 未选中个数
-            , invalidNum = 0
+        var table = layui.table
+            , nums = 0 
             , ids = [] // 未选中id
             , data = table.cache[gridId] || [];
         //计算未选中个数
