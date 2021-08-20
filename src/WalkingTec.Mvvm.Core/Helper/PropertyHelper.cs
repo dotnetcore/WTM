@@ -166,6 +166,7 @@ namespace WalkingTec.Mvvm.Core
         /// 获取属性显示名称
         /// </summary>
         /// <param name="pi">属性信息</param>
+        /// <param name="local"></param>
         /// <returns>属性名称</returns>
         public static string GetPropertyDisplayName(this MemberInfo pi, IStringLocalizer local = null)
         {
@@ -196,6 +197,7 @@ namespace WalkingTec.Mvvm.Core
         /// 获取属性显示名称
         /// </summary>
         /// <param name="expression">属性表达式</param>
+        /// <param name="local"></param>
         /// <returns>属性显示名称</returns>
         public static string GetPropertyDisplayName(this Expression expression, IStringLocalizer local = null)
         {

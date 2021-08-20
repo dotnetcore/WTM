@@ -819,7 +819,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        private void TryValidateProperty(object value, ValidationContext context, ICollection<ValidationResult> results, PropertyInfo? propertyInfo = null)
+        private void TryValidateProperty(object value, ValidationContext context, ICollection<ValidationResult> results, PropertyInfo propertyInfo = null)
         {
             var modelType = context.ObjectType;
             if (propertyInfo == null)

@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     [Display(Name = "oss")]
     public class WtmOssFileHandler : WtmFileHandlerBase
     {
-        private static string _modeName = "oss";
+        //private static string _modeName = "oss";
 
         public WtmOssFileHandler(Configs config, IDataContext dc) : base(config, dc)
         {

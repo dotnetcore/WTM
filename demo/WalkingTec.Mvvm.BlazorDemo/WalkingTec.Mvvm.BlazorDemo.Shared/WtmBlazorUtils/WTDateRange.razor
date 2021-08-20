@@ -55,7 +55,7 @@
         return base.OnParametersSetAsync();
     }
 
-    private async Task SetDate(DateTimeRangeValue v)
+    private Task SetDate(DateTimeRangeValue v)
     {
         if (v.Start == DateTime.MinValue && v.End == DateTime.MinValue)
         {
@@ -65,6 +65,7 @@
         {
             CurrentValue = new DateRange(v.Start, v.End);
         }
+        return Task.FromResult(CurrentValue);
     }
 
 }

@@ -12,6 +12,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// </summary>
         /// <param name="self">是否需要对数据进行Json编码</param>
         /// <param name="returnColumnObject">不在后台进行ColumnFormatInfo的转化，而是直接输出ColumnFormatInfo的json结构到前端，由前端处理，默认False</param>
+        /// <param name="enumToString"></param>
         /// <returns>Json格式的数据</returns>
         public static string GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool returnColumnObject = false, bool enumToString = true) where T : TopBasePoco, new()
         {
@@ -101,6 +102,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="obj">数据</param>
         /// <param name="returnColumnObject">不在后台进行ColumnFormatInfo的转化，而是直接输出ColumnFormatInfo的json结构到前端，由前端处理，默认False</param>
         /// <param name="index">index</param>
+        /// <param name="enumToString"></param>
         /// <returns>Json格式的数据</returns>
         public static string GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, object obj, bool returnColumnObject, int index = 0, bool enumToString = true) where T : TopBasePoco
         {

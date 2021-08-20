@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Core.Json
                 DynamicData rv = new DynamicData();
                 rv.Fields = new Dictionary<string, object>();
                 string currentkey = "";
-                object currentvalue;
+                //object currentvalue;
                 int level = 0;
                 while (true)
                 {
