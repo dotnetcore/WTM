@@ -1008,7 +1008,11 @@ where S : struct
             List<object> newids = new List<object>();
             foreach (var item in Ids)
             {
-                newids.Add(PropertyHelper.ConvertValue(item, peid.Type));
+                object vv = PropertyHelper.ConvertValue(item, peid.Type);
+                if (vv != null)
+                {
+                    newids.Add(vv);
+                }
             }
             Expression dpleft = Expression.Constant(newids, typeof(IEnumerable<object>));
             Expression dpleft2 = Expression.Call(typeof(Enumerable), "Cast", new Type[] { peid.Type }, dpleft);
