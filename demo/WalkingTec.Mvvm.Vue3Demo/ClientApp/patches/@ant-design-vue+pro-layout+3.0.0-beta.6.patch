@@ -1,0 +1,28 @@
+diff --git a/node_modules/@ant-design-vue/pro-layout/es/SiderMenu/BaseMenu.js b/node_modules/@ant-design-vue/pro-layout/es/SiderMenu/BaseMenu.js
+index 4508572..21b1241 100644
+--- a/node_modules/@ant-design-vue/pro-layout/es/SiderMenu/BaseMenu.js
++++ b/node_modules/@ant-design-vue/pro-layout/es/SiderMenu/BaseMenu.js
+@@ -176,7 +176,8 @@ var MenuUtil = function MenuUtil(props) {
+     var props = {
+       to: {
+         name: item.name
+-      }
++      },
++      ...item.router
+     };
+     var attrs = hasUrl || target ? {
+       href: item.path,
+diff --git a/node_modules/@ant-design-vue/pro-layout/lib/SiderMenu/BaseMenu.js b/node_modules/@ant-design-vue/pro-layout/lib/SiderMenu/BaseMenu.js
+index d018451..6311863 100644
+--- a/node_modules/@ant-design-vue/pro-layout/lib/SiderMenu/BaseMenu.js
++++ b/node_modules/@ant-design-vue/pro-layout/lib/SiderMenu/BaseMenu.js
+@@ -193,7 +193,8 @@ var MenuUtil = function MenuUtil(props) {
+     var props = {
+       to: {
+         name: item.name
+-      }
++      },
++      ...item.router
+     };
+     var attrs = hasUrl || target ? {
+       href: item.path,
