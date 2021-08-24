@@ -95,7 +95,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             oncheck = $@"
                 ,oncheck: function(data){{
                     if(loaded{Id} == false) return;
-                    var checkData = layui.tree.getChecked('tree{Id}');
+                    var checkData = layui.tree.getChecked('{Id}');
                     var ids = ff.getTreeChecked(checkData);
                     $('#tree{Id}hidden').html('');
                     for(var i=0;i<ids.length;i++){{
