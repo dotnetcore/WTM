@@ -66,7 +66,7 @@ export class RowActionBasics extends Vue {
      * @memberof ActionBasics
      */
     get ButtonProps() {
-        const styles: ButtonProps = { size: 'default' }
+        const styles: any = { size: 'default' }
         if (this.isRowAction) {
             styles.type = "link"
             styles.size = 'small'
