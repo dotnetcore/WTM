@@ -65,8 +65,8 @@ export class UserController extends UserEntity {
     onChangePassword(body) {
         return this.$ajax.post("/api/_Account/ChangePassword", body);
     }
-    async onLogOut() {
-        this.$ajax.get("/api/_Account/Logout");
+    async onLogOut(logout = true) {
+        logout && this.$ajax.get("/api/_Account/Logout");
         this.onSetUserInfo({})
     }
 }

@@ -46,7 +46,7 @@ AjaxBasics.onNProgress = function (type) {
 AjaxBasics.onError = function (error) {
     console.error("LENG ~ error", error)
     if (lodash.get(error, 'status') === 401) {
-        return $System.UserController.onLogOut()
+        return $System.UserController.onLogOut(false)
     }
     const Message = lodash.get(error, 'response.Message', []);
     if (Message.length) {
