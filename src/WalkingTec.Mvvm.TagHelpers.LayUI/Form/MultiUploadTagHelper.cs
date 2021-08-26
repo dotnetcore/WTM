@@ -212,6 +212,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }}
         }});
 }}
+function {Id}DoPreview(){{
+		layui.layer.photos({{
+			photos: '#{Id}label',
+			anim: 5
+		}});
+}}
   var index = 0;
   var {Id}preview;
 
@@ -238,9 +244,9 @@ layui.use(['upload'],function(){{
         {Id}selected.push(res.Data.Id);
         {Id}SetValues();
         {(ShowPreview == true ? $@"
-            $('#{Id}label').append('<label id=""label'+res.Data.Id+'""><img src=""/_Framework/GetFile?id='+ res.Data.Id+'&stream=true&width={PreviewWidth ?? 64}&height={PreviewHeight ?? 64}&_DONOT_USE_CS={(vm!=null?vm.CurrentCS:"")}""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview'+res.Data.Id+'"" style=""cursor:pointer"" /><i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:relative;left:{(PreviewWidth ?? 64) - 74}px;top:-27px;color: #ff0000;cursor: pointer;"" id=""del'+res.Data.Id+'""></i></label> ');
+            $('#{Id}label').append('<label id=""label'+res.Data.Id+'""><img alt=""'+res.Data.Name+'"" layer-src=""/_Framework/GetFile?id='+ res.Data.Id+'&_DONOT_USE_CS={(vm != null ? vm.CurrentCS : "")}"" src=""/_Framework/GetFile?id='+ res.Data.Id+'&stream=true&width={PreviewWidth ?? 64}&height={PreviewHeight ?? 64}&_DONOT_USE_CS={(vm!=null?vm.CurrentCS:"")}""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview'+res.Data.Id+'"" style=""cursor:pointer;margin-bottom:5px"" /><i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:relative;left:-10px;top:-27px;color: #ff0000;cursor: pointer;"" id=""del'+res.Data.Id+'""></i></label> ');
             $('#preview'+res.Data.Id).on('click',function(){{
-                ff.OpenDialog('/_Framework/ViewFile/'+ res.Data.Id+'?_DONOT_USE_CS={(vm != null ? vm.CurrentCS : "")}','{Guid.NewGuid().ToString().Replace("-", "")}','{THProgram._localizer["Sys.Preview"]}',600,600,undefined,false);;return false;
+              {Id}DoPreview(res.Data.Id);
             }});
             $('#del'+res.Data.Id).on('click',function(){{
               {Id}DoDelete(res.Data.Id);
@@ -263,7 +269,9 @@ layui.use(['upload'],function(){{
 ");
             if (string.IsNullOrEmpty(idstring) == false)
             {
-                foreach (var fileId in idstring.Split('|', StringSplitOptions.RemoveEmptyEntries))
+                var allfileids = idstring.Split('|', StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var fileId in allfileids)
                 {
                     var geturl = $"/_Framework/GetFileName/{fileId}";
                     var downloadurl = $"/_Framework/GetFile/{fileId}";
@@ -288,17 +296,17 @@ $.ajax({{
   async: false,
   success: function(data) {{
     {(ShowPreview == true ? $@" {(Disabled == true? $@"
-      $('#{Id}label').append('<label id=""label{fileId}""><img src=""{picurl}""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview{fileId}"" style=""cursor:pointer""/></label> ');
+      $('#{Id}label').append('<label id=""label{fileId}""><img layer-src=""{downloadurl}"" src=""{picurl}"" alt=""'+data+'""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview{fileId}"" style=""cursor:pointer;margin-bottom:5px""/></label> ');
             $('#preview{fileId}').on('click',function(){{
-                ff.OpenDialog('{previewurl}','{Guid.NewGuid().ToString().Replace("-","")}','{THProgram._localizer["Sys.Preview"]}',600,600,undefined,false);;return false;
+              {Id}DoPreview();
             }});
 " :$@"
-      $('#{Id}label').append('<label id=""label{fileId}""><img src=""{picurl}""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview{fileId}"" style=""cursor:pointer""/><i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:relative;left:{(PreviewWidth ?? 64) - 74}px;top:-27px;color: #ff0000;cursor:pointer"" id=""del{fileId}""></i></label> ');
+      $('#{Id}label').append('<label id=""label{fileId}""><img layer-src=""{downloadurl}"" src=""{picurl}"" alt=""'+data+'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview{fileId}"" style=""cursor:pointer;margin-bottom:5px""/><i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:relative;left:-10px;top:-27px;color: #ff0000;cursor:pointer;margin-bottom:5px"" id=""del{fileId}""></i></label> ');
             $('#del{fileId}').on('click',function(){{
               {Id}DoDelete('{fileId}');
             }});
             $('#preview{fileId}').on('click',function(){{
-                ff.OpenDialog('{previewurl}','{Guid.NewGuid().ToString().Replace("-", "")}','{THProgram._localizer["Sys.Preview"]}',600,600,undefined,false);;return false;
+              {Id}DoPreview();
             }});
 ")}
     " : $@"{(Disabled == true? $@"

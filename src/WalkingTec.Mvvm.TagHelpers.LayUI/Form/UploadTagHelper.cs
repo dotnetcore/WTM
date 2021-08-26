@@ -190,7 +190,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     $('.layui-progress .layui-progress-bar').css('width', '0%');
   }}
 function {Id}DoPreview(fileid){{
-    ff.OpenDialog('/_Framework/ViewFile/'+ fileid+'?_DONOT_USE_CS={(vm != null ? vm.CurrentCS : "")}','{Guid.NewGuid().ToString().Replace("-", "")}','{THProgram._localizer["Sys.Preview"]}',600,600,undefined,false);;return false;
+		layui.layer.photos({{
+			photos: {{
+				data: [{{
+					src: '/_Framework/GetFile/'+ fileid+'?_DONOT_USE_CS={(vm != null ? vm.CurrentCS : "")}'
+				}}]
+			}},
+			anim: 5
+		}});
 }}
   var index = 0;
   var {Id}preview;

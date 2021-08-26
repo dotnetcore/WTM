@@ -1,0 +1,28 @@
+ @import './antd.less';
+ @import './scrollbar.less';
+
+ //  @import 'nprogress/nprogress.css';
+ #nprogress {
+   .bar {
+     // background: red;
+     background-image: -webkit-linear-gradient(top left, red, blue 25%, yellow 90%);
+   }
+
+   .spinner-icon {
+     width: 30px;
+     height: 30px;
+     border-top-color: red;
+     border-bottom-color: blue;
+     border-left-color: yellow;
+   }
+ }
+
+ .fade-enter-active,
+ .fade-leave-active {
+   transition: opacity 0.5s ease;
+ }
+
+ .fade-enter-from,
+ .fade-leave-to {
+   opacity: 0;
+ }

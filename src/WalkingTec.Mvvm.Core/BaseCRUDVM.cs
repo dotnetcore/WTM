@@ -294,8 +294,12 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         if (itempro.Name.ToLower() == fkname.ToLower())
                                         {
-                                            itempro.SetValue(newitem, Entity.GetID());
-                                            found = true;
+                                            try
+                                            {
+                                                itempro.SetValue(newitem, Entity.GetID());
+                                                found = true;
+                                            }
+                                            catch { }
                                         }
                                     }
                                 }

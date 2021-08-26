@@ -31,8 +31,8 @@ namespace WalkingTec.Mvvm.Core
 
 
         [NotMapped]
-        [Display(Name = "_Admin.UserCount")]
-        public int UserCount { get; set; }
+        [Display(Name = "_Admin.UsersCount")]
+        public int UsersCount { get; set; }
 
 
     }
