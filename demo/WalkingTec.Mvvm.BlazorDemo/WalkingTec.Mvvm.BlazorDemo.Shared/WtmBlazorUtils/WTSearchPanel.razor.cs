@@ -19,6 +19,8 @@ namespace WtmBlazorUtils
             .AddClass($"text-{Color.ToDescriptionString()}", Color != Color.None)
             .Build();
 
+        [Inject]
+        public WtmBlazorContext WtmBlazor { get; set; }
 
         /// <summary>
         /// 获得/设置 CardBody
@@ -51,6 +53,14 @@ namespace WtmBlazorUtils
                 Collapsed = false;
             }
             Collapsed = !Collapsed;
+        }
+
+        protected override void OnInitialized()
+        {
+            if(Collapsed == null)
+            {
+                Collapsed = !WtmBlazor.ConfigInfo.UIOptions.SearchPanel.DefaultExpand;
+            }
         }
     }
 }
