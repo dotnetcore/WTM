@@ -20,20 +20,30 @@
         log('ECharts is not Loaded');
         return;
     }
-    echarts.registerTheme('vintage', {
+    echarts.registerTheme('roma', {
         "color": [
-            "#d87c7c",
-            "#919e8b",
-            "#d7ab82",
-            "#6e7074",
-            "#61a0a8",
-            "#efa18d",
-            "#787464",
-            "#cc7e63",
-            "#724e58",
-            "#4b565b"
+            "#e01f54",
+            "#001852",
+            "#f5e8c8",
+            "#b8d2c7",
+            "#c6b38e",
+            "#a4d8c2",
+            "#f3d999",
+            "#d3758f",
+            "#dcc392",
+            "#2e4783",
+            "#82b6e9",
+            "#ff6347",
+            "#a092f1",
+            "#0a915d",
+            "#eaf889",
+            "#6699ff",
+            "#ff6666",
+            "#3cb371",
+            "#d5b158",
+            "#38b6b6"
         ],
-        "backgroundColor": "rgba(254,248,239,1)",
+        "backgroundColor": "rgba(0,0,0,0)",
         "textStyle": {},
         "title": {
             "textStyle": {
@@ -115,10 +125,10 @@
         },
         "candlestick": {
             "itemStyle": {
-                "color": "#c23531",
-                "color0": "#314656",
-                "borderColor": "#c23531",
-                "borderColor0": "#314656",
+                "color": "#e01f54",
+                "color0": "#001852",
+                "borderColor": "#f5e8c8",
+                "borderColor0": "#b8d2c7",
                 "borderWidth": 1
             }
         },
@@ -129,25 +139,35 @@
             },
             "lineStyle": {
                 "width": 1,
-                "color": "#aaa"
+                "color": "#aaaaaa"
             },
             "symbolSize": 4,
             "symbol": "emptyCircle",
             "smooth": false,
             "color": [
-                "#d87c7c",
-                "#919e8b",
-                "#d7ab82",
-                "#6e7074",
-                "#61a0a8",
-                "#efa18d",
-                "#787464",
-                "#cc7e63",
-                "#724e58",
-                "#4b565b"
+                "#e01f54",
+                "#001852",
+                "#f5e8c8",
+                "#b8d2c7",
+                "#c6b38e",
+                "#a4d8c2",
+                "#f3d999",
+                "#d3758f",
+                "#dcc392",
+                "#2e4783",
+                "#82b6e9",
+                "#ff6347",
+                "#a092f1",
+                "#0a915d",
+                "#eaf889",
+                "#6699ff",
+                "#ff6666",
+                "#3cb371",
+                "#d5b158",
+                "#38b6b6"
             ],
             "label": {
-                "color": "#eee"
+                "color": "#eeeeee"
             }
         },
         "map": {
@@ -162,7 +182,7 @@
             "emphasis": {
                 "itemStyle": {
                     "areaColor": "rgba(255,215,0,0.8)",
-                    "borderColor": "#444444",
+                    "borderColor": "#444",
                     "borderWidth": 1
                 },
                 "label": {
@@ -182,7 +202,7 @@
             "emphasis": {
                 "itemStyle": {
                     "areaColor": "rgba(255,215,0,0.8)",
-                    "borderColor": "#444444",
+                    "borderColor": "#444",
                     "borderWidth": 1
                 },
                 "label": {
@@ -394,9 +414,8 @@
         },
         "visualMap": {
             "color": [
-                "#bf444c",
-                "#d88273",
-                "#f6efa6"
+                "#e01f54",
+                "#e7dbc3"
             ]
         },
         "dataZoom": {
@@ -411,11 +430,11 @@
         },
         "markPoint": {
             "label": {
-                "color": "#eee"
+                "color": "#eeeeee"
             },
             "emphasis": {
                 "label": {
-                    "color": "#eee"
+                    "color": "#eeeeee"
                 }
             }
         }

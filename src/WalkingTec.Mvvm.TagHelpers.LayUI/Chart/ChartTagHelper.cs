@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 {
-    public enum ChartThemeEnum { light, dark, vintage }
+    public enum ChartThemeEnum { light, dark, vintage, chalk, essos, macarons, roma, walden, westeros, wonderland }
 
     public enum ChartTypeEnum { Bar, Pie, Line, PieHollow, Scatter }
 
@@ -173,9 +173,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             output.PostElement.AppendHtml($@"
 <script>
 var {Id}Chart;
-layui.use(['echarts'],function(){{
-  var echarts = layui.echarts;
-  {Id}Chart = echarts.init(document.getElementById('{Id}'), {(Theme == null ? "'default'" : $"'{Theme.ToString()}'")});
+var themeTemp ={(Theme == null ? "'default'" : $"'{Theme.ToString()}'")};
+{Id}Chart = echarts.init(document.getElementById('{Id}'),themeTemp);
   window.onresize = function(){{
     $(""div[ischart='1']"").each(function(index){{ eval($( this ).attr('id')+'Chart.resize();'); }});
   }};
@@ -189,7 +188,6 @@ layui.use(['echarts'],function(){{
     {s}
   }};
   {Id}Chart.setOption({Id}option);
-}});
 </script>
 ");
             base.Process(context, output);
