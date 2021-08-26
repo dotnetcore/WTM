@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 {
-    public enum ChartThemeEnum { light, dark }
+    public enum ChartThemeEnum { light, dark, vintage }
 
-    public enum ChartTypeEnum { Bar, Pie, Line }
+    public enum ChartTypeEnum { Bar, Pie, Line, PieHollow, Scatter }
 
-    [Obsolete("已废弃，预计v3.0版本及v2.10版本开始将删除 wt:chart")]
+    //[Obsolete("已废弃，预计v3.0版本及v2.10版本开始将删除 wt:chart")]
     [HtmlTargetElement("wt:chart", TagStructure = TagStructure.WithoutEndTag)]
     public class ChartTagHelper : BaseElementTag
     {
@@ -29,6 +29,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
         public ChartTypeEnum Type { get; set; }
 
         public bool IsHorizontal { get; set; }
+        //折线图弧度
+        public bool OpenSmooth { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -45,13 +47,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 
             string legend = "";
             string tooltip = "";
-            for (int i = 0; i < cd.Count; i++)
+            var i = 0;
+            for (i = 0; i < cd.Count; i++)
             {
                 if (string.IsNullOrEmpty(cd[i].Series))
                 {
                     cd[i].Series = "数据";
                 }
             }
+
 
             string[] series = cd.Select(x => x.Series).Distinct().ToArray();
 
@@ -72,29 +76,47 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
                 tooltip = "tooltip: {},";
             }
 
-            object[,] rtc = new object[cd.Count + 1, series.Length + 1];
+            var yCount = cd.GroupBy(x => x.Category).ToList();
+            object[,] rtc = new object[yCount.Count + 1, series.Length + 1];
             rtc[0, 0] = "'product'";
-            for (int i = 0; i < series.Length; i++)
+
+            for (i = 0; i < series.Length; i++)
             {
                 rtc[0, i + 1] = "'" + series[i] + "'";
             }
-            for (int i = 0; i < cd.Count; i++)
+            //for (int i = 0; i < yCount.Count; i++)
+            //{
+            //    rtc[i + 1, 0] = "'" + yCount. + "'";
+            //    for (int j = 0; j < series.Length; j++)
+            //    {
+            //        if (cd[i].Series == series[j])
+            //        {
+            //            rtc[i + 1, j + 1] = cd[i].Value;
+            //            break;
+            //        }
+            //    }
+
+            //}
+            i = 0;
+            foreach (var item in yCount)
             {
-                rtc[i + 1, 0] = "'" + cd[i].Category + "'";
+                rtc[i + 1, 0] = "'" + item.Key + "'";
                 for (int j = 0; j < series.Length; j++)
                 {
-                    if (cd[i].Series == series[j])
+                    var ser = item.Where(x => x.Series == series[j])?.FirstOrDefault();
+                    if (ser != null)
                     {
-                        rtc[i + 1, j + 1] = cd[i].Value;
-                        break;
+                        rtc[i + 1, j + 1] = ser.Value;
                     }
                 }
 
+                i++;
             }
+
 
             string data = "";
             data = "dataset: {source:[";
-            for (int i = 0; i <= cd.Count; i++)
+            for (i = 0; i <= yCount.Count; i++)
             {
                 data += "[";
                 for (int j = 0; j <= series.Length; j++)
@@ -106,7 +128,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
                     }
                 }
                 data += "]";
-                if (i < cd.Count)
+                if (i < yCount.Count)
                 {
                     data += ",";
                 }
@@ -114,14 +136,23 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             data += "]},";
 
             string s = "series: [";
-            for (int i = 0; i < series.Length; i++)
+            for (i = 0; i < series.Length; i++)
             {
-                s += $"{{type:'{Type.ToString().ToLower()}'}}";
+                if (Type == ChartTypeEnum.PieHollow)
+                    s += $"{{type:'pie',radius: ['40%', '70%']";
+                else
+                    s += $"{{type:'{Type.ToString().ToLower()}'";
+                if (OpenSmooth && Type == ChartTypeEnum.Line)
+                {
+                    s += ",smooth: true";
+                }
+                s += "}";
                 if (i < series.Length - 1)
                 {
                     s += ",";
                 }
             }
+
             s += "]";
 
             string xAxis = "", yAxis = "";
