@@ -253,7 +253,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Response.Redirect("/");
+            Ok();
         }
 
     }

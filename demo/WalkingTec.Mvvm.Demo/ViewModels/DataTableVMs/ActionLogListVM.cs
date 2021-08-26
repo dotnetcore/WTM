@@ -40,8 +40,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
             );
             header.Add(topheader);
             header.Add(this.MakeGridHeader(x => "弹出框").SetTitle("弹出框").SetFormat((a, b) =>{
-                return UIService.MakeButton(ButtonTypesEnum.Button, $"/_admin/actionlog/details/{a.ID}", "弹出框", 500, null,title: "日志", rtype: RedirectTypesEnum.Layer, buttonClass:"layui-btn-warm");
-            }));
+                return UIService.MakeDialogButton(ButtonTypesEnum.Button, $"/_admin/actionlog/details/{a.ID}", "弹出框", 500, null,title: "日志", buttonClass:"layui-btn-warm");
+            }).SetFixed(GridColumnFixedEnum.Left));
             header.Add(this.MakeGridHeader(x => "新Tab").SetTitle("新Tab").SetFormat((a, b) => {
                 return UIService.MakeButton(ButtonTypesEnum.Button, $"/_admin/actionlog/details/{a.ID}", "弹出框", 500, null, title: "日志", rtype: RedirectTypesEnum.NewTab);
             }));

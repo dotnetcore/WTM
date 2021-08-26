@@ -52,7 +52,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 height = width * oimage.Height / oimage.Width;
             }
             MemoryStream ms = new MemoryStream();
-            oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
             ms.Position = 0;
             var file = fp.Upload(FileData.FileName, FileData.Length, ms, groupName,subdir, extra, sm, Wtm.CreateDC(cskey: csName));
             oimage.Dispose();
@@ -100,7 +100,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                             height = oimage.Height * width / oimage.Width;
                         }
                         var ms = new MemoryStream();
-                        oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                         ms.Position = 0;
                         await ms?.CopyToAsync(Response.Body);
                         file.DataStream.Dispose();

@@ -24,15 +24,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             {
                 innerClick = $"$.ajax({{cache: false,type: 'GET',url: '{url}',async: true,success: function(data, textStatus, request) {{eval(data);}} }});";
             }
-            var click = $"<script>$('#{buttonID}').on('click',function(){{{innerClick};return false;}});</script>";
+            string funcname = $"x{buttonID.Replace("-", "")}click";
+            var click = $"<script>function {funcname}(){{{innerClick};return false;}}</script>";
             string rv = "";
             if (buttonType == ButtonTypesEnum.Link)
             {
-                rv = $"<a id='{buttonID}' style='{style ?? "color:blue;cursor:pointer"}' class='{buttonClass ?? ""}'>{buttonText}</a>";
+                rv = $"<a id='{buttonID}' onclick='{funcname}()' style='{style ?? "color:blue;cursor:pointer"}' class='{buttonClass ?? ""}'>{buttonText}</a>";
             }
             if (buttonType == ButtonTypesEnum.Button)
             {
-                rv = $"<a id='{buttonID}' style='{style ?? ""}' class='layui-btn {(string.IsNullOrEmpty(buttonClass) ? "layui-btn-primary layui-btn-xs" : $"{buttonClass}")}'>{buttonText}</a>";
+                rv = $"<a id='{buttonID}' onclick='{funcname}()' style='{style ?? ""}' class='layui-btn {(string.IsNullOrEmpty(buttonClass) ? "layui-btn-primary layui-btn-xs" : $"{buttonClass}")}'>{buttonText}</a>";
             }
             rv += click;
             return rv;
@@ -147,16 +148,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
                 default:
                     break;
             }
-
-            var click = $"<script>$('#{buttonID}').on('click',function(){{{innerClick};return false;}});</script>";
+            string funcname = $"x{buttonID.Replace("-", "")}click";
+            var click = $"<script>function {funcname}(){{{innerClick};return false;}}</script>";
             string rv = "";
             if (buttonType == ButtonTypesEnum.Link)
             {
-                rv = $"<a id='{buttonID}'  style='{style ?? "color:blue;cursor:pointer"}' class='{buttonClass ?? ""}'>{buttonText}</a>";
+                rv = $"<a id='{buttonID}' onclick='{funcname}()' style='{style ?? "color:blue;cursor:pointer"}' class='{buttonClass ?? ""}'>{buttonText}</a>";
             }
             if (buttonType == ButtonTypesEnum.Button)
             {
-                rv = $"<a id='{buttonID}' style='{style ?? ""}' class='layui-btn {(string.IsNullOrEmpty(buttonClass) ? "layui-btn-primary layui-btn-xs" : $"{buttonClass}")}'>{buttonText}</a>";
+                rv = $"<a id='{buttonID}' onclick='{funcname}()' style='{style ?? ""}' class='layui-btn {(string.IsNullOrEmpty(buttonClass) ? "layui-btn-primary layui-btn-xs" : $"{buttonClass}")}'>{buttonText}</a>";
             }
             rv += click;
             return rv;

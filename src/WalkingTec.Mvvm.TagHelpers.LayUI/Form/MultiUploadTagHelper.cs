@@ -293,7 +293,7 @@ $.ajax({{
   cache: false,
   type: 'GET',
   url: '{geturl}',
-  async: false,
+  async: true,
   success: function(data) {{
     {(ShowPreview == true ? $@" {(Disabled == true? $@"
       $('#{Id}label').append('<label id=""label{fileId}""><img layer-src=""{downloadurl}"" src=""{picurl}"" alt=""'+data+'""  class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} id=""preview{fileId}"" style=""cursor:pointer;margin-bottom:5px""/></label> ');
