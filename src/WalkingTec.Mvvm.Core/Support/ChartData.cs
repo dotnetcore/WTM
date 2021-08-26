@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,5 +11,6 @@ namespace WalkingTec.Mvvm.Core
         public int Value { get; set; }
 
         public string Series { get; set; }
+
     }
 }

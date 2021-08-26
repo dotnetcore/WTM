@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs;
 using WalkingTec.Mvvm.Mvc;
 
@@ -15,6 +18,39 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public IActionResult Index()
         {
             var vm = Wtm.CreateVM<DatatableListVM>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("报表查询", IsPage = true)]
+        public IActionResult ChartsIndex()
+        {
+            var vm = Wtm.CreateVM<DatatableListVM>();
+
+            //var data = Wtm.DC.Set<Major>().AsNoTracking().Include(x => x.School)
+            //        .GroupBy(x => new { x.School.SchoolName, x.MajorType }, x => x.ID).Select(x => new ChartData
+            //        {
+            //            Series = x.Key.SchoolName,
+            //            Category = x.Key.MajorType.ToString(),
+            //            Value = x.Count(),
+            //            //yAvg= x.Average()
+            //        }).ToList();
+            //data.g
+
+            var data = new List<ChartData>();
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    data.Add(new ChartData
+                    {
+                        Category = "a" + i,
+                        Value = new Random().Next(100, 1000),
+                        Series = "bbb" + j
+                    });
+                }
+            }
+
+            vm.charts = data;
             return PartialView(vm);
         }
 

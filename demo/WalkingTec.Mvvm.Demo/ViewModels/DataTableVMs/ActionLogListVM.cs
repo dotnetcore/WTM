@@ -39,17 +39,21 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
                 this.MakeGridHeader(x => x.test2, 120)
             );
             header.Add(topheader);
-            header.Add(this.MakeGridHeader(x => "弹出框").SetTitle("弹出框").SetFormat((a, b) =>{
-                return UIService.MakeDialogButton(ButtonTypesEnum.Button, $"/_admin/actionlog/details/{a.ID}", "弹出框", 500, null,title: "日志", buttonClass:"layui-btn-warm");
-            }).SetFixed(GridColumnFixedEnum.Left));
-            header.Add(this.MakeGridHeader(x => "新Tab").SetTitle("新Tab").SetFormat((a, b) => {
+            header.Add(this.MakeGridHeader(x => "弹出框").SetTitle("弹出框").SetFormat((a, b) =>
+            {
+                return UIService.MakeButton(ButtonTypesEnum.Button, $"/_admin/actionlog/details/{a.ID}", "弹出框", 500, null, title: "日志", rtype: RedirectTypesEnum.Layer, buttonClass: "layui-btn-warm");
+            }));
+            header.Add(this.MakeGridHeader(x => "新Tab").SetTitle("新Tab").SetFormat((a, b) =>
+            {
                 return UIService.MakeButton(ButtonTypesEnum.Button, $"/_admin/actionlog/details/{a.ID}", "弹出框", 500, null, title: "日志", rtype: RedirectTypesEnum.NewTab);
             }));
-            header.Add(this.MakeGridHeader(x => "新Window").SetTitle("新Window").SetFormat((a, b) => {
+            header.Add(this.MakeGridHeader(x => "新Window").SetTitle("新Window").SetFormat((a, b) =>
+            {
                 return UIService.MakeButton(ButtonTypesEnum.Button, $"/_admin/actionlog/details/{a.ID}", "弹出框", 500, null, title: "日志", rtype: RedirectTypesEnum.NewWindow);
             }));
-            header.Add(this.MakeGridHeader(x => "Self").SetTitle("Self").SetFormat((a, b) => {
-                return UIService.MakeButton(ButtonTypesEnum.Button, $"/_admin/actionlog/details/{a.ID}", "弹出框", 500, null, title: "日志", currentdivid:this.ViewDivId, rtype: RedirectTypesEnum.Self);
+            header.Add(this.MakeGridHeader(x => "Self").SetTitle("Self").SetFormat((a, b) =>
+            {
+                return UIService.MakeButton(ButtonTypesEnum.Button, $"/_admin/actionlog/details/{a.ID}", "弹出框", 500, null, title: "日志", currentdivid: this.ViewDivId, rtype: RedirectTypesEnum.Self);
             }));
 
             header.Add(this.MakeGridHeaderAction(width: 320));
@@ -80,7 +84,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
             //cmd.CommandType = System.Data.CommandType.StoredProcedure;
             return cmd;
         }
+
+        public List<ChartData> charts { get; set; }
     }
+
 
     public class CustomView : TopBasePoco
     {
