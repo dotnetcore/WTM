@@ -822,10 +822,8 @@ window.ff = {
         var check = {};
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
-            if (/^checkbox|radio$/.test(item.type) && !item.checked) {
-                if (item.value === "true") {
-                    filter[item.name] = false;
-                }
+            if (/^checkbox|radio$/.test(item.type) && item.checked) {
+                filter[item.name] = item.value;
                 return;
             }
             var itemname = item.name;
