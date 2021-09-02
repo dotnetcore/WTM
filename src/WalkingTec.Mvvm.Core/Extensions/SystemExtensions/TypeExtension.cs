@@ -255,10 +255,27 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     else if (pro.PropertyType == typeof(string))
                     {
                         var length = pro.GetCustomAttribute<StringLengthAttribute>();
-                        var l = new Random().Next(3, 10);
-                        if (length != null && l > length.MaximumLength)
+                        var min = 1;
+                        var max = 20;
+                        var l = 0;
+                        if (length != null)
                         {
-                            l = length.MaximumLength;
+                            if (length.MaximumLength > 0)
+                            {
+                                max = length.MaximumLength;
+                            }
+                            if(length.MinimumLength > 0)
+                            {
+                                min = length.MinimumLength;
+                            }
+                        }
+                        if(min == max)
+                        {
+                            l = max;
+                        }
+                        else if(min < max)
+                        {
+                            l = new Random().Next(min, max);
                         }
                         Random r = new Random();
                         for (int i = 0; i < l; i++)

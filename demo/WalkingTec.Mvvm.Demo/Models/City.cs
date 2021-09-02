@@ -21,6 +21,7 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "名称")]
         [Required(ErrorMessage = "名称是必填项")]
+        [StringLength(3,ErrorMessage = "{0}abc{1}")]
         public string Name { get; set; }
 
         [Display(Name = "test")]

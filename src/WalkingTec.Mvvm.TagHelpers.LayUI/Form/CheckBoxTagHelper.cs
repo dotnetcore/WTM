@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                     else if (modelType.IsBoolOrNullableBool())
                     {
-                        values.Add("true");
+                        values.Add(Field.Model.ToString());
                     }
                     else
                     {
