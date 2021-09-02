@@ -36,45 +36,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("FrontPage")]
         public IActionResult FrontPage()
         {
-            var areas = GlobaInfo.AllModule.Select(x => x.Area).Distinct();
-            var legend = new List<string>();
-            var series = new List<object>();
-            foreach (var area in areas)
-            {
-                var legendName = area?.AreaName ?? "Default";
-                var controllers = GlobaInfo.AllModule.Where(x => x.Area == area);
-                legend.Add(legendName);
-                series.Add(new
-                {
-                    name = legendName,
-                    type = "bar",
-                    data = new int[] {
-                        controllers.Count(),
-                        controllers.SelectMany(x => x.Actions).Count()
-                    },
-                });
-            }
-
-            var otherLegend = new List<string>() { "Info" };
-            var otherSeries = new List<object>()
-            {
-                new {
-                    name = "Info",
-                    type = "bar",
-                    data = new int[] {
-                        10,
-                        Wtm.GlobaInfo.AllAssembly.Count(),
-                        Wtm.DataPrivilegeSettings.Count(),
-                        Wtm.ConfigInfo.Connections.Count(),
-                        Wtm.ConfigInfo.AppSettings.Count()
-                    },
-                }
-            };
-
-            ViewData["controller.legend"] = legend;
-            ViewData["controller.series"] = series;
-            ViewData["other.legend"] = otherLegend;
-            ViewData["other.series"] = otherSeries;
 
             return PartialView();
         }
