@@ -115,8 +115,6 @@ var themeTemp ={(Theme == null ? "'default'" : $"'{Theme.ToString()}'")};
 $.get('{TriggerUrl}').done(function (data) {{
     if(data.series!=undefined){{
         data.series=data.series.replaceAll('""type"":""charttype""','{typeSeries}');
-console.log(data.series);
-        console.log(JSONfns.parse(data.series));
     }}
   {Id}Chart.setOption({{
     {(string.IsNullOrEmpty(Title) ? "" : $"title:{{text: '{Title}'}},")}
