@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Demo.Models.Virus;
 
@@ -79,6 +80,10 @@ namespace WalkingTec.Mvvm.Demo
             return state;
         }
 
+        private void AddSchoolTestData()
+        {
+            var pros = typeof(School).GetRandomValues();
+        }
     }
     public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
     {
