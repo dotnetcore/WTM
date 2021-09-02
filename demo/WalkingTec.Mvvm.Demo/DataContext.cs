@@ -80,10 +80,6 @@ namespace WalkingTec.Mvvm.Demo
             return state;
         }
 
-        private void AddSchoolTestData()
-        {
-            var pros = typeof(School).GetRandomValues();
-        }
     }
     public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
     {
