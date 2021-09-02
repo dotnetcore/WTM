@@ -3,17 +3,28 @@
 
 @*<wt:chart field="@Model.charts" type="Bar" title="abcd" height="400"/>
   <wt:chart field="@Model.charts" type="Pie" title="abcd" height="400" />*@
-<wt:row items-per-row="ItemsPerRowEnum.Two">
-  <wt:card title="12333">
-    <wt:chart field="@Model.charts" type="Line" title="abcd" height="400" theme="WalkingTec.Mvvm.TagHelpers.LayUI.Chart.ChartThemeEnum.vintage" />
-  </wt:card>
-  <wt:card title="123444">
-    <wt:chart field="@Model.charts" type="PieHollow" title="abcd" height="400" theme="WalkingTec.Mvvm.TagHelpers.LayUI.Chart.ChartThemeEnum.westeros" />
+<wt:row items-per-row="ItemsPerRowEnum.One">
+  <wt:card title="散点图">
+    <wt:chart is-horizontal="true" type="Scatter" title="散点图" height="400" open-smooth="true" theme="WalkingTec.Mvvm.TagHelpers.LayUI.Chart.ChartThemeEnum.macarons" trigger-url="/DataTable/GetChartsFour" />
   </wt:card>
 </wt:row>
-<wt:card title="123">
-  <wt:chart field="@Model.charts" type="Scatter" title="abcd" height="400" theme="WalkingTec.Mvvm.TagHelpers.LayUI.Chart.ChartThemeEnum.macarons" />
-</wt:card>
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+  <wt:card title="圆环">
+    <wt:chart field="@Model.charts" type="PieHollow" title="圆环" height="400" theme="WalkingTec.Mvvm.TagHelpers.LayUI.Chart.ChartThemeEnum.westeros" trigger-url="/DataTable/GetCharts" />
+  </wt:card>
+  <wt:card title="饼图">
+    <wt:chart field="@Model.charts" type="Pie" title="饼图" height="400" theme="WalkingTec.Mvvm.TagHelpers.LayUI.Chart.ChartThemeEnum.dark" trigger-url="/DataTable/GetCharts" />
+  </wt:card>
+</wt:row>
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+  <wt:card title="折线图">
+    <wt:chart is-horizontal="false" show-legend="true" show-tooltip="true" field="@Model.charts" type="Line" title="折线图" height="400" theme="WalkingTec.Mvvm.TagHelpers.LayUI.Chart.ChartThemeEnum.chalk" trigger-url="/DataTable/GetCharts" />
+  </wt:card>
+  <wt:card title="柱状图">
+    <wt:chart is-horizontal="false" show-legend="true" show-tooltip="true" field="@Model.charts" type="Bar" title="柱状图" height="400" theme="WalkingTec.Mvvm.TagHelpers.LayUI.Chart.ChartThemeEnum.essos" trigger-url="/DataTable/GetCharts" />
+  </wt:card>
+</wt:row>
+
 
 <script>
   function test() {
