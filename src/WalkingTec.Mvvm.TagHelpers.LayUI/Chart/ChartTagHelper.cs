@@ -12,7 +12,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 
     public enum ChartTypeEnum { Bar, Pie, Line, PieHollow, Scatter }
 
-    //[Obsolete("已废弃，预计v3.0版本及v2.10版本开始将删除 wt:chart")]
     [HtmlTargetElement("wt:chart", TagStructure = TagStructure.WithoutEndTag)]
     public class ChartTagHelper : BaseElementTag
     {
@@ -30,10 +29,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 
         public bool IsHorizontal { get; set; }
         //折线图弧度
-        public bool OpenSmooth { get; set; }
+        public bool OpenSmooth { get; set; } 
 
         public string TriggerUrl { get; set; }
         public int Radius { get; set; } = 100;
+
+        public string NameX { get; set; } = "";
+        public string NameY { get; set; } = "";
+        public string NameAddition { get; set; } = "";
+        public string NameCategory { get; set; } = "";
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -69,6 +73,26 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             if (ShowTooltip == true)
             {
                 tooltip = "tooltip: {},";
+                if(Type == ChartTypeEnum.Scatter)
+                {
+                    tooltip = @$"tooltip:{{
+formatter: function (params) {{
+    var xl = '{(NameX == "" ? "" : NameX + ":")}';
+    var yl = '{(NameY == "" ? "" : NameY + ":")}';
+    var al = '{(NameAddition == "" ? "" : NameAddition + ":")}';
+    var cl = '{(NameCategory == "" ? "" : NameCategory + ":")}';
+    return params.seriesName + ' <br/>'
+                + xl + params.value[0] + ' <br/>'
+                + yl + params.value[1] + ' <br/>'
+                + al + params.value[2] + ' <br/>'
+                + cl + params.value[3] + ' <br/>';
+    }},
+}},";
+                }
+                if(Type == ChartTypeEnum.Line)
+                {
+                    tooltip = "tooltip: {trigger: 'axis'},";
+                }
             }
 
             var typeSeries = string.Empty;
@@ -76,27 +100,27 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
                 typeSeries = $"\"type\":\"pie\",\"radius\": [\"40%\", \"70%\"]";
             else
                 typeSeries = $"\"type\":\"{Type.ToString().ToLower()}\"";
-            if (OpenSmooth && Type == ChartTypeEnum.Line)
-                typeSeries += ",\"smooth\": true";
+            if (Type == ChartTypeEnum.Line)
+                typeSeries += $",\"smooth\": {OpenSmooth.ToString().ToLower()}";
 
 
-            string xAxis = "", yAxis = "";
+                string xAxis = "", yAxis = "";
             if (Type != ChartTypeEnum.Pie)
             {
                 if (IsHorizontal == false)
                 {
-                    xAxis = "xAxis: {type: 'category'},";
-                    yAxis = "yAxis: {},";
+                    xAxis = $"xAxis: {{name:'{NameX}',type: 'category'}},";
+                    yAxis = $"yAxis: {{name:'{NameY}'}},";
                 }
                 else
                 {
-                    xAxis = "xAxis: {},";
-                    yAxis = "yAxis: {type: 'category'},";
+                    xAxis = $"xAxis: {{name:'{NameY}'}},";
+                    yAxis = $"yAxis: {{name:'{NameX}',type: 'category'}},";
                 }
                 if (Type == ChartTypeEnum.Scatter)
                 {
-                    xAxis = "xAxis: { type: 'value',splitLine: { lineStyle: { type: 'dashed'} } },";
-                    yAxis = "yAxis:{splitLine:{lineStyle:{type: 'dashed'} },scale: true},";
+                    xAxis = $"xAxis: {{ name:'{NameX}',type: 'value',splitLine: {{ lineStyle: {{ type: 'dashed'}} }} }},";
+                    yAxis = $"yAxis:{{name:'{NameY}',splitLine:{{lineStyle:{{type: 'dashed'}} }},scale: true}},";
                 }
             }
             if (Type == ChartTypeEnum.Scatter && ShowLegend == true)

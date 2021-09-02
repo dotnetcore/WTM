@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
-        public static (string, string, string) ToChartData<T>(this List<T> self, int radius = 100)
+        public static object ToChartData<T>(this List<T> self, int radius = 100, string seriesname="Info")
         {
             //var data = string.Empty;
             if (self != null)
@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     if (string.IsNullOrEmpty(cd[i].Series))
                     {
-                        cd[i].Series = "数据";
+                        cd[i].Series = "Data";
                     }
                 }
                 string[] series = cd.Select(x => x.Series).Distinct().ToArray();
@@ -98,7 +98,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 else
                 {
                     object[,] rtc = new object[yCount.Count + 1, series.Length + 1];
-                    rtc[0, 0] = "\"product\"";
+                    rtc[0, 0] = $"\"{seriesname}\"";
 
                     for (i = 0; i < series.Length; i++)
                     {
@@ -159,9 +159,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
                 legend += "]}";
                 seriesStr += "]";
-                return (dataset, seriesStr, legend);
+                return new { dataset = dataset, series = seriesStr, legend = legend };
             }
-            return ("", "", "");
+            return null;
         }
 
     }

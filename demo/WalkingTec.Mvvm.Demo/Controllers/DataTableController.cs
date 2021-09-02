@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
             }
             var rv = data.ToChartData();
-            return Json(new { dataset = rv.Item1, series = rv.Item2, legend = rv.Item3 });
+            return Json(rv);
         }
 
         public IActionResult GetCharts()
@@ -95,7 +95,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
             }
             var rv = data.ToChartData();
-            return Json(new { dataset = rv.Item1, series = rv.Item2, legend = rv.Item3 });
+            return Json(rv);
         }
 
         [ActionDescription("搜索")]

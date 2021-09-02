@@ -41,7 +41,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
                     });
                 }
             }
-            var rv = data.ToChartData();
             return Ok(data);
         }
     }
