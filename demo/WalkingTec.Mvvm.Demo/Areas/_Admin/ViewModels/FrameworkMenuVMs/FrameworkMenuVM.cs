@@ -158,6 +158,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     List<SimpleAction> otherActions = null;
                  
                     var mainModule = m.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
+                    if (actionPage == null)
+                    {
+                        actionPage = new SimpleAction
+                        {
+                            Module = mainModule,
+                            Url = "/" + mainModule.ClassName,
+                            ActionName = mainModule.ModuleName
+                        };
+                    }
                     var mainAction = actionPage;
 
                     Entity.Url = mainAction.Url;
@@ -258,15 +267,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         return;
                     }
                     List<SimpleAction> otherActions = null;
-                   
-                    //if (mainAction == null && Entity.ShowOnMenu == false)
-                    //{
-                    //    var model = modules.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
-                    //    mainAction = new SimpleAction();
-                    //    mainAction.Module = model;
-                    //    mainAction.MethodName = null;
-                    //}
                     var mainModule = m.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
+                    if(actionPage == null)
+                    {
+                        actionPage = new SimpleAction
+                        {
+                            Module = mainModule,
+                            Url = "/" + mainModule.ClassName,
+                            ActionName = mainModule.ModuleName
+                        };
+                    }
                     var mainAction = actionPage;
 
                     Entity.Url = mainAction.Url;
