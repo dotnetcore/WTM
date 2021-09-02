@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("报表查询", IsPage = true)]
+        [ActionDescription("图表实例", IsPage = true)]
         public IActionResult ChartsIndex()
         {
             var vm = Wtm.CreateVM<DatatableListVM>();
