@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Models\Virus\" />
+    <Folder Include="wwwroot\layuiadmin\lib\extend\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
