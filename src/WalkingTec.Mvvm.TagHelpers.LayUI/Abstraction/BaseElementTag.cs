@@ -52,7 +52,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 TagHelperAttribute prestyle = null;
                 if(output.Attributes.TryGetAttribute("style", out prestyle))
                 {
-                    Style = prestyle.Value+Style;
+                    string s = prestyle.Value.ToString();
+                    if(s.EndsWith(";") == false)
+                    {
+                        s += ";";
+                    }
+                    Style = s+Style;
                 }
                 
                 output.Attributes.SetAttribute("style",  Style);
