@@ -455,6 +455,27 @@ window.ff = {
                         , btn: []
                         , id: windowid //设定一个id，防止重复弹出
                         , content: str
+                        , resizing: function (layero) {
+                            $(layero).find("div[ischart = '1']").each(
+                                function (index) {
+                                    eval($(this).attr('id') + 'Chart.resize();');
+                                }
+                            );
+                        }
+                        , full: function (layero) {
+                            $(layero).find("div[ischart = '1']").each(
+                                function (index) {
+                                    eval($(this).attr('id') + 'Chart.resize();');
+                                }
+                            );
+                        }
+                        , restore : function (layero) {
+                            $(layero).find("div[ischart = '1']").each(
+                                function (index) {
+                                    eval($(this).attr('id') + 'Chart.resize();');
+                                }
+                            );
+                        }
                         , end: function () {
                             if (ff.GetCookie("windowids") === wid) {
                                 ff.SetCookie("windowids", owid);
@@ -578,6 +599,42 @@ window.ff = {
             else {
                 layui.admin.closeThisTabs();
             }
+        }
+    },
+
+    ResizeChart: function (id) {
+        if (layui == undefined ) {
+            return;
+        }
+        if (id === undefined || id === null || id === '') {
+            layui.use(['admin'], function () {
+                layui.admin.resize(function () {
+                    {
+                        console.log(id);
+                       $("div[ischart = '1']").each(
+                            function (index) {
+                                eval($(this).attr('id') + 'Chart.resize();');
+                            }
+                        );
+                    }
+                });
+            }
+            );
+        }
+        else {
+            layui.use(['admin'], function () {
+                layui.admin.resize(function () {
+                    {
+                        console.log(id);
+                        $("#"+id).find("div[ischart = '1']").each(
+                            function (index) {
+                               eval($(this).attr('id') + 'Chart.resize();');
+                            }
+                        );
+                    }
+                });
+            }
+            );
         }
     },
 

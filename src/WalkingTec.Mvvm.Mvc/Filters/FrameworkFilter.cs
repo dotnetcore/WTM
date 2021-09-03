@@ -359,6 +359,17 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             var ctrlActDesc = context.ActionDescriptor as ControllerActionDescriptor;
             var nolog = ctrlActDesc.MethodInfo.IsDefined(typeof(NoLogAttribute), false) || ctrlActDesc.ControllerTypeInfo.IsDefined(typeof(NoLogAttribute), false);
 
+            BaseVM model = null;
+            if (context.Result is ViewResult vr)
+            {
+                model = vr.Model as BaseVM;
+            }
+            if (context.Result is PartialViewResult pvr)
+            {
+                model = pvr.Model as BaseVM;
+                context.HttpContext.Response.WriteAsync($"<script>ff.ResizeChart('{model?.ViewDivId}')</script>");
+            }
+
             //如果是来自Error，则已经记录过日志，跳过
             if (ctrlActDesc.ControllerName == "_Framework" && ctrlActDesc.ActionName == "Error")
             {

@@ -34,6 +34,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 <script>
     $('#{Id} ul li').eq({SelectedIndex}).addClass('layui-this');
     $('#{Id} .layui-tab-item').eq({SelectedIndex}).addClass('layui-show');
+    layui.element.on('tab({Id}filter)', function(data){{
+        $('#{Id}').find(""div[ischart = '1']"").each(
+            function (index) {{
+                eval($(this).attr('id') + 'Chart.resize();');
+            }}
+        );
+}});
 </script>
 ");
             base.Process(context, output);
