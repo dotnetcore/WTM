@@ -610,7 +610,6 @@ window.ff = {
             layui.use(['admin'], function () {
                 layui.admin.resize(function () {
                     {
-                        console.log(id);
                        $("div[ischart = '1']").each(
                             function (index) {
                                 eval($(this).attr('id') + 'Chart.resize();');
@@ -625,7 +624,6 @@ window.ff = {
             layui.use(['admin'], function () {
                 layui.admin.resize(function () {
                     {
-                        console.log(id);
                         $("#"+id).find("div[ischart = '1']").each(
                             function (index) {
                                eval($(this).attr('id') + 'Chart.resize();');
