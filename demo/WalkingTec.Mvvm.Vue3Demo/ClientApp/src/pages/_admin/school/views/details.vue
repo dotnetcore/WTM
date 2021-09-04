@@ -11,7 +11,7 @@
       <WtmField entityKey="SchoolType" />
       <WtmField entityKey="Remark" />
     </a-space>
-    <WtmField entityKey="Majors" :fieldProps="{ columnDefs, gridOptions }" />
+    <WtmField entityKey="Majors" :fieldProps="{ columnDefs, gridOptions }" debug />
   </WtmDetails>
 </template>
 <script lang="ts">

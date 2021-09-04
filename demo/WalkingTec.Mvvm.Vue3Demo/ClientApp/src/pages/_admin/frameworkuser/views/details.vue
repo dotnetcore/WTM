@@ -5,7 +5,7 @@
     </template>
     <a-space>
       <WtmField entityKey="ITCode" :disabled="IsEdit" />
-      <WtmField entityKey="Password" :disabled="IsEdit" />
+      <WtmField entityKey="Password" v-if="!IsEdit" />
     </a-space>
     <a-space>
       <WtmField entityKey="Email" />
@@ -25,7 +25,7 @@
       <div v-else></div>
     </a-space>
     <a-space>
-      <WtmField entityKey="PhotoId" />
+      <WtmField entityKey="PhotoId" debug/>
       <div></div>
     </a-space>
     <WtmField entityKey="SelectedRolesCodes" />

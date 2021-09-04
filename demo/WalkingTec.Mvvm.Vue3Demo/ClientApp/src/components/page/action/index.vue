@@ -98,6 +98,7 @@ export default class extends mixins(ActionBasics) {
 .w-action-space {
   width: 100%;
   display: block !important;
+  text-align: right;
   > .ant-space-item {
     display: inline-block !important;
   }
