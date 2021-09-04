@@ -30,8 +30,10 @@ export class UserController extends UserEntity {
     async onSignIn(body: { account: string, password: string }) {
         this.onToggleLoading(true)
         try {
-            const res = await this.$ajax.post<any>('/api/_Account/Login', { rememberLogin: false, ...body }, { 'Content-Type': null })
+            // const res = await this.$ajax.post<any>('/api/_Account/Login', { rememberLogin: false, ...body }, { 'Content-Type': null })
+            const res = await this.$ajax.post<any>('/api/_Account/LoginJwt', { rememberLogin: false, ...body })
             this.onSetUserInfo(res)
+            this.onCheckLogin()
         } catch (error) {
             throw error
         }
@@ -45,10 +47,12 @@ export class UserController extends UserEntity {
     async onCheckLogin() {
         this.onToggleLoading(true)
         try {
-            const userid = lodash.get(this.UserInfo, 'ITCode');
-            if (userid) {
-                const res = await this.$ajax.get("/api/_Account/CheckUserInfo");
-                this.onSetUserInfo(res)
+            // const userid = lodash.get(this.UserInfo, 'ITCode');
+            const access_token = lodash.get(this.UserInfo, 'access_token');
+            if (access_token) {
+                lodash.set(AjaxBasics.headers, 'Authorization', `bearer ${access_token}`)
+                const res = await this.$ajax.get("/api/_Account/CheckUserInfo", {}, { Authorization: `bearer ${access_token}` });
+                this.onSetUserInfo(lodash.merge({}, this.UserInfo, res))
             }
             this.onToggleLoading(false)
         } catch (error) {
