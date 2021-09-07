@@ -277,15 +277,23 @@ namespace WalkingTec.Mvvm.Core.Extensions
         private static IQueryable<T> AppendSelfDPWhere<T>(IQueryable<T> query, WTMContext wtmcontext, List<SimpleDataPri> dps) where T : TopBasePoco
         {
             var dpsSetting = wtmcontext?.DataPrivilegeSettings;
-            ParameterExpression pe = Expression.Parameter(typeof(T));
-            Expression peid = Expression.Property(pe, typeof(T).GetSingleProperty("ID"));
+            Type modelTye = typeof(T);
+            bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelTye);
+            ParameterExpression pe = Expression.Parameter(modelTye);
+            Expression peid = Expression.Property(pe, modelTye.GetSingleProperty("ID"));
             //循环数据权限，加入到where条件中，达到自动过滤的效果
+
+            Expression selfexp = Expression.NotEqual(Expression.Constant(1), Expression.Constant(1));
+            if(isBasePoco == true)
+            {
+                selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+            }
             if (dpsSetting?.Where(x => x.ModelName == query.ElementType.Name).SingleOrDefault() != null)
             {
                 //如果dps参数是空，则生成 1!=1 这种错误的表达式，这样就查不到任何数据了
                 if (dps == null)
                 {
-                    query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
+                    query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
                 }
                 else
                 {
@@ -293,13 +301,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     var ids = dps.Where(x => x.TableName == query.ElementType.Name).Select(x => x.RelateId).ToList();
                     if (ids == null || ids.Count() == 0)
                     {
-                        query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
+                        query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
                     }
                     else
                     {
                         if (!ids.Contains(null))
                         {
-                            query = query.Where(ids.GetContainIdExpression<T>());
+                            query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.OrElse(selfexp, ids.GetContainIdExpression<T>())));
                         }
                     }
                 }
@@ -358,14 +366,21 @@ namespace WalkingTec.Mvvm.Core.Extensions
         public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery,WTMContext wtmcontext,List<string> tableName, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
         {
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
+            Type modelTye = typeof(T);
+            bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelTye);
 
             // var dpsSetting = BaseVM.AllDPS;
-            ParameterExpression pe = Expression.Parameter(typeof(T));
+            ParameterExpression pe = Expression.Parameter(modelTye);
             Expression left1 = Expression.Constant(1);
             Expression right1 = Expression.Constant(1);
             Expression trueExp = Expression.Equal(left1, right1);
             Expression falseExp = Expression.NotEqual(left1, right1);
             Expression finalExp = null;
+            Expression selfexp = falseExp;
+            if (isBasePoco == true)
+            {
+                selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+            }
             int tindex = 0;
             //循环所有关联外键
             foreach (var IdField in IdFields)
@@ -399,7 +414,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 //如果dps为空，则拼接一个返回假的表达式，这样就查询不出任何数据
                 if (dps == null)
                 {
-                    exp = falseExp;
+                    exp = selfexp;
                 }
                 else
                 {
@@ -435,15 +450,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     //如果没有关联的id，则拼接一个返回假的where，是语句查询不到任何数据
                     if (ids == null || ids.Count() == 0)
                     {
-                        exp = falseExp;
-                        //if (peid.Type == typeof(Guid))
-                        //{
-                        //    exp = Expression.Equal(peid, Expression.Constant(Guid.NewGuid()));
-                        //}
-                        //else
-                        //{
-                        //    exp = Expression.Equal(peid, Expression.Constant(null));
-                        //}
+                        exp = selfexp;
                     }
                     //如果有关联 Id
                     else
@@ -477,6 +484,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             {
                                 exp = ids.GetContainIdExpression(typeof(T), pe, peid).Body;
                             }
+                            exp = Expression.OrElse(selfexp, exp);
                         }
                     }
                 }
