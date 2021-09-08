@@ -104,7 +104,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 ID = Guid.NewGuid(),
                                 ParentId = modelmenu.ID,
                                 PageName = item.ActionDes == null ? item.ModuleName : item.ActionDes.Description,
-                                Url = url
+                                Url = url                               
                             });
                         }
                     }
@@ -129,6 +129,7 @@ namespace WalkingTec.Mvvm.Mvc
                                     DisplayOrder = x.DisplayOrder,
                                     ShowOnMenu = x.ShowOnMenu,
                                     Icon = x.Icon,
+                                    IsPublic = x.IsPublic
                                 })
                                 .ToList());
                     }

@@ -473,7 +473,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                 pagetitle += menu.PageName;
             }
-            if (Wtm.IsAccessable(url))
+            if (Wtm.IsUrlPublic(url) || Wtm.IsAccessable(url))
             {
                 return Content($@"<title>{pagetitle}</title>
 <iframe src='{url}' frameborder='0' class='layadmin-iframe'></iframe>");
@@ -655,7 +655,14 @@ namespace WalkingTec.Mvvm.Mvc
             url = HttpUtility.UrlDecode(url);
             if (Wtm.LoginUserInfo == null)
             {
-                return Unauthorized();
+                if (Wtm.IsUrlPublic(url))
+                {
+                    return Ok(true);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
             else
             {

@@ -435,6 +435,29 @@ namespace WalkingTec.Mvvm.Core
             return false;
         }
 
+        public bool IsUrlPublic(string url)
+        {
+            var isPublic = false;
+            try
+            {
+                url = Regex.Replace(url, "/do(batch.*)", "/$1", RegexOptions.IgnoreCase);
+                url = url.Trim();
+
+                if (url.StartsWith("#"))
+                {
+                    isPublic = true;
+                }
+                var menus = GlobaInfo.AllMenus;
+                var menu = Utils.FindMenu(url, menus);
+                if (menu != null && menu.IsPublic == true)
+                {
+                    isPublic = true;
+                }
+            }
+            catch { }
+            return isPublic;
+        }
+
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Normal)
         {
             var log = this.Log?.GetActionLog();

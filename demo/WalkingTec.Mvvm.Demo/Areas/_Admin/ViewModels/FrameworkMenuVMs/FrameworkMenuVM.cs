@@ -194,7 +194,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             }
                             var menu = new FrameworkMenu();
                             menu.FolderOnly = false;
-                            menu.IsPublic = false;
+                            menu.IsPublic = Entity.IsPublic;
                             menu.Parent = Entity;
                             menu.ShowOnMenu = false;
                             menu.DisplayOrder = order++;
@@ -214,13 +214,20 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
                 else
                 {
-                    Entity.Children = null;
+                    Entity.Children = new List<FrameworkMenu>();
                     Entity.Url = null;
                 }
             }
             if (FC.ContainsKey("Entity.Children") == false)
             {
                 FC.Add("Entity.Children", 0);
+                FC.Add("Entity.Children[0].IsPublic",0);
+                FC.Add("Entity.Children[0].PageName", 0);
+                FC.Add("Entity.Children[0].ModuleName", 0);
+                FC.Add("Entity.Children[0].ActionName", 0);
+                FC.Add("Entity.Children[0].ClassName", 0);
+                FC.Add("Entity.Children[0].MethodName", 0);
+                FC.Add("Entity.Children[0].Url", 0);
             }
             FC.Add("Entity.ModuleName", 0);
             base.DoEdit();
@@ -294,7 +301,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         {
                             FrameworkMenu menu = new FrameworkMenu();
                             menu.FolderOnly = false;
-                            menu.IsPublic = false;
+                            menu.IsPublic = Entity.IsPublic;
                             menu.Parent = Entity;
                             menu.ShowOnMenu = false;
                             menu.DisplayOrder = order++;

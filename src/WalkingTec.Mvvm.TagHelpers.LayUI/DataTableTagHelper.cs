@@ -729,7 +729,7 @@ setTimeout(function(){{
             bool isSub = false
         )
         {
-            if (string.IsNullOrEmpty(item.Url) || vm.Wtm?.IsAccessable(item.Url) == true ||
+            if (string.IsNullOrEmpty(item.Url) || vm.Wtm?.IsUrlPublic(item.Url)==true || vm.Wtm?.IsAccessable(item.Url) == true ||
                 item.ParameterType == GridActionParameterTypesEnum.AddRow ||
                 item.ParameterType == GridActionParameterTypesEnum.RemoveRow                 
             )
