@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +58,7 @@ namespace WalkingTec.Mvvm.Demo
             }
             catch { }
 
+           
             if (state == true || emptydb == true)
             {
                 //when state is true, means it's the first time EF create database, do data init here
@@ -76,11 +79,52 @@ namespace WalkingTec.Mvvm.Demo
                 Set<FrameworkUser>().Add(user);
                 Set<FrameworkUserRole>().Add(userrole);
                 await SaveChangesAsync();
+
+                Dictionary<string, List<object>> data = new Dictionary<string, List<object>>();
+                SetTestData(typeof(Student), data);
+                foreach (var item in data)
+                {
+                    foreach (var obj in item.Value)
+                    {
+                        Attach(obj);
+                    }
+                }
+                await SaveChangesAsync();
             }
             return state;
         }
 
+        private void SetTestData(Type modelType, Dictionary<string, List<object>> data, int count = 100)
+        {
+            if (data.ContainsKey(modelType.FullName))
+            {
+                return;
+            }
+            Random r = new Random();
+            data[modelType.FullName] = new List<object>();
+            for (int i = 0; i < count; i++)
+            {
+                var modelprops = modelType.GetRandomValues();
+                var newobj = modelType.GetConstructor(Type.EmptyTypes).Invoke(null);
+                foreach (var pro in modelprops)
+                {
+                    if (pro.Value == "$fk$")
+                    {
+                        var fktype = modelType.GetSingleProperty(pro.Key[0..^2])?.PropertyType;
+                        SetTestData(fktype, data);
+                        newobj.SetPropertyValue(pro.Key, data[fktype.FullName][r.Next(0, 100)]);
+                    }
+                    else
+                    {
+                        newobj.SetPropertyValue(pro.Key, pro.Value);
+                    }
+                }
+                data[modelType.FullName].Add(newobj);
+            }
+        }
+
     }
+
     public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
     {
         public DataContext CreateDbContext(string[] args)

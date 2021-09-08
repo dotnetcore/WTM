@@ -49,10 +49,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
-        public static object ToChartData<T>(this List<T> self, int radius = 100, string seriesname="Info")
+        public static object ToChartData<T>(this List<T> self, int radius = 100, string seriesname = "Info")
         {
             //var data = string.Empty;
-            if (self != null)
+            if (self != null && self.Count > 0)
             {
                 var cd = self as List<ChartData>;
                 var i = 0;
@@ -98,22 +98,26 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 else
                 {
                     object[,] rtc = new object[yCount.Count + 1, series.Length + 1];
-                    rtc[0, 0] = $"\"{seriesname}\"";
+                    rtc[0, 0] = $"{seriesname}";
 
                     for (i = 0; i < series.Length; i++)
                     {
-                        rtc[0, i + 1] = "\"" + series[i] + "\"";
+                        rtc[0, i + 1] = series[i];
                     }
                     i = 0;
                     foreach (var item in yCount)
                     {
-                        rtc[i + 1, 0] = "\"" + item.Key + "\"";
+                        rtc[i + 1, 0] = item.Key;
                         for (int j = 0; j < series.Length; j++)
                         {
                             var ser = item.Where(x => x.Series == series[j])?.FirstOrDefault();
                             if (ser != null)
                             {
                                 rtc[i + 1, j + 1] = ser.Value;
+                            }
+                            else
+                            {
+                                rtc[i + 1, j + 1] = 0;
                             }
                         }
 
@@ -124,7 +128,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         dataset += "[";
                         for (int j = 0; j <= series.Length; j++)
                         {
-                            dataset += rtc[i, j];
+                            dataset += $"\"{rtc[i, j]}\"";
                             if (j < series.Length)
                             {
                                 dataset += ",";
