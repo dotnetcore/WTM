@@ -1,7 +1,7 @@
 @page "/BasicData/Chart"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs;
 @inherits BasePage
-@attribute [ActionDescription("图表实例", "WalkingTec.Mvvm.BlazorDemo.Controllers,Chart")]
+@attribute [ActionDescription("图表", "WalkingTec.Mvvm.BlazorDemo.Controllers,Chart")]
 
 <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Inline">
     <Chart ChartType="ChartType.Line" OnInitAsync="() =>OnInit(title1)"></Chart>

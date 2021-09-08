@@ -21,19 +21,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("图表实例", IsPage = true)]
+        [ActionDescription("搜索", IsPage = false)]
         public IActionResult ChartsIndex()
         {
             var vm = Wtm.CreateVM<DatatableListVM>();
-
-            //var data = Wtm.DC.Set<Major>().AsNoTracking().Include(x => x.School)
-            //        .GroupBy(x => new { x.School.SchoolName, x.MajorType }, x => x.ID).Select(x => new ChartData
-            //        {
-            //            Series = x.Key.SchoolName,
-            //            Category = x.Key.MajorType.ToString(),
-            //            Value = x.Count(),
-            //            //yAvg= x.Average()
-            //        }).ToList();
             //data.g
 
             //var data = new List<ChartData>();
@@ -79,21 +70,116 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         public IActionResult GetCharts()
         {
-            var data = new List<ChartData>();
-            for (int i = 0; i < 5; i++)
-            {
-                for (int j = 0; j < 5; j++)
-                {
-                    data.Add(new ChartData
-                    {
-                        Category = "a" + i,
-                        Value = new Random().Next(100, 1000),
-                        Series = "bbb" + j,
-                        Addition = new Random().Next(100, 1000),
+            //var data = new List<ChartData>();
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    for (int j = 0; j < 5; j++)
+            //    {
+            //        data.Add(new ChartData
+            //        {
+            //            Category = "a" + i,
+            //            Value = new Random().Next(100, 1000),
+            //            Series = "bbb" + j,
+            //            Addition = new Random().Next(100, 1000),
 
-                    });
-                }
-            }
+            //        });
+            //    }
+            //}
+            DateTime dateTime = new DateTime(1900, 1, 1);
+
+            //.Select(x => new
+            // {
+            //     abc =
+            //             x.CreateTime.Value.Year.ToString() + ","
+            //             +
+            //             (((SqlServerDbFunctionsExtensions.DateDiffMonth(EF.Functions, dateTime, x.CreateTime.Value) % 12 + 1) - 1) / 3 + 1).ToString(),
+            //     x.MajorName,
+            //     x.CreateTime
+            // })
+
+            //var data = Wtm.DC.Set<Major>().AsNoTracking().Include(x => x.School)
+            //        .Select(x => new
+            //        {
+            //            abc =
+            //            //x.CreateTime.Value.Year * 100 + ((x.CreateTime.Value.Month - 1) / 3 + 1),
+            //            x.CreateTime.Value.DayOfYear / 7 + 1,
+            //            x.MajorName,
+            //            x.CreateTime
+            //        })
+            //        .GroupBy(x => new
+            //        {
+            //            x.abc,
+            //            x.MajorName
+            //        }).Select(x => new ChartData
+            //        //.GroupBy(x => new { x.School.SchoolName, x.MajorType }, x => x.ID).Select(x => new ChartData
+            //        {
+            //            Series = x.Key.MajorName,
+            //            //Category = x.Min(y => y.CreateTime).Value.ToString("yyyy.") + ((x.Min(y => y.CreateTime).Value.Month - 1) / 3 + 1),
+            //            Category = x.Min(y => y.CreateTime).Value.ToString("yyyy.") + ((x.Min(y => y.CreateTime).Value.DayOfYear) / 7 + 1),
+            //            //Category = x.Key.abc,
+            //            Value = x.Count(),
+
+            //            //yAvg= x.Average()
+            //        }).ToList();
+
+            //int group = int.Parse((max - min) / 2);
+            var data = Wtm.DC.Set<ActionLog>().AsNoTracking()
+                      .Select(x => new
+                      {
+                          abc =
+                         //x.CreateTime.Value.Year * 100 + ((x.CreateTime.Value.Month - 1) / 3 + 1),
+                         Convert.ToInt32(x.Duration / 2) + 1,
+                          //x.CreateTime.Value.Year * 1000 + x.CreateTime.Value.DayOfYear,
+                          ef = x.LogType,
+                          x.Duration,
+                      })
+                      .GroupBy(x => new
+                      {
+                          x.abc,
+                          x.ef
+                      }, x => new { x.Duration }).OrderBy(x => x.Key.abc).Select(x => new ChartData
+                      //.GroupBy(x => new { x.School.SchoolName, x.MajorType }, x => x.ID).Select(x => new ChartData
+                      {
+                          Series = x.Key.ef.ToString(),
+                          //Category = x.Min(y => y.CreateTime).Value.ToString("yyyy.") + ((x.Min(y => y.CreateTime).Value.Month - 1) / 3 + 1),
+                          Category = ((x.Key.abc - 1) * 2).ToString() + "-" + (x.Key.abc * 2).ToString(),
+                          //Category = x.Key.abc,
+                          Value = x.Count(),
+
+                          //yAvg= x.Average()
+                      }).ToList();
+
+            //var data1 = Wtm.DC.Set<Student>()
+            //        .Join(Wtm.DC.Set<StudentMajor>(), a => a.ID, b => b.StudentId, (a, b) => new { a.Name, a.CreateTime, b.MajorId })
+            //        .Join(Wtm.DC.Set<Major>(), a => a.MajorId, b => b.ID, (m, n) => new { m.Name, m.CreateTime, n.MajorName })
+            //      .Select(x => new
+            //      {
+            //          abc =
+            //         x.CreateTime.Value.Year * 100 + ((x.CreateTime.Value.Month - 1) / 3 + 1),
+            //          Convert.ToInt32(x.Duration / 2) + 1,
+            //          x.Name,
+            //          x.MajorName,
+            //      }).ToList();
+
+
+            //var data = data1
+            //       .GroupBy(x => new
+            //       {
+            //           x.abc,
+            //           x.MajorName
+            //       }).OrderBy(x => x.Key.abc).Select(x => new ChartData
+            //      .GroupBy(x => new { x.School.SchoolName, x.MajorType }, x => x.ID).Select(x => new ChartData
+            //      {
+            //          Series = x.Key.MajorName.ToString(),
+            //          Category = x.Min(y => y.CreateTime).Value.ToString("yyyy.") + ((x.Min(y => y.CreateTime).Value.Month - 1) / 3 + 1),
+            //          Category = x.Key.abc,
+            //          Category = x.Key.abc,
+            //          Value = x.Count(),
+
+            //          yAvg = x.Average()
+            //      }).ToList();
+
+
             var rv = data.ToChartData();
             return Json(rv);
         }
