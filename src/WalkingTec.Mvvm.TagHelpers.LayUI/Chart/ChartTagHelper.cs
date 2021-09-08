@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             if (ShowTooltip == true)
             {
                 tooltip = "tooltip: {},";
-                if(Type == ChartTypeEnum.Scatter)
+                if (Type == ChartTypeEnum.Scatter)
                 {
                     tooltip = @$"tooltip:{{
 formatter: function (params) {{
@@ -89,7 +89,7 @@ formatter: function (params) {{
     }},
 }},";
                 }
-                if(Type == ChartTypeEnum.Line)
+                if (Type == ChartTypeEnum.Line)
                 {
                     tooltip = "tooltip: {trigger: 'axis'},";
                 }
@@ -104,7 +104,7 @@ formatter: function (params) {{
                 typeSeries += $",\"smooth\": {OpenSmooth.ToString().ToLower()}";
 
 
-                string xAxis = "", yAxis = "";
+            string xAxis = "", yAxis = "";
             if (Type != ChartTypeEnum.Pie)
             {
                 if (IsHorizontal == false)
@@ -132,9 +132,6 @@ formatter: function (params) {{
 var {Id}Chart;
 var themeTemp ={(Theme == null ? "'default'" : $"'{Theme.ToString()}'")};
 {Id}Chart = echarts.init(document.getElementById('{Id}'),themeTemp);
-  window.onresize = function(){{
-    $(""div[ischart='1']"").each(function(index){{ eval($( this ).attr('id')+'Chart.resize();'); }});
-  }};
   var {Id}option; 
 $.get('{TriggerUrl}').done(function (data) {{
     if(data.series!=undefined){{
@@ -149,9 +146,8 @@ $.get('{TriggerUrl}').done(function (data) {{
     dataset:JSON.parse(data.dataset),
     series:JSONfns.parse(data.series) 
   }});
-  
+    {Id}Chart.resize();
 }});
-
 </script>
 ");
             base.Process(context, output);

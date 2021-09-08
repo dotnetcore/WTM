@@ -17,6 +17,11 @@
       :columnDefs="columnDefs"
       :gridOptions="gridOptions"
     />
+    <a-list size="small" bordered :data-source="dataError" v-show="dataError.length">
+      <template #renderItem="{ item }">
+        <a-list-item style="color: #ff4d4f;">{{ item.key }} | {{ item.value.help }}</a-list-item>
+      </template>
+    </a-list>
   </div>
 
   <!-- </template> -->
@@ -44,6 +49,18 @@ export default class extends mixins(FieldBasics) {
   // get GridKey() {
   //   return this.$Encryption.MD5(this.lodash.assign({}, { columnDefs: this.columnDefs }, this.gridOptions))
   // }
+  get dataError() {
+    const name = this.lodash.join(this._name, ".");
+    const keys = this.lodash
+      .keys(this.formValidate)
+      .filter(item => this.lodash.includes(item, name));
+    return this.lodash.map(keys, item => {
+      return {
+        key: item,
+        value: this.lodash.get(this.formValidate, item)
+      };
+    });
+  }
   get isReadonly() {
     return this._readonly || this.disabled;
   }

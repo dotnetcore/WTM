@@ -1,39 +1,54 @@
 <template>
-  <!-- <template v-if="_readonly">
-    <a-image :width="100" :src="imageUrl" :fallback="imagefallback" />
+  <template v-if="_readonly">
+    <a-image
+      v-for="(item, index) in imageUrl"
+      :key="index"
+      :width="100"
+      :src="item"
+      :fallback="imagefallback"
+    />
   </template>
-  <template v-else> -->
-  <div class="w-avatar-uploader">
-    <!-- <a-spin :spinning="spinning"> -->
-    <!-- v-model:fileList="fileList" -->
-    <a-upload
-      :disabled="disabled || _readonly"
-      :fileList="fileList"
-      name="file"
-      list-type="picture-card"
-      accept="image/*"
-      :action="action"
-      :before-upload="beforeUpload"
-      @change="onChange"
-      v-bind="_fieldProps"
-    >
-      <!-- <img v-if="imageUrl" :src="imageUrl" class="w-upload-img" /> -->
-      <!-- <a-image
+  <template v-else>
+    <div class="w-avatar-uploader">
+      <!-- <a-spin :spinning="spinning"> -->
+      <!-- v-model:fileList="fileList" -->
+      <a-upload
+        :disabled="disabled || _readonly"
+        :fileList="fileList"
+        name="file"
+        list-type="picture-card"
+        accept="image/*"
+        :action="action"
+        :before-upload="beforeUpload"
+        @change="onChange"
+        @preview="handlePreview"
+        v-bind="_fieldProps"
+      >
+        <!-- <img v-if="imageUrl" :src="imageUrl" class="w-upload-img" /> -->
+        <!-- <a-image
+            @click.self.stop
             v-if="imageUrl"
             :width="104"
             class="w-upload-img"
             :src="imageUrl"
             :fallback="imagefallback"
           /> -->
-      <div v-if="isPlusBottun">
-        <!-- <loading-outlined v-if="loading"></loading-outlined> -->
-        <plus-outlined></plus-outlined>
-        <div class="ant-upload-text">Upload</div>
-      </div>
-    </a-upload>
-    <!-- </a-spin> -->
-  </div>
-  <!-- </template> -->
+        <div v-if="isPlusBottun">
+          <!-- <loading-outlined v-if="loading"></loading-outlined> -->
+          <plus-outlined></plus-outlined>
+          <div class="ant-upload-text">Upload</div>
+        </div>
+      </a-upload>
+      <!-- </a-spin> -->
+      <a-modal
+        :visible="previewVisible"
+        :footer="null"
+        @cancel="handlePreview(false)"
+      >
+        <img alt="example" style="width: 100%" :src="previewUrl" />
+      </a-modal>
+    </div>
+  </template>
 </template>
 <script lang="ts">
 import { Vue, Options, Watch, mixins, Inject } from "vue-property-decorator";
@@ -49,7 +64,9 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly PageEntity;
   // 表单类型
   @Inject({ default: "" }) readonly formType;
-  imageUrl = "";
+  imageUrl = [];
+  previewUrl = "";
+  previewVisible = false;
   get action() {
     return $System.FilesController.getUploadUrl();
   }
@@ -79,24 +96,58 @@ export default class extends mixins(FieldBasics) {
       console.log(this);
       console.groupEnd();
     }
+    this.onValueChange(this.value, undefined);
   }
   beforeUpload() {}
   onChange(event) {
     this.fileList = event.fileList;
+    if (event.file.status === "removed") {
+      this.value = undefined;
+    }
     if (event.file.status === "uploading") {
       this.spinning = true;
     } else {
       this.spinning = false;
       if (event.file.status === "done") {
-        const Id = this.lodash.get(event, "file.response.Id");
-        this.value = Id;
+        if (this.max === 1) {
+          const Id = this.lodash.get(event, "file.response.Id");
+          this.value = Id;
+        } else {
+          this.value = this.lodash.map(this.fileList, "response.Id");
+        }
       }
     }
   }
   @Watch("value")
   onValueChange(val, old) {
     if (val) {
-      this.imageUrl = $System.FilesController.getDownloadUrl(val);
+      if (this.lodash.isArray(val)) {
+        this.imageUrl = this.lodash.map(
+          val,
+          $System.FilesController.getDownloadUrl
+        );
+      } else {
+        this.imageUrl = [$System.FilesController.getDownloadUrl(val)];
+      }
+      if (this.fileList.length === 0) {
+        this.fileList = this.lodash.map(this.imageUrl, item => {
+          return {
+            uid: item,
+            name: "image.png",
+            status: "done",
+            url: item
+          };
+        });
+      }
+    }
+  }
+  handlePreview(file) {
+    if (file) {
+      this.previewVisible = true;
+      this.previewUrl = "";
+    } else {
+      this.previewVisible = false;
+      this.previewUrl = "";
     }
   }
 }
@@ -117,6 +168,9 @@ function getBase64(img: Blob, callback: (base64Url: string) => void) {
   // }
   .ant-upload.ant-upload-select-picture-card {
     margin: 0;
+  }
+  .anticon-eye {
+    display: none;
   }
 }
 .w-upload-img {

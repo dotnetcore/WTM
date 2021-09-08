@@ -95,6 +95,21 @@ namespace WalkingTec.Mvvm.Core
             idpro.SetValue(this, id.ConvertValue(idpro.PropertyType));
 
         }
+
+        private bool? _isBasePoco = null;
+        [NotMapped]
+        [JsonIgnore]
+        public bool IsBasePoco
+        {
+            get
+            {
+                if(_isBasePoco == null)
+                {
+                    _isBasePoco = typeof(IBasePoco).IsAssignableFrom(this.GetType());
+                }
+                return _isBasePoco.Value;
+            }
+        }
     }
 
 

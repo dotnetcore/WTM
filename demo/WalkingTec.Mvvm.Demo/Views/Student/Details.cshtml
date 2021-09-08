@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
+@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
@@ -11,7 +11,7 @@
 <wt:display field="Entity.CellPhone" />
 <wt:display field="Entity.Address" />
 <wt:display field="Entity.ZipCode" />
-<wt:display field="Entity.PhotoId" />
+<wt:upload field="Entity.PhotoId" disabled="true" upload-type="ImageFile" width="300"/>
 <wt:display field="Entity.IsValid" />
 <wt:display field="Entity.EnRollDate" />
 

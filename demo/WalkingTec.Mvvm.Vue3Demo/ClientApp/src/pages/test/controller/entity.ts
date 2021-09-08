@@ -65,6 +65,12 @@ class Entity {
         label: WTM_ValueType.image,
         valueType: WTM_ValueType.image,
     }
+    readonly image2: WTM_EntitiesField = {
+        name: 'image2',
+        label: WTM_ValueType.image + '多',
+        valueType: WTM_ValueType.image,
+        fieldProps: { max: 9 }
+    }
     readonly [WTM_ValueType.upload]: WTM_EntitiesField = {
         name: WTM_ValueType.upload,
         label: WTM_ValueType.upload,
