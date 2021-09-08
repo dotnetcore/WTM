@@ -2,12 +2,14 @@ import { ColDef, ColGroupDef, GridOptions } from "ag-grid-community";
 import lodash from "lodash";
 import { VueI18n } from 'vue-i18n'
 import { frameworkComponents } from "./framework";
+import { AG_GRID_LOCALE_ZH } from "./locale";
 export default (i18n: VueI18n) => {
     const defaultOptions: GridOptions = {
         suppressColumnVirtualisation: true,
         rowBuffer: 0,
         loadingOverlayComponent: frameworkComponents.loadingOverlay,
         noRowsOverlayComponent: frameworkComponents.noRowsOverlay,
+        localeText: i18n.locale === 'zh' ? AG_GRID_LOCALE_ZH : undefined,
         // debug:true,
         defaultColDef: {
             sortable: true,
