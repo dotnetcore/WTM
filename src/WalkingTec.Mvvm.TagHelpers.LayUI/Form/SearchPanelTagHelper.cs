@@ -31,6 +31,26 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
         }
 
+        private BaseSearcher _searcherVM;
+        private BaseSearcher SearcherVM
+        {
+            get
+            {
+                if(_searcherVM == null)
+                {
+                    if (ListVM == null)
+                    {
+                        _searcherVM = Vm?.Model as BaseSearcher;
+                    }
+                    else
+                    {
+                        _searcherVM = ListVM.Searcher;
+                    }
+                }
+                return _searcherVM;
+            }
+        }
+
         private string _gridIdUserSet;
 
         private string _gridId;
@@ -45,7 +65,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     if (string.IsNullOrEmpty(_gridIdUserSet))
                     {
-                        _gridId = $"{DataTableTagHelper.TABLE_ID_PREFIX}{ListVM.UniqueId}";
+                        if (ListVM != null)
+                        {
+                            _gridId = $"{DataTableTagHelper.TABLE_ID_PREFIX}{ListVM?.UniqueId}";
+                        }
                     }
                     else
                     {
@@ -61,21 +84,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
         }
 
-        private string _tableJSVar;
         /// <summary>
-        /// datatable 渲染之后返回对象的变量名
+        /// 关联的 Chart 组件的 Id
         /// </summary>
-        public string TableJSVar
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_tableJSVar))
-                {
-                    _tableJSVar = $"{DataTableTagHelper.TABLE_JSVAR_PREFIX}{(string.IsNullOrEmpty(_gridIdUserSet) ? ListVM.UniqueId : _gridIdUserSet)}";
-                }
-                return _tableJSVar;
-            }
-        }
+        public string ChartId { get; set; }
 
         private string _searchBtnId;
         /// <summary>
@@ -87,7 +99,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (string.IsNullOrEmpty(_searchBtnId))
                 {
-                    _searchBtnId = $"{SEARCH_BTN_ID_PREFIX}{ListVM.UniqueId}";
+                    _searchBtnId = $"{SEARCH_BTN_ID_PREFIX}{SearcherVM?.UniqueId}";
                 }
                 return _searchBtnId;
             }
@@ -100,7 +112,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <summary>
         /// Reset button Id
         /// </summary>
-        private string ResetBtnId => $"{RESET_BTN_ID_PREFIX}{ListVM.UniqueId}";
+        private string ResetBtnId => $"{RESET_BTN_ID_PREFIX}{SearcherVM.UniqueId}";
 
         /// <summary>
         /// 重置按钮
@@ -122,9 +134,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             bool show = false;
-            if(ListVM?.Searcher?.IsExpanded != null)
+            if(SearcherVM?.IsExpanded != null)
             {
-                Expanded = ListVM?.Searcher?.IsExpanded;
+                Expanded = SearcherVM?.IsExpanded;
             }
             if(Expanded != null)
             {
@@ -158,7 +170,32 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
   </div>
 </div>
 ");
-            output.PostElement.AppendHtml($@"
+
+            var refreshgridjs = "";
+            if (string.IsNullOrEmpty(GridId) == false)
+            {
+                foreach (var item in GridId.Split(','))
+                {
+                    refreshgridjs += $@"
+    var tempwhere{item} = {{}};
+    $.extend(tempwhere{item},{item}defaultfilter.where);
+    {item}filterback.where = tempwhere{item};
+    table.reload('{item}',{{url:{item}url,where: $.extend(tempwhere{item},ff.GetSearchFormData('{Id}','{Vm.Name}')){showpage}}});
+";
+                }
+            }
+            var refreshchartjs = "";
+            if (string.IsNullOrEmpty(ChartId) == false)
+            {
+                output.Attributes.SetAttribute("chartlink",  ChartId);
+                foreach (var item in ChartId.Split(','))
+                {
+                    refreshchartjs += $@"
+    ff.RefreshChart('{item}');
+";
+                }
+            }
+                output.PostElement.AppendHtml($@"
 <script>
   layui.use(['table','element'], function () {{
     const table = layui.table;
@@ -173,12 +210,8 @@ layui.element.on('collapse({tempSearchTitleId}x)', function(data){{
 
 {(OldPost == true ? $"" : $@"
 $('#{SearchBtnId}').on('click', function () {{
-  var layer = layui.layer;
-    var tempwhere = {{}};
-    $.extend(tempwhere,{GridId}defaultfilter.where);
-      {GridId}filterback.where = tempwhere;
-  table.reload('{GridId}',{{url:{GridId}url,where: $.extend(tempwhere,ff.GetSearchFormData('{Id}','{Vm.Name}')){showpage}
-  }})
+    {refreshgridjs}
+    {refreshchartjs}
 }});
     ")}
 layui.element.on('collapse({tempSearchTitleId})', function(data){{ff.triggerResize()}});

@@ -21,10 +21,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("搜索", IsPage = false)]
+        [ActionDescription("搜索", IsPage = true)]
         public IActionResult ChartsIndex()
         {
-            var vm = Wtm.CreateVM<DatatableListVM>();
+            var vm = Wtm.CreateVM<ChartVM>();
             //data.g
 
             //var data = new List<ChartData>();
@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return Json(rv);
         }
 
-        public IActionResult GetCharts()
+        public IActionResult GetCharts(ChartVM vm)
         {
             //var data = new List<ChartData>();
             //for (int i = 0; i < 5; i++)
@@ -124,6 +124,12 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
             //int group = int.Parse((max - min) / 2);
             var data = Wtm.DC.Set<ActionLog>().AsNoTracking()
+                .CheckContain(vm.Searcher.ITCode, x => x.ITCode)
+                .CheckContain(vm.Searcher.ActionUrl, x => x.ActionUrl)
+                .CheckContain(vm.Searcher.LogType, x => x.LogType)
+                .CheckContain(vm.Searcher.IP, x => x.IP)
+                .CheckBetween(vm.Searcher.ActionTime?.GetStartTime(), vm.Searcher.ActionTime?.GetEndTime(), x => x.ActionTime, includeMax: false)
+                .CheckWhere(vm.Searcher.Duration, x => x.Duration >= vm.Searcher.Duration)
                       .Select(x => new
                       {
                           abc =

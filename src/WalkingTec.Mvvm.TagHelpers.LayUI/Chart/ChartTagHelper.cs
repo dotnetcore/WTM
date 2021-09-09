@@ -17,6 +17,34 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
     {
         //public ModelExpression Field { get; set; }
 
+        private string _chartIdUserSet;
+
+        private string _id;
+        public new string Id
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_id))
+                {
+                    if (string.IsNullOrEmpty(_chartIdUserSet))
+                    {
+                        _id = "chart" + Guid.NewGuid().ToString("N");
+                    }
+                    else
+                    {
+                        _id = _chartIdUserSet;
+                    }
+                }
+                return _id;
+            }
+            set
+            {
+                _id = value;
+                _chartIdUserSet = value;
+            }
+        }
+
+
         public string Title { get; set; }
 
         public bool? ShowLegend { get; set; }
@@ -29,7 +57,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 
         public bool IsHorizontal { get; set; }
         //折线图弧度
-        public bool OpenSmooth { get; set; } 
+        public bool OpenSmooth { get; set; }
 
         public string TriggerUrl { get; set; }
         public int Radius { get; set; } = 100;
@@ -41,9 +69,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            Id = "chart" + Guid.NewGuid().ToString("N");
             output.TagName = "div";
             output.Attributes.Add("ischart", "1");
+            output.Attributes.SetAttribute("id", Id);
             output.TagMode = TagMode.StartTagAndEndTag;
             //var cd = Field?.Model as List<ChartData>;
             //if (cd == null)
@@ -123,31 +151,27 @@ formatter: function (params) {{
                     yAxis = $"yAxis:{{name:'{NameY}',splitLine:{{lineStyle:{{type: 'dashed'}} }},scale: true}},";
                 }
             }
-            if (Type == ChartTypeEnum.Scatter && ShowLegend == true)
-            {
-                legend = "legend:JSON.parse(data.legend),";
-            }
+            //string scatterlegend = "";
+            //if (Type == ChartTypeEnum.Scatter && ShowLegend == true)
+            //{
+            //    scatterlegend = "true";
+            //}
             output.PostElement.AppendHtml($@"
 <script>
 var {Id}Chart;
 var themeTemp ={(Theme == null ? "'default'" : $"'{Theme.ToString()}'")};
 {Id}Chart = echarts.init(document.getElementById('{Id}'),themeTemp);
-  var {Id}option; 
-$.get('{TriggerUrl}').done(function (data) {{
-    if(data.series!=undefined){{
-        data.series=data.series.replaceAll('""type"":""charttype""','{typeSeries}');
-    }}
-  {Id}Chart.setOption({{
+{Id}ChartType = '{typeSeries}';
+{Id}ChartLegend = '{ShowLegend.ToString().ToLower()}';
+{Id}ChartUrl = '{TriggerUrl}';
+var {Id}option;
+{Id}Chart.setOption({{
     {(string.IsNullOrEmpty(Title) ? "" : $"title:{{text: '{Title}'}},")}
     {tooltip}
-    {legend}
     {xAxis}
     {yAxis}
-    dataset:JSON.parse(data.dataset),
-    series:JSONfns.parse(data.series) 
-  }});
-    //{Id}Chart.resize();
 }});
+ff.RefreshChart('{Id}');
 </script>
 ");
             base.Process(context, output);

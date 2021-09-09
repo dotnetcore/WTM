@@ -1006,6 +1006,31 @@ window.ff = {
         form.remove();
     },
 
+    RefreshChart: function (chartid) {
+        var postdata = '';
+
+        var searcher = $('form[chartlink*="' + chartid + '"]')
+        if (searcher !== undefined && searcher.length > 0) {
+            postdata = ff.GetFormData(searcher[0].id);
+        }
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: eval(chartid+"ChartUrl"),
+                data: postdata,
+                async: true,
+                success: function (data, textStatus, request) {
+                    if (data.series != undefined) {
+                        data.series = data.series.replaceAll('"type":"charttype"', eval(chartid+'ChartType'));
+                    }
+                    eval(chartid + 'Chart.setOption({dataset: JSON.parse(data.dataset),series: JSONfns.parse(data.series)},{replaceMerge:\'series\'});');
+                    if (eval(chartid + 'ChartLegend') == 'true') {
+                        eval(chartid + 'Chart.setOption({legend:JSON.parse(data.legend)});');
+                    }
+                }
+            });
+    },
+
     /**
      * RefreshGrid
      * @param {string} dialogid the dialogid

@@ -17,8 +17,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (string.IsNullOrEmpty(_id))
                 {
-                    var vm = Vm.Model as IBaseVM;
-                    _id = $"{FORM_ID_PREFIX}{vm.UniqueId}";
+                    if (Vm?.Model is IBaseVM)
+                    {
+                        var vm = Vm.Model as IBaseVM;
+                        _id = $"{FORM_ID_PREFIX}{vm.UniqueId}";
+                    }
+                    else if(Vm?.Model is BaseSearcher)
+                    {
+                        var vm = Vm.Model as BaseSearcher;
+                        _id = $"{FORM_ID_PREFIX}{vm.UniqueId}";
+                    }
                 }
                 return _id;
             }
@@ -56,7 +64,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if (Vm?.Model is not BaseVM baseVM)
+            var novm = true;
+            BaseVM baseVM = null;
+            BaseSearcher baseSearcher = null;
+            if (Vm?.Model is  BaseVM)
+            {
+                novm = false;
+                baseVM = Vm?.Model as BaseVM;
+            }
+            if(Vm?.Model is BaseSearcher )
+            {
+                novm = false;
+                baseSearcher = Vm?.Model as BaseSearcher;
+            }
+            if (novm)
             {
                 output.TagName = "div";
                 output.TagMode = TagMode.StartTagAndEndTag;
@@ -86,7 +107,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (context.Items.ContainsKey("model") == false)
             {
-                context.Items.Add("model", baseVM);
+                if(baseVM != null)
+                {
+                    context.Items.Add("model", baseVM);
+                }
+                else if(baseSearcher != null)
+                {
+                    context.Items.Add("model", baseSearcher);
+                }
             }
 
             if (string.IsNullOrEmpty(Url) == false)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -103,6 +104,20 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         [JsonIgnore]
         public bool? IsExpanded { get; set; }
+
+        private Guid _uniqueId;
+        [JsonIgnore]
+        public string UniqueId
+        {
+            get
+            {
+                if (_uniqueId == Guid.Empty)
+                {
+                    _uniqueId = Guid.NewGuid();
+                }
+                return _uniqueId.ToNoSplitString();
+            }
+        }
 
         [JsonIgnore]
         public WTMContext Wtm { get; set; }
