@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace WalkingTec.Mvvm.Mvc.Binders
 {
@@ -50,8 +51,7 @@ namespace WalkingTec.Mvvm.Mvc.Binders
 
             if (count == 0)
             {
-                value = value.Replace("<", string.Empty)
-                                    .Replace(">", string.Empty);
+                value = HttpUtility.HtmlEncode(value);
             }
 
             bindingContext.Result = ModelBindingResult.Success(value);

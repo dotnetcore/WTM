@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -39,11 +40,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("wtm-name", Field.Name);
             if (DefaultValue != null)
             {
-                output.Attributes.Add("value", DefaultValue);
+                output.Attributes.Add("value", WebUtility.HtmlDecode(DefaultValue));
             }
             else
             {
-                output.Attributes.Add("value", Field?.Model);
+                output.Attributes.Add("value", WebUtility.HtmlDecode(Field?.Model?.ToString()));
             }
             output.Attributes.Add("placeholder", placeHolder);
             output.Attributes.Add("class", "layui-input");

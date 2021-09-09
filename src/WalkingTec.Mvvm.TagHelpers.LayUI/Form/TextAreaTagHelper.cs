@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Net;
+using System.Web;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -16,11 +18,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("class", "layui-textarea");
             if (DefaultValue != null)
             {
-                output.Content.SetContent(DefaultValue.ToString());
+                output.Content.SetContent(WebUtility.HtmlDecode(DefaultValue.ToString()));
             }
             else
             {
-                output.Content.SetContent(Field?.Model?.ToString());
+                output.Content.SetContent(WebUtility.HtmlDecode(Field?.Model?.ToString()));
             }
 
             base.Process(context, output);
