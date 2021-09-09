@@ -261,7 +261,7 @@ namespace WtmBlazorUtils
 
         public async Task Download(string url, object data, HttpMethodEnum method = HttpMethodEnum.POST)
         {
-            await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data), method.ToString());
+            await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data, CoreProgram.DefaultPostJsonOption), method.ToString());
         }
 
 

@@ -146,7 +146,7 @@ $.get('{TriggerUrl}').done(function (data) {{
     dataset:JSON.parse(data.dataset),
     series:JSONfns.parse(data.series) 
   }});
-    {Id}Chart.resize();
+    //{Id}Chart.resize();
 }});
 </script>
 ");
