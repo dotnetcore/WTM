@@ -30,7 +30,7 @@ else if (hasToken == false)
     protected override void OnInitialized()
     {
         publicPages = this.WtmBlazor.GetPublicPages();
-        if (publicPages.Contains(NavigationManager.ToBaseRelativePath(NavigationManager.Uri)))
+        if (publicPages.Contains(NavigationManager.ToBaseRelativePath(NavigationManager.Uri?.ToLower())))
         {
             IsPublic = true;
         }
