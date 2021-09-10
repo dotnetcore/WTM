@@ -82,14 +82,6 @@ namespace WalkingTec.Mvvm.Demo
 
                 Dictionary<string, List<object>> data = new Dictionary<string, List<object>>();
                 SetTestData(typeof(Student), data);
-                foreach (var item in data)
-                {
-                    foreach (var obj in item.Value)
-                    {
-                        Attach(obj);
-                    }
-                }
-                await SaveChangesAsync();
             }
             return state;
         }
@@ -100,26 +92,41 @@ namespace WalkingTec.Mvvm.Demo
             {
                 return;
             }
-            Random r = new Random();
-            data[modelType.FullName] = new List<object>();
-            for (int i = 0; i < count; i++)
+            using (var dc = this.CreateNew())
             {
-                var modelprops = modelType.GetRandomValues();
-                var newobj = modelType.GetConstructor(Type.EmptyTypes).Invoke(null);
-                foreach (var pro in modelprops)
+                Random r = new Random();
+                data[modelType.FullName] = new List<object>();
+                for (int i = 0; i < count; i++)
                 {
-                    if (pro.Value == "$fk$")
+                    var modelprops = modelType.GetRandomValues();
+                    var newobj = modelType.GetConstructor(Type.EmptyTypes).Invoke(null);
+                    foreach (var pro in modelprops)
                     {
-                        var fktype = modelType.GetSingleProperty(pro.Key[0..^2])?.PropertyType;
-                        SetTestData(fktype, data);
-                        newobj.SetPropertyValue(pro.Key, data[fktype.FullName][r.Next(0, 100)]);
+                        if (pro.Value == "$fk$")
+                        {
+                            //var fktype = modelType.GetSingleProperty(pro.Key[0..^2])?.PropertyType;
+                            //SetTestData(fktype, data);
+                            //newobj.SetPropertyValue(pro.Key, (data[fktype.FullName][r.Next(0, data[fktype.FullName].Count)] as TopBasePoco).GetID());
+                        }
+                        else
+                        {
+                            var v = pro.Value;
+                            if (v.StartsWith("\""))
+                            {
+                                v = v[1..];
+                            }
+                            if (v.EndsWith("\""))
+                            {
+                                v = v[..^1];
+                            }
+                            newobj.SetPropertyValue(pro.Key, v);
+                        }
                     }
-                    else
-                    {
-                        newobj.SetPropertyValue(pro.Key, pro.Value);
-                    }
+                    data[modelType.FullName].Add(newobj);
+                    (dc as DbContext).Attach(newobj);
                 }
-                data[modelType.FullName].Add(newobj);
+               int a = dc.SaveChanges();
+                int x = 0;
             }
         }
 

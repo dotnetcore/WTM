@@ -285,6 +285,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         }
                         val = "\"" + val + "\"";
                     }
+                    else if(pro.PropertyType == typeof(DateTime) || pro.PropertyType == typeof(DateTime))
+                    {
+                        Random r = new Random();
+                        val = DateTime.Now.AddDays(r.Next(-500, 500)).ToString();
+                        val = "DateTime.Parse(val)";
+                    }
                     if (pros.Where(x => x.Name.ToLower() + "id" == key.ToLower()).Any())
                     {
                         val = "$fk$";
