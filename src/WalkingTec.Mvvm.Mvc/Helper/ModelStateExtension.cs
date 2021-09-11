@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc
                 if (item.Value.ValidationState == ModelValidationState.Invalid)
                 {
                     var name = item.Key;
-                    if (name.ToLower().StartsWith(" ") == false)
+                    if (name.ToLower().StartsWith(" ") == false && name != "")
                     {
                         mse.Form.Add(name, item.Value.Errors.FirstOrDefault()?.ErrorMessage);
                     }

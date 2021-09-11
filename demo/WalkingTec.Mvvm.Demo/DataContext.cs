@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -81,14 +82,23 @@ namespace WalkingTec.Mvvm.Demo
                 await SaveChangesAsync();
 
                 Dictionary<string, List<object>> data = new Dictionary<string, List<object>>();
+                SetTestData(typeof(School), data);
+                SetTestData(typeof(Major), data);
                 SetTestData(typeof(Student), data);
+                SetTestData(typeof(School), data);
+                SetTestData(typeof(City), data);
+                SetTestData(typeof(ControlCenter), data);
+                SetTestData(typeof(Hospital), data);
+                SetTestData(typeof(Patient), data);
+                SetTestData(typeof(Virus), data);
+                SetTestData(typeof(Report), data);
             }
             return state;
         }
 
         private void SetTestData(Type modelType, Dictionary<string, List<object>> data, int count = 100)
         {
-            if (data.ContainsKey(modelType.FullName))
+            if (data.ContainsKey(modelType.FullName) && data[modelType.FullName].Count>=count)
             {
                 return;
             }
@@ -96,17 +106,40 @@ namespace WalkingTec.Mvvm.Demo
             {
                 Random r = new Random();
                 data[modelType.FullName] = new List<object>();
+                int retry = 0;
+                List<string> ids = new List<string>();
                 for (int i = 0; i < count; i++)
                 {
-                    var modelprops = modelType.GetRandomValues();
+                    var modelprops = modelType.GetRandomValuesForTestData();
                     var newobj = modelType.GetConstructor(Type.EmptyTypes).Invoke(null);
+                    var idvalue = modelprops.Where(x => x.Key == "ID").Select(x=>x.Value).SingleOrDefault();
+                    if (idvalue != null )
+                    {
+                        if (ids.Contains(idvalue.ToLower()) == false)
+                        {
+                            ids.Add(idvalue.ToLower());
+                        }
+                        else
+                        {
+                            retry++;
+                            i--;
+                            if (retry > count)
+                            {
+                                break;
+                            }
+                            continue;
+                        }
+                    }
                     foreach (var pro in modelprops)
                     {
                         if (pro.Value == "$fk$")
                         {
-                            //var fktype = modelType.GetSingleProperty(pro.Key[0..^2])?.PropertyType;
-                            //SetTestData(fktype, data);
-                            //newobj.SetPropertyValue(pro.Key, (data[fktype.FullName][r.Next(0, data[fktype.FullName].Count)] as TopBasePoco).GetID());
+                            var fktype = modelType.GetSingleProperty(pro.Key[0..^2])?.PropertyType;
+                            if (fktype != modelType)
+                            {
+                                SetTestData(fktype, data);
+                                newobj.SetPropertyValue(pro.Key, (data[fktype.FullName][r.Next(0, data[fktype.FullName].Count)] as TopBasePoco).GetID());
+                            }
                         }
                         else
                         {
@@ -122,10 +155,28 @@ namespace WalkingTec.Mvvm.Demo
                             newobj.SetPropertyValue(pro.Key, v);
                         }
                     }
-                    data[modelType.FullName].Add(newobj);
-                    (dc as DbContext).Attach(newobj);
+                    if(modelType == typeof(FileAttachment))
+                    {
+                        newobj.SetPropertyValue("Path", "./wwwroot/logo.png");
+                        newobj.SetPropertyValue("SaveMode", "local");
+                        newobj.SetPropertyValue("Length", 16728);
+                    }
+                    try
+                    {
+                        (dc as DbContext).Add(newobj);
+                        data[modelType.FullName].Add(newobj);
+                    }
+                    catch
+                    {
+                        retry++;
+                        i--;
+                        if(retry > count)
+                        {
+                            break;
+                        }
+                    }
                 }
-               int a = dc.SaveChanges();
+                int a = dc.SaveChanges();
                 int x = 0;
             }
         }

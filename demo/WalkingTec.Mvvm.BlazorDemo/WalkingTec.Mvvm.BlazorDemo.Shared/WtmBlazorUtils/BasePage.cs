@@ -67,12 +67,10 @@ namespace WtmBlazorUtils
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(rv.ErrorMsg))
+                    var err = rv.Errors.GetFirstError();
+                    if (string.IsNullOrEmpty(err) == false)
                     {
-                        if (rv.Errors.Form.Any())
-                        {
-                            await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.Errors.Form.First().Value);
-                        }
+                        await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], err);
                     }
                     else
                     {

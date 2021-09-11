@@ -195,7 +195,7 @@ namespace WalkingTec.Mvvm.Core
                         var menus = new FrameworkMenu[] { logList, userList, roleList, groupList, menuList, dpList };
                         foreach (var item in menus)
                         {
-                            if(item != null)
+                            if (item != null)
                             {
                                 systemManagement.Children.Add(item);
                             }
@@ -225,7 +225,7 @@ namespace WalkingTec.Mvvm.Core
                             //apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += $"({Program._localizer["BuildinApi"]})"; });
                             foreach (var item in apis)
                             {
-                                if(item != null)
+                                if (item != null)
                                 {
                                     apifolder.Children.Add(item);
 
@@ -277,7 +277,7 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
-        private FrameworkMenu GetMenu(List<SimpleModule> allModules, string areaName, string controllerName, string actionName, string pageKey, List<FrameworkRole> allowedRoles,  int displayOrder)
+        private FrameworkMenu GetMenu(List<SimpleModule> allModules, string areaName, string controllerName, string actionName, string pageKey, List<FrameworkRole> allowedRoles, int displayOrder)
         {
             var acts = allModules.Where(x => x.ClassName == controllerName && (areaName == null || x.Area?.Prefix?.ToLower() == areaName.ToLower())).SelectMany(x => x.Actions).ToList();
             var act = acts.Where(x => x.MethodName == actionName).SingleOrDefault();
@@ -304,7 +304,7 @@ namespace WalkingTec.Mvvm.Core
             var acts = allModules.Where(x => x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}" && x.IsApi == true).SelectMany(x => x.Actions).ToList();
             var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
             SimpleAction act = null;
-            if(acts.Count > 0)
+            if (acts.Count > 0)
             {
                 act = acts[0];
             }
@@ -442,7 +442,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
-                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum),typeof(string) }).Invoke(new object[] { CSName, DBType, Version });
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum), typeof(string) }).Invoke(new object[] { CSName, DBType, Version });
             }
         }
 
@@ -635,8 +635,9 @@ namespace WalkingTec.Mvvm.Core
                     optionsBuilder.UseSqlite(CSName);
                     break;
                 case DBTypeEnum.Oracle:
-                    
-                    optionsBuilder.UseOracle(CSName, option=> {
+
+                    optionsBuilder.UseOracle(CSName, option =>
+                    {
                         if (string.IsNullOrEmpty(Version) == false)
                         {
                             option.UseOracleSQLCompatibility(Version);
@@ -650,15 +651,15 @@ namespace WalkingTec.Mvvm.Core
                 default:
                     break;
             }
-                if (IsDebug == true)
-                {
-                    optionsBuilder.EnableDetailedErrors();
-                    optionsBuilder.EnableSensitiveDataLogging();
+            if (IsDebug == true)
+            {
+                optionsBuilder.EnableDetailedErrors();
+                optionsBuilder.EnableSensitiveDataLogging();
                 if (_loggerFactory != null)
                 {
                     optionsBuilder.UseLoggerFactory(_loggerFactory);
                 }
-                }
+            }
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -836,7 +837,7 @@ namespace WalkingTec.Mvvm.Core
 
         public void Dispose()
         {
-            
+
         }
 
         public IDataContext ReCreate()
