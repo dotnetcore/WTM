@@ -249,6 +249,11 @@ namespace WtmBlazorUtils
                 url = url.ToLower();
                 return actions.Any(x => x.ToLower() == url.ToLower());
             }
+            else if (WtmBlazor.PublicPages.Contains(url?.ToLower()))
+            {
+                return true;
+            }
+            
             return false;
         }
 
@@ -275,6 +280,9 @@ namespace WtmBlazorUtils
         public IHttpClientFactory ClientFactory { get; set; }
         private Configs _configInfo;
         public Configs ConfigInfo { get => _configInfo; }
+
+        public List<string> _publicPages = null;
+
         public WtmBlazorContext(IStringLocalizer local, GlobalItems gi, ApiClient api, DialogService dialog, ToastService toast, IHttpClientFactory cf, Configs _config)
         {
             _configInfo = _config;
@@ -325,25 +333,30 @@ namespace WtmBlazorUtils
             return menus;
         }
 
-        public List<string> GetPublicPages()
+        public List<string> PublicPages
         {
-            var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
-            var rv = new List<string>();
-            foreach (var item in pages)
-            {
-                var route = item.GetCustomAttribute<RouteAttribute>();
-                var ispublic = item.GetCustomAttribute<PublicAttribute>();
-                if (ispublic != null)
+            get {
+                if(_publicPages == null)
                 {
-                    var url = route.Template.ToLower();
-                    if (url.StartsWith("/"))
+                    var pages = Assembly.GetCallingAssembly().GetTypes().Where(x => typeof(BasePage).IsAssignableFrom(x)).ToList();
+                     _publicPages = new List<string>();
+                    foreach (var item in pages)
                     {
-                        url = url[1..];
+                        var route = item.GetCustomAttribute<RouteAttribute>();
+                        var ispublic = item.GetCustomAttribute<PublicAttribute>();
+                        if (ispublic != null)
+                        {
+                            var url = route.Template.ToLower();
+                            if (url.StartsWith("/"))
+                            {
+                                url = url[1..];
+                            }
+                            _publicPages.Add(url);
+                        }
                     }
-                    rv.Add(url);
                 }
+                return _publicPages;
             }
-            return rv;
         }
 
         public async Task<string> GetBase64Image(string fileid, int? width = null, int? height = null)
