@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (Height.HasValue)
             {
-                Style += $" height:{Height}px;";
+                Style += $" min-height:{Height}px;";
             }
             if (string.IsNullOrEmpty(Style) == false)
             {
