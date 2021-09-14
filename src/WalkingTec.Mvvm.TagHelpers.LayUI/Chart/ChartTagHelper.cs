@@ -80,11 +80,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             //    return;
             //}
 
-            string legend = "";
             string tooltip = "";
-
-
-
 
             if (ShowLegend == null)
             {
@@ -93,10 +89,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             if (ShowTooltip == null)
             {
                 ShowTooltip = true;
-            }
-            if (ShowLegend == true)
-            {
-                legend = "legend: {},";
             }
             if (ShowTooltip == true)
             {

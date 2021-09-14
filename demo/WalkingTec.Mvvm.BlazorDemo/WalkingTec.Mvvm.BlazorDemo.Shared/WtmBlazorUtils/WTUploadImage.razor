@@ -164,9 +164,9 @@
 
     }
 
-    private async Task<bool> OnAvatarDelete(string filename)
+    private async Task<bool> OnAvatarDelete(UploadFile file)
     {
-        var idstr = files.Where(x => x.Value == filename).Select(x => x.Key).FirstOrDefault();
+        var idstr = files.Where(x => x.Value == file.OriginFileName).Select(x => x.Key).FirstOrDefault();
         if (idstr != null)
         {
             var rv = await WtmBlazor.Api.CallAPI($"/api/_file/DeletedFile/{idstr}");
