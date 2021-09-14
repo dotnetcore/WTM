@@ -133,7 +133,7 @@ formatter: function (params) {{
 
 
             string xAxis = "", yAxis = "";
-            if (Type != ChartTypeEnum.Pie)
+            if (Type != ChartTypeEnum.Pie && Type != ChartTypeEnum.PieHollow)
             {
                 if (IsHorizontal == false)
                 {
