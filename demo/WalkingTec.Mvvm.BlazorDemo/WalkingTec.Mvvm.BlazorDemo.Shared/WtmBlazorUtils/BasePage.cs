@@ -60,7 +60,6 @@ namespace WtmBlazorUtils
             }
             else
             {
-                ErrorHandler?.Invoke(rv.Errors);
                 if (rv.Errors == null)
                 {
                     await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.StatusCode.ToString());
@@ -76,6 +75,7 @@ namespace WtmBlazorUtils
                     {
                         await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.ErrorMsg);
                     }
+                    ErrorHandler?.Invoke(rv.Errors);
                 }
                 return false;
             }
@@ -97,7 +97,6 @@ namespace WtmBlazorUtils
             }
             else
             {
-                ErrorHandler?.Invoke(rv.Errors);
                 if (rv.Errors == null)
                 {
                     await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.StatusCode.ToString());
@@ -105,6 +104,7 @@ namespace WtmBlazorUtils
                 else
                 {
                     SetError(form, rv.Errors);
+                    ErrorHandler?.Invoke(rv.Errors);
                 }
                 return false;
             }

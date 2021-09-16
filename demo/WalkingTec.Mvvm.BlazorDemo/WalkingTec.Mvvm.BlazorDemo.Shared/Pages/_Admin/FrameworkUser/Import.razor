@@ -42,8 +42,15 @@
         private async Task Submit(EditContext context)
         {
             await PostsForm(vform, "/api/_frameworkuserbase/import",(s)=> WtmBlazor.Localizer["Sys.ImportSuccess",s],(err) => {
-                ErrorRowStyle = "display:visiable";
-                ErrorFileId = err.Form["Entity.ErrorFileId"];
+                if (err.Form.ContainsKey("Entity.ErrorFileId"))
+                {
+                    ErrorRowStyle = "display:visiable";
+                    ErrorFileId = err.Form["Entity.ErrorFileId"];
+                }
+                else
+                {
+                    WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], err.GetFirstError());
+                }
             }) ;
         }
 

@@ -87,7 +87,7 @@
 
     private async Task<byte[]> GetFileData(IBrowserFile file)
     {
-        using var fileStream = file.OpenReadStream();
+        using var fileStream = file.OpenReadStream(WtmBlazor.ConfigInfo.FileUploadOptions.UploadLimit);
         using var memoryStream = new MemoryStream();
         await fileStream.CopyToAsync(memoryStream);
         byte[] rv = memoryStream.ToArray();
