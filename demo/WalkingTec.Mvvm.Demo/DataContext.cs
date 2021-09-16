@@ -177,7 +177,6 @@ namespace WalkingTec.Mvvm.Demo
                     }
                 }
                 int a = dc.SaveChanges();
-                int x = 0;
             }
         }
 
