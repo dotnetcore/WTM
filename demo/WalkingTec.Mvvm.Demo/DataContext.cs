@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<Report> Reports { get; set; }
         public DbSet<LinkTest> LinkTests { get; set; }
         public DbSet<LinkTest2> LinkTest2 { get; set; }
-
+        public DbSet<TreeTest> TreeTests { get; set; }
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {
             var state = await base.DataInit(allModules, IsSpa);

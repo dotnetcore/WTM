@@ -17,16 +17,19 @@
         {
             @(ViewBag.SubmitFunc.ToString())<Text>(selected);</Text>;
         }
-        if (selected.length > 0) {
-            if (!multiSel && selected.length > 1) {
-                layui.layer.msg('@WalkingTec.Mvvm.Core.CoreProgram._localizer?["Sys.SelectOneRowMax"]');
-                return;
-            }
-            for (var i = 0; i < selected.length; i++) {
-                displayStrArr.push(selected[i]['@ViewBag.TextName']);
-                hiddenStrArr.push("<input type='hidden' wtm-tag='wtmselector' name='@ViewBag.FieldName' value='" + selected[i]['@ViewBag.ValName'] +"' />");
-            }
+      if (selected.length > 0) {
+        if (!multiSel && selected.length > 1) {
+          layui.layer.msg('@WalkingTec.Mvvm.Core.CoreProgram._localizer?["Sys.SelectOneRowMax"]');
+          return;
         }
+        for (var i = 0; i < selected.length; i++) {
+          displayStrArr.push(selected[i]['@ViewBag.TextName']);
+          hiddenStrArr.push("<input type='hidden' wtm-tag='wtmselector' name='@ViewBag.FieldName' value='" + selected[i]['@ViewBag.ValName'] + "' />");
+        }
+      }
+      else {
+          hiddenStrArr.push("<input type='hidden' wtm-tag='wtmselector' name='@ViewBag.FieldName' value='' />");
+      }
 
         ff.CloseDialog();
 
