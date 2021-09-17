@@ -8,6 +8,7 @@ import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import VChart, { THEME_KEY } from "vue-echarts";
 import { Options, Prop, Provide, Vue } from "vue-property-decorator";
+// 文档地址 https://echarts.apache.org/handbook/zh/basics/import 
 use([
   CanvasRenderer,
   PieChart,
