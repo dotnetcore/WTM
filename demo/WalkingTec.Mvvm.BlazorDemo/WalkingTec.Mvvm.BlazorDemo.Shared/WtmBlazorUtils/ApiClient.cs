@@ -94,7 +94,7 @@ namespace WtmBlazorUtils
                     if (res.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
                         await js.InvokeVoidAsync("localStorageFuncs.remove", "wtmtoken");
-                        await js.InvokeVoidAsync("urlFuncs.refresh");
+                        await js.InvokeVoidAsync("urlFuncs.redirect","/login");
                     }
                     string responseTxt = await res.Content.ReadAsStringAsync();
                     if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)

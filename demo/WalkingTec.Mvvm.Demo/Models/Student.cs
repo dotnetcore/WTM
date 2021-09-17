@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         public string Password { get; set; }
 
         [Display(Name = "邮箱")]
-        [DataType(DataType.EmailAddress)]
+        [RegularExpression("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", ErrorMessage = "Validate.{0}formaterror")]
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         public string Email { get; set; }
 
@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         public GenderEnum? Sex { get; set; }
 
         [Display(Name = "手机")]
-        [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}格式错误")]
+        [RegularExpression("^[1][34578][0-9]{9}$", ErrorMessage = "{0}格式错误")]
         public string CellPhone { get; set; }
 
         [Display(Name = "住址")]

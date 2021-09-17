@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using Fare;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -285,6 +286,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         }
                         val = "\"" + val + "\"";
                     }
+                    else if(pro.PropertyType == typeof(DateTime) || pro.PropertyType == typeof(DateTime?))
+                    {
+                        Random r = new Random();
+                        val = DateTime.Now.AddDays(r.Next(-500, 500)).ToString("yyyy-MM-dd HH:mm:ss");
+                        val = $"DateTime.Parse(\"{val}\")";
+                    }
                     if (pros.Where(x => x.Name.ToLower() + "id" == key.ToLower()).Any())
                     {
                         val = "$fk$";
@@ -300,6 +307,179 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             return rv;
         }
+
+        public static Dictionary<string, string> GetRandomValuesForTestData(this Type self)
+        {
+            Dictionary<string, string> rv = new Dictionary<string, string>();
+            string pat = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+            var pros = self.GetAllProperties();
+            List<string> skipFields = new List<string>()
+            {
+               nameof(TopBasePoco.BatchError),
+               nameof(TopBasePoco.Checked),
+               nameof(TopBasePoco.ExcelIndex),
+            };
+            if (typeof(IBasePoco).IsAssignableFrom(self))
+            {
+                skipFields.AddRange(
+                    new string[]{
+               nameof(IBasePoco.CreateBy),
+               nameof(IBasePoco.CreateTime),
+               nameof(IBasePoco.UpdateBy),
+               nameof(IBasePoco.UpdateTime) }
+                    );
+            }
+            if (typeof(IPersistPoco).IsAssignableFrom(self))
+            {
+                skipFields.Add(nameof(IPersistPoco.IsValid));
+            }
+            foreach (var pro in pros)
+            {
+                string key = pro.Name;
+                string val = "";
+                var notmapped = pro.GetCustomAttribute<NotMappedAttribute>();
+                var required = pro.GetCustomAttributes<RequiredAttribute>() != null;
+                if (notmapped == null &&
+                    pro.PropertyType.IsList() == false &&
+                    pro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) == false &&
+                    skipFields.Contains(key) == false
+                    )
+                {
+                    if (pro.PropertyType.IsNumber())
+                    {
+                        if (pro.Name == "ID")
+                        {
+                            val = "";
+                        }
+                        else
+                        {
+                            var range = pro.GetCustomAttribute<RangeAttribute>();
+                            int start = 0;
+                            int end = 100;
+                            if (range != null)
+                            {
+                                try
+                                {
+                                    start = (int)Math.Truncate(double.Parse(range.Minimum.ToString()));
+                                    end = (int)Math.Truncate(double.Parse(range.Maximum.ToString()));
+                                }
+                                catch { }
+                            }
+                            Random r = new Random();
+                            val = r.Next(start, end).ToString();
+                        }
+                    }
+                    else if (pro.PropertyType.IsBoolOrNullableBool())
+                    {
+                        List<string> boolvalues = new List<string> { "true", "false" };
+                        if (pro.PropertyType.IsNullable())
+                        {
+                            if (required == false)
+                            {
+                                boolvalues.Add("");
+                            }
+                        }
+                        Random r = new Random();
+                        var index = r.Next(0, boolvalues.Count);
+                        val = boolvalues[index];
+                    }
+                    else if (pro.PropertyType.IsEnumOrNullableEnum())
+                    {
+                        List<string> enumvalues = new List<string>();
+                        Type enumtype = null;
+                        if (pro.PropertyType.IsNullable())
+                        {
+                            enumtype = pro.PropertyType.GenericTypeArguments[0];
+                            if (required == false)
+                            {
+                                enumvalues.Add("");
+                            }
+                        }
+                        else
+                        {
+                            enumtype = pro.PropertyType;
+                        }
+                        var vs = Enum.GetValues(enumtype);
+                        foreach (var item in vs)
+                        {
+                            enumvalues.Add((int)item + "");
+                        }
+                        Random r = new Random();
+                        var index = r.Next(0, enumvalues.Count);
+                        val = enumvalues[index];
+                    }
+                    else if (pro.PropertyType == typeof(string))
+                    {
+
+                        var reg = pro.GetCustomAttribute<RegularExpressionAttribute>();
+                        var length = pro.GetCustomAttribute<StringLengthAttribute>();
+
+                        if (reg != null) {
+                            Xeger x = new Xeger(reg.Pattern);
+                            val = x.Generate();
+                            if(length != null)
+                            {
+                                if(length.MaximumLength > 0 && val.Length > length.MaximumLength)
+                                {
+                                    val = val.Substring(0, length.MaximumLength-1);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var min = 1;
+                            var max = 20;
+                            var l = 0;
+                            if (length != null)
+                            {
+                                if (length.MaximumLength > 0)
+                                {
+                                    max = length.MaximumLength;
+                                }
+                                if (length.MinimumLength > 0)
+                                {
+                                    min = length.MinimumLength;
+                                }
+                            }
+                            if (min == max)
+                            {
+                                l = max;
+                            }
+                            else if (min < max)
+                            {
+                                l = new Random().Next(min, max);
+                            }
+                            Random r = new Random();
+                            for (int i = 0; i < l; i++)
+                            {
+                                int index = r.Next(pat.Length);
+                                val += pat[index];
+                            }
+                        }
+                        
+                        val = "\"" + val + "\"";
+                    }
+                    else if (pro.PropertyType == typeof(DateTime) || pro.PropertyType == typeof(DateTime?))
+                    {
+                        Random r = new Random();
+                        val = DateTime.Now.AddDays(r.Next(-500, 500)).ToString("yyyy-MM-dd HH:mm:ss");
+                    }
+                    if (pros.Where(x => x.Name.ToLower() + "id" == key.ToLower()).Any())
+                    {
+                        val = "$fk$";
+                    }
+                    if (val != "")
+                    {
+                        if (rv.ContainsKey(key) == false)
+                        {
+                            rv.Add(key, val);
+                        }
+                    }
+                }
+            }
+            return rv;
+        }
+
 
         public static PropertyInfo GetSingleProperty(this Type self, string name)
         {

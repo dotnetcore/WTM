@@ -3,7 +3,7 @@
 
 @if (hasToken == true || IsPublic == true)
 {
-    <Router AppAssembly="@typeof(Program).Assembly">
+    <Router AppAssembly="@typeof(Program).Assembly" OnNavigateAsync="OnNavigateAsync">
         <Found Context="routeData">
             <CascadingValue Value="User" IsFixed="false">
                 <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -18,19 +18,28 @@
 }
 else if (hasToken == false)
 {
-    <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }" />
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+            <CascadingValue Value="User" IsFixed="false">
+                <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }" />
+            </CascadingValue>
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(EmptyLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
 }
 @code{
 
     private LoginUserInfo User;
-    private List<string> publicPages;
     private bool? hasToken { get; set; }
     private bool? IsPublic { get; set; }
 
     protected override void OnInitialized()
     {
-        publicPages = this.WtmBlazor.GetPublicPages();
-        if (publicPages.Contains(NavigationManager.ToBaseRelativePath(NavigationManager.Uri)))
+        if (this.WtmBlazor.PublicPages.Contains(NavigationManager.ToBaseRelativePath(NavigationManager.Uri?.ToLower())))
         {
             IsPublic = true;
         }
@@ -85,5 +94,14 @@ else if (hasToken == false)
             }
             StateHasChanged();
         }
+    }
+
+    private void OnNavigateAsync(NavigationContext args)
+    {
+        if (args.Path.ToLower().StartsWith("login"))
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
     }
 }

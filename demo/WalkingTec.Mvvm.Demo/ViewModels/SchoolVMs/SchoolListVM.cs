@@ -77,6 +77,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x => x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x => x.SchoolType)
+                .CheckEqual(Searcher.CityId, x=>x.CityId)
                 .DPWhere(Wtm, x=>x.ID)
                 .Select(x => new School_View
                 {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -46,7 +47,7 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<Report> Reports { get; set; }
         public DbSet<LinkTest> LinkTests { get; set; }
         public DbSet<LinkTest2> LinkTest2 { get; set; }
-
+        public DbSet<TreeTest> TreeTests { get; set; }
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {
             var state = await base.DataInit(allModules, IsSpa);
@@ -81,45 +82,101 @@ namespace WalkingTec.Mvvm.Demo
                 await SaveChangesAsync();
 
                 Dictionary<string, List<object>> data = new Dictionary<string, List<object>>();
+                SetTestData(typeof(School), data);
+                SetTestData(typeof(Major), data);
                 SetTestData(typeof(Student), data);
-                foreach (var item in data)
-                {
-                    foreach (var obj in item.Value)
-                    {
-                        Attach(obj);
-                    }
-                }
-                await SaveChangesAsync();
+                SetTestData(typeof(School), data);
+                SetTestData(typeof(City), data);
+                SetTestData(typeof(ControlCenter), data);
+                SetTestData(typeof(Hospital), data);
+                SetTestData(typeof(Patient), data);
+                SetTestData(typeof(Virus), data);
+                SetTestData(typeof(Report), data);
             }
             return state;
         }
 
         private void SetTestData(Type modelType, Dictionary<string, List<object>> data, int count = 100)
         {
-            if (data.ContainsKey(modelType.FullName))
+            if (data.ContainsKey(modelType.FullName) && data[modelType.FullName].Count>=count)
             {
                 return;
             }
-            Random r = new Random();
-            data[modelType.FullName] = new List<object>();
-            for (int i = 0; i < count; i++)
+            using (var dc = this.CreateNew())
             {
-                var modelprops = modelType.GetRandomValues();
-                var newobj = modelType.GetConstructor(Type.EmptyTypes).Invoke(null);
-                foreach (var pro in modelprops)
+                Random r = new Random();
+                data[modelType.FullName] = new List<object>();
+                int retry = 0;
+                List<string> ids = new List<string>();
+                for (int i = 0; i < count; i++)
                 {
-                    if (pro.Value == "$fk$")
+                    var modelprops = modelType.GetRandomValuesForTestData();
+                    var newobj = modelType.GetConstructor(Type.EmptyTypes).Invoke(null);
+                    var idvalue = modelprops.Where(x => x.Key == "ID").Select(x=>x.Value).SingleOrDefault();
+                    if (idvalue != null )
                     {
-                        var fktype = modelType.GetSingleProperty(pro.Key[0..^2])?.PropertyType;
-                        SetTestData(fktype, data);
-                        newobj.SetPropertyValue(pro.Key, data[fktype.FullName][r.Next(0, 100)]);
+                        if (ids.Contains(idvalue.ToLower()) == false)
+                        {
+                            ids.Add(idvalue.ToLower());
+                        }
+                        else
+                        {
+                            retry++;
+                            i--;
+                            if (retry > count)
+                            {
+                                break;
+                            }
+                            continue;
+                        }
                     }
-                    else
+                    foreach (var pro in modelprops)
                     {
-                        newobj.SetPropertyValue(pro.Key, pro.Value);
+                        if (pro.Value == "$fk$")
+                        {
+                            var fktype = modelType.GetSingleProperty(pro.Key[0..^2])?.PropertyType;
+                            if (fktype != modelType)
+                            {
+                                SetTestData(fktype, data);
+                                newobj.SetPropertyValue(pro.Key, (data[fktype.FullName][r.Next(0, data[fktype.FullName].Count)] as TopBasePoco).GetID());
+                            }
+                        }
+                        else
+                        {
+                            var v = pro.Value;
+                            if (v.StartsWith("\""))
+                            {
+                                v = v[1..];
+                            }
+                            if (v.EndsWith("\""))
+                            {
+                                v = v[..^1];
+                            }
+                            newobj.SetPropertyValue(pro.Key, v);
+                        }
+                    }
+                    if(modelType == typeof(FileAttachment))
+                    {
+                        newobj.SetPropertyValue("Path", "./wwwroot/logo.png");
+                        newobj.SetPropertyValue("SaveMode", "local");
+                        newobj.SetPropertyValue("Length", 16728);
+                    }
+                    try
+                    {
+                        (dc as DbContext).Add(newobj);
+                        data[modelType.FullName].Add(newobj);
+                    }
+                    catch
+                    {
+                        retry++;
+                        i--;
+                        if(retry > count)
+                        {
+                            break;
+                        }
                     }
                 }
-                data[modelType.FullName].Add(newobj);
+                int a = dc.SaveChanges();
             }
         }
 

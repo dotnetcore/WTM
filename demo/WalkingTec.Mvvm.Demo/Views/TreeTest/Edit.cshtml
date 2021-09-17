@@ -1,0 +1,24 @@
+@model WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs.TreeTestVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:textbox field="Entity.Name" />
+    <wt:textbox field="Entity.Test" />
+    @*<wt:combobox field="Entity.ParentId" items="AllParents"/>*@
+
+    <wt:selector list-vm="ListVM" field="Entity.ParentId" multi-select="false" text-bind="ListVM.EntityList[0].Name">
+      <wt:searchpanel vm="ListVM">
+        <wt:row items-per-row=" ItemsPerRowEnum.Two">
+          <wt:textbox field="ListVM.Searcher.Name" />
+        </wt:row>
+      </wt:searchpanel>
+    </wt:selector>
+
+  </wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

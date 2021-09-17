@@ -80,11 +80,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             //    return;
             //}
 
-            string legend = "";
             string tooltip = "";
-
-
-
 
             if (ShowLegend == null)
             {
@@ -93,10 +89,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             if (ShowTooltip == null)
             {
                 ShowTooltip = true;
-            }
-            if (ShowLegend == true)
-            {
-                legend = "legend: {},";
             }
             if (ShowTooltip == true)
             {
@@ -133,7 +125,7 @@ formatter: function (params) {{
 
 
             string xAxis = "", yAxis = "";
-            if (Type != ChartTypeEnum.Pie)
+            if (Type != ChartTypeEnum.Pie && Type != ChartTypeEnum.PieHollow)
             {
                 if (IsHorizontal == false)
                 {
