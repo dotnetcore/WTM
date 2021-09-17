@@ -802,8 +802,10 @@ window.ff = {
                    }
                    layui.form.render('select', targetfilter+"div");
                    if (ismulticombo) {
-                       var mm = layui.formSelects.selects[targetfilter];
-                       ff.refreshcombobox(mm, arr);
+                       layui.use(['form', 'formSelects'], function () {
+                           var mm = layui.formSelects.selects[targetfilter];
+                           ff.refreshcombobox(mm, arr);
+                       });
                    }
                }
                if (controltype === "checkbox") {
