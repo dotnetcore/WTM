@@ -20,6 +20,10 @@ export default {
             loadingComponent: WtmGridLoading,
             delay: 0,
         }))
+        app.component('WtmEcharts', defineAsyncComponent({
+            loader: () => import("./page/echarts.vue"),
+            delay: 0,
+        }))
         app.component('WtmView', WtmView)
         app.component('WtmDetails', WtmDetails)
         app.component('WtmAction', WtmAction)
