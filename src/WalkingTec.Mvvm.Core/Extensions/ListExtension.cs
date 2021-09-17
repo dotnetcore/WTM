@@ -165,7 +165,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 seriesStr += "]";
                 return new { dataset = dataset, series = seriesStr, legend = legend };
             }
-            return null;
+            else
+            {
+                var dataset = "{\"source\":[]}";
+                var seriesStr = "[]";
+                var legend = "{\"data\":[]}";
+                return new { dataset = dataset, series = seriesStr, legend = legend };
+            }
         }
 
     }
