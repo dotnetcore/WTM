@@ -7,7 +7,7 @@
     <wt:combobox field="Entity.SchoolType" default-value="1"  />
     <wt:multiupload field="Entity.Photos" upload-mode="local" upload-group-name="test" upload-subdir="aaa"  upload-type="ImageFile" preview-width="128"/>
     <wt:datetime field="Entity.Duration" format="HH:mm:ss" type="Time" default-value="1:1:1" />
-    <wt:ueditor field="Entity.Remark" height="300" upload-group-name="test" upload-subdir="bbb" />
+    <wt:ueditor field="Entity.Remark" height="300" upload-group-name="test" upload-subdir="bbb" id="abc"/>
   </wt:row>
   <wt:row align="AlignEnum.Right">
     <wt:submitbutton click="test()" text="运行js并提交" submit-url="/School/Create2" />
@@ -28,5 +28,7 @@
     alert("test不提交");
     return false;
   }
-
+  layui.use(['ueditorconfig'], function () {
+    layui.ueditor.getEditor('abc', { autoHeightEnabled: false })
+  });
 </script>
