@@ -163,7 +163,10 @@ var {Id}option;
     {xAxis}
     {yAxis}
 }});
+setTimeout(function(){{
 ff.RefreshChart('{Id}');
+}},100);
+
 </script>
 ");
             base.Process(context, output);

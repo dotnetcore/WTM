@@ -802,8 +802,10 @@ window.ff = {
                    }
                    layui.form.render('select', targetfilter+"div");
                    if (ismulticombo) {
-                       var mm = layui.formSelects.selects[targetfilter];
-                       ff.refreshcombobox(mm, arr);
+                       layui.use(['form', 'formSelects'], function () {
+                           var mm = layui.formSelects.selects[targetfilter];
+                           ff.refreshcombobox(mm, arr);
+                       });
                    }
                }
                if (controltype === "checkbox") {
@@ -1012,7 +1014,7 @@ window.ff = {
     RefreshChart: function (chartid) {
         var postdata = '';
 
-        var searcher = $('form[chartlink*="' + chartid + '"]')
+        var searcher = $('form[chartlink*="' + chartid + '"]');
         if (searcher !== undefined && searcher.length > 0) {
             postdata = ff.GetFormData(searcher[0].id);
         }
@@ -1024,7 +1026,7 @@ window.ff = {
                 async: true,
                 success: function (data, textStatus, request) {
                     if (data.series != undefined) {
-                        data.series = data.series.replaceAll('"type":"charttype"', eval(chartid+'ChartType'));
+                        data.series = data.series.replace('"type":"charttype"', eval(chartid+'ChartType'));
                     }
                     eval(chartid + 'Chart.setOption({dataset: JSON.parse(data.dataset),series: JSONfns.parse(data.series)},{replaceMerge:\'series\'});');
                     if (eval(chartid + 'ChartLegend') == 'true') {
