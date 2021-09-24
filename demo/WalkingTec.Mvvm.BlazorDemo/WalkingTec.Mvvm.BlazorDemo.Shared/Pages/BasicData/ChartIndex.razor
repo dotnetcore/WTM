@@ -2,7 +2,14 @@
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs;
 @inherits BasePage
 @attribute [ActionDescription("图表", "WalkingTec.Mvvm.BlazorDemo.Controllers,Chart")]
+@*<WTSearchPanel OnSearch="@OnInit2">
+        <ValidateForm Model="@SearchModel">
+            <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
 
+                <BootstrapInput @bind-Value="@SearchModel.Name" />
+            </Row>
+        </ValidateForm>
+    </WTSearchPanel>*@
 <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Inline">
     <Chart ChartType="ChartType.Line" OnInitAsync="() =>OnInit(title1)"></Chart>
     <Chart ChartType="ChartType.Bubble" OnInitAsync="@OnInit2" />
@@ -14,6 +21,7 @@
 </Row>
 
 @code{
+    private CitySearcher SearchModel = new CitySearcher();
     private Random Randomer { get; } = new Random();
     private List<ChartData> data = new List<ChartData>();
     private string title1 = "Line折线图";
@@ -22,21 +30,25 @@
     private string title4 = "pie 圆环";
     private async Task<ChartDataSource> OnInit(string title)
     {
-        var data = await WtmBlazor.Api.CallAPI<List<ChartData>>("/api/Chart/GetCharts");
-        var cd = data.Data;
+        var data = await WtmBlazor.Api.CallAPI<List<ChartData>>("/api/Chart/GetCharts", HttpMethodEnum.POST, SearchModel);
+
         var ds = new ChartDataSource();
         ds.Options.Title = title;
-        string[] series = cd.Select(x => x.Series).Distinct().ToArray();
-        string[] categorys = cd.Select(x => x.Category).Distinct().ToArray();
-        var yCount = cd.GroupBy(x => x.Series).ToList();
-        ds.Labels = categorys;
-        foreach (var item in yCount)
+        if (data.Data != null && data.Data.Count > 0)
         {
-            ds.Data.Add(new ChartDataset()
+            var cd = data.Data;
+            string[] series = cd.Select(x => x.Series).Distinct().ToArray();
+            string[] categorys = cd.Select(x => x.Category).Distinct().ToArray();
+            var yCount = cd.GroupBy(x => x.Series).ToList();
+            ds.Labels = categorys;
+            foreach (var item in yCount)
             {
-                Label = item.Key,
-                Data = item.Select(x => x.Value.ToString())
-            });
+                ds.Data.Add(new ChartDataset()
+                {
+                    Label = item.Key,
+                    Data = item.Select(x => x.Value.ToString())
+                });
+            }
         }
         return ds;
     }
@@ -44,31 +56,29 @@
     private async Task<ChartDataSource> OnInit2()
     {
 
-        var data = await WtmBlazor.Api.CallAPI<List<ChartData>>("/api/Chart/GetCharts");
-        var cd = data.Data;
-
-        string[] series = cd.Select(x => x.Series).Distinct().ToArray();
-        string[] categorys = cd.Select(x => x.Category).Distinct().ToArray();
-        var yCount = cd.GroupBy(x => x.Series).ToList();
-
+        var data = await WtmBlazor.Api.CallAPI<List<ChartData>>("/api/Chart/GetCharts", HttpMethodEnum.POST, SearchModel);
         var ds = new ChartDataSource();
-        ds.Options.Title = "Bubble 折线图";
-
-
-        foreach (var item in yCount)
+        if (data.Data != null && data.Data.Count > 0)
         {
-
-            var cateData = item.GroupBy(x => x.Category).ToList();
-            ds.Data.Add(new ChartDataset()
+            var cd = data.Data;
+            string[] series = cd.Select(x => x.Series).Distinct().ToArray();
+            string[] categorys = cd.Select(x => x.Category).Distinct().ToArray();
+            var yCount = cd.GroupBy(x => x.Series).ToList();
+            ds.Options.Title = "Bubble 折线图";
+            foreach (var item in yCount)
             {
-                Label = item.Key,
-                Data = cateData.Select(i => new
+                var cateData = item.GroupBy(x => x.Category).ToList();
+                ds.Data.Add(new ChartDataset()
                 {
-                    x = Randomer.Next(100, 1000),
-                    y = i.Where(x => x.Series == item.Key)?.FirstOrDefault().Value,
-                    r = i.Where(x => x.Series == item.Key)?.FirstOrDefault().Addition / 50
-                })
-            });
+                    Label = item.Key,
+                    Data = cateData.Select(i => new
+                    {
+                        x = Randomer.Next(100, 1000),
+                        y = i.Where(x => x.Series == item.Key)?.FirstOrDefault().Value,
+                        r = i.Where(x => x.Series == item.Key)?.FirstOrDefault().Addition / 50
+                    })
+                });
+            }
         }
         return ds;
     }
