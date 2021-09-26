@@ -935,9 +935,13 @@ namespace WalkingTec.Mvvm.Core
 
         /// <summary>
         /// 验证重复数据
+        /// 如果存在重复的数据，则返回已存在数据的id列表
+        /// 如果不存在重复数据，则返回一个空列表
         /// </summary>
-        protected void ValidateDuplicateData()
+        protected List<object> ValidateDuplicateData()
         {
+            //定义一个对象列表用于存放重复数据的id
+            var count = new List<object>();
             //获取设定的重复字段信息
             var checkCondition = SetDuplicatedCheck();
             if (checkCondition != null && checkCondition.Groups.Count > 0)
@@ -975,7 +979,7 @@ namespace WalkingTec.Mvvm.Core
                         BinaryExpression idEqual = Expression.Equal(idLeft, idRight);
                         conditions.Insert(0, idEqual);
                     }
-                    int count = 0;
+                    //int count = 0;
                     if (conditions.Count > 1)
                     {
                         //循环添加条件并生成Where语句
@@ -992,12 +996,12 @@ namespace WalkingTec.Mvvm.Core
                         }
                         var result = baseExp.Provider.CreateQuery(whereCallExpression);
 
-                        foreach (var res in result)
+                        foreach (TopBasePoco res in result)
                         {
-                            count++;
+                            count.Add(res.GetID());
                         }
                     }
-                    if (count > 0)
+                    if (count.Count > 0)
                     {
                         //循环拼接所有字段名
                         string AllName = "";
@@ -1023,6 +1027,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }
             }
+            return count;
         }
 
 
