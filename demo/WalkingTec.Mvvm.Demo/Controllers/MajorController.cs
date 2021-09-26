@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.ViewModels.MajorVMs;
+using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -213,6 +214,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public IActionResult ExportExcel(MajorListVM vm)
         {
             return vm.GetExportData();
+        }
+        public ActionResult GetStudents()
+        {
+            return JsonMore(DC.Set<Student>().GetSelectListItems(Wtm, x => x.Name));
         }
 
     }

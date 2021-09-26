@@ -1,18 +1,20 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorVM
+@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
-<wt:row items-per-row="ItemsPerRowEnum.Two">
-<wt:textbox field="Entity.MajorCode" />
-<wt:textbox field="Entity.MajorName" />
-<wt:combobox field="Entity.MajorType" />
-<wt:textbox field="Entity.Remark" />
-<wt:combobox field="Entity.SchoolId" items="AllSchools"/>
-<wt:checkbox field="SelectedStudentMajorsIDs" items="AllStudentMajorss"/>
-</wt:row>
-    <wt:hidden field="Entity.ID" />
-    <wt:row align="AlignEnum.Right">
-        <wt:submitbutton />
-        <wt:closebutton />
-    </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:textbox field="Entity.MajorCode" />
+    <wt:textbox field="Entity.MajorName" />
+    <wt:combobox field="Entity.MajorType" />
+    <wt:textbox field="Entity.Remark" />
+    <wt:combobox field="Entity.SchoolId" items="AllSchools" />
+  </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.One">
+    <wt:transfer field="SelectedStudentMajorsIDs" item-url="/Major/GetStudents" />
+  </wt:row>
+  <wt:hidden field="Entity.ID" />
+  <wt:row align="AlignEnum.Right">
+    <wt:submitbutton />
+    <wt:closebutton />
+  </wt:row>
 </wt:form>
