@@ -1026,7 +1026,7 @@ window.ff = {
                 async: true,
                 success: function (data, textStatus, request) {
                     if (data.series != undefined) {
-                        data.series = data.series.replace('"type":"charttype"', eval(chartid+'ChartType'));
+                        data.series = data.series.replace(/"type":"charttype"/g, eval(chartid + 'ChartType'));
                     }
                     eval(chartid + 'Chart.setOption({dataset: JSON.parse(data.dataset),series: JSONfns.parse(data.series)},{replaceMerge:\'series\'});');
                     if (eval(chartid + 'ChartLegend') == 'true') {
