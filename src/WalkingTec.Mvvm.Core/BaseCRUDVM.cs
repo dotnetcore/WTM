@@ -185,9 +185,9 @@ namespace WalkingTec.Mvvm.Core
             {
                 var fname = DC.GetFKName2<TModel>(f.Name);
                 var fid = typeof(TModel).GetSingleProperty(fname).GetValue(rv);
-                if (fid != null)
+                if (fid != null && Wtm.ServiceProvider != null)
                 {
-                    var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                    var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
                     var file = fp.GetFile(fid?.ToString(), false, DC);
                     rv.SetPropertyValue(f.Name, file);
                 }
@@ -202,9 +202,9 @@ namespace WalkingTec.Mvvm.Core
         {
             DoAddPrepare();
             //删除不需要的附件
-            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
             {
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -218,9 +218,9 @@ namespace WalkingTec.Mvvm.Core
         {
             DoAddPrepare();
             //删除不需要的附件
-            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
             {
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -355,9 +355,9 @@ namespace WalkingTec.Mvvm.Core
                 MSD.AddModelError(" ", Localizer["Sys.EditFailed"]);
             }
             //删除不需要的附件
-            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
             {
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -373,9 +373,9 @@ namespace WalkingTec.Mvvm.Core
 
             await DC.SaveChangesAsync();
             //删除不需要的附件
-            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
             {
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -770,10 +770,13 @@ namespace WalkingTec.Mvvm.Core
                 }
                 DC.DeleteEntity(Entity);
                 DC.SaveChanges();
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                foreach (var item in fileids)
+                if (Wtm.ServiceProvider != null)
                 {
-                    fp.DeleteFile(item.ToString(), DC.ReCreate());
+                    var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
+                    foreach (var item in fileids)
+                    {
+                        fp.DeleteFile(item.ToString(), DC.ReCreate());
+                    }
                 }
             }
             catch (Exception)
@@ -823,10 +826,13 @@ namespace WalkingTec.Mvvm.Core
                 }
                 DC.DeleteEntity(Entity);
                 await DC.SaveChangesAsync();
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                foreach (var item in fileids)
+                if (Wtm.ServiceProvider != null)
                 {
-                    fp.DeleteFile(item.ToString(), DC.ReCreate());
+                    var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
+                    foreach (var item in fileids)
+                    {
+                        fp.DeleteFile(item.ToString(), DC.ReCreate());
+                    }
                 }
             }
             catch (Exception)

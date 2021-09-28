@@ -207,15 +207,17 @@ namespace WalkingTec.Mvvm.Core
                     ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.PleaseUploadTemplate"] });
                     return;
                 }
-
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var file = fp.GetFile(UploadFileId, true, DC);
+                Models.IWtmFile file = null;
+                if (Wtm.ServiceProvider != null)
+                {
+                    var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
+                    file = fp.GetFile(UploadFileId, true, DC);
+                }
                 if (file == null)
                 {
                     ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
                     return;
                 }
-
                 xssfworkbook = new XSSFWorkbook(file.DataStream);
                 file.DataStream.Dispose();
                 Template.InitExcelData();
@@ -888,9 +890,9 @@ namespace WalkingTec.Mvvm.Core
         public virtual bool BatchSaveData()
         {
             //删除不必要的附件
-            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
             {
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -1035,9 +1037,9 @@ namespace WalkingTec.Mvvm.Core
                     return false;
                 }
             }
-            if (string.IsNullOrEmpty(UploadFileId) == false)
+            if (string.IsNullOrEmpty(UploadFileId) == false && Wtm.ServiceProvider != null)
             {
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
                 fp.DeleteFile(UploadFileId, DC.ReCreate());
             }
 
@@ -1352,8 +1354,12 @@ namespace WalkingTec.Mvvm.Core
             var err = ErrorListVM?.EntityList?.Where(x => x.Index == 0).FirstOrDefault()?.Message;
             if (string.IsNullOrEmpty(err))
             {
-                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var fa = fp.GetFile(UploadFileId, true, DC);
+                Models.IWtmFile fa = null;
+                if(Wtm.ServiceProvider == null) {
+                    return mse;
+                }
+                var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
+                fa = fp.GetFile(UploadFileId, true, DC);
                 xssfworkbook = new XSSFWorkbook(fa.DataStream);
                 fa.DataStream.Dispose();
                 var propetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
