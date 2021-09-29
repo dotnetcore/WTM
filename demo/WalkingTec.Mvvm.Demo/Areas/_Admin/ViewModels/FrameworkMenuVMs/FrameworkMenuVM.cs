@@ -59,8 +59,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 IconFontItem = res[1];
             }
 
-            SelectedRolesIds.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.ID).ToList());
-
             var data = DC.Set<FrameworkMenu>().AsNoTracking().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
             var pids = Entity.GetAllChildrenIDs(DC);
@@ -214,30 +212,26 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
                 else
                 {
-                    Entity.Children = new List<FrameworkMenu>();
+                    //Entity.Children = new List<FrameworkMenu>();
                     Entity.Url = null;
                 }
             }
-            if (FC.ContainsKey("Entity.Children") == false)
+            if (Entity.FolderOnly == false)
             {
-                FC.Add("Entity.Children", 0);
-                FC.Add("Entity.Children[0].IsPublic",0);
-                FC.Add("Entity.Children[0].PageName", 0);
-                FC.Add("Entity.Children[0].ModuleName", 0);
-                FC.Add("Entity.Children[0].ActionName", 0);
-                FC.Add("Entity.Children[0].ClassName", 0);
-                FC.Add("Entity.Children[0].MethodName", 0);
-                FC.Add("Entity.Children[0].Url", 0);
+                if (FC.ContainsKey("Entity.Children") == false)
+                {
+                    FC.Add("Entity.Children", 0);
+                    FC.Add("Entity.Children[0].IsPublic", 0);
+                    FC.Add("Entity.Children[0].PageName", 0);
+                    FC.Add("Entity.Children[0].ModuleName", 0);
+                    FC.Add("Entity.Children[0].ActionName", 0);
+                    FC.Add("Entity.Children[0].ClassName", 0);
+                    FC.Add("Entity.Children[0].MethodName", 0);
+                    FC.Add("Entity.Children[0].Url", 0);
+                }
             }
             FC.Add("Entity.ModuleName", 0);
             base.DoEdit();
-            List<Guid> guids = new List<Guid>();
-            guids.Add(Entity.ID);
-            if (Entity.Children != null)
-            {
-                guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
-            }
-            AddPrivilege(guids);
         }
 
         public override void DoAdd()
