@@ -336,7 +336,7 @@ window.ff = {
                     eval(data);
                 }
                 else {
-                    data = "<div id='" + $.cookie("divid") + "' class='layui-card-body donotuse_pdiv'>" + data + "</div>";
+                    data = "<div id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + data + "</div>";
                     $("#" + divid).parent().html(data);
                 }
                 layer.close(index);
