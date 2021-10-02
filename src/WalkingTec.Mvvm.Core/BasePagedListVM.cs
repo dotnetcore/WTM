@@ -1011,11 +1011,11 @@ namespace WalkingTec.Mvvm.Core
                 var temp = GridHeaders as List<GridColumn<TModel>>;
                 if (temp.Where(x => x.ColumnType == GridColumnTypeEnum.Action).FirstOrDefault() == null)
                 {
-                    temp.Add(this.MakeGridColumn(x => x.BatchError, Width: 200, Header: Core.CoreProgram._localizer?["Sys.Error"]).SetForeGroundFunc(x => "ff0000"));
+                    temp.Add(this.MakeGridColumn(x => x.BatchError, Width: 200, Header: Core.CoreProgram._localizer?["Sys.Error"]).SetForeGroundFunc(x => "ff0000").SetFixed(GridColumnFixedEnum.Right));
                 }
                 else
                 {
-                    temp.Insert(temp.Count - 1, this.MakeGridColumn(x => x.BatchError, Width: 200, Header: Core.CoreProgram._localizer?["Sys.Error"]).SetForeGroundFunc(x => "ff0000"));
+                    temp.Insert(temp.Count - 1, this.MakeGridColumn(x => x.BatchError, Width: 200, Header: Core.CoreProgram._localizer?["Sys.Error"]).SetForeGroundFunc(x => "ff0000").SetFixed(GridColumnFixedEnum.Right));
                 }
             }
         }
