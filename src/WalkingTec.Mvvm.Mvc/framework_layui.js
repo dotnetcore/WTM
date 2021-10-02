@@ -336,7 +336,12 @@ window.ff = {
                     eval(data);
                 }
                 else {
-                    data = "<div id='" + $.cookie("divid") + "' class='layui-card-body donotuse_pdiv'>" + data + "</div>";
+                    var inlayer = $("#" + formId).parents(".layui-layer-content");
+                    if (inlayer !== undefined && inlayer.length > 0) {
+                        data = "<div id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + data + "</div>";
+                    } else {
+                        data = "<div id='" + $.cookie("divid") + "' class='layui-card-body donotuse_pdiv'>" + data + "</div>";
+                    }
                     $("#" + divid).parent().html(data);
                 }
                 layer.close(index);
