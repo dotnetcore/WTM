@@ -232,10 +232,12 @@ namespace WalkingTec.Mvvm.Core
                                 text = enumdisplay;
                             }
 
-
-                            if (int.TryParse(text, out int enumvalue))
+                            else
                             {
-                                text = PropertyHelper.GetEnumDisplayName(proType, enumvalue);
+                                if (int.TryParse(text, out int enumvalue))
+                                {
+                                    text = PropertyHelper.GetEnumDisplayName(proType, enumvalue);
+                                }
                             }
                         }
 
