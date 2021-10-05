@@ -1,3 +1,4 @@
+@using System.Text.RegularExpressions;
 @inherits BasePage
 @inject NavigationManager NavigationManager
 
@@ -39,7 +40,8 @@ else if (hasToken == false)
 
     protected override void OnInitialized()
     {
-        if (this.WtmBlazor.PublicPages.Contains(NavigationManager.ToBaseRelativePath(NavigationManager.Uri?.ToLower())))
+        var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri?.ToLower());
+        if (this.WtmBlazor.PublicPages.Any(x=> Regex.IsMatch(url, x)))
         {
             IsPublic = true;
         }
