@@ -353,6 +353,7 @@ namespace WtmBlazorUtils
                                 url = url[1..];
                             }
                             url = Regex.Replace(url, "{.*?}", ".*?");
+                            url = "^" + url + "$";
                             _publicPages.Add(url);
                         }
                     }
