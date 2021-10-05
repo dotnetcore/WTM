@@ -40,15 +40,7 @@ else if (hasToken == false)
 
     protected override void OnInitialized()
     {
-        var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri?.ToLower());
-        if (this.WtmBlazor.PublicPages.Any(x=> Regex.IsMatch(url, x)))
-        {
-            IsPublic = true;
-        }
-        else
-        {
-            IsPublic = false;
-        }
+        IsPublicPage();
         base.OnInitialized();
     }
 
@@ -100,9 +92,23 @@ else if (hasToken == false)
 
     private void OnNavigateAsync(NavigationContext args)
     {
+        IsPublicPage();
         if (args.Path.ToLower().StartsWith("login"))
         {
             NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private void IsPublicPage()
+    {
+        var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri?.ToLower());
+        if (this.WtmBlazor.PublicPages.Any(x => Regex.IsMatch(url, x)))
+        {
+            IsPublic = true;
+        }
+        else
+        {
+            IsPublic = false;
         }
 
     }
