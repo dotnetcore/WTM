@@ -5,6 +5,7 @@
       :disabled="disabled || _readonly"
       :multiple="true"
       :action="action"
+      :headers="headers"
       :before-upload="beforeUpload"
       :remove="onRemove"
       @change="onChange"
@@ -32,6 +33,9 @@ export default class extends mixins(FieldBasics) {
   @Inject({ default: '' }) readonly formType;
   get action() {
     return $System.FilesController.getUploadUrl()
+  }
+  get headers() {
+    return { Authorization: $System.UserController.Authorization }
   }
   get value() {
     return this.lodash.get(this.formState, this._name);

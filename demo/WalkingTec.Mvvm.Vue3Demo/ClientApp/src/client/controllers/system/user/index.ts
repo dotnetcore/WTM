@@ -50,8 +50,8 @@ export class UserController extends UserEntity {
             // const userid = lodash.get(this.UserInfo, 'ITCode');
             const access_token = lodash.get(this.UserInfo, 'access_token');
             if (access_token) {
-                lodash.set(AjaxBasics.headers, 'Authorization', `bearer ${access_token}`)
-                const res = await this.$ajax.get("/api/_Account/CheckUserInfo", {}, { Authorization: `bearer ${access_token}` });
+                lodash.set(AjaxBasics.headers, 'Authorization', this.Authorization)
+                const res = await this.$ajax.get("/api/_Account/CheckUserInfo", {}, { Authorization: this.Authorization });
                 this.onSetUserInfo(lodash.merge({}, this.UserInfo, res))
             }
             this.onToggleLoading(false)
