@@ -52,6 +52,11 @@ export class UserEntity {
     private setUserInfo(value) {
         this._UserInfo = value;
     }
+    /** headers Authorization */
+    get Authorization(){
+        const access_token = lodash.get(this.UserInfo, 'access_token');
+        return `bearer ${access_token}`
+    }
     @observable
     loading = false;
     /**
