@@ -1,10 +1,14 @@
 <template>
-  <WtmFilter :PageController="PageController" @finish="onFinish" @reset="onReset">
+  <WtmFilter
+    :PageController="PageController"
+    @finish="onFinish"
+    @reset="onReset"
+  >
     <WtmField entityKey="ITCode_Filter" />
     <WtmField entityKey="ActionUrl_Filter" />
+    <WtmField entityKey="ActionTime_Filter" />
     <!-- 更多搜索条件 默认隐藏 -->
     <template #more>
-      <WtmField entityKey="ActionTime_Filter" />
       <WtmField entityKey="IP_Filter" />
       <WtmField entityKey="LogType_Filter" />
     </template>
@@ -19,7 +23,7 @@ export default class extends Vue {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) readonly formState = {
     ITCode: "",
-    Name: "",
+    Name: ""
   };
   readonly EnumLocaleLabel = EnumLocaleLabel;
   get Pagination() {
@@ -32,8 +36,7 @@ export default class extends Vue {
   async onReset(values) {
     await this.Pagination.onLoading(values);
   }
-  mounted() { }
+  mounted() {}
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

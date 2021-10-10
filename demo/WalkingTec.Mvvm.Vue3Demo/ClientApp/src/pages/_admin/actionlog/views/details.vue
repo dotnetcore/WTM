@@ -3,14 +3,22 @@
     <template v-show="false">
       <WtmField entityKey="ID" />
     </template>
-    <WtmField entityKey="ITCode" />
-    <WtmField entityKey="LogType" />
-    <WtmField entityKey="ActionUrl" />
-    <WtmField entityKey="ActionTime" />
-    <WtmField entityKey="ActionName" />
-    <WtmField entityKey="Duration" />
-    <WtmField entityKey="ModuleName" />
-    <WtmField entityKey="IP" />
+    <a-space>
+      <WtmField entityKey="ITCode" />
+      <WtmField entityKey="LogType" />
+    </a-space>
+    <a-space>
+      <WtmField entityKey="ActionUrl" />
+      <WtmField entityKey="ActionTime" />
+    </a-space>
+    <a-space>
+      <WtmField entityKey="ActionName" />
+      <WtmField entityKey="Duration" />
+    </a-space>
+    <a-space>
+      <WtmField entityKey="ModuleName" />
+      <WtmField entityKey="IP" />
+    </a-space>
   </WtmDetails>
 </template>
 <script lang="ts">
@@ -21,15 +29,12 @@ import { PageController } from "../controller";
 export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
-    Entity: {
-
-    },
+    Entity: {}
   };
-  created() { }
+  created() {}
   mounted() {
-    this.onLoading()
+    this.onLoading();
   }
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

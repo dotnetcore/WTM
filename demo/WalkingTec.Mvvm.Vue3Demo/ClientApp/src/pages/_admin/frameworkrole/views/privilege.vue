@@ -5,7 +5,15 @@
         <a-list-item :class="`list-item-` + item.Level">
           <a-list-item-meta>
             <template #title>
-              <div v-text="item.Name"></div>
+              <div>
+                <a-checkbox
+                  :checked="checkAll(item)"
+                  :indeterminate="indeterminate(item)"
+                  @change="onCheckAllChange(item)"
+                >
+                  <span v-text="item.Name"></span>
+                </a-checkbox>
+              </div>
             </template>
             <template #description>
               <a-checkbox-group
@@ -28,44 +36,65 @@ import { PageController } from "../controller";
 export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
-    Entity: {},
+    Entity: {}
   };
-  loading = true
-  dataSource = []
+  loading = true;
+  dataSource = [];
   get queryKey() {
-    return 'privilege'
+    return "privilege";
   }
-  created() { }
+  created() {}
   async onLoading() {
     try {
-      this.loading = true
-      const res = await this.PageController.onGetPrivilege(this.ID)
+      this.loading = true;
+      const res = await this.PageController.onGetPrivilege(this.ID);
       this.dataSource = res.Pages;
       this.formState.Entity = res.Entity;
-      console.log("LENG ~ extends ~ onLoading ~ onLoading", res, this)
-    } catch (error) {
-
-    }
-    this.loading = false
+      console.log("LENG ~ extends ~ onLoading ~ onLoading", res, this);
+    } catch (error) {}
+    this.loading = false;
   }
   /**
-    * 传递给 details 组件的 提交函数 返回一个 Promise
-    * @param values 
-    * @returns 
-    */
+   * 传递给 details 组件的 提交函数 返回一个 Promise
+   * @param values
+   * @returns
+   */
   async onFinish(values) {
-    return this.PageController.onSavePrivilege(this.lodash.assign({}, this.formState, { Pages: this.dataSource }))
+    return this.PageController.onSavePrivilege(
+      this.lodash.assign({}, this.formState, { Pages: this.dataSource })
+    );
+  }
+  checkAll(event) {
+    return this.lodash.eq(
+      this.lodash.size(event.Actions),
+      this.lodash.size(event.AllActions)
+    );
+  }
+  indeterminate(event) {
+    if (!this.lodash.size(event.Actions)) {
+      return false;
+    }
+    return this.lodash.size(event.Actions) < this.lodash.size(event.AllActions);
+  }
+  onCheckAllChange(event) {
+    if (this.checkAll(event)) {
+      return (event.Actions = []);
+    }
+    event.Actions = this.lodash.map(event.AllActions, "Value");
   }
   getOptions(AllActions) {
-    return this.lodash.map(AllActions, item => ({ label: item.Text, value: item.Value }))
+    return this.lodash.map(AllActions, item => ({
+      label: item.Text,
+      value: item.Value
+    }));
   }
   mounted() {
-    this.onLoading()
+    this.onLoading();
   }
 }
 </script>
 
-<style lang="less" >
+<style lang="less">
 .list-item {
   &-1 {
     padding-left: 30px;

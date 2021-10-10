@@ -208,6 +208,13 @@ export class ControllerBasics<T = any> {
     saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
   }
   /**
+   * 导入
+   * @param UploadFileId 
+   */
+  onImport(UploadFileId) {
+    return this.$ajax.request(lodash.assign({ body: { UploadFileId } }, this.getAjaxRequest('import'))).toPromise()
+  }
+  /**
    * 导出
    * @param body 
    */

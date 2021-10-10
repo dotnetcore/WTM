@@ -14,6 +14,9 @@ export enum EnumLocaleLabel {
     Remark = "actionlog.Remark",
     IP = "actionlog.IP",
     LogType = "actionlog.LogType",
+    LogType_0 = "actionlog.LogType.0",
+    LogType_1 = "actionlog.LogType.1",
+    LogType_2 = "actionlog.LogType.2",
 }
 export default {
     en: {
@@ -28,7 +31,9 @@ export default {
         [EnumLocaleLabel.Remark]: 'Remark',
         [EnumLocaleLabel.IP]: 'IP',
         [EnumLocaleLabel.LogType]: 'LogType',
-       
+        [EnumLocaleLabel.LogType_0]: 'Normal',
+        [EnumLocaleLabel.LogType_1]: 'Exception',
+        [EnumLocaleLabel.LogType_2]: 'Debug',
     },
     zh: {
         [EnumLocaleLabel.ID]: 'ID',
@@ -42,5 +47,8 @@ export default {
         [EnumLocaleLabel.Remark]: '备注',
         [EnumLocaleLabel.IP]: 'IP',
         [EnumLocaleLabel.LogType]: '类型',
+        [EnumLocaleLabel.LogType_0]: '普通',
+        [EnumLocaleLabel.LogType_1]: '异常',
+        [EnumLocaleLabel.LogType_2]: '调试',
     }
 }
