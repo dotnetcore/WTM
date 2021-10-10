@@ -92,7 +92,7 @@ export class ControllerBasics<T = any> {
         delete: { method: 'post' },
         import: { method: 'post' },
         export: { method: 'post', responseType: 'blob' },
-        exportIds: { method: 'post' },
+        exportIds: { method: 'post', responseType: 'blob' },
         template: { method: 'get', responseType: 'blob' },
       }
       return {
@@ -203,6 +203,16 @@ export class ControllerBasics<T = any> {
    */
   async onExport(body?) {
     const res: any = await this.$ajax.request(lodash.assign({ body }, this.getAjaxRequest('export'))).toPromise()
+    const disposition = res.xhr.getResponseHeader('content-disposition');
+    Regulars.filename.test(disposition);
+    saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
+  }
+  /**
+   * 导出选择
+   */
+  async onExportIds(body = lodash.map(this.Pagination.selectionDataSource, 'ID')) {
+    const res: any = await this.$ajax.request(lodash.assign({ body }, this.getAjaxRequest('exportIds'))).toPromise()
+    console.log("🚀 ~ file: controller.ts ~ line 215 ~ ControllerBasics<T ~ onExportIds ~ res", res)
     const disposition = res.xhr.getResponseHeader('content-disposition');
     Regulars.filename.test(disposition);
     saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);

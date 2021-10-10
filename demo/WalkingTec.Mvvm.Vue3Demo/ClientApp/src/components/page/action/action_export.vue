@@ -2,10 +2,17 @@
   <a-dropdown v-if="isExport">
     <template #overlay>
       <a-menu @click="onMenuClick">
-        <a-menu-item :key="EnumActionType.Export" v-if="onAuthority(EnumActionType.Export)">
+        <a-menu-item
+          :key="EnumActionType.Export"
+          v-if="onAuthority(EnumActionType.Export)"
+        >
           <i18n-t :keypath="$locales.action_exportAll" />
         </a-menu-item>
-        <a-menu-item :key="EnumActionType.ExportIds" v-if="onAuthority(EnumActionType.ExportIds)">
+        <a-menu-item
+          :key="EnumActionType.ExportIds"
+          :disabled="disabled"
+          v-if="onAuthority(EnumActionType.ExportIds)"
+        >
           <i18n-t :keypath="$locales.action_exportSelect" />
         </a-menu-item>
       </a-menu>
@@ -26,16 +33,21 @@ import { ActionBasics } from "./script";
 @Options({ components: {} })
 export default class extends mixins(ActionBasics) {
   @Prop() readonly PageController: ControllerBasics;
-  onExport() {
-    this.PageController.onExport()
+  get disabled() {
+    return !this.Pagination.selectionDataSource.length;
   }
   onMenuClick(event) {
-    console.log("LENG ~ extends ~ onMenuClick ~ event", event)
-
+    switch (event.key) {
+      case this.EnumActionType.Export:
+        this.PageController.onExport(this.Pagination.oldBody);
+        break;
+      case this.EnumActionType.ExportIds:
+        this.PageController.onExportIds();
+        break;
+    }
   }
-  created() { }
-  mounted() { }
+  created() {}
+  mounted() {}
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>
