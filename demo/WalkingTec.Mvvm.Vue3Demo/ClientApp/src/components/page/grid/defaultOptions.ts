@@ -62,13 +62,14 @@ export default (i18n: VueI18n) => {
 export function getColumnDefsAction(frameworkComponents): (ColGroupDef | ColDef)[] {
     if (lodash.has(frameworkComponents, 'RowAction')) {
         return [{
-            minWidth: 0,
+            // minWidth: 0,
             headerName: 'action_name',
             field: 'RowAction',
             cellRenderer: 'RowAction',
             cellClass: 'w-row-action',
             pinned: window.innerWidth > 701 ? 'right' : '',
             sortable: false,
+            minWidth: 140,
             suppressMenu: true,
             suppressColumnsToolPanel: true,
         }]
