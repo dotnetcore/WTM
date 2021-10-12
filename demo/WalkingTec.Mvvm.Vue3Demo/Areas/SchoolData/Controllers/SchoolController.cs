@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -183,6 +183,29 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         public ActionResult GetCitys()
         {
             return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+        }
+
+        [HttpGet("GetCharts")]
+        public IActionResult GetChartsFour()
+        {
+            var data = new List<ChartData>();
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    data.Add(new ChartData
+                    {
+                        Category = "a" + i,
+                        Value = new Random().Next(100, 1000),
+                        ValueX = new Random().Next(200, 2000),
+                        Series = "bbb" + j,
+                        Addition = new Random().Next(100, 1000),
+
+                    });
+                }
+            }
+            var rv = data.ToChartData();
+            return Ok(rv);
         }
 
     }
