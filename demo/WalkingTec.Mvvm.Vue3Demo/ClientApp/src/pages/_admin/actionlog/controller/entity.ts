@@ -67,6 +67,7 @@ class Entity {
             }
         ]),
         valueType: WTM_ValueType.select,
+        fieldProps: { mode: 'tags' }
     }
     readonly ActionName: WTM_EntitiesField = {
         name: ['Entity', 'ActionName'],
