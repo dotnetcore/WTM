@@ -10,6 +10,8 @@ export default (i18n: VueI18n) => {
         loadingOverlayComponent: frameworkComponents.loadingOverlay,
         noRowsOverlayComponent: frameworkComponents.noRowsOverlay,
         localeText: i18n.locale === 'zh' ? AG_GRID_LOCALE_ZH : undefined,
+        rowSelection:"multiple",
+        rowMultiSelectWithClick:true,
         // debug:true,
         defaultColDef: {
             sortable: true,
