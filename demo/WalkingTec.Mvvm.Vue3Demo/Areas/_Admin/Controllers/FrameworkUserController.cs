@@ -80,6 +80,20 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
+        [HttpPost("BatchEdit")]
+        [ActionDescription("Sys.BatchEdit")]
+        public ActionResult BatchEdit(FrameworkUserBatchVM vm)
+        {
+            if (!ModelState.IsValid || !vm.DoBatchEdit())
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                return Ok(vm.Ids.Count());
+            }
+        }
+
         [HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
