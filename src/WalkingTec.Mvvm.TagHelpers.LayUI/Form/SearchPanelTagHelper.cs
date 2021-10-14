@@ -99,7 +99,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (string.IsNullOrEmpty(_searchBtnId))
                 {
-                    _searchBtnId = $"{SEARCH_BTN_ID_PREFIX}{SearcherVM?.UniqueId}";
+                    _searchBtnId = $"{SEARCH_BTN_ID_PREFIX}{Id}";
                 }
                 return _searchBtnId;
             }
