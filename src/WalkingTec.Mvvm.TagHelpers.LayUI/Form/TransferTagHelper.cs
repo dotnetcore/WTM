@@ -155,11 +155,11 @@ layui.use(['transfer'],function(){{
   var transfer = layui.transfer;
   var name = '{Field.Name}';
   var _id = '{Id}';
-  var container = $('#'+_id);
+  var container = $('#'+_id+""div"");
   function defaultFunc(data,index,transferIns) {{
     var selectVals = transfer.getData('{Id}');
     /* remove old values */
-    var inputs = $('#'+_id+' input[name=""'+name+'""]')
+    var inputs = $('#'+_id+'div input[name=""'+name+'""]')
     if(inputs!=null && inputs.length>0){{
       for (var i = 0; i < inputs.length; i++) {{
         inputs[i].remove();
@@ -199,6 +199,7 @@ layui.use(['transfer'],function(){{
 </script>
 ";
             output.PostElement.AppendHtml(content);
+            output.PostElement.AppendHtml($"<div id=\"{Id}div\"></div>");
             output.PostElement.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
             if (string.IsNullOrEmpty(ItemUrl) == false)
             {

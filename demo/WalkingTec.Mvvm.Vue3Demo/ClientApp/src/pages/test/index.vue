@@ -11,7 +11,9 @@
       <ViewDetails />
     </a-tab-pane>
     <a-tab-pane key="2" tab="树结构">Content of Tab 2</a-tab-pane>
-    <a-tab-pane key="3" tab="Tab 3">Content of Tab 3</a-tab-pane>
+    <a-tab-pane key="3" tab="图表">
+      <ViewEcharts />
+    </a-tab-pane>
   </a-tabs>
 </template>
 <script lang="ts">
@@ -21,13 +23,15 @@ import ViewAction from "./views/action.vue";
 import ViewDetails from "./views/details.vue";
 import ViewFilter from "./views/filter.vue";
 import ViewGrid from "./views/grid.vue";
+import ViewEcharts from "./views/echarts.vue";
 @Options({
   components: {
     ViewAction,
     ViewFilter,
     ViewGrid,
     ViewDetails,
-  },
+    ViewEcharts
+  }
 })
 export default class extends Vue {
   /**
@@ -40,8 +44,8 @@ export default class extends Vue {
    * 子组件 通过 Inject 均可访问
    */
   @Provide({ reactive: true }) readonly PageEntity = PageEntity;
-  activeKey = "1"
-  created() { }
+  activeKey = "1";
+  created() {}
   mounted() {
     console.log("");
     console.group(this.$route.name);
@@ -50,5 +54,4 @@ export default class extends Vue {
   }
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

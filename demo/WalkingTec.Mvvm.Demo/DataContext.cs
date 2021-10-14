@@ -180,6 +180,11 @@ namespace WalkingTec.Mvvm.Demo
             }
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Major>().HasOne(x => x.School).WithMany(x => x.Majors).OnDelete(DeleteBehavior.SetNull);
+        }
     }
 
     public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>

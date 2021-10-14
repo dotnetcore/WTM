@@ -264,6 +264,7 @@ namespace WtmBlazorUtils
 
         public async Task Download(string url, object data, HttpMethodEnum method = HttpMethodEnum.POST)
         {
+             url = new Uri( WtmBlazor.Api.Client.BaseAddress ,url).ToString();
             await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data, CoreProgram.DefaultPostJsonOption), method.ToString());
         }
 
@@ -351,6 +352,8 @@ namespace WtmBlazorUtils
                             {
                                 url = url[1..];
                             }
+                            url = Regex.Replace(url, "{.*?}", ".*?");
+                            url = "^" + url + "$";
                             _publicPages.Add(url);
                         }
                     }

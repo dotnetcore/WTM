@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public string SelectedModule { get; set; }
 
         [Display(Name = "_Admin.AllowedRole")]
-        public List<Guid> SelectedRolesIds { get; set; }
+        public List<string> SelectedRolesIds { get; set; }
 
         [JsonIgnore]
         public FrameworkRoleListVM RoleListVM { get; set; }
@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             AllActions = new List<ComboSelectListItem>();
             AllModules = new List<ComboSelectListItem>();
 
-            SelectedRolesIds = new List<Guid>();
+            SelectedRolesIds = new List<string>();
         }
 
         protected override void InitVM()
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 IconFontItem = res[1];
             }
 
-            SelectedRolesIds.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.ID).ToList());
+            SelectedRolesIds.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToList());
 
             var data = DC.Set<FrameworkMenu>().AsNoTracking().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
@@ -214,20 +214,23 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
                 else
                 {
-                    Entity.Children = new List<FrameworkMenu>();
+                    //Entity.Children = new List<FrameworkMenu>();
                     Entity.Url = null;
                 }
             }
-            if (FC.ContainsKey("Entity.Children") == false)
+            if (Entity.FolderOnly == false)
             {
-                FC.Add("Entity.Children", 0);
-                FC.Add("Entity.Children[0].IsPublic",0);
-                FC.Add("Entity.Children[0].PageName", 0);
-                FC.Add("Entity.Children[0].ModuleName", 0);
-                FC.Add("Entity.Children[0].ActionName", 0);
-                FC.Add("Entity.Children[0].ClassName", 0);
-                FC.Add("Entity.Children[0].MethodName", 0);
-                FC.Add("Entity.Children[0].Url", 0);
+                if (FC.ContainsKey("Entity.Children") == false)
+                {
+                    FC.Add("Entity.Children", 0);
+                    FC.Add("Entity.Children[0].IsPublic", 0);
+                    FC.Add("Entity.Children[0].PageName", 0);
+                    FC.Add("Entity.Children[0].ModuleName", 0);
+                    FC.Add("Entity.Children[0].ActionName", 0);
+                    FC.Add("Entity.Children[0].ClassName", 0);
+                    FC.Add("Entity.Children[0].MethodName", 0);
+                    FC.Add("Entity.Children[0].Url", 0);
+                }
             }
             FC.Add("Entity.ModuleName", 0);
             base.DoEdit();
@@ -338,18 +341,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public void AddPrivilege(List<Guid> menuids)
         {
-            var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").FirstOrDefault();
-            if (admin != null && SelectedRolesIds.Contains(admin.ID) == false)
+            var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").SingleOrDefault();
+            if (admin != null && SelectedRolesIds.Contains(admin.RoleCode) == false)
             {
-                SelectedRolesIds.Add(admin.ID);
+                SelectedRolesIds.Add(admin.RoleCode);
             }
-            var codes = DC.Set<FrameworkRole>().Where(x => SelectedRolesIds.Contains(x.ID)).Select(x => x.RoleCode).ToList();
             foreach (var menuid in menuids)
             {
 
                 if (SelectedRolesIds != null)
                 {
-                    foreach (var code in codes)
+                    foreach (var code in SelectedRolesIds)
                     {
                         FunctionPrivilege fp = new FunctionPrivilege();
                         fp.MenuItemId = menuid;

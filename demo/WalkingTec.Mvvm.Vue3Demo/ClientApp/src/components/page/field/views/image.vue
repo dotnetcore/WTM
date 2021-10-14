@@ -19,6 +19,7 @@
         list-type="picture-card"
         accept="image/*"
         :action="action"
+        :headers="headers"
         :before-upload="beforeUpload"
         @change="onChange"
         @preview="handlePreview"
@@ -32,7 +33,7 @@
             class="w-upload-img"
             :src="imageUrl"
             :fallback="imagefallback"
-          /> -->
+        />-->
         <div v-if="isPlusBottun">
           <!-- <loading-outlined v-if="loading"></loading-outlined> -->
           <plus-outlined></plus-outlined>
@@ -40,11 +41,7 @@
         </div>
       </a-upload>
       <!-- </a-spin> -->
-      <a-modal
-        :visible="previewVisible"
-        :footer="null"
-        @cancel="handlePreview(false)"
-      >
+      <a-modal :visible="previewVisible" :footer="null" @cancel="handlePreview(false)">
         <img alt="example" style="width: 100%" :src="previewUrl" />
       </a-modal>
     </div>
@@ -70,6 +67,9 @@ export default class extends mixins(FieldBasics) {
   get action() {
     return $System.FilesController.getUploadUrl();
   }
+  get headers() {
+    return { Authorization: $System.UserController.Authorization }
+  }
   get max() {
     return this.lodash.get(this._fieldProps, "max", 1);
   }
@@ -84,6 +84,7 @@ export default class extends mixins(FieldBasics) {
       !(this.disabled || this._readonly) && this.fileList.length < this.max
     );
   }
+
   fileList = [];
   async mounted() {
     // this.onRequest();
@@ -98,7 +99,7 @@ export default class extends mixins(FieldBasics) {
     }
     this.onValueChange(this.value, undefined);
   }
-  beforeUpload() {}
+  beforeUpload() { }
   onChange(event) {
     this.fileList = event.fileList;
     if (event.file.status === "removed") {

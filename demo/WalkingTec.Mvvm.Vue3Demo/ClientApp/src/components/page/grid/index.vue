@@ -112,8 +112,9 @@ export default class Grid extends Vue {
       // 数据更新
       onRowDataChanged: lodash.debounce((event: RowDataChangedEvent) => {
         if (this.isAutoSizeColumn && this.Pagination.dataSource.length > 0) {
-          event.columnApi.autoSizeColumn("RowAction");
-          // event.api.sizeColumnsToFit();
+          // event.columnApi.autoSizeAllColumns(true)
+          event.api.sizeColumnsToFit();
+          // event.columnApi.autoSizeColumn("RowAction");
           this.isAutoSizeColumn = false;
         }
         lodash.invoke(this.gridOptions, "onRowDataChanged", event);

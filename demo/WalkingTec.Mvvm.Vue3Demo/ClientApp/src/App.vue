@@ -40,7 +40,7 @@ export default class extends Vue {
   async created() {
     await this.System.onInit();
     // router.onInit();
-    // console.error("LENG ~ extends ~ created ~ this.System");
+    // console.error("LENG ~ extends ~ created ~ this.System",this);
   }
   mounted() {}
 }

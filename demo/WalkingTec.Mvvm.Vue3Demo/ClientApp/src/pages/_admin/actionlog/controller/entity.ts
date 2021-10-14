@@ -52,6 +52,22 @@ class Entity {
     readonly LogType_Filter: WTM_EntitiesField = {
         name: 'LogType',
         label: EnumLocaleLabel.LogType,
+        request: async () => ([
+            {
+                label: $i18n.t(EnumLocaleLabel.LogType_0),
+                value: 0
+            },
+            {
+                label: $i18n.t(EnumLocaleLabel.LogType_1),
+                value: 1
+            },
+            {
+                label: $i18n.t(EnumLocaleLabel.LogType_2),
+                value: 2
+            }
+        ]),
+        valueType: WTM_ValueType.select,
+        fieldProps: { mode: 'tags' }
     }
     readonly ActionName: WTM_EntitiesField = {
         name: ['Entity', 'ActionName'],

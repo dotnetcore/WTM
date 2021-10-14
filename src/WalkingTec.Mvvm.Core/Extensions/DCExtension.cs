@@ -307,7 +307,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         if (!ids.Contains(null))
                         {
-                            query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.OrElse(selfexp, ids.GetContainIdExpression<T>())));
+                            var exp = Expression.OrElse(selfexp, ids.GetContainIdExpression(typeof(T), pe).Body);
+                            query = query.Where(Expression.Lambda<Func<T, bool>>(exp,pe));
                         }
                     }
                 }

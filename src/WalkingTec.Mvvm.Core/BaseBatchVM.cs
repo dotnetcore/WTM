@@ -218,7 +218,7 @@ namespace WalkingTec.Mvvm.Core
                 try
                 {
                     DC.SaveChanges();
-                    var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                    var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
                     foreach (var item in fileids)
                     {
                         fp.DeleteFile(item.ToString(), DC.ReCreate());

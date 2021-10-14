@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         public string Remark { get; set; }
 
         [Display(Name = "所属学校")]
-        [Required()]
+        //[Required()]
         public int? SchoolId { get; set; }
 
         public DateTime TestDate { get; set; }

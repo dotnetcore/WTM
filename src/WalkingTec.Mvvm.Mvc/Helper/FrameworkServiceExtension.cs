@@ -498,7 +498,8 @@ namespace WalkingTec.Mvvm.Mvc
                                builder.WithOrigins(domains)
                                                    .AllowAnyHeader()
                                                    .AllowAnyMethod()
-                                                   .AllowCredentials();
+                                                   .AllowCredentials()
+                                                   .WithExposedHeaders("Content-Disposition");
                            });
                     }
                 }
@@ -510,7 +511,8 @@ namespace WalkingTec.Mvvm.Mvc
                             builder.SetIsOriginAllowed((a) => true)
                                                 .AllowAnyHeader()
                                                 .AllowAnyMethod()
-                                                .AllowCredentials();
+                                                .AllowCredentials()
+                                                .WithExposedHeaders("Content-Disposition");
                         });
                 }
             });
