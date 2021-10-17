@@ -3,6 +3,20 @@
     <template v-show="false">
       <WtmField entityKey="ID" />
     </template>
+    <a-row>
+      <a-col :span="12">
+        col-12
+      </a-col>
+      <a-col :span="12">
+        col-12
+      </a-col>
+       <a-col :span="12">
+        col-12
+      </a-col>
+      <a-col :span="12">
+        col-12
+      </a-col>
+    </a-row>
     <a-space>
       <WtmField entityKey="ITCode" :disabled="IsEdit" />
       <WtmField entityKey="Password" v-if="!IsEdit" />
@@ -25,7 +39,7 @@
       <div v-else></div>
     </a-space>
     <a-space>
-      <WtmField entityKey="PhotoId" debug/>
+      <WtmField entityKey="PhotoId" debug />
       <div></div>
     </a-space>
     <WtmField entityKey="SelectedRolesCodes" />
@@ -51,16 +65,15 @@ export default class extends mixins(PageDetailsBasics) {
       HomePhone: "",
       Address: "",
       ZipCode: "",
-      PhotoId: undefined,
+      PhotoId: undefined
     },
     SelectedRolesCodes: [],
-    SelectedGroupCodes: [],
+    SelectedGroupCodes: []
   };
-  created() { }
+  created() {}
   mounted() {
-    this.onLoading()
+    this.onLoading();
   }
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>
