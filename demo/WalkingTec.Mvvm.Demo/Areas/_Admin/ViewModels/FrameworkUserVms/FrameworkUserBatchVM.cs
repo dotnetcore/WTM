@@ -3,18 +3,28 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 {
     public class FrameworkUserBatchVM : BaseBatchVM<FrameworkUser, FrameworkUser_BatchEdit>
     {
+        [JsonIgnore]
+        public FrameworkRoleListVM RoleListVM { get; set; }
+
         public FrameworkUserBatchVM()
         {
             ListVM = new FrameworkUserListVM();
             LinkedVM = new FrameworkUser_BatchEdit();
+        }
+
+        protected override void InitVM()
+        {
+            RoleListVM = Wtm.CreateVM<FrameworkRoleListVM>();
         }
 
         public override bool DoBatchEdit()

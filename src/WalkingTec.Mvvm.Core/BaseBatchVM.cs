@@ -307,6 +307,10 @@ namespace WalkingTec.Mvvm.Core
                     {
                         var proToSet = entity.GetType().GetSingleProperty(pro.Name);
                         var val = FC.ContainsKey("LinkedVM." + pro.Name) ? FC["LinkedVM." + pro.Name] : null;
+                        if(val == null && FC.ContainsKey("LinkedVM." + pro.Name + "[]"))
+                        {
+                            val = FC["LinkedVM." + pro.Name + "[]"];
+                        }
                         if (proToSet != null && val != null)
                         {
                             var hasvalue = true;
