@@ -30,7 +30,10 @@
       </div>
     </a-col>
     <a-col :span="12">
-      <WtmEcharts request="/api/School/GetCharts" />
+      <WtmEcharts
+        request="/api/School/GetCharts"
+        :replace="{ charttype: 'pie' }"
+      />
     </a-col>
   </a-row>
 </template>
