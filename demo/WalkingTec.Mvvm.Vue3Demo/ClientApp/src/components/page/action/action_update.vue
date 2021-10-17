@@ -1,5 +1,10 @@
 <template>
-  <a-button v-if="isUpdate" v-bind="ButtonProps" :disabled="disabled" @click="onToDetails">
+  <a-button
+    v-if="isUpdate"
+    v-bind="ButtonProps"
+    :disabled="disabled"
+    @click="onToDetails"
+  >
     <template #icon v-if="isPageAction">
       <EditOutlined />
     </template>
@@ -19,26 +24,39 @@ export default class extends mixins(ActionBasics) {
     if (this.isRowAction) {
       return false;
     }
-    return !this.lodash.eq(this.Pagination.selectionDataSource.length, 1);
+    return !this.Pagination.selectionDataSource.length;
   }
   getRowData() {
     if (this.isRowAction) {
       return this.lodash.cloneDeep(this.rowParams.data);
     }
-    return this.lodash.cloneDeep(this.lodash.head(this.Pagination.selectionDataSource))
+    return this.lodash.cloneDeep(
+      this.lodash.head(this.Pagination.selectionDataSource)
+    );
   }
   onToDetails() {
-    const rowData = this.getRowData()
-    let query = {
+    if (this.Pagination.selectionDataSource.length > 1) {
+      return this.__wtmToDetails({ details: "", _batch: "" });
     }
-    if (this.lodash.hasIn(this.$props, 'toQuery')) {
-      query = this.lodash.invoke(this.$props, 'toQuery', rowData, this)
+    const rowData = this.getRowData();
+    let query = {};
+    if (this.lodash.hasIn(this.$props, "toQuery")) {
+      query = this.lodash.invoke(this.$props, "toQuery", rowData, this);
     }
-    this.__wtmToDetails(this.lodash.assign({ [this.$WtmConfig.detailsVisible]: this.lodash.get(rowData, this.PageController.key), }, query))
+    this.__wtmToDetails(
+      this.lodash.assign(
+        {
+          [this.$WtmConfig.detailsVisible]: this.lodash.get(
+            rowData,
+            this.PageController.key
+          )
+        },
+        query
+      )
+    );
   }
-  created() { }
-  mounted() { }
+  created() {}
+  mounted() {}
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

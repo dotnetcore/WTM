@@ -132,6 +132,12 @@ class Entity {
         valueType: WTM_ValueType.transfer,
         request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
     }
+    readonly LinkedVM_SelectedRolesCodes: WTM_EntitiesField = {
+        name: ['LinkedVM', 'SelectedRolesCodes'],
+        label: EnumLocaleLabel.RoleName,
+        valueType: WTM_ValueType.transfer,
+        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
+    }
     /**
     * 备注预留
     * @type {WTM_EntitiesField}

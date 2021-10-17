@@ -4,6 +4,8 @@ export default {
     'action_reset': ' Reset',
     'action_insert': ' Insert',
     'action_update': ' Update',
+    'action_update_batch': ' Batch Update',
+    'action_update_batch_null': ' Please select the data that needs to be modified',
     'action_delete': ' Delete',
     'action_info': ' Info',
     'action_import': ' Import',

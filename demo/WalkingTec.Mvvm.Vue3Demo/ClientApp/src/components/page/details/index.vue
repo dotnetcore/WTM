@@ -1,10 +1,6 @@
-/**
- * @author 冷 (https://github.com/LengYXin)
- * @email lengyingxin8966@gmail.com
- * @create date 2021-03-12 17:19:19
- * @modify date 2021-03-12 17:19:19
- * @desc 详情表单 
- */
+/** * @author 冷 (https://github.com/LengYXin) * @email
+lengyingxin8966@gmail.com * @create date 2021-03-12 17:19:19 * @modify date
+2021-03-12 17:19:19 * @desc 详情表单 */
 <template>
   <a-form
     class="w-form"
@@ -49,17 +45,25 @@
 </template>
 
 <script lang="ts">
-import { Inject, Options, Prop, Ref, Vue, Provide, Watch } from "vue-property-decorator";
+import {
+  Inject,
+  Options,
+  Prop,
+  Ref,
+  Vue,
+  Provide,
+  Watch
+} from "vue-property-decorator";
 @Options({
-  components: {},
+  components: {}
 })
 export default class extends Vue {
   /** 表单状态 */
   @Inject() readonly formState = {};
   /** 自定义 校验状态 用于服务器返回 错误*/
-  @Provide({ reactive: true }) formValidate = {}
+  @Provide({ reactive: true }) formValidate = {};
   // 只读
-  @Provide({ reactive: true }) formType = 'details';
+  @Provide({ reactive: true }) formType = "details";
   /** 表单 ref */
   @Ref("formRef") readonly formRef;
   /** 表单 rules */
@@ -71,13 +75,16 @@ export default class extends Vue {
   @Prop({ type: Function, required: true }) readonly onFinish;
   // 只读
   get readonly() {
-    return this.lodash.has(this.$route.query, '_readonly')
+    return this.lodash.has(this.$route.query, "_readonly");
+  }
+  get batch() {
+    return this.lodash.has(this.$route.query, "_batch");
   }
   get successMsg() {
-    return this.$t(this.$locales.tips_success_operation)
+    return this.$t(this.$locales.tips_success_operation);
   }
   get errorMsg() {
-    return this.$t(this.$locales.tips_error_operation)
+    return this.$t(this.$locales.tips_error_operation);
   }
   spinning = false;
   labelCol = { span: 24 };
@@ -93,32 +100,37 @@ export default class extends Vue {
   }
   async onReset() {
     await this.lodash.result(this.formRef, "resetFields");
-    this.formValidate = {}
+    this.formValidate = {};
     // const values = await this.lodash.result(this.formRef, "validateFields");
   }
   onValidate(name) {
-    console.log("LENG ~ extends ~ onValidate ~ name", name)
+    console.log("LENG ~ extends ~ onValidate ~ name", name);
   }
   // 成功
   onComplete() {
     this.spinning = false;
     this.__wtmBackDetails(this.queryKey);
-    this.$message.success(this.successMsg)
+    this.$message.success(this.successMsg);
   }
   // 失败
   onFail(error) {
-    const formErrors = this.lodash.get(error, 'response.Form');
-    this.formValidate = this.lodash.mapValues(formErrors, (msg, key) => {
-      return {
-        help: msg,
-        validateStatus: 'error'
-      }
-    });
-    console.error("LENG  ~ onFail ", this.formRef, formErrors, error);
+    if (this.lodash.isString(error)) {
+      this.$message.warn(error);
+    } else {
+      const formErrors = this.lodash.get(error, "response.Form");
+      this.formValidate = this.lodash.mapValues(formErrors, (msg, key) => {
+        return {
+          help: msg,
+          validateStatus: "error"
+        };
+      });
+      console.error("LENG  ~ onFail ", this.formRef, formErrors, error);
+    }
+
     this.spinning = false;
     // this.$message.error(this.errorMsg)
   }
-  created() { }
+  created() {}
   mounted() {
     // this.onLoading();
     // console.log("LENG ~ extends ~ mounted ~ this", this);

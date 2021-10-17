@@ -14,6 +14,7 @@ export class PageController extends WTM.ControllerBasics {
             insert: '/api/_frameworkuserbase/add',
             // 修改
             update: '/api/_frameworkuserbase/edit',
+            batchUpdate: { method: 'post', url: '/api/_frameworkuserbase/BatchEdit' },
             // 删除 单&多
             delete: '/api/_frameworkuserbase/BatchDelete',
             // 导入

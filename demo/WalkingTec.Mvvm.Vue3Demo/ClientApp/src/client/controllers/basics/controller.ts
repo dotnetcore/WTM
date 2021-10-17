@@ -14,6 +14,7 @@ export interface ControllerBasicsOptions {
   details?: string | AjaxRequest;
   insert?: string | AjaxRequest;
   update?: string | AjaxRequest;
+  batchUpdate?: string | AjaxRequest;
   delete?: string | AjaxRequest;
   import?: string | AjaxRequest;
   export?: string | AjaxRequest;
@@ -81,7 +82,7 @@ export class ControllerBasics<T = any> {
    * @param type 
    * @returns 
    */
-  getAjaxRequest(type: 'search' | 'details' | 'insert' | 'update' | 'delete' | 'import' | 'export' | 'exportIds' | 'template' | string): AjaxRequest {
+  getAjaxRequest(type: 'search' | 'details' | 'insert' | 'update' | 'batchUpdate' | 'delete' | 'import' | 'export' | 'exportIds' | 'template' | string): AjaxRequest {
     let options = lodash.get(this.options, type);
     if (lodash.isString(options)) {
       const defaultRequest: { [key: string]: AjaxRequest } = {
@@ -89,6 +90,7 @@ export class ControllerBasics<T = any> {
         details: { method: 'get' },
         insert: { method: 'post' },
         update: { method: 'put' },
+        batchUpdate: { method: 'put' },
         delete: { method: 'post' },
         import: { method: 'post' },
         export: { method: 'post', responseType: 'blob' },
@@ -143,6 +145,23 @@ export class ControllerBasics<T = any> {
       this.Pagination.onUpdate(res, old => {
         return lodash.assign(old, res)
       })
+      ControllerBasics.$msg(msg)
+      this.onToggleLoading(false);
+    } catch (error) {
+      console.error(error)
+      this.onToggleLoading(false);
+      throw error
+    }
+  }
+  /**
+   * 批量修改更新
+   * @param key 
+   * @param value 
+   */
+  async onBatchUpdate(entities: T, msg?: string) {
+    try {
+      this.onToggleLoading(true);
+      const res = await this.$ajax.request<T>(lodash.assign({ body: entities }, this.getAjaxRequest('batchUpdate'))).toPromise()
       ControllerBasics.$msg(msg)
       this.onToggleLoading(false);
     } catch (error) {
