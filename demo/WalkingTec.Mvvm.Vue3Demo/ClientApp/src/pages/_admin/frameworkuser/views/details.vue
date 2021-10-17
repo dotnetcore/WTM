@@ -1,79 +1,20 @@
 <template>
-  <WtmDetails :loading="Entities.loading" :onFinish="onFinish">
-    <template v-show="false">
-      <WtmField entityKey="ID" />
-    </template>
-    <a-row>
-      <a-col :span="12">
-        col-12
-      </a-col>
-      <a-col :span="12">
-        col-12
-      </a-col>
-       <a-col :span="12">
-        col-12
-      </a-col>
-      <a-col :span="12">
-        col-12
-      </a-col>
-    </a-row>
-    <a-space>
-      <WtmField entityKey="ITCode" :disabled="IsEdit" />
-      <WtmField entityKey="Password" v-if="!IsEdit" />
-    </a-space>
-    <a-space>
-      <WtmField entityKey="Email" />
-      <WtmField entityKey="Name" />
-    </a-space>
-    <a-space>
-      <WtmField entityKey="Gender" />
-      <WtmField entityKey="CellPhone" />
-    </a-space>
-    <a-space>
-      <WtmField entityKey="HomePhone" />
-      <WtmField entityKey="Address" />
-    </a-space>
-    <a-space>
-      <WtmField entityKey="ZipCode" />
-      <WtmField v-if="IsEdit" entityKey="IsValid" />
-      <div v-else></div>
-    </a-space>
-    <a-space>
-      <WtmField entityKey="PhotoId" debug />
-      <div></div>
-    </a-space>
-    <WtmField entityKey="SelectedRolesCodes" />
-    <WtmField entityKey="SelectedGroupCodes" />
-  </WtmDetails>
+  <ViewInfo v-if="IsInfo" />
+  <ViewBatch v-else-if="IsBatch" />
+  <ViewUpdate v-else-if="IsEdit" />
+  <ViewInstall v-else />
 </template>
 <script lang="ts">
 import { PageDetailsBasics } from "@/components";
 import { Inject, mixins, Options, Provide } from "vue-property-decorator";
-import { PageController } from "../controller";
-@Options({ components: {} })
+import ViewInfo from "./details_info.vue";
+import ViewInstall from "./details_install.vue";
+import ViewUpdate from "./details_update.vue";
+import ViewBatch from "./details_batch.vue";
+@Options({ components: { ViewInfo, ViewInstall, ViewUpdate, ViewBatch } })
 export default class extends mixins(PageDetailsBasics) {
-  @Inject() readonly PageController: PageController;
-  @Provide({ reactive: true }) formState = {
-    Entity: {
-      ID: "",
-      ITCode: "",
-      Password: "",
-      Email: "",
-      Name: "",
-      Gender: "Male",
-      CellPhone: "",
-      HomePhone: "",
-      Address: "",
-      ZipCode: "",
-      PhotoId: undefined
-    },
-    SelectedRolesCodes: [],
-    SelectedGroupCodes: []
-  };
   created() {}
-  mounted() {
-    this.onLoading();
-  }
+  mounted() {}
 }
 </script>
 <style lang="less"></style>

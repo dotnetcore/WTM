@@ -48,6 +48,7 @@ const options: ComponentOptions = {
                 [
                     $WtmConfig.detailsVisible,
                     '_readonly',
+                    '_batch',
                     queryKey,
                 ]
             ))

@@ -65,14 +65,22 @@ export default class extends Vue {
   get readonly() {
     return this.lodash.has(this.$route.query, "_readonly");
   }
+  get batch() {
+    return this.lodash.has(this.$route.query, "_batch");
+  }
   get _title() {
     if (this.title) {
       return this.title;
     }
-    if (this.lodash.get(this.query, this.visibleKey)) {
-      return this.$t(
-        this.readonly ? this.$locales.action_info : this.$locales.action_update
-      );
+    if (this.lodash.get(this.query, this.visibleKey) || this.batch) {
+      let title = this.$locales.action_update;
+      if (this.readonly) {
+        title = this.$locales.action_info;
+      }
+      if (this.batch) {
+        title = this.$locales.action_update_batch;
+      }
+      return this.$t(title);
     }
     return this.$t(this.$locales.action_insert);
   }

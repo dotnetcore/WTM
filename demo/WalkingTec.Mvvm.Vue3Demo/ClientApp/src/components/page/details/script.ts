@@ -20,8 +20,17 @@ export class PageDetailsBasics extends Vue {
     get ID() {
         return this.lodash.get(this.$route.query, this.queryKey)
     }
+    // 编辑
     get IsEdit() {
         return !!this.ID
+    }
+    // 详情
+    get IsInfo() {
+        return this.lodash.has(this.$route.query, '_readonly')
+    }
+    // 多编辑
+    get IsBatch() {
+        return this.lodash.has(this.$route.query, '_batch')
     }
     get body() {
         return { ID: this.ID };
@@ -33,6 +42,13 @@ export class PageDetailsBasics extends Vue {
      */
     async onFinish(values) {
         console.log("LENG ~ extends ~ onFinish ~ values", values);
+        if (this.IsBatch) {
+            const Ids = this.lodash.map(this.PageController.Pagination.selectionDataSource, this.PageController.key)
+            if (this.lodash.size(Ids)) {
+                return this.PageController.onBatchUpdate(this.lodash.assign({Ids}, this.formState))
+            }
+            throw this.$t(this.$locales.action_update_batch_null)
+        }
         if (this.IsEdit) {
             return this.PageController.onUpdate(this.formState)
         }
