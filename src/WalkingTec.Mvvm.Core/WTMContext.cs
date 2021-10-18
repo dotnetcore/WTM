@@ -374,7 +374,7 @@ namespace WalkingTec.Mvvm.Core
         public bool IsAccessable(string url)
         {
             // 如果是调试 或者 url 为 null or 空字符串
-            if (_configInfo.IsQuickDebug || string.IsNullOrEmpty(url))
+            if (_configInfo.IsQuickDebug || string.IsNullOrEmpty(url) || IsUrlPublic(url))
             {
                 return true;
             }
