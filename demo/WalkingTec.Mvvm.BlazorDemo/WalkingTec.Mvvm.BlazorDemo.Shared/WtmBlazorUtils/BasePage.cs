@@ -45,9 +45,9 @@ namespace WtmBlazorUtils
             return await WtmBlazor.OpenDialog(Title, Values, size);
         }
 
-        public async Task<bool> PostsData(object data, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
+        public async Task<bool> PostsData(object data, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST, bool isIgnoreNull = false)
         {
-            var rv = await WtmBlazor.Api.CallAPI(url, method, data);
+            var rv = await WtmBlazor.Api.CallAPI<string>(url, method, data, isIgnoreNull);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 if (Msg != null)
@@ -82,9 +82,9 @@ namespace WtmBlazorUtils
 
         }
 
-        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
+        public async Task<bool> PostsForm(ValidateForm form, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST, bool isIgnoreNull = false)
         {
-            var rv = await WtmBlazor.Api.CallAPI(url, method, form.Model);
+            var rv = await WtmBlazor.Api.CallAPI<string>(url, method, form.Model, isIgnoreNull);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 if (Msg != null)
