@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.Demo
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
-            app.UseWtmSwagger();
+            app.UseWtmSwagger(false);
             app.UseWtm();
             app.UseEndpoints(endpoints =>
             {

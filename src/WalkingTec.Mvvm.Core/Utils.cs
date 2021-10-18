@@ -758,7 +758,12 @@ namespace WalkingTec.Mvvm.Core
                     ActionName = y.ActionName,
                     Url = y.Url,
                     MethodName = y.MethodName,
-
+                    IgnorePrivillege = y.IgnorePrivillege,
+                    ID = y.ID,
+                    Module = y.Module,
+                    ModuleId = y.ModuleId,
+                    Parameter = y.Parameter,
+                    ParasToRunTest = y.ParasToRunTest
                 }).ToList(),
                 Area = x.Area,
                 AreaId = x.AreaId,

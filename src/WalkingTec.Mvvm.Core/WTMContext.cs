@@ -382,7 +382,7 @@ namespace WalkingTec.Mvvm.Core
             var publicActions = _globaInfo.AllAccessUrls;
             foreach (var au in publicActions)
             {
-                if (new Regex(au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))
+                if (new Regex("^"+au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))
                 {
                     return true;
                 }
