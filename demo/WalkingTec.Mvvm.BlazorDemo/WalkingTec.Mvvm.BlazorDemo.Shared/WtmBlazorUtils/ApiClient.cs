@@ -251,6 +251,26 @@ namespace WtmBlazorUtils
             return await CallAPI<string>(url, method, postdata, timeout, proxy);
         }
 
+        /// <summary>
+        /// 发起请求时，是否对剔除提交字段中null字段
+        /// </summary>
+        /// <param name="url">调用地址</param>
+        /// <param name="method">调用方式</param>
+        /// <param name="postdata">提交字段</param>
+        /// <param name="isIgnoreNull">是否剔除null字段</param>
+        /// <param name="timeout">超时时间，单位秒</param>
+        /// <param name="proxy">代理地址</param>
+        /// <returns></returns>
+
+        public async Task<ApiResult<T>> CallAPI<T>(string url, HttpMethodEnum method, object postdata, bool isIgnoreNull, int? timeout = null, string proxy = null) where T : class
+        {
+            var jsonOption = new JsonSerializerOptions
+            {
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            };
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata, isIgnoreNull ? jsonOption : CoreProgram.DefaultPostJsonOption), System.Text.Encoding.UTF8, "application/json");
+            return await CallAPI<T>(url, method, content, timeout, proxy);
+        }
         #endregion
 
         public async Task<ApiResult<WtmApiResult<T>>> CallSearchApi<T>(string url, BaseSearcher searcher, QueryPageOptions options) where T : class, new()
