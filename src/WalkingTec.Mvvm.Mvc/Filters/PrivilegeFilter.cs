@@ -53,7 +53,15 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             if (u != null && u.EndsWith("/0"))
             {
-                u = u.Substring(0, u.Length - 2);
+                u = u[0..^2];
+                if (controller is BaseApiController)
+                {
+                    u = u + "/{id}";
+                }
+            }
+            if (u != null && u.EndsWith("?id=0"))
+            {
+                u = u[0..^5];
                 if (controller is BaseApiController)
                 {
                     u = u + "/{id}";
