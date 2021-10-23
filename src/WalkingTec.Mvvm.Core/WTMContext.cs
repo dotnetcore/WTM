@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                if (HttpContext?.User?.Identity?.IsAuthenticated == true && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
+                if (_loginUserInfo == null && HttpContext?.User?.Identity?.IsAuthenticated == true ) // 用户认证通过后，当前上下文不包含用户数据
                 {
                     var userIdStr = HttpContext.User.Claims.FirstOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
                     string usercode = userIdStr;

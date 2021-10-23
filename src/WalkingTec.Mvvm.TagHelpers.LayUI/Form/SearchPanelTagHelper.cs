@@ -150,7 +150,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             string showpage = "";
             if(ListVM?.NeedPage == true)
             {
-                showpage = ",page:{curr:1}";
+                showpage = $@",page:{{
+        rpptext:'{THProgram._localizer["Sys.RecordsPerPage"]}',
+        totaltext:'{THProgram._localizer["Sys.Total"]}',
+        recordtext:'{THProgram._localizer["Sys.Record"]}',
+        gototext:'{THProgram._localizer["Sys.Goto"]}',
+        pagetext:'{THProgram._localizer["Sys.Page"]}',
+        oktext:'{THProgram._localizer["Sys.GotoButtonText"]}',
+    }}";
             }
             var layuiShow = show ? " layui-show" : string.Empty;
             output.PreContent.AppendHtml($@"
@@ -178,9 +185,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     refreshgridjs += $@"
     var tempwhere{item} = {{}};
-    $.extend(tempwhere{item},{item}defaultfilter.where);
     {item}filterback.where = tempwhere{item};
-    table.reload('{item}',{{url:{item}url,where: $.extend(tempwhere{item},ff.GetSearchFormData('{Id}','{Vm.Name}')){showpage}}});
+    table.reload('{item}',{{page: {item}filterback.page,url:{item}url,where: $.extend(tempwhere{item},ff.GetSearchFormData('{Id}','{(Vm.Name == ""?"Searcher":Vm.Name)}'))}});
 ";
                 }
             }
@@ -202,9 +208,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     layui.element.init();
     $('#{tempSearchTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})
     $('#{ResetBtnId}').on('click', function (btn) {{ff.resetForm(this.form.id);}});
-    $('#{tempSearchTitleId}').parents('form').append(""<input type='hidden' name='Searcher.IsExpanded' value='{show.ToString().ToLower()}' />"");
+    $('#{tempSearchTitleId}').parents('form').append(""<input type='hidden' name='IsExpanded' value='{show.ToString().ToLower()}' />"");
 layui.element.on('collapse({tempSearchTitleId}x)', function(data){{
-    $('#{tempSearchTitleId}').parents('form').find(""input[name='Searcher.IsExpanded']"").val(data.show+'');
+    $('#{tempSearchTitleId}').parents('form').find(""input[name='IsExpanded']"").val(data.show+'');
     ff.triggerResize();
 }});
 

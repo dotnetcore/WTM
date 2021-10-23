@@ -16,6 +16,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         public CityChildrenDetailListVM CityChildrenList { get; set; }
         public CityChildrenDetailListVM1 CityChildrenList1 { get; set; }
 
+        public CityListVM list { get; set; }
+        public CitySearcher se { get; set; }
         public CityVM()
         {
             SetInclude(x => x.Parent);
@@ -23,6 +25,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             CityChildrenList.DetailGridPrix = "Entity.Children";
             CityChildrenList1 = new CityChildrenDetailListVM1();
             CityChildrenList1.DetailGridPrix = "Entity.Children";
+            list = new CityListVM();
+            se = new CitySearcher();
         }
 
         protected override void InitVM()
@@ -30,6 +34,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             AllParents = DC.Set<City>().GetTreeSelectListItems(Wtm, y => y.Name);
             CityChildrenList.CopyContext(this);
             CityChildrenList1.CopyContext(this);
+            list.CopyContext(this);
+            se.CopyContext(this);
         }
 
         public override void DoAdd()

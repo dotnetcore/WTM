@@ -273,7 +273,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             "LoginUserInfo",
             "MSD",
             "Session",
-            "Wtm"
+            "Wtm",
+            "ViewDivId"
         };
 
         private bool hasButtonGroup = false;
@@ -398,10 +399,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             if (prop.PropertyType.IsGenericType == false || (prop.PropertyType.GenericTypeArguments[0] != typeof(ComboSelectListItem) && prop.PropertyType.GenericTypeArguments[0] != typeof(TreeSelectListItem)))
                             {
-                                var listvalue = prop.GetValue(ListVM.Searcher);
+                                var listvalue = prop.GetValue(ListVM.Searcher);                                
                                 if (listvalue != null)
                                 {
-                                    Filter.Add($"Searcher.{prop.Name}", prop.GetValue(ListVM.Searcher));
+                                    Filter.Add($"{prop.Name}", prop.GetValue(ListVM.Searcher));
                                 }
                             }
                         }
@@ -538,7 +539,8 @@ layui.use(['table'], function(){{
     ,text:{{
         none:'{THProgram._localizer["Sys.NoData"]}'
     }}
-    {toolbardef}
+    ,request: {{ 'pageName': 'Page', 'limitName': 'Limit'}}
+    { toolbardef}
     {righttoolbar}
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
     ,headers: {{layuisearch: 'true'}}
@@ -589,7 +591,7 @@ $.extend(true,{Id}defaultfilter ,{Id}option);
 setTimeout(function(){{
     var tempwhere = {{}};
     $.extend(tempwhere,{Id}defaultfilter.where);
-    table.reload('{Id}',{{url:'{Url}',where: $.extend(tempwhere,ff.GetSearchFormData('{SearchPanelId}','{Vm.Name}')),}});
+    table.reload('{Id}',{{url:'{Url}',where: $.extend(tempwhere,ff.GetSearchFormData('{SearchPanelId}','Searcher')),}});
 }},100);
 " : $@"
         var {Id}optionempty =  Object.assign({{}}, {Id}option);
@@ -603,9 +605,9 @@ setTimeout(function(){{
   {(string.IsNullOrEmpty(CheckedFunc) ? string.Empty : $"table.on('checkbox({Id})',{CheckedFunc});")}
     table.on('sort({Id})', function(obj){{
     var sortfilter = {{}};
-    sortfilter['Searcher.SortInfo.Property'] = obj.field;
-    sortfilter['Searcher.SortInfo.Direction'] = obj.type.replace(obj.type[0],obj.type[0].toUpperCase());
-    var w = $.extend({Id}option.where,sortfilter,ff.GetSearchFormData('{SearchPanelId}','{Vm.Name}'));
+    sortfilter['SortInfo.Property'] = obj.field;
+    sortfilter['SortInfo.Direction'] = obj.type.replace(obj.type[0],obj.type[0].toUpperCase());
+    var w = $.extend({Id}option.where,sortfilter,ff.GetSearchFormData('{SearchPanelId}','Searcher'));
 
     table.reload('{Id}', {{
     initSort: obj,
