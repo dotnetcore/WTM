@@ -1,5 +1,5 @@
 <template>
-  <WtmDetails queryKey="update" :loading="Entities.loading" :onFinish="onFinish">
+  <WtmDetails :loading="Entities.loading" :onFinish="onFinish">
     <template v-show="false">
       <WtmField entityKey="ID" />
     </template>
