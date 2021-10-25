@@ -11,6 +11,12 @@
       </template>
       <i18n-t :keypath="$locales.action_insert" />
     </a-button>
+    <a-button @click="toUpdate()">
+      <template #icon>
+        <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+      </template>
+      修改
+    </a-button>
     <WtmActionDelete :PageController="PageController" :params="params">
       <template #icon>
         <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
@@ -60,8 +66,11 @@ import { PageController } from "../controller";
 export default class extends Vue {
   // page Inject 注入 row 为 toRowAction 注入
   @Inject() readonly PageController: PageController;
+  get Pagination() {
+    return this.PageController.Pagination;
+  }
   /**
-   * 行 操作 aggrid 传入
+   * 行 操作 的参数 aggrid 传入
    * @type {ICellRendererParams}
    * @memberof Action
    */
@@ -74,9 +83,25 @@ export default class extends Vue {
   get isRowAction() {
     return this.lodash.has(this.params, "node");
   }
+  getRowData() {
+    if (this.isRowAction) {
+      return this.lodash.cloneDeep(this.lodash.get(this, "params.data", {}));
+    }
+    return this.lodash.cloneDeep(
+      this.lodash.head(this.Pagination.selectionDataSource)
+    );
+  }
+  toUpdate() {
+    this.__wtmToDetails({
+      [this.$WtmConfig.detailsVisible]: this.lodash.get(
+        this.getRowData(),
+        this.PageController.key
+      )
+    });
+  }
   //自定义修改 需要的参数
   toUpdateQuery(data) {
-    this.$message.warn('地址栏改变 需要 WtmView 支持')
+    this.$message.warn("地址栏改变 需要 WtmView 支持");
     // 这是跳转页面
     // this.$router.push('页面地址')
     return { aaa: data.ITCode };
