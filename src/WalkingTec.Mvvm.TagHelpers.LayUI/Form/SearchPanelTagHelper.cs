@@ -186,7 +186,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     refreshgridjs += $@"
     var tempwhere{item} = {{}};
     {item}filterback.where = tempwhere{item};
-    table.reload('{item}',{{page: {item}filterback.page,url:{item}url,where: $.extend(tempwhere{item},ff.GetSearchFormData('{Id}','{(Vm.Name == ""?"Searcher":Vm.Name)}'))}});
+    var page{item} = {item}filterback.page;
+    if(keeppage ==null){{ page{item}.curr = 1}}
+    table.reload('{item}',{{page: page{item},url:{item}url,where: $.extend(tempwhere{item},ff.GetSearchFormData('{Id}','{(Vm.Name == ""?"Searcher":Vm.Name)}'))}});
 ";
                 }
             }
@@ -216,6 +218,12 @@ layui.element.on('collapse({tempSearchTitleId}x)', function(data){{
 
 {(OldPost == true ? $"" : $@"
 $('#{SearchBtnId}').on('click', function () {{
+   var keeppage = null;
+    {refreshgridjs}
+    {refreshchartjs}
+}});
+$('#{SearchBtnId}').bind('myclick', function () {{
+   var keeppage = true;
     {refreshgridjs}
     {refreshchartjs}
 }});

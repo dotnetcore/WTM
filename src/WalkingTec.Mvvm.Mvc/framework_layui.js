@@ -1064,7 +1064,7 @@ window.ff = {
         var tables = $('#' + dialogid + tab + ' table[id]');
         var searchBtns = $('#' + dialogid + tab + ' form a[IsSearchButton]');
         if (searchBtns.length > index) {
-            searchBtns[index].click();
+            $('#' + searchBtns[index].id).trigger("myclick", true);
         }
         else {
             if (tables.length > index) {
