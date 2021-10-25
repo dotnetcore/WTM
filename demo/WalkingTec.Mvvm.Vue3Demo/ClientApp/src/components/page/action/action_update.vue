@@ -35,7 +35,7 @@ export default class extends mixins(ActionBasics) {
     );
   }
   onToDetails() {
-    if (this.Pagination.selectionDataSource.length > 1) {
+    if (!this.isRowAction && this.Pagination.selectionDataSource.length > 1) {
       return this.__wtmToDetails({ details: "", _batch: "" });
     }
     const rowData = this.getRowData();

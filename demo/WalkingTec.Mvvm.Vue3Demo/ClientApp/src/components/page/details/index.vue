@@ -23,22 +23,24 @@ lengyingxin8966@gmail.com * @create date 2021-03-12 17:19:19 * @modify date
         <template v-slot:indicator>
           <div></div>
         </template>
-        <!-- 非只读状态显示底部按钮 -->
-        <template v-if="!readonly">
-          <a-button type="primary" html-type="submit">
-            <template v-slot:icon>
-              <SaveOutlined />
-            </template>
-            <i18n-t :keypath="$locales.action_submit" />
-          </a-button>
-          <a-divider type="vertical" />
-          <a-button @click.stop.prevent="onReset">
-            <template v-slot:icon>
-              <RedoOutlined />
-            </template>
-            <i18n-t :keypath="$locales.action_reset" />
-          </a-button>
-        </template>
+        <slot name="button">
+          <!-- 非只读状态显示底部按钮 -->
+          <template v-if="!readonly">
+            <a-button type="primary" html-type="submit">
+              <template v-slot:icon>
+                <SaveOutlined />
+              </template>
+              <i18n-t :keypath="$locales.action_submit" />
+            </a-button>
+            <a-divider type="vertical" />
+            <a-button @click.stop.prevent="onReset">
+              <template v-slot:icon>
+                <RedoOutlined />
+              </template>
+              <i18n-t :keypath="$locales.action_reset" />
+            </a-button>
+          </template>
+        </slot>
       </a-spin>
     </a-space>
   </a-form>
