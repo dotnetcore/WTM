@@ -41,7 +41,11 @@
       </template>
       <span>WtmActionInsert</span>
     </WtmActionInsert>
-    <WtmActionUpdate :PageController="PageController" :params="params">
+    <WtmActionUpdate
+      :PageController="PageController"
+      :params="params"
+      :toQuery="toUpdateQuery"
+    >
       <template #icon>
         <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
       </template>
@@ -69,6 +73,13 @@ export default class extends Vue {
    */
   get isRowAction() {
     return this.lodash.has(this.params, "node");
+  }
+  //自定义修改 需要的参数
+  toUpdateQuery(data) {
+    this.$message.warn('地址栏改变 需要 WtmView 支持')
+    // 这是跳转页面
+    // this.$router.push('页面地址')
+    return { aaa: data.ITCode };
   }
   mounted() {}
 }
