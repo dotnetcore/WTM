@@ -2,9 +2,13 @@
   <a-popconfirm :title="title" :disabled="disabled" @confirm="onConfirm">
     <a-button v-if="isDelete" v-bind="ButtonProps" :disabled="disabled">
       <template #icon v-if="isPageAction">
-        <DeleteOutlined />
+        <slot name="icon">
+          <DeleteOutlined />
+        </slot>
       </template>
-      <i18n-t :keypath="$locales.action_delete" />
+      <slot>
+        <i18n-t :keypath="$locales.action_delete" />
+      </slot>
     </a-button>
   </a-popconfirm>
 </template>
@@ -22,28 +26,31 @@ export default class extends mixins(ActionBasics) {
     return !this.Pagination.selectionDataSource.length;
   }
   get title() {
-    return this.$t(this.$locales.action_deleteConfirm, { text: this.isRowAction ? 1 : this.Pagination.selectionDataSource.length })
+    return this.$t(this.$locales.action_deleteConfirm, {
+      text: this.isRowAction ? 1 : this.Pagination.selectionDataSource.length
+    });
   }
   get successMsg() {
-    return this.$t(this.$locales.tips_success_operation)
+    return this.$t(this.$locales.tips_success_operation);
   }
   get errorMsg() {
-    return this.$t(this.$locales.tips_error_operation)
+    return this.$t(this.$locales.tips_error_operation);
   }
   async onConfirm() {
     // 得先获取 内容 删除后获取 组件卸载就娶不到了
     const { successMsg, errorMsg } = this;
     try {
-      const remKey = this.isRowAction ? this.rowKey : this.Pagination.selectionDataSource
+      const remKey = this.isRowAction
+        ? this.rowKey
+        : this.Pagination.selectionDataSource;
       await this.PageController.onRemove(remKey);
-      this.$message.success(successMsg)
+      this.$message.success(successMsg);
     } catch (error) {
-      this.$message.error(errorMsg)
+      this.$message.error(errorMsg);
     }
   }
-  created() { }
-  mounted() { }
+  created() {}
+  mounted() {}
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

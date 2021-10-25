@@ -34,15 +34,19 @@
     </template>
     <a-button v-if="isImport" v-bind="ButtonProps">
       <template #icon v-if="isPageAction">
-        <CloudUploadOutlined />
+        <slot name="icon">
+          <CloudUploadOutlined />
+        </slot>
       </template>
-      <i18n-t :keypath="$locales.action_import" />
+      <slot>
+        <i18n-t :keypath="$locales.action_import" />
+      </slot>
     </a-button>
   </a-popconfirm>
 </template>
 <script lang="ts">
 import { Vue, Options, mixins, Prop } from "vue-property-decorator";
-import { ControllerBasics, $System } from "@/client";
+import { ControllerBasics, $System, $locales } from "@/client";
 import { ActionBasics } from "./script";
 @Options({ components: {} })
 export default class extends mixins(ActionBasics) {
@@ -60,9 +64,7 @@ export default class extends mixins(ActionBasics) {
   get errorMsg() {
     return this.$t(this.$locales.tips_error_operation);
   }
-  onConfirm() {
-    
-  }
+  onConfirm() {}
   async onChange(event) {
     this.loading = true;
     const { successMsg, errorMsg } = this;
