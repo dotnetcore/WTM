@@ -3,9 +3,6 @@
   <ViewAction />
   <a-divider />
   <ViewGrid />
-  <WtmView>
-    <ViewDetails />
-  </WtmView>
   <WtmView queryKey="update">
     <ViewDetailsUpdate />
   </WtmView>
@@ -14,7 +11,6 @@
 import { Options,Provide,Vue } from "vue-property-decorator";
 import PageController,{ PageEntity } from "./controller";
 import ViewAction from "./views/action.vue";
-import ViewDetails from "./views/details.vue";
 import ViewDetailsUpdate from "./views/details_update.vue";
 import ViewFilter from "./views/filter.vue";
 import ViewGrid from "./views/grid.vue";
@@ -23,7 +19,6 @@ import ViewGrid from "./views/grid.vue";
     ViewAction,
     ViewFilter,
     ViewGrid,
-    ViewDetails,
     ViewDetailsUpdate
   },
 })

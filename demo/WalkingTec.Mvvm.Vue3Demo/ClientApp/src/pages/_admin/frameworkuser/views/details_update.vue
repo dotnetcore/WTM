@@ -1,5 +1,9 @@
 <template>
-  <WtmDetails :loading="Entities.loading" :onFinish="onFinish">
+  <WtmDetails
+    :queryKey="queryKey"
+    :loading="Entities.loading"
+    :onFinish="onFinish"
+  >
     <template v-show="false">
       <WtmField entityKey="ID" />
     </template>
@@ -37,6 +41,9 @@ import { PageController } from "../controller";
 @Options({ components: {} })
 export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
+  get queryKey() {
+    return "update";
+  }
   @Provide({ reactive: true }) formState = {
     Entity: {
       ID: "",
