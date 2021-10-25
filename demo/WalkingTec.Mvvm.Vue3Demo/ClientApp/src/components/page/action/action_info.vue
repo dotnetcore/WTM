@@ -1,14 +1,23 @@
 <template>
-  <a-button v-if="isInfo" v-bind="ButtonProps" :disabled="disabled" @click="onToDetails">
+  <a-button
+    v-if="isInfo"
+    v-bind="ButtonProps"
+    :disabled="disabled"
+    @click="onToDetails"
+  >
     <template #icon v-if="isPageAction">
-      <EditOutlined />
+      <slot name="icon">
+        <EditOutlined />
+      </slot>
     </template>
-    <i18n-t :keypath="$locales.action_info" />
+    <slot>
+      <i18n-t :keypath="$locales.action_info" />
+    </slot>
   </a-button>
 </template>
 <script lang="ts">
 import { Vue, Options, mixins, Prop } from "vue-property-decorator";
-import { ControllerBasics } from "@/client";
+import { $locales, ControllerBasics } from "@/client";
 import { ActionBasics } from "./script";
 @Options({ components: {} })
 export default class extends mixins(ActionBasics) {
@@ -25,21 +34,31 @@ export default class extends mixins(ActionBasics) {
     if (this.isRowAction) {
       return this.lodash.cloneDeep(this.rowParams.data);
     }
-    return this.lodash.cloneDeep(this.lodash.head(this.Pagination.selectionDataSource))
+    return this.lodash.cloneDeep(
+      this.lodash.head(this.Pagination.selectionDataSource)
+    );
   }
   onToDetails() {
-    const rowData = this.getRowData()
-    let query = {
-
+    const rowData = this.getRowData();
+    let query = {};
+    if (this.lodash.hasIn(this.$props, "toQuery")) {
+      query = this.lodash.invoke(this.$props, "toQuery", rowData, this);
     }
-    if (this.lodash.hasIn(this.$props, 'toQuery')) {
-      query = this.lodash.invoke(this.$props, 'toQuery', rowData, this)
-    }
-    this.__wtmToDetails(this.lodash.assign({ [this.$WtmConfig.detailsVisible]: this.lodash.get(rowData, this.PageController.key) }, query, { _readonly: '' }))
+    this.__wtmToDetails(
+      this.lodash.assign(
+        {
+          [this.$WtmConfig.detailsVisible]: this.lodash.get(
+            rowData,
+            this.PageController.key
+          )
+        },
+        query,
+        { _readonly: "" }
+      )
+    );
   }
-  created() { }
-  mounted() { }
+  created() {}
+  mounted() {}
 }
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

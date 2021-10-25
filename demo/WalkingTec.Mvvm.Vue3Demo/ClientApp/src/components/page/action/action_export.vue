@@ -19,10 +19,14 @@
     </template>
     <a-button v-bind="ButtonProps">
       <template #icon v-if="isPageAction">
-        <CloudDownloadOutlined />
+        <slot name="icon">
+          <CloudDownloadOutlined />
+        </slot>
       </template>
-      <i18n-t :keypath="$locales.action_export" />
-      <DownOutlined />
+      <slot>
+        <i18n-t :keypath="$locales.action_export" />
+        <DownOutlined />
+      </slot>
     </a-button>
   </a-dropdown>
 </template>

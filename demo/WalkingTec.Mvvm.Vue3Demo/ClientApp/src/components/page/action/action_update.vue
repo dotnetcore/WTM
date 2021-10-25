@@ -6,14 +6,18 @@
     @click="onToDetails"
   >
     <template #icon v-if="isPageAction">
-      <EditOutlined />
+      <slot name="icon">
+        <EditOutlined />
+      </slot>
     </template>
-    <i18n-t :keypath="$locales.action_update" />
+    <slot>
+      <i18n-t :keypath="$locales.action_insert" />
+    </slot>
   </a-button>
 </template>
 <script lang="ts">
 import { Vue, Options, mixins, Prop } from "vue-property-decorator";
-import { ControllerBasics } from "@/client";
+import { $locales, ControllerBasics } from "@/client";
 import { ActionBasics } from "./script";
 @Options({ components: {} })
 export default class extends mixins(ActionBasics) {
