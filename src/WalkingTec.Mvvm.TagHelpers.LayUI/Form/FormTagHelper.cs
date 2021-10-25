@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
                 else
                 {
-                    output.Attributes.SetAttribute("action", baseVM?.CurrentUrl ?? "#");
+                    output.Attributes.SetAttribute("action", baseVM?.CurrentUrl ?? baseSearcher?.Wtm?.BaseUrl ?? "#");
                 }
             }
             output.PostContent.AppendHtml($"<input type='hidden' name='FromView' value='{baseVM?.CurrentView}' />");
@@ -179,7 +179,7 @@ layui.use(['form'],function(){{
                 output.PostElement.AppendHtml($@"
 $('#{search.SearchBtnId}').on('click', function () {{
     if({BeforeSubmit ?? "true"} == false){{return false;}}
-    ff.PostForm('', '{Id}', '{baseVM?.ViewDivId}')
+    ff.PostForm('', '{Id}', '{baseVM?.ViewDivId ?? baseSearcher?.ViewDivId}','{Vm?.Name}')
     return false;
   }});
 ");

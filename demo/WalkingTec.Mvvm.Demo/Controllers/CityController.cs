@@ -16,9 +16,21 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
-            var vm = Wtm.CreateVM<CityListVM>();
+            var vm = Wtm.CreateVM<CityVM>();
             return PartialView(vm);
         }
+
+        [HttpPost]
+        public ActionResult Index(CitySearcher searcher)
+        {
+            var vm = Wtm.CreateVM<CityVM>();
+            searcher.CopyContext(vm);
+            vm.se = searcher;
+            vm.list.Searcher = searcher;
+            return PartialView(vm);
+        }
+
+
 
         [ActionDescription("Codegen.FieldDes", IsPage = true)]
         public ActionResult CityPage()

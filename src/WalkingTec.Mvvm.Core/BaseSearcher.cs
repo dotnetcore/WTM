@@ -93,6 +93,8 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public LoginUserInfo LoginUserInfo { get => Wtm?.LoginUserInfo; }
 
+        [JsonIgnore]
+        public string ViewDivId { get; set; }
         #region 未使用
         /// <summary>
         /// 排序信息
@@ -185,6 +187,7 @@ namespace WalkingTec.Mvvm.Core
         {
             FC = vm.FC;
             this.Wtm = vm.Wtm;
+            this.ViewDivId = vm.ViewDivId;
         }
 
         #endregion

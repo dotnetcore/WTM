@@ -216,7 +216,8 @@ namespace WalkingTec.Mvvm.Mvc
                         var action = new SimpleAction
                         {
                             Module = model,
-                            MethodName = method.Name
+                            MethodName = method.Name,
+                            IgnorePrivillege = model.IgnorePrivillege
                         };
                         if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
@@ -268,7 +269,8 @@ namespace WalkingTec.Mvvm.Mvc
                         var action = new SimpleAction
                         {
                             Module = model,
-                            MethodName = method.Name
+                            MethodName = method.Name,
+                            IgnorePrivillege = model.IgnorePrivillege
                         };
                         if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
@@ -372,9 +374,11 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             url = area + "/" + url;
                         }
+                        url = "/" + url;
+                        bool needadd = false;
                         if (includeAll == true)
                         {
-                            rv.Add(url);
+                            needadd = true;
                         }
                         else
                         {
@@ -383,7 +387,15 @@ namespace WalkingTec.Mvvm.Mvc
                             var attrs42 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                             if (attrs3.Length > 0 || attrs4.Length > 0 || attrs42.Length > 0)
                             {
-                                rv.Add(url);
+                                needadd = true;
+                            }
+                        }
+                        if (needadd)
+                        {
+                            rv.Add(url);
+                            if (url.ToLower().EndsWith("/index"))
+                            {
+                                rv.Add(url[0..^6]);
                             }
                         }
                     }
@@ -401,9 +413,11 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             url = area + "/" + url;
                         }
+                        url = "/" + url;
+                        bool needadd = false;
                         if (includeAll == true)
                         {
-                            rv.Add(url);
+                            needadd = true;
                         }
                         else
                         {
@@ -412,7 +426,15 @@ namespace WalkingTec.Mvvm.Mvc
                             var attrs62 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                             if (attrs5.Length > 0 || attrs6.Length > 0 || attrs62.Length > 0)
                             {
-                                rv.Add(url);
+                                needadd = true;
+                            }
+                        }
+                        if (needadd)
+                        {
+                            rv.Add(url);
+                            if (url.ToLower().EndsWith("/index"))
+                            {
+                                rv.Add(url[0..^6]);
                             }
                         }
                     }

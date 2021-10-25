@@ -315,17 +315,24 @@ window.ff = {
         }
     },
 
-    PostForm: function (url, formId, divid) {
+    PostForm: function (url, formId, divid, searchervm) {
         var layer = layui.layer;
         var index = layer.load(2);
         if (url === undefined || url === "") {
             url = $("#" + formId).attr("action");
         }
+        var d = null;
+        if (searchervm !== undefined && searchervm !== null && searchervm !== "") {
+            d = ff.GetSearchFormData(formId, searchervm);
+        }
+        else {
+            d = ff.GetFormData(formId)
+        }
         $.ajax({
             cache: false,
             type: "POST",
             url: url,
-            data: ff.GetFormData(formId),
+            data: d,
             async: true,
             error: function (request) {
                 layer.close(index);
@@ -1057,7 +1064,7 @@ window.ff = {
         var tables = $('#' + dialogid + tab + ' table[id]');
         var searchBtns = $('#' + dialogid + tab + ' form a[IsSearchButton]');
         if (searchBtns.length > index) {
-            searchBtns[index].click();
+            $('#' + searchBtns[index].id).trigger("myclick", true);
         }
         else {
             if (tables.length > index) {

@@ -130,6 +130,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
+            
             return vm.GetExportData();
         }
 

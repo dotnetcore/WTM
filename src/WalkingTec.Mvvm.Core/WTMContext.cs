@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                if (HttpContext?.User?.Identity?.IsAuthenticated == true && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
+                if (_loginUserInfo == null && HttpContext?.User?.Identity?.IsAuthenticated == true ) // 用户认证通过后，当前上下文不包含用户数据
                 {
                     var userIdStr = HttpContext.User.Claims.FirstOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
                     string usercode = userIdStr;
@@ -374,7 +374,7 @@ namespace WalkingTec.Mvvm.Core
         public bool IsAccessable(string url)
         {
             // 如果是调试 或者 url 为 null or 空字符串
-            if (_configInfo.IsQuickDebug || string.IsNullOrEmpty(url))
+            if (_configInfo.IsQuickDebug || string.IsNullOrEmpty(url) || IsUrlPublic(url))
             {
                 return true;
             }
@@ -382,7 +382,7 @@ namespace WalkingTec.Mvvm.Core
             var publicActions = _globaInfo.AllAccessUrls;
             foreach (var au in publicActions)
             {
-                if (new Regex(au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))
+                if (new Regex("^"+au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))
                 {
                     return true;
                 }

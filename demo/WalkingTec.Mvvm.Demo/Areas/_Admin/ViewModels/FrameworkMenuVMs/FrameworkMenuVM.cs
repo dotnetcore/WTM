@@ -75,16 +75,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
 
             var modules = Wtm.GlobaInfo.AllModule;
-            var toRemove = new List<SimpleModule>();
-            foreach (var item in modules)
-            {
-                if (item.IgnorePrivillege)
-                {
-                    toRemove.Add(item);
-                }
-            }
             var m = Utils.ResetModule(modules);
-            toRemove.ForEach(x => m.Remove(x));
 
             AllModules = m.ToListItems(y => y.ModuleName, y => y.FullName);
             if (string.IsNullOrEmpty(SelectedModule) == false || (string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true))
