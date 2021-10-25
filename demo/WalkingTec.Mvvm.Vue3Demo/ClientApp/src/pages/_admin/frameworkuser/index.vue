@@ -6,12 +6,16 @@
   <WtmView>
     <ViewDetails />
   </WtmView>
+  <WtmView queryKey="update">
+    <ViewDetailsUpdate />
+  </WtmView>
 </template>
 <script lang="ts">
 import { Options,Provide,Vue } from "vue-property-decorator";
 import PageController,{ PageEntity } from "./controller";
 import ViewAction from "./views/action.vue";
 import ViewDetails from "./views/details.vue";
+import ViewDetailsUpdate from "./views/details_update.vue";
 import ViewFilter from "./views/filter.vue";
 import ViewGrid from "./views/grid.vue";
 @Options({
@@ -20,6 +24,7 @@ import ViewGrid from "./views/grid.vue";
     ViewFilter,
     ViewGrid,
     ViewDetails,
+    ViewDetailsUpdate
   },
 })
 export default class extends Vue {

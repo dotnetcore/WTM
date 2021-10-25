@@ -93,7 +93,7 @@ export default class extends Vue {
   }
   toUpdate() {
     this.__wtmToDetails({
-      [this.$WtmConfig.detailsVisible]: this.lodash.get(
+      update: this.lodash.get(
         this.getRowData(),
         this.PageController.key
       )

@@ -19,6 +19,21 @@ import { ActionBasics } from "./script";
 @Options({ components: {} })
 export default class extends mixins(ActionBasics) {
   @Prop() readonly PageController: ControllerBasics;
+  /**
+   * 行 操作需要 aggrid 传入
+   * @type {ICellRendererParams}
+   * @memberof Action
+   */
+  @Prop() readonly params;
+  get dateKey() {
+    if (this.isRowAction) {
+      return this.rowKey;
+    }
+    return this.lodash.get(
+      this.lodash.head(this.Pagination.selectionDataSource),
+      this.PageController.key
+    );
+  }
   get disabled() {
     if (this.isRowAction) {
       return false;
