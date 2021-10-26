@@ -10,7 +10,7 @@
           <ViewGrid />
         </a-col>
         <a-col :span="12">
-          <ViewGrid />
+          <ViewLogGrid />
         </a-col>
       </a-row>
     </a-col>
@@ -18,17 +18,20 @@
 </template>
 <script lang="ts">
 import { Options, Provide, Vue } from "vue-property-decorator";
-import PageController, { PageEntity } from "./controller";
+import PageController, { PageEntity, LogPage } from "./controller";
 import ViewAction from "./views/action.vue";
 import ViewInsert from "./views/details_insert.vue";
 import ViewFilter from "./views/filter.vue";
 import ViewGrid from "./views/grid.vue";
+import ViewLogGrid from "./views/grid_log.vue";
+
 @Options({
   components: {
     ViewAction,
     ViewFilter,
     ViewGrid,
-    ViewInsert
+    ViewInsert,
+    ViewLogGrid
   }
 })
 export default class extends Vue {
@@ -46,6 +49,11 @@ export default class extends Vue {
    * 子组件 通过 Inject 均可访问
    */
   @Provide({ reactive: true }) readonly PageEntity = PageEntity;
+  /**
+   * 当前页面控制器
+   * 子组件 通过 Inject 均可访问
+   */
+  @Provide({ reactive: true, to: "LogPage" }) readonly LogPage = LogPage;
   created() {}
   mounted() {
     console.log("");
