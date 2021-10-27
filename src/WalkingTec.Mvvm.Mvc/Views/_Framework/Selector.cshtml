@@ -99,7 +99,7 @@
 <wt:container style="margin:0px 10px 0px 10px" class='donotuse_pdiv' wtm-name="@ViewBag.FieldName" wtm-linkto="@ViewBag.LinkField" id="Selector_@ViewBag.FieldName">
   <div style="height:10px">&nbsp;</div>
   $$SearchPanel$$
-  <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" url="/_Framework/GetPagingData" need-show-filter="false" need-show-print="false" />
+  <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" url="/_Framework/GetPagingData" need-show-filter="false" need-show-print="false" is-in-selector="true"/>
   <div style="margin-bottom:3px;">
     <wt:row align="AlignEnum.Right">
       <wt:button click="submitSelect();" text="@WalkingTec.Mvvm.Core.CoreProgram._localizer?["Sys.OK"]" size="ButtonSizeEnum.Normal" />

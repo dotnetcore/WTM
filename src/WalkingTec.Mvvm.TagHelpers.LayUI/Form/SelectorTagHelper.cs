@@ -99,7 +99,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             "PageCount",
             "FC",
             "DC",
-            "VMFullName",
             "SortInfo",
             "TreeMode",
             "IsPostBack",
@@ -107,8 +106,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             "LoginUserInfo",
             "MSD",
             "Session",
-            "Wtm"
-
+            "Wtm",
+            "ViewDivId"
         };
 
         /// <summary>
@@ -123,6 +122,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            if (context.Items.ContainsKey("inselector") == false)
+            {
+                context.Items.Add("inselector", true);
+            }
+
             #region Display Value
 
             var modelType = Field.Metadata.ModelType;

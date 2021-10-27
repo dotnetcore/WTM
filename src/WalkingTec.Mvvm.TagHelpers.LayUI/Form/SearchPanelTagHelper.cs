@@ -130,8 +130,43 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             _configs = configs.CurrentValue;
         }
 
+        private bool IsInSelector = false;
+
+        protected string fieldPre
+        {
+            get
+            {
+                string rv = "";
+                if(string.IsNullOrEmpty(Vm?.Name) == false) {
+                    rv = Vm?.Name;
+                    if (ListVM != null)
+                    {
+                        rv += ".Searcher";
+                    }
+                }
+                else
+                {
+                    if(ListVM != null)
+                    {
+                        rv = "Searcher";
+                    }
+                }
+                if(IsInSelector == true)
+                {
+                    rv = rv.Replace(".Searcher", "").Replace("Searcher", "");
+                }
+                return rv;
+            }
+        }
+
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
+            if (context.Items.ContainsKey("inselector") == true)
+            {
+                IsInSelector = true;
+            }
+
+
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             bool show = false;
             if(SearcherVM?.IsExpanded != null)
@@ -185,10 +220,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     refreshgridjs += $@"
     var tempwhere{item} = {{}};
-    {item}filterback.where = tempwhere{item};
+    $.extend(tempwhere{item},{item}defaultfilter.where);
     var page{item} = {item}filterback.page;
     if(keeppage ==null){{ page{item}.curr = 1}}
-    table.reload('{item}',{{page: page{item},url:{item}url,where: $.extend(tempwhere{item},ff.GetSearchFormData('{Id}','{(Vm.Name == ""?"Searcher":Vm.Name)}'))}});
+    table.reload('{item}',{{page: page{item},url:{item}url,where: $.extend(tempwhere{item},ff.GetSearchFormData('{Id}','{fieldPre}'))}});
 ";
                 }
             }

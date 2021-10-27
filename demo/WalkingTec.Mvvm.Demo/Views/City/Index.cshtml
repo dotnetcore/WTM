@@ -1,9 +1,17 @@
 @model WalkingTec.Mvvm.Demo.ViewModels.CityVMs.CityVM
 @inject IStringLocalizer<Program> Localizer;
 
-<wt:searchpanel vm="se" reset-btn="true" grid-id="g1" old-post="true">
-<wt:row items-per-row="ItemsPerRowEnum.Three">
-<wt:textbox field="se.Name" />
-</wt:row>
+<wt:searchpanel vm="se" reset-btn="true" grid-id="g1" old-post="true" id="s1">
+  <wt:row items-per-row="ItemsPerRowEnum.Three">
+    <wt:textbox field="se.Name" />
+  </wt:row>
 </wt:searchpanel>
-<wt:grid vm="list" url="/City/Search" id="g1"/>
+<wt:grid vm="list" url="/City/Search" id="g1" search-panel-id="s1"/>
+
+
+@*<wt:searchpanel vm="list" reset-btn="true" grid-id="g2"  id="s2">
+  <wt:row items-per-row="ItemsPerRowEnum.Three">
+    <wt:textbox field="list.Searcher.Name" />
+  </wt:row>
+</wt:searchpanel>
+<wt:grid vm="list" url="/City/Search" id="g2" search-panel-id="s2"/>*@

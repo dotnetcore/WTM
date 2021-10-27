@@ -37,6 +37,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
 
         public ModelExpression Vm { get; set; }
+        public bool IsInSelector { get; set; }
 
         private IBasePagedListVM<TopBasePoco, BaseSearcher> _listVM;
         private IBasePagedListVM<TopBasePoco, BaseSearcher> ListVM
@@ -95,6 +96,34 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             set
             {
                 _searchPanelId = value;
+            }
+        }
+
+        protected string fieldPre
+        {
+            get
+            {
+                string rv = "";
+                if (string.IsNullOrEmpty(Vm?.Name) == false)
+                {
+                    rv = Vm?.Name;
+                    if (ListVM != null)
+                    {
+                        rv += ".Searcher";
+                    }
+                }
+                else
+                {
+                    if (ListVM != null)
+                    {
+                        rv = "Searcher";
+                    }
+                }
+                if (IsInSelector == true)
+                {
+                    rv = rv.Replace(".Searcher", "").Replace("Searcher", "");
+                }
+                return rv;
             }
         }
 
@@ -539,7 +568,7 @@ layui.use(['table'], function(){{
     ,text:{{
         none:'{THProgram._localizer["Sys.NoData"]}'
     }}
-    ,request: {{ 'pageName': 'Page', 'limitName': 'Limit'}}
+    {(IsInSelector==false? $",request: {{ 'pageName': 'Page', 'limitName': 'Limit'}}":"")}    
     { toolbardef}
     {righttoolbar}
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
@@ -591,7 +620,7 @@ $.extend(true,{Id}defaultfilter ,{Id}option);
 setTimeout(function(){{
     var tempwhere = {{}};
     $.extend(tempwhere,{Id}defaultfilter.where);
-    table.reload('{Id}',{{url:'{Url}',where: $.extend(tempwhere,ff.GetSearchFormData('{SearchPanelId}','Searcher')),}});
+    table.reload('{Id}',{{url:'{Url}',where: $.extend(tempwhere,ff.GetSearchFormData('{SearchPanelId}','{fieldPre}')),}});
 }},100);
 " : $@"
         var {Id}optionempty =  Object.assign({{}}, {Id}option);
@@ -605,9 +634,9 @@ setTimeout(function(){{
   {(string.IsNullOrEmpty(CheckedFunc) ? string.Empty : $"table.on('checkbox({Id})',{CheckedFunc});")}
     table.on('sort({Id})', function(obj){{
     var sortfilter = {{}};
-    sortfilter['SortInfo.Property'] = obj.field;
-    sortfilter['SortInfo.Direction'] = obj.type.replace(obj.type[0],obj.type[0].toUpperCase());
-    var w = $.extend({Id}option.where,sortfilter,ff.GetSearchFormData('{SearchPanelId}','Searcher'));
+    sortfilter['{(IsInSelector==true?"Searcher.":"")}SortInfo.Property'] = obj.field;
+    sortfilter['{(IsInSelector == true ? "Searcher." : "")}SortInfo.Direction'] = obj.type.replace(obj.type[0],obj.type[0].toUpperCase());
+    var w = $.extend({Id}option.where,sortfilter,ff.GetSearchFormData('{SearchPanelId}','{fieldPre}'));
 
     table.reload('{Id}', {{
     initSort: obj,
