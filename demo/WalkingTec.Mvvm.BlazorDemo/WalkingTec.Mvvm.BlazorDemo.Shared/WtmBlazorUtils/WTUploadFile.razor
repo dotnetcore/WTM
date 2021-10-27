@@ -113,6 +113,7 @@
         {
             dlist = new List<UploadFile>();
         }
+        ClearDeletedIds();
         await base.OnInitializedAsync();
     }
 
@@ -149,11 +150,12 @@
 
     private async Task<bool> OnAvatarDelete(UploadFile file)
     {
-        var idstr = files.Where(x => x.Value == file.OriginFileName).Select(x => x.Key).FirstOrDefault();
+        var idstr = files.Where(x => x.Value == file.OriginFileName || x.Key == file.FileName).Select(x => x.Key).FirstOrDefault();
         if (idstr != null)
         {
             var rv = await WtmBlazor.Api.CallAPI($"/api/_file/DeletedFile/{idstr}");
             files.Remove(idstr);
+            SetDeletedIds(idstr);
             if (IsMultiple == true)
             {
                 CurrentValue = (TValue)PropertyHelper.MakeList(typeof(TValue).GetGenericArguments()[0], "FileId", files.Select(x => x.Key).ToArray());
@@ -177,4 +179,33 @@
         fileStream.Dispose();
         return rv;
     }
+
+    private void SetDeletedIds(string id)
+    {
+        var refpage = PropertyHelper.GetExpressionRootObj(ValueExpression) as BasePage;
+        if (refpage != null)
+        {
+            if (string.IsNullOrEmpty(id) == false)
+            {
+                if (refpage.DeletedFileIds == null)
+                {
+                    refpage.DeletedFileIds = new List<string>();
+                }
+                if (refpage.DeletedFileIds.Contains(id) == false)
+                {
+                    refpage.DeletedFileIds.Add(id);
+                }
+            }
+        }
+    }
+
+    private void ClearDeletedIds()
+    {
+        var refpage = PropertyHelper.GetExpressionRootObj(ValueExpression) as BasePage;
+        if (refpage != null)
+        {
+            refpage.DeletedFileIds = new List<string>();
+        }
+    }
+
 }

@@ -24,6 +24,8 @@ namespace WtmBlazorUtils
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
 
+        public List<string> DeletedFileIds { get; set; }
+
         [CascadingParameter]
         public LoginUserInfo UserInfo
         {
@@ -84,6 +86,10 @@ namespace WtmBlazorUtils
 
         public async Task<bool> PostsForm(ValidateForm form, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
         {
+            if(form.Model is BaseVM bv)
+            {
+                bv.DeletedFileIds = this.DeletedFileIds;
+            }
             var rv = await WtmBlazor.Api.CallAPI(url, method, form.Model);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {

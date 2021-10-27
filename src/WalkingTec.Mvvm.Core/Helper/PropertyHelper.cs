@@ -18,6 +18,68 @@ namespace WalkingTec.Mvvm.Core
     public static class PropertyHelper
     {
 
+        public static object GetExpressionRootObj(Expression expression)
+        {
+            if (expression == null)
+            {
+                return "";
+            }
+            Expression me = null;
+            LambdaExpression le = null;
+            if (expression is MemberExpression)
+            {
+                me = expression as MemberExpression;
+            }
+            if (expression is LambdaExpression)
+            {
+                le = expression as LambdaExpression;
+                if (le.Body is MemberExpression)
+                {
+                    me = le.Body as MemberExpression;
+                }
+                if (le.Body is UnaryExpression)
+                {
+                    me = (le.Body as UnaryExpression).Operand as MemberExpression;
+                }
+            }
+            while (me != null && me.NodeType == ExpressionType.MemberAccess)
+            {
+                Expression exp = (me as MemberExpression).Expression;
+                if (exp is MemberExpression)
+                {
+                    me = exp as MemberExpression;
+                }
+                else if (exp is MethodCallExpression)
+                {
+                    var mexp = exp as MethodCallExpression;
+                    if (mexp.Method.Name == "get_Item")
+                    {
+                        object index = 0;
+                        if (mexp.Arguments[0] is MemberExpression)
+                        {
+                            var obj = ((mexp.Arguments[0] as MemberExpression).Expression as ConstantExpression).Value;
+                            index = obj.GetType().GetField((mexp.Arguments[0] as MemberExpression).Member.Name).GetValue(obj);
+                        }
+                        else
+                        {
+                            index = (mexp.Arguments[0] as ConstantExpression).Value;
+                        }
+                        me = mexp.Object as MemberExpression;
+                    }
+                }
+                else
+                {
+                    me = exp;
+                    break;
+                }
+            }
+            if(me.NodeType == ExpressionType.Constant)
+            {
+                return (me as ConstantExpression)?.Value;
+            }
+            return null;
+        }
+
         public static Func<object, object> GetPropertyExpression(Type objtype, string property)
         {
             property = Regex.Replace(property, @"\[[^\]]*\]", string.Empty);
