@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     ChangePara cp = new ChangePara();
                     ParameterExpression pe = Expression.Parameter(typeof(T));
-                    // var toString = Expression.Call(cp.Change(_displayField.Body, pe), "ToString", new Type[] { });
+                    //var toString = Expression.Call(cp.Change(_displayField.Body, pe), "Cast", new Type[] { typeof(string)});
                     var tolower = Expression.Call(cp.Change(_displayField.Body, pe), "ToLower", new Type[] { });
                     var exp = Expression.Call(tolower, "Contains", null, Expression.Constant(filter.ToLower()));
                     where = Expression.Lambda<Func<T, bool>>(exp, pe);
