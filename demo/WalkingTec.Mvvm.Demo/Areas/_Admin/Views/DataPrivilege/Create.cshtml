@@ -4,7 +4,7 @@
   <wt:combobox field="Entity.TableName" items="TableNames" change-func="PriTypeChange" />
   <wt:combobox field="IsAll" change-func="IsAllChange" />
   <wt:row id="selector">
-    <wt:selector list-vm="DpList" field="SelectedItemsID" text-bind="DpList.EntityList[0].Name" before-onpen-dialog-func="SetTableName" label-text="">
+    <wt:selector list-vm="DpList" field="SelectedItemsID" text-bind="DpList.EntityList[0].Name" before-onpen-dialog-func="SetTableName" label-text="" paras="Searcher.TableName=@Model.Entity.TableName">
       <wt:searchpanel vm="DpList">
         <wt:row items-per-row=" ItemsPerRowEnum.Two">
           <wt:textbox field="DpList.Searcher.Filter" />
@@ -26,8 +26,8 @@
 </wt:form>
 <script>
   DbTypeChange({ value: $("[name='DpType'][checked]").val() });
-    IsAllChange({ value: '@Model.IsAll.ToString().ToLower()' });
-    var selectedtablename = "";
+  IsAllChange({ value: '@Model.IsAll.ToString().ToLower()' });
+  var selectedtablename = "@Model.Entity.TableName";
   function DbTypeChange(data) {
         if (data.value == 'UserGroup') {
             $('#userrow').css('display', 'none');

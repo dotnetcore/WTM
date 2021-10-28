@@ -1064,7 +1064,14 @@ window.ff = {
         var tables = $('#' + dialogid + tab + ' table[id]');
         var searchBtns = $('#' + dialogid + tab + ' form a[IsSearchButton]');
         if (searchBtns.length > index) {
-            $('#' + searchBtns[index].id).trigger("myclick", true);
+            var sb = $('#' + searchBtns[index].id);
+            var form = sb.parents("form");
+            if (form.attr("oldpost") == 'True') {
+                sb.trigger("click");
+            }
+            else {
+                sb.trigger("myclick", true);
+            }
         }
         else {
             if (tables.length > index) {

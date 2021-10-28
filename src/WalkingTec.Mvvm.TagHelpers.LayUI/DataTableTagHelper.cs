@@ -431,7 +431,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                                 var listvalue = prop.GetValue(ListVM.Searcher);                                
                                 if (listvalue != null)
                                 {
-                                    Filter.Add($"{prop.Name}", prop.GetValue(ListVM.Searcher));
+                                    if (IsInSelector == true)
+                                    {
+                                        Filter.Add($"Searcher.{prop.Name}", prop.GetValue(ListVM.Searcher));
+                                    }
+                                    else
+                                    {
+                                        Filter.Add($"{prop.Name}", prop.GetValue(ListVM.Searcher));
+                                    }
                                 }
                             }
                         }

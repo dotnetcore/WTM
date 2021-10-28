@@ -64,6 +64,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             TableNames = new List<ComboSelectListItem>();
             AllItems = new List<ComboSelectListItem>();
             TableNames = Wtm.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            if (ControllerName.Contains("/api") == false)
+            {
+                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode);
+            }
         }
 
         public override void Validate()

@@ -672,7 +672,7 @@ namespace WalkingTec.Mvvm.Mvc
                         default:
                             break;
                     }
-                    if (typename == "DateTime" || typename == "DateTime?")
+                    if ((typename == "DateTime" || typename == "DateTime?") && name == "Searcher")
                     {
                         typename = "DateRange";
                     }

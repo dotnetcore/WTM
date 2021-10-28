@@ -165,7 +165,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 IsInSelector = true;
             }
-
+            if(OldPost == true)
+            {
+                output.Attributes.Add("oldpost", true);
+            }
 
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             bool show = false;
@@ -219,6 +222,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 foreach (var item in GridId.Split(','))
                 {
                     refreshgridjs += $@"
+debugger;
     var tempwhere{item} = {{}};
     $.extend(tempwhere{item},{item}defaultfilter.where);
     var page{item} = {item}filterback.page;
@@ -253,11 +257,13 @@ layui.element.on('collapse({tempSearchTitleId}x)', function(data){{
 
 {(OldPost == true ? $"" : $@"
 $('#{SearchBtnId}').on('click', function () {{
+debugger;
    var keeppage = null;
     {refreshgridjs}
     {refreshchartjs}
 }});
 $('#{SearchBtnId}').bind('myclick', function () {{
+debugger;
    var keeppage = true;
     {refreshgridjs}
     {refreshchartjs}
