@@ -77,6 +77,6 @@ export class UserEntity {
      * @memberof UserEntity
      */
     get LoginStatus() {
-        return lodash.hasIn(this.UserInfo, 'ITCode')
+        return true// lodash.hasIn(this.UserInfo, 'ITCode')
     }
 }

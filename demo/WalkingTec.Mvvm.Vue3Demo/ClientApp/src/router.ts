@@ -3,7 +3,7 @@ import { BindAll } from 'lodash-decorators';
 import { BehaviorSubject } from 'rxjs';
 import { createRouter, createWebHistory, RouteLocationNormalized, Router, RouteRecordRaw } from 'vue-router';
 import queryString from 'query-string';
-import { $i18n, $System } from './client';
+import { $i18n, $System, createRouters } from './client';
 import AppConfig from './client/config';
 import error from './layouts/pages/error/index.vue';
 import home from './layouts/pages/home/index.vue';
@@ -163,68 +163,13 @@ class AppRouter {
     return PagesCache
   }
   createRouters() {
-    const map = this.PagePath.reduce((map, cur) => {
-      let dislodge = cur.match(/\/(.+?)\.vue$/)[1] // 只匹配纯文件名的字符串
-      let key = dislodge.split('/')[0]; // 拿到一级文件的名称
-      (map[key] || (map[key] = [])).push(cur)
-      return map
-    }, {})
-    return this.getRoutes(map)
-  }
-  getRoutes(map) {
-    // console.log("LENG: getRoutes -> map", map)
-    const routes: Array<any> = [];
-    lodash.map(map, (value, key) => {
-      // 所有 页面 只取 index.tsx 结尾页面
-      value = lodash.filter(value, item => lodash.endsWith(item, 'index.vue'))
-      // 子页面
-      const childrenPage = lodash.filter(value, rem => lodash.includes(rem, `/children/`));
-      // 根页面
-      const page = lodash.filter(value, rem => !lodash.includes(rem, `/children/`));
-      lodash.forEach(page, item => {
-        const route = this.getRoute(item, childrenPage)
-
-        routes.push(route)
-      })
+    return createRouters({
+      rc: this.PageFiles,
+      filter: (fileName) => !/[\\/](view|views|children)[\\/]/.test(fileName),
+      component: (file) => {
+        return file.default
+      }
     })
-    this.RouterFiles = routes
-    // console.log("LENG: getRoutes -> routes", routes)
-    return routes
-  }
-  getRoute(item, childrenPage) {
-    const name = this.getRouteItemName(item);
-    const path = this.getRouteItemPath(item);
-    const route = {
-      name,
-      path,
-      component: this.getComponent(item),
-      exact: true,
-    }
-    return route
-  }
-  getComponent(item) {
-    const component = this.PageFiles(item);
-    return component.default
-  }
-  /**
-   * 获取路由name
-   * @param {*} file type：string （文件完整的目录）
-   */
-  getRouteItemName(file) {
-    let match = file.match(/\/(.+?)\.vue$/)[1] // 去除相对路径与.tsx
-    let res = match.replace(/_/ig, '').replace(/\//ig, '-') // 把下划线去除， 改变/为-拼接
-    return res.replace('-index', '').replace('-children', '')
-  }
-
-  /**
-  * 获取路由path
-  * @param {*} file String （目录，一级路由则为完整目录，多级为自身目录名称）
-  */
-  getRouteItemPath(file) {
-    return file
-      .replace('/index.vue', '')
-      // .replace(/_/g, ':')
-      .replace(/\./g, '') || '/'
   }
 }
 export default new AppRouter()
