@@ -118,7 +118,7 @@ export function createRouters(config: Config) {
         let noFind: any = []
 
         // 循环当前深度路由数据
-        curr.map((c: any) => {
+        curr?.map((c: any) => {
             // 在 上一层深度 的路由数据里面查找
             const fobj = pre.find((p: any) => {
                 // 生成 当前深度 当前项 路由的name
