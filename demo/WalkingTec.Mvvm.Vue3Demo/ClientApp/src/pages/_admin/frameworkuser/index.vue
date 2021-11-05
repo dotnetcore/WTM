@@ -11,7 +11,7 @@
 import { Options,Provide,Vue } from "vue-property-decorator";
 import PageController,{ PageEntity } from "./controller";
 import ViewAction from "./views/action.vue";
-import ViewDetailsUpdate from "./views/details_update.vue";
+import ViewDetailsUpdate from "./views/details.vue";
 import ViewFilter from "./views/filter.vue";
 import ViewGrid from "./views/grid.vue";
 @Options({
