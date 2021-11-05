@@ -30,7 +30,7 @@
     private string title4 = "pie 圆环";
     private async Task<ChartDataSource> OnInit(string title)
     {
-        var data = await WtmBlazor.Api.CallAPI<List<ChartData>>("/api/Chart/GetCharts", HttpMethodEnum.POST, SearchModel);
+        var data = await WtmBlazor.Api.CallAPI<List<ChartData>>("/api/Chart/GetCharts", HttpMethodEnum.GET, SearchModel);
 
         var ds = new ChartDataSource();
         ds.Options.Title = title;

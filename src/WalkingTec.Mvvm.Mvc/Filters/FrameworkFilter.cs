@@ -106,6 +106,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 var obj = JsonSerializer.Deserialize<PostedBody>(body, joption);
                                 foreach (var field in obj.ProNames)
                                 {
+
                                     model.FC.Add(field, "");
                                 }
                             }

@@ -389,14 +389,14 @@ namespace WalkingTec.Mvvm.Core
             if (typeof(IBasePoco).IsAssignableFrom(typeof(TModel)))
             {
                 IBasePoco ent = Entity as IBasePoco;
-                if (ent.UpdateTime == null)
-                {
+                //if (ent.UpdateTime == null)
+                //{
                     ent.UpdateTime = DateTime.Now;
-                }
-                if (string.IsNullOrEmpty(ent.UpdateBy))
-                {
+                //}
+                //if (string.IsNullOrEmpty(ent.UpdateBy))
+                //{
                     ent.UpdateBy = LoginUserInfo?.ITCode;
-                }
+                //}
             }
             var pros = typeof(TModel).GetAllProperties();
             pros = pros.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(NotMappedAttribute)) == false).ToList();
