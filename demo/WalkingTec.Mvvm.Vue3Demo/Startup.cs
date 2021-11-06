@@ -44,7 +44,8 @@ namespace WalkingTec.Mvvm.Vue3Demo
             {
                 options.UseWtmMvcOptions();
             })
-            .AddJsonOptions(options => {
+            .AddJsonOptions(options =>
+            {
                 options.UseWtmJsonOptions();
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
@@ -55,7 +56,8 @@ namespace WalkingTec.Mvvm.Vue3Demo
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddWtmDataAnnotationsLocalization(typeof(Program));
 
-            services.AddWtmContext(ConfigRoot, (options) => {
+            services.AddWtmContext(ConfigRoot, (options) =>
+            {
                 options.DataPrivileges = DataPrivilegeSettings();
                 options.CsSelector = CSSelector;
                 options.FileSubDirSelector = SubDirSelector;
@@ -102,12 +104,15 @@ namespace WalkingTec.Mvvm.Vue3Demo
                         regex: "Compiled successfully");
                 }
             });
-            
+
             app.UseWtmContext();
-            app.UseSpa(spa =>
+            if (env.IsDevelopment())
             {
-                spa.Options.SourcePath = "ClientApp";
-            });
+                app.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = "ClientApp";
+                });
+            }
         }
 
         /// <summary>
