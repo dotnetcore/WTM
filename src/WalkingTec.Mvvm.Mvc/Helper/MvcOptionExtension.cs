@@ -53,6 +53,7 @@ namespace WalkingTec.Mvvm.Mvc
             options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
             options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            options.JsonSerializerOptions.Converters.Add(new BoolStringConverter());
             options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
             options.JsonSerializerOptions.Converters.Add(new PocoConverter());
             options.JsonSerializerOptions.Converters.Add(new TypeConverter());
@@ -64,6 +65,7 @@ namespace WalkingTec.Mvvm.Mvc
             jsonOptions2.AllowTrailingCommas = true;
             jsonOptions2.Converters.Add(new DateTimeConverter());
             jsonOptions2.Converters.Add(new JsonStringEnumConverter());
+            jsonOptions2.Converters.Add(new BoolStringConverter());
             jsonOptions2.Converters.Add(new DateRangeConverter());
             jsonOptions2.Converters.Add(new PocoConverter());
             jsonOptions2.Converters.Add(new TypeConverter());
