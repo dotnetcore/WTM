@@ -763,18 +763,16 @@ namespace WalkingTec.Mvvm.Core
                     if (conditions.Count > 1)
                     {
                         //循环添加条件并生成Where语句
-                        Expression conExp = conditions[0];
-                        for (int i = 1; i < conditions.Count; i++)
+                        Expression whereCallExpression = baseExp.Expression;
+                        for (int i = 0; i < conditions.Count; i++)
                         {
-                            conExp = Expression.And(conExp, conditions[i]);
+                            whereCallExpression = Expression.Call(
+                                 typeof(Queryable),
+                                 "Where",
+                                 new Type[] { modelType },
+                                 whereCallExpression,
+                                 Expression.Lambda<Func<P, bool>>(conditions[i], new ParameterExpression[] { para }));
                         }
-
-                        MethodCallExpression whereCallExpression = Expression.Call(
-                             typeof(Queryable),
-                             "Where",
-                             new Type[] { modelType },
-                             baseExp.Expression,
-                             Expression.Lambda<Func<P, bool>>(conExp, new ParameterExpression[] { para }));
                         var result = baseExp.Provider.CreateQuery(whereCallExpression);
 
                         foreach (var res in result)
@@ -1261,26 +1259,18 @@ namespace WalkingTec.Mvvm.Core
                     if (conditions.Count > 0)
                     {
                         //循环添加条件并生成Where语句
-                        Expression conExp = conditions[0];
-                        for (int i = 1; i < conditions.Count; i++)
+                        Expression whereCallExpression = baseExp.Expression;
+                        for (int i = 0; i < conditions.Count; i++)
                         {
-                            conExp = Expression.And(conExp, conditions[i]);
+                            whereCallExpression = Expression.Call(
+                                 typeof(Queryable),
+                                 "Where",
+                                 new Type[] { modelType },
+                                 whereCallExpression,
+                                 Expression.Lambda<Func<P, bool>>(conditions[i], new ParameterExpression[] { para }));
                         }
-
-                        MethodCallExpression whereCallExpression = Expression.Call(
-                             typeof(Queryable),
-                             "Where",
-                             new Type[] { modelType },
-                             baseExp.Expression,
-                             Expression.Lambda<Func<P, bool>>(conExp, new ParameterExpression[] { para }));
-                        //Expression subSelect = Expression.Call(
-                        //       typeof(Queryable),
-                        //       "Select",
-                        //       new Type[] { modelType, typeof(long)},
-                        //       whereCallExpression,
-                        //       Expression.Lambda<Func<P, long>>(Expression.PropertyOrField(para, "Id"), new ParameterExpression[] { para }));
-
                         var result = baseExp.Provider.CreateQuery(whereCallExpression);
+
 
                         foreach (var res in result)
                         {
