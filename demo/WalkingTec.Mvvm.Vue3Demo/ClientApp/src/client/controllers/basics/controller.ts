@@ -116,7 +116,7 @@ export class ControllerBasics<T = any> {
   /**
    * 添加
    */
-  async onInstall(entities: T, msg?: string) {
+  async onInsert(entities: T, msg?: string) {
     try {
       this.onToggleLoading(true);
       const res = await this.$ajax.request(lodash.assign({ body: entities }, this.getAjaxRequest('insert'))).toPromise()

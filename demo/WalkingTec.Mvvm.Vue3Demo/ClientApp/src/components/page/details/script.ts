@@ -52,7 +52,7 @@ export class PageDetailsBasics extends Vue {
         if (this.IsEdit) {
             return this.PageController.onUpdate(this.formState)
         }
-        return this.PageController.onInstall(this.lodash.omit(this.formState, ['Entity.ID']))
+        return this.PageController.onInsert(this.lodash.omit(this.formState, ['Entity.ID']))
     }
     async onLoading() {
         if (this.ID) {
