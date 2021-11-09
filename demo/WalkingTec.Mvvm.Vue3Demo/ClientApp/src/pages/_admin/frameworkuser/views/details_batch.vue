@@ -29,7 +29,13 @@ export default class extends mixins(PageDetailsBasics) {
     LinkedVM: {
       SelectedRolesCodes: []
     }
-  };
+    };
+    async onFinish(values) {
+        const Ids = this.lodash.map(this.PageController.Pagination.selectionDataSource, this.PageController.key)
+        if (this.lodash.size(Ids)) {
+            return this.PageController.onBatchUpdate(this.lodash.assign({ Ids }, this.formState))
+        }
+    }
   created() {}
   mounted() {
     this.onLoading();

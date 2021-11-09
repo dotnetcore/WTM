@@ -5,58 +5,62 @@
     v-if="isRowAction"
   />
   <div v-else>
-    <a-button @click="__wtmToDetails()">
-      <template #icon>
-        <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
-      </template>
-      <i18n-t :keypath="$locales.action_insert" />
-    </a-button>
-    <a-button @click="toUpdate()">
-      <template #icon>
-        <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
-      </template>
-      修改
-    </a-button>
-    <WtmActionDelete :PageController="PageController" :params="params">
-      <template #icon>
-        <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
-      </template>
-      <span>我是删除按钮</span>
-    </WtmActionDelete>
-    <WtmActionExport :PageController="PageController" :params="params">
-      <template #icon>
-        <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
-      </template>
-      <span>WtmActionExport</span>
-    </WtmActionExport>
-    <WtmActionImport :PageController="PageController" :params="params">
-      <template #icon>
-        <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
-      </template>
-      <span>WtmActionImport</span>
-    </WtmActionImport>
-    <WtmActionInfo :PageController="PageController" :params="params">
-      <template #icon>
-        <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
-      </template>
-      <span>WtmActionInfo</span>
-    </WtmActionInfo>
-    <WtmActionInsert :PageController="PageController" :params="params">
-      <template #icon>
-        <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
-      </template>
-      <span>WtmActionInsert</span>
-    </WtmActionInsert>
-    <WtmActionUpdate
-      :PageController="PageController"
-      :params="params"
-      :toQuery="toUpdateQuery"
-    >
-      <template #icon>
-        <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
-      </template>
-      <span>WtmActionUpdate</span>
-    </WtmActionUpdate>
+      <a-button @click="__wtmToDetails()">
+          <template #icon>
+              <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+          </template>
+          <i18n-t :keypath="$locales.action_insert" />
+      </a-button>
+      <a-button @click="toUpdate()">
+          <template #icon>
+              <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+          </template>
+          修改
+      </a-button>
+      <a-button @click="tobatchUpdate()">
+          <template #icon>
+              <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+          </template>
+         pl修改
+      </a-button>
+      <WtmActionDelete :PageController="PageController" :params="params">
+          <template #icon>
+              <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+          </template>
+          <span>我是删除按钮</span>
+      </WtmActionDelete>
+      <WtmActionExport :PageController="PageController" :params="params">
+          <template #icon>
+              <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+          </template>
+          <span>WtmActionExport</span>
+      </WtmActionExport>
+      <WtmActionImport :PageController="PageController" :params="params">
+          <template #icon>
+              <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+          </template>
+          <span>WtmActionImport</span>
+      </WtmActionImport>
+      <WtmActionInfo :PageController="PageController" :params="params">
+          <template #icon>
+              <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+          </template>
+          <span>WtmActionInfo</span>
+      </WtmActionInfo>
+      <WtmActionInsert :PageController="PageController" :params="params">
+          <template #icon>
+              <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+          </template>
+          <span>WtmActionInsert</span>
+      </WtmActionInsert>
+      <WtmActionUpdate :PageController="PageController"
+                       :params="params"
+                       :toQuery="toUpdateQuery">
+          <template #icon>
+              <span class="_wtmicon _wtmicon-shoucang_shixin"></span>
+          </template>
+          <span>WtmActionUpdate</span>
+      </WtmActionUpdate>
   </div>
 </template>
 <script lang="ts">
@@ -98,7 +102,17 @@ export default class extends Vue {
         this.PageController.key
       )
     });
-  }
+    }
+
+    tobatchUpdate() {
+        this.__wtmToDetails({
+            _adminframeworkuserbatchedit: this.lodash.get(
+                this.getRowData(),
+                this.PageController.key
+            )
+        });
+    }
+
   //自定义修改 需要的参数
   toUpdateQuery(data) {
     this.$message.warn("地址栏改变 需要 WtmView 支持");
