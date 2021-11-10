@@ -12,7 +12,7 @@
         <a-spin size="large" />
       </div>
     </div>
-    <!-- 主界面 -->
+    <!-- 主界面 demo -->
     <Main key="Main" v-else-if="!System.UserController.loading && System.UserController.LoginStatus" />
     <!-- 登录界面 -->
     <Login key="Login" v-else/>
