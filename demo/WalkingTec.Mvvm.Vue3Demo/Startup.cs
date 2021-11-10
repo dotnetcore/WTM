@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.Vue3Demo
                         "{*path}",
                         new SpaOptions { SourcePath = "ClientApp" },
                         npmScript: "start",
-                        regex: "Compiled successfully");
+                        regex: "No issues found.");
                 }
             });
 
