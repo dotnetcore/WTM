@@ -1,6 +1,12 @@
+import './fs/iconfont.css';
 import './test/iconfont.css';
 import './wtm/iconfont.css';
 export default [
+    {
+        "name": "fs",
+        "class": "FontAwesome",
+        "icons": []
+    },
     {
         "name": "test",
         "class": "musicicon",
