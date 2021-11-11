@@ -270,7 +270,11 @@ namespace WtmBlazorUtils
 
         public async Task Download(string url, object data, HttpMethodEnum method = HttpMethodEnum.POST)
         {
-             url = new Uri( WtmBlazor.Api.Client.BaseAddress ,url).ToString();
+            var server = WtmBlazor.ConfigInfo.Domains.Where(x => x.Key.ToLower() == "serverpub").Select(x=>x.Value).FirstOrDefault();
+            if (server != null)
+            {
+                url = server.Address.TrimEnd('/') + url;
+            }
             await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data, CoreProgram.DefaultPostJsonOption), method.ToString());
         }
 
