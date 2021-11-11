@@ -2,7 +2,7 @@
   <a-layout class="w-login" :class="contentClass">
     <a-layout-header class="w-login-header">
       <img :src="logo" class="w-login-logo" />
-      <h1 class="fa-toggle-on fa" style="color:red;"></h1>
+      <h1 class="fa-toggle-on fa fa-lg" style="color:red;"></h1>
     </a-layout-header>
     <a-layout-content class="w-login-content">
       <a-form
