@@ -5,6 +5,9 @@
   <!-- <WtmView>
     <ViewDetails />
   </WtmView>-->
+  <div>
+    <h1 class="fa-toggle-on fa fa-lg" style="color:red;"></h1>
+  </div>
   <a-tabs v-model:activeKey="activeKey" tab-position="left">
     <a-tab-pane key="1" tab="表单">
       <a-divider>表单测试</a-divider>
