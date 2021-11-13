@@ -151,9 +151,10 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (_loginUserInfo == null && HttpContext?.User?.Identity?.IsAuthenticated == true ) // 用户认证通过后，当前上下文不包含用户数据
                 {
-                    var userIdStr = HttpContext.User.Claims.FirstOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
+                    var userIdStr = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Name).Select(x => x.Value).FirstOrDefault();
+                    var tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x=>x.Value).FirstOrDefault();
                     string usercode = userIdStr;
-                    var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr}";
+                    var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr + "$`$" + tenant}";
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
                     if (_loginUserInfo == null)
                     {
@@ -178,13 +179,13 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (value == null)
                 {
-                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo?.ITCode}");
+                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo?.ITCode + "$`$" + _loginUserInfo?.TenantCode}");
                     _loginUserInfo = value;
                 }
                 else
                 {
                     _loginUserInfo = value;
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.ITCode}", value);
+                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.ITCode+ "$`$" + _loginUserInfo?.TenantCode}", value);
                 }
             }
         }
@@ -337,7 +338,7 @@ namespace WalkingTec.Mvvm.Core
         {
             foreach (var userId in userIds)
             {
-                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId}";
+                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId+"$`$"+LoginUserInfo?.TenantCode}";
                 await Cache.DeleteAsync(key);
             }
         }
