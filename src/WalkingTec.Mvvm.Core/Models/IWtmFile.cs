@@ -18,7 +18,6 @@ namespace WalkingTec.Mvvm.Core.Models
         string SaveMode { get; set; }
         string ExtraInfo { get; set; }
         string HandlerInfo { get; set; }
-        string Url { get; set; }
 
         Stream DataStream { get; set; }
 

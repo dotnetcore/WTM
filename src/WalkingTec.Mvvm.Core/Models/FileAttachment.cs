@@ -38,8 +38,7 @@ namespace WalkingTec.Mvvm.Core
 
         public string ExtraInfo { get; set; }
         public string HandlerInfo { get; set; }
-        [NotMapped]
-        public string Url { get; set; }
+
 
         [NotMapped]
         [JsonIgnore]
