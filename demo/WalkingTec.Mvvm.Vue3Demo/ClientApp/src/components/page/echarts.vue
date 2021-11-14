@@ -1,9 +1,9 @@
 <template>
-  <div class="app-chart-spin">
-    <a-spin :spinning="spinning">
-      <v-chart class="chart" :option="_option" />
-    </a-spin>
-  </div>
+    <div class="app-chart-spin">
+        <a-spin :spinning="spinning">
+            <v-chart class="chart" :option="_option" />
+        </a-spin>
+    </div>
 </template>
 <script lang="ts">
 import "echarts";
@@ -18,7 +18,8 @@ export default class extends Vue {
   @Prop({ type: Object }) replace;
   @Prop({ type: Object }) type;
   @Prop({ type: Object }) title;
-  @Prop({ type: Boolean }) showtooltip;
+    @Prop({ type: Boolean }) showtooltip;
+    @Prop({ type: Boolean }) ishorizontal;
   //   api 请求参数 string | AjaxRequest
   @Prop({}) request;
   @Provide() [THEME_KEY]: "dark";
@@ -33,37 +34,37 @@ export default class extends Vue {
   spinning = true;
   requestOption = {};
   baseOption = {};
-  async onRequest() {
-    //this.replace = "{ charttype: '" + this.type + "' }";
-    if (this.request) {
-      try {
-        const res = await this.$Ajax.request<any>(this.request).toPromise();
-        const option = this.lodash.mapValues<any, any>(res, val => {
-          if (this.lodash.isString(val)) {
-            // 替换所有配置的数据
-            this.lodash.mapValues(this.replace, (regStr, key) => {
-              const reg = new RegExp(key, "g");
-              val = val.replace(reg, regStr);
-            });
-            return JSON.parse(val);
-          }
-        });
-        this.requestOption = option;
-      } catch (error) {
-        console.log(
-          "🚀 ~ file: echarts.vue ~ line 60 ~ extends ~ onRequest ~ error",
-          error
-        );
-      }
+    async onRequest() {
+        //this.replace = "{ charttype: '" + this.type + "' }";
+        if (this.request) {
+            try {
+                const res = await this.$Ajax.post<any>(this.request);
+                const option = this.lodash.mapValues<any, any>(res, val => {
+                    if (this.lodash.isString(val)) {
+                        // 替换所有配置的数据
+                        this.lodash.mapValues(this.replace, (regStr, key) => {
+                            const reg = new RegExp(key, "g");
+                            val = val.replace(reg, regStr);
+                        });
+                        return JSON.parse(val);
+                    }
+                });
+                this.requestOption = option;
+            } catch (error) {
+                console.log(
+                    "🚀 ~ file: echarts.vue ~ line 60 ~ extends ~ onRequest ~ error",
+                    error
+                );
+            }
+        }
+        this.spinning = false;
     }
-    this.spinning = false;
-  }
-  setBase() {
-    var tooltip = "";
-    if (this.showtooltip == true) {
-      tooltip = "tooltip: {},";
-      if (this.type == "scatter") {
-        tooltip = `tooltip:{
+    setBase() {
+        var tooltip = "";
+        if (this.showtooltip == true) {
+            tooltip = "tooltip: {},";
+            if (this.type == "scatter") {
+                tooltip = `tooltip:{
                     formatter: function (params) {
                             var xl = 'x';
                             var yl = 'y';
@@ -75,31 +76,37 @@ export default class extends Vue {
                                 + al + params.value[2] + ' <br/>'
                                 + cl + params.value[3] + ' <br/>';
                         },}, `;
-      }
-      if (this.type == "line") {
-        {
-          tooltip = "tooltip: {trigger: 'axis'},";
+            }
+            if (this.type == "line") {
+                tooltip = "tooltip: {trigger: 'axis'},";
+            }
         }
-      }
-      var xAxis = "",
-        yAxis = "";
-      if (this.type != "pie" && this.type != "piehollow") {
-        xAxis = `xAxis: {name:'Y'},`;
-        yAxis = `yAxis: {name:'X',type: 'category'},`;
-        if (this.type == "scatter") {
-          xAxis = `xAxis: {{ name:'X',type: 'value',splitLine: {{ lineStyle: {{ type: 'dashed'}} }} }},`;
-          yAxis = `yAxis:{{name:'Y',splitLine:{{lineStyle:{{type: 'dashed'}} }},scale: true}},`;
-        }
-      }
+        var xAxis = "",
+            yAxis = "";
+        if (this.type != "pie" && this.type != "piehollow") {
+            if (this.ishorizontal == false) {
+                xAxis = `xAxis: {name:'X',type: 'category'},`;
+                yAxis = `yAxis: {name:'Y'},`;
+            }
+            else {
+                xAxis = `xAxis: {name:'Y'},`;
+                yAxis = `yAxis: {name:'X',type: 'category'},`;
+            }
 
-      var str = `{
+            if (this.type == "scatter") {
+                xAxis = `xAxis: {{ name:'X',type: 'value',splitLine: {{ lineStyle: {{ type: 'dashed'}} }} }},`;
+                yAxis = `yAxis:{{name:'Y',splitLine:{{lineStyle:{{type: 'dashed'}} }},scale: true}},`;
+            }
+        }
+
+        var str = `{
     ${tooltip}
     ${xAxis}
     ${yAxis}
                 }`;
-      this.baseOption = eval("(" + str + ")");
+        this.baseOption = eval("(" + str + ")");
     }
-  }
+
   created() {
     this.onRequest();
     this.setBase();
@@ -108,13 +115,13 @@ export default class extends Vue {
 }
 </script>
 <style lang="less">
-.app-chart-spin {
-  width: 100%;
-  height: 100%;
-  .ant-spin-nested-loading,
-  .ant-spin-container {
-    width: 100%;
-    height: 100%;
-  }
-}
+    .app-chart-spin {
+        width: 100%;
+        height: 100%;
+        .ant-spin-nested-loading, .ant-spin-container
+    {
+        width: 100%;
+        height: 100%;
+    }
+    }
 </style>
