@@ -44,22 +44,26 @@ namespace WalkingTec.Mvvm.Mvc.Auth
 
             var signinCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecurityKey)), SecurityAlgorithms.HmacSha256);
 
+
+            var cls = new List<Claim>()
+                {
+                    new Claim(AuthConstants.JwtClaimTypes.Subject, loginUserInfo.ITCode.ToString())
+                };
+            if (string.IsNullOrEmpty(loginUserInfo.TenantCode) == false)
+            {
+                cls.Add(new Claim(AuthConstants.JwtClaimTypes.TenantCode, loginUserInfo.TenantCode.ToString()));
+            }
             var tokeOptions = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Audience,
-                claims: new List<Claim>()
-                {
-                    new Claim(AuthConstants.JwtClaimTypes.Subject, loginUserInfo.ITCode.ToString())
-                    //new Claim(AuthConstants.JwtClaimTypes.Name, loginUserInfo.Name)
-                },
+                claims: cls,
                 expires: DateTime.Now.AddSeconds(_jwtOptions.Expires),
                 signingCredentials: signinCredentials
             );
 
-
             var refreshToken = new PersistedGrant()
             {
-                UserCode = loginUserInfo.ITCode,
+                UserCode = loginUserInfo.ITCode + "$`$" + loginUserInfo.TenantCode,
                 Type = "refresh_token",
                 CreationTime = DateTime.Now,
                 RefreshToken = Guid.NewGuid().ToString("N"),
@@ -82,11 +86,11 @@ namespace WalkingTec.Mvvm.Mvc.Auth
         private IDataContext CreateDC()
         {
             string cs = "tokendefault";
-            if(_configs.Connections.Any(x=>x.Key.ToLower() == cs) == false)
+            if (_configs.Connections.Any(x => x.Key.ToLower() == cs) == false)
             {
                 cs = "default";
             }
-            return _configs.Connections.Where(x=>x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
+            return _configs.Connections.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
         }
 
 
@@ -109,10 +113,12 @@ namespace WalkingTec.Mvvm.Mvc.Auth
                 _dc.DeleteEntity(persistedGrant);
                 await _dc.SaveChangesAsync();
 
+                var pair = persistedGrant.UserCode?.Split("$`$");
                 //生成并返回登录用户信息
                 var loginUserInfo = new LoginUserInfo()
                 {
-                    ITCode = persistedGrant.UserCode
+                    ITCode = pair[0],
+                    TenantCode = pair[1],
                 };
 
                 // 清理过期 refreshtoken

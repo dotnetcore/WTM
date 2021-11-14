@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (_loginUserInfo == null && HttpContext?.User?.Identity?.IsAuthenticated == true ) // 用户认证通过后，当前上下文不包含用户数据
                 {
-                    var userIdStr = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Name).Select(x => x.Value).FirstOrDefault();
+                    var userIdStr = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault();
                     var tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x=>x.Value).FirstOrDefault();
                     string usercode = userIdStr;
                     var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr + "$`$" + tenant}";
