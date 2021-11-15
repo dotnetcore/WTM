@@ -30,9 +30,7 @@
             </div>
         </a-col>
         <a-col :span="12">
-            <WtmEcharts request="/api/School/GetCharts"
-                        :replace="{ charttype: 'line' }"
-                        :type="line"
+            <WtmEcharts request="/api/School/GetCharts" type="line"
                         :showtooltip="true"
                         :title="柱状图" />
         </a-col>
