@@ -137,6 +137,7 @@ namespace WalkingTec.Mvvm.Core.Auth
             // Summary:
             //     The role
             public const string Role = "role";
+            public const string TenantCode = "tenant";
             //
             // Summary:
             //     JWT ID. A unique identifier for the token, which can be used to prevent reuse
