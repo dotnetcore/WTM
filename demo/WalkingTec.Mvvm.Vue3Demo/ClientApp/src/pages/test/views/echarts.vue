@@ -23,30 +23,32 @@
             </div>
         </a-col>
     </a-row>-->
+    <ViewFilter />
     <a-row>
-        <a-col :span="12">
+        <a-col span="12">
             <div style="height: 400px;width: 600px;">
                 <WtmEcharts :option="optionScatter" />
             </div>
         </a-col>
         <a-col :span="12">
-            <WtmEcharts request="/api/School/GetCharts"
-                        :replace="{ charttype: 'line' }"
-                        :type="line"
-                        :showtooltip="true"
-                        :title="柱状图" />
+            <WtmEcharts ref="C1" request="/api/School/GetCharts" type="line"
+                        showtooltip=true
+                        title="柱状图" />
         </a-col>
     </a-row>
 </template>
 <script lang="ts">
     import { ColDef, ColGroupDef, GridOptions } from "ag-grid-community";
-    import { Inject, Options, Vue } from "vue-property-decorator";
-    import { PageController } from "../controller";
-    import { EnumLocaleLabel } from "../locales";
-    import RowAction from "./action.vue";
-    @Options({ components: {} })
+    import { Inject, Options,Provide, Vue } from "vue-property-decorator";
+    import PageController, { PageEntity } from "../controller";
+    import ViewFilter from "./filter.vue";
+    @Options({ components: {
+        ViewFilter
+    } })
     export default class extends Vue {
-        optionPie = {
+    @Provide({ reactive: true }) readonly PageController = PageController;
+  @Provide({ reactive: true }) readonly PageEntity = PageEntity;
+  optionPie = {
             title: {
                 text: "Traffic Sources",
                 left: "center"

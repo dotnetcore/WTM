@@ -151,8 +151,10 @@ class AppRouter {
    * @returns 
    */
   async onGetRequest(): Promise<Array<{ label: string, value: string } & RouteRecordRaw>> {
+    
     return lodash.map(lodash.filter(this.RouterFiles, 'component.controller'), item => {
-      return lodash.assign({ label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'component.controller') }, item)
+
+        return lodash.assign({ label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'component.controller') }, item)
     })
   }
   toArray() {
@@ -163,13 +165,15 @@ class AppRouter {
     return PagesCache
   }
   createRouters() {
-    return createRouters({
+    let rv= createRouters({
       rc: this.PageFiles,
       filter: (fileName) => !/[\\/](view|views|children)[\\/]/.test(fileName),
       component: (file) => {
         return file.default
       }
-    })
+    });
+    this.RouterFiles = rv;
+    return rv;
   }
 }
 export default new AppRouter()

@@ -21,12 +21,16 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 claims.Add(new Claim(AuthConstants.JwtClaimTypes.Name, self.Name));
             }
+            if (!string.IsNullOrEmpty(self.TenantCode))
+            {
+                claims.Add(new Claim(AuthConstants.JwtClaimTypes.TenantCode, self.TenantCode));
+            }
 
             var id = new ClaimsIdentity(
                 claims.Distinct(new ClaimComparer()),
                 AuthConstants.AuthenticationType,
                 AuthConstants.JwtClaimTypes.Name,
-                AuthConstants.JwtClaimTypes.Role);
+                AuthConstants.JwtClaimTypes.TenantCode);
             return new ClaimsPrincipal(id);
         }
     }

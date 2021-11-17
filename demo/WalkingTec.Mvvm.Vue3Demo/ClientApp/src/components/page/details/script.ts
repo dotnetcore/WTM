@@ -1,5 +1,5 @@
 import { ControllerBasics } from "@/client";
-import { Options, Vue } from "vue-property-decorator";
+import { Options, Vue, Emit } from "vue-property-decorator";
 /**
  * 详情基础操作
  */
@@ -35,12 +35,18 @@ export class PageDetailsBasics extends Vue {
     get body() {
         return { ID: this.ID };
     }
+
+    @Emit("refreshGrid")
+    async onRefreshGrid(){
+
+    }
+
     /**
      * 传递给 details 组件的 提交函数 返回一个 Promise
      * @param values 
      * @returns 
      */
-    async onFinish(values) {
+    async onFinish(values): Promise<unknown> {
         console.log("LENG ~ extends ~ onFinish ~ values", values);
         if (this.IsBatch) {
             const Ids = this.lodash.map(this.PageController.Pagination.selectionDataSource, this.PageController.key)
@@ -52,7 +58,8 @@ export class PageDetailsBasics extends Vue {
         if (this.IsEdit) {
             return this.PageController.onUpdate(this.formState)
         }
-        return this.PageController.onInsert(this.lodash.omit(this.formState, ['Entity.ID']))
+       await this.PageController.onInsert(this.lodash.omit(this.formState, ['Entity.ID']))
+       await this.PageController.Pagination.onCurrentChange({ current: 1 });
     }
     async onLoading() {
         if (this.ID) {
