@@ -16,10 +16,10 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
         @Prop({ type: Object }) option;
         // 需要替换的 key  {charttype:'pie'}
         @Prop({ type: Object }) replace;
-        @Prop({ type: Object }) type;
-        @Prop({ type: Object }) title;
-        @Prop({ type: Object, default: 'X' }) namex;
-        @Prop({ type: Object, default: 'Y' }) namey;
+        @Prop({ type: String }) type;
+        @Prop({ type: String }) title;
+        @Prop({ type: String, default: 'X' }) namex;
+        @Prop({ type: String, default: 'Y' }) namey;
 
         @Prop({ type: Boolean, default: false }) opensmooth;
         @Prop({ type: Boolean, default: true }) showlegent;
@@ -63,6 +63,9 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
                 }
             }
 
+        }
+        refresh(){
+            console.log("xxxxxxxxxxxxxxxxxxxxx"); 
         }
         setBase() {
             var tooltip = "";

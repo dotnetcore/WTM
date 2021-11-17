@@ -8,7 +8,10 @@
 import { Vue, Options, Provide, Inject } from "vue-property-decorator";
 import { PageController } from "../controller";
 import { EnumLocaleLabel } from "../locales";
-@Options({ components: {} })
+import chart from "@/components/page/echarts.vue"
+@Options({ components: {
+  chart
+} })
 export default class extends Vue {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) readonly formState = {
@@ -20,6 +23,7 @@ export default class extends Vue {
     return this.PageController.Pagination;
   }
   async onFinish(values) {
+    eval("this.$parent.$refs.C1.refresh()");
     await this.Pagination.onLoading(values);
     // this.onText();
   }
