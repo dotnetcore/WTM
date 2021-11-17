@@ -120,7 +120,7 @@ export class ControllerBasics<T = any> {
     try {
       this.onToggleLoading(true);
       const res = await this.$ajax.request(lodash.assign({ body: entities }, this.getAjaxRequest('insert'))).toPromise()
-      this.Pagination.onCurrentChange({ current: 1 })
+      //this.Pagination.onCurrentChange({ current: 1 })
       ControllerBasics.$msg(msg)
       this.onToggleLoading(false);
       return res

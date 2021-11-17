@@ -61,6 +61,11 @@ export default class extends mixins(PageDetailsBasics) {
     SelectedRolesCodes: [],
     SelectedGroupCodes: []
   };
+  async onFinish(values) {
+      console.log("LENG ~ extends ~ onFinish ~ values", values);
+      await this.PageController.onUpdate(this.formState);
+      await this.onRefreshGrid();
+  }
   created() {}
   mounted() {
     this.onLoading();

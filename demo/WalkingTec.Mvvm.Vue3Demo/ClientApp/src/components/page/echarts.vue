@@ -64,9 +64,27 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
             }
 
         }
-        refresh(){
-            console.log("xxxxxxxxxxxxxxxxxxxxx"); 
-        }
+        async refresh(url,body){
+                try {
+                    const res = await this.$Ajax.post<any>(url,body);
+                    const option = this.lodash.mapValues<any, any>(res, val => {
+                        if (this.lodash.isString(val)) {
+                            // 替换所有配置的数据
+                            this.lodash.mapValues(this.replace, (regStr, key) => {
+                                const reg = new RegExp(key, '"type":"charttype"');
+                                val = val.replace(reg, regStr);
+                            });
+                            return JSON.parse(val);
+                        }
+                    });
+                    this.requestOption = option;
+                } catch (error) {
+                    console.log(
+                        "🚀 ~ file: echarts.vue ~ line 60 ~ extends ~ onRequest ~ error",
+                        error
+                    );
+                }
+        }        
         setBase() {
             var tooltip = "";
             if (this.showtooltip == true) {
