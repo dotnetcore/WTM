@@ -34,7 +34,6 @@ export default class extends mixins(PageDetailsBasics) {
       { field: "MajorCode", headerName: "MajorCode" },
       { field: "MajorName", headerName: "MajorName" },
       { field: "MajorType", headerName: "MajorType" },
-      { field: "SchoolId", headerName: "SchoolId" }
       // {
       //   field: "Sex",
       //   headerName: "Sex",
