@@ -6,20 +6,21 @@
     </div>
 </template>
 <script lang="ts">
-import "echarts";
-import VChart, { THEME_KEY } from "vue-echarts";
-import { Options, Prop, Provide, Vue } from "vue-property-decorator";
-// 文档地址 https://echarts.apache.org/handbook/zh/basics/import
+    import "echarts";
+    import VChart, { THEME_KEY } from "vue-echarts";
+    import { Options, Prop, Provide, Vue } from "vue-property-decorator";
+    // 文档地址 https://echarts.apache.org/handbook/zh/basics/import
     @Options({ components: { VChart } })
     export default class extends Vue {
         // 图表参数
         @Prop({ type: Object }) option;
         // 需要替换的 key  {charttype:'pie'}
-        @Prop({ type: Object }) replace;
-        @Prop({ type: String }) type;
-        @Prop({ type: String }) title;
+        @Prop({ type: Object }) type;
+        @Prop({ type: Object }) title;
         @Prop({ type: String, default: 'X' }) namex;
         @Prop({ type: String, default: 'Y' }) namey;
+        @Prop({ type: String, default: '附加' }) nameaddition;
+        @Prop({ type: String, default: '' }) namecategory;
 
         @Prop({ type: Boolean, default: false }) opensmooth;
         @Prop({ type: Boolean, default: true }) showlegent;
@@ -39,6 +40,8 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
         spinning = true;
         requestOption = {};
         baseOption = {};
+        repStr = '';
+        replace = {};
         async onRequest() {
             //this.replace = "{ charttype: '" + this.type + "' }";
             if (this.request) {
@@ -48,7 +51,7 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
                         if (this.lodash.isString(val)) {
                             // 替换所有配置的数据
                             this.lodash.mapValues(this.replace, (regStr, key) => {
-                                const reg = new RegExp(key, '"type":"charttype"');
+                                const reg = new RegExp(key, "g");
                                 val = val.replace(reg, regStr);
                             });
                             return JSON.parse(val);
@@ -64,27 +67,6 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
             }
 
         }
-        async refresh(url,body){
-                try {
-                    const res = await this.$Ajax.post<any>(url,body);
-                    const option = this.lodash.mapValues<any, any>(res, val => {
-                        if (this.lodash.isString(val)) {
-                            // 替换所有配置的数据
-                            this.lodash.mapValues(this.replace, (regStr, key) => {
-                                const reg = new RegExp(key, '"type":"charttype"');
-                                val = val.replace(reg, regStr);
-                            });
-                            return JSON.parse(val);
-                        }
-                    });
-                    this.requestOption = option;
-                } catch (error) {
-                    console.log(
-                        "🚀 ~ file: echarts.vue ~ line 60 ~ extends ~ onRequest ~ error",
-                        error
-                    );
-                }
-        }        
         setBase() {
             var tooltip = "";
             if (this.showtooltip == true) {
@@ -94,8 +76,8 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
                     formatter: function (params) {
                             var xl = '${this.namex}';
                             var yl = '${this.namey}';
-                            var al = '附加';
-                            var cl = '';
+                            var al = '${this.nameaddition}';
+                            var cl = '${this.namecategory}';
                             return params.seriesName + ' <br/>'
                                 + xl + params.value[0] + ' <br/>'
                                 + yl + params.value[1] + ' <br/>'
@@ -111,12 +93,14 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
             if (this.showlegent == false) {
                 legend = `legend: {show: false},`;
             }
-            //if (this.type == 'piehollow')
-            //    this.replace = `"type":"pie","radius": ["40%", "70%"]`;
-            //else
-            //    this.replace = `"type":"${this.type}"`;
-            //if (this.type == 'line')
-            //    this.replace += `,"smooth": ${this.opensmooth}`;
+            this.repStr = '';
+            if (this.type == 'piehollow')
+                this.repStr = `"type":"pie","radius": ["40%", "70%"]`;
+            else
+                this.repStr = `"type":"${this.type}"`;
+            if (this.type == 'line')
+                this.repStr += `,"smooth": ${this.opensmooth}`;
+            this.replace = { '\"type\":\"charttype\"': this.repStr }
 
             var xAxis = "";
             var yAxis = "";
@@ -131,8 +115,8 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
                 }
 
                 if (this.type == "scatter") {
-                    xAxis = `xAxis: {{ name:'${this.namex}',type: 'value',splitLine: {{ lineStyle: {{ type: 'dashed'}} }} }},`;
-                    yAxis = `yAxis:{{name:'${this.namey}',splitLine:{{lineStyle:{{type: 'dashed'}} }},scale: true}},`;
+                    xAxis = `xAxis: { name:'${this.namex}',type: 'value',splitLine: { lineStyle: { type: 'dashed'} } },`;
+                    yAxis = `yAxis:{name:'${this.namey}',splitLine:{lineStyle:{type: 'dashed'} },scale: true},`;
                 }
             }
 
@@ -147,13 +131,13 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
     ${xAxis}
     ${yAxis}
                 }`;
+            console.log(eval("(" + str + ")"))
             this.baseOption = eval("(" + str + ")");
         }
 
         created() {
             this.setBase();
             this.onRequest();
-
             this.spinning = false;
         }
         mounted() { }
