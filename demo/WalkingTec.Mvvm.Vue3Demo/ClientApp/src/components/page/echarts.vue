@@ -13,10 +13,9 @@
     @Options({ components: { VChart } })
     export default class extends Vue {
         // 图表参数
-        @Prop({ type: Object }) option;
         // 需要替换的 key  {charttype:'pie'}
-        @Prop({ type: Object }) type;
-        @Prop({ type: Object }) title;
+        @Prop({ type: String }) type;
+        @Prop({ type: String }) title;
         @Prop({ type: String, default: 'X' }) namex;
         @Prop({ type: String, default: 'Y' }) namey;
         @Prop({ type: String, default: '附加' }) nameaddition;
@@ -33,7 +32,6 @@
             return this.lodash.merge(
                 {},
                 this.requestOption,
-                this.option,
                 this.baseOption
             );
         }
