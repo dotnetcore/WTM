@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
-    public abstract class BaseElementTag : TagHelper
+    public abstract class BaseElementTag : BaseTag
     {
         public int? Colspan { get; set; }
         public string Id { get; set; }
@@ -45,22 +45,22 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (string.IsNullOrEmpty(Style) == false)
             {
-                if (this is TreeTagHelper )
+                if (this is TreeTagHelper)
                 {
                     Style += " overflow:auto;";
                 }
                 TagHelperAttribute prestyle = null;
-                if(output.Attributes.TryGetAttribute("style", out prestyle))
+                if (output.Attributes.TryGetAttribute("style", out prestyle))
                 {
                     string s = prestyle.Value.ToString();
-                    if(s.EndsWith(";") == false)
+                    if (s.EndsWith(";") == false)
                     {
                         s += ";";
                     }
-                    Style = s+Style;
+                    Style = s + Style;
                 }
-                
-                output.Attributes.SetAttribute("style",  Style);
+
+                output.Attributes.SetAttribute("style", Style);
             }
 
             if (context.Items.ContainsKey("ipr"))
@@ -82,7 +82,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.PreElement.SetHtmlContent(preHtml + output.PreElement.GetContent());
                     output.PostElement.AppendHtml(postHtml);
                 }
-                if(this is CardTagHelper || this is FormTagHelper || this is ContainerTagHelper || this is TreeContainerTagHelper || this is SearchPanelTagHelper)
+                if (this is CardTagHelper || this is FormTagHelper || this is ContainerTagHelper || this is TreeContainerTagHelper || this is SearchPanelTagHelper)
                 {
                     context.Items.Remove("ipr");
                 }
@@ -91,7 +91,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             switch (this)
             {
                 case ComboBoxTagHelper item:
-                    if(item.MultiSelect == true)
+                    if (item.MultiSelect == true)
                     {
                         break;
                     }
@@ -231,7 +231,7 @@ layui.use(['autocomplete'],function(){{
             //}
         }
 
-        public string FormatFuncName(string funcname,bool appendparameter = true)
+        public string FormatFuncName(string funcname, bool appendparameter = true)
         {
             if (funcname == null)
             {

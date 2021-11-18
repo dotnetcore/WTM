@@ -14,7 +14,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
     [HtmlTargetElement("wt:grid", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
-    public class DataTableTagHelper : TagHelper
+    public class DataTableTagHelper : BaseTag
     {
         #region const
         protected const string REQUIRED_ATTR_NAME = "vm";
@@ -345,7 +345,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagName = "table";
             output.Attributes.Add("id", Id);
             output.Attributes.Add("lay-filter", Id);
-            output.Attributes.Add("subpro", ListVM?.DetailGridPrix??"");
+            output.Attributes.Add("subpro", ListVM?.DetailGridPrix ?? "");
             output.TagMode = TagMode.StartTagAndEndTag;
 
             var config = ListVM.ConfigInfo;
@@ -368,14 +368,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             var righttoolbar = ",defaultToolbar: []";
             int lefttoolbarmergin = -120;
-            if(NeedShowFilter == true && NeedShowPrint == true)
+            if (NeedShowFilter == true && NeedShowPrint == true)
             {
                 righttoolbar = ",defaultToolbar: ['filter', 'print']";
                 lefttoolbarmergin = -45;
             }
             else
             {
-                if(NeedShowFilter == true)
+                if (NeedShowFilter == true)
                 {
                     righttoolbar = ",defaultToolbar: ['filter']";
                     lefttoolbarmergin = -80;
@@ -428,7 +428,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             if (prop.PropertyType.IsGenericType == false || (prop.PropertyType.GenericTypeArguments[0] != typeof(ComboSelectListItem) && prop.PropertyType.GenericTypeArguments[0] != typeof(TreeSelectListItem)))
                             {
-                                var listvalue = prop.GetValue(ListVM.Searcher);                                
+                                var listvalue = prop.GetValue(ListVM.Searcher);
                                 if (listvalue != null)
                                 {
                                     if (IsInSelector == true)
@@ -468,7 +468,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     UnResize = true,
                     //Width = 45
                 };
-                if(LineHeight != null)
+                if (LineHeight != null)
                 {
                     checkboxHeader.Style = $"height:{LineHeight}px";
                 }
@@ -493,7 +493,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             var nextCols = new List<IGridColumn<TopBasePoco>>();// 下一级列头
 
-            generateColHeader(rawCols, nextCols, tempCols, maxDepth,0);
+            generateColHeader(rawCols, nextCols, tempCols, maxDepth, 0);
 
             if (nextCols.Count > 0)
             {
@@ -545,7 +545,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             #region DataTable
             var toolbardef = "";
-            if(toolBarBtnStrBuilder.Length > 0 || NeedShowFilter == true || NeedShowPrint == true)
+            if (toolBarBtnStrBuilder.Length > 0 || NeedShowFilter == true || NeedShowPrint == true)
             {
                 toolbardef = $" ,toolbar: '#{ToolBarId}2'";
             }
@@ -575,7 +575,7 @@ layui.use(['table'], function(){{
     ,text:{{
         none:'{THProgram._localizer["Sys.NoData"]}'
     }}
-    {(IsInSelector==false? $",request: {{ 'pageName': 'Page', 'limitName': 'Limit'}}":"")}    
+    {(IsInSelector == false ? $",request: {{ 'pageName': 'Page', 'limitName': 'Limit'}}" : "")}    
     { toolbardef}
     {righttoolbar}
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
@@ -590,7 +590,7 @@ layui.use(['table'], function(){{
         gototext:'{THProgram._localizer["Sys.Goto"]}',
         pagetext:'{THProgram._localizer["Sys.Page"]}',
         oktext:'{THProgram._localizer["Sys.GotoButtonText"]}',
-    }}":",page:false")}
+    }}" : ",page:false")}
     {(page ? $",limit:{Limit}" : $",limit:{(UseLocalData ? ListVM.GetEntityList().Count().ToString() : "0")}")}
     {(page
         ? (Limits == null || Limits.Length == 0
@@ -600,7 +600,7 @@ layui.use(['table'], function(){{
         : string.Empty)}
     {(!Width.HasValue ? string.Empty : $",width: {Width.Value}")}
     {(!Height.HasValue ? string.Empty : (Height.Value >= 0 ? $",height: {Height.Value}" : $",height: 'full{Height.Value}'"))}
-    ,cols:{JsonSerializer.Serialize(layuiCols, joption).Replace("\"_raw_", "").Replace("_raw_\"", "").Replace("\\r\\n","").Replace("\\\"","\"")}
+    ,cols:{JsonSerializer.Serialize(layuiCols, joption).Replace("\"_raw_", "").Replace("_raw_\"", "").Replace("\\r\\n", "").Replace("\\\"", "\"")}
     {(!Skin.HasValue ? string.Empty : $",skin: '{Skin.Value.ToString().ToLower()}'")}
     {(Even.HasValue && !Even.Value ? $",even: false" : string.Empty)}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
@@ -609,7 +609,7 @@ layui.use(['table'], function(){{
       if(res.Code == 401){{ layui.layer.confirm(res.Msg,{{title:'{THProgram._localizer["Sys.Error"]}'}}, function(index){{window.location.reload();layer.close(index);}});}}
       if(res.Code != undefined && res.Code != 200){{ layui.layer.alert(res.Msg,{{title:'{THProgram._localizer["Sys.Error"]}'}});}}
      var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
-      {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','{maxDepth*38}px');ff.triggerResize();" : string.Empty)}
+      {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','{maxDepth * 38}px');ff.triggerResize();" : string.Empty)}
       {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
        tab.find('div [lay-event=\'LAYTABLE_COLS\']').attr('title','{THProgram._localizer["Sys.ColumnFilter"]}');
        tab.find('div [lay-event=\'LAYTABLE_PRINT\']').attr('title','{THProgram._localizer["Sys.Print"]}');
@@ -641,7 +641,7 @@ setTimeout(function(){{
   {(string.IsNullOrEmpty(CheckedFunc) ? string.Empty : $"table.on('checkbox({Id})',{CheckedFunc});")}
     table.on('sort({Id})', function(obj){{
     var sortfilter = {{}};
-    sortfilter['{(IsInSelector==true?"Searcher.":"")}SortInfo.Property'] = obj.field;
+    sortfilter['{(IsInSelector == true ? "Searcher." : "")}SortInfo.Property'] = obj.field;
     sortfilter['{(IsInSelector == true ? "Searcher." : "")}SortInfo.Direction'] = obj.type.replace(obj.type[0],obj.type[0].toUpperCase());
     var w = $.extend({Id}option.where,sortfilter,ff.GetSearchFormData('{SearchPanelId}','{fieldPre}'));
 
@@ -676,7 +676,7 @@ setTimeout(function(){{
         )
         {
             var temp = rawCols.Where(x => x.Fixed == GridColumnFixedEnum.Left).ToArray();
-            generateColHeaderCore(temp, nextCols, tempCols, maxDepth,depth);
+            generateColHeaderCore(temp, nextCols, tempCols, maxDepth, depth);
 
             temp = rawCols.Where(x => x.Fixed == null).ToArray();
             generateColHeaderCore(temp, nextCols, tempCols, maxDepth, depth);
@@ -718,7 +718,7 @@ setTimeout(function(){{
 
                 // 非编辑状态且有字段名的情况下，设置template
                 if ((string.IsNullOrEmpty(ListVM.DetailGridPrix) == true && string.IsNullOrEmpty(item.Field) == false) || item.Field == "BatchError")
-                    tempCol.Templet = getTemplate(item.Field,random);
+                    tempCol.Templet = getTemplate(item.Field, random);
 
                 NeedShowTotal |= item.ShowTotal == true;
                 switch (item.ColumnType)
@@ -767,9 +767,9 @@ setTimeout(function(){{
             bool isSub = false
         )
         {
-            if (string.IsNullOrEmpty(item.Url) || vm.Wtm?.IsUrlPublic(item.Url)==true || vm.Wtm?.IsAccessable(item.Url) == true ||
+            if (string.IsNullOrEmpty(item.Url) || vm.Wtm?.IsUrlPublic(item.Url) == true || vm.Wtm?.IsAccessable(item.Url) == true ||
                 item.ParameterType == GridActionParameterTypesEnum.AddRow ||
-                item.ParameterType == GridActionParameterTypesEnum.RemoveRow                 
+                item.ParameterType == GridActionParameterTypesEnum.RemoveRow
             )
             {
                 // Grid 行内按钮
@@ -817,7 +817,7 @@ setTimeout(function(){{
                                 subBarBtnStrList.AppendFormat("<dd style=\"padding: 0 0px;margin-bottom:1px;line-height: initial;\">{0}</dd>", subBarBtnStr.ToString());
                             }
                         }
-                        if(subBarBtnStrList.Length == 0)
+                        if (subBarBtnStrList.Length == 0)
                         {
                             return;
                         }
@@ -933,7 +933,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     string actionScript = "";
                     if (string.IsNullOrEmpty(item.OnClickFunc))
                     {
-                        if(item.IsDownload == true)
+                        if (item.IsDownload == true)
                         {
                             actionScript = $"ff.Download(tempUrl,ids);";
                         }
@@ -960,7 +960,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                         }
                         else
                         {
-                            if ( (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel") || item.IsExport == true)
+                            if ((item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel") || item.IsExport == true)
                             {
                                 actionScript = $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{Id}defaultfilter.where,ids);";
                             }
@@ -986,7 +986,14 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     }
                     else
                     {
-                        actionScript = $"{item.OnClickFunc}(ids,ff.GetSelectionData('{Id}'));";
+                        if (item.ShowInRow)
+                        {
+                            actionScript = $"{FormatFuncName(item.OnClickFunc, false)}(ids,data,tr);";
+                        }
+                        else
+                        {
+                            actionScript = $"{FormatFuncName(item.OnClickFunc, false)}(ids,ff.GetSelectionData('{Id}'));";
+                        }
                     }
                     if (string.IsNullOrEmpty(item.PromptMessage) == false)
                     {
@@ -1007,7 +1014,7 @@ var isPost = false;
             }
         }
 
-        private string getTemplate(string field,string random)
+        private string getTemplate(string field, string random)
         {
             return $@"function(d){{var sty = '';var bg = '';var did = '{field}{random}_'+d.LAY_INDEX;if(d.{field}__bgcolor != undefined) bg = ""<script>$('#""+did+""').closest('td').css('background-color','""+d.{field}__bgcolor+""');</s""+""cript>""; if(d.{field}__forecolor != undefined) sty = 'color:'+d.{field}__forecolor+';'; return '<div style=""'+sty+'"" id=""'+did+'"">'+d.{field}.replace(/\""/g,""'"")+bg+'</div>';}}";
         }
