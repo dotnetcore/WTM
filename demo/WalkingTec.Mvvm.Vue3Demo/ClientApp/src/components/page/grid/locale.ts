@@ -60,7 +60,7 @@ export const AG_GRID_LOCALE_ZH = {
     pivotColumnsEmptyMessage: '拖拽设置列标题',
 
     // Header of the Default Group Column
-    group: '组',
+    group: 'Group',
 
     // Other
     loadingOoo: '加载中...',

@@ -50,6 +50,7 @@ export default class extends mixins(PageDetailsBasics) {
     Entity: {
       FolderOnly: false,
       IsInside: true,
+      ShowOnMenu:true,
       Url: undefined
     },
     SelectedModule: undefined

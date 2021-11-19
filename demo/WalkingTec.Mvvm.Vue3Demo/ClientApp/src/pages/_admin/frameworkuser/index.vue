@@ -44,7 +44,6 @@
         @Provide({ reactive: true }) readonly PageEntity = PageEntity;
 
         refreshGrid(){
-            debugger;
             console.log('------------------------------------override refresh---------------------------')
             this.PageController.Pagination.onCurrentChange({ current: 1 })
         }

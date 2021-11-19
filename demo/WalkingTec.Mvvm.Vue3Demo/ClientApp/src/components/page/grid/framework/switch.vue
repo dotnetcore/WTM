@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-switch :checked="value" disabled>
+    <a-switch :checked="this.lodash.includes(['true', true], params.getValue())" disabled>
       <template #checkedChildren>
         <check-outlined />
       </template>
@@ -19,10 +19,9 @@ import { Options, Vue } from "vue-property-decorator";
 })
 export default class extends Vue {
   params: ICellRendererParams;
-  get value() {
-    return this.lodash.includes(['true', true], this.params.getValue())
+
+  created() { 
   }
-  created() { }
   mounted() {
   }
   updated() { }

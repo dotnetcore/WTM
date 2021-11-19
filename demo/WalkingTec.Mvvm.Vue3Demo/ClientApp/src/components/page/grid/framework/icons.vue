@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span :class="value"></span>
+    <span :class="params.value"></span>
   </div>
 </template>
 

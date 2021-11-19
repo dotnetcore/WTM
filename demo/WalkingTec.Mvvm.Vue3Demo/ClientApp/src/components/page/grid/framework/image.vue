@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-image :width="40" :src="src" :fallback="imagefallback" />
+    <a-image :width="40" :src="'/api/_file/downloadFile/'+params.value" :fallback="imagefallback" />
   </div>
 </template>
 
