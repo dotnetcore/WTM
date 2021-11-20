@@ -623,6 +623,7 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.DocumentFilter<HiddenApiFilter>();
                 var bearer = new OpenApiSecurityScheme()
                 {
                     Description = "JWT Bearer",
