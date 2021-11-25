@@ -45,6 +45,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 prec = prec.Substring(0, prec.Length - 1);
             }
             string val = "";
+
+            if (string.IsNullOrEmpty(Field?.Model?.ToString()) == false)
+            {
+                DefaultValue = null;
+            }
+
             if (DefaultValue != null)
             {
                 val = DefaultValue;

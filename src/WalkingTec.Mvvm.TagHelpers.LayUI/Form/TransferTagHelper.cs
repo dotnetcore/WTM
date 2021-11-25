@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
 
             // 赋默认值
-            else if (string.IsNullOrEmpty(DefaultValue) && Field.Model != null)
+            else if (Field.Model != null)
             {
                 if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
                 {
@@ -145,7 +145,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     selectVal.Add(Field.Model.ToString());
                 }
             }
-            DefaultValue = $"[{string.Join(",", selectVal.Select(x=> "'"+x+"'"))}]";
+            if(selectVal.Count > 0)
+            {
+                DefaultValue = null;
+            }
 
             var title = $"['{(string.IsNullOrEmpty(LeftTitle) ? THProgram._localizer["Sys.ForSelect"] : LeftTitle)}','{(string.IsNullOrEmpty(RightTitle) ? THProgram._localizer["Sys.Selected"] : RightTitle)}']";
             var content = $@"
