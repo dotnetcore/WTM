@@ -24,7 +24,6 @@
     "bowser": "^2.11.0",
     "core-js": "^3.11.1",
     "crypto-js": "^4.0.0",
-    "font-awesome": "^4.7.0",
     "echarts": "^5.2.0",
     "file-saver": "^2.0.5",
     "iframe-resizer": "^4.3.2",

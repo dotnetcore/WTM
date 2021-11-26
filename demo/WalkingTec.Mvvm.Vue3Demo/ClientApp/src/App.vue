@@ -59,4 +59,7 @@ export default class extends Vue {
     width: 100px;
   }
 }
+.ant-pro-sider .ant-layout-sider-children ::-webkit-scrollbar{
+  width:0!important;
+}
 </style>
