@@ -14,6 +14,7 @@ export default {
     'tips_error_file':'File Error',
     'tips_error_required': '{label} is required',
     'tips_placeholder_choose': 'Please choose {label}',
+    'tips_choose': 'Please choose',
     'tips_placeholder_input': 'Please input {label}',
     'tips_bool_true': 'Yes',
     'tips_bool_false': 'No',

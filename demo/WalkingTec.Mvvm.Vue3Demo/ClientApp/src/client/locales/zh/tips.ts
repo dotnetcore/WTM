@@ -13,6 +13,7 @@ export default {
     'tips_error_file': '文件错误',
     'tips_error_required':'{label} 是必填项',
     'tips_placeholder_choose': '请选择 {label}',
+    'tips_choose': '请选择',
     'tips_placeholder_input': '请输入 {label}',
     'tips_bool_true': '是',
     'tips_bool_false': '否',
