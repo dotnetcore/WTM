@@ -42,42 +42,44 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var modelType = Field.Metadata.ModelType;
             var listItems = new List<ComboSelectListItem>();
             List<string> values = new List<string>();
-            if (DefaultValue != null)
+            if (Field?.Name?.Contains("[") == true)
             {
-                values = DefaultValue.Split(',').ToList();
+                values.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
             }
             else
             {
-                if (Field?.Name?.Contains("[") == true)
+                if (modelType.IsList())
                 {
-                    values.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                    var ilist = Field.Model as IList;
+                    if (ilist != null)
+                    {
+                        foreach (var item in ilist)
+                        {
+                            values.Add(item.ToString());
+                        }
+                    }
+                }
+                else if (modelType.IsBoolOrNullableBool())
+                {
+                    values.Add(Field.Model.ToString());
                 }
                 else
                 {
-                    if (modelType.IsList())
-                    {
-                        var ilist = Field.Model as IList;
-                        if (ilist != null)
-                        {
-                            foreach (var item in ilist)
-                            {
-                                values.Add(item.ToString());
-                            }
-                        }
-                    }
-                    else if (modelType.IsBoolOrNullableBool())
+                    if (Field.Model != null)
                     {
                         values.Add(Field.Model.ToString());
                     }
-                    else
-                    {
-                        if (Field.Model != null)
-                        {
-                            values.Add(Field.Model.ToString());
-                        }
-                    }
                 }
             }
+
+            if (values.Count == 0)
+            {
+                if (DefaultValue != null)
+                {
+                    values = DefaultValue.Split(',').ToList();
+                }
+            }
+
             if (string.IsNullOrEmpty(ItemUrl) == false)
             {
                 output.PostElement.AppendHtml($"<script>ff.LoadComboItems('checkbox','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(values)})</script>");
@@ -97,7 +99,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                     else if (modelType.IsBoolOrNullableBool())
                     {
-                        listItems = new List<ComboSelectListItem>() { new ComboSelectListItem { Value = "true", Text = "|"} };
+                        listItems = new List<ComboSelectListItem>() { new ComboSelectListItem { Value = "true", Text = "|" } };
                     }
                 }
                 else

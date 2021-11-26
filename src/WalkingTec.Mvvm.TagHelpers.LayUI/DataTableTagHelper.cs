@@ -780,7 +780,7 @@ setTimeout(function(){{
                         bool condition = false || string.IsNullOrEmpty(item.BindVisiableColName) == false;
                         if (condition == true)
                         {
-                            rowBtnStrBuilder.Append("{{#  if(d." + item.BindVisiableColName + " == true || d." + item.BindVisiableColName + " == 'true' ){ }}");
+                            rowBtnStrBuilder.Append("{{#  if(d." + item.BindVisiableColName + " == true || d." + item.BindVisiableColName + " == 'true' || d." + item.BindVisiableColName + " == 'True' ){ }}");
                         }
                         rowBtnStrBuilder.Append($@"<a class=""layui-btn {(string.IsNullOrEmpty(item.ButtonClass) ? "layui-btn-primary" : $"{item.ButtonClass}")} layui-btn-xs"" lay-event=""{item.Area + item.ControllerName + item.ActionName + item.QueryString}"">{item.Name}</a>");
                         if (condition == true)

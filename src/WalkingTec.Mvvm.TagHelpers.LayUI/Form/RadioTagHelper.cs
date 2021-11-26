@@ -42,25 +42,27 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var modeltype = Field.Metadata.ModelType;
             var listItems = new List<ComboSelectListItem>();
             List<string> values = new List<string>();
-            if (DefaultValue != null)
+            if (modeltype.IsBoolOrNullableBool())
             {
-                values = DefaultValue.Split(',').ToList();
+                values.Add(Field.Model.ToString());
             }
             else
             {
-                    if (modeltype.IsBoolOrNullableBool())
-                    {
-                        values.Add(Field.Model.ToString());
-                    }
-                    else
-                    {
-                        if (Field.Model != null)
-                        {
-                            values.Add(Field.Model.ToString());
-                        }
-                    }
-                
+                if (Field.Model != null)
+                {
+                    values.Add(Field.Model.ToString());
+                }
             }
+
+            if (values.Count == 0)
+            {
+                if (DefaultValue != null)
+                {
+                    values = DefaultValue.Split(',').ToList();
+                }
+
+            }
+
             if (string.IsNullOrEmpty(ItemUrl) == false)
             {
                 output.PostElement.AppendHtml($"<script>ff.LoadComboItems('radio','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(values)})</script>");

@@ -38,6 +38,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("type", type);
             output.Attributes.Add("name", Field.Name);
             output.Attributes.Add("wtm-name", Field.Name);
+            if (string.IsNullOrEmpty(Field?.Model?.ToString()) == false)
+            {
+                DefaultValue = null;
+            }
             if (DefaultValue != null)
             {
                 output.Attributes.Add("value", WebUtility.HtmlDecode(DefaultValue));

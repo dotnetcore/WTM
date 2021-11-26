@@ -152,7 +152,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public IActionResult DeletedFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
             fp.DeleteFile(id, ConfigInfo.CreateDC(csName));
-            return Ok();
+            return Ok(true);
         }
     }
 }
