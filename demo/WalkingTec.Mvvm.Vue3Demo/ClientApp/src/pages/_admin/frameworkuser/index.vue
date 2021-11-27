@@ -19,6 +19,7 @@
     import ViewFilter from "./views/filter.vue";
     import ViewGrid from "./views/grid.vue";
     @Options({
+        name: "WalkingTec.Mvvm.Admin.Api,FrameworkUser",
         components: {
             ViewAction,
             ViewFilter,
