@@ -151,7 +151,7 @@
         }
         onRemove(file) {
             const response = this.lodash.get(file, 'response')
-            return response ? $System.FilesController.deleteFiles(response) : true
+            return response ? $System.FilesController.deleteFiles(response) : $System.FilesController.deleteFiles({ Id: file.uid })
         }
     }
     function getBase64(img: Blob, callback: (base64Url: string) => void) {
