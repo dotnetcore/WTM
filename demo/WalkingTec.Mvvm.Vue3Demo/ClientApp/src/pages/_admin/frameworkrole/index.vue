@@ -19,6 +19,7 @@ import ViewFilter from "./views/filter.vue";
 import ViewGrid from "./views/grid.vue";
 import ViewPrivilege from "./views/privilege.vue";
 @Options({
+  name: "WalkingTec.Mvvm.Admin.Api,FrameworkRole",
   components: {
     ViewAction,
     ViewFilter,

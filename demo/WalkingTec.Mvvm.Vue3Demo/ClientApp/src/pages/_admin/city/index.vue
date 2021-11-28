@@ -16,6 +16,7 @@ import ViewDetails from "./views/details.vue";
 import ViewFilter from "./views/filter.vue";
 import ViewGrid from "./views/grid.vue";
 @Options({
+  name: "WalkingTec.Mvvm.Admin.Api,city",
   components: {
     ViewAction,
     ViewFilter,

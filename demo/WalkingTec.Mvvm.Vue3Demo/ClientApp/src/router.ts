@@ -52,8 +52,8 @@ class AppRouter {
   RouterBehaviorSubject = new BehaviorSubject(this.toArray());
   /**
    * 全局前置守卫
-   * @param to 
-   * @param from 
+   * @param to
+   * @param from
    * @doc https://next.router.vuejs.org/zh/guide/advanced/navigation-guards.html
    */
   async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
@@ -72,8 +72,8 @@ class AppRouter {
   }
   /**
    * 全局解析守卫
-   * @param to 
-   * @param from 
+   * @param to
+   * @param from
    * @doc https://next.router.vuejs.org/zh/guide/advanced/navigation-guards.html
    */
   async beforeResolve(to: RouteLocationNormalized) {
@@ -82,8 +82,8 @@ class AppRouter {
   }
   /**
    * 全局后置钩子
-   * @param to 
-   * @param from 
+   * @param to
+   * @param from
    * @doc https://next.router.vuejs.org/zh/guide/advanced/navigation-guards.html
    */
   afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
@@ -148,13 +148,13 @@ class AppRouter {
   }
   /**
    * 获取带有 controller 属性的 页面
-   * @returns 
+   * @returns
    */
   async onGetRequest(): Promise<Array<{ label: string, value: string } & RouteRecordRaw>> {
-    
-    return lodash.map(lodash.filter(this.RouterFiles, 'component.controller'), item => {
 
-        return lodash.assign({ label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'component.controller') }, item)
+    return lodash.map(lodash.filter(this.RouterFiles, 'component.name'), item => {
+
+        return lodash.assign({ label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'component.name') }, item)
     })
   }
   toArray() {
