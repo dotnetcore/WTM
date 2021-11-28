@@ -152,9 +152,9 @@ class AppRouter {
    */
   async onGetRequest(): Promise<Array<{ label: string, value: string } & RouteRecordRaw>> {
 
-    return lodash.map(lodash.filter(this.RouterFiles, 'component.name'), item => {
-
-        return lodash.assign({ label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'component.name') }, item)
+    return lodash.map(lodash.filter(this.RouterFiles, 'name'), item => {
+        var a = lodash.assign({ label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'name') }, item)
+        return a;
     })
   }
   toArray() {

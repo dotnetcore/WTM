@@ -58,7 +58,6 @@
         @Inject() readonly PageEntity;
         // 表单类型
         @Inject({ default: "" }) readonly formType;
-        imageUrl = [];
         previewUrl = "";
         previewVisible = false;
         get action() {
@@ -83,7 +82,8 @@
         }
 
         fileList = [];
-        async mounted() {
+        filedata = [];
+      async mounted() {
             // this.onRequest();
             // if (this.value) {
             //   this.imageUrl = $System.FilesController.getDownloadUrl(this.value)
@@ -121,23 +121,36 @@
         onValueChange(val, old) {
             if (val) {
                 if (this.lodash.isArray(val)) {
-                    this.imageUrl = this.lodash.map(
+                    this.filedata = this.lodash.map(
                         val,
-                        $System.FilesController.getDownloadUrl
+                        item => {
+                            return {
+                                fileid: val,
+                                fileurl: $System.FilesController.getDownloadUrl(val),
+                                filename: $System.FilesController.getFileName(val)
+                            }
+                        }
                     );
                 } else {
-                    this.imageUrl = [$System.FilesController.getDownloadUrl(val)];
+                    this.filedata = [{
+                        fileid: val,
+                        fileurl: $System.FilesController.getDownloadUrl(val),
+                        filename: $System.FilesController.getFileName(val)
+                    }]
                 }
-                if (this.fileList.length === 0) {
-                    this.fileList = this.lodash.map(this.imageUrl, item => {
-                        return {
-                            uid: item,
-                            name: "image.png",
-                            status: "done",
-                            url: item
-                        };
-                    });
-                }
+                Promise.all(this.lodash.map(this.filedata, "filename")).then((ps) => {
+                    var ips = ps;
+                    if (this.fileList.length === 0) {
+                        this.fileList = this.lodash.map(this.filedata, (item, index) => {
+                            return {
+                                uid: item.fileid,
+                                name: ps[index],
+                                status: "done",
+                                url: item.fileurl
+                            };
+                        });
+                    }
+                })
             }
         }
         handlePreview(file) {
