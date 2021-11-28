@@ -20,9 +20,14 @@ export class FilesController {
             url: "/api/_file/DeletedFile/{Id}",
             method: "get"
         },
+        getFileName: {
+            url: "/api/_file/GetFileName/{Id}",
+            method: "get",            
+            responseType: "text"
+        },
         fileGet: {
             url: "/api/_file/getFile",
-            method: "get"
+            method: "get",
         },
         fileDownload: {
             url: "/api/_file/downloadFile/{Id}",
@@ -46,6 +51,15 @@ export class FilesController {
      */
     deleteFiles(body) {
         return this.$ajax.request(lodash.assign({ body }, this.options.fileDelete)).toPromise()
+    }
+
+    /**
+     * 获取文件名
+     * @param body 
+     * @returns 
+     */
+    getFileName(id){
+        return this.$ajax.request(lodash.assign({body:{ Id:id }}, this.options.getFileName)).toPromise()
     }
     /**
     * 获取文件

@@ -55,6 +55,7 @@
             }
         }
         fileList = [];
+        filedata = [];
         beforeUpload() { }
         get isPlusBottun() {
             return (
@@ -81,16 +82,51 @@
                 }
             }
         }
+        @Watch("value")
+        onValueChange(val, old) {
+            if (val) {
+                if (this.lodash.isArray(val)) {
+                    this.filedata = this.lodash.map(
+                        val,
+                        item => {
+                            return {
+                                fileid: val,
+                                fileurl: $System.FilesController.getDownloadUrl(val),
+                                filename: $System.FilesController.getFileName(val)
+                            }
+                        }
+                    );
+                } else {
+                    this.filedata = [{
+                        fileid: val,
+                        fileurl: $System.FilesController.getDownloadUrl(val),
+                        filename: $System.FilesController.getFileName(val)
+                    }]
+                }
+
+                Promise.all(this.lodash.map(this.filedata, "filename")).then((ps) => {
+                    var ips = ps;
+                    if (this.fileList.length === 0) {
+                        this.fileList = this.lodash.map(this.filedata, (item, index) => {
+                            return {
+                                uid: item.fileid,
+                                name: ps[index],
+                                status: "done"
+                            };
+                        });
+                    }
+                })
+            }
+        }
         onRemove(file) {
             const response = this.lodash.get(file, 'response')
-            return response ? $System.FilesController.deleteFiles(response) : true
+            return response ? $System.FilesController.deleteFiles(response) : $System.FilesController.deleteFiles({ Id: file.uid })
         }
     }
 
 </script>
 <style lang="less">
-    .w-uploader
-    {
+    .w-uploader {
         &-readonly
 
     {
@@ -102,8 +138,7 @@
 
     }
 
-    .ant-upload-list-item-info
-    {
+    .ant-upload-list-item-info {
         padding-right: 60px;
     }
     }
