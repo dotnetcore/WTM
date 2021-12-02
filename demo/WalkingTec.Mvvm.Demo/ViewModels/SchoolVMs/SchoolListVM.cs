@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 
         public SchoolListVM()
         {
-            NeedPage = false;
+            //NeedPage = false;
         }
 
         protected override void InitVM()
@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 .CheckContain(Searcher.SchoolName, x => x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x => x.SchoolType)
                 .CheckEqual(Searcher.CityId, x=>x.CityId)
-                .DPWhere(Wtm, x=>x.ID)
+                //.DPWhere(Wtm, x=>x.ID)
                 .Select(x => new School_View
                 {
                     ID = x.ID,

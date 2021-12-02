@@ -91,7 +91,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             var gridvar = m2.Groups[1].Value.Trim();
                             cusmtomclick = $@"
-    $.extend({gridid}defaultfilter.where,{{'{IdField?.Name ?? "notsetid"}':data.data.id, '{LevelField?.Name ?? "notsetlevel"}':data.data.level }});
+    $.extend({gridid}defaultfilter.where,{{'{IdField?.Name?.Replace("Searcher.","") ?? "notsetid"}':data.data.id, '{LevelField?.Name?.Replace("Searcher.", "") ?? "notsetlevel"}':data.data.level }});
     layui.table.reload('{gridid}',{{where: {gridid}defaultfilter.where}});
 ";
                         }
