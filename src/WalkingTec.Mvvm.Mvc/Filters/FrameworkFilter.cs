@@ -263,9 +263,9 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             var ctrlActDesc = context.ActionDescriptor as ControllerActionDescriptor;
             //get viewname
             string viewName = "";
-            if(context.Result is PartialViewResult pvr)
+            if (context.Result is PartialViewResult pvr)
             {
-                viewName = pvr.ViewName??"";
+                viewName = pvr.ViewName ?? "";
                 if (viewName?.StartsWith("/") == false)
                 {
                     var viewEngine = context.HttpContext.RequestServices.GetRequiredService<ICompositeViewEngine>();

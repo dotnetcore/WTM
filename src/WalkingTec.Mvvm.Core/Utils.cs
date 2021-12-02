@@ -655,9 +655,9 @@ namespace WalkingTec.Mvvm.Core
             return stringDecrypted;
         }
 
-        private static DESCryptoServiceProvider GenerateDESCryptoServiceProvider(string key)
+        private static DES GenerateDESCryptoServiceProvider(string key)
         {
-            DESCryptoServiceProvider dCrypter = new DESCryptoServiceProvider();
+            var dCrypter = DES.Create();
 
             string sTemp;
             if (dCrypter.LegalKeySizes.Length > 0)
@@ -730,7 +730,7 @@ namespace WalkingTec.Mvvm.Core
 
         private static string MD5String(byte[] buffer)
         {
-            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+            var md5 = MD5.Create();
             byte[] cryptBuffer = md5.ComputeHash(buffer);
             StringBuilder sb = new StringBuilder();
             foreach (byte item in cryptBuffer)

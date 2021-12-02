@@ -54,12 +54,9 @@ namespace WalkingTec.Mvvm.Core.Json
             rv.DefaultIgnoreCondition = op.DefaultIgnoreCondition;
             rv.DictionaryKeyPolicy = op.DictionaryKeyPolicy;
             rv.Encoder = op.Encoder;
-            rv.IgnoreNullValues = op.IgnoreNullValues;
             rv.IgnoreReadOnlyFields = op.IgnoreReadOnlyFields;
             rv.IgnoreReadOnlyProperties = op.IgnoreReadOnlyProperties;
             rv.IncludeFields = op.IncludeFields;
-            rv.DefaultIgnoreCondition = op.DefaultIgnoreCondition;
-            rv.DictionaryKeyPolicy = op.DictionaryKeyPolicy;
             rv.MaxDepth = op.MaxDepth;
             rv.NumberHandling = op.NumberHandling;
             rv.ReadCommentHandling = op.ReadCommentHandling;

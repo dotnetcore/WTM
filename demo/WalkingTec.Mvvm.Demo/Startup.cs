@@ -44,7 +44,6 @@ namespace WalkingTec.Mvvm.Demo
             .AddJsonOptions(options => {
                 options.UseWtmJsonOptions();
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
             {
                 options.UseWtmApiOptions();

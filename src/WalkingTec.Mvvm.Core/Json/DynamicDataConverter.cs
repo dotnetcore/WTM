@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.Core.Json
                 {
                     if(item.Value == null)
                     {
-                        if (options.IgnoreNullValues == false)
+                        if (options.DefaultIgnoreCondition == JsonIgnoreCondition.Never)
                         {
                             writer.WriteNull(item.Key);
                         }

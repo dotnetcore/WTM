@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Mvc
         public static void UseWtmJsonOptions(this JsonOptions options)
         {
             options.JsonSerializerOptions.PropertyNamingPolicy = null;
-            options.JsonSerializerOptions.IgnoreNullValues = true;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
             options.JsonSerializerOptions.AllowTrailingCommas = true;
             options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());

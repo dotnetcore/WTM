@@ -557,7 +557,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             var joption = new JsonSerializerOptions();
             joption.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-            joption.IgnoreNullValues = true;
+            joption.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             output.PostElement.AppendHtml($@"
 <script>
 var {Id}option = null;
