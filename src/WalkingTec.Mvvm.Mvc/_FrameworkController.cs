@@ -632,8 +632,8 @@ namespace WalkingTec.Mvvm.Mvc
                 LocalizeMenu(resultMenus);
                 return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
                 {
-                    IgnoreNullValues = true
-                }), "application/json");
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
+                }), "application/json") ;
             }
             else
             {
@@ -644,7 +644,7 @@ namespace WalkingTec.Mvvm.Mvc
                 LocalizeMenu(resultMenus);
                 return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
                 {
-                    IgnoreNullValues = true
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
                 }), "application/json");
             }
         }

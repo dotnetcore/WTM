@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Core.Test
         public string Remark { get; set; }
 
         [Display(Name = "所属学校")]
-        [Required()]
+        //[Required()]
         public Guid? SchoolId { get; set; }
 
 

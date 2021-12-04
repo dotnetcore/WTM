@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using BootstrapBlazor.Components;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.ConfigOptions;
@@ -11,8 +12,9 @@ namespace WtmBlazorUtils
 {
     public static class ServiceExtension
     {
-        public static void AddWtmBlazor(this IServiceCollection self, Configs config, string baseAddress="")
+        public static void AddWtmBlazor(this IServiceCollection self, IConfiguration configs, string baseAddress="")
         {
+            var config = configs.Get<Configs>();
             self.AddScoped<GlobalItems>();
             self.AddSingleton<Configs>(config);
             string url = "";
@@ -49,7 +51,7 @@ namespace WtmBlazorUtils
             });
             JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
             jsonOptions.PropertyNamingPolicy = null;
-            jsonOptions.IgnoreNullValues = true;
+            jsonOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
             jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
             jsonOptions.AllowTrailingCommas = true;
             jsonOptions.Converters.Add(new DateTimeConverter());

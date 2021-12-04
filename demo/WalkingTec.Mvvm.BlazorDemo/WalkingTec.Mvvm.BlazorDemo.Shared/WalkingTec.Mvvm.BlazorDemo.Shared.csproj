@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="5.18.1" />
-    <PackageReference Include="BootstrapBlazor.Chart" Version="5.3.0" />
-    <PackageReference Include="BootstrapBlazor.Markdown" Version="5.3.0" />
+    <PackageReference Include="BootstrapBlazor" Version="6.0.15" />
+    <PackageReference Include="BootstrapBlazor.Chart" Version="6.0.0" />
+    <PackageReference Include="BootstrapBlazor.Markdown" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

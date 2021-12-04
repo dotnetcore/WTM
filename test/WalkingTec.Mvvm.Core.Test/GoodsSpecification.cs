@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Core.Test
         [Display(Name = "货物种类")]
         public GoodsCatalog Catalog { get; set; }
         [Display(Name = "货物种类")]
-        [Required(ErrorMessage = "请选择{0}")]
+        //[Required(ErrorMessage = "请选择{0}")]
         public int? CatalogId { get; set; }
 
         [Display(Name = "品种名称")]

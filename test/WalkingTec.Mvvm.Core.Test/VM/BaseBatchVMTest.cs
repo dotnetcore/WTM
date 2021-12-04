@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                     ID = new Guid("3E32E2A6-3B09-43CF-8E49-9DE26DCC30AE"),
                     SchoolCode = "001",
                     SchoolName = "school1",
-                    SchoolType = null,
+                    SchoolType =  SchoolTypeEnum.PRI,
                     Remark = "remark1"
                 });
                 context.Set<School>().Add(new School
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                     ID = new Guid("2BBE998F-D639-483E-AC0C-8FC7C18A77A3"),
                     SchoolCode = "002",
                     SchoolName = "school2",
-                    SchoolType = null,
+                    SchoolType =  SchoolTypeEnum.PRI,
                     Remark = "remark2"
                 });
                 context.SaveChanges();

@@ -66,7 +66,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             SchoolTop s = new SchoolTop();
             s.SchoolCode = "000";
             s.SchoolName = "default";
-            s.SchoolType = null;
+            s.SchoolType =  SchoolTypeEnum.PRI;
             s.Remark = "default";
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             SchoolTop s = new SchoolTop();
             s.SchoolCode = "000";
             s.SchoolName = "default";
-            s.SchoolType = null;
+            s.SchoolType =  SchoolTypeEnum.PRI;
             s.Remark = "default";
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 Assert.AreEqual(1, rv.Count());
                 Assert.AreEqual("000", rv[0].SchoolCode);
                 Assert.AreEqual(name, rv[0].SchoolName);
-                Assert.AreEqual(null, rv[0].SchoolType);
+                Assert.AreEqual(SchoolTypeEnum.PRI, rv[0].SchoolType);
                 Assert.AreEqual("default", rv[0].Remark);
             }
         }
@@ -144,7 +144,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             SchoolTop s = new SchoolTop();
             s.SchoolCode = "000";
             s.SchoolName = "default";
-            s.SchoolType = null;
+            s.SchoolType =  SchoolTypeEnum.PUB;
             s.Remark = "default";
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
@@ -239,17 +239,20 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             s.SchoolCode = "000";
             s.SchoolName = "school";
             s.SchoolType = SchoolTypeEnum.PRI;
+            s.Remark = "";
             s.Majors = new List<MajorTop>();
             s.Majors.Add(new MajorTop
             {
                 MajorCode = "111",
                 MajorName = "major1",
+                Remark = "",
                 MajorType = MajorTypeEnum.Optional
             });
             s.Majors.Add(new MajorTop
             {
                 MajorCode = "222",
                 MajorName = "major2",
+                Remark = "",
                 MajorType = MajorTypeEnum.Required
             });
             _schoolvm.Entity = s;
