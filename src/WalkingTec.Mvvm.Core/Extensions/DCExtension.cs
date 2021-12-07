@@ -202,10 +202,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //如果没有指定忽略权限，则拼接权限过滤的where条件
             if (ignorDataPrivilege == false)
             {
-                query = AppendSelfDPWhere(query,wtmcontext,dps);
+                query = AppendSelfDPWhere(query, wtmcontext, dps);
             }
 
-            if (typeof(IPersistPoco).IsAssignableFrom( typeof(T)))
+            if (typeof(IPersistPoco).IsAssignableFrom(typeof(T)))
             {
                 var mod = new IsValidModifier();
                 var newExp = mod.Modify(query.Expression);
@@ -277,23 +277,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
         private static IQueryable<T> AppendSelfDPWhere<T>(IQueryable<T> query, WTMContext wtmcontext, List<SimpleDataPri> dps) where T : TopBasePoco
         {
             var dpsSetting = wtmcontext?.DataPrivilegeSettings;
-            Type modelTye = typeof(T);
-            bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelTye);
-            ParameterExpression pe = Expression.Parameter(modelTye);
-            Expression peid = Expression.Property(pe, modelTye.GetSingleProperty("ID"));
+            ParameterExpression pe = Expression.Parameter(typeof(T));
+            Expression peid = Expression.Property(pe, typeof(T).GetSingleProperty("ID"));
             //循环数据权限，加入到where条件中，达到自动过滤的效果
-
-            Expression selfexp = Expression.NotEqual(Expression.Constant(1), Expression.Constant(1));
-            if(isBasePoco == true)
-            {
-                selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
-            }
             if (dpsSetting?.Where(x => x.ModelName == query.ElementType.Name).SingleOrDefault() != null)
             {
                 //如果dps参数是空，则生成 1!=1 这种错误的表达式，这样就查不到任何数据了
                 if (dps == null)
                 {
-                    query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
+                    query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
                 }
                 else
                 {
@@ -301,14 +293,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     var ids = dps.Where(x => x.TableName == query.ElementType.Name).Select(x => x.RelateId).ToList();
                     if (ids == null || ids.Count() == 0)
                     {
-                        query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
+                        query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
                     }
                     else
                     {
                         if (!ids.Contains(null))
                         {
-                            var exp = Expression.OrElse(selfexp, ids.GetContainIdExpression(typeof(T), pe).Body);
-                            query = query.Where(Expression.Lambda<Func<T, bool>>(exp,pe));
+                            query = query.Where(ids.GetContainIdExpression<T>());
                         }
                     }
                 }
@@ -324,7 +315,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="wtmcontext"></param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, params Expression<Func<T, object>>[] IdFields) where T : TopBasePoco
         {
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
             //循环所有关联外键
@@ -351,7 +342,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
             }
             //var test = DPWhere(baseQuery, dps, tableNameList, IdFields);
-            return DPWhere(baseQuery,wtmcontext,tableNameList, IdFields);
+            return DPWhere(baseQuery, wtmcontext, tableNameList, IdFields);
         }
 
         #region AddBy YOUKAI 20160310
@@ -364,24 +355,17 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="tableName">关联数据权限的表名,如果关联外键为自身，则参数第一个为自身</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery,WTMContext wtmcontext,List<string> tableName, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, List<string> tableName, params Expression<Func<T, object>>[] IdFields) where T : TopBasePoco
         {
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
-            Type modelTye = typeof(T);
-            bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelTye);
 
             // var dpsSetting = BaseVM.AllDPS;
-            ParameterExpression pe = Expression.Parameter(modelTye);
+            ParameterExpression pe = Expression.Parameter(typeof(T));
             Expression left1 = Expression.Constant(1);
             Expression right1 = Expression.Constant(1);
             Expression trueExp = Expression.Equal(left1, right1);
             Expression falseExp = Expression.NotEqual(left1, right1);
             Expression finalExp = null;
-            Expression selfexp = falseExp;
-            if (isBasePoco == true)
-            {
-                selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
-            }
             int tindex = 0;
             //循环所有关联外键
             foreach (var IdField in IdFields)
@@ -415,7 +399,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 //如果dps为空，则拼接一个返回假的表达式，这样就查询不出任何数据
                 if (dps == null)
                 {
-                    exp = selfexp;
+                    exp = falseExp;
                 }
                 else
                 {
@@ -451,7 +435,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     //如果没有关联的id，则拼接一个返回假的where，是语句查询不到任何数据
                     if (ids == null || ids.Count() == 0)
                     {
-                        exp = selfexp;
+                        exp = falseExp;
+                        //if (peid.Type == typeof(Guid))
+                        //{
+                        //    exp = Expression.Equal(peid, Expression.Constant(Guid.NewGuid()));
+                        //}
+                        //else
+                        //{
+                        //    exp = Expression.Equal(peid, Expression.Constant(null));
+                        //}
                     }
                     //如果有关联 Id
                     else
@@ -485,7 +477,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             {
                                 exp = ids.GetContainIdExpression(typeof(T), pe, peid).Body;
                             }
-                            exp = Expression.OrElse(selfexp, exp);
                         }
                     }
                 }
@@ -601,7 +592,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
-        public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val, Expression<Func<T, object>> member=null)
+        public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val, Expression<Func<T, object>> member = null)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
             PropertyInfo idproperty = null;
@@ -625,7 +616,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             idproperty = typeof(T).GetSingleProperty("ParentId");
             Expression peid = Expression.Property(pe, idproperty);
             var p = Expression.Call(peid, "ToString", new Type[] { });
-            if(val == null)
+            if (val == null)
             {
                 return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(null)), pe));
             }
@@ -638,7 +629,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         public static IQueryable<T> CheckIDs<T>(this IQueryable<T> baseQuery, List<string> val, Expression<Func<T, object>> member = null)
         {
-            if(val == null)
+            if (val == null)
             {
                 return baseQuery;
             }
@@ -658,7 +649,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
 
-        public static IQueryable<T> CheckNotNull<T>(this IQueryable<T> baseQuery, Expression<Func<T,object>> member)
+        public static IQueryable<T> CheckNotNull<T>(this IQueryable<T> baseQuery, Expression<Func<T, object>> member)
         {
             return baseQuery.CheckNotNull<T>(member.GetPropertyName());
         }
@@ -695,7 +686,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 return baseQuery;
             }
-            else if(val is string s && string.IsNullOrEmpty(s))
+            else if (val is string s && string.IsNullOrEmpty(s))
             {
                 return baseQuery;
             }
