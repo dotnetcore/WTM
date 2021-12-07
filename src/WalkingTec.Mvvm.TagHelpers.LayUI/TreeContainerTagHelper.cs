@@ -90,8 +90,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         if (m2.Success)
                         {
                             var gridvar = m2.Groups[1].Value.Trim();
+                            var idfieldname = IdField?.Name ?? "notsetid";
+                            idfieldname = Regex.Replace(idfieldname, ".*?Searcher\\.","");
+                            var levelfieldname = LevelField?.Name ?? "notsetlevel";
+                            levelfieldname = Regex.Replace(levelfieldname, ".*?Searcher\\.", "");
                             cusmtomclick = $@"
-    $.extend({gridid}defaultfilter.where,{{'{IdField?.Name?.Replace("Searcher.","") ?? "notsetid"}':data.data.id, '{LevelField?.Name?.Replace("Searcher.", "") ?? "notsetlevel"}':data.data.level }});
+    $.extend({gridid}defaultfilter.where,{{'{idfieldname}':data.data.id, '{levelfieldname}':data.data.level }});
     layui.table.reload('{gridid}',{{where: {gridid}defaultfilter.where}});
 ";
                         }
