@@ -7,34 +7,24 @@ using Microsoft.JSInterop;
 using WalkingTec.Mvvm.Core;
 using WtmBlazorUtils;
 
-namespace WalkingTec.Mvvm.BlazorDemo.Client
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+var configs = builder.Configuration.Get<Configs>();
+builder.RootComponents.Add<WalkingTec.Mvvm.BlazorDemo.Shared.App>("app");
+builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
+builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(WalkingTec.Mvvm.BlazorDemo.Shared.Program); });
+builder.Services.AddWtmBlazor(builder.Configuration, builder.HostEnvironment.BaseAddress);
+var host = builder.Build();
+var jsInterop = host.Services.GetRequiredService<IJSRuntime>();
+var result = await jsInterop.InvokeAsync<string>("localStorageFuncs.get", "wtmculture");
+CultureInfo culture = null;
+if (result == null)
 {
-    public class Program
-    {
-        public static async Task Main(string[] args)
-        {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            var configs = builder.Configuration.Get<Configs>();
-            builder.RootComponents.Add<Shared.App>("app");
-            builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
-            builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(Shared.Program); });
-            builder.Services.AddWtmBlazor(builder.Configuration, builder.HostEnvironment.BaseAddress);
-            var host = builder.Build();
-            var jsInterop = host.Services.GetRequiredService<IJSRuntime>();
-            var result = await jsInterop.InvokeAsync<string>("localStorageFuncs.get", "wtmculture");
-            CultureInfo culture = null;
-            if (result == null)
-            {
-                culture = configs.SupportLanguages[0];
-            }
-            else 
-            {
-                culture = new CultureInfo(result);
-            }
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
-            await host.RunAsync();
-        }
-
-    }
+    culture = configs.SupportLanguages[0];
 }
+else
+{
+    culture = new CultureInfo(result);
+}
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
+await host.RunAsync();

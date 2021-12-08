@@ -4,7 +4,8 @@
 
 @if (hasToken == true || IsPublic == true)
 {
-    <Router AppAssembly="@typeof(Program).Assembly" OnNavigateAsync="OnNavigateAsync">
+ <BootstrapBlazorRoot>
+   <Router AppAssembly="@typeof(Program).Assembly" OnNavigateAsync="OnNavigateAsync">
         <Found Context="routeData">
             <CascadingValue Value="User" IsFixed="false">
                 <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -16,10 +17,12 @@
             </LayoutView>
         </NotFound>
     </Router>
+    </BootstrapBlazorRoot>
 }
 else if (hasToken == false)
 {
-    <Router AppAssembly="@typeof(Program).Assembly">
+   <BootstrapBlazorRoot>
+  <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
             <CascadingValue Value="User" IsFixed="false">
                 <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }" />
@@ -31,6 +34,7 @@ else if (hasToken == false)
             </LayoutView>
         </NotFound>
     </Router>
+    </BootstrapBlazorRoot>
 }
 @code{
 
