@@ -17,6 +17,7 @@ WalkingTec.Mvvm框架（简称WTM）是基于.net core的快速开发框架。�
 | -------- | ------------ | ---- |---------|---------|
 | Azure Pipelines |  Windows/Linux/OSX |  v2.2.300 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=develop) |
 | Azure Pipelines |  Windows/Linux/OSX |  v3.1.101 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.1?branchName=feature/dotnet3)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=28&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.1?branchName=feature/dotnet3)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=28&branchName=feature/dotnet3) |
+| Azure Pipelines |  Windows/Linux/OSX |  v5.0.103 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v5.0?branchName=feature/vNext)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=30&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v5.0?branchName=feature%2FvNext)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=30&branchName=feature/vNext) |
 | AppVeyor |  Windows/Linux |  v2.2.300 | - | - |
 | Travis   | Linux/OSX |  v2.2.300 | - | - |
 
@@ -55,6 +56,7 @@ Package name                              | Version                     | Downlo
 |不分离 |LayUI |稳定|
 |前后端分离 |React |稳定|
 |前后端分离 |VUE |RTM|
+|新 |Blazor |RTM|
 
 WTM框架的前后端分离模式同样可以使用代码生成器同时生成前台和后台的代码，极大的降低了前后端人员的沟通成本，从本质上提升了开发效率，让“分离”不再复杂和昂贵。
 
@@ -68,7 +70,9 @@ WTM框架的前后端分离模式同样可以使用代码生成器同时生成�
 
 框架问答社区：https://community.walkingtec.cn
 
-框架QQ交流群：694148336
+框架QQ交流群：694148336（已满），892848149 (2群）
+
+5.0版本的最新代码在VNext分支
 
 ## 点<a href="http://wtmdoc.walkingtec.cn/setup">这里</a>在线一键生成WTM的项目，立刻开始体验WTM之美~~~
 

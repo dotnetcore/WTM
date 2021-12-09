@@ -203,7 +203,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 {
                                     check = m.Groups[1] + "[0]" + m.Groups[2];
                                 }
-                                if (model.FC.ContainsKey(check) == false)
+                                if (model.FC.Keys.Any(x=>x.ToLower() == check.ToLower()) == false)
                                 {
                                     ctrl.ModelState.Remove(v);
                                 }

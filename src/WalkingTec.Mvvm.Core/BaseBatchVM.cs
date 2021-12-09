@@ -311,7 +311,8 @@ namespace WalkingTec.Mvvm.Core
                         {
                             val = FC["LinkedVM." + pro.Name + "[]"];
                         }
-                        if (proToSet != null && val != null)
+                        var valuetoset = pro.GetValue(LinkedVM);
+                        if (proToSet != null && val != null && valuetoset != null)
                         {
                             var hasvalue = true;
                             if ( val is StringValues sv && StringValues.IsNullOrEmpty(sv) == true)
@@ -320,7 +321,7 @@ namespace WalkingTec.Mvvm.Core
                             }
                             if (hasvalue)
                             {
-                                proToSet.SetValue(entity, pro.GetValue(LinkedVM));
+                                proToSet.SetValue(entity, valuetoset);
                             }
                         }
                     }

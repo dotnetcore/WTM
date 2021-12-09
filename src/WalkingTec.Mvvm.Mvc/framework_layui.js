@@ -499,7 +499,8 @@ window.ff = {
                     });
                     if (maxed === true) {
                         layer.full(oid);
-                    }
+                        ff.triggerResize();
+                  }
                 }
             }
         });
