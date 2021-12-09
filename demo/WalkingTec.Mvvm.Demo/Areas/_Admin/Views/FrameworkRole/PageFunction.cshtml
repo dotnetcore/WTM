@@ -13,5 +13,26 @@
     <wt:closebutton />
   </wt:row>
 </wt:form>
+<script>
+  $().ready(function () {
+    var $selectAll = $('input[do-not-use-selectall]+div');
+    $selectAll.each(function (index, dom) {
+      var existUnchecked = $(dom).nextAll('div:not(.layui-form-checked)').length;
+      if (existUnchecked == 0) {
+        $(dom).click();
+      }
+    });
 
+    $selectAll.on('click', function (value) {
+      var $el = $(this);
+
+      if ($el.hasClass('layui-form-checked')) {
+        $el.nextAll('div:not(.layui-form-checked)').click();
+      }
+      else {
+        $el.nextAll('div.layui-form-checked').click();
+      }
+    });
+  });
+</script>
 <!-- WTM默认页面 Wtm buidin page-->
