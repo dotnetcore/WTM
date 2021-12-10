@@ -16,10 +16,10 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
         @Prop({ type: Object }) option;
         // 需要替换的 key  {charttype:'pie'}
         @Prop({ type: Object }) replace;
-        @Prop({ type: Object }) type;
-        @Prop({ type: Object }) title;
-        @Prop({ type: Object, default: 'X' }) namex;
-        @Prop({ type: Object, default: 'Y' }) namey;
+        @Prop({ type: String }) type;
+        @Prop({ type: String }) title;
+        @Prop({ type: String, default: 'X' }) namex;
+        @Prop({ type: String, default: 'Y' }) namey;
 
         @Prop({ type: Boolean, default: false }) opensmooth;
         @Prop({ type: Boolean, default: true }) showlegent;
@@ -64,6 +64,27 @@ import { Options, Prop, Provide, Vue } from "vue-property-decorator";
             }
 
         }
+        async refresh(url,body){
+                try {
+                    const res = await this.$Ajax.post<any>(url,body);
+                    const option = this.lodash.mapValues<any, any>(res, val => {
+                        if (this.lodash.isString(val)) {
+                            // 替换所有配置的数据
+                            this.lodash.mapValues(this.replace, (regStr, key) => {
+                                const reg = new RegExp(key, '"type":"charttype"');
+                                val = val.replace(reg, regStr);
+                            });
+                            return JSON.parse(val);
+                        }
+                    });
+                    this.requestOption = option;
+                } catch (error) {
+                    console.log(
+                        "🚀 ~ file: echarts.vue ~ line 60 ~ extends ~ onRequest ~ error",
+                        error
+                    );
+                }
+        }        
         setBase() {
             var tooltip = "";
             if (this.showtooltip == true) {

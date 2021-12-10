@@ -47,6 +47,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
                 output.Attributes.Add("name", string.IsNullOrEmpty(Name) ? Field.Name : Name);
 
+
+
                 if (DefaultValue != null)
                 {
                     output.Attributes.Add("value", DefaultValue);
@@ -114,6 +116,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.Attributes.Add("type", "hidden");
 
                     output.Attributes.Add("name", string.IsNullOrEmpty(Name) ? Field.Name : Name);
+
+                    if(string.IsNullOrEmpty(value) == false)
+                    {
+                        DefaultValue = null;
+                    };
 
                     if (DefaultValue != null)
                     {

@@ -4,7 +4,7 @@
     <a-divider />
     <ViewGrid />
     <WtmView queryKey="update">
-        <ViewDetailsUpdate />
+        <ViewDetailsUpdate @refreshGrid="refreshGrid"/>
     </WtmView>
     <WtmView queryKey="_adminframeworkuserbatchedit">
         <ViewBatch />
@@ -19,6 +19,7 @@
     import ViewFilter from "./views/filter.vue";
     import ViewGrid from "./views/grid.vue";
     @Options({
+        name: "WalkingTec.Mvvm.Admin.Api,FrameworkUser",
         components: {
             ViewAction,
             ViewFilter,
@@ -42,6 +43,13 @@
          * 子组件 通过 Inject 均可访问
          */
         @Provide({ reactive: true }) readonly PageEntity = PageEntity;
+
+        refreshGrid(){
+            debugger;
+            console.log('------------------------------------override refresh---------------------------')
+            this.PageController.Pagination.onCurrentChange({ current: 1 })
+        }
+
         created() { }
         mounted() {
             console.log("");

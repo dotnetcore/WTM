@@ -959,6 +959,7 @@ namespace WalkingTec.Mvvm.Core
                 //循环所有重复字段组
                 foreach (var group in checkCondition.Groups)
                 {
+                    var innercount = new List<object>();
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
                     var idproperty = typeof(TModel).GetSingleProperty("ID");
@@ -1004,10 +1005,12 @@ namespace WalkingTec.Mvvm.Core
 
                         foreach (TopBasePoco res in result)
                         {
-                            count.Add(res.GetID());
+                            var id = res.GetID();
+                            count.Add(id);
+                            innercount.Add(id);
                         }
                     }
-                    if (count.Count > 0)
+                    if (innercount.Count > 0)
                     {
                         //循环拼接所有字段名
                         string AllName = "";

@@ -27,6 +27,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             output.Attributes.Add("placeholder", placeHolder);
             output.Attributes.Add("style", "display:none");
             output.Attributes.Add("isrich", "1");
+
+            if(string.IsNullOrEmpty(Field?.Model?.ToString()) == false)
+            {
+                DefaultValue = null;
+            }
+
             if (DefaultValue != null)
             {
                 output.Content.SetContent(DefaultValue.ToString());

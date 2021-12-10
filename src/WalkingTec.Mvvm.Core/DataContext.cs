@@ -301,7 +301,7 @@ namespace WalkingTec.Mvvm.Core
 
         private FrameworkMenu GetMenu2(List<SimpleModule> allModules, string controllerName, string pageKey, List<FrameworkRole> allowedRoles, int displayOrder)
         {
-            var acts = allModules.Where(x => (x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}"  || x.Area?.Prefix == "_Admin")&& x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            var acts = allModules.Where(x => (x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}")&& x.IsApi == true).SelectMany(x => x.Actions).ToList();
             var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
             SimpleAction act = null;
             if (acts.Count > 0)

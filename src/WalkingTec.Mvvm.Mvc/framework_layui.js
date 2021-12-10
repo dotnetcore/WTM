@@ -468,13 +468,15 @@ window.ff = {
                         , id: windowid //设定一个id，防止重复弹出
                         , content: str
                         , resizing: function (layero) {
-                            $(layero).find("div[ischart = '1']").each(
+                            ff.triggerResize();
+                          $(layero).find("div[ischart = '1']").each(
                                 function (index) {
                                     eval($(this).attr('id') + 'Chart.resize();');
                                 }
                             );
                         }
                         , full: function (layero) {
+                            ff.triggerResize();
                             $(layero).find("div[ischart = '1']").each(
                                 function (index) {
                                     eval($(this).attr('id') + 'Chart.resize();');
@@ -482,7 +484,8 @@ window.ff = {
                             );
                         }
                         , restore : function (layero) {
-                            $(layero).find("div[ischart = '1']").each(
+                            ff.triggerResize();
+                          $(layero).find("div[ischart = '1']").each(
                                 function (index) {
                                     eval($(this).attr('id') + 'Chart.resize();');
                                 }
@@ -496,7 +499,8 @@ window.ff = {
                     });
                     if (maxed === true) {
                         layer.full(oid);
-                    }
+                        ff.triggerResize();
+                  }
                 }
             }
         });

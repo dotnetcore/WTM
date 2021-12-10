@@ -187,46 +187,50 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 RangeSplit = "~";
             }
 
-            if (DefaultValue != null)
+            if (Field.ModelExplorer.ModelType == typeof(string))
             {
-                Value = DefaultValue;
+                Value = Field.Model?.ToString() ?? Value;
+            }
+            else if (Range.HasValue && Range.Value && Field.ModelExplorer.ModelType == typeof(DateRange))
+            {
+                var dateRange = Field.Model as DateRange;
+                if (string.IsNullOrEmpty(Format))
+                    Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
+                else
+                    Value = dateRange?.ToString(Format, RangeSplit) ?? Value;
+            }
+            else if (Field.ModelExplorer.ModelType == typeof(TimeSpan) || Field.ModelExplorer.ModelType == typeof(TimeSpan?))
+            {
+                TimeSpan? df = Field.Model as TimeSpan?;
+                if (df == TimeSpan.MinValue)
+                {
+                    df = null;
+                }
+                Value = df?.ToString();
             }
             else
             {
-                if (Field.ModelExplorer.ModelType == typeof(string))
+                DateTime? df = Field.Model as DateTime?;
+                if (df == DateTime.MinValue)
                 {
-                    Value = Field.Model?.ToString() ?? Value;
+                    df = null;
                 }
-                else if (Range.HasValue && Range.Value && Field.ModelExplorer.ModelType == typeof(DateRange))
-                {
-                    var dateRange = Field.Model as DateRange;
-                    if (string.IsNullOrEmpty(Format))
-                        Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
-                    else
-                        Value = dateRange?.ToString(Format, RangeSplit) ?? Value;
-                }
-                else if (Field.ModelExplorer.ModelType == typeof(TimeSpan) || Field.ModelExplorer.ModelType == typeof(TimeSpan?))
-                {
-                    TimeSpan? df = Field.Model as TimeSpan?;
-                    if (df == TimeSpan.MinValue)
-                    {
-                        df = null;
-                    }
-                    Value = df?.ToString();
-                }
+                if (string.IsNullOrEmpty(Format))
+                    Value = df?.ToString(DateTimeFormatDic[Type]) ?? Value;
                 else
+                    Value = df?.ToString(Format) ?? Value;
+            }
+
+
+            if (string.IsNullOrEmpty(Value))
+            {
+                if (DefaultValue != null)
                 {
-                    DateTime? df = Field.Model as DateTime?;
-                    if (df == DateTime.MinValue)
-                    {
-                        df = null;
-                    }
-                    if (string.IsNullOrEmpty(Format))
-                        Value = df?.ToString(DateTimeFormatDic[Type]) ?? Value;
-                    else
-                        Value = df?.ToString(Format) ?? Value;
+                    Value = DefaultValue;
                 }
             }
+
+
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");
             if (_configInfo.UIOptions.DateTime.DefaultReadonly)

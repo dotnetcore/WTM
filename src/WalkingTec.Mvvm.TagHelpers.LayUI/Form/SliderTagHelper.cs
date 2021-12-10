@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -127,13 +127,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             string value0 = Field?.Model?.ToString();
             string value1 = Field1?.Model?.ToString();
-            if (string.IsNullOrEmpty(DefaultValue))
+            if (Field?.Model != null || Field1?.Model != null)
             {
                 value0 = Field?.Model == null ? "0" : Field.Model.ToString();
                 value1 = Field1?.Model == null ? "0" : Field1.Model.ToString();
-                DefaultValue = range ? $"[{value0},{value1}]" : value0;
             }
-            else
+            else if(string.IsNullOrEmpty(DefaultValue) == false)
             {
                 if (DefaultValue.StartsWith('[') && DefaultValue.EndsWith(']'))
                 {

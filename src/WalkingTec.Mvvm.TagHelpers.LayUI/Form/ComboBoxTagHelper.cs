@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public bool AutoComplete { get; set; }
 
         public string YesText { get; set; }
-        
+
         public string NoText { get; set; }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagName = "select";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("name", Field.Name);
-            output.Attributes.Add("lay-filter", $"_WTMMultiCombo_{Guid.NewGuid()}_"+Field.Name);
+            output.Attributes.Add("lay-filter", $"_WTMMultiCombo_{Guid.NewGuid()}_" + Field.Name);
             output.Attributes.Add("wtm-name", Field.Name);
             output.Attributes.Add("wtm-ctype", "combo");
             if (Disabled == true)
@@ -87,7 +87,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             if (MultiSelect == null)
             {
                 MultiSelect = false;
-                if (Field.Name.Contains("[") ||modeltype.IsArray || modeltype.IsList())// Array or List
+                if (Field.Name.Contains("[") || modeltype.IsArray || modeltype.IsList())// Array or List
                 {
                     MultiSelect = true;
                 }
@@ -111,7 +111,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     linkto = Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name);
                 }
-                else {
+                else
+                {
                     linkto = LinkId;
                 }
                 output.Attributes.Add("wtm-linkto", $"{linkto}");
@@ -133,38 +134,41 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             var listItems = new List<ComboSelectListItem>();
             var selectVal = new List<string>();
-            if (DefaultValue == null)
+            if (Field.Name.Contains("[") && modeltype.IsList() == false && modeltype.IsArray == false)
             {
-                if (Field.Name.Contains("[") && modeltype.IsList() == false && modeltype.IsArray == false)
+                //默认多对多不必填
+                if (Required == null)
                 {
-                    //默认多对多不必填
-                    if (Required == null)
-                    {
-                        Required = false;
-                    }
-                    selectVal.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                    Required = false;
                 }
-                else if (Field.Model != null)
-                {
-                    if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
-                    {
-                        foreach (var item in Field.Model as dynamic)
-                        {
-                            selectVal.Add(item.ToString().ToLower());
-                        }
-                    }
-                    else
-                    {
-                        selectVal.Add(Field.Model.ToString().ToLower());
-                    }
-                }
+                selectVal.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
             }
-            else
+            else if (Field.Model != null)
             {
-                selectVal.AddRange(DefaultValue.Split(',').Select(x => x.ToLower()));
+                if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
+                {
+                    foreach (var item in Field.Model as dynamic)
+                    {
+                        selectVal.Add(item.ToString().ToLower());
+                    }
+                }
+                else
+                {
+                    selectVal.Add(Field.Model.ToString().ToLower());
+                }
             }
 
-            if (string.IsNullOrEmpty(ItemUrl) == false) {
+            if (selectVal.Count == 0)
+            {
+                if (string.IsNullOrEmpty(DefaultValue) == false)
+                {
+                    selectVal.AddRange(DefaultValue.Split(',').Select(x => x.ToLower()));
+                }
+            }
+
+
+            if (string.IsNullOrEmpty(ItemUrl) == false)
+            {
                 if (_wtm.HttpContext?.Request?.Host != null)
                 {
                     ItemUrl = _wtm.HttpContext.Request.IsHttps ? "https://" : "http://" + _wtm.HttpContext?.Request?.Host.ToString() + ItemUrl;
@@ -235,7 +239,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                 }
             }
-            if (MultiSelect==true)
+            if (MultiSelect == true)
             {
                 foreach (var item in listItems)
                 {
@@ -263,10 +267,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                     else
                     {
-                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")} {(item.Disabled==true ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")} {(item.Disabled == true ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
                     }
                 }
-            
+
             }
             output.Content.SetHtmlContent(contentBuilder.ToString());
             #endregion
