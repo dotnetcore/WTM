@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             var menus = DC.Set<FunctionPrivilege>()
                 .Where(x => x.RoleCode != null && user.Roles.Select(x => x.RoleCode).Contains(x.RoleCode))
                 .Select(x => x.MenuItem)
-                .Where(x => x.MethodName == null)
+                .Where(x => string.IsNullOrEmpty(x.MethodName))
                 .OrderBy(x => x.DisplayOrder)
                 .Select(x => new SimpleMenuApi
                 {
@@ -187,7 +187,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
                 var ms = new List<SimpleMenuApi>();
                 var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
-                var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
+                var data = DC.Set<FrameworkMenu>().Where(x => string.IsNullOrEmpty(x.MethodName)).ToList();
                 var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
                 var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()

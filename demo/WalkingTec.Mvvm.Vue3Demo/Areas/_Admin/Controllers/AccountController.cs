@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             forapi.Groups = user.Groups;
             forapi.PhotoId = user.PhotoId;
             var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
-            var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
+            var data = DC.Set<FrameworkMenu>().Where(x => string.IsNullOrEmpty(x.MethodName)).ToList();
             var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
             var allowed = DC.Set<FunctionPrivilege>()
                             .AsNoTracking()
@@ -193,7 +193,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
                 var ms = new List<SimpleMenuApi>();
                 var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
-                var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
+                var data = DC.Set<FrameworkMenu>().Where(x => string.IsNullOrEmpty(x.MethodName)).ToList();
                 var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
                 var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()
