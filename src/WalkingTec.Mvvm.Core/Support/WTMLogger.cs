@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Core
                 .Select(x => x.LogLevel).FirstOrDefault();
             if (level == null)
             {
-                level = LogLevel.Error;
+                level = LogLevel.None;
             }
             if (logLevel >= level)
             {

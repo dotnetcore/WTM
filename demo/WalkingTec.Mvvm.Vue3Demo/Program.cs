@@ -71,6 +71,7 @@ app.UseAuthorization();
 app.UseSession();
 app.UseWtmSwagger(false);
 app.UseWtm();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
@@ -90,13 +91,6 @@ app.UseEndpoints(endpoints =>
 });
 
 app.UseWtmContext();
-if (app.Environment.EnvironmentName == "Development")
-{
-    app.UseSpa(spa =>
-    {
-        spa.Options.SourcePath = "ClientApp";
-    });
-}
 app.Run();
 
 public partial class Program

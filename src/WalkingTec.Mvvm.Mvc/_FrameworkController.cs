@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -16,6 +14,12 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SixLabors.Fonts;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
@@ -307,7 +311,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var FileData = Request.Form.Files[0];
 
-            Image oimage = Image.FromStream(FileData.OpenReadStream());
+            Image oimage = Image.Load(FileData.OpenReadStream());
             if (oimage == null)
             {
                 return JsonMore(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
@@ -321,7 +325,8 @@ namespace WalkingTec.Mvvm.Mvc
                 height = width * oimage.Height / oimage.Width;
             }
             MemoryStream ms = new MemoryStream();
-            oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            oimage.Mutate(x => x.Resize(width.Value, height.Value));
+            oimage.SaveAsJpeg(ms);
             ms.Position = 0;
 
             var file = fp.Upload(FileData.FileName, ms.Length, ms, groupName,subdir,extra,sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
@@ -368,7 +373,7 @@ namespace WalkingTec.Mvvm.Mvc
             try
             {
                 rv = file.DataStream;
-                Image oimage = Image.FromStream(rv);
+                Image oimage = Image.Load(rv);
                 if (oimage != null && (width != null || height != null))
                 {
                     if (width == null)
@@ -380,7 +385,8 @@ namespace WalkingTec.Mvvm.Mvc
                         height = oimage.Height * width / oimage.Width;
                     }
                     var ms = new MemoryStream();
-                    oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    oimage.Mutate(x => x.Resize(width.Value, height.Value));
+                    oimage.SaveAsJpeg(ms);
                     rv.Dispose();
                     rv = ms;
                 }
@@ -729,34 +735,32 @@ namespace WalkingTec.Mvvm.Mvc
             HttpContext.Session.Set<string>("verify_code", chkCode);
 
             //创建画布
-            Bitmap bmp = new Bitmap(codeW, codeH);
-            Graphics g = Graphics.FromImage(bmp);
-            g.Clear(Color.Linen);
+            Image bmp = new Image<Rgba32>(codeW, codeH);
 
             //画噪线
             for (int i = 0; i < 3; i++)
             {
-                int x1 = rnd.Next(codeW);
-                int y1 = rnd.Next(codeH);
-                int x2 = rnd.Next(codeW);
-                int y2 = rnd.Next(codeH);
+                float x1 = rnd.Next(codeW);
+                float y1 = rnd.Next(codeH);
+                float x2 = rnd.Next(codeW);
+                float y2 = rnd.Next(codeH);
 
                 Color clr = color[rnd.Next(color.Length)];
-                g.DrawLine(new Pen(clr), x1, y1, x2, y2);
+                bmp.Mutate(x => x.DrawLines(clr, 1.0f, new PointF(x1,y1), new PointF(x2,y2)));
             }
             //画验证码
             for (int i = 0; i < chkCode.Length; i++)
             {
                 string fnt = font[rnd.Next(font.Length)];
-                Font ft = new Font(fnt, fontSize);
+                Font ft = new Font(SystemFonts.Find(fnt), fontSize);
                 Color clr = color[rnd.Next(color.Length)];
-                g.DrawString(chkCode[i].ToString(), ft, new SolidBrush(clr), (float)i * 18, (float)0);
+                bmp.Mutate(x => x.DrawText(chkCode[i].ToString(),ft,clr,new PointF((float)i * 18, (float)0)));
             }
             //将验证码写入图片内存流中，以image/png格式输出
             MemoryStream ms = new MemoryStream();
             try
             {
-                bmp.Save(ms, ImageFormat.Png);
+                bmp.SaveAsPng(ms);
                 return File(ms.ToArray(), "image/jpeg");
             }
             catch (Exception)
@@ -765,7 +769,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
             finally
             {
-                g.Dispose();
                 bmp.Dispose();
             }
         }
