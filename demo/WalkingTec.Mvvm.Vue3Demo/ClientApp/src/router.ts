@@ -153,7 +153,6 @@ class AppRouter {
   async onGetRequest(): Promise<Array<{ label: string, value: string } & RouteRecordRaw>> {
 
       return lodash.map(lodash.filter(this.RouterFiles, 'name'), item => {
-          debugger;
         var a = lodash.assign({ label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'component.name') }, item)
         return a;
     })
