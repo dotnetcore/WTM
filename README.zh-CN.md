@@ -18,8 +18,7 @@ WalkingTec.Mvvm框架（简称WTM）是基于.net core的快速开发框架。�
 | Azure Pipelines |  Windows/Linux/OSX |  v2.2.300 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=develop) |
 | Azure Pipelines |  Windows/Linux/OSX |  v3.1.101 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.1?branchName=feature/dotnet3)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=28&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.1?branchName=feature/dotnet3)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=28&branchName=feature/dotnet3) |
 | Azure Pipelines |  Windows/Linux/OSX |  v5.0.103 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v5.0?branchName=feature/vNext)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=30&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v5.0?branchName=feature%2FvNext)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=30&branchName=feature/vNext) |
-| AppVeyor |  Windows/Linux |  v2.2.300 | - | - |
-| Travis   | Linux/OSX |  v2.2.300 | - | - |
+| Azure Pipelines |  Windows/Linux/OSX |  v6.0.101 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v6.0?branchName=dotnet6)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=31&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v6.0?branchName=dotnet6)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=31&branchName=dotnet6) |
 
 ## Nuget Packages
 
