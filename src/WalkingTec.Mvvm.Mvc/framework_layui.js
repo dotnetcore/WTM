@@ -1280,7 +1280,7 @@ window.ff = {
             item.value = data[i].Value;
             item.title = data[i].Text;
             item.disabled = data[i].Disabled;
-            item.checked = data[i].Selected || svals.indexOf(data[i].Value) > -1;
+            //item.checked = data[i].Selected || svals.indexOf(data[i].Value) > -1;
             rv.push(item);
         }
         return rv;

@@ -147,9 +147,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if(selectVal.Count > 0)
             {
-                DefaultValue = null;
+                DefaultValue = $"[{string.Join(",", selectVal.Select(x => "'" + x + "'"))}]";
             }
-
+            else
+            {
+                if(string.IsNullOrEmpty(DefaultValue) == false)
+                {
+                    DefaultValue = $"[{string.Join(",", DefaultValue.Split(",").Select(x => "'" + x + "'"))}]";
+                }
+            }
             var title = $"['{(string.IsNullOrEmpty(LeftTitle) ? THProgram._localizer["Sys.ForSelect"] : LeftTitle)}','{(string.IsNullOrEmpty(RightTitle) ? THProgram._localizer["Sys.Selected"] : RightTitle)}']";
             var content = $@"
 <script>
