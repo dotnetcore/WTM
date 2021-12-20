@@ -28,7 +28,6 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [DataTestMethod]
         [DataRow("111", "test1", SchoolTypeEnum.PRI, "newremark1")]
         [DataRow("222", "test2", SchoolTypeEnum.PUB, "newremark2")]
-        [DataRow("", "", null, "")]
         public void SingleTableDoEditFields(string code, string name, SchoolTypeEnum? schooltype, string remark)
         {
             InitData();
