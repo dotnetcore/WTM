@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Core
     /// FrameworkUser
     /// </summary>
     [Table("FrameworkUsers")]
-    public  class FrameworkUserBase : BasePoco
+    public  abstract class FrameworkUserBase : BasePoco
     {
         [Display(Name = "_Admin.Account")]
         [Required(ErrorMessage = "Validate.{0}required")]

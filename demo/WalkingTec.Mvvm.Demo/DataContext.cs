@@ -183,7 +183,7 @@ namespace WalkingTec.Mvvm.Demo
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Major>().HasOne(x => x.School).WithMany(x => x.Majors).OnDelete(DeleteBehavior.SetNull);
+            //modelBuilder.Entity<Major>().HasOne(x => x.School).WithMany(x => x.Majors).OnDelete(DeleteBehavior.SetNull);
         }
     }
 
