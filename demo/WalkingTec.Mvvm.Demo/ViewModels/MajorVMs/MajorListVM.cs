@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,6 +48,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
                 .CheckContain(Searcher.Remark, x=>x.Remark)
                 .CheckEqual(Searcher.SchoolId, x=>x.SchoolId)
                 .CheckWhere(Searcher.SelectedStudentMajorsIDs,x=>DC.Set<StudentMajor>().Where(y=>Searcher.SelectedStudentMajorsIDs.Contains(y.StudentId)).Select(z=>z.MajorId).Contains(x.ID))
+                .DPWhere(Wtm, x=>x.SchoolId)
                 .Select(x => new Major_View
                 {
 				    ID = x.ID,
