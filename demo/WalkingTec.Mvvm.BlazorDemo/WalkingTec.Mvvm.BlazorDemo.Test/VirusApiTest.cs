@@ -38,9 +38,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             VirusVM vm = _controller.Wtm.CreateVM<VirusVM>();
             Virus v = new Virus();
             
-            v.VirtusName = "9nn";
-            v.VirtusCode = "XDON";
-            v.Remark = "8j5DwQK";
+            v.VirtusName = "Q4ZTQmmjeqr";
+            v.VirtusCode = "XUN5";
+            v.Remark = "WQJKRCxQG";
             v.VirtusType = WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.RNA;
             vm.Entity = v;
             var rv = _controller.Add(vm);
@@ -50,9 +50,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<Virus>().Find(v.ID);
                 
-                Assert.AreEqual(data.VirtusName, "9nn");
-                Assert.AreEqual(data.VirtusCode, "XDON");
-                Assert.AreEqual(data.Remark, "8j5DwQK");
+                Assert.AreEqual(data.VirtusName, "Q4ZTQmmjeqr");
+                Assert.AreEqual(data.VirtusCode, "XUN5");
+                Assert.AreEqual(data.Remark, "WQJKRCxQG");
                 Assert.AreEqual(data.VirtusType, WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.RNA);
             }
         }
@@ -64,9 +64,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.VirtusName = "9nn";
-                v.VirtusCode = "XDON";
-                v.Remark = "8j5DwQK";
+                v.VirtusName = "Q4ZTQmmjeqr";
+                v.VirtusCode = "XUN5";
+                v.Remark = "WQJKRCxQG";
                 v.VirtusType = WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.RNA;
                 context.Set<Virus>().Add(v);
                 context.SaveChanges();
@@ -77,10 +77,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             v = new Virus();
             v.ID = oldID;
        		
-            v.VirtusName = "N14lF";
-            v.VirtusCode = "zZoFx";
-            v.Remark = "RptU";
-            v.VirtusType = WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.DNA;
+            v.VirtusName = "0eAnXO6oKe22lhcHY1";
+            v.VirtusCode = "pko";
+            v.Remark = "bAvhotF8klwm10sejEg";
+            v.VirtusType = WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.RNA;
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
 			
@@ -95,10 +95,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             {
                 var data = context.Set<Virus>().Find(v.ID);
  				
-                Assert.AreEqual(data.VirtusName, "N14lF");
-                Assert.AreEqual(data.VirtusCode, "zZoFx");
-                Assert.AreEqual(data.Remark, "RptU");
-                Assert.AreEqual(data.VirtusType, WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.DNA);
+                Assert.AreEqual(data.VirtusName, "0eAnXO6oKe22lhcHY1");
+                Assert.AreEqual(data.VirtusCode, "pko");
+                Assert.AreEqual(data.Remark, "bAvhotF8klwm10sejEg");
+                Assert.AreEqual(data.VirtusType, WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.RNA);
             }
 
         }
@@ -110,9 +110,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.VirtusName = "9nn";
-                v.VirtusCode = "XDON";
-                v.Remark = "8j5DwQK";
+                v.VirtusName = "Q4ZTQmmjeqr";
+                v.VirtusCode = "XUN5";
+                v.Remark = "WQJKRCxQG";
                 v.VirtusType = WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.RNA;
                 context.Set<Virus>().Add(v);
                 context.SaveChanges();
@@ -129,14 +129,14 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.VirtusName = "9nn";
-                v1.VirtusCode = "XDON";
-                v1.Remark = "8j5DwQK";
+                v1.VirtusName = "Q4ZTQmmjeqr";
+                v1.VirtusCode = "XUN5";
+                v1.Remark = "WQJKRCxQG";
                 v1.VirtusType = WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.RNA;
-                v2.VirtusName = "N14lF";
-                v2.VirtusCode = "zZoFx";
-                v2.Remark = "RptU";
-                v2.VirtusType = WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.DNA;
+                v2.VirtusName = "0eAnXO6oKe22lhcHY1";
+                v2.VirtusCode = "pko";
+                v2.Remark = "bAvhotF8klwm10sejEg";
+                v2.VirtusType = WalkingTec.Mvvm.Demo.Models.Virus.VirtusTypeEnum.RNA;
                 context.Set<Virus>().Add(v1);
                 context.Set<Virus>().Add(v2);
                 context.SaveChanges();

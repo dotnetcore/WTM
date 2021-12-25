@@ -31,7 +31,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs
             var query = DC.Set<Virus>()
                 .CheckContain(Searcher.VirtusName, x=>x.VirtusName)
                 .CheckContain(Searcher.VirtusCode, x=>x.VirtusCode)
-                .CheckContain(Searcher.Remark, x=>x.Remark)
                 .CheckEqual(Searcher.VirtusType, x=>x.VirtusType)
                 .CheckWhere(Searcher.SelectedPatientsIDs,x=>DC.Set<PatientVirus>().Where(y=>Searcher.SelectedPatientsIDs.Contains(y.PatientId)).Select(z=>z.VirusId).Contains(x.ID))
                 .Select(x => new Virus_View

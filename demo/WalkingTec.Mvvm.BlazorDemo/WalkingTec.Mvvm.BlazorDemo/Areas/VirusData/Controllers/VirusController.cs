@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 {
     [Area("VirusData")]
     [AuthorizeJwtWithCookie]
-    [ActionDescription("病毒管理")]
+    [ActionDescription("新病毒管理")]
     [ApiController]
     [Route("api/Virus")]
 	public partial class VirusController : BaseApiController
@@ -153,14 +153,13 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
         [HttpPost("Import")]
         public ActionResult Import(VirusImportVM vm)
         {
-
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm!=null && (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData()))
             {
                 return BadRequest(vm.GetErrorJson());
             }
             else
             {
-                return Ok(vm.EntityList.Count);
+                return Ok(vm?.EntityList?.Count ?? 0);
             }
         }
 

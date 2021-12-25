@@ -1,4 +1,4 @@
-﻿@page "/VirusData/Patient"
+@page "/VirusData/Patient"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.PatientVMs;
 @inherits BasePage
 @attribute [ActionDescription("病人管理", "WalkingTec.Mvvm.BlazorDemo.Controllers,Patient")]
@@ -66,11 +66,11 @@
         <div style="padding-right:10px;">
             @if (IsAccessable("/api/Patient/Edit"))
             {
-                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
             }
             @if (IsAccessable("/api/Patient/{id}"))
             {
-                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClick="()=>OnDetailsClick(context)" />
             }
             @if (IsAccessable("/api/Patient/BatchDelete"))
             {

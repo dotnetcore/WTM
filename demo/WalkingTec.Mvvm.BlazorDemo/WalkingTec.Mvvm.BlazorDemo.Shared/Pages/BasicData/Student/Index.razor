@@ -1,4 +1,4 @@
-﻿@page "/BasicData/Student"
+@page "/BasicData/Student"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs;
 @inherits BasePage
 @attribute [ActionDescription("学生管理", "WalkingTec.Mvvm.BlazorDemo.Controllers,Student")]
@@ -72,11 +72,11 @@
         <div style="padding-right:10px;">
             @if (IsAccessable("/api/Student/Edit"))
             {
-                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
             }
             @if (IsAccessable("/api/Student/{id}"))
             {
-                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClick="()=>OnDetailsClick(context)" />
             }
             @if (IsAccessable("/api/Student/BatchDelete"))
             {

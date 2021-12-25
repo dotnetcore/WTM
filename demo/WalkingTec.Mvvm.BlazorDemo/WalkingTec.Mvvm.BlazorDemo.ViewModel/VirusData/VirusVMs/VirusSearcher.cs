@@ -16,8 +16,6 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs
         public String VirtusName { get; set; }
         [Display(Name = "病毒代码")]
         public String VirtusCode { get; set; }
-        [Display(Name = "病毒描述")]
-        public String Remark { get; set; }
         [Display(Name = "病毒种类")]
         public VirtusTypeEnum? VirtusType { get; set; }
         [Display(Name = "患者")]

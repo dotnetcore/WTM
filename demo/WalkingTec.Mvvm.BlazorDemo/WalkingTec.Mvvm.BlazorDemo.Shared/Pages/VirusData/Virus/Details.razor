@@ -1,4 +1,4 @@
-@page "/VirusData/Virus/Details/{id}"
+﻿@page "/VirusData/Virus/Details/{id}"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs;
 @inherits BasePage
 
@@ -18,7 +18,7 @@
 
 @code {
 
-    private VirusVM Model = new VirusVM();
+    private VirusVM Model = null;
     private ValidateForm vform { get; set; }
     [Parameter]
     public string id { get; set; }
