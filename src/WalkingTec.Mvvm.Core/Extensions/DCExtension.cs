@@ -277,6 +277,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
         private static IQueryable<T> AppendSelfDPWhere<T>(IQueryable<T> query, WTMContext wtmcontext, List<SimpleDataPri> dps) where T : TopBasePoco
         {
             var dpsSetting = wtmcontext?.DataPrivilegeSettings;
+            Type modelTye = typeof(T);
+            bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelTye);
             ParameterExpression pe = Expression.Parameter(typeof(T));
             Expression peid = Expression.Property(pe, typeof(T).GetSingleProperty("ID"));
             //循环数据权限，加入到where条件中，达到自动过滤的效果
@@ -293,7 +295,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     var ids = dps.Where(x => x.TableName == query.ElementType.Name).Select(x => x.RelateId).ToList();
                     if (ids == null || ids.Count() == 0)
                     {
-                        query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
+                        if (isBasePoco == true)
+                        {
+                            var selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+                            query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
+                        }
+                        else
+                        {
+                            query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
+                        }
                     }
                     else
                     {
@@ -435,7 +445,32 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     //如果没有关联的id，则拼接一个返回假的where，是语句查询不到任何数据
                     if (ids == null || ids.Count() == 0)
                     {
-                        exp = falseExp;
+                        if (mtm)
+                        {
+                            ParameterExpression midpe = Expression.Parameter(middletype);
+                            bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(middletype);
+                            if (isBasePoco)
+                            {
+                                exp = Expression.Equal(Expression.Property(midpe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+                            }
+                            else
+                            {
+                                exp = falseExp;
+                            }
+                        }
+                        else
+                        {
+                            Type modelTye = typeof(T);
+                            bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelTye);
+                            if (isBasePoco)
+                            {
+                                exp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+                            }
+                            else
+                            {
+                                exp = falseExp;
+                            }
+                        }
                         //if (peid.Type == typeof(Guid))
                         //{
                         //    exp = Expression.Equal(peid, Expression.Constant(Guid.NewGuid()));

@@ -1,4 +1,4 @@
-﻿@page "/BasicData/City"
+@page "/BasicData/City"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs;
 @inherits BasePage
 @attribute [ActionDescription("城市管理", "WalkingTec.Mvvm.BlazorDemo.Controllers,City")]
@@ -50,11 +50,11 @@
         <div style="padding-right:10px;">
             @if (IsAccessable("/api/City/Edit"))
             {
-                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
             }
             @if (IsAccessable("/api/City/{id}"))
             {
-                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="()=>OnDetailsClick(context)" />
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClick="()=>OnDetailsClick(context)" />
             }
             @if (IsAccessable("/api/City/BatchDelete"))
             {

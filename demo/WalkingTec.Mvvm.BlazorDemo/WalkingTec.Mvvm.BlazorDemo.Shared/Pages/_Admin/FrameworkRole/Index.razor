@@ -47,11 +47,11 @@
         <div style="padding-right:10px;">
             @if (IsAccessable("/api/_FrameworkRole/Edit"))
             {
-                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClickCallback="() => OnEditClick(context)" />
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
             }
             @if (IsAccessable("/api/_FrameworkRole/{id}"))
             {
-                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClickCallback="() => OnDetailsClick(context)" />
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClick="() => OnDetailsClick(context)" />
             }
             @if (IsAccessable("/api/_FrameworkRole/BatchDelete"))
             {
@@ -60,7 +60,7 @@
             }
             @if (IsAccessable("/api/_FrameworkRole/EditPrivilege"))
             {
-                <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" Icon="fa fa-key" Text="@WtmBlazor.Localizer["_Admin.PageFunction"]" OnClickCallback="() => OnPageFunctionClick(context)" />
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" Icon="fa fa-key" Text="@WtmBlazor.Localizer["_Admin.PageFunction"]" OnClick="() => OnPageFunctionClick(context)" />
             }
         </div>
     </RowButtonTemplate>

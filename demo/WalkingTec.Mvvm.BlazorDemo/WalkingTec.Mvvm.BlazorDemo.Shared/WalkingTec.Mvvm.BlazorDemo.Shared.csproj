@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="5.18.1" />
+    <PackageReference Include="BootstrapBlazor" Version="5.18.4" />
     <PackageReference Include="BootstrapBlazor.Chart" Version="5.3.0" />
     <PackageReference Include="BootstrapBlazor.Markdown" Version="5.3.0" />
   </ItemGroup>
