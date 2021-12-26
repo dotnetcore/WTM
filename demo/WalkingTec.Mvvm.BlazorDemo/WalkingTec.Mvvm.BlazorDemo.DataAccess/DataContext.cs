@@ -60,7 +60,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.DataAccess
                     ITCode = "admin",
                     Password = Utils.GetMD5String("000000"),
                     IsValid = true,
-                    Name = "Admin"
+                    Name = "Admin",
+                    CreateBy = "Admin"
                 };
 
                 var userrole = new FrameworkUserRole
