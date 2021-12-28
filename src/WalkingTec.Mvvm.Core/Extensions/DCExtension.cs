@@ -341,7 +341,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 if (fieldName.ToLower() != "id")
                 {
                     fieldName = fieldName.Remove(fieldName.Length - 2);
-                    typename = IdField.GetPropertyInfo().DeclaringType.GetSingleProperty(fieldName).PropertyType.Name;
+                    var dtype = IdField.GetPropertyInfo().DeclaringType;
+                    if (dtype == typeof(TreePoco) && fieldName == "Parent")
+                    {
+                        typename = typeof(TreePoco).Name;
+                    }
+                    else
+                    {
+                        typename = dtype.GetSingleProperty(fieldName).PropertyType.Name;
+                    }
                 }
                 //如果是 Id，则本身就是关联的类
                 else
