@@ -344,7 +344,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     var dtype = IdField.GetPropertyInfo().DeclaringType;
                     if (dtype == typeof(TreePoco) && fieldName == "Parent")
                     {
-                        typename = typeof(TreePoco).Name;
+                        typename = typeof(T).Name;
                     }
                     else
                     {
@@ -411,8 +411,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     for (int i = 1; i < splits.Length; i++)
                     {
                         peid = Expression.MakeMemberAccess(peid, peid.Type.GetSingleProperty(splits[i]));
-                    }
+                    }                    
                     middletype = (peid as MemberExpression).Member.DeclaringType;
+                    if(middletype == typeof(TreePoco))
+                    {
+                        middletype = typeof(T);
+                    }
                 }
                 //如果dps为空，则拼接一个返回假的表达式，这样就查询不出任何数据
                 if (dps == null)
