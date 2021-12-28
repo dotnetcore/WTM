@@ -341,7 +341,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 if (fieldName.ToLower() != "id")
                 {
                     fieldName = fieldName.Remove(fieldName.Length - 2);
-                    typename = IdField.GetPropertyInfo().DeclaringType.GetSingleProperty(fieldName).PropertyType.Name;
+                    var dtype = IdField.GetPropertyInfo().DeclaringType;
+                    if (dtype == typeof(TreePoco) && fieldName == "Parent")
+                    {
+                        typename = typeof(T).Name;
+                    }
+                    else
+                    {
+                        typename = dtype.GetSingleProperty(fieldName).PropertyType.Name;
+                    }
                 }
                 //如果是 Id，则本身就是关联的类
                 else
@@ -405,6 +413,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         peid = Expression.MakeMemberAccess(peid, peid.Type.GetSingleProperty(splits[i]));
                     }
                     middletype = (peid as MemberExpression).Member.DeclaringType;
+                    if (middletype == typeof(TreePoco))
+                    {
+                        middletype = typeof(T);
+                    }
                 }
                 //如果dps为空，则拼接一个返回假的表达式，这样就查询不出任何数据
                 if (dps == null)
