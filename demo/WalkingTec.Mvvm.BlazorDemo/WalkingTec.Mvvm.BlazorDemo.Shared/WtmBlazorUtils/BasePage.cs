@@ -33,6 +33,22 @@ namespace WtmBlazorUtils
             set;
         }
 
+        public object _userinfo;
+
+        [CascadingParameter(Name = "BodyContext")]
+        public object UserInfoForDialog
+        {
+            get
+            {
+                return _userinfo;
+            }
+            set
+            {
+                _userinfo = value;
+                UserInfo = value as LoginUserInfo;
+            }
+        }
+
         [Parameter]
         public Action<DialogResult> OnCloseDialog { get; set; }
 
@@ -44,7 +60,7 @@ namespace WtmBlazorUtils
 
         public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.Large)
         {
-            return await WtmBlazor.OpenDialog(Title, Values, size);
+            return await WtmBlazor.OpenDialog(Title, Values, size, this.UserInfo);
         }
 
         public async Task<bool> PostsData(object data, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
@@ -395,7 +411,7 @@ namespace WtmBlazorUtils
             }
         }
 
-        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.None)
+        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.None, LoginUserInfo userinfo=null)
         {
             TaskCompletionSource<DialogResult> ReturnTask = new TaskCompletionSource<DialogResult>();
             SetValuesParser p = new SetValuesParser();
@@ -404,7 +420,8 @@ namespace WtmBlazorUtils
                 ShowCloseButton = false,
                 ShowFooter = false,
                 Size = size,
-                Title = Title
+                Title = Title,
+                BodyContext = userinfo
             };
             option.BodyTemplate = builder =>
             {

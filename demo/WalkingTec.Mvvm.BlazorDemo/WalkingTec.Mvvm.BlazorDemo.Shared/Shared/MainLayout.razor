@@ -177,7 +177,7 @@
 
     private async Task Show()
     {
-        await wtmblazor.OpenDialog<Password>(wtmblazor.Localizer["Login.ChangePassword"], size: Size.Small);
+        await wtmblazor.OpenDialog<Password>(wtmblazor.Localizer["Login.ChangePassword"], size: Size.Small, userinfo: UserInfo);
     }
 
     protected override async Task OnInitializedAsync()
