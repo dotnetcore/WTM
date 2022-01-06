@@ -183,6 +183,7 @@
 
 .table-cell .btn-group .btn {
     margin-left: 3px !important;
+    border-radius: 2px !important;
 }
 
 .table-modal-footer {
