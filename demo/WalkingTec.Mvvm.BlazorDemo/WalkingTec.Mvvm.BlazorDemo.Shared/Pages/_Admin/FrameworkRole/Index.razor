@@ -44,7 +44,6 @@
         }
     </TableToolbarTemplate>
     <RowButtonTemplate>
-        <div style="padding-right:10px;">
             @if (IsAccessable("/api/_FrameworkRole/Edit"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
@@ -62,7 +61,6 @@
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" Icon="fa fa-key" Text="@WtmBlazor.Localizer["_Admin.PageFunction"]" OnClick="() => OnPageFunctionClick(context)" />
             }
-        </div>
     </RowButtonTemplate>
 </Table>
 
