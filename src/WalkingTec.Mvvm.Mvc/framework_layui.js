@@ -905,7 +905,7 @@ window.ff = {
                 return;
             }
             var itemname = item.name;
-            if (/_WTMMultiCombo_(.*?)_(.*?)$/.test(itemname)) {
+      if (/_WTMMultiCombo_(.*?)_(.*?)$/.test(itemname)) {
                 itemname = RegExp.$2;
             }
             if (/_DONOTUSE_(.*?)\[(\d?)\]\.(.*?)$/.test(itemname)) {
@@ -919,7 +919,7 @@ window.ff = {
             }
             if (/_DONOTUSE_(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
-                if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1) == false) {
+              if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1) == false) {
                     filterback[name1] = 1;
                 }
                 return;
@@ -956,8 +956,8 @@ window.ff = {
                     filter[itemname] = temp;
                 }
                 else {
-                    filter[itemname] = item.value;
-                    if (filterback.hasOwnProperty(itemname) == true) {
+                    if (filterback.hasOwnProperty(itemname) == true && item.value != "") {
+                        filter[itemname] = item.value;
                         filterback[itemname] = undefined;
                     }
                 }

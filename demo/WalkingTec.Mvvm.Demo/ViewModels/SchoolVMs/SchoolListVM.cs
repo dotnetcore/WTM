@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
@@ -19,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 
         protected override void InitVM()
         {
-            CityTree = DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name);
+            CityTree = DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name + "15.0.1-/1");
         }
 
         public override string SetFullRowBgColor(object entity)

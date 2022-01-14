@@ -19,6 +19,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         [Display(Name = "学校类型")]
         public SchoolTypeEnum? SchoolType { get; set; }
 
+        public List<Guid> test { get; set; } = new List<Guid>();
         public Guid? CityId { get; set; }
         protected override void InitVM()
         {
