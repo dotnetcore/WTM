@@ -74,7 +74,7 @@
             List<UploadFile> temp = new List<UploadFile>();
             if (IsMultiple == false)
             {
-                var rv = await WtmBlazor.Api.CallAPI<string>($"/api/_file/GetFileName/{Value}", HttpMethodEnum.GET, new object());
+                var rv = await WtmBlazor.Api.CallAPI<string>($"/api/_file/GetFileName/{Value}", HttpMethodEnum.GET,  new Dictionary<string,string>());
                 if (rv.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     temp.Add(new UploadFile
