@@ -956,8 +956,8 @@ window.ff = {
                     filter[itemname] = temp;
                 }
                 else {
+                    filter[itemname] = item.value;
                     if (filterback.hasOwnProperty(itemname) == true && item.value != "") {
-                        filter[itemname] = item.value;
                         filterback[itemname] = undefined;
                     }
                 }
@@ -966,6 +966,7 @@ window.ff = {
 
         for (item in filterback) {
             if (filterback[item] !== undefined) {
+                filter[item] = undefined;
                 filter[item + ".length"] = "0";
             }
         }

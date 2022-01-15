@@ -32,6 +32,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
             return new List<GridColumn<Major>>{
                 this.MakeGridHeader(x => x.MajorCode,1000).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.MajorType,1000).SetEditType(EditTypeEnum.ComboBox,typeof(MajorTypeEnum).ToListItems(null,true)),
+                this.MakeGridHeader(x=> x.CityId, 1000).SetEditType( EditTypeEnum.ComboBox,DC.Set<City>().GetSelectListItems(Wtm, x=>x.Name)),
                 this.MakeGridHeader(x => x.MajorName,1000).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.TestDate,1000).SetEditType(EditTypeEnum.Datetime),
                 this.MakeGridHeader(x => x.IsTrue).SetEditType(EditTypeEnum.ComboBox,Utils.GetBoolCombo(BoolComboTypes.YesNo, selectText:Wtm.Localizer?["Sys.PleaseSelect"])),
