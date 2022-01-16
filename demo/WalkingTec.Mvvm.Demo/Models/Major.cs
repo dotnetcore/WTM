@@ -46,6 +46,10 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Display(Name = "学生")]
         public List<StudentMajor> StudentMajors { get; set; }
 
+
+        public City City { get; set; }
+        public  Guid CityId { get; set; }
+
         public bool? IsTrue { get; set; }
     }
 }
