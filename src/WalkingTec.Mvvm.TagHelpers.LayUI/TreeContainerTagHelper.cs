@@ -96,7 +96,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                             levelfieldname = Regex.Replace(levelfieldname, ".*?Searcher\\.", "");
                             cusmtomclick = $@"
     $.extend({gridid}defaultfilter.where,{{'{idfieldname}':data.data.id, '{levelfieldname}':data.data.level }});
-    layui.table.reload('{gridid}',{{where: {gridid}defaultfilter.where}});
+    layui.table.reload('{gridid}',{{url:{gridid}url, where: {gridid}defaultfilter.where}});
 ";
                         }
                     }
