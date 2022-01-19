@@ -58,7 +58,7 @@
     private List<SelectedItem> IconTypes = new List<SelectedItem>();
     private List<SelectedItem> Icons = new List<SelectedItem>();
     private List<FrameworkMenu> ClientPages;
-    private string SelectedIconType = "";
+    public string SelectedIconType { get; set; } = "";
     private ValidateForm vform { get; set; }
 
     protected override async Task OnInitializedAsync()
