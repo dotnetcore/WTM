@@ -553,7 +553,7 @@ namespace WalkingTec.Mvvm.Mvc
         public static IServiceCollection AddWtmAuthentication(this IServiceCollection services, IConfiguration config)
         {
             var conf = config.Get<Configs>();
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             var jwtOptions = conf.JwtOptions;
 
