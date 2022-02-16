@@ -5,7 +5,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
-    [HtmlTargetElement("wt:image", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
+    [HtmlTargetElement("wt:image", TagStructure = TagStructure.WithoutEndTag)]
     public class ImageTagHelper : BaseFieldTag
     {
 
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 //TODO 若 image 组件未在form中该如何解决 _DONOT_USE_CS 的问题？
             }
-            if (string.IsNullOrEmpty(Url) && Field.Model != null)
+            if (string.IsNullOrEmpty(Url) && Field?.Model != null)
             {
                 Url = $"/_Framework/GetFile/{Field.Model}";
                 if (vm != null)
@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.TagName = "img";
             output.TagMode = TagMode.SelfClosing;
-            output.Attributes.Add("name", Field.Name + "img");
+            output.Attributes.Add("name", Field?.Name + "img");
             output.Attributes.Add("id", Id + "img");
             if (!string.IsNullOrEmpty(Url))
                 output.Attributes.Add("src", Url);
