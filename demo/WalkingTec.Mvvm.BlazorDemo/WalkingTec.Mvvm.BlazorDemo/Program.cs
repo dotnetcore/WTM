@@ -64,7 +64,7 @@ builder.Services.AddWtmContext(builder.Configuration, (options) => {
 var app = builder.Build();
 IOptionsMonitor<Configs> config = app.Services.GetRequiredService<IOptionsMonitor<Configs>>();
 
-IconFontsHelper.GenerateIconFont();
+IconFontsHelper.GenerateIconFont("wwwroot/font", "wwwroot/font-awesome");
 
 if (app.Environment.EnvironmentName == "Development")
 {
