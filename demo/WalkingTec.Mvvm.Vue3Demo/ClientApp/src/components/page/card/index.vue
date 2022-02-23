@@ -1,10 +1,10 @@
 <template>
 		<a
-            :href="infor.href"
+            :href="href"
             target="_blank"
         >
-            <div><span :class="infor.icon"></span></div>
-            {{infor.font}}
+            <div><span :class="icon"></span></div>
+            {{font}}
         </a>
 </template>
 <script>
@@ -14,10 +14,18 @@
 			}
 		},
 		props: {
-			infor:{
-				type:Object,
-				default:{}
-			}
+			href:{
+				type:String,
+				default:''
+			},
+			font:{
+				type:String,
+				default:''
+			},
+			icon:{
+				type:String,
+				default:''
+			},
 		},
 		methods: {
 			

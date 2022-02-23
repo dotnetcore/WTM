@@ -2,7 +2,7 @@
     <div v-if="locale === 'zh'">
         <a-row :gutter="20">
             <a-col :md="12">
-                <WtmCard :infor='infor'></WtmCard>
+                <WtmCard icon='fa-music fa' font="音乐" href = "https://github.com/dotnetcore/WTM"></WtmCard>
             </a-col>
             <a-col :md="12">
                 <a-card title="WTM—做最好的.netcore开源框架" >
@@ -168,11 +168,7 @@ export default class extends Vue {
     get locale() {
         return this.$i18n.locale
     }
-    get infor() {
-        return {
-            icon:"fa-music fa",font:"音乐",href:"https://github.com/dotnetcore/WTM"
-        }
-    }
+   
     created() {
 
     }
