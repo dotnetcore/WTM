@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
         public List<ComboSelectListItem> AllSchools { get; set; }
         public List<ComboSelectListItem> AllStudentMajorss { get; set; }
         [Display(Name = "学生")]
+        [Required]
         public List<string> SelectedStudentMajorsIDs { get; set; }
 
         public MajorVM()

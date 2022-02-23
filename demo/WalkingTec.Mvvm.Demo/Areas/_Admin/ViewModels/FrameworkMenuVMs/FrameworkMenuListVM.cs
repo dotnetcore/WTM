@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -56,33 +57,34 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         private object GenerateCheckBox(FrameworkMenu_ListView item)
         {
-            string rv = "";
+            StringBuilder rv = new StringBuilder();
             if (item.FolderOnly == false)
             {
+                rv.Append($"<input do-not-use-selectall hidden lay-skin='primary' type='checkbox' title='{Localizer["Sys.All"]}'>");
                 if (item.IsInside == true)
                 {
-
                     var others = item.Children?.ToList();
-                    rv += UIService.MakeCheckBox(item.Allowed, Localizer["Sys.MainPage"], "menu_" + item.ID, "1");
+                    rv.Append(UIService.MakeCheckBox(item.Allowed, Localizer["Sys.MainPage"], "menu_" + item.ID, "1"));
                     if (others != null)
                     {
                         foreach (var c in others)
                         {
                             string actionname = "";
-                            if(c.ActionName != null)
+                            if (c.ActionName != null)
                             {
-                                    actionname = Localizer[c.ActionName];
+                                actionname = Localizer[c.ActionName];
                             }
-                            rv += UIService.MakeCheckBox(c.Allowed, actionname, "menu_" + c.ID, "1");
+                            rv.Append(UIService.MakeCheckBox(c.Allowed, actionname, "menu_" + c.ID, "1"));
                         }
                     }
                 }
                 else
                 {
-                    rv += UIService.MakeCheckBox(item.Allowed, Localizer["Sys.MainPage"], "menu_" + item.ID, "1");
+                    rv.Append(UIService.MakeCheckBox(item.Allowed, Localizer["Sys.MainPage"], "menu_" + item.ID, "1"));
                 }
             }
-            return rv;
+
+            return rv.ToString();
         }
 
 
@@ -122,16 +124,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
 
             var data = DC.Set<FrameworkMenu>().ToList();
-            var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || x.Url.EndsWith("/Index") || x.MethodName == null).ToList();
+            var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || x.Url.EndsWith("/Index") || string.IsNullOrEmpty(x.MethodName)).ToList();
             foreach (var item in topdata)
             {
                 if (item.PageName?.StartsWith("MenuKey.") == true)
                 {
-                        item.PageName =Localizer[item.PageName];
+                    item.PageName = Localizer[item.PageName];
                 }
                 if (item.ModuleName?.StartsWith("MenuKey.") == true)
                 {
-                        item.ModuleName = Localizer[item.ModuleName];
+                    item.ModuleName = Localizer[item.ModuleName];
                 }
 
             }
@@ -139,7 +141,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             if (SearcherMode == ListVMSearchModeEnum.Custom2)
             {
                 var pris = DC.Set<FunctionPrivilege>()
-                                .Where(x => x.RoleCode == DC.Set<FrameworkRole>().CheckID(Searcher.RoleID,null).Select(x=>x.RoleCode).FirstOrDefault()).ToList();
+                                .Where(x => x.RoleCode == DC.Set<FrameworkRole>().CheckID(Searcher.RoleID, null).Select(x => x.RoleCode).FirstOrDefault()).ToList();
                 var allowed = pris.Where(x => x.Allowed == true).Select(x => x.MenuItemId).ToList();
                 var denied = pris.Where(x => x.Allowed == false).Select(x => x.MenuItemId).ToList();
                 int order = 0;

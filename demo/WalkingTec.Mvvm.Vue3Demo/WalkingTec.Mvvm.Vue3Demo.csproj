@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>4.5</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
@@ -24,6 +24,7 @@
   <ItemGroup>
     <EmbeddedResource Remove="ClientApp\dist\**" />
     <None Remove="ClientApp\dist\**" />
+    <TypeScriptCompile Remove="ClientApp\node_modules\**" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="tsconfig.json" />
@@ -37,6 +38,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="tsconfig.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.5.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

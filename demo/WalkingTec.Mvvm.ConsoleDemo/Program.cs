@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,8 +28,11 @@ namespace WalkingTec.Mvvm.ConsoleDemo
             Console.WriteLine(DateTime.Now.Subtract(check).TotalSeconds);
             //var context = GetWtmContext();
             //var test = context.CallAPI("baidu","/").Result;
-            AddSchool();
-            Upload();
+            List<int> ids = new List<int>();
+            ids.Add( AddSchool("111","111","111"));
+            ids.Add(AddSchool("222", "222", "222"));
+            BatchEditSchool(ids);
+            //Upload();
             Console.ReadLine();
         }
 
@@ -51,7 +56,7 @@ namespace WalkingTec.Mvvm.ConsoleDemo
             return rv;
         }
 
-        static void AddSchool()
+        static int AddSchool(string name,string code,string remark)
         {
             SchoolVM vm = GetWtmContext().CreateVM<SchoolVM>();
 
@@ -62,10 +67,10 @@ namespace WalkingTec.Mvvm.ConsoleDemo
 
             vm.Entity = new Demo.Models.School
             {
-                SchoolCode = "111",
-                SchoolName = "222",
+                SchoolCode = code,
+                SchoolName = name,
                 SchoolType = Demo.Models.SchoolTypeEnum.PRI,
-                Remark = "abc",
+                Remark = remark,
                 //Photos = new System.Collections.Generic.List<Demo.Models.SchoolPhoto>
                 //{
                 //    new Demo.Models.SchoolPhoto
@@ -91,12 +96,32 @@ namespace WalkingTec.Mvvm.ConsoleDemo
                 vm.DoAdd();
                 vm.Wtm.DoLog("lalala");
                 Console.WriteLine($"添加成功");
+                return vm.Entity.ID;
+            }
+            else
+            {
+                Console.WriteLine($"验证错误:{vm.MSD.GetFirstError()}");
+                return 0;
+            }
+
+        }
+
+        static void BatchEditSchool(List<int> ids)
+        {
+            SchoolBatchVM vm = GetWtmContext().CreateVM<SchoolBatchVM>();
+            vm.Ids = ids.Select(x=>x.ToString()).ToArray();
+            vm.LinkedVM = new School_BatchEdit();
+            vm.LinkedVM.SchoolType = SchoolTypeEnum.PUB;
+            vm.Validate();
+            if (vm.MSD.IsValid == true)
+            {
+                vm.DoBatchEdit();
+                Console.WriteLine($"修改成功");
             }
             else
             {
                 Console.WriteLine($"验证错误:{vm.MSD.GetFirstError()}");
             }
-
         }
 
         static void Upload()

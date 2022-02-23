@@ -22,7 +22,11 @@ namespace WalkingTec.Mvvm.Mvc
 
         public async Task InvokeAsync(HttpContext context, IOptionsMonitor<Configs> configs)
         {
-            context.Features.Get<IHttpMaxRequestBodySizeFeature>().MaxRequestBodySize = configs.CurrentValue.FileUploadOptions.UploadLimit;
+            var max = context.Features.Get<IHttpMaxRequestBodySizeFeature>();
+            if (max.IsReadOnly == false)
+            {
+                max.MaxRequestBodySize = configs.CurrentValue.FileUploadOptions.UploadLimit;
+            }
             if (context.Request.Path == "/")
             {
                 context.Response.Cookies.Append("pagemode", configs.CurrentValue.PageMode.ToString());

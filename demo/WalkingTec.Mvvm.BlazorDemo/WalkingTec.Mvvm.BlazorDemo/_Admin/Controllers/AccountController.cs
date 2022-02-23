@@ -1,6 +1,7 @@
 // WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -80,7 +81,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             var menus = DC.Set<FunctionPrivilege>()
                 .Where(x => x.RoleCode != null && user.Roles.Select(x => x.RoleCode).Contains(x.RoleCode))
                 .Select(x => x.MenuItem)
-                .Where(x => x.MethodName == null)
+                .Where(x => string.IsNullOrEmpty(x.MethodName))
                 .OrderBy(x => x.DisplayOrder)
                 .Select(x => new SimpleMenuApi
                 {
@@ -135,6 +136,40 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Content(JsonSerializer.Serialize(token), "application/json");
         }
 
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public IActionResult Reg(SimpleReg regInfo)
+        {
+            var exist = DC.Set<FrameworkUser>().Any(x => x.ITCode.ToLower() == regInfo.ITCode.ToLower());
+
+            if (exist == true)
+            {
+                ModelState.AddModelError("ITCode", Localizer["Login.ItcodeDuplicate"]);
+                return BadRequest(ModelState.GetErrorJson());
+            }
+
+            var hasuserrole = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "002").FirstOrDefault();
+            FrameworkUser user = new FrameworkUser
+            {
+                ITCode = regInfo.ITCode,
+                Name = regInfo.Name,
+                Password = Utils.GetMD5String(regInfo.Password),
+                IsValid = true,
+                PhotoId = regInfo.PhotoId,
+            };
+            if(hasuserrole != null)
+            {
+                var userrole = new FrameworkUserRole
+                {
+                    UserCode = user.ITCode,
+                    RoleCode = "002"
+                };
+                DC.Set<FrameworkUserRole>().Add(userrole);
+            }
+            DC.Set<FrameworkUser>().Add(user);
+            DC.SaveChanges();
+            return Ok();
+        }
 
         private void LocalizeMenu(List<SimpleMenuApi> menus)
         {
@@ -187,7 +222,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
                 var ms = new List<SimpleMenuApi>();
                 var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
-                var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
+                var data = DC.Set<FrameworkMenu>().Where(x => string.IsNullOrEmpty(x.MethodName)).ToList();
                 var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
                 var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()
@@ -262,5 +297,26 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         public string Account { get; set; }
         public string Password { get; set; }
+    }
+
+    public class SimpleReg
+    {
+        [Display(Name = "_Admin.Account")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
+        public string ITCode { get; set; }
+
+        [Display(Name = "_Admin.Name")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
+        public string Name { get; set; }
+
+        [Display(Name = "Login.Password")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
+        public string Password { get; set; }
+
+        [Display(Name = "_Admin.Photo")]
+        public Guid? PhotoId { get; set; }
     }
 }

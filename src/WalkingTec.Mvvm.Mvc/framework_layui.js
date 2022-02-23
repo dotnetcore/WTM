@@ -499,7 +499,8 @@ window.ff = {
                     });
                     if (maxed === true) {
                         layer.full(oid);
-                    }
+                        ff.triggerResize();
+                  }
                 }
             }
         });
@@ -904,7 +905,7 @@ window.ff = {
                 return;
             }
             var itemname = item.name;
-            if (/_WTMMultiCombo_(.*?)_(.*?)$/.test(itemname)) {
+      if (/_WTMMultiCombo_(.*?)_(.*?)$/.test(itemname)) {
                 itemname = RegExp.$2;
             }
             if (/_DONOTUSE_(.*?)\[(\d?)\]\.(.*?)$/.test(itemname)) {
@@ -918,7 +919,7 @@ window.ff = {
             }
             if (/_DONOTUSE_(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
-                if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1) == false) {
+              if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1) == false) {
                     filterback[name1] = 1;
                 }
                 return;
@@ -956,7 +957,7 @@ window.ff = {
                 }
                 else {
                     filter[itemname] = item.value;
-                    if (filterback.hasOwnProperty(itemname) == true) {
+                    if (filterback.hasOwnProperty(itemname) == true && item.value != "") {
                         filterback[itemname] = undefined;
                     }
                 }
@@ -965,6 +966,7 @@ window.ff = {
 
         for (item in filterback) {
             if (filterback[item] !== undefined) {
+                filter[item] = undefined;
                 filter[item + ".length"] = "0";
             }
         }
@@ -1279,7 +1281,7 @@ window.ff = {
             item.value = data[i].Value;
             item.title = data[i].Text;
             item.disabled = data[i].Disabled;
-            item.checked = data[i].Selected || svals.indexOf(data[i].Value) > -1;
+            //item.checked = data[i].Selected || svals.indexOf(data[i].Value) > -1;
             rv.push(item);
         }
         return rv;
