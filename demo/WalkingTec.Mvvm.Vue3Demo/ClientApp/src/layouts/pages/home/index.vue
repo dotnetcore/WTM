@@ -2,7 +2,7 @@
     <div v-if="locale === 'zh'">
         <a-row :gutter="20">
             <a-col :md="12">
-                <WtmCard icon='fa-music fa' font="音乐" href = "https://github.com/dotnetcore/WTM"></WtmCard>
+                <WtmShortCut icon='fa-music fa' font="音乐" href = "https://github.com/dotnetcore/WTM"></WtmShortCut>
             </a-col>
             <a-col :md="12">
                 <a-card title="WTM—做最好的.netcore开源框架" >
