@@ -2,55 +2,21 @@
     <div v-if="locale === 'zh'">
         <a-row :gutter="20">
             <a-col :md="12">
-                <a-card title="快捷方式" >
-                    <a-row :gutter="20" class="tarbarList">
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                音乐
-                            </a>
-                        </a-col>
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                音乐
-                            </a>
-                        </a-col>
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                音乐
-                            </a>
-                        </a-col>
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                音乐
-                            </a>
-                        </a-col>
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                音乐
-                            </a>
-                        </a-col>
-                    </a-row>
-                </a-card>
+                <WtmCard title='快捷方式'>
+                    <template v-slot:main>
+                         <a-row :gutter="20" class="tarbarList">
+                            <a-col :md="6" v-for='item in 7' :key="item">
+                                <a
+                                    href="https://github.com/dotnetcore/WTM"
+                                    target="_blank"
+                                >
+                                    <div><span class="fa-music fa"></span></div>
+                                    音乐
+                                </a>
+                            </a-col>
+                        </a-row>
+                    </template>
+                </WtmCard>
             </a-col>
             <a-col :md="12">
                 <a-card title="WTM—做最好的.netcore开源框架" >
@@ -122,56 +88,22 @@
     </div>
     <div v-else>
         <a-row :gutter="20">
-         <a-col :md="12">
-                <a-card title="Shortcut" >
-                    <a-row :gutter="20" class="tarbarList">
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                music
-                            </a>
-                        </a-col>
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                music
-                            </a>
-                        </a-col>
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                music
-                            </a>
-                        </a-col>
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                music
-                            </a>
-                        </a-col>
-                        <a-col :md="6">
-                            <a
-                                href="https://github.com/dotnetcore/WTM"
-                                target="_blank"
-                            >
-                                <div><span class="fa-music fa"></span></div>
-                                music
-                            </a>
-                        </a-col>
-                    </a-row>
-                </a-card>
+           <a-col :md="12">
+                <WtmCard title='Shortcut'>
+                    <template v-slot:main>
+                         <a-row :gutter="20" class="tarbarList">
+                            <a-col :md="6" v-for='item in 7' :key="item">
+                                <a
+                                    href="https://github.com/dotnetcore/WTM"
+                                    target="_blank"
+                                >
+                                    <div><span class="fa-music fa"></span></div>
+                                    music
+                                </a>
+                            </a-col>
+                        </a-row>
+                    </template>
+                </WtmCard>
             </a-col>
             <a-col :md="12">
                 <a-card

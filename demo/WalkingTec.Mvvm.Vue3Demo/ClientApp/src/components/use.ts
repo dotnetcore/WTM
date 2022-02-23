@@ -4,6 +4,7 @@ import WtmActionDelete from './page/action/action_delete.vue';
 import WtmActionExport from './page/action/action_export.vue';
 import WtmActionImport from './page/action/action_import.vue';
 import WtmActionInfo from './page/action/action_info.vue';
+import WtmCard from './page/card/index.vue';
 import WtmActionInsert from './page/action/action_insert.vue';
 import WtmActionUpdate from './page/action/action_update.vue';
 import WtmDetails from './page/details/index.vue';
@@ -40,6 +41,7 @@ export default {
         app.component('WtmActionInsert', WtmActionInsert)
         app.component('WtmActionUpdate', WtmActionUpdate)
         app.component('WtmFilter', WtmFilter)
+        app.component('WtmCard', WtmCard)
         app.component('WtmField', WtmField)
         app.config.globalProperties.$FrameworkComponents = frameworkComponents
     }
