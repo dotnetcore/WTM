@@ -24,6 +24,7 @@
   <ItemGroup>
     <EmbeddedResource Remove="ClientApp\dist\**" />
     <None Remove="ClientApp\dist\**" />
+    <TypeScriptCompile Remove="ClientApp\node_modules\**" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="tsconfig.json" />
