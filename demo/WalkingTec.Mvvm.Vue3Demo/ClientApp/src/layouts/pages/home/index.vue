@@ -2,21 +2,7 @@
     <div v-if="locale === 'zh'">
         <a-row :gutter="20">
             <a-col :md="12">
-                <WtmCard title='快捷方式'>
-                    <template v-slot:main>
-                         <a-row :gutter="20" class="tarbarList">
-                            <a-col :md="6" v-for='item in 7' :key="item">
-                                <a
-                                    href="https://github.com/dotnetcore/WTM"
-                                    target="_blank"
-                                >
-                                    <div><span class="fa-music fa"></span></div>
-                                    音乐
-                                </a>
-                            </a-col>
-                        </a-row>
-                    </template>
-                </WtmCard>
+                <WtmCard :infor='infor'></WtmCard>
             </a-col>
             <a-col :md="12">
                 <a-card title="WTM—做最好的.netcore开源框架" >
@@ -108,7 +94,6 @@
             <a-col :md="12">
                 <a-card
                     title="WTM -- make the best. NETCORE open source framework"
-                    
                 >
                     <p>Walkingtec.mvvm framework (WTM for short) was first developed in 2013 ,based on asp.net mvc3 and the earliest Entity Framework. It was mainly used to solve the problems of low coding efficiency and inconsistent code style. Based on dozens of projects,the framework has been gradually improved and four major versions have been launched during 4 years.</p>
                     <p>In September 2017, we transplanted the code to. Net core and carried out deep optimization and reconstruction. We launched a new framework based on asp.net core and EF core. The new framework has made great progress in architecture, stability and speed. It really become a powerful tool for efficient development.</p>
@@ -182,6 +167,11 @@ import { Inject, Options, Vue } from "vue-property-decorator";
 export default class extends Vue {
     get locale() {
         return this.$i18n.locale
+    }
+    get infor() {
+        return {
+            icon:"fa-music fa",font:"音乐",href:"https://github.com/dotnetcore/WTM"
+        }
     }
     created() {
 
