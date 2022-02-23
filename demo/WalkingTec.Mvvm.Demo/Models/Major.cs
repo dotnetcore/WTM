@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         public string Remark { get; set; }
 
         [Display(Name = "所属学校")]
-        //[Required()]
+        [Required()]
         public int? SchoolId { get; set; }
 
         public DateTime TestDate { get; set; }
@@ -45,6 +45,10 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "学生")]
         public List<StudentMajor> StudentMajors { get; set; }
+
+
+        public City City { get; set; }
+        public  Guid CityId { get; set; }
 
         public bool? IsTrue { get; set; }
     }

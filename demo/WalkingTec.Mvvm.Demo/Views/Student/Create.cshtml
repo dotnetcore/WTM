@@ -12,7 +12,7 @@
     <wt:textbox field="Entity.Address" />
     <wt:textbox field="Entity.ZipCode" />
     <wt:upload field="Entity.PhotoId"  upload-type=" ImageFile" />
-    <wt:switch field="Entity.IsValid" />
+    <wt:switch field="Entity.IsValid" default-value="true"/>
     <wt:datetime field="Entity.EnRollDate" />
       <wt:selector list-vm="MajorList" field="Entity.StudentMajor[-1].MajorId" text-bind="MajorList.EntityList[-1].MajorName" val-bind="MajorList.EntityList[-1].ID" multi-select="true">
     <wt:searchpanel vm="MajorList">

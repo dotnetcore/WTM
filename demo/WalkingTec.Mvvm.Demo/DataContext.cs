@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Demo
                 SetTestData(typeof(Major), data);
                 SetTestData(typeof(Student), data);
                 SetTestData(typeof(School), data);
-                SetTestData(typeof(City), data);
+                SetTestData(typeof(City), data,1000);
                 SetTestData(typeof(ControlCenter), data);
                 SetTestData(typeof(Hospital), data);
                 SetTestData(typeof(Patient), data);
@@ -183,7 +183,7 @@ namespace WalkingTec.Mvvm.Demo
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Major>().HasOne(x => x.School).WithMany(x => x.Majors).OnDelete(DeleteBehavior.SetNull);
+            //modelBuilder.Entity<Major>().HasOne(x => x.School).WithMany(x => x.Majors).OnDelete(DeleteBehavior.SetNull);
         }
     }
 

@@ -127,7 +127,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 contentBuilder.Append($"<option value=''>{EmptyText}</option>");
             }
 
-            output.PostElement.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
+            output.PreElement.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
 
 
             #region 添加下拉数据 并 设置默认选中
