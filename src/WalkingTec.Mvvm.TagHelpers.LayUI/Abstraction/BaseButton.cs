@@ -44,6 +44,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public string ConfirmTxt { get; set; }
 
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (string.IsNullOrEmpty(Id))
@@ -93,7 +94,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else
             {
-                output.Content.SetHtmlContent(Text ?? string.Empty);
+                if (string.IsNullOrEmpty(Icon) == false)
+                {
+                    output.Attributes.SetAttribute("class", "shortcut");
+                    output.Content.SetHtmlContent($"<div><i class=\"{Icon}\"></i></div>{Text ?? ""}");
+                }
+                else
+                {
+                    output.Content.SetHtmlContent(Text ?? string.Empty);
+                }
             }
             string submitButtonUrl = "";
             if (this is SubmitButtonTagHelper sbt)
