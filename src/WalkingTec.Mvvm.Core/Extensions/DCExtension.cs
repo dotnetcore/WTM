@@ -325,43 +325,43 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="wtmcontext"></param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, params Expression<Func<T, object>>[] IdFields) where T : TopBasePoco
-        {
-            var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
-            //循环所有关联外键
-            List<string> tableNameList = new List<string>();
-            foreach (var IdField in IdFields)
-            {
+        //public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, params Expression<Func<T, object>>[] IdFields) where T : TopBasePoco
+        //{
+        //    var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
+        //    //循环所有关联外键
+        //    List<string> tableNameList = new List<string>();
+        //    foreach (var IdField in IdFields)
+        //    {
 
-                //将外键 Id 用.分割，循环生成指向最终id的表达式，比如x=> x.a.b.Id
-                var fieldName = IdField.GetPropertyName(false);
-                //获取关联的类
-                string typename = "";
-                //如果外键名称不是‘id’，则根据model层的命名规则，它应该是xxxId，所以抹掉最后的 Id 应该是关联的类名
-                if (fieldName.ToLower() != "id")
-                {
-                    fieldName = fieldName.Remove(fieldName.Length - 2);
-                    var dtype = IdField.GetPropertyInfo().DeclaringType;
-                    if (dtype == typeof(TreePoco) && fieldName == "Parent")
-                    {
-                        typename = typeof(T).Name;
-                    }
-                    else
-                    {
-                        typename = dtype.GetSingleProperty(fieldName).PropertyType.Name;
-                    }
-                }
-                //如果是 Id，则本身就是关联的类
-                else
-                {
-                    typename = typeof(T).Name;
-                }
-                tableNameList.Add(typename);
+        //        //将外键 Id 用.分割，循环生成指向最终id的表达式，比如x=> x.a.b.Id
+        //        var fieldName = IdField.GetPropertyName(false);
+        //        //获取关联的类
+        //        string typename = "";
+        //        //如果外键名称不是‘id’，则根据model层的命名规则，它应该是xxxId，所以抹掉最后的 Id 应该是关联的类名
+        //        if (fieldName.ToLower() != "id")
+        //        {
+        //            fieldName = fieldName.Remove(fieldName.Length - 2);
+        //            var dtype = IdField.GetPropertyInfo().DeclaringType;
+        //            if (dtype == typeof(TreePoco) && fieldName == "Parent")
+        //            {
+        //                typename = typeof(T).Name;
+        //            }
+        //            else
+        //            {
+        //                typename = dtype.GetSingleProperty(fieldName).PropertyType.Name;
+        //            }
+        //        }
+        //        //如果是 Id，则本身就是关联的类
+        //        else
+        //        {
+        //            typename = typeof(T).Name;
+        //        }
+        //        tableNameList.Add(typename);
 
-            }
-            //var test = DPWhere(baseQuery, dps, tableNameList, IdFields);
-            return DPWhere(baseQuery, wtmcontext, tableNameList, IdFields);
-        }
+        //    }
+        //    //var test = DPWhere(baseQuery, dps, tableNameList, IdFields);
+        //    return DPWhere(baseQuery, wtmcontext, tableNameList, IdFields);
+        //}
 
         #region AddBy YOUKAI 20160310
         /// <summary>
@@ -370,10 +370,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <typeparam name="T">源数据类</typeparam>
         /// <param name="baseQuery">源Query</param>
         /// <param name="wtmcontext">wtm context</param>
-        /// <param name="tableName">关联数据权限的表名,如果关联外键为自身，则参数第一个为自身</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, List<string> tableName, params Expression<Func<T, object>>[] IdFields) where T : TopBasePoco
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, params Expression<Func<T, object>>[] IdFields) where T : TopBasePoco
         {
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
 
@@ -388,108 +387,99 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //循环所有关联外键
             foreach (var IdField in IdFields)
             {
-                bool mtm = false;
                 Expression exp = trueExp;
                 //将外键Id用.分割，循环生成指向最终id的表达式，比如x=> x.a.b.Id
                 var fullname = IdField.GetPropertyName();
                 string[] splits = fullname.Split('.');
-                int leftindex = splits[0].IndexOf('[');
-                if (leftindex > 0)
-                {
-                    mtm = true;
-                    splits[0] = splits[0].Substring(0, leftindex);
-                }
-                Expression peid = Expression.MakeMemberAccess(pe, pe.Type.GetSingleProperty(splits[0]));
-                Type middletype = null;
-                if (mtm)
-                {
-                    middletype = peid.Type.GetGenericArguments()[0];
 
-                }
-                else
+                List<(Expression exp, ParameterExpression pe, bool islist)> data = new System.Collections.Generic.List<(Expression, ParameterExpression, bool)>();
+                Expression iexp = pe;
+                ParameterExpression ipe = pe;
+
+                //格式化idfeild，保存在data中
+                for (int i=0;i<splits.Length;i++)
                 {
-                    for (int i = 1; i < splits.Length; i++)
+                    var item = splits[i];
+                    var proname = item;
+                    int lindex = proname.IndexOf('[');
+                    bool islist = false;
+                    if (lindex > 0)
                     {
-                        peid = Expression.MakeMemberAccess(peid, peid.Type.GetSingleProperty(splits[i]));
+                        islist = true;
+                        proname = proname.Substring(0, lindex);
                     }
-                    middletype = (peid as MemberExpression).Member.DeclaringType;
-                    if (middletype == typeof(TreePoco))
+                    iexp = Expression.MakeMemberAccess(iexp, iexp.Type.GetSingleProperty(proname));
+
+                    Type petype = null;
+                    if (islist == true)
                     {
-                        middletype = typeof(T);
+                        petype = iexp.Type.GetGenericArguments()[0];
+                    }
+                    else
+                    {
+                        petype = iexp.Type;
+                    }
+                    if (petype == typeof(TreePoco))
+                    {
+                        petype = typeof(T);
+                    }
+                    if(islist == true || i == splits.Length-1)
+                    {
+                        data.Add((iexp, ipe, islist));
+                        ipe = Expression.Parameter(petype);
+                        iexp = ipe;
                     }
                 }
+
+                //确定最终关联的表名
+                string tableName = "";
+                if(data.Count > 0)
+                {
+                    var last = data.Last().exp as MemberExpression;
+                    string fieldname = last?.Member?.Name;
+                    if (string.IsNullOrEmpty(fieldname) == false)
+                    {
+                        if (fieldname.ToLower() == "id")
+                        {
+                            tableName = last.Member.ReflectedType.Name;
+                        }
+                        else
+                        {
+                            var pro2 = wtmcontext.DC.GetPropertyNameByFk(last.Member.ReflectedType, fieldname);
+                            if (string.IsNullOrEmpty(pro2) == false)
+                            {
+                                tableName = last.Member.ReflectedType.GetSingleProperty(pro2).PropertyType.Name;
+                            }
+                        }
+                    }
+                }
+                
                 //如果dps为空，则拼接一个返回假的表达式，这样就查询不出任何数据
-                if (dps == null)
+                if (dps == null || tableName == "")
                 {
                     exp = falseExp;
                 }
                 else
                 {
-                    var fieldName = IdField.GetPropertyName(false);
-                    //如果外键名称不是‘id’，则根据model层的命名规则，它应该是xxxId，所以抹掉最后的 Id 应该是关联的类名
-                    if (fieldName.ToLower() != "id")
-                    {
-                        fieldName = fieldName.Remove(fieldName.Length - 2);
-                        var typeinfo = middletype.GetSingleProperty(fieldName);
-                        //var IsTableName = tableName?.Where(x => x == fieldName).FirstOrDefault();
-                        var IsTableName = tableName?.Where(x => x.ToLower() == typeinfo.PropertyType.Name.ToLower()).FirstOrDefault();
-                        if (string.IsNullOrEmpty(IsTableName))
-                        {
-                            continue;
-                        }
-                        fieldName = IsTableName;
-                        //typename = PropertyHelper.GetPropertyInfo(IdField).DeclaringType.GetProperty(fieldName).PropertyType.Name;
-                    }
-                    //如果是Id，则本身就是关联的类
-                    else
-                    {
-                        fieldName = tableName[tindex];
-                    }
                     var dpsSetting = wtmcontext.DataPrivilegeSettings;
-
                     //循环系统设定的数据权限，如果没有和关联类一样的表，则跳过
-                    if (dpsSetting.Where(x => x.ModelName == fieldName).SingleOrDefault() == null)
+                    if (dpsSetting.Where(x => x.ModelName == tableName).FirstOrDefault() == null)
                     {
                         continue;
                     }
                     //获取dps中关联到关联类的id列表
-                    var ids = dps.Where(x => x.TableName == fieldName).Select(x => x.RelateId).ToList();
+                    var ids = dps.Where(x => x.TableName == tableName).Select(x => x.RelateId).ToList();
                     //如果没有关联的id，则拼接一个返回假的where，是语句查询不到任何数据
-                    if (ids == null || ids.Count() == 0)
+                    if (ids == null || ids.Count == 0)
                     {
-                        if (mtm)
-                        {
-                            ParameterExpression midpe = Expression.Parameter(middletype);
-                            bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(middletype);
-                            if (isBasePoco)
-                            {
-                                exp = Expression.Equal(Expression.Property(midpe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
-                            }
-                            else
-                            {
-                                exp = falseExp;
-                            }
-                        }
-                        else
-                        {
-                            Type modelTye = typeof(T);
-                            bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelTye);
-                            if (isBasePoco)
-                            {
-                                exp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
-                            }
-                            else
-                            {
-                                exp = falseExp;
-                            }
-                        }
-                        //if (peid.Type == typeof(Guid))
+                        //bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(data.Last().pe.Type);
+                        //if (isBasePoco)
                         //{
-                        //    exp = Expression.Equal(peid, Expression.Constant(Guid.NewGuid()));
+                        //    exp = Expression.Equal(Expression.Property(data.Last().pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
                         //}
                         //else
                         //{
-                        //    exp = Expression.Equal(peid, Expression.Constant(null));
+                            exp = falseExp;
                         //}
                     }
                     //如果有关联 Id
@@ -499,30 +489,30 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         //如果关联 Id 包括null，则代表可以访问所有数据，就不需要再拼接where条件了
                         if (!ids.Contains(null))
                         {
-                            if (mtm == true)
+                            for(int i=data.Count-1; i>=0; i--)
                             {
-                                ParameterExpression midpe = Expression.Parameter(middletype);
-                                Expression middleid = Expression.PropertyOrField(midpe, IdField.GetPropertyName(false));
+                                var d = data[i];
+                                if(d.islist == true)
+                                {
+                                    var lastd = data[i + 1];
+                                    var queryable = Expression.Call(
+                                         typeof(Queryable),
+                                         "AsQueryable",
+                                         new Type[] { lastd.pe.Type },
+                                         d.exp);
 
-                                var queryable = Expression.Call(
-                                     typeof(Queryable),
-                                     "AsQueryable",
-                                     new Type[] { middletype },
-                                     peid);
+                                    exp = Expression.Call(
+                                         typeof(Queryable),
+                                         "Any",
+                                         new Type[] { lastd.pe.Type },
+                                         queryable,
+                                         Expression.Lambda(typeof(Func<,>).MakeGenericType(lastd.pe.Type, typeof(bool)), exp, new ParameterExpression[] { lastd.pe }));
 
-                                List<Guid> ddd = new List<Guid>();
-
-                                exp = Expression.Call(
-                                     typeof(Queryable),
-                                     "Any",
-                                     new Type[] { middletype },
-                                     queryable,
-                                     Expression.Lambda(typeof(Func<,>).MakeGenericType(middletype, typeof(bool)), ids.GetContainIdExpression(middletype, midpe, middleid).Body, new ParameterExpression[] { midpe }));
-
-                            }
-                            else
-                            {
-                                exp = ids.GetContainIdExpression(typeof(T), pe, peid).Body;
+                                }
+                                else
+                                {
+                                    exp = ids.GetContainIdExpression(d.pe.Type, d.pe, d.exp).Body;
+                                }
                             }
                         }
                     }
