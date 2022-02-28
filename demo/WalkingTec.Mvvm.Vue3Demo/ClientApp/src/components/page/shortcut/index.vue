@@ -45,7 +45,7 @@
 	        background:#F8F8F8;
 	        color:#333;
 	        padding:0.6rem 1rem;
-	        font-size:22px;
+	        font-size:40px;
 	        margin-bottom:0.8rem
 	    }
 	}
