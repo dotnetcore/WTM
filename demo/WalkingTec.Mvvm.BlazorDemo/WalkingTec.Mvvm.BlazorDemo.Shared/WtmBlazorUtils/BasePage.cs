@@ -232,7 +232,17 @@ namespace WtmBlazorUtils
 
         public async Task<LoginUserInfo> GetUserInfo()
         {
-            string rv = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmuser");
+            string part = "";
+            string rv = "";
+            while(true)
+            {
+                part = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", System.Threading.CancellationToken.None, "wtmuser", rv.Length);
+                rv += part;
+                if (part.Length < 20000)
+                {
+                    break;
+                }
+            }
             var user = JsonSerializer.Deserialize<LoginUserInfo>(rv);
             JsonSerializerOptions options = new JsonSerializerOptions
             {
