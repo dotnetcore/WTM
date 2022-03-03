@@ -42,9 +42,9 @@ namespace WtmBlazorUtils
         }
 
 
-        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.Large)
+        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.ExtraExtraLarge, bool isMax = false)
         {
-            return await WtmBlazor.OpenDialog(Title, Values, size);
+            return await WtmBlazor.OpenDialog(Title, Values, size, isMax);
         }
 
         public async Task<bool> PostsData(object data, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
@@ -205,24 +205,24 @@ namespace WtmBlazorUtils
 
         public async Task<string> GetToken()
         {
-            return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmtoken");
+            return await GetLocalStorage<string>("wtmtoken");
         }
 
         public async Task<string> GetRefreshToken()
         {
-            return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmrefreshtoken");
+            return await GetLocalStorage<string>("wtmrefreshtoken");
         }
 
         public async Task SetToken(string token, string refreshtoken)
         {
-            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", "wtmtoken", token);
-            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", "wtmrefreshtoken", refreshtoken);
+            await SetLocalStorage("wtmtoken", token);
+            await SetLocalStorage("wtmrefreshtoken", refreshtoken);
         }
 
         public async Task DeleteToken()
         {
-            await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmtoken");
-            await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmrefreshtoken");
+            await DeleteLocalStorage("wtmtoken");
+            await DeleteLocalStorage("wtmrefreshtoken");
         }
 
         public async Task SetUserInfo(LoginUserInfo userinfo)
@@ -232,18 +232,7 @@ namespace WtmBlazorUtils
 
         public async Task<LoginUserInfo> GetUserInfo()
         {
-            string part = "";
-            string rv = "";
-            while(true)
-            {
-                part = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", System.Threading.CancellationToken.None, "wtmuser", rv.Length);
-                rv += part;
-                if (part.Length < 20000)
-                {
-                    break;
-                }
-            }
-            var user = JsonSerializer.Deserialize<LoginUserInfo>(rv);
+            var user = await GetLocalStorage<LoginUserInfo>("wtmuser");
             JsonSerializerOptions options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -252,6 +241,43 @@ namespace WtmBlazorUtils
             user.Attributes["Menus"] = JsonSerializer.Deserialize<SimpleMenuApi[]>(user.Attributes["Menus"].ToString(), options);
             return user;
         }
+
+        public async Task<T> GetLocalStorage<T>(string key) where T : class
+        {
+            string rv = "";
+            while (true)
+            {
+                string part = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", System.Threading.CancellationToken.None, key, rv.Length);
+                rv += part;
+                if (part.Length < 20000)
+                {
+                    break;
+                }
+            }
+            if(typeof(T) == typeof(string))
+            {
+                return rv as T;
+            }
+            var obj = JsonSerializer.Deserialize<T>(rv);
+            return obj;
+        }
+
+        public async Task SetLocalStorage<T>(string key, T data) where T : class
+        {
+            if (typeof(T) == typeof(string))
+            {
+                await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", key, data);
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", key, JsonSerializer.Serialize(data));
+            }
+        }
+        public async Task DeleteLocalStorage(string key)
+        {
+            await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", key);
+        }
+
 
         public bool IsAccessable(string url)
         {
@@ -405,15 +431,22 @@ namespace WtmBlazorUtils
             }
         }
 
-        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.None)
+        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size? size = null, bool isMax = false)
         {
             TaskCompletionSource<DialogResult> ReturnTask = new TaskCompletionSource<DialogResult>();
             SetValuesParser p = new SetValuesParser();
+            if(size != null)
+            {
+                size = Size.ExtraLarge;
+            }
             DialogOption option = new DialogOption
             {
                 ShowCloseButton = false,
                 ShowFooter = false,
-                Size = size,
+                IsDraggable = true,
+                ShowMaximizeButton = !isMax,
+                FullScreenSize = isMax==true?FullScreenSize.Always:FullScreenSize.Medium,
+                Size =  size.Value,
                 Title = Title
             };
             option.BodyTemplate = builder =>
