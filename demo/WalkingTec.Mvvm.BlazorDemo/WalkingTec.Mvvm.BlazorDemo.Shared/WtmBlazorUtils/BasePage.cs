@@ -248,6 +248,10 @@ namespace WtmBlazorUtils
             while (true)
             {
                 string part = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", System.Threading.CancellationToken.None, key, rv.Length);
+                if(part == null)
+                {
+                    return null;
+                }
                 rv += part;
                 if (part.Length < 20000)
                 {

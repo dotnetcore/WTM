@@ -24,7 +24,7 @@ window.localStorageFuncs = {
         }
         var t = localStorage.getItem(key);
         if (t == null) {
-            t = "";
+            return null;
         }
         var rv;
         if (t.length - start > 20000) {

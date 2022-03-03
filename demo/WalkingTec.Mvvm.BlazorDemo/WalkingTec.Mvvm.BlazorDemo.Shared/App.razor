@@ -2,37 +2,40 @@
 @inherits BasePage
 @inject NavigationManager NavigationManager
 
-@if (hasToken == true || IsPublic == true)
-{
-    <Router AppAssembly="@typeof(Program).Assembly" OnNavigateAsync="OnNavigateAsync">
-        <Found Context="routeData">
-            <CascadingValue Value="User" IsFixed="false">
-                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-            </CascadingValue>
-        </Found>
-        <NotFound>
-            <LayoutView Layout="@typeof(EmptyLayout)">
-                <p>Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
-}
-else if (hasToken == false)
-{
-    <Router AppAssembly="@typeof(Program).Assembly">
-        <Found Context="routeData">
-            <CascadingValue Value="User" IsFixed="false">
-                <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }" />
-            </CascadingValue>
-        </Found>
-        <NotFound>
-            <LayoutView Layout="@typeof(EmptyLayout)">
-                <p>Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
-}
-@code{
+<BootstrapBlazorRoot>
+    @if (hasToken == true || IsPublic == true)
+    {
+        <Router AppAssembly="@typeof(Program).Assembly" OnNavigateAsync="OnNavigateAsync">
+            <Found Context="routeData">
+                <CascadingValue Value="User" IsFixed="false">
+                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                </CascadingValue>
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(EmptyLayout)">
+                    <p>Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    }
+    else if (hasToken == false)
+    {
+        <Router AppAssembly="@typeof(Program).Assembly">
+            <Found Context="routeData">
+                <CascadingValue Value="User" IsFixed="false">
+                    <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }" />
+                </CascadingValue>
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(EmptyLayout)">
+                    <p>Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    }
+</BootstrapBlazorRoot>
+
+@code {
 
     private LoginUserInfo User;
     private bool? hasToken { get; set; }
