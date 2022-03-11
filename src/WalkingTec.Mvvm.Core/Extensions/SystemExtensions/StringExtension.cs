@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 var s = "";
                 if (Format == null)
                 {
-                    s = item.ToString();
+                    s = item?.ToString()??"";
                 }
                 else
                 {

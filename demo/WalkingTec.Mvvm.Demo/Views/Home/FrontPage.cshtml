@@ -2,6 +2,7 @@
 @using System.Text.Json
 
 <div class="layui-row layui-col-space15" id="frontpage" >
+  <div id="demo1"></div>
   <div class="layui-col-md8">
     <div class="layui-row layui-col-space15">
       <div class="layui-col-md6">
@@ -227,6 +228,17 @@
 </div>
 <script>
   $("#frontpage").parents(".layui-card").css("background-color", "#eee").css("height","unset");
+
+  var demo1 = xmSelect.render({
+		el: '#demo1',
+		language: 'zn',
+		data: [
+			{name: '张三', value: 1},
+			{name: '李四', value: 2},
+			{name: '王五', value: 3},
+		]
+	})
+
   $.get("/Home/GetGithubInfo", function (r) {
     if (r === undefined || r === null) {
       return;
