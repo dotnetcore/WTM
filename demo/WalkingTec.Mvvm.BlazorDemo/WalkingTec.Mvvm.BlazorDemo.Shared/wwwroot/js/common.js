@@ -41,6 +41,9 @@ window.localStorageFuncs = {
 };
 
 window.urlFuncs = {
+    getCurrentUrl: function () {
+        return window.location.href;
+    },
     redirect: function (url) {
         window.location.href = url;
     },

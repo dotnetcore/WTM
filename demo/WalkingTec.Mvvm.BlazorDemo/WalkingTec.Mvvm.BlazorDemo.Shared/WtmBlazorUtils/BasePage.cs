@@ -33,6 +33,23 @@ namespace WtmBlazorUtils
             set;
         }
 
+        public object _userinfo;
+
+        [CascadingParameter(Name = "BodyContext")]
+        public object UserInfoForDialog
+        {
+            get
+            {
+                return _userinfo;
+            }
+            set
+            {
+                _userinfo = value;
+                UserInfo = value as LoginUserInfo;
+            }
+        }
+
+
         [Parameter]
         public Action<DialogResult> OnCloseDialog { get; set; }
 
@@ -310,14 +327,9 @@ namespace WtmBlazorUtils
 
         public async Task Download(string url, object data, HttpMethodEnum method = HttpMethodEnum.POST)
         {
-            var server = WtmBlazor.ConfigInfo.Domains.Where(x => x.Key.ToLower() == "serverpub").Select(x=>x.Value).FirstOrDefault();
-            if (server != null)
-            {
-                url = server.Address.TrimEnd('/') + url;
-            }
+            url = WtmBlazor.GetServerUrl() + url;
             await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data, CoreProgram.DefaultPostJsonOption), method.ToString());
         }
-
 
     }
 
@@ -481,6 +493,22 @@ namespace WtmBlazorUtils
             await Dialog.Show(option);
             var rv = await ReturnTask.Task;
             return rv;
+        }
+        public string GetServerUrl()
+        {
+            var server = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "serverpub").Select(x => x.Value).FirstOrDefault();
+            if (server == null)
+            {
+                server = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "server").Select(x => x.Value).FirstOrDefault();
+            }
+            if (server != null)
+            {
+                return server.Address.TrimEnd('/');
+            }
+            else
+            {
+                return "";
+            }
         }
 
     }
