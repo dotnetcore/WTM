@@ -745,10 +745,11 @@ namespace WalkingTec.Mvvm.Mvc
                 g.DrawLine(new Pen(clr), x1, y1, x2, y2);
             }
             //画验证码
+            System.Drawing.Text.InstalledFontCollection MyFont = new System.Drawing.Text.InstalledFontCollection();
             for (int i = 0; i < chkCode.Length; i++)
             {
-                string fnt = font[rnd.Next(font.Length)];
-                Font ft = new Font(fnt, fontSize);
+                //string fnt = font[rnd.Next(font.Length)];
+                Font ft = new Font(MyFont.Families[0].Name, fontSize);
                 Color clr = color[rnd.Next(color.Length)];
                 g.DrawString(chkCode[i].ToString(), ft, new SolidBrush(clr), (float)i * 18, (float)0);
             }
