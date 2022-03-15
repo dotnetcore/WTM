@@ -31,6 +31,7 @@ namespace WalkingTec.Mvvm.Mvc
     {
 
         [HttpPost]
+        [Public]
         public IActionResult Selector(string _DONOT_USE_VMNAME
             , string _DONOT_USE_KFIELD
             , string _DONOT_USE_VFIELD
@@ -449,6 +450,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         }
 
+        [Public]
         public IActionResult OutSide(string url)
         {
             url = HttpUtility.UrlDecode(url);
