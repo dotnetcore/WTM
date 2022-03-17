@@ -1,6 +1,6 @@
 <template>
-  <div class="external-wrap">
-    <iframe id="mainiframe" :src="url" width="100%" height="700" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
+  <div class="external-wrap" style="height: 100%;">
+    <iframe id="mainiframe" :src="url" width="100%" style="height: 100%;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
   </div>
 </template>
 

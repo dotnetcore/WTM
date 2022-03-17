@@ -7,10 +7,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
     public class LayuiTreeItem
     {
-        [JsonPropertyName("title")]
+        [JsonPropertyName("name")]
         public string Title { get; set; }
 
-        [JsonPropertyName("id")]
+        [JsonPropertyName("value")]
         public string Id { get; set; }
 
         [JsonPropertyName("children")]
@@ -22,8 +22,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         [JsonPropertyName("spread")]
         public bool Expand { get; set; }
 
-        [JsonPropertyName("checked")]
+        [JsonPropertyName("selected")]
         public bool Checked { get; set; }
+
+        [JsonPropertyName("disabled")]
+        public bool Disabled { get; set; }
 
         [JsonPropertyName("level")]
         public int Level { get; set; }

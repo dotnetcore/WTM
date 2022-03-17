@@ -467,6 +467,9 @@ window.ff = {
                         , btn: []
                         , id: windowid //设定一个id，防止重复弹出
                         , content: str
+                        , success: function (layero, index) {
+                            document.getElementById('layui-layer' + index).getElementsByClassName('layui-layer-content')[0].style.overflow = 'unset';
+                        }
                         , resizing: function (layero) {
                             ff.triggerResize();
                           $(layero).find("div[ischart = '1']").each(
@@ -690,9 +693,7 @@ window.ff = {
                 form.render('radio', targetfilter);
                 break;
             case "tree":
-                layui.tree.reload(targetid, {
-                    data: []
-                });
+                window[targetid].update({ data: [] });
                 break;
             case "transfer":
                 layui.transfer.reload(targetid, {
@@ -707,9 +708,7 @@ window.ff = {
                     var item = null;
 
                     if (controltype === "tree") {
-                        layui.tree.reload(targetid, {
-                            data: ff.getTreeItems(data.Data)
-                        });
+                        window[targetid].update({ data: data.Data });
                     }
                     if (controltype === "transfer") {
                         layui.transfer.reload(targetid, {
@@ -787,9 +786,7 @@ window.ff = {
                var item = null;
                if (controltype === "tree") {
                    var da = ff.getTreeItems(data.Data, svals);
-                   layui.tree.reload(controlid, {
-                       data: da
-                   });
+                   window[controlid].update({ data: da });
                    if (cb !== undefined && cb != null) {
                        cb();
                    }
@@ -1249,21 +1246,20 @@ window.ff = {
 
         for (var i = 0; i < data.length; i++) {
             var item = {};
-            item.id = data[i].Value;
-            item.title = data[i].Text;
-            item.href = data[i].Url;
-            item.spread = data[i].Expended;
-            item.checked = data[i].Selected  || svals.indexOf(data[i].Value) > -1;
+            item.value = data[i].Value;
+            item.name = data[i].Text;
+            item.disabled = data[i].Disabled;
+            item.selected = data[i].Selected  || svals.indexOf(data[i].Value) > -1;
 
             if (data[i].Children != null && data[i].Children.length > 0) {
                 item.children = this.getTreeItems(data[i].Children, svals);
 
-                for (var j = 0; j < item.children.length; j++) {
-                    if (item.children[j].checked == true || item.children[j].spread == true) {
-                        item.spread = true;
-                        break;
-                    }
-                }
+            //    for (var j = 0; j < item.children.length; j++) {
+            //        if (item.children[j].checked == true || item.children[j].spread == true) {
+            //            item.spread = true;
+            //            break;
+            //        }
+            //    }
             }
             rv.push(item);
         }

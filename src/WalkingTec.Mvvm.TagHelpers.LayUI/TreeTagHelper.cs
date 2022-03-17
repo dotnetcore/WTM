@@ -12,6 +12,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     [HtmlTargetElement("wt:tree",  TagStructure = TagStructure.WithoutEndTag)]
     public class TreeTagHelper : BaseFieldTag
     {
+        public string EmptyText { get; set; }
         public ModelExpression Items { get; set; }
         public bool ShowLine { get; set; } = true;
         /// <summary>
@@ -50,59 +51,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             bool MultiSelect = false;
             var type = Field.Metadata.ModelType;
-            if (type.IsArray || (type.IsGenericType && typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition())))// Array or List
+            if (Field.Name.Contains("[") || type.IsArray || type.IsList())// Array or List
             {
                 MultiSelect = true;
             }
-            string oncheck = "";
-            string onclick = "";
-            if (MultiSelect != true)
+            if (EmptyText == null)
             {
-                var formid = "";
-                if (context.Items.ContainsKey("formid"))
-                {
-                    formid = $",'{context.Items["formid"]}form'";
-                }
-
-                onclick = $@"
-                ,click: function(data){{
-                    var ele = data.elem.find('.layui-tree-main:first');
-                    if(last{Id} != null){{
-                        last{Id}.css('background-color','');
-                        last{Id}.find('.layui-tree-txt').css('color','');
-                    }}
-                    $('#tree{Id}hidden').html('');
-                    if(last{Id} != null && last{Id}.is(ele)){{
-                        last{Id} = null;
-                    }}
-                    else{{
-                        ele.css('background-color','#5fb878');
-                        ele.find('.layui-tree-txt').css('color','#fff');
-                        $('#tree{Id}hidden').append(""<input type='hidden' name='{Field?.Name}' value='""+data.data.id+""'/>"");
-                        last{Id} = ele;
-                    }}
-                    {FormatFuncName(CheckFunc)};
-                  }}";
+                EmptyText = THProgram._localizer["Sys.PleaseSelect"];
             }
-            else
-            {
-                onclick = $@"
-,click: function(data){{
-    {FormatFuncName(ClickFunc)};
-  }}";
-
-            }
-            oncheck = $@"
-                ,oncheck: function(data){{
-                    if(loaded{Id} == false) return;
-                    var checkData = layui.tree.getChecked('{Id}');
-                    var ids = ff.getTreeChecked(checkData);
-                    $('#tree{Id}hidden').html('');
-                    for(var i=0;i<ids.length;i++){{
-                        $('#tree{Id}hidden').append(""<input type='hidden' name='{Field?.Name}' value='""+ids[i]+""'/>"");
-                    }}
-                    {FormatFuncName(CheckFunc)};
-                  }}";
 
             output.TagName = "div";
             output.Attributes.Add("id", "div" + Id);
@@ -134,31 +90,28 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
                 var script = $@"
 <script>
-layui.use(['tree'],function(){{
-  var last{Id} = null;
-  var loaded{Id} = false;
-  layui.tree.render({{
-    id:'{Id}',elem: '#div{Id}',onlyIconControl:{(!MultiSelect).ToString().ToLower()}, showCheckbox:{MultiSelect.ToString().ToLower()},showLine:{ShowLine.ToString().ToLower()}
-    ,data: {JsonSerializer.Serialize(treeitems)} {oncheck} {onclick}
-  }});
-  loaded{Id} = true;";
-
-            var defaultselect = "";
-            if (Field.Model != null) {
-               defaultselect = $@"
-    var selected = $(""div[data-id='{Field.Model.ToString()}']"");
-    var selected2 = selected.find('.layui-tree-main:first');
-    selected2.css('background-color','#5fb878');
-    selected2.find('.layui-tree-txt').css('color','#fff');
-    last{Id} = selected2;
-";
-            }
-
-            if (MultiSelect == false && Field.Model != null)
-                {
-                script += defaultselect;
-                }
-                script += $@"
+var {Id} = xmSelect.render({{
+    el: '#div{Id}',
+    name:'{Field.Name}',
+    tips:'{EmptyText}',
+	autoRow: false,
+	filterable: true,
+    {(Required == true?$"layVerify: 'required',layReqText:'{THProgram._localizer["Validate.{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}'," :"")}    
+    {(MultiSelect==false? "radio: true,":"")}
+	tree: {{
+        strict: false,
+		show: true,
+		showFolderIcon: true,
+		showLine: true,
+		indent: 20,
+		expandedKeys: [ -3 ],
+	}},
+	toolbar: {{
+        show: true,
+		list: ['ALL', 'REVERSE', 'CLEAR']
+	}},
+	height: '400px',
+	data:  {JsonSerializer.Serialize(treeitems)}
 }})
 </script>
 ";
@@ -167,7 +120,6 @@ layui.use(['tree'],function(){{
                 {
                     output.PostElement.AppendHtml($@"<script>
 ff.LoadComboItems('tree','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(vals)},function(){{
-    {defaultselect}
 }})
 
 </script>");
@@ -206,6 +158,7 @@ ff.LoadComboItems('tree','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Seria
                     Title = s.Text,
                     Url = s.Url,
                     Expand = s.Expended,
+                    Disabled = s.Disabled
                     //Children = new List<LayuiTreeItem>()
                 };
                 if (values.Contains(s.Value.ToString()))
