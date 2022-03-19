@@ -96,20 +96,29 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             if (!(this is DisplayTagHelper) && ((Field.Metadata.IsRequired && Field.Name.Contains("[-1]")==false) || Required == true))
             {
                 requiredDot = "<font color='red'>*</font>";
-                if (!(this is UploadTagHelper || this is RadioTagHelper || this is CheckBoxTagHelper || this is MultiUploadTagHelper || this is ColorPickerTagHelper || this is TreeTagHelper || this is SliderTagHelper || this is TransferTagHelper)) // 上传组件自定义验证
+                if (!(this is UploadTagHelper || this is RadioTagHelper || this is CheckBoxTagHelper || this is MultiUploadTagHelper || this is ColorPickerTagHelper  || this is SliderTagHelper || this is TransferTagHelper)) // 上传组件自定义验证
                 {
                     //richtextbox不需要进行必填验证
                     if (output.Attributes["isrich"] == null)
                     {
-                        if (this is ComboBoxTagHelper combo && combo.MultiSelect.Value == true)
+                        //combobox和tree用xmselect控件的验证
+                        if (this is ComboBoxTagHelper combo || this is TreeTagHelper)
                         {
-                            //output.Attributes.Add("lay-verify", "selectRequired");
+                            var script = $@"
+<script>
+    window['{this.Id}'].update({{
+    layVerify:'required',
+    layReqText:'{THProgram._localizer["Validate.{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}'
+}});
+</script>
+";
+                            output.PostElement.AppendHtml(script);
                         }
                         else
                         {
                             output.Attributes.Add("lay-verify", "required");
+                            output.Attributes.Add("lay-reqText", $"{THProgram._localizer["Validate.{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}");
                         }
-                        output.Attributes.Add("lay-reqText", $"{THProgram._localizer["Validate.{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}");
                     }
                 }
             }

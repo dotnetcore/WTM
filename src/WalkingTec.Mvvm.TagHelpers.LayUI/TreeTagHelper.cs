@@ -6,6 +6,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.Extensions.Options;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -47,6 +48,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </para>
         /// </summary>
         public string CheckFunc { get; set; }
+        public bool AutoRow { get; set; }
+        public bool EnableSearch { get; set; }
+
+        public TreeTagHelper(IOptionsMonitor<Configs> configs)
+        {
+            if (EmptyText == null)
+            {
+                EmptyText = THProgram._localizer["Sys.PleaseSelect"];
+            }
+            EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
+        }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             bool MultiSelect = false;
@@ -55,13 +68,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 MultiSelect = true;
             }
-            if (EmptyText == null)
-            {
-                EmptyText = THProgram._localizer["Sys.PleaseSelect"];
-            }
 
             output.TagName = "div";
-            output.Attributes.Add("id", "div" + Id);
+            output.Attributes.Add("id", Id);
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("wtm-ctype", "tree");
             output.Attributes.Add("wtm-name", Field.Name);
@@ -91,24 +100,19 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 var script = $@"
 <script>
 var {Id} = xmSelect.render({{
-    el: '#div{Id}',
+    el: '#{Id}',
     name:'{Field.Name}',
     tips:'{EmptyText}',
-	autoRow: false,
-	filterable: true,
-    {(Required == true?$"layVerify: 'required',layReqText:'{THProgram._localizer["Validate.{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}'," :"")}    
-    {(MultiSelect==false? "radio: true,":"")}
+	autoRow: {AutoRow.ToString().ToLower()},
+	filterable: {EnableSearch.ToString().ToLower()},
+    {(MultiSelect == false ? "radio: true,clickClose: true,model: { label: { type: 'text' }},toolbar: {show: true,list: ['CLEAR']}," : "")}
+    {(MultiSelect == true ? "toolbar: {show: true,list: ['ALL', 'REVERSE', 'CLEAR']}," : "")}
 	tree: {{
         strict: false,
 		show: true,
 		showFolderIcon: true,
 		showLine: true,
-		indent: 20,
-		expandedKeys: [ -3 ],
-	}},
-	toolbar: {{
-        show: true,
-		list: ['ALL', 'REVERSE', 'CLEAR']
+		indent: 20
 	}},
 	height: '400px',
 	data:  {JsonSerializer.Serialize(treeitems)}
