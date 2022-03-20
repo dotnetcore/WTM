@@ -2,6 +2,9 @@
 
 ## v6.x.x
 
+##6.0.7(2022-3-21) 
+* **HotFix：**  修复使用用xmselect引发的联动和TreeContainer的bug
+
 ##6.0.6(2022-3-20) 
 * **修改：**  使用xmselect控件重写了Layui的Combobox和Tree，老用户更新的时候需要手动添加xmselect的js文件：https://gitee.com/maplemei/xm-select/releases/v1.2.4
 把这个文件放到wwwroot/layui下面。LayUI项目的用户还需要手动在/Views/Shared/_Layout.cshtml文件中加入对这个js的引用， 其他UI类型的项目不需要，但是因为其他UI类型的项目代码生成器也是用的layui的界面，所以还是需要copy xm-select的js文件到wwwroot/layui下面的
@@ -29,6 +32,8 @@
 
 ## v5.x.x 
 
+##5.7.9(2022-3-21) 
+* **HotFix：**  修复使用用xmselect引发的联动和TreeContainer的bug
 
 ##5.7.7(2022-3-20) 
 * **修改：**  使用xmselect控件重写了Layui的Combobox和Tree，老用户更新的时候需要手动添加xmselect的js文件：https://gitee.com/maplemei/xm-select/releases/v1.2.4
