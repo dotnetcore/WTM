@@ -2,6 +2,18 @@
 
 ## v6.x.x
 
+##6.0.6(2022-3-20) 
+* **修改：**  使用xmselect控件重写了Layui的Combobox和Tree，老用户更新的时候需要手动添加xmselect的js文件：https://gitee.com/maplemei/xm-select/releases/v1.2.4
+把这个文件放到wwwroot/layui下面。LayUI项目的用户还需要手动在/Views/Shared/_Layout.cshtml文件中加入对这个js的引用， 其他UI类型的项目不需要，但是因为其他UI类型的项目代码生成器也是用的layui的界面，所以还是需要copy xm-select的js文件到wwwroot/layui下面的
+
+* **修改：**  Layui模式下修复了数据列表指定line-height的bug
+* **修改：**  Layui模式下MakeViewButton方法现在可以生成更美观的图片预览
+* **修改：**  验证码现在会自动读取系统安装的字体，linux下部署的时候不会出现找不到字体的问题了
+* **修改：**  Blazor项目默认使用自带的字体文件
+* **修改：**  修复Blazor项目中向localstorage存储大量数据报错的问题
+* **修改：**  Blazor的弹出窗口现在可以最大化和拖动
+* **修改：**  修复Blazor项目中切换多语言有可能报错的问题
+
 ##6.0.5(2022-2-28) 
 * **修改：**  默认初始化数据中加入了普通用户角色
 * **修改：**  优化了数据权限查询语句
@@ -16,6 +28,19 @@
 * **修改：**  修改了layui多选控件设置必填的bug
 
 ## v5.x.x 
+
+
+##5.7.7(2022-3-20) 
+* **修改：**  使用xmselect控件重写了Layui的Combobox和Tree，老用户更新的时候需要手动添加xmselect的js文件：https://gitee.com/maplemei/xm-select/releases/v1.2.4
+把这个文件放到wwwroot/layui下面。LayUI项目的用户还需要手动在/Views/Shared/_Layout.cshtml文件中加入对这个js的引用， 其他UI类型的项目不需要，但是因为其他UI类型的项目代码生成器也是用的layui的界面，所以还是需要copy xm-select的js文件到wwwroot/layui下面的
+
+* **修改：**  Layui模式下修复了数据列表指定line-height的bug
+* **修改：**  Layui模式下MakeViewButton方法现在可以生成更美观的图片预览
+* **修改：**  验证码现在会自动读取系统安装的字体，linux下部署的时候不会出现找不到字体的问题了
+* **修改：**  Blazor项目默认使用自带的字体文件
+* **修改：**  修复Blazor项目中向localstorage存储大量数据报错的问题
+* **修改：**  Blazor的弹出窗口现在可以最大化和拖动
+* **修改：**  修复Blazor项目中切换多语言有可能报错的问题
 
 ##5.7.6(2022-2-28) 
 * **修改：**  默认初始化数据中加入了普通用户角色
