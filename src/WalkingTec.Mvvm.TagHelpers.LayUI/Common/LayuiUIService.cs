@@ -197,10 +197,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             }
             rv += click;
             return rv;
-
-
-
-            return MakeDialogButton(buttonType, $"/_Framework/ViewFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}&width={width}", buttonText, width, height, title, null, true, resizable, maxed,buttonClass, style);
         }
 
         public string MakeScriptButton(ButtonTypesEnum buttonType, string buttonText, string script = "", string buttonID = null, string url = null, string buttonClass = null, string style=null)
