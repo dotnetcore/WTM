@@ -30,5 +30,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         [JsonPropertyName("level")]
         public int Level { get; set; }
+
+        [JsonPropertyName("icon")]
+        public string Icon { get; set; }
     }
 }

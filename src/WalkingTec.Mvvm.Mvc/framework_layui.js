@@ -1162,7 +1162,8 @@ window.ff = {
             item.value = data[i].Value;
             item.name = data[i].Text;
             item.disabled = data[i].Disabled;
-            item.selected = data[i].Selected  || svals.indexOf(data[i].Value) > -1;
+            item.selected = data[i].Selected || svals.indexOf(data[i].Value) > -1;
+            item.icon = data[i].Icon;
 
             if (data[i].Children != null && data[i].Children.length > 0) {
                 item.children = this.getTreeItems(data[i].Children, svals);
@@ -1173,7 +1174,6 @@ window.ff = {
     },
 
     getComboItems: function (data, svals) {
-        debugger;
         var rv = [];
         if (svals == undefined || svals == null) {
             svals = [];
@@ -1184,7 +1184,7 @@ window.ff = {
             item.name = data[i].Text;
             item.disabled = data[i].Disabled;
             item.selected = data[i].Selected || svals.indexOf(data[i].Value) > -1;
-
+            item.icon = data[i].Icon;
             if (data[i].Children != null && data[i].Children.length > 0) {
                 item.children = this.getTreeItems(data[i].Children, svals);
             }

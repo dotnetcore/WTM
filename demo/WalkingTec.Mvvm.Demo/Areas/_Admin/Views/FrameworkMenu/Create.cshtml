@@ -63,7 +63,10 @@
     }
   }
   function ModelChange(data) {
-    var st = $('#FrameworkMenuVM_SelectedModule').find('option:selected').text();
+    var st = "";
+    if(data.arr.length>0){
+      st = data.arr[0].name;
+    }
     $('#FrameworkMenuVM_Entity_PageName').val(st);
   }
 </script>

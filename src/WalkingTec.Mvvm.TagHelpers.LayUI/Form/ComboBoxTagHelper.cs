@@ -236,12 +236,55 @@ var {Id} = xmSelect.render({{
     tips:'{EmptyText}',    
 	autoRow: {AutoRow.ToString().ToLower()},
 	filterable: {EnableSearch.ToString().ToLower()},
-    {(MultiSelect == false ? "radio: true,clickClose: true,model: { label: { type: 'text' }},toolbar: {show: true,list: ['CLEAR']}," : "")}
-    {(MultiSelect == true ? "toolbar: {show: true,list: ['ALL', 'REVERSE', 'CLEAR']}," : "")}
+    template({{ item, sels, name, value }}){{
+        if(item.icon !== undefined && item.icon != """"&& item.icon != null){{
+			return '<i class=""'+item.icon+'""></i>' + item.name;
+        }}
+        else{{
+            return item.name;
+        }}
+	}},
+    {(MultiSelect == false ? $@"
+    radio: true,
+    clickClose: true,
+    model: {{
+        label: {{
+            type: 'abc' ,
+            abc: {{
+                template: function(item, sels){{
+                    if(sels[0].icon !== undefined && sels[0].icon != """" && sels[0].icon != null){{
+                        return '<i class=""'+sels[0].icon+'""></i>' + sels[0].name;
+                    }}
+                    else{{
+                        return sels[0].name;
+                    }}
+                }}
+            }}
+        }}
+    }},
+    toolbar: {{
+        show: true,
+        list: ['CLEAR']}}," : $@"
+        toolbar: {{show: true,list: ['ALL', 'REVERSE', 'CLEAR']}},
+        model: {{
+		label: {{
+			block: {{
+				template: function(item, sels){{
+                    if(item.icon !== undefined && item.icon != """"&& item.icon != null){{
+					    return '<i class=""'+item.icon+'""></i>' + item.name;
+                    }}
+                    else{{
+                        return item.name;
+                    }}
+				}},
+			}},
+		}}
+	}},
+")}
 	height: '400px',
     on:function(data){{
         {((LinkField != null || string.IsNullOrEmpty(LinkId) == false)?@$"
-            if (eval(""{(string.IsNullOrEmpty(ChangeFunc)?"1==1":ChangeFunc+ "(data)")}"")) {{
+            if (eval(""{(string.IsNullOrEmpty(ChangeFunc)?"1==1":ChangeFunc)}"") != false) {{
                 var u = ""{(TriggerUrl??"")}"";
                 if (u.indexOf(""?"") == -1) {{
                     u += ""?t="" + new Date().getTime();
@@ -273,7 +316,8 @@ var {Id} = xmSelect.render({{
                     Id = s.Value.ToString(),
                     Title = s.Text,
                     Disabled = s.Disabled,
-                    Checked = s.Selected
+                    Checked = s.Selected,
+                    Icon = s.Icon
                 };
                 if (values.Contains(s.Value.ToString().ToLower()))
                 {
