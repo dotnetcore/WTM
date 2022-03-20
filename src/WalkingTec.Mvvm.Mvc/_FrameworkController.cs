@@ -751,11 +751,9 @@ namespace WalkingTec.Mvvm.Mvc
                 bmp.Mutate(x => x.DrawLines(clr, 1.0f, new PointF(x1,y1), new PointF(x2,y2)));
             }
             //画验证码
-            System.Drawing.Text.InstalledFontCollection MyFont = new System.Drawing.Text.InstalledFontCollection();
             for (int i = 0; i < chkCode.Length; i++)
             {
-                //string fnt = font[rnd.Next(font.Length)];
-                Font ft = new Font(MyFont.Families[0].Name, fontSize);
+                Font ft = new Font(SystemFonts.Families.First(), fontSize);
                 Color clr = color[rnd.Next(color.Length)];
                 bmp.Mutate(x => x.DrawText(chkCode[i].ToString(),ft,clr,new PointF((float)i * 18, (float)0)));
             }
