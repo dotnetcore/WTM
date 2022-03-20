@@ -109,6 +109,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult Edit(string id)
         {
             var vm = Wtm.CreateVM<CityVM>(id);
+            vm.CityChildrenList1.Searcher.ParentId = id;
             return PartialView(vm);
         }
 

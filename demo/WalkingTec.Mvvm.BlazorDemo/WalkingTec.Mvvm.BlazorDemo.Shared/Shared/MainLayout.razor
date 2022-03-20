@@ -125,7 +125,6 @@
             </GroupBox>
         </div>
     </Drawer>
-
 </CascadingValue>
 @code
 {
@@ -177,7 +176,7 @@
 
     private async Task Show()
     {
-        await wtmblazor.OpenDialog<Password>(wtmblazor.Localizer["Login.ChangePassword"], size: Size.Small, userinfo: UserInfo);
+        await wtmblazor.OpenDialog<Password>(wtmblazor.Localizer["Login.ChangePassword"], size: Size.Small, userinfo:UserInfo);
     }
 
     protected override async Task OnInitializedAsync()
@@ -291,11 +290,10 @@
             var culture = new CultureInfo(cultureName);
             CultureInfo.CurrentCulture = culture;
             CultureInfo.CurrentUICulture = culture;
-            var uri = new Uri(NavigationManager.Uri)
-                        .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+            var uri =  await JSRuntime.InvokeAsync<string>("urlFuncs.getCurrentUrl");
             var query = $"?culture={Uri.EscapeDataString(Value)}&" +
                 $"redirect={Uri.EscapeDataString(uri)}";
-            NavigationManager.NavigateTo("/_framework/SetLanguageForBlazor" + query, forceLoad: true);
+            NavigationManager.NavigateTo(wtmblazor.GetServerUrl() + "/_framework/SetLanguageForBlazor" + query, forceLoad: true);
         }
     }
 }

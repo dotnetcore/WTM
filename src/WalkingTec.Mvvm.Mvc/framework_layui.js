@@ -251,68 +251,10 @@ window.ff = {
     },
 
     RenderForm: function (formId) {
-        var comboxs = $(".layui-form[lay-filter=" + formId + "] select[wtm-combo='MULTI_COMBO']");
-        if (comboxs.length === 0) {
+        var comboxs = $(".layui-form[lay-filter=" + formId + "] div[wtm-ctype='combo']");
             layui.use(['form'], function () {
                 var form = layui.form.render(null, formId);
             });
-        }
-        else {
-            layui.use(['form', 'formSelects'], function () {
-                var formSelects = layui.formSelects;
-                layui.form.render(null, formId);
-                /* 启用 ComboBox 多选 */
-                for (var i = 0; i < comboxs.length; i++) {
-                    var filter = comboxs[i].attributes['lay-filter'].value;
-                    var vs = comboxs[i].attributes['wtm-combovalue'].value;
-                    var vn = comboxs[i].attributes['wtm-comboname'].value;
-                    var arr = [];
-                    if (vs !== null && vs != "") {
-                        var values = vs.split("`");
-                        var names = vn.split("`");
-                        for (var a = 0; a < values.length; a++) {
-                            arr.push({ name: names[a], val: values[a] });
-                        }
-                    }
-                    var changefunc = "1==1";
-                    var chainchange = "";
-                    var linkto = false;
-                    var url = "";
-                    var targetname = "";
-                    var changefuncattr = comboxs[i].attributes['wtm-cf'];
-                    var linktoattr = comboxs[i].attributes['wtm-linkto'];
-                    var urlattr = comboxs[i].attributes['wtm-turl'];
-                    if (changefuncattr != undefined) {
-                        changefunc = changefuncattr.value + "(a)";
-                    }
-                    if (urlattr != undefined) {
-                        url = urlattr.value;
-                    }
-                    if (linktoattr != undefined) {
-                        linkto = true;
-                    }
-                    formSelects.on({
-                        layFilter: filter, left: '', right: '', separator: ',', arr: arr,
-                        url: url, self: comboxs[i],  linkto: linkto, cf: changefunc,
-                        selectFunc: function (a) {
-                            try {
-                                if (eval(this.cf) && this.linkto == true) {
-                                    var u = this.url;
-                                    if (u.indexOf("?") == -1) {
-                                        u += "?t=" + new Date().getTime();
-                                    }
-                                    for (var i = 0; i < a.length; i++) {
-                                        u += "&id=" + a[i].val;
-                                    }
-                                    ff.ChainChange(u, this.self)
-                                }
-                            }
-                            catch (e) { }
-                        }
-                    });
-                }
-            });
-        }
     },
 
     PostForm: function (url, formId, divid, searchervm) {
@@ -467,6 +409,9 @@ window.ff = {
                         , btn: []
                         , id: windowid //设定一个id，防止重复弹出
                         , content: str
+                        , success: function (layero, index) {
+                            document.getElementById('layui-layer' + index).getElementsByClassName('layui-layer-content')[0].style.overflow = 'unset';
+                        }
                         , resizing: function (layero) {
                             ff.triggerResize();
                           $(layero).find("div[ischart = '1']").each(
@@ -668,6 +613,8 @@ window.ff = {
         var targetname = target.attr("wtm-name");
         var ismulticombo = target.attr("wtm-combo") != undefined;
         var targetid = target.attr("id");
+        var comboid = targetid;
+
         if (controltype == undefined) {
             controltype = "";
         }
@@ -678,8 +625,7 @@ window.ff = {
         //clear
         switch (controltype) {
             case "combo":
-                target.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
-                form.render('select', targetfilter);
+                window[comboid].update({ data: [] });
                 break;
             case "checkbox":
                 target.html('');
@@ -690,9 +636,7 @@ window.ff = {
                 form.render('radio', targetfilter);
                 break;
             case "tree":
-                layui.tree.reload(targetid, {
-                    data: []
-                });
+                window[comboid].update({ data: [] });
                 break;
             case "transfer":
                 layui.transfer.reload(targetid, {
@@ -707,9 +651,7 @@ window.ff = {
                     var item = null;
 
                     if (controltype === "tree") {
-                        layui.tree.reload(targetid, {
-                            data: ff.getTreeItems(data.Data)
-                        });
+                        window[comboid].update({ data: ff.getTreeItems(data.Data) });
                     }
                     if (controltype === "transfer") {
                         layui.transfer.reload(targetid, {
@@ -718,26 +660,7 @@ window.ff = {
                     }
 
                     if (controltype === "combo") {
-                        target.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
-                        var arr = [];
-                        if (data.Data !== undefined && data.Data !== null) {
-                            for (i = 0; i < data.Data.length; i++) {
-                                item = data.Data[i];
-                                var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
-                                if (item.Selected === true) {
-                                    target.append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
-                                }
-                                else {
-                                    target.append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
-                                }
-                                arr.push({ name: item.Text, val: item.Value });
-                            }
-                        }
-                        form.render('select', targetfilter);
-                        if (ismulticombo) {
-                            var mm = layui.formSelects.selects[target.attr("lay-filter")];
-                            ff.refreshcombobox(mm, []);
-                        }
+                        window[comboid].update({ data: ff.getComboItems(data.Data) });
                     }
                     if (controltype === "checkbox") {
                         for (i = 0; i < data.Data.length; i++) {
@@ -787,9 +710,7 @@ window.ff = {
                var item = null;
                if (controltype === "tree") {
                    var da = ff.getTreeItems(data.Data, svals);
-                   layui.tree.reload(controlid, {
-                       data: da
-                   });
+                   window[controlid].update({ data: da });
                    if (cb !== undefined && cb != null) {
                        cb();
                    }
@@ -800,29 +721,8 @@ window.ff = {
                    });
                }
                if (controltype === "combo") {
-
-                   target.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
-                   var arr = [];
-                   if (data.Data !== undefined && data.Data !== null) {
-                       for (i = 0; i < data.Data.length; i++) {
-                           item = data.Data[i];
-                           var icon = item.Icon !== undefined && item.Icon != null && item.Icon.length > 0 ? ' icon="' + item.Icon + '"' : '';
-                           if (item.Selected === true || svals.indexOf(item.Value) > -1) {
-                               target.append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
-                               arr.push({ name: item.Text, val: item.Value });
-                          }
-                           else {
-                               target.append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
-                           }
-                       }
-                   }
-                   layui.form.render('select', targetfilter+"div");
-                   if (ismulticombo) {
-                       layui.use(['form', 'formSelects'], function () {
-                           var mm = layui.formSelects.selects[targetfilter];
-                           ff.refreshcombobox(mm, arr);
-                       });
-                   }
+                   var da = ff.getComboItems(data.Data, svals);
+                    window[controlid].update({ data: da });
                }
                if (controltype === "checkbox") {
                    for (i = 0; i < data.Data.length; i++) {
@@ -892,6 +792,19 @@ window.ff = {
             }
         }
 
+        var xselect = searchForm.find("div[wtm-ctype='tree'],div[wtm-ctype='combo']");
+        layui.each(xselect, function (_, item) {
+            var val = window[item.id].getValue('value');
+            if (val.length > 1) {
+                fieldElem = fieldElem.filter(function (index) {
+                    return this.name != item.attributes["wtm-name"].value;
+                })
+                $.each(val, function (i, v) {
+                    fieldElem.push({ name: item.attributes["wtm-name"].value, value: v });
+                });
+            }
+        });
+
         var check = {};
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
@@ -905,9 +818,6 @@ window.ff = {
                 return;
             }
             var itemname = item.name;
-      if (/_WTMMultiCombo_(.*?)_(.*?)$/.test(itemname)) {
-                itemname = RegExp.$2;
-            }
             if (/_DONOTUSE_(.*?)\[(\d?)\]\.(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
                 var number = RegExp.$2;
@@ -1249,21 +1159,34 @@ window.ff = {
 
         for (var i = 0; i < data.length; i++) {
             var item = {};
-            item.id = data[i].Value;
-            item.title = data[i].Text;
-            item.href = data[i].Url;
-            item.spread = data[i].Expended;
-            item.checked = data[i].Selected  || svals.indexOf(data[i].Value) > -1;
+            item.value = data[i].Value;
+            item.name = data[i].Text;
+            item.disabled = data[i].Disabled;
+            item.selected = data[i].Selected  || svals.indexOf(data[i].Value) > -1;
 
             if (data[i].Children != null && data[i].Children.length > 0) {
                 item.children = this.getTreeItems(data[i].Children, svals);
+            }
+            rv.push(item);
+        }
+        return rv;
+    },
 
-                for (var j = 0; j < item.children.length; j++) {
-                    if (item.children[j].checked == true || item.children[j].spread == true) {
-                        item.spread = true;
-                        break;
-                    }
-                }
+    getComboItems: function (data, svals) {
+        debugger;
+        var rv = [];
+        if (svals == undefined || svals == null) {
+            svals = [];
+        }
+        for (var i = 0; i < data.length; i++) {
+            var item = {};
+            item.value = data[i].Value;
+            item.name = data[i].Text;
+            item.disabled = data[i].Disabled;
+            item.selected = data[i].Selected || svals.indexOf(data[i].Value) > -1;
+
+            if (data[i].Children != null && data[i].Children.length > 0) {
+                item.children = this.getTreeItems(data[i].Children, svals);
             }
             rv.push(item);
         }

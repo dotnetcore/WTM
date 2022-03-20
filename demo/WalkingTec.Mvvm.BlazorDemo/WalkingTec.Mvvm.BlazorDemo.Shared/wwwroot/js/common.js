@@ -18,8 +18,22 @@ window.localStorageFuncs = {
     set: function (key, value) {
         localStorage.setItem(key, value);
     },
-    get: function (key) {
-        return localStorage.getItem(key);
+    get: function (key, start) {
+        if (start === undefined) {
+            start = 0;
+        }
+        var t = localStorage.getItem(key);
+        if (t == null) {
+            return null;
+        }
+        var rv;
+        if (t.length - start > 20000) {
+            rv = t.substring(start, start+20000);
+        }
+        else {
+            rv = t.substring(start);
+        }
+        return rv;
     },
     remove: function (key) {
         localStorage.removeItem(key);
@@ -27,6 +41,9 @@ window.localStorageFuncs = {
 };
 
 window.urlFuncs = {
+    getCurrentUrl: function () {
+        return window.location.href;
+    },
     redirect: function (url) {
         window.location.href = url;
     },

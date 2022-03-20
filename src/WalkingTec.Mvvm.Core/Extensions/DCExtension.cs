@@ -295,15 +295,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     var ids = dps.Where(x => x.TableName == query.ElementType.Name).Select(x => x.RelateId).ToList();
                     if (ids == null || ids.Count() == 0)
                     {
-                        if (isBasePoco == true)
-                        {
-                            var selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
-                            query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
-                        }
-                        else
-                        {
+                        //if (isBasePoco == true)
+                        //{
+                        //    var selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+                        //    query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
+                        //}
+                        //else
+                        //{
                             query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
-                        }
+                        //}
                     }
                     else
                     {

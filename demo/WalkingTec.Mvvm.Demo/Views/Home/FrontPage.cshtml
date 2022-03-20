@@ -227,6 +227,7 @@
 </div>
 <script>
   $("#frontpage").parents(".layui-card").css("background-color", "#eee").css("height","unset");
+
   $.get("/Home/GetGithubInfo", function (r) {
     if (r === undefined || r === null) {
       return;

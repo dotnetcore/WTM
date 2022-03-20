@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<FrameworkUserListVM>();
-            vm.Searcher.IsValid = true;
+           // vm.Searcher.IsValid = true;
             return PartialView(vm);
         }
 
