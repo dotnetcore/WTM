@@ -48,7 +48,8 @@ namespace WalkingTec.Mvvm.Core
     public enum ButtonTypesEnum
     {
         Button,
-        Link
+        Link,
+        Img
     };
 
     /// <summary>
