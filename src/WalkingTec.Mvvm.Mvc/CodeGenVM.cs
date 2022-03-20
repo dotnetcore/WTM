@@ -2160,7 +2160,14 @@ namespace WalkingTec.Mvvm.Mvc
                     string newname = item.FieldName;
                     if (mpro.PropertyType.IsBoolOrNullableBool())
                     {
-                        render = "ComponentType=\"@typeof(Switch)\"";
+                        if (mpro.PropertyType.IsNullable())
+                        {
+                            render = "ComponentType=\"@typeof(NullSwitch)\"";
+                        }
+                        else
+                        {
+                            render = "ComponentType=\"@typeof(Switch)\"";
+                        }
                     }
                     if (mpro.PropertyType == typeof(DateTime) || mpro.PropertyType == typeof(DateTime?))
                     {
@@ -2417,7 +2424,14 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool))
                         {
-                            controltype = "Switch";
+                            if (proType.IsNullable())
+                            {
+                                controltype = "NullSwitch";
+                            }
+                            else
+                            {
+                                controltype = "Switch";
+                            }
                         }
                         else if (checktype.IsEnum())
                         {
@@ -2543,7 +2557,14 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool))
                         {
-                            controltype = "Switch";
+                            if (proType.IsNullable())
+                            {
+                                controltype = "NullSwitch";
+                            }
+                            else
+                            {
+                                controltype = "Switch";
+                            }
                             disabled = "IsDisabled=\"true\"";
                         }
                     }

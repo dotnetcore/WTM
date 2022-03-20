@@ -105,9 +105,51 @@ var {Id} = xmSelect.render({{
     tips:'{EmptyText}',
 	autoRow: {AutoRow.ToString().ToLower()},
 	filterable: {EnableSearch.ToString().ToLower()},
-    {(MultiSelect == false ? "radio: true,clickClose: true,model: { label: { type: 'text' }},toolbar: {show: true,list: ['CLEAR']}," : "")}
-    {(MultiSelect == true ? "toolbar: {show: true,list: ['ALL', 'REVERSE', 'CLEAR']}," : "")}
-	tree: {{
+    template({{ item, sels, name, value }}){{
+        if(item.icon !== undefined && item.icon != """"&& item.icon != null){{
+			return '<i class=""'+item.icon+'""></i>' + item.name;
+        }}
+        else{{
+            return item.name;
+        }}
+	}},
+    {(MultiSelect == false ? $@"
+    radio: true,
+    clickClose: true,
+    model: {{
+        label: {{
+            type: 'abc' ,
+            abc: {{
+                template: function(item, sels){{
+                    if(sels[0].icon !== undefined && sels[0].icon != """" && sels[0].icon != null){{
+                        return '<i class=""'+sels[0].icon+'""></i>' + sels[0].name;
+                    }}
+                    else{{
+                        return sels[0].name;
+                    }}
+                }}
+            }}
+        }}
+    }},
+    toolbar: {{
+        show: true,
+        list: ['CLEAR']}}," : $@"
+        toolbar: {{show: true,list: ['ALL', 'REVERSE', 'CLEAR']}},
+        model: {{
+		label: {{
+			block: {{
+				template: function(item, sels){{
+                    if(item.icon !== undefined && item.icon != """"&& item.icon != null){{
+					    return '<i class=""'+item.icon+'""></i>' + item.name;
+                    }}
+                    else{{
+                        return item.name;
+                    }}
+				}},
+			}},
+		}}
+	}},
+")}	tree: {{
         strict: false,
 		show: true,
 		showFolderIcon: true,
@@ -162,7 +204,8 @@ ff.LoadComboItems('tree','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Seria
                     Title = s.Text,
                     Url = s.Url,
                     Expand = s.Expended,
-                    Disabled = s.Disabled
+                    Disabled = s.Disabled,
+                    Icon = s.Icon
                     //Children = new List<LayuiTreeItem>()
                 };
                 if (values.Contains(s.Value.ToString()))
