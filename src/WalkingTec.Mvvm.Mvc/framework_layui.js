@@ -409,9 +409,11 @@ window.ff = {
                         , btn: []
                         , id: windowid //设定一个id，防止重复弹出
                         , content: str
-                        , success: function (layero, index) {
-                            document.getElementById('layui-layer' + index).getElementsByClassName('layui-layer-content')[0].style.overflow = 'unset';
-                        }
+                        //, success: function (layero, index) {
+                        //    if (height == undefined || height == null || height == '' || max == false){
+                        //        document.getElementById('layui-layer' + index).getElementsByClassName('layui-layer-content')[0].style.overflow = 'unset';
+                        //    }
+                        //}
                         , resizing: function (layero) {
                             ff.triggerResize();
                           $(layero).find("div[ischart = '1']").each(
