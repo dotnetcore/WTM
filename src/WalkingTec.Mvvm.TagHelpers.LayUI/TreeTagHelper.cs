@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public string CheckFunc { get; set; }
         public bool AutoRow { get; set; }
-        public bool EnableSearch { get; set; }
+        public bool? EnableSearch { get; set; }
 
         public TreeTagHelper(IOptionsMonitor<Configs> configs)
         {
@@ -57,7 +57,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 EmptyText = THProgram._localizer["Sys.PleaseSelect"];
             }
-            EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
+            if (EnableSearch == null)
+            {
+                EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
+            }
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
