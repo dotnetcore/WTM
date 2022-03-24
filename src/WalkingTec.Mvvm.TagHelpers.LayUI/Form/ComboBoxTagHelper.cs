@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 启用搜索
         /// 注意：多选与搜索不能同时启用
         /// </summary>
-        public bool EnableSearch { get; set; }
+        public bool? EnableSearch { get; set; }
 
         public ModelExpression Items { get; set; }
 
@@ -65,7 +65,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 EmptyText = THProgram._localizer["Sys.PleaseSelect"];
             }
-            EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
+            if (EnableSearch == null)
+            {
+                EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
+            }
             _wtm = wtm;
         }
 
@@ -233,7 +236,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 var {Id} = xmSelect.render({{
     el: '#{Id}',
     name:'{Field.Name}',
-    tips:'{EmptyText}',    
+    tips:'{EmptyText}',
+    {(THProgram._localizer["Sys.LayuiDateLan"] =="CN"? "language:'zn'," : "language:'en',")}
 	autoRow: {AutoRow.ToString().ToLower()},
 	filterable: {EnableSearch.ToString().ToLower()},
     template({{ item, sels, name, value }}){{
