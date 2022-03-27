@@ -45,6 +45,7 @@ using WalkingTec.Mvvm.Mvc.Helper;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.Extensions.FileProviders;
+using WalkingTec.Mvvm.Core.Support.Quartz;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -71,7 +72,7 @@ namespace WalkingTec.Mvvm.Mvc
         private static GlobalData GetGlobalData()
         {
             var gd = new GlobalData();
-
+            gd.AllAssembly = Utils.GetAllAssembly();
             return gd;
         }
 
@@ -502,6 +503,7 @@ namespace WalkingTec.Mvvm.Mvc
                 y.ValueLengthLimit = int.MaxValue - 20480;
                 y.MultipartBodyLengthLimit = conf.FileUploadOptions.UploadLimit;
             });
+            services.AddHostedService<QuartzHostService>();
             return services;
         }
         public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services, IConfiguration config)
@@ -698,7 +700,6 @@ namespace WalkingTec.Mvvm.Mvc
             var localfactory = app.ApplicationServices.GetRequiredService<IStringLocalizerFactory>();
             var lop = app.ApplicationServices.GetService<WtmLocalizationOption>();
             //获取所有程序集
-            gd.AllAssembly = Utils.GetAllAssembly();
             //var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
             //if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
             //{

@@ -231,21 +231,21 @@ namespace WalkingTec.Mvvm.Core
                 return null;
             }
 
-
-            var code = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>new { itcode = x.ITCode, id= x.GetID(), photoid=x.PhotoId, name=x.Name }).SingleOrDefaultAsync();
-            if (code == null)
+            var password = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>x.Password).SingleOrDefaultAsync();
+            if (this.HttpContext.Request.Headers.ContainsKey("Authorization"))
             {
-                return null;
+                var user = await CallAPI<LoginUserInfo>("", this.HttpContext.Request.Scheme + "://" + this.HttpContext.Request.Host.ToString() + "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = itcode, Password = password, IsReload=true });
+                return user?.Data;
             }
-            LoginUserInfo rv = new LoginUserInfo
+            else
             {
-                ITCode = code.itcode,
-                UserId = code.id?.ToString(),
-                Name = code.name,
-                PhotoId = code.photoid
-            };
-            await rv.LoadBasicInfoAsync(this);
-            return rv;
+                Dictionary<string, string> data = new Dictionary<string, string>();
+                data.Add("account", itcode);
+                data.Add("password", password);
+                data.Add("withmenu", "false");
+                var user = await CallAPI<LoginUserInfo>("", this.HttpContext.Request.Scheme + "://" + this.HttpContext.Request.Host.ToString() + "/api/_account/login", HttpMethodEnum.POST, data);
+                return user?.Data;
+            }
         }
 
         #endregion
@@ -459,7 +459,7 @@ namespace WalkingTec.Mvvm.Core
             return isPublic;
         }
 
-        public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Normal)
+        public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Normal,string moduleName="", string actionName="", string ip="",string url = "", double duration = 0)
         {
             var log = this.Log?.GetActionLog();
             if (log == null)
@@ -469,6 +469,15 @@ namespace WalkingTec.Mvvm.Core
             log.LogType = logtype;
             log.ActionTime = DateTime.Now;
             log.Remark = msg;
+            log.ActionUrl = url;
+            log.Duration = duration;
+            log.ModuleName = moduleName;
+            log.ActionName = actionName;
+            log.IP = ip;
+            if(string.IsNullOrEmpty(url) && this.HttpContext?.Request != null)
+            {
+                log.ActionUrl = this.HttpContext.Request.Path.ToString();
+            }
             LogLevel ll = LogLevel.Information;
             switch (logtype)
             {
