@@ -12,9 +12,13 @@ namespace WalkingTec.Mvvm.Mvc.Helper
     {
         public override  Task Execute(IJobExecutionContext context)
         {
-            var sql = $"DELETE FROM {this.Wtm.DC.GetTableName<PersistedGrant>()} WHERE Expiration<'{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
-            this.Wtm.DC.RunSQL(sql);
-            Wtm.DoLog("清理过期的refreshToken", ActionLogTypesEnum.Job);
+            try
+            {
+                var sql = $"DELETE FROM {this.Wtm.DC.GetTableName<PersistedGrant>()} WHERE Expiration<'{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
+                this.Wtm.DC.RunSQL(sql);
+                Wtm.DoLog("清理过期的refreshToken", ActionLogTypesEnum.Job);
+            }
+            catch { }
             return Task.CompletedTask;
         }
     }

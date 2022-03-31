@@ -1,8 +1,8 @@
 // WTM默认页面 Wtm buidin page
 using System;
-using System.Drawing;
 using System.IO;
-using System.Linq;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
@@ -21,24 +21,24 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [HttpPost("[action]")]
         [ActionDescription("UploadFile")]
-        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir=null,string extra = null,string csName= null)
+        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
         {
             var FileData = Request.Form.Files[0];
-            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName,subdir,extra,sm,Wtm.CreateDC(cskey:csName));
+            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, extra, sm, Wtm.CreateDC(cskey: csName));
             return Ok(new { Id = file.GetID(), Name = file.FileName });
         }
 
         [HttpPost("[action]")]
         [ActionDescription("UploadPic")]
-        public IActionResult UploadImage([FromServices] WtmFileProvider fp,int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
+        public IActionResult UploadImage([FromServices] WtmFileProvider fp, int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
         {
             if (width == null && height == null)
             {
-                return Upload(fp,sm,groupName,csName);
+                return Upload(fp, sm, groupName, csName);
             }
             var FileData = Request.Form.Files[0];
 
-            Image oimage = Image.FromStream(FileData.OpenReadStream());
+            Image oimage = Image.Load(FileData.OpenReadStream());
             if (oimage == null)
             {
                 return BadRequest(Localizer["Sys.UploadFailed"]);
@@ -52,9 +52,10 @@ namespace WalkingTec.Mvvm.Admin.Api
                 height = width * oimage.Height / oimage.Width;
             }
             MemoryStream ms = new MemoryStream();
-            oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            oimage.Mutate(x => x.Resize(width.Value, height.Value));
+            oimage.SaveAsJpeg(ms);
             ms.Position = 0;
-            var file = fp.Upload(FileData.FileName, FileData.Length, ms, groupName,subdir, extra, sm, Wtm.CreateDC(cskey: csName));
+            var file = fp.Upload(FileData.FileName, FileData.Length, ms, groupName, subdir, extra, sm, Wtm.CreateDC(cskey: csName));
             oimage.Dispose();
             ms.Dispose();
 
@@ -90,7 +91,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 if (width != null || height != null)
                 {
-                    Image oimage = Image.FromStream(file.DataStream);
+                    Image oimage = Image.Load(file.DataStream);
                     if (oimage != null)
                     {
                         if (width == null)
@@ -102,7 +103,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                             height = oimage.Height * width / oimage.Width;
                         }
                         var ms = new MemoryStream();
-                        oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        oimage.Mutate(x => x.Resize(width.Value, height.Value));
                         ms.Position = 0;
                         await ms?.CopyToAsync(Response.Body);
                         file.DataStream.Dispose();

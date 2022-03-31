@@ -234,7 +234,7 @@ namespace WalkingTec.Mvvm.Core
             var password = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>x.Password).SingleOrDefaultAsync();
             if (this.HttpContext.Request.Headers.ContainsKey("Authorization"))
             {
-                var user = await CallAPI<LoginUserInfo>("", this.HttpContext.Request.Scheme + "://" + this.HttpContext.Request.Host.ToString() + "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = itcode, Password = password, IsReload=true });
+                var user = await CallAPI<LoginUserInfo>("", GetServerUrl() + "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = itcode, Password = password, IsReload=true });
                 return user?.Data;
             }
             else
@@ -967,6 +967,24 @@ namespace WalkingTec.Mvvm.Core
         public async Task<ApiResult<string>> CallAPI(string domainName, string url, HttpMethodEnum method, object postdata, int? timeout = null, string proxy = null)
         {
             return await CallAPI<string>(domainName, url, method, postdata, timeout, proxy);
+        }
+
+
+        private string GetServerUrl()
+        {
+            var server = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "serverpub").Select(x => x.Value).FirstOrDefault();
+            if (server == null)
+            {
+                server = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "server").Select(x => x.Value).FirstOrDefault();
+            }
+            if (server != null && string.IsNullOrEmpty(server.Address) == false)
+            {
+                return server.Address.TrimEnd('/');
+            }
+            else
+            {
+                return this.HttpContext.Request.Scheme + "://" + this.HttpContext.Request.Host.ToString();
+            }
         }
 
         #endregion

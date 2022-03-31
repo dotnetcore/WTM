@@ -63,6 +63,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.15" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
     <PackageReference Include="VueCliMiddleware" Version="6.0.0" />
   </ItemGroup>

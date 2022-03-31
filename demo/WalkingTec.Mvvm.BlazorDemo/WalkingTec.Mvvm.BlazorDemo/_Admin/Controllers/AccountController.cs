@@ -115,7 +115,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
 
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && (x.Password == Utils.GetMD5String(loginInfo.Password) || x.Password == loginInfo.Password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
 
             if (rv == null)
             {
@@ -128,12 +128,21 @@ namespace WalkingTec.Mvvm.Admin.Api
                 UserId = rv.id.ToString()
             };
             await user.LoadBasicInfoAsync(Wtm);
+
+            //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
+
             Wtm.LoginUserInfo = user;
+            if (loginInfo.IsReload == false)
+            {
+                var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
 
-            var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
-
-            var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
-            return Content(JsonSerializer.Serialize(token), "application/json");
+                var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
+                return Content(JsonSerializer.Serialize(token), "application/json");
+            }
+            else
+            {
+                return Ok(user);
+            }
         }
 
         [AllowAnonymous]
@@ -297,6 +306,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         public string Account { get; set; }
         public string Password { get; set; }
+        public bool IsReload { get; set; } = false;
     }
 
     public class SimpleReg

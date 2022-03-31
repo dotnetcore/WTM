@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
         public QuartzRepeatAttribute(int interval,int repeat, bool isForever)
         {
             this.Repeat = repeat;
-            this.IsForever = IsForever;
+            this.IsForever = isForever;
             this.IntervalInSeconds = interval;
         }
     }

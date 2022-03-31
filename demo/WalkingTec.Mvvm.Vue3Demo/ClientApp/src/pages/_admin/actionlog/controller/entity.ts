@@ -64,6 +64,10 @@ class Entity {
             {
                 label: $i18n.t(EnumLocaleLabel.LogType_2),
                 value: 2
+            },
+            {
+                label: $i18n.t(EnumLocaleLabel.LogType_3),
+                value: 3
             }
         ]),
         valueType: WTM_ValueType.select,

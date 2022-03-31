@@ -49,18 +49,17 @@ namespace WalkingTec.Mvvm.Mvc
                     context.Items["DONOTUSE_REQUESTBODY"] = body;
                 }
             }
-            if(wtm.ConfigInfo.Domains != null)
-            {
-                var mainHost = wtm.ConfigInfo.Domains.Where(x=>x.Key== "mainhost").Select(x=>x.Value.Address).FirstOrDefault();
-                if(string.IsNullOrEmpty(mainHost) == false)
-                {
-                    if(context.Request.RouteValues["controller"]?.ToString()?.ToLower() == "login")
-                    {
-                        var test = await context.Request.RedirectCall(wtm, "mainhost");
-                        int a = 0;
-                    }
-                }
-            }
+            //if(wtm.ConfigInfo.Domains != null)
+            //{
+            //    var mainHost = wtm.ConfigInfo.Domains.Where(x=>x.Key== "mainhost").Select(x=>x.Value.Address).FirstOrDefault();
+            //    if(string.IsNullOrEmpty(mainHost) == false)
+            //    {
+            //        if(context.Request.RouteValues["controller"]?.ToString()?.ToLower() == "login")
+            //        {
+            //            var test = await context.Request.RedirectCall(wtm, "mainhost");
+            //        }
+            //    }
+            //}
             await _next(context);
             if (context.Response.StatusCode == 404)
             {
