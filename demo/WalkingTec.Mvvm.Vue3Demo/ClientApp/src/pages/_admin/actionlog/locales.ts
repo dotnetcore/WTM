@@ -17,6 +17,7 @@ export enum EnumLocaleLabel {
     LogType_0 = "actionlog.LogType.0",
     LogType_1 = "actionlog.LogType.1",
     LogType_2 = "actionlog.LogType.2",
+    LogType_3 = "actionlog.LogType.3",
 }
 export default {
     en: {
@@ -34,6 +35,7 @@ export default {
         [EnumLocaleLabel.LogType_0]: 'Normal',
         [EnumLocaleLabel.LogType_1]: 'Exception',
         [EnumLocaleLabel.LogType_2]: 'Debug',
+        [EnumLocaleLabel.LogType_3]: 'Job',
     },
     zh: {
         [EnumLocaleLabel.ID]: 'ID',
@@ -50,5 +52,6 @@ export default {
         [EnumLocaleLabel.LogType_0]: '普通',
         [EnumLocaleLabel.LogType_1]: '异常',
         [EnumLocaleLabel.LogType_2]: '调试',
+        [EnumLocaleLabel.LogType_3]: '作业',
     }
 }

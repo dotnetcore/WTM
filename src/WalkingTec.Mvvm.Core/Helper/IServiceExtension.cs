@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
+using WalkingTec.Mvvm.Core.Support.Quartz;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -53,6 +54,7 @@ namespace WalkingTec.Mvvm.Core
                 dc.Database.EnsureCreated();
             }
             WtmFileProvider.Init(WtmConfigs, gd);
+            services.TryAddSingleton<QuartzHostService>();
             return services;
         }
 

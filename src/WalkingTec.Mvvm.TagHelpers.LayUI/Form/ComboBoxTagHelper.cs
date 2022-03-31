@@ -237,6 +237,7 @@ var {Id} = xmSelect.render({{
     el: '#{Id}',
     name:'{Field.Name}',
     tips:'{EmptyText}',
+    disabled: {Disabled.ToString().ToLower()},
     {(THProgram._localizer["Sys.LayuiDateLan"] =="CN"? "language:'zn'," : "language:'en',")}
 	autoRow: {AutoRow.ToString().ToLower()},
 	filterable: {EnableSearch.ToString().ToLower()},
@@ -287,8 +288,9 @@ var {Id} = xmSelect.render({{
 ")}
 	height: '400px',
     on:function(data){{
+debugger;
         {((LinkField != null || string.IsNullOrEmpty(LinkId) == false)?@$"
-            if (eval(""{(string.IsNullOrEmpty(ChangeFunc)?"1==1":ChangeFunc)}"") != false) {{
+            if (eval(""{(string.IsNullOrEmpty(ChangeFunc)?"1==1":FormatFuncName(ChangeFunc))}"") != false) {{
                 var u = ""{(TriggerUrl??"")}"";
                 if (u.indexOf(""?"") == -1) {{
                     u += ""?t="" + new Date().getTime();
@@ -297,7 +299,7 @@ var {Id} = xmSelect.render({{
                     u += ""&id="" + data.arr[i].value;
                 }}
                 ff.ChainChange(u, $('#{Id}')[0])
-        }}" : "")}
+        }}" : FormatFuncName(ChangeFunc))}
    }},
 	data:  {JsonSerializer.Serialize(GetLayuiTree(listItems,selectVal))}
 }})

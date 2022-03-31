@@ -121,11 +121,6 @@ namespace WalkingTec.Mvvm.Mvc.Auth
                     TenantCode = pair[1],
                 };
 
-                // 清理过期 refreshtoken
-                var sql = $"DELETE FROM {DC.GetTableName<PersistedGrant>()} WHERE Expiration<'{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
-                _dc.RunSQL(sql);
-                _logger.LogDebug("清理过期的refreshToken：【sql:{0}】", sql);
-
                 // 颁发 token
                 return await IssueTokenAsync(loginUserInfo);
             }

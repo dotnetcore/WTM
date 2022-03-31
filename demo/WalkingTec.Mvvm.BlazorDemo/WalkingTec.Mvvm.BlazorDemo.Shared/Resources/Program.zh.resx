@@ -840,6 +840,9 @@
   <data name="_Admin.IsValid" xml:space="preserve">
     <value>是否有效</value>
   </data>
+  <data name="_Admin.Job" xml:space="preserve">
+    <value>作业</value>
+  </data>
   <data name="_Admin.Length" xml:space="preserve">
     <value>长度</value>
   </data>

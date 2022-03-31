@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Core
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            if(logConfig == null)
+            if(logConfig == null || categoryName == "VueCliMiddleware")
             {
                 return false;
             }

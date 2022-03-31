@@ -12,7 +12,9 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Exception")]
         Exception,
         [Display(Name = "_Admin.Debug")]
-        Debug
+        Debug,
+        [Display(Name = "_Admin.Job")]
+        Job
     };
 
     /// <summary>

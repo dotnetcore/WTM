@@ -18,5 +18,6 @@ export const TABLE_HEADER: Array<object> = [
 export const logTypes: Array<any> = [
   { Value: 0, Text: i18n.t(`actionlog.Ordinary`) },
   { Value: 1, Text: i18n.t(`actionlog.Abnormal`) },
-  { Value: 2, Text: i18n.t(`actionlog.Debugging`) }
+  { Value: 2, Text: i18n.t(`actionlog.Debugging`) },
+  { Value: 3, Text: i18n.t(`actionlog.Job`) },
 ];

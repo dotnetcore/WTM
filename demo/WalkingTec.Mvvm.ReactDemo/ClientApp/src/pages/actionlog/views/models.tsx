@@ -22,6 +22,7 @@ mergeLocales({
         'actionlog.LogType.0':'普通',
         'actionlog.LogType.1': '异常',
         'actionlog.LogType.2': '调试',
+        'actionlog.LogType.3': '作业'
     },
     "en-US": {
         'actionlog.ModuleName': 'Module',
@@ -36,6 +37,7 @@ mergeLocales({
         'actionlog.LogType.0': 'Normal',
         'actionlog.LogType.1': 'Exception',
         'actionlog.LogType.2': 'Debug',
+        'actionlog.LogType3': 'Job'
     }
 });
 
@@ -149,7 +151,8 @@ export default {
                 formItem: <WtmSelect placeholder={getLocalesValue('tips.all')} mode="multiple" dataSource={[  
                     { Text: <FormattedMessage id='actionlog.LogType.0' />, Value: 0 },
                     { Text: <FormattedMessage id='actionlog.LogType.1' />, Value: 1 },
-                    { Text: <FormattedMessage id='actionlog.LogType.2' />, Value: 2 }
+                    { Text: <FormattedMessage id='actionlog.LogType.2' />, Value: 2 },
+                    { Text: <FormattedMessage id='actionlog.LogType.3' />, Value: 3 }
                 ]}/>
             },
 

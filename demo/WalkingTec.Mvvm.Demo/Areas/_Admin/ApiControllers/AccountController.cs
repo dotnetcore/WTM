@@ -40,10 +40,10 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] bool rememberLogin = false)
+        public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] bool rememberLogin = false, [FromForm] bool withMenu = true)
         {
 
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && (x.Password == Utils.GetMD5String(password) || x.Password == password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
 
             if (rv == null)
             {
@@ -56,6 +56,9 @@ namespace WalkingTec.Mvvm.Admin.Api
             };
 
             await user.LoadBasicInfoAsync(Wtm);
+
+            //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
+
             Wtm.LoginUserInfo = user;
 
             AuthenticationProperties properties = null;
@@ -70,49 +73,56 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             var principal = Wtm.LoginUserInfo.CreatePrincipal();
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
-            List<SimpleMenuApi> ms = new List<SimpleMenuApi>();
-            LoginUserInfo forapi = new LoginUserInfo();
-            forapi.UserId = user.UserId;
-            forapi.ITCode = user.ITCode;
-            forapi.Name = user.Name;
-            forapi.Roles = user.Roles;
-            forapi.Groups = user.Groups;
-            forapi.PhotoId = user.PhotoId;
-            var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
-            var data = DC.Set<FrameworkMenu>().Where(x => string.IsNullOrEmpty(x.MethodName)).ToList();
-            var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
-            var allowed = DC.Set<FunctionPrivilege>()
-                            .AsNoTracking()
-                            .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
-                            .Select(x => new { x.MenuItem.ID, x.MenuItem.Url })
-                            .ToList();
-
-            var allowedids = allowed.Select(x => x.ID).ToList();
-            foreach (var item in topdata)
+            if (withMenu == false)
             {
-                if (allowedids.Contains(item.ID))
-                {
-                    ms.Add(new SimpleMenuApi
-                    {
-                        Id = item.ID.ToString().ToLower(),
-                        ParentId = item.ParentId?.ToString()?.ToLower(),
-                        Text = item.PageName,
-                        Url = item.Url,
-                        Icon = item.Icon
-                    });
-                }
+                return Ok(user);
             }
+            else
+            {
+                List<SimpleMenuApi> ms = new List<SimpleMenuApi>();
+                LoginUserInfo forapi = new LoginUserInfo();
+                forapi.UserId = user.UserId;
+                forapi.ITCode = user.ITCode;
+                forapi.Name = user.Name;
+                forapi.Roles = user.Roles;
+                forapi.Groups = user.Groups;
+                forapi.PhotoId = user.PhotoId;
+                var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
+                var data = DC.Set<FrameworkMenu>().Where(x => string.IsNullOrEmpty(x.MethodName)).ToList();
+                var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
+                var allowed = DC.Set<FunctionPrivilege>()
+                                .AsNoTracking()
+                                .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
+                                .Select(x => new { x.MenuItem.ID, x.MenuItem.Url })
+                                .ToList();
 
-            LocalizeMenu(ms);
+                var allowedids = allowed.Select(x => x.ID).ToList();
+                foreach (var item in topdata)
+                {
+                    if (allowedids.Contains(item.ID))
+                    {
+                        ms.Add(new SimpleMenuApi
+                        {
+                            Id = item.ID.ToString().ToLower(),
+                            ParentId = item.ParentId?.ToString()?.ToLower(),
+                            Text = item.PageName,
+                            Url = item.Url,
+                            Icon = item.Icon
+                        });
+                    }
+                }
 
-            List<string> urls = new List<string>();
-            urls.AddRange(allowed.Select(x => x.Url).Distinct());
-            urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
-            forapi.Attributes = new Dictionary<string, object>();
-            forapi.Attributes.Add("Menus", ms);
-            forapi.Attributes.Add("Actions", urls);
+                LocalizeMenu(ms);
 
-            return Ok(forapi);
+                List<string> urls = new List<string>();
+                urls.AddRange(allowed.Select(x => x.Url).Distinct());
+                urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
+                forapi.Attributes = new Dictionary<string, object>();
+                forapi.Attributes.Add("Menus", ms);
+                forapi.Attributes.Add("Actions", urls);
+
+                return Ok(forapi);
+            }
         }
 
 
@@ -121,7 +131,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
 
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && (x.Password == Utils.GetMD5String(loginInfo.Password) || x.Password == loginInfo.Password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
 
             if (rv == null)
             {
@@ -134,12 +144,21 @@ namespace WalkingTec.Mvvm.Admin.Api
                 UserId = rv.id.ToString()
             };
             await user.LoadBasicInfoAsync(Wtm);
+
+            //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
+
             Wtm.LoginUserInfo = user;
+            if (loginInfo.IsReload == false)
+            {
+                var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
 
-            var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
-
-            var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
-            return Content(JsonSerializer.Serialize(token), "application/json");
+                var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
+                return Content(JsonSerializer.Serialize(token), "application/json");
+            }
+            else
+            {
+                return Ok(user);
+            }
         }
 
         [AllowAnonymous]
@@ -303,6 +322,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         public string Account { get; set; }
         public string Password { get; set; }
+        public bool IsReload { get; set; } = false;
     }
     public class SimpleReg
     {

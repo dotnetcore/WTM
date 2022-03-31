@@ -15,6 +15,7 @@ export default {
             Ordinary: "普通",
             Abnormal: "异常",
             Debugging: "调试",
+            Job:"作业",
             StartPlaceholder: "开始日期",
             EndPlaceholder: "结束日期"
         }
@@ -35,6 +36,7 @@ export default {
             Ordinary: "Ordinary",
             Abnormal: "Abnormal",
             Debugging: "Debugging",
+            Job:"Job",
             StartPlaceholder: "Start Placeholder",
             EndPlaceholder: "End Placeholder"
     }

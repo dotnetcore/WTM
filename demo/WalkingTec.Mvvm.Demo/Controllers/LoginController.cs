@@ -12,6 +12,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
+using System.Collections.Generic;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -51,15 +52,18 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                     return View(vm);
                 }
             }
-
-            var user = await vm.DoLoginAsync();
-            if (user == null)
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            data.Add("account", vm.ITCode);
+            data.Add("password", vm.Password);
+            data.Add("withmenu", "false");
+            var user = await Wtm.CallAPI<LoginUserInfo>("", Request.Scheme+"://"+ Request.Host.ToString()+"/api/_account/login", HttpMethodEnum.POST, data);
+            if (user?.Data == null)
             {
                 return View(vm);
             }
             else
             {
-                Wtm.LoginUserInfo = user;
+                Wtm.LoginUserInfo = user.Data;
                 string url = string.Empty;
                 if (!string.IsNullOrEmpty(vm.Redirect))
                 {
@@ -80,7 +84,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                     };
                 }
 
-                var principal = user.CreatePrincipal();
+                var principal = user.Data.CreatePrincipal();
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
                 return Redirect(HttpUtility.UrlDecode(url));
             }

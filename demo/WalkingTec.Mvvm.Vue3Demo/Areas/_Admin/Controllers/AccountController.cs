@@ -1,6 +1,7 @@
 // WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -77,38 +78,32 @@ namespace WalkingTec.Mvvm.Admin.Api
             forapi.Roles = user.Roles;
             forapi.Groups = user.Groups;
             forapi.PhotoId = user.PhotoId;
-            var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
-            var data = DC.Set<FrameworkMenu>().Where(x => string.IsNullOrEmpty(x.MethodName)).ToList();
-            var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
-            var allowed = DC.Set<FunctionPrivilege>()
-                            .AsNoTracking()
-                            .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
-                            .Select(x => new { x.MenuItem.ID, x.MenuItem.Url })
-                            .ToList();
-
-            var allowedids = allowed.Select(x => x.ID).ToList();
-            foreach (var item in topdata)
-            {
-                if (allowedids.Contains(item.ID))
+            var menus = DC.Set<FunctionPrivilege>()
+                .Where(x => x.RoleCode != null && user.Roles.Select(x => x.RoleCode).Contains(x.RoleCode))
+                .Select(x => x.MenuItem)
+                .Where(x => string.IsNullOrEmpty(x.MethodName))
+                .OrderBy(x => x.DisplayOrder)
+                .Select(x => new SimpleMenuApi
                 {
-                    ms.Add(new SimpleMenuApi
-                    {
-                        Id = item.ID.ToString().ToLower(),
-                        ParentId = item.ParentId?.ToString()?.ToLower(),
-                        Text = item.PageName,
-                        Url = item.Url,
-                        Icon = item.Icon
-                    });
-                }
-            }
-
-            LocalizeMenu(ms);
+                    Id = x.ID.ToString().ToLower(),
+                    ParentId = x.ParentId.ToString().ToLower(),
+                    Text = x.PageName,
+                    Url = x.Url,
+                    Icon = x.Icon
+                }).ToList();
+            LocalizeMenu(menus);
+            ms.AddRange(menus);
 
             List<string> urls = new List<string>();
-            urls.AddRange(allowed.Select(x => x.Url).Distinct());
+            urls.AddRange(DC.Set<FunctionPrivilege>()
+                .Where(x => x.RoleCode != null && user.Roles.Select(x => x.RoleCode).Contains(x.RoleCode))
+                .Select(x => x.MenuItem)
+                .Where(x => x.MethodName != null)
+                .Select(x => x.Url)
+                );
             urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
             forapi.Attributes = new Dictionary<string, object>();
-            forapi.Attributes.Add("Menus", ms);
+            forapi.Attributes.Add("Menus", menus);
             forapi.Attributes.Add("Actions", urls);
 
             return Ok(forapi);
@@ -120,7 +115,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
 
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password.ToLower())).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
+            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && (x.Password == Utils.GetMD5String(loginInfo.Password) || x.Password == loginInfo.Password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
 
             if (rv == null)
             {
@@ -133,14 +128,57 @@ namespace WalkingTec.Mvvm.Admin.Api
                 UserId = rv.id.ToString()
             };
             await user.LoadBasicInfoAsync(Wtm);
+
+            //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
+
             Wtm.LoginUserInfo = user;
+            if (loginInfo.IsReload == false)
+            {
+                var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
 
-            var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
-
-            var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
-            return Content(JsonSerializer.Serialize(token), "application/json");
+                var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
+                return Content(JsonSerializer.Serialize(token), "application/json");
+            }
+            else
+            {
+                return Ok(user);
+            }
         }
 
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public IActionResult Reg(SimpleReg regInfo)
+        {
+            var exist = DC.Set<FrameworkUser>().Any(x => x.ITCode.ToLower() == regInfo.ITCode.ToLower());
+
+            if (exist == true)
+            {
+                ModelState.AddModelError("ITCode", Localizer["Login.ItcodeDuplicate"]);
+                return BadRequest(ModelState.GetErrorJson());
+            }
+
+            var hasuserrole = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "002").FirstOrDefault();
+            FrameworkUser user = new FrameworkUser
+            {
+                ITCode = regInfo.ITCode,
+                Name = regInfo.Name,
+                Password = Utils.GetMD5String(regInfo.Password),
+                IsValid = true,
+                PhotoId = regInfo.PhotoId,
+            };
+            if (hasuserrole != null)
+            {
+                var userrole = new FrameworkUserRole
+                {
+                    UserCode = user.ITCode,
+                    RoleCode = "002"
+                };
+                DC.Set<FrameworkUserRole>().Add(userrole);
+            }
+            DC.Set<FrameworkUser>().Add(user);
+            DC.SaveChanges();
+            return Ok();
+        }
 
         private void LocalizeMenu(List<SimpleMenuApi> menus)
         {
@@ -259,7 +297,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Response.Redirect("/");
+            Ok();
         }
 
     }
@@ -268,5 +306,27 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         public string Account { get; set; }
         public string Password { get; set; }
+        public bool IsReload { get; set; } = false;
+    }
+
+    public class SimpleReg
+    {
+        [Display(Name = "_Admin.Account")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
+        public string ITCode { get; set; }
+
+        [Display(Name = "_Admin.Name")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
+        public string Name { get; set; }
+
+        [Display(Name = "Login.Password")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
+        public string Password { get; set; }
+
+        [Display(Name = "_Admin.Photo")]
+        public Guid? PhotoId { get; set; }
     }
 }

@@ -56,7 +56,11 @@ namespace WalkingTec.Mvvm.Core
             }
             set
             {
-                _domains = value;
+                _domains = new Dictionary<string, Domain>();
+                foreach (var domain in value)
+                {
+                    _domains.Add(domain.Key.ToLower(), domain.Value);
+                }
                 foreach (var item in _domains)
                 {
                     if(item.Value != null)
