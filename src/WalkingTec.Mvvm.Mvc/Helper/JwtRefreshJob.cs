@@ -8,6 +8,8 @@ using WalkingTec.Mvvm.Core.Support.Quartz;
 namespace WalkingTec.Mvvm.Mvc.Helper
 {
     [QuartzRepeat(3600,0,true)]
+    [QuartzJob("RefreshJwt")]
+    [QuartzGroup("Wtm_System")]
     public class JwtRefreshJob : WtmJob
     {
         public override  Task Execute(IJobExecutionContext context)

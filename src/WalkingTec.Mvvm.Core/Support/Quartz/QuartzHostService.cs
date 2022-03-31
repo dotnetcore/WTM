@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
                            // job.Sp = _sp;
                            var attrs = st.GetCustomAttributes(true);
                             string jobName = st.Name;
-                            string groupName = "group"+count;
+                            string groupName = "wtmgroup"+count;
                             var nameAttr = attrs.Where(x => x is QuartzJobAttribute).FirstOrDefault() as QuartzJobAttribute;
                             var groupAttr = attrs.Where(x => x is QuartzGroupAttribute).FirstOrDefault() as QuartzGroupAttribute;
                             var repeatAttr = attrs.Where(x => x is QuartzRepeatAttribute).FirstOrDefault() as QuartzRepeatAttribute;
@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
                               .Build();
                             // 创建触发器，每60s执行一次
                             var builder = TriggerBuilder.Create()
-                              .WithIdentity("trigger" + count, "group1");
+                              .WithIdentity("wtmtrigger" + count, "group1");
                             if (startAttr != null)
                             {
                                 builder = builder.WithCronSchedule(startAttr.Cron);

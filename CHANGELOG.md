@@ -2,6 +2,14 @@
 
 ## v6.x.x
 
+##6.1.0(2022-4-1) 
+* **新增：**  集成Quartz作业调度，为后续工作流所需内部定时任务做好准备，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/Quartz
+* **修改：**  日志分类中增加了“作业”一项
+* **修改：**  Layui模式下登录现在会统一调用/api/_account/login方法，为后续单点登录做好准备
+* **修改：**  现在当用户缓存失效时，框架会自动调用/api/_account/login或/api/_account/loginJwt获取用户信息，如无特殊情况，不需要再重写ReloadUser方法了
+* **修改：**  修复layui数据权限维护时下拉菜单的bug
+老项目更新时，除了升级Nuget包，还应该通过官网或Plus生成新项目，将系统自带的Controller和View覆盖一下
+
 ##6.0.7(2022-3-21) 
 * **HotFix：**  修复使用用xmselect引发的联动和TreeContainer的bug
 
@@ -31,6 +39,15 @@
 * **修改：**  修改了layui多选控件设置必填的bug
 
 ## v5.x.x 
+
+##5.8.2(2022-4-1) 
+* **新增：**  集成Quartz作业调度，为后续工作流所需内部定时任务做好准备，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/Quartz
+* **修改：**  日志分类中增加了“作业”一项
+* **修改：**  Layui模式下登录现在会统一调用/api/_account/login方法，为后续单点登录做好准备
+* **修改：**  现在当用户缓存失效时，框架会自动调用/api/_account/login或/api/_account/loginJwt获取用户信息，如无特殊情况，不需要再重写ReloadUser方法了
+* **修改：**  修复layui数据权限维护时下拉菜单的bug
+* **修改：**  图形操作改用ImageSharp
+老项目更新时，除了升级Nuget包，还应该通过官网或Plus生成新项目，将系统自带的Controller和View覆盖一下
 
 ##5.7.9(2022-3-21) 
 * **HotFix：**  修复使用用xmselect引发的联动和TreeContainer的bug
