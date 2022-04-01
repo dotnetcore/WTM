@@ -288,7 +288,6 @@ var {Id} = xmSelect.render({{
 ")}
 	height: '400px',
     on:function(data){{
-debugger;
         {((LinkField != null || string.IsNullOrEmpty(LinkId) == false)?@$"
             if (eval(""{(string.IsNullOrEmpty(ChangeFunc)?"1==1":FormatFuncName(ChangeFunc))}"") != false) {{
                 var u = ""{(TriggerUrl??"")}"";
