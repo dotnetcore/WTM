@@ -61,7 +61,7 @@ namespace WtmBlazorUtils
 
         public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.ExtraExtraLarge, LoginUserInfo userinfo = null, bool isMax = false)
         {
-            return await WtmBlazor.OpenDialog(Title, Values, size, userinfo, isMax);
+            return await WtmBlazor.OpenDialog(Title, Values, size, userinfo??this.UserInfo, isMax);
         }
 
         public async Task<bool> PostsData(object data, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
