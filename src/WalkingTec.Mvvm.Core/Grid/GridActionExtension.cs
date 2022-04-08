@@ -419,6 +419,18 @@ namespace WalkingTec.Mvvm.Core
             self.SubActions = subActions;
             return self;
         }
+
+        /// <summary>
+        /// 如果按钮方式是SingleId或SingleIdWithNull，WhereStr里的字段也会被带入到url中传递过去
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static GridAction SetWhereStr(this GridAction self, params string[] str)
+        {
+            self.whereStr = str;
+            return self;
+        }
         #endregion
     }
 }
