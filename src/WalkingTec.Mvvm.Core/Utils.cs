@@ -691,6 +691,10 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>返回大写32位MD5值</returns>
         public static string GetMD5String(string str)
         {
+            if(str == null)
+            {
+                return "";
+            }
             byte[] buffer = Encoding.UTF8.GetBytes(str);
 
             return MD5String(buffer);
