@@ -231,18 +231,20 @@ namespace WalkingTec.Mvvm.Core
                 return null;
             }
 
-            var password = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x =>x.Password).SingleOrDefaultAsync();
             if (this.HttpContext.Request.Headers.ContainsKey("Authorization"))
             {
-                var user = await CallAPI<LoginUserInfo>("", GetServerUrl() + "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = itcode, Password = password, IsReload=true });
+                Dictionary<string, string> headers = new Dictionary<string, string>();
+                headers.Add("Authorization", HttpContext.Request.Headers["Authorization"]);
+                var user = await CallAPI<LoginUserInfo>("", GetServerUrl() + "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = itcode, Password = "", IsReload=true }, headers: headers);
                 return user?.Data;
             }
             else
             {
+                var password = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x => x.Password).SingleOrDefaultAsync();
                 Dictionary<string, string> data = new Dictionary<string, string>();
-                data.Add("account", itcode);
                 data.Add("password", password);
-                data.Add("withmenu", "false");
+                data.Add("account", itcode);
+                data.Add("withmenu", "false");                
                 var user = await CallAPI<LoginUserInfo>("", this.HttpContext.Request.Scheme + "://" + this.HttpContext.Request.Host.ToString() + "/api/_account/login", HttpMethodEnum.POST, data);
                 return user?.Data;
             }
@@ -766,7 +768,7 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region CallApi
-        public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url, HttpMethodEnum method, HttpContent content,  int? timeout = null, string proxy = null) where T:class
+        public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url, HttpMethodEnum method, HttpContent content,  int? timeout = null, string proxy = null,Dictionary<string,string> headers = null) where T:class
         {
             ApiResult<T> rv = new ApiResult<T>();
             try
@@ -785,6 +787,13 @@ namespace WalkingTec.Mvvm.Core
                 else
                 {
                     client = factory.CreateClient(domainName);
+                }
+                if(headers != null)
+                {
+                    foreach (var item in headers)
+                    {
+                        client.DefaultRequestHeaders.Add(item.Key, item.Value);
+                    }
                 }
                 //如果配置了代理，则使用代理
                 //设置超时
@@ -869,11 +878,11 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url,  int? timeout = null, string proxy = null) where T : class
+        public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url,  int? timeout = null, string proxy = null,Dictionary<string, string> headers = null) where T : class
         {
             HttpContent content = null;
             //填充表单数据
-            return await CallAPI<T>(domainName, url, HttpMethodEnum.GET, content, timeout, proxy);
+            return await CallAPI<T>(domainName, url, HttpMethodEnum.GET, content, timeout, proxy,headers);
         }
 
         /// <summary>
@@ -887,7 +896,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, int? timeout = null, string proxy = null) where T : class
+        public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, int? timeout = null, string proxy = null, Dictionary<string, string> headers = null) where T : class
         {
             HttpContent content = null;
             //填充表单数据
@@ -900,7 +909,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 content = new FormUrlEncodedContent(paras);
             }
-            return await CallAPI<T>(domainName, url, method, content, timeout, proxy);
+            return await CallAPI<T>(domainName, url, method, content, timeout, proxy,headers);
         }
 
         /// <summary>
@@ -914,15 +923,15 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url, HttpMethodEnum method, object postdata,  int? timeout = null, string proxy = null) where T : class
+        public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url, HttpMethodEnum method, object postdata,  int? timeout = null, string proxy = null, Dictionary<string, string> headers = null) where T : class
         {
             HttpContent content = new StringContent(JsonSerializer.Serialize(postdata, CoreProgram.DefaultPostJsonOption), System.Text.Encoding.UTF8, "application/json");
-            return await CallAPI<T>(domainName, url, method, content,  timeout, proxy);
+            return await CallAPI<T>(domainName, url, method, content,  timeout, proxy,headers);
         }
 
-        public async Task<ApiResult<string>> CallAPI(string domainName, string url, HttpMethodEnum method, HttpContent content, int? timeout = null, string proxy = null) 
+        public async Task<ApiResult<string>> CallAPI(string domainName, string url, HttpMethodEnum method, HttpContent content, int? timeout = null, string proxy = null, Dictionary<string, string> headers = null) 
         {
-            return await CallAPI<string>(domainName, url, method, content, timeout, proxy);
+            return await CallAPI<string>(domainName, url, method, content, timeout, proxy,headers);
         }
 
         /// <summary>
@@ -933,9 +942,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<string>> CallAPI(string domainName, string url,  int? timeout = null, string proxy = null)
+        public async Task<ApiResult<string>> CallAPI(string domainName, string url,  int? timeout = null, string proxy = null, Dictionary<string, string> headers = null)
         {
-            return await CallAPI<string>(domainName, url, timeout, proxy);
+            return await CallAPI<string>(domainName, url, timeout, proxy,headers);
         }
 
         /// <summary>
@@ -948,9 +957,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<string>> CallAPI(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata,int? timeout = null, string proxy = null)
+        public async Task<ApiResult<string>> CallAPI(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata,int? timeout = null, string proxy = null, Dictionary<string, string> headers = null)
         {
-            return await CallAPI<string>(domainName, url, method, postdata, timeout, proxy);
+            return await CallAPI<string>(domainName, url, method, postdata, timeout, proxy,headers);
 
         }
 
@@ -964,9 +973,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public async Task<ApiResult<string>> CallAPI(string domainName, string url, HttpMethodEnum method, object postdata, int? timeout = null, string proxy = null)
+        public async Task<ApiResult<string>> CallAPI(string domainName, string url, HttpMethodEnum method, object postdata, int? timeout = null, string proxy = null, Dictionary<string, string> headers = null)
         {
-            return await CallAPI<string>(domainName, url, method, postdata, timeout, proxy);
+            return await CallAPI<string>(domainName, url, method, postdata, timeout, proxy,headers);
         }
 
 

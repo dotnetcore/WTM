@@ -797,14 +797,12 @@ window.ff = {
         var xselect = searchForm.find("div[wtm-ctype='tree'],div[wtm-ctype='combo']");
         layui.each(xselect, function (_, item) {
             var val = window[item.id].getValue('value');
-            if (val.length > 1) {
                 fieldElem = fieldElem.filter(function (index) {
-                    return this.name != item.attributes["wtm-name"].value;
+                   return this.name != item.attributes["wtm-name"].value;
                 })
                 $.each(val, function (i, v) {
                     fieldElem.push({ name: item.attributes["wtm-name"].value, value: v });
                 });
-            }
         });
 
         var check = {};
