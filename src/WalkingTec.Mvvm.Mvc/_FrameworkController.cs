@@ -753,7 +753,7 @@ namespace WalkingTec.Mvvm.Mvc
             //画验证码
             for (int i = 0; i < chkCode.Length; i++)
             {
-                Font ft = new Font(SystemFonts.Families.First(), fontSize);
+                Font ft = new Font(SystemFonts.Get("Arial"), fontSize);
                 Color clr = color[rnd.Next(color.Length)];
                 bmp.Mutate(x => x.DrawText(chkCode[i].ToString(), ft, clr, new PointF((float)i * 18, (float)0)));
             }
