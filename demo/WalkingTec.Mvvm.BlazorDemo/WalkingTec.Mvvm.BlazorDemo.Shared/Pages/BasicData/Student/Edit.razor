@@ -1,4 +1,4 @@
-﻿@page "/BasicData/Student/Edit/{id}"
+@page "/BasicData/Student/Edit/{id}"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs;
 @inherits BasePage
 
@@ -13,7 +13,7 @@
             <BootstrapInput @bind-Value="@Model.Entity.CellPhone"  />
             <BootstrapInput @bind-Value="@Model.Entity.Address"  />
             <BootstrapInput @bind-Value="@Model.Entity.ZipCode"  />
-            <WTUploadImage @bind-Value="@Model.Entity.PhotoId"  />
+            <WTUploadFile @bind-Value="@Model.Entity.PhotoId"  />
             <Switch @bind-Value="@Model.Entity.IsValid"  />
             <DateTimePicker @bind-Value="@Model.Entity.EnRollDate"  />
     <Row ColSpan="2">
