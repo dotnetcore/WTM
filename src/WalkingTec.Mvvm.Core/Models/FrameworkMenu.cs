@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
     /// FrameworkMenu
     /// </summary>
     [Table("FrameworkMenus")]
-    public class FrameworkMenu : TreePoco<FrameworkMenu>
+    public class FrameworkMenu : TreePoco<FrameworkMenu>,ITenant
     {
 
         [Display(Name = "_Admin.PageName")]
@@ -75,6 +75,9 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Icon")]
         [StringLength(50)]
         public string Icon { get; set; }
+
+        [Display(Name = "_Admin.Tenant")]
+        public string TenantCode { get; set; }
 
     }
 }

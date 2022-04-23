@@ -456,7 +456,11 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         if (itempro.Name.ToLower() == fkname.ToLower())
                                         {
-                                            itempro.SetValue(newitem, Entity.GetID());
+                                            try
+                                            {
+                                                itempro.SetValue(newitem, Entity.GetID());
+                                            }
+                                            catch { }
                                             found = true;
                                         }
                                     }

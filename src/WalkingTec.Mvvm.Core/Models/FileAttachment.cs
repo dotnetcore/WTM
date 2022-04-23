@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Core
     /// FileAttachment
     /// </summary>
     [Table("FileAttachments")]
-    public class FileAttachment : TopBasePoco, IWtmFile, IDisposable
+    public class FileAttachment : TopBasePoco, IWtmFile,ITenant, IDisposable
     {
         [Display(Name = "_Admin.FileName")]
         [Required(ErrorMessage = "Validate.{0}required")]
@@ -39,6 +39,8 @@ namespace WalkingTec.Mvvm.Core
         public string ExtraInfo { get; set; }
         public string HandlerInfo { get; set; }
 
+        [Display(Name = "_Admin.Tenant")]
+        public string TenantCode { get; set; }
 
         [NotMapped]
         [JsonIgnore]

@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
     /// FrameworkRole
     /// </summary>
     [Table("FrameworkRoles")]
-    public class FrameworkRole : BasePoco
+    public class FrameworkRole : BasePoco,ITenant
     {
         [Display(Name = "_Admin.RoleCode")]
         [Required(ErrorMessage = "Validate.{0}required")]
