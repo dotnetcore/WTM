@@ -1,14 +1,21 @@
 @using Microsoft.AspNetCore.Builder
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.Extensions.Options
+@using WalkingTec.Mvvm.Core
+@using WalkingTec.Mvvm.Core.Extensions
 @model WalkingTec.Mvvm.Core.BaseVM
 @inject IOptionsMonitor<RequestLocalizationOptions> LocOptions
 
 @{
-  var requestCulture = Context.Features.Get<IRequestCultureFeature>();
-  var cultureItems = LocOptions.CurrentValue.SupportedUICultures
-      .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
-      .ToList();
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.CurrentValue.SupportedUICultures
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
+        .ToList();
+    List<ComboSelectListItem> tenants = new List<ComboSelectListItem>();
+    if(Model?.LoginUserInfo != null)
+    {
+        tenants = Model.DC.Set<FrameworkTenant>().Where(x=>x.TenantCode == Model.LoginUserInfo.TenantCode).GetSelectListItems(Model.Wtm, x => x.TName, x=>x.TCode);
+    }
 }
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
@@ -56,7 +63,27 @@
           }
         </dl>
       </li>
-      <li class="layui-nav-item" lay-unselect>
+            @if(tenants.Count() > 0)
+            {
+       <li class="layui-nav-item" lay-unselect>
+        <a href="javascript:;">
+          <cite>@Model.Localizer["_Admin.TenantChoose"]</cite>
+        </a>
+        <dl class="layui-nav-child">
+             <dd>
+              <wt:linkbutton url="/_Framework/SetTenant?tenant=@Model?.LoginUserInfo?.TenantCode" target=" ButtonTargetEnum.self" window-width="400" text="@Model.Localizer["_Admin.TenantHost"]" is-link="true" />
+            </dd>
+         @foreach (var item in tenants)
+          {
+            <dd>
+              <wt:linkbutton url="/_Framework/SetTenant?tenant=@item.Value" target=" ButtonTargetEnum.self" window-width="400" text="@item.Text" is-link="true" />
+            </dd>
+          }
+        </dl>
+      </li>
+               
+            }
+            <li class="layui-nav-item" lay-unselect>
         <a href="javascript:;">
           @if (Model.LoginUserInfo?.PhotoId != null)
           {

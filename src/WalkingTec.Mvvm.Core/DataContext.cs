@@ -40,6 +40,7 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<ActionLog> BaseActionLogs { get; set; }
         //public DbSet<FrameworkArea> BaseFrameworkAreas { get; set; }
         public DbSet<PersistedGrant> PersistedGrants { get; set; }
+        public DbSet<FrameworkTenant> FrameworkTenants { get; set; }
 
         /// <summary>
         /// FrameworkContext
@@ -150,6 +151,28 @@ namespace WalkingTec.Mvvm.Core
                         var builder = typeof(ModelBuilder).GetMethod("Entity", Type.EmptyTypes).MakeGenericMethod(item).Invoke(modelBuilder, null) as EntityTypeBuilder;
                         builder.HasOne(filepro.Name).WithMany().OnDelete(DeleteBehavior.Restrict);
                     }
+                }
+                List<Expression> list = new List<Expression>();
+                ParameterExpression pe = Expression.Parameter(item);
+                if (typeof(IPersistPoco).IsAssignableFrom(item))
+                {
+                    var exp = Expression.Equal(Expression.Property(pe, "IsValid"), Expression.Constant(true));
+                    list.Add(exp);
+                }
+                if (typeof(ITenant).IsAssignableFrom(item))
+                {
+                    var exp = Expression.Equal(Expression.Property(pe, "TenantCode"), Expression.PropertyOrField(Expression.Constant(this),"TenantCode"));
+                    list.Add(exp);
+                }
+                if(list.Count > 0)
+                {
+                    var finalexp = list[0];
+                    for (int i = 1; i < list.Count; i++)
+                    {
+                        finalexp = Expression.AndAlso(finalexp, list[i]);
+                    }
+                    var builder = typeof(ModelBuilder).GetMethod("Entity", Type.EmptyTypes).MakeGenericMethod(item).Invoke(modelBuilder, null) as EntityTypeBuilder;
+                    builder.HasQueryFilter(Expression.Lambda(finalexp,pe));
                 }
             }
         }
@@ -388,7 +411,14 @@ namespace WalkingTec.Mvvm.Core
         /// IsFake
         /// </summary>
         public bool IsFake { get; set; }
-
+        private string _tenantCode;
+        public string TenantCode
+        {
+            get
+            {
+                return _tenantCode;
+            }
+        }
         public bool IsDebug { get; set; }
         /// <summary>
         /// CSName
@@ -669,7 +699,10 @@ namespace WalkingTec.Mvvm.Core
             this._loggerFactory = factory;
         }
 
-
+        public void SetTenantCode(string code)
+        {
+            this._tenantCode = code;
+        }
         /// <summary>
         /// 数据初始化
         /// </summary>
@@ -796,6 +829,7 @@ namespace WalkingTec.Mvvm.Core
     {
 
 
+        public string TenantCode { get; }
         public bool IsFake { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public IModel Model => throw new NotImplementedException();
@@ -897,6 +931,10 @@ namespace WalkingTec.Mvvm.Core
         }
 
         public DbSet<T> Set<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
+        public void SetTenantCode(string code)
         {
             throw new NotImplementedException();
         }

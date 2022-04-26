@@ -57,12 +57,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 query = AppendSelfDPWhere(query, wtmcontext, dps);
             }
 
-            if (typeof(IPersistPoco).IsAssignableFrom(typeof(T)))
-            {
-                var mod = new IsValidModifier();
-                var newExp = mod.Modify(query.Expression);
-                query = query.Provider.CreateQuery<T>(newExp) as IOrderedQueryable<T>;
-            }
+            //if (typeof(IPersistPoco).IsAssignableFrom(typeof(T)))
+            //{
+            //    var mod = new IsValidModifier();
+            //    var newExp = mod.Modify(query.Expression);
+            //    query = query.Provider.CreateQuery<T>(newExp) as IOrderedQueryable<T>;
+            //}
 
             //处理后面要使用的expression
             //if (valueField == null)
@@ -205,12 +205,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 query = AppendSelfDPWhere(query, wtmcontext, dps);
             }
 
-            if (typeof(IPersistPoco).IsAssignableFrom(typeof(T)))
-            {
-                var mod = new IsValidModifier();
-                var newExp = mod.Modify(query.Expression);
-                query = query.Provider.CreateQuery<T>(newExp) as IOrderedQueryable<T>;
-            }
+            //if (typeof(IPersistPoco).IsAssignableFrom(typeof(T)))
+            //{
+            //    var mod = new IsValidModifier();
+            //    var newExp = mod.Modify(query.Expression);
+            //    query = query.Provider.CreateQuery<T>(newExp) as IOrderedQueryable<T>;
+            //}
 
 
             //定义PE

@@ -7,6 +7,8 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -843,6 +845,15 @@ namespace WalkingTec.Mvvm.Mvc
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
             );
 
+            return FFResult().AddCustomScript("location.reload();");
+        }
+
+        [Public]
+        public IActionResult SetTenant(string tenant)
+        {
+            Wtm.SetCurrentTenant(tenant);
+            var principal = Wtm.LoginUserInfo.CreatePrincipal();
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
             return FFResult().AddCustomScript("location.reload();");
         }
 

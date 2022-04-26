@@ -128,18 +128,22 @@ namespace WalkingTec.Mvvm.Core
                 }
                 if (wtm != null)
                 {
-                    using (var dc = wtm.CreateDC(true))
+                    try
                     {
-                        if (dc != null)
+                        using (var dc = wtm.CreateDC(true))
                         {
-                            try
+                            if (dc != null)
                             {
-                                dc.AddEntity<ActionLog>(log);
-                                dc.SaveChanges();
+                                try
+                                {
+                                    dc.AddEntity<ActionLog>(log);
+                                    dc.SaveChanges();
+                                }
+                                catch { }
                             }
-                            catch { }
                         }
                     }
+                    catch { }
                 }
             }
         }

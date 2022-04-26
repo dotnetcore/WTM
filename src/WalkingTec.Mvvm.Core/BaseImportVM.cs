@@ -211,7 +211,7 @@ namespace WalkingTec.Mvvm.Core
                 if (Wtm.ServiceProvider != null)
                 {
                     var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
-                    file = fp.GetFile(UploadFileId, true, DC);
+                    file = fp.GetFile(UploadFileId, true,Wtm.CreateDC(false,"default"));
                 }
                 if (file == null)
                 {
@@ -704,7 +704,7 @@ namespace WalkingTec.Mvvm.Core
                         Expression conExp = conditions[0];
                         for (int i = 1; i < conditions.Count; i++)
                         {
-                            conExp = Expression.And(conExp, conditions[i]);
+                            conExp = Expression.AndAlso(conExp, conditions[i]);
                         }
 
                         MethodCallExpression whereCallExpression = Expression.Call(

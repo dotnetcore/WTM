@@ -77,7 +77,7 @@ namespace WalkingTec.Mvvm.Core
                     if (_where != null)
                     {
                         var temp = cp.Change(_where.Body, pe);
-                        var together = Expression.And(where.Body, temp);
+                        var together = Expression.AndAlso(where.Body, temp);
                         where = Expression.Lambda<Func<T, bool>>(together, pe);
                     }
                 }

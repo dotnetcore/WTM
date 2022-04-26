@@ -684,12 +684,12 @@ namespace WalkingTec.Mvvm.Core
                     var newExp = mod.Modify(query.Expression);
                     query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 }
-                if (typeof(IPersistPoco).IsAssignableFrom( typeof(TModel)))
-                {
-                    var mod = new IsValidModifier();
-                    var newExp = mod.Modify(query.Expression);
-                    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-                }
+                //if (typeof(IPersistPoco).IsAssignableFrom( typeof(TModel)))
+                //{
+                //    var mod = new IsValidModifier();
+                //    var newExp = mod.Modify(query.Expression);
+                //    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+                //}
                 if (PassSearch == false)
                 {
                     //如果需要分页，则添加分页语句

@@ -165,12 +165,12 @@ namespace WalkingTec.Mvvm.Core
                     query = query.Include(item);
                 }
             }
-            if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
-            {
-                var mod = new IsValidModifier();
-                var newExp = mod.Modify(query.Expression);
-                query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-            }
+            //if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
+            //{
+            //    var mod = new IsValidModifier();
+            //    var newExp = mod.Modify(query.Expression);
+            //    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+            //}
 
             //获取数据
             rv = query.CheckID(Id).AsNoTracking().SingleOrDefault();
@@ -257,7 +257,11 @@ namespace WalkingTec.Mvvm.Core
                     ent.CreateBy = LoginUserInfo?.ITCode;
                 }
             }
-
+            if (typeof(ITenant).IsAssignableFrom(typeof(TModel)))
+            {
+                ITenant ent = Entity as ITenant;
+                ent.TenantCode = LoginUserInfo?.TenantCode??"";
+            }
             if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
             {
                 (Entity as IPersistPoco).IsValid = true;
@@ -324,6 +328,11 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         ent.CreateBy = LoginUserInfo?.ITCode;
                                     }
+                                }
+                                if (typeof(ITenant).IsAssignableFrom(typeof(TModel)))
+                                {
+                                    ITenant ent = Entity as ITenant;
+                                    ent.TenantCode = LoginUserInfo?.TenantCode ?? "";
                                 }
                             }
                         }
@@ -573,6 +582,11 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         ent.CreateBy = LoginUserInfo?.ITCode;
                                     }
+                                }
+                                if (typeof(ITenant).IsAssignableFrom(typeof(TModel)))
+                                {
+                                    ITenant ent = Entity as ITenant;
+                                    ent.TenantCode = LoginUserInfo?.TenantCode ?? "";
                                 }
                                 DC.AddEntity(item);
                             }

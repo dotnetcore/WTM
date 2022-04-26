@@ -24,6 +24,7 @@ namespace WalkingTec.Mvvm.Core
 
         public string TenantCode { get; set; }
 
+        public string CurrentTenant { get; set; }
         public string Name { get; set; }
 
         public string Memo { get; set; }
@@ -46,13 +47,15 @@ namespace WalkingTec.Mvvm.Core
 
         public async System.Threading.Tasks.Task LoadBasicInfoAsync(WTMContext context)
         {
-            if (string.IsNullOrEmpty(this.ITCode) || context?.DC == null || context.BaseUserQuery == null)
+            if (string.IsNullOrEmpty(this.UserId) || context?.DC == null || context.BaseUserQuery == null)
             {
                 return;
             }
             var DC = context.DC;
+            Guid userid = Guid.Empty;
+            Guid.TryParse(this.UserId, out userid);
             var userInfo = await context.BaseUserQuery
-                                        .Where(x => x.ITCode.ToLower() == this.ITCode.ToLower() && x.IsValid)
+                                        .Where(x => x.ID == userid && x.IsValid)
                                         .Select(x => new {
                                             user = x,
                                             UserRoles = DC.Set<FrameworkUserRole>().Where(y => y.UserCode == x.ITCode).ToList(),
@@ -93,6 +96,10 @@ namespace WalkingTec.Mvvm.Core
                 if (string.IsNullOrEmpty(this.TenantCode))
                 {
                     this.TenantCode = userInfo.user.TenantCode;
+                }
+                if(Attributes == null)
+                {
+                    Attributes = new Dictionary<string, object>();
                 }
                 this.Roles = roles.Select(x => new SimpleRole { ID = x.ID, RoleCode = x.RoleCode, RoleName = x.RoleName }).ToList();
                 this.Groups = groups.Select(x => new SimpleGroup { ID = x.ID, GroupCode = x.GroupCode, GroupName = x.GroupName }).ToList();

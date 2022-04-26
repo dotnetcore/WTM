@@ -41,18 +41,24 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] bool rememberLogin = false, [FromForm] bool withMenu = true)
+        public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] string tenant=null, [FromForm] bool rememberLogin = false, [FromForm] bool withMenu = true)
         {
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && (x.Password == Utils.GetMD5String(password) || x.Password == password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
-
+            object rv = null;
+            if (tenant == null)
+            {
+                rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && (x.Password == Utils.GetMD5String(password) || x.Password == password) && x.IsValid).Select(x => x.GetID()).SingleOrDefaultAsync();
+            }
+            else
+            {
+                rv = await DC.Set<FrameworkUser>().IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == account.ToLower() && (x.Password == Utils.GetMD5String(password) || x.Password == password) && x.IsValid && x.TenantCode == tenant).Select(x => x.GetID()).SingleOrDefaultAsync();
+            }
             if (rv == null)
             {
                 return BadRequest(Localizer["Sys.LoginFailed"].Value);
             }
             LoginUserInfo user = new LoginUserInfo
             {
-                ITCode = rv.itcode,
-                UserId = rv.id.ToString()
+                UserId = rv.ToString()
             };
 
             await user.LoadBasicInfoAsync(Wtm);
@@ -132,7 +138,24 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
 
             var userIdStr = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault() ?? "";
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && (x.Password == Utils.GetMD5String(loginInfo.Password) || x.ITCode.ToLower() == userIdStr.ToLower()) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
+            var tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault();
+
+            object rv = null;
+            if(loginInfo.IsReload == true && string.IsNullOrEmpty(userIdStr) == false)
+            {
+                rv = await DC.Set<FrameworkUser>().IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == userIdStr.ToLower() && x.TenantCode == tenant && x.IsValid).Select(x => x.GetID()).SingleOrDefaultAsync();
+            }
+            else
+            {
+                if(loginInfo.Tenant == null)
+                {
+                    rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password) && x.IsValid).Select(x => x.GetID()).SingleOrDefaultAsync();
+                }
+                else
+                {
+                    rv = await DC.Set<FrameworkUser>().IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == loginInfo.Account.ToLower() && x.Password == Utils.GetMD5String(loginInfo.Password) && x.TenantCode == loginInfo.Tenant && x.IsValid).Select(x =>x.GetID()).SingleOrDefaultAsync();
+                }
+            }
 
             if (rv == null)
             {
@@ -141,8 +164,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             LoginUserInfo user = new LoginUserInfo
             {
-                ITCode = rv.itcode,
-                UserId = rv.id.ToString()
+                UserId = rv.ToString()
             };
             await user.LoadBasicInfoAsync(Wtm);
 
@@ -160,6 +182,14 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Ok(user);
             }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("[action]")]
+        public IActionResult SetTenant(string tenant)
+        {
+            bool rv = Wtm.SetCurrentTenant(tenant);
+            return Ok(rv);
         }
 
         [AllowAnonymous]
@@ -323,6 +353,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         public string Account { get; set; }
         public string Password { get; set; }
+        public string Tenant { get; set; }
         public bool IsReload { get; set; } = false;
     }
     public class SimpleReg

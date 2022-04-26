@@ -54,7 +54,10 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public string CurrentCS { get; set; }
+        public string CurrentCS {
+            get;
+            set;
+        }
 
         public DBTypeEnum? CurrentDbType { get; set; }
 
@@ -345,11 +348,22 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public bool SetCurrentTenant(string tenant)
+        {
+            if(LoginUserInfo != null)
+            {
+                LoginUserInfo.CurrentTenant = tenant;
+                LoginUserInfo = LoginUserInfo;
+                return true;
+            }
+            return false;
+        }
 
         #region CreateDC
-        public virtual IDataContext CreateDC(bool isLog = false, string cskey = null)
+        public virtual IDataContext CreateDC(bool isLog = false, string cskey = null, bool logerror = true)
         {
             string cs = cskey ?? CurrentCS;
+            string tenantCode = null;
             if (isLog == true)
             {
                 if (ConfigInfo.Connections?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
@@ -357,13 +371,62 @@ namespace WalkingTec.Mvvm.Core
                     cs = "defaultlog";
                 }
             }
-            if (cs == null)
+            if (string.IsNullOrEmpty(cs))
             {
+                //判断多租户的dc
+                var tenants = ReadFromCache<List<FrameworkTenant>>("tenants", () =>
+                {
+                    try
+                    {
+                        var defaultdc = this.CreateDC(false, "default",false);
+                        var rv = defaultdc.Set<FrameworkTenant>().ToList();
+                        return rv;
+                    }
+                    catch
+                    {
+                        return new List<FrameworkTenant>();
+                    }
+                }, 36000);
+                string tc = null;
+                if (this.LoginUserInfo?.TenantCode == null && this.LoginUserInfo?.CurrentTenant != null)
+                {
+                    tc = this.LoginUserInfo?.CurrentTenant;
+                }
+                else
+                {
+                    tc = this.LoginUserInfo?.TenantCode;
+                }
+                if (tc == null && HttpContext?.Request?.Host != null)
+                {
+                    tc = tenants.Where(x=>x.TDomain.ToLower() == HttpContext.Request.Host.ToString().ToLower()).Select(x=>x.TCode).FirstOrDefault();
+                }
+                if(tc != null)
+                {
+                    var item = tenants.Where(x=>x.TCode == tc).FirstOrDefault();
+                    tenantCode = tc;
+                    if (item.TDb != null && item.TDb != "" && item.TDbType != null)
+                    {
+                        var context = string.IsNullOrEmpty(item.DbContext) ? "DataContext" : item.DbContext;
+                        var DcConstructor = CS.CisFull.Where(x => x.DeclaringType.Name.ToLower() == context.ToLower()).FirstOrDefault();
+                        var tenantdc = (IDataContext)DcConstructor?.Invoke(new object[] { item.TDb, item.TDbType });
+                        tenantdc.IsDebug = ConfigInfo.IsQuickDebug;
+                        if (logerror == true)
+                        {
+                            tenantdc.SetLoggerFactory(_loggerFactory);
+                        }
+                        tenantdc.SetTenantCode(tenantCode);
+                        return tenantdc;
+                    }
+                }
                 cs = "default";
             }
             var rv = ConfigInfo.Connections.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault().CreateDC();
             rv.IsDebug = ConfigInfo.IsQuickDebug;
-            rv.SetLoggerFactory(_loggerFactory);
+            rv.SetTenantCode(tenantCode);
+            if (logerror == true)
+            {
+                rv.SetLoggerFactory(_loggerFactory);
+            }
             return rv;
         }
 
