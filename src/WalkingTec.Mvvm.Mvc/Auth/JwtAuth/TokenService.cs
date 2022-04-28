@@ -47,12 +47,21 @@ namespace WalkingTec.Mvvm.Mvc.Auth
 
             var cls = new List<Claim>()
                 {
-                    new Claim(AuthConstants.JwtClaimTypes.Subject, loginUserInfo.ITCode.ToString())
+                    new Claim(AuthConstants.JwtClaimTypes.Subject, loginUserInfo.ITCode)
                 };
             if (string.IsNullOrEmpty(loginUserInfo.TenantCode) == false)
             {
-                cls.Add(new Claim(AuthConstants.JwtClaimTypes.TenantCode, loginUserInfo.TenantCode.ToString()));
+                cls.Add(new Claim(AuthConstants.JwtClaimTypes.TenantCode, loginUserInfo.TenantCode));
             }
+            if (string.IsNullOrEmpty(loginUserInfo.CurrentTenant) == true && string.IsNullOrEmpty(loginUserInfo.TenantCode) == false)
+            {
+                cls.Add(new Claim(AuthConstants.JwtClaimTypes.CurrentTenant, loginUserInfo.TenantCode));
+            }
+            else if(string.IsNullOrEmpty(loginUserInfo.CurrentTenant) == false)
+            {
+                cls.Add(new Claim(AuthConstants.JwtClaimTypes.CurrentTenant, loginUserInfo.CurrentTenant));
+            }
+
             var tokeOptions = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Audience,

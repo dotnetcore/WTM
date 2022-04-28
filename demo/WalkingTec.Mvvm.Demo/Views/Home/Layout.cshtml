@@ -14,7 +14,11 @@
     List<ComboSelectListItem> tenants = new List<ComboSelectListItem>();
     if(Model?.LoginUserInfo != null)
     {
-        tenants = Model.DC.Set<FrameworkTenant>().Where(x=>x.TenantCode == Model.LoginUserInfo.TenantCode).GetSelectListItems(Model.Wtm, x => x.TName, x=>x.TCode);
+        var cache = Model.Cache.Get<List<FrameworkTenant>>("tenants");
+        if (cache != null)
+        {
+           tenants = cache.Where(x => x.TenantCode == Model.LoginUserInfo.TenantCode).AsQueryable().GetSelectListItems(Model.Wtm, x => x.TName, x => x.TCode);
+        }
     }
 }
 <div class="layui-layout layui-layout-admin">
@@ -67,7 +71,7 @@
             {
        <li class="layui-nav-item" lay-unselect>
         <a href="javascript:;">
-          <cite>@Model.Localizer["_Admin.TenantChoose"]</cite>
+          <cite>@(Model?.LoginUserInfo?.CurrentTenant==null?@Model.Localizer["_Admin.TenantHost"] : tenants.Where(x=>x.Value.ToString()== Model.LoginUserInfo.CurrentTenant).Select(x=>x.Text).FirstOrDefault())</cite>
         </a>
         <dl class="layui-nav-child">
              <dd>

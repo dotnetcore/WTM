@@ -361,13 +361,13 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFileName")]
         public IActionResult GetFileName([FromServices] WtmFileProvider fp, Guid id, string _DONOT_USE_CS = "default")
         {
-            return Ok(fp.GetFileName(id.ToString(), ConfigInfo.CreateDC(_DONOT_USE_CS)));
+            return Ok(fp.GetFileName(id.ToString(), Wtm.CreateDC(cskey: _DONOT_USE_CS)));
         }
 
         [ActionDescription("GetFile")]
         public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
-            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(_DONOT_USE_CS));
+            var file = fp.GetFile(id, true, Wtm.CreateDC(cskey: _DONOT_USE_CS));
             if (file == null)
             {
                 return new EmptyResult();
@@ -437,7 +437,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("ViewFile")]
         public IActionResult ViewFile([FromServices] WtmFileProvider fp, string id, string width, string _DONOT_USE_CS = "default")
         {
-            var file = fp.GetFile(id, false, ConfigInfo.CreateDC(_DONOT_USE_CS));
+            var file = fp.GetFile(id, false, Wtm.CreateDC(cskey: _DONOT_USE_CS));
             string html = string.Empty;
             var ext = file.FileExt.ToLower();
             if (ext == "pdf")

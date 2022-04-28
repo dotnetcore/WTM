@@ -148,24 +148,83 @@ namespace WalkingTec.Mvvm.Core
             //去掉ID列和Action列
             RemoveActionAndIdColumn();
 
-            //如果没有数据源，进行查询
-            if (IsSearched == false)
-            {
-                DoSearch();
-            }
+            var query = SearcherMode== ListVMSearchModeEnum.CheckExport? GetCheckedExportQuery() : GetExportQuery();
+            int listcount = query.Count();
 
             //获取分成Excel的个数
             ExportMaxCount = ExportMaxCount == 0 ? 1000000 : (ExportMaxCount > 1000000 ? 1000000 : ExportMaxCount);
-            ExportExcelCount = EntityList.Count < ExportMaxCount ? 1 : ((EntityList.Count % ExportMaxCount) == 0 ? (EntityList.Count / ExportMaxCount) : (EntityList.Count / ExportMaxCount + 1));
+            ExportExcelCount = listcount < ExportMaxCount ? 1 : ((listcount % ExportMaxCount) == 0 ? (listcount / ExportMaxCount) : (listcount / ExportMaxCount + 1));
 
             //如果是1，直接下载Excel，如果是多个，下载ZIP包
             if (ExportExcelCount == 1)
             {
-                return DownLoadExcel();
+                var data = query.ToList();
+                return DownLoadExcel(data);
             }
             else
             {
-                return DownLoadZipPackage(typeof(TModel).Name + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff"));
+                Guid g = Guid.NewGuid();
+                var FileName = typeof(TModel).Name + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff");
+                //文件根目录            
+                string RootPath = $"{Wtm.ConfigInfo.HostRoot}\\export{g}";
+
+                //文件夹目录
+                string FilePath = $"{RootPath}//FileFolder";
+
+                //压缩包目录
+                string ZipPath = $"{RootPath}//{g}.zip";
+
+                //打开文件夹
+                DirectoryInfo FileFolder = new DirectoryInfo(FilePath);
+                if (!FileFolder.Exists)
+                {
+                    //创建文件夹
+                    FileFolder.Create();
+                }
+                else
+                {
+                    //清空文件夹
+                    FileSystemInfo[] Files = FileFolder.GetFileSystemInfos();
+                    foreach (var item in Files)
+                    {
+                        if (item is DirectoryInfo)
+                        {
+                            DirectoryInfo Directory = new DirectoryInfo(item.FullName);
+                            Directory.Delete(true);
+                        }
+                        else
+                        {
+                            File.Delete(item.FullName);
+                        }
+                    }
+                }
+                for (int i = 0; i < ExportExcelCount; i++)
+                {
+                    var data = query.Skip(i * ExportMaxCount).Take(ExportMaxCount).ToList();
+                    var WorkBook = GenerateWorkBook(data);
+                    string SavePath = $"{FilePath}/{FileName}_{i + 1}.xlsx";
+                    using (FileStream FS = new FileStream(SavePath, FileMode.CreateNew))
+                    {
+                        WorkBook.Write(FS);
+                    }
+                }
+
+                //生成压缩包
+                ZipFile.CreateFromDirectory(FilePath, ZipPath);
+
+                //读取压缩包
+                FileStream ZipFS = new FileStream(ZipPath, FileMode.Open, FileAccess.Read);
+                byte[] bt = new byte[ZipFS.Length];
+                ZipFS.Read(bt, 0, bt.Length);
+                ZipFS.Close();
+
+                //删除根目录文件夹
+                DirectoryInfo RootFolder = new DirectoryInfo(RootPath);
+                if (RootFolder.Exists)
+                {
+                    RootFolder.Delete(true);
+                }
+                return bt;
             }
         }
 
@@ -265,9 +324,9 @@ namespace WalkingTec.Mvvm.Core
             return book;
         }
 
-        private byte[] DownLoadExcel()
+        private byte[] DownLoadExcel(List<TModel> data)
         {
-            var book = GenerateWorkBook(EntityList);
+            var book = GenerateWorkBook(data);
             byte[] rv = new byte[] { };
             using (MemoryStream ms = new MemoryStream())
             {
@@ -275,73 +334,6 @@ namespace WalkingTec.Mvvm.Core
                 rv = ms.ToArray();
             }
             return rv;
-        }
-
-        private byte[] DownLoadZipPackage(string FileName)
-        {
-            //文件根目录            
-            string RootPath = $"{Directory.GetCurrentDirectory()}\\{FileName}";
-
-            //文件夹目录
-            string FilePath = $"{RootPath}//FileFolder";
-
-            //压缩包目录
-            string ZipPath = $"{RootPath}//{FileName}.zip";
-
-            //打开文件夹
-            DirectoryInfo FileFolder = new DirectoryInfo(FilePath);
-            if (!FileFolder.Exists)
-            {
-                //创建文件夹
-                FileFolder.Create();
-            }
-            else
-            {
-                //清空文件夹
-                FileSystemInfo[] Files = FileFolder.GetFileSystemInfos();
-                foreach (var item in Files)
-                {
-                    if (item is DirectoryInfo)
-                    {
-                        DirectoryInfo Directory = new DirectoryInfo(item.FullName);
-                        Directory.Delete(true);
-                    }
-                    else
-                    {
-                        File.Delete(item.FullName);
-                    }
-                }
-            }
-
-            //放入数据
-            for (int i = 0; i < ExportExcelCount; i++)
-            {
-                var List = EntityList.Skip(i * ExportMaxCount).Take(ExportMaxCount).ToList();
-                var WorkBook = GenerateWorkBook(List);
-                string SavePath = $"{FilePath}/{FileName}_{i + 1}.xlsx";
-                using (FileStream FS = new FileStream(SavePath, FileMode.CreateNew))
-                {
-                    WorkBook.Write(FS);
-                }
-            }
-
-            //生成压缩包
-            ZipFile.CreateFromDirectory(FilePath, ZipPath);
-
-            //读取压缩包
-            FileStream ZipFS = new FileStream(ZipPath, FileMode.Open, FileAccess.Read);
-            byte[] bt = new byte[ZipFS.Length];
-            ZipFS.Read(bt, 0, bt.Length);
-            ZipFS.Close();
-
-            //删除根目录文件夹
-            DirectoryInfo RootFolder = new DirectoryInfo(RootPath);
-            if (RootFolder.Exists)
-            {
-                RootFolder.Delete(true);
-            }
-
-            return bt;
         }
 
         /// <summary>

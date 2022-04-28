@@ -64,8 +64,8 @@ namespace WalkingTec.Mvvm.Demo
         public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs)
         {
             IconFontsHelper.GenerateIconFont();
-
-            app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
+            app.UseForwardedHeaders();
+           app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
             app.UseStaticFiles();
             app.UseWtmStaticFiles();
             app.UseRouting();

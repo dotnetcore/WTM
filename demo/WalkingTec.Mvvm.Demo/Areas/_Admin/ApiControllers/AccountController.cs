@@ -44,7 +44,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] string tenant=null, [FromForm] bool rememberLogin = false, [FromForm] bool withMenu = true)
         {
             object rv = null;
-            if (tenant == null)
+            if (string.IsNullOrEmpty(tenant) == true)
             {
                 rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == account.ToLower() && (x.Password == Utils.GetMD5String(password) || x.Password == password) && x.IsValid).Select(x => x.GetID()).SingleOrDefaultAsync();
             }
@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
 
             var principal = Wtm.LoginUserInfo.CreatePrincipal();
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
+            await Wtm.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
             if (withMenu == false)
             {
                 return Ok(user);

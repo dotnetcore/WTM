@@ -17,6 +17,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Password { get; set; }
 
+        [Display(Name = "_Admin.Tenant")]
+        public string Tenant { get; set; }
+
         [Display(Name = "Login.RememberMe")]
         public bool RememberLogin { get; set; }
 

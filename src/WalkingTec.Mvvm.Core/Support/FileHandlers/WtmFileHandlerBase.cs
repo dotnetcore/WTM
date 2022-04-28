@@ -18,10 +18,6 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         {
             _config = config;
             _dc = dc;
-            if (_dc == null)
-            {
-                _dc = _config.CreateDC();
-            }
         }
 
 

@@ -379,8 +379,30 @@ namespace WalkingTec.Mvvm.Core
                     try
                     {
                         var defaultdc = this.CreateDC(false, "default",false);
-                        var rv = defaultdc.Set<FrameworkTenant>().ToList();
-                        return rv;
+                        if (ConfigInfo?.TenantLevel > 0)
+                        {
+                            var rv = defaultdc.Set<FrameworkTenant>().Where(x => x.Enabled).ToList();
+                            for(int i = 0; i < rv.Count; i++)
+                            {
+                                int level = 0;
+                                FrameworkTenant temp = rv[i];
+                                while (temp?.TenantCode != null)
+                                {
+                                    temp = rv.Where(x => x.TCode == temp.TenantCode).FirstOrDefault();
+                                    level++;
+                                }
+                                if(level >= ConfigInfo.TenantLevel)
+                                {
+                                    rv.RemoveAt(i);
+                                    i--;
+                                }
+                            }
+                            return rv;
+                        }
+                        else
+                        {
+                            return new List<FrameworkTenant>();
+                        }
                     }
                     catch
                     {
@@ -388,13 +410,16 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }, 36000);
                 string tc = null;
-                if (this.LoginUserInfo?.TenantCode == null && this.LoginUserInfo?.CurrentTenant != null)
+                var usertenant = HttpContext?.User?.Claims?.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault();
+                var usercurrenttenant = HttpContext?.User?.Claims?.Where(x => x.Type == AuthConstants.JwtClaimTypes.CurrentTenant).Select(x => x.Value).FirstOrDefault();
+
+                if (usertenant == null && usercurrenttenant != null)
                 {
-                    tc = this.LoginUserInfo?.CurrentTenant;
+                    tc = usercurrenttenant;
                 }
                 else
                 {
-                    tc = this.LoginUserInfo?.TenantCode;
+                    tc = usertenant;
                 }
                 if (tc == null && HttpContext?.Request?.Host != null)
                 {
@@ -404,7 +429,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     var item = tenants.Where(x=>x.TCode == tc).FirstOrDefault();
                     tenantCode = tc;
-                    if (item.TDb != null && item.TDb != "" && item.TDbType != null)
+                    if (item != null && item.TDb != null && item.TDb != "" && item.TDbType != null)
                     {
                         var context = string.IsNullOrEmpty(item.DbContext) ? "DataContext" : item.DbContext;
                         var DcConstructor = CS.CisFull.Where(x => x.DeclaringType.Name.ToLower() == context.ToLower()).FirstOrDefault();

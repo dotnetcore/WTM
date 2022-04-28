@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.TenantDbType")]
         public DBTypeEnum? TDbType { get; set; }
 
-        [Display(Name = "_Admin.DbContext")]
+        [Display(Name = "_Admin.TenantDbContext")]
         public string DbContext { get; set; }
 
         [Display(Name = "_Admin.TenantDomain")]
@@ -42,6 +42,9 @@ namespace WalkingTec.Mvvm.Core
 
         [Display(Name = "_Admin.Tenant")]
         public string TenantCode { get; set; }
+
+        [Display(Name = "Sys.Enable")]
+        public bool Enabled { get; set; } = true;
 
         [NotMapped]
         public bool IsUsingDB

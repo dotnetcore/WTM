@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [Public]
         public IActionResult GetFileName([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            return Ok(fp.GetFileName(id, ConfigInfo.CreateDC(csName)));
+            return Ok(fp.GetFileName(id, Wtm.CreateDC(cskey: csName)));
         }
 
         [HttpGet("[action]/{id}")]
@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [Public]
         public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, string csName = null, int? width = null, int? height = null)
         {
-            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id, true, Wtm.CreateDC(cskey: csName));
 
 
             if (file == null)

@@ -95,6 +95,28 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        #region Tenant
+
+        private int? _tenantLevel;
+
+        /// <summary>
+        /// Is debug mode
+        /// </summary>
+        public int TenantLevel
+        {
+            get
+            {
+                return _tenantLevel ?? 0;
+            }
+            set
+            {
+                _tenantLevel = value;
+            }
+        }
+
+        #endregion
+
+
         public string ErrorHandler { get; set; } = "/_Framework/Error";
 
         #region Cookie prefix
@@ -469,16 +491,6 @@ namespace WalkingTec.Mvvm.Core
         }
 
         #endregion
-
-        public IDataContext CreateDC(string csName = null)
-        {
-            if (string.IsNullOrEmpty(csName))
-            {
-                csName = "default";
-            }
-            var cs = Connections.Where(x => x.Key.ToLower() == csName.ToLower()).FirstOrDefault();
-            return cs?.CreateDC();
-        }
 
     }
 }

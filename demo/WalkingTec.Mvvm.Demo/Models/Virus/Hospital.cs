@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.Models.Virus
        Class1, 
     }
     
-    public class Hospital: TopBasePoco
+    public class Hospital: TopBasePoco, ITenant
     {
         [Display(Name = "医院名称")]
         [Required(ErrorMessage = "医院名称是必填项")]
@@ -31,5 +31,6 @@ namespace WalkingTec.Mvvm.Demo.Models.Virus
         [Display(Name = "医院地点")]
         [Required(ErrorMessage = "医院地点是必填项")]
         public Guid? LocationId { get; set; }
+        public string TenantCode { get; set; }
     }
 }
