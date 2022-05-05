@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
     /// FrameworkMenu
     /// </summary>
     [Table("FrameworkMenus")]
-    public class FrameworkMenu : TreePoco<FrameworkMenu>,ITenant
+    public class FrameworkMenu : TreePoco<FrameworkMenu>
     {
 
         [Display(Name = "_Admin.PageName")]
@@ -31,9 +31,6 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.IsInherit")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool IsInherit { get; set; }
-
-        [Display(Name = "_Admin.Privileges")]
-        public List<FunctionPrivilege> Privileges { get; set; }
 
         /// <summary>
         /// ClassName
@@ -75,9 +72,5 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Icon")]
         [StringLength(50)]
         public string Icon { get; set; }
-
-        [Display(Name = "_Admin.Tenant")]
-        public string TenantCode { get; set; }
-
     }
 }

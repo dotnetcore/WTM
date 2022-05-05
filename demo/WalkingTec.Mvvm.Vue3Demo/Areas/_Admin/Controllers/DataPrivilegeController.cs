@@ -12,7 +12,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("MenuKey.DataPrivilege")]
+    [ActionDescription("_Admin.DataPrivilegeApi")]
     [ApiController]
     [Route("api/_[controller]")]
     public class DataPrivilegeController : BaseApiController
@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public ActionResult GetUserGroups()
         {
-            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x=>x.GroupCode);
+            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName);
             return Ok(rv);
         }
     }

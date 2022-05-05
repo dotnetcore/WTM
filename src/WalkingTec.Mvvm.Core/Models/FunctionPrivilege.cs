@@ -16,9 +16,6 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.MenuItem")]
         public Guid MenuItemId { get; set; }
 
-        [Display(Name = "_Admin.MenuItem")]
-        public FrameworkMenu MenuItem { get; set; }
-
         [Display(Name = "_Admin.Allowed")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool? Allowed { get; set; }

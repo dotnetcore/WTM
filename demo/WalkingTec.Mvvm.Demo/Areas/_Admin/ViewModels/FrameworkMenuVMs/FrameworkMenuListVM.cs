@@ -141,7 +141,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             if (SearcherMode == ListVMSearchModeEnum.Custom2)
             {
                 var pris = DC.Set<FunctionPrivilege>()
-                                .Where(x => x.RoleCode == DC.Set<FrameworkRole>().CheckID(Searcher.RoleID, null).Select(x => x.RoleCode).FirstOrDefault()).ToList();
+                                .Where(x => x.RoleCode == Searcher.RoleCode).ToList();
                 var allowed = pris.Where(x => x.Allowed == true).Select(x => x.MenuItemId).ToList();
                 var denied = pris.Where(x => x.Allowed == false).Select(x => x.MenuItemId).ToList();
                 int order = 0;

@@ -104,7 +104,6 @@ namespace WalkingTec.Mvvm.Admin.Api
                         }
                         var ms = new MemoryStream();
                         oimage.Mutate(x => x.Resize(width.Value, height.Value));
-                        oimage.SaveAsJpeg(ms);
                         ms.Position = 0;
                         await ms?.CopyToAsync(Response.Body);
                         file.DataStream.Dispose();
@@ -134,7 +133,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [Public]
         public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id, true, Wtm.CreateDC(cskey: csName));
             if (file == null)
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
@@ -153,7 +152,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("DeleteFile")]
         public IActionResult DeletedFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            fp.DeleteFile(id, ConfigInfo.CreateDC(csName));
+            fp.DeleteFile(id, Wtm.CreateDC(cskey: csName));
             return Ok(true);
         }
     }

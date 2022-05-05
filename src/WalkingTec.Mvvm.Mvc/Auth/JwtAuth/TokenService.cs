@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Mvc.Auth
 {
@@ -52,14 +53,6 @@ namespace WalkingTec.Mvvm.Mvc.Auth
             if (string.IsNullOrEmpty(loginUserInfo.TenantCode) == false)
             {
                 cls.Add(new Claim(AuthConstants.JwtClaimTypes.TenantCode, loginUserInfo.TenantCode));
-            }
-            if (string.IsNullOrEmpty(loginUserInfo.CurrentTenant) == true && string.IsNullOrEmpty(loginUserInfo.TenantCode) == false)
-            {
-                cls.Add(new Claim(AuthConstants.JwtClaimTypes.CurrentTenant, loginUserInfo.TenantCode));
-            }
-            else if(string.IsNullOrEmpty(loginUserInfo.CurrentTenant) == false)
-            {
-                cls.Add(new Claim(AuthConstants.JwtClaimTypes.CurrentTenant, loginUserInfo.CurrentTenant));
             }
 
             var tokeOptions = new JwtSecurityToken(

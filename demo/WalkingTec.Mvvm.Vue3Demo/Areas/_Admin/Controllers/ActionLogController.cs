@@ -11,18 +11,25 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("MenuKey.ActionLog")]
+    [ActionDescription("_Admin.ActionLogApi")]
     [ApiController]
     [Route("api/_[controller]")]
     public class ActionLogController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(ActionLogSearcher searcher)
+        public IActionResult Search(ActionLogSearcher searcher)
         {
-            var vm = Wtm.CreateVM<ActionLogListVM>(passInit: true);
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<ActionLogListVM>(passInit:true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]

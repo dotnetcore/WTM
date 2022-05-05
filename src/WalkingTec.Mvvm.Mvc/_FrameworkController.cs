@@ -26,8 +26,6 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
-using WalkingTec.Mvvm.Core.Support.Json;
-using WalkingTec.Mvvm.Mvc.Model;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -494,169 +492,15 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        /// <summary>
-        /// 移除没有权限访问的菜单
-        /// </summary>
-        /// <param name="menus">菜单列表</param>
-        /// <param name="info">用户信息</param>
-        private void RemoveUnAccessableMenu(List<Menu> menus, LoginUserInfo info)
-        {
-            if (menus == null)
-            {
-                return;
-            }
-
-            List<Menu> toRemove = new List<Menu>();
-            //如果没有指定用户信息，则用当前用户的登录信息
-            if (info == null)
-            {
-                info = Wtm.LoginUserInfo;
-            }
-            //循环所有菜单项
-            foreach (var menu in menus)
-            {
-                //判断是否有权限，如果没有，则添加到需要移除的列表中
-                var url = menu.Url;
-                if (!string.IsNullOrEmpty(url) && url.StartsWith("/_framework/outside?url="))
-                {
-                    url = url.Replace("/_framework/outside?url=", "");
-                }
-                if (!string.IsNullOrEmpty(url) && Wtm.IsAccessable(url) == false)
-                {
-                    toRemove.Add(menu);
-                }
-                //如果有权限，则递归调用本函数检查子菜单
-                else
-                {
-                    RemoveUnAccessableMenu(menu.Children, info);
-                }
-            }
-            //删除没有权限访问的菜单
-            foreach (var remove in toRemove)
-            {
-                menus.Remove(remove);
-            }
-        }
-
-        /// <summary>
-        /// RemoveEmptyMenu
-        /// </summary>
-        /// <param name="menus"></param>
-        private void RemoveEmptyMenu(List<Menu> menus)
-        {
-            if (menus == null)
-            {
-                return;
-            }
-            List<Menu> toRemove = new List<Menu>();
-            //循环所有菜单项
-            foreach (var menu in menus)
-            {
-                RemoveEmptyMenu(menu.Children);
-                if ((menu.Children == null || menu.Children.Count == 0) && (string.IsNullOrEmpty(menu.Url)))
-                {
-                    toRemove.Add(menu);
-                }
-            }
-            foreach (var remove in toRemove)
-            {
-                menus.Remove(remove);
-            }
-        }
-
-        private void LocalizeMenu(List<Menu> menus)
-        {
-            if (menus == null)
-            {
-                return;
-            }
-            //循环所有菜单项
-            foreach (var menu in menus)
-            {
-                LocalizeMenu(menu.Children);
-                menu.Title = Core.CoreProgram._localizer?[menu.Title];
-            }
-        }
-
-        /// <summary>
-        /// genreate menu
-        /// </summary>
-        /// <param name="menus"></param>
-        /// <param name="resultMenus"></param>
-        /// <param name="quickDebug"></param>
-        private void GenerateMenuTree(List<SimpleMenu> menus, List<Menu> resultMenus, bool quickDebug = false)
-        {
-            resultMenus.AddRange(menus.Where(x => x.ParentId == null).Select(x => new Menu()
-            {
-                Id = x.ID,
-                Title = x.PageName,
-                Url = x.Url,
-                Order = x.DisplayOrder,
-                Icon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
-            })
-            .OrderBy(x => x.Order)
-            .ToList());
-
-            foreach (var menu in resultMenus)
-            {
-                var temp = menus.Where(x => x.ParentId == menu.Id).Select(x => new Menu()
-                {
-                    Id = x.ID,
-                    Title = x.PageName,
-                    Url = x.Url,
-                    Order = x.DisplayOrder,
-                    Icon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
-                })
-                .OrderBy(x => x.Order)
-                .ToList();
-                if (temp.Count() > 0)
-                {
-                    menu.Children = temp;
-                    foreach (var item in menu.Children)
-                    {
-                        item.Children = menus.Where(x => x.ParentId == item.Id).Select(x => new Menu()
-                        {
-                            Title = x.PageName,
-                            Url = x.Url,
-                            Order = x.DisplayOrder,
-                            Icon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
-                        })
-                        .OrderBy(x => x.Order)
-                        .ToList();
-
-                        if (item.Children.Count() == 0)
-                            item.Children = null;
-                    }
-                }
-            }
-        }
 
         [HttpGet]
         public IActionResult Menu()
         {
-            if (Wtm.ConfigInfo.IsQuickDebug == true)
+            var resultMenus = GlobaInfo.AllMenus.ToLayuiMenu(Wtm);
+            return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
             {
-                var resultMenus = new List<Menu>();
-                GenerateMenuTree(GlobaInfo.AllMenus, resultMenus, true);
-                RemoveEmptyMenu(resultMenus);
-                LocalizeMenu(resultMenus);
-                return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
-                {
-                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
-                }), "application/json");
-            }
-            else
-            {
-                var resultMenus = new List<Menu>();
-                GenerateMenuTree(GlobaInfo.AllMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
-                RemoveUnAccessableMenu(resultMenus, Wtm.LoginUserInfo);
-                RemoveEmptyMenu(resultMenus);
-                LocalizeMenu(resultMenus);
-                return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
-                {
-                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
-                }), "application/json");
-            }
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
+            }), "application/json");
         }
 
         [AllowAnonymous]
@@ -875,6 +719,21 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult Redirect401()
         {
             return this.Unauthorized();
+        }
+
+        [Public]
+        public async Task<ActionResult> RemoteEntry(string redirect)
+        {
+            if (string.IsNullOrEmpty(redirect))
+            {
+                redirect = "/";
+            }
+            if (Wtm?.LoginUserInfo != null)
+            {
+                var principal = Wtm.LoginUserInfo.CreatePrincipal();
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
+            }
+            return Content($"<script>window.location.href='{HttpUtility.UrlDecode(redirect)}'</script>", "text/html");
         }
 
     }

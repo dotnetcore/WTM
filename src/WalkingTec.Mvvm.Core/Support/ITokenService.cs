@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Support.Json;
 
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core
 {
     public interface ITokenService
     {

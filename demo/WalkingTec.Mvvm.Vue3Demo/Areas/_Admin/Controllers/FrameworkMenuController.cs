@@ -13,7 +13,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("MenuKey.MenuMangement")]
+    [ActionDescription("_Admin.MenuApi")]
     [ApiController]
     [Route("api/_[controller]")]
     public class FrameworkMenuController : BaseApiController
@@ -179,20 +179,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
 
             return Ok(AllParents);
-        }
-
-        [AllRights]
-        [HttpGet("GetIcons")]
-        public List<ComboSelectListItem> GetIcons()
-        {
-            return IconFontsHelper.IconFontItems;
-        }
-
-        [AllRights]
-        [HttpGet("GetIconItems")]
-        public List<MenuItem> GetIconItems(string key)
-        {
-            return IconFontsHelper.IconFontDicItems[key];
         }
 
     }

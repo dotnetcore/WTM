@@ -23,6 +23,22 @@ namespace WalkingTec.Mvvm.Core
         public List<string> AllAccessUrls { get; set; }
 
         public Type CustomUserType { get; set; }
+
+        private List<PropertyInfo> _customUserProperties;
+       public List<PropertyInfo> CustomUserProperties
+        {
+            get {
+                if(_customUserProperties == null)
+                {
+                    _customUserProperties = new List<PropertyInfo>();
+                    if(CustomUserType != null)
+                    {
+                        _customUserProperties = CustomUserType.GetProperties( BindingFlags.Public| BindingFlags.Instance | BindingFlags.DeclaredOnly).ToList();
+                    }
+                }
+                return _customUserProperties;
+            }
+        }
         /// <summary>
         /// 模块
         /// </summary>

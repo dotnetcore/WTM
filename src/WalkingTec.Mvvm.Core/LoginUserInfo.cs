@@ -25,6 +25,9 @@ namespace WalkingTec.Mvvm.Core
         public string TenantCode { get; set; }
 
         public string CurrentTenant { get; set; }
+
+        public string RemoteToken { get; set; }
+
         public string Name { get; set; }
 
         public string Memo { get; set; }
@@ -74,7 +77,7 @@ namespace WalkingTec.Mvvm.Core
                                 .Where(x => x.UserCode == userInfo.user.ITCode || (x.GroupCode != null && groupIDs.Contains(x.GroupCode)))
                                 .Distinct()
                                 .ToListAsync();
-                ProcessTreeDp(dataPris,context);
+               context.ProcessTreeDp(dataPris);
 
                 //查找登录用户的页面权限
                 var funcPrivileges = await DC.Set<FunctionPrivilege>().AsNoTracking()
@@ -108,43 +111,65 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        private void ProcessTreeDp(List<DataPrivilege> dps, WTMContext context)
+        public void SetAttributesForApi(WTMContext context)
         {
-            var dpsSetting = context.DataPrivilegeSettings;
-            foreach (var dp in dpsSetting)
+            var ms = new List<SimpleMenuApi>();
+            List<string> urls = new List<string>();
+            if (context.ConfigInfo.IsQuickDebug == false)
             {
-                if (typeof(TreePoco).IsAssignableFrom(dp.ModelType))
+                var topdata = context.GlobaInfo.AllMenus.Where(x => x.ShowOnMenu && (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName))).ToList();
+                var allowedids = context.LoginUserInfo.FunctionPrivileges.Select(x => x.MenuItemId).ToList();
+                foreach (var item in topdata)
                 {
-                    var ids = dps.Where(x => x.TableName == dp.ModelName).Select(x => x.RelateId).ToList();
-                    if (ids.Count > 0 && ids.Contains(null) == false)
+                    if (allowedids.Contains(item.ID) && item.IsParentShowOnMenu(topdata))
                     {
-                        var skipids = dp.GetTreeParentIds(context, dps);
-                        List<string> subids = new List<string>();
-                        subids.AddRange(GetSubIds(dp, ids, dp.ModelType, skipids,context));
-                        subids = subids.Distinct().ToList();
-                        subids.ForEach(x => dps.Add(new DataPrivilege
+                        ms.Add(new SimpleMenuApi
                         {
-                            TableName = dp.ModelName,
-                            RelateId = x.ToString()
-                        }));
+                            Id = item.ID.ToString().ToLower(),
+                            ParentId = item.ParentId?.ToString()?.ToLower(),
+                            Text = item.PageName,
+                            Url = item.Url,
+                            Icon = item.Icon
+                        });
                     }
                 }
 
+                LocalizeMenu(ms);
+
+                urls.AddRange(context.GlobaInfo.AllMenus.Where(x => allowedids.Contains(x.ID) && x.Url != null).Select(x => x.Url).Distinct());
+                urls.AddRange(context.GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
             }
+            if(this.Attributes == null)
+            {
+                this.Attributes = new Dictionary<string, object>();
+            }
+            if (this.Attributes.ContainsKey("Menus"))
+            {
+                this.Attributes.Remove("Menus");
+            }
+            if (this.Attributes.ContainsKey("Actions"))
+            {
+                this.Attributes.Remove("Actions");
+            }
+            this.Attributes.Add("Menus", ms);
+            this.Attributes.Add("Actions", urls);
         }
-        private IEnumerable<string> GetSubIds(IDataPrivilege dp, List<string> p_id, Type modelType, List<string> skipids,WTMContext context)
+
+        private void LocalizeMenu(List<SimpleMenuApi> menus)
         {
-            var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
-            var subids = dp.GetTreeSubIds(context, ids);
-            if (subids.Count > 0)
+            if (menus == null)
             {
-                return subids.Concat(GetSubIds(dp, subids, modelType, skipids,context));
+                return;
             }
-            else
+            foreach (var menu in menus)
             {
-                return new List<string>();
+                if (menu.Text?.StartsWith("MenuKey.") == true)
+                {
+                    menu.Text = CoreProgram._localizer[menu.Text];
+                }
             }
         }
+
 
     }
 }

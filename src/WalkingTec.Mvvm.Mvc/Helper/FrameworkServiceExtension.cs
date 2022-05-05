@@ -130,7 +130,10 @@ namespace WalkingTec.Mvvm.Mvc
                                     DisplayOrder = x.DisplayOrder,
                                     ShowOnMenu = x.ShowOnMenu,
                                     Icon = x.Icon,
-                                    IsPublic = x.IsPublic
+                                    IsPublic = x.IsPublic,
+                                    FolderOnly = x.FolderOnly,
+                                    MethodName = x.MethodName,
+                                    IsInside = x.IsInside
                                 })
                                 .ToList());
                     }

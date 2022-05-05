@@ -24,16 +24,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             var allowedids = DC.Set<FunctionPrivilege>()
                                         .Where(x => x.RoleCode == Entity.RoleCode && x.Allowed == true).Select(x => x.MenuItemId)
                                         .ToList();
-            var data = DC.Set<FrameworkMenu>().ToList();
-            var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
+            var topdata = Wtm.GlobaInfo.AllMenus.Where(x => x.ShowOnMenu && (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName))).ToList();
             int order = 0;
             var data2 = topdata.Select(x => new Page_View
             {
                 ID = x.ID,
                 Name = x.PageName,
-                AllActions = x.FolderOnly == true ? null : x.Children.ToListItems(y => y.ActionName, y => y.ID, null),
+                AllActions = x.FolderOnly == true ? null : Wtm.GlobaInfo.AllMenus.Where(x=>x.ParentId == x.ID).ToList().ToListItems(y => y.PageName, y => y.ID, null),
                 ParentID = x.ParentId,
-                Level = x.GetLevel(),
+                Level = x.GetLevel(Wtm.GlobaInfo.AllMenus),
                 IsFolder = x.FolderOnly,
                 ExtraOrder = order++
             }).OrderBy(x => x.ExtraOrder).ToList();

@@ -13,6 +13,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -51,18 +52,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                     return View(vm);
                 }
             }
-            Dictionary<string, string> data = new Dictionary<string, string>();
-            data.Add("account", vm.ITCode);
-            data.Add("password", vm.Password);
-            data.Add("withmenu", "false");
-            var user = await Wtm.CallAPI<LoginUserInfo>("", Request.Scheme+"://"+ Request.Host.ToString()+"/api/_account/login", HttpMethodEnum.POST, data);
-            if (user?.Data == null)
+            var user = Wtm.DoLogin(vm.ITCode, vm.Password, null);
+            if (user == null)
             {
                 return View(vm);
             }
             else
             {
-                Wtm.LoginUserInfo = user.Data;
+                //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
+                Wtm.LoginUserInfo = user;
                 string url = string.Empty;
                 if (!string.IsNullOrEmpty(vm.Redirect))
                 {
@@ -82,8 +80,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                         ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(30))
                     };
                 }
-
-                var principal = user.Data.CreatePrincipal();
+                var principal = user.CreatePrincipal();
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
                 return Redirect(HttpUtility.UrlDecode(url));
             }
@@ -125,7 +122,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             await Wtm.RemoveUserCache(Wtm.LoginUserInfo.ITCode);
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Response.Redirect("/");
+            string mh = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "mainhost").Select(x => x.Value.Address).FirstOrDefault();
+            if (string.IsNullOrEmpty(mh))
+            {
+                HttpContext.Response.Redirect("/");
+            }
+            else
+            {
+                HttpContext.Response.Redirect(mh+"/Login/Logout");
+            }
         }
 
         [AllRights]

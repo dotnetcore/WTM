@@ -1,0 +1,24 @@
+@page "/_framework/remoteentry"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
+@inherits BasePage
+
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? Filter { get; set; }    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var rv = await WtmBlazor.Api.CallAPI<ActionLogVM>($"/api/_ActionLog/{id}");
+        Model = rv.Data;
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

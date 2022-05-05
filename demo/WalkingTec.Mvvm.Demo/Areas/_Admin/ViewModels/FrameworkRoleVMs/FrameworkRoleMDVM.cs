@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
     public class FrameworkRoleMDVM : BaseCRUDVM<FrameworkRole>
     {
         public FrameworkMenuListVM ListVM { get; set; }
-
+        public string RoleCode { get; set; }
         public FrameworkRoleMDVM()
         {
             ListVM = new FrameworkMenuListVM();
@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
         protected override void InitVM()
         {
             ListVM.CopyContext(this);
-            ListVM.Searcher.RoleID = Entity.ID;
+            ListVM.Searcher.RoleCode = RoleCode;
         }
 
         public async Task<bool> DoChangeAsync()
