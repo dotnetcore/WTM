@@ -1,3 +1,4 @@
+@inherits BasePage
 <div class="index">
     <div class="welcome container">
         <div class="form-inline">
@@ -47,9 +48,9 @@
                     <div class="welcome-footer">
                         <div class="d-flex flex-wrap q-link">
                             <div>
-                                <a target="_self" href="/_Admin/FrameworkUser" :underline="false">
+                                <a target="_self" href="https://localhost:5001/_framework/RemoteEntry?_remotetoken=@UserInfo.RemoteToken" :underline="false">
                                     <i class="fa fa-user fa-3"></i>
-                                    <p class="link-ctx">用户</p>
+                                    <p class="link-ctx">5001</p>
                                 </a>
                             </div>
                             <div>

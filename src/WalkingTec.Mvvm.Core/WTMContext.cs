@@ -181,8 +181,7 @@ namespace WalkingTec.Mvvm.Core
                 if (_loginUserInfo == null && HttpContext?.Request.Query.Any(x => x.Key == "_remotetoken") == true)
                 {
                     var remoteToken = HttpContext?.Request.Query["_remotetoken"][0];
-                    string mh = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "mainhost").Select(x => x.Value.Address).FirstOrDefault();
-                    if (string.IsNullOrEmpty(mh))
+                    if (ConfigInfo.HasMainHost==false)
                     {
                         var token = new JwtSecurityToken(remoteToken);
                         var userIdStr = token.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault();
@@ -211,7 +210,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         Dictionary<string, string> headers = new Dictionary<string, string>();
                         headers.Add("Authorization", "Bearer " + remoteToken);
-                        var user = CallAPI<LoginUserInfo>("", mh + "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, headers: headers).Result;
+                        var user = CallAPI<LoginUserInfo>("mainhost","/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, headers: headers).Result;
                         var rv = user.Data;
                         if (rv != null)
                         {
@@ -365,8 +364,7 @@ namespace WalkingTec.Mvvm.Core
 
         public LoginUserInfo DoLogin(string username, string password, string tenant)
         {
-            string mh = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "mainhost").Select(x => x.Value.Address).FirstOrDefault();
-            if (string.IsNullOrEmpty(mh) == false)
+            if (ConfigInfo.HasMainHost)
             {
                 var remoteToken = _loginUserInfo?.RemoteToken;
                 LoginUserInfo rv = null;
@@ -374,7 +372,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     Dictionary<string, string> headers = new Dictionary<string, string>();
                     headers.Add("Authorization", "Bearer " + remoteToken);
-                    var user = CallAPI<LoginUserInfo>("", mh + "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10,headers: headers).Result;
+                    var user = CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10,headers: headers).Result;
                     rv = user.Data;
                     if (rv != null)
                     {
@@ -383,13 +381,13 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else
                 {
-                    var loginjwt = CallAPI<Token>("", mh + "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = username, Password = password },10).Result;
+                    var loginjwt = CallAPI<Token>("mainhost",  "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = username, Password = password },10).Result;
                     if (string.IsNullOrEmpty(loginjwt?.Data?.AccessToken) == false)
                     {
                         remoteToken = loginjwt?.Data?.AccessToken;
                         Dictionary<string, string> headers = new Dictionary<string, string>();
                         headers.Add("Authorization", "Bearer " + remoteToken);
-                        var user = CallAPI<LoginUserInfo>("", mh + "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { },10, headers: headers).Result;
+                        var user = CallAPI<LoginUserInfo>("mainhost",  "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { },10, headers: headers).Result;
                         rv = user.Data;
                         if (rv != null)
                         {
@@ -397,25 +395,27 @@ namespace WalkingTec.Mvvm.Core
                         }
                     }
                 }
-                var roleIDs = rv.Roles.Select(x => x.RoleCode).ToList();
-                var groupIDs = rv.Groups.Select(x => x.GroupCode).ToList();
+                if (rv != null)
+                {
+                    var roleIDs = rv.Roles.Select(x => x.RoleCode).ToList();
+                    var groupIDs = rv.Groups.Select(x => x.GroupCode).ToList();
 
 
-                var dataPris =  DC.Set<DataPrivilege>().AsNoTracking()
-                                .Where(x => x.UserCode == rv.ITCode || (x.GroupCode != null && groupIDs.Contains(x.GroupCode)))
-                                .Distinct()
-                                .ToList();
-                ProcessTreeDp(dataPris);
+                    var dataPris = DC.Set<DataPrivilege>().AsNoTracking()
+                                    .Where(x => x.UserCode == rv.ITCode || (x.GroupCode != null && groupIDs.Contains(x.GroupCode)))
+                                    .Distinct()
+                                    .ToList();
+                    ProcessTreeDp(dataPris);
 
-                //查找登录用户的页面权限
-                var funcPrivileges = DC.Set<FunctionPrivilege>().AsNoTracking()
-                    .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
-                    .Distinct()
-                    .ToList();
+                    //查找登录用户的页面权限
+                    var funcPrivileges = DC.Set<FunctionPrivilege>().AsNoTracking()
+                        .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
+                        .Distinct()
+                        .ToList();
 
-                rv.DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserCode = x.UserCode, GroupCode = x.GroupCode }).ToList();
-                rv.FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, RoleCode = x.RoleCode, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList();
-
+                    rv.DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserCode = x.UserCode, GroupCode = x.GroupCode }).ToList();
+                    rv.FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, RoleCode = x.RoleCode, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList();
+                }
                 return rv;
             }
             else

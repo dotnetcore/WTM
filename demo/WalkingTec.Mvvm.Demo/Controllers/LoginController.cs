@@ -122,14 +122,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             await Wtm.RemoveUserCache(Wtm.LoginUserInfo.ITCode);
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            string mh = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "mainhost").Select(x => x.Value.Address).FirstOrDefault();
-            if (string.IsNullOrEmpty(mh))
+            if (ConfigInfo.HasMainHost == false)
             {
                 HttpContext.Response.Redirect("/");
             }
             else
             {
-                HttpContext.Response.Redirect(mh+"/Login/Logout");
+                Wtm.CallAPI<string>("mainhost", "/api/_account/logout", HttpMethodEnum.GET, new { }, 10).Wait();
+                HttpContext.Response.Redirect(ConfigInfo.MainHost);
             }
         }
 
@@ -147,14 +147,44 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("ChangePassword")]
         public ActionResult ChangePassword(ChangePasswordVM vm)
         {
-            if (!ModelState.IsValid)
+            if (ConfigInfo.HasMainHost)
             {
-                return PartialView(vm);
+                Dictionary<string, string> headers = new Dictionary<string, string>();
+                headers.Add("Authorization", "Bearer " + Wtm.LoginUserInfo.RemoteToken);
+                var result = Wtm.CallAPI<string>("mainhost", "/api/_account/ChangePassword", HttpMethodEnum.POST, vm, 10,headers: headers).Result;
+                if(result.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    return FFResult().CloseDialog().Alert(Localizer["Login.ChangePasswordSuccess"]);
+                }
+                else if(result.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    ModelState.Clear();
+                    foreach (var item in result.Errors.Form)
+                    {
+                        ModelState.AddModelError(item.Key, item.Value);
+                    }
+                    foreach (var item in result.Errors.Message)
+                    {
+                        ModelState.AddModelError(" ", item);
+                    }
+                    return PartialView(vm);
+                }
+                else
+                {                 
+                    return FFResult().CloseDialog().Alert(Localizer["Sys.Error"]);
+                }
             }
             else
             {
-                vm.DoChange();
-                return FFResult().CloseDialog().Alert(Localizer["Login.ChangePasswordSuccess"]);
+                if (!ModelState.IsValid)
+                {
+                    return PartialView(vm);
+                }
+                else
+                {
+                    vm.DoChange();
+                    return FFResult().CloseDialog().Alert(Localizer["Login.ChangePasswordSuccess"]);
+                }
             }
         }
 
