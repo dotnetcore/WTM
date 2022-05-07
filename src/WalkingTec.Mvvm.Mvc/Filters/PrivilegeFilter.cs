@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
             context.SetWtmContext();
-
+            _ =controller.Wtm.LoginUserInfo;
             if (controller.Wtm.ConfigInfo.IsQuickDebug && controller is BaseApiController)
             {
                 base.OnActionExecuting(context);

@@ -19,20 +19,37 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         }
 
+        protected override FrameworkRole GetById(object Id)
+        {
+            if (ConfigInfo.HasMainHost)
+            {
+                return Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}").Result.Data.Entity;
+            }
+            else
+            {
+                return base.GetById(Id);
+            }
+        }
+
         protected override void InitVM()
         {
             var allowedids = DC.Set<FunctionPrivilege>()
                                         .Where(x => x.RoleCode == Entity.RoleCode && x.Allowed == true).Select(x => x.MenuItemId)
                                         .ToList();
-            var topdata = Wtm.GlobaInfo.AllMenus.Where(x => x.ShowOnMenu && (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName))).ToList();
+            List<FrameworkMenu> data = new List<FrameworkMenu>();
+            using (var maindc = Wtm.CreateDC(false, "default"))
+            {
+                data = DC.Set<FrameworkMenu>().ToList();
+            }
+            var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
             int order = 0;
             var data2 = topdata.Select(x => new Page_View
             {
                 ID = x.ID,
                 Name = x.PageName,
-                AllActions = x.FolderOnly == true ? null : Wtm.GlobaInfo.AllMenus.Where(x=>x.ParentId == x.ID).ToList().ToListItems(y => y.PageName, y => y.ID, null),
+                AllActions = x.FolderOnly == true ? null : x.Children.ToListItems(y => y.ActionName, y => y.ID, null),
                 ParentID = x.ParentId,
-                Level = x.GetLevel(Wtm.GlobaInfo.AllMenus),
+                Level = x.GetLevel(),
                 IsFolder = x.FolderOnly,
                 ExtraOrder = order++
             }).OrderBy(x => x.ExtraOrder).ToList();
@@ -93,8 +110,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 DC.Set<FunctionPrivilege>().Add(fp);
             }
             await DC.SaveChangesAsync();
-            var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == Entity.RoleCode).Select(x => x.UserCode).ToArray();
-            await Wtm.RemoveUserCache(userids);
+            await Wtm.RemoveUserCacheByRole(Entity.RoleCode);
             return true;
         }
 

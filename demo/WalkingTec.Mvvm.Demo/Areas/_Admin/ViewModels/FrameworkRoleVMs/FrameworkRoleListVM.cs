@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             {
                 return new List<GridAction>
                 {
-                    this.MakeAction("FrameworkRole","PageFunction",Localizer["_Admin.PageFunction"],Localizer["_Admin.PageFunction"], GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow().SetWhereStr("RoleCode"),
+                    this.MakeAction("FrameworkRole","PageFunction",Localizer["_Admin.PageFunction"],Localizer["_Admin.PageFunction"], GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
                 };
             }
             else
@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                     this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Details, "","_Admin", dialogWidth: 800),
                     this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
                     this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
-                    this.MakeAction("FrameworkRole","PageFunction",Localizer["_Admin.PageFunction"],Localizer["_Admin.PageFunction"], GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow().SetWhereStr("RoleCode"),
+                    this.MakeAction("FrameworkRole","PageFunction",Localizer["_Admin.PageFunction"],Localizer["_Admin.PageFunction"], GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
                     this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
                 };
             }

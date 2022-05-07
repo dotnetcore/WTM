@@ -19,11 +19,22 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(FrameworkRoleSearcher searcher)
+        public IActionResult Search(FrameworkRoleSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkRoleListVM>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ConfigInfo.HasMainHost)
+            {
+                return Request.RedirectCall(Wtm).Result;
+            }
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<FrameworkRoleListVM>(passInit: true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]
@@ -37,7 +48,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("GetPageActions")]
         [HttpGet("[action]/{id}")]
         [AllRights]
-        public FrameworkRoleMDVM2 GetPageActions(Guid id)
+        public FrameworkRoleMDVM2 GetPageActions(string id)
         {
             var vm = Wtm.CreateVM<FrameworkRoleMDVM2>(id);
             return vm;

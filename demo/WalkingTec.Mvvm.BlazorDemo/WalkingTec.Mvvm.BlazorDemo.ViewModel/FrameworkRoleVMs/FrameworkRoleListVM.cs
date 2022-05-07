@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 {
@@ -10,17 +11,27 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
     {
         protected override List<GridAction> InitGridAction()
         {
-            return new List<GridAction>
+            if (ConfigInfo.HasMainHost)
             {
-                this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Edit, "","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Delete, "", "_Admin",dialogWidth: 800),
-                this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Details, "","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
-                this.MakeAction("FrameworkRole","PageFunction",Localizer["_Admin.PageFunction"],Localizer["_Admin.PageFunction"], GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
-                this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
-            };
+                return new List<GridAction>
+                {
+                    this.MakeAction("FrameworkRole","PageFunction",Localizer["_Admin.PageFunction"],Localizer["_Admin.PageFunction"], GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
+                };
+            }
+            else
+            {
+                return new List<GridAction>
+                {
+                    this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800),
+                    this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Edit, "","_Admin", dialogWidth: 800),
+                    this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Delete, "", "_Admin",dialogWidth: 800),
+                    this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Details, "","_Admin", dialogWidth: 800),
+                    this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
+                    this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
+                    this.MakeAction("FrameworkRole","PageFunction",Localizer["_Admin.PageFunction"],Localizer["_Admin.PageFunction"], GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
+                    this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
+                };
+            }
         }
 
         protected override IEnumerable<IGridColumn<FrameworkRole>> InitGridHeader()
@@ -35,11 +46,25 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         public override IOrderedQueryable<FrameworkRole> GetSearchQuery()
         {
-            var query = DC.Set<FrameworkRole>()
-                .CheckContain(Searcher.RoleCode,x=>x.RoleCode)
-                .CheckContain(Searcher.RoleName,x=>x.RoleName)
-                .OrderBy(x => x.RoleCode);
-            return query;
+            if (ConfigInfo.HasMainHost)
+            {
+                var rv = Wtm.CallAPI<ApiListModel<FrameworkRole>>("mainhost", "/api/_frameworkrole/search", HttpMethodEnum.POST, this.Searcher).Result;
+                if (rv?.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    EntityList = rv.Data.Data;
+                    Searcher.PageCount = rv.Data.PageCount;
+                    Searcher.Count = rv.Data.Count;
+                }
+                return null;
+            }
+            else
+            {
+                var query = DC.Set<FrameworkRole>()
+                    .CheckContain(Searcher.RoleCode, x => x.RoleCode)
+                    .CheckContain(Searcher.RoleName, x => x.RoleName)
+                    .OrderBy(x => x.RoleCode);
+                return query;
+            }
         }
 
     }

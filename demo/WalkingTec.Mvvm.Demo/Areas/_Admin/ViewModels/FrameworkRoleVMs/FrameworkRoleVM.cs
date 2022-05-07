@@ -10,6 +10,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 {
     public class FrameworkRoleVM : BaseCRUDVM<FrameworkRole>
     {
+
         public override DuplicatedInfo<FrameworkRole> SetDuplicatedCheck()
         {
             var rv = CreateFieldsInfo(SimpleField(x => x.RoleName));
@@ -37,7 +38,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                     DC.Set<FrameworkUserRole>().RemoveRange(ur);
                     DC.SaveChanges();
                     tran.Commit();
-                    await Wtm.RemoveUserCache(ur.Select(x=>x.UserCode).ToArray());
+                    await Wtm.RemoveUserCacheByRole(Entity.RoleCode);
                 }
                 catch
                 {

@@ -12,18 +12,25 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("MenuKey.DataPrivilege")]
+    [ActionDescription("_Admin.DataPrivilegeApi")]
     [ApiController]
     [Route("api/_[controller]")]
     public class DataPrivilegeController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(DataPrivilegeSearcher searcher)
+        public ActionResult Search(DataPrivilegeSearcher searcher)
         {
-            var vm = Wtm.CreateVM<DataPrivilegeListVM>(passInit: true);
-            vm.Searcher = searcher;
-            return vm.GetJson(enumToString: false);
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<DataPrivilegeListVM>(passInit: true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson(enumToString: false));
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]
@@ -34,7 +41,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (DpType == DpTypeEnum.User)
             {
                 vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.UserCode == TargetId && x.DpType == DpType);
-                
             }
             else
             {
@@ -133,7 +139,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public ActionResult GetUserGroups()
         {
-            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x=>x.GroupCode);
+            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName);
             return Ok(rv);
         }
     }

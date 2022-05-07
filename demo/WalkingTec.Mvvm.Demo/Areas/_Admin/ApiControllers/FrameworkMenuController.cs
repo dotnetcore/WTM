@@ -13,18 +13,25 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("_Admin.MenuApi")]
+    [ActionDescription("MenuKey.MenuMangement")]
     [ApiController]
     [Route("api/_[controller]")]
     public class FrameworkMenuController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(BaseSearcher searcher)
+        public ActionResult Search(BaseSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkMenuListVM2>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<FrameworkMenuListVM2>(passInit: true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]
@@ -139,9 +146,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<ActionResult> RefreshMenu()
         {
             Cache.Delete("FFMenus");
-            var userids = DC.Set<FrameworkUser>().Select(x => x.ID.ToString().ToLower()).ToArray();
+            Cache.Delete("RealMenus");
+            var userids = DC.Set<FrameworkUser>().Select(x => x.ITCode).ToArray();
             await Wtm.RemoveUserCache(userids);
-            return Ok(Localizer["Sys.OprationSuccess"]);
+            return Ok(Localizer["Sys.OprationSuccess"].Value);
         }
 
         [ActionDescription("GetActionsByModelId")]
@@ -179,6 +187,20 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
 
             return Ok(AllParents);
+        }
+
+        [AllRights]
+        [HttpGet("GetIcons")]
+        public List<ComboSelectListItem> GetIcons()
+        {
+            return IconFontsHelper.IconFontItems;
+        }
+
+        [AllRights]
+        [HttpGet("GetIconItems")]
+        public List<MenuItem> GetIconItems(string key)
+        {
+            return IconFontsHelper.IconFontDicItems[key];
         }
 
     }

@@ -19,12 +19,28 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         }
 
+        protected override FrameworkRole GetById(object Id)
+        {
+            if (ConfigInfo.HasMainHost)
+            {
+                return Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}").Result.Data.Entity;
+            }
+            else
+            {
+                return base.GetById(Id);
+            }
+        }
+
         protected override void InitVM()
         {
             var allowedids = DC.Set<FunctionPrivilege>()
                                         .Where(x => x.RoleCode == Entity.RoleCode && x.Allowed == true).Select(x => x.MenuItemId)
                                         .ToList();
-            var data = DC.Set<FrameworkMenu>().ToList();
+            List<FrameworkMenu> data = new List<FrameworkMenu>();
+            using (var maindc = Wtm.CreateDC(false, "default"))
+            {
+                data = DC.Set<FrameworkMenu>().ToList();
+            }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
             int order = 0;
             var data2 = topdata.Select(x => new Page_View
@@ -42,7 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             {
                 if (item.Name?.StartsWith("MenuKey.") == true)
                 {
-                        item.Name = Localizer[item.Name];
+                    item.Name = Localizer[item.Name];
                 }
                 if (item.AllActions == null)
                 {
@@ -50,7 +66,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 }
                 foreach (var act in item.AllActions)
                 {
-                        act.Text = Localizer[act.Text];
+                    act.Text = Localizer[act.Text];
                 }
                 item.AllActions.Insert(0, new ComboSelectListItem { Text = Localizer["Sys.MainPage"], Value = item.ID.ToString() });
                 var ids = item.AllActions.Select(x => Guid.Parse(x.Value.ToString()));
@@ -94,8 +110,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 DC.Set<FunctionPrivilege>().Add(fp);
             }
             await DC.SaveChangesAsync();
-            var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == Entity.RoleCode).Select(x => x.UserCode).ToArray();
-            await Wtm.RemoveUserCache(userids);
+            await Wtm.RemoveUserCacheByRole(Entity.RoleCode);
             return true;
         }
 

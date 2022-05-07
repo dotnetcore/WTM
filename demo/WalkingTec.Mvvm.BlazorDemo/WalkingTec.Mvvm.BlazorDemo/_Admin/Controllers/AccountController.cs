@@ -150,7 +150,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public IActionResult CheckUserInfo(bool IsApi = true)
+        public IActionResult CheckUserInfo(bool IsApi=true)
         {
             if (Wtm.LoginUserInfo == null)
             {

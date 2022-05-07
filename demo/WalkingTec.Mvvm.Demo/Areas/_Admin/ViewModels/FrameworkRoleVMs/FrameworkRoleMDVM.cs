@@ -12,24 +12,35 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
     public class FrameworkRoleMDVM : BaseCRUDVM<FrameworkRole>
     {
         public FrameworkMenuListVM ListVM { get; set; }
-        public string RoleCode { get; set; }
+
         public FrameworkRoleMDVM()
         {
             ListVM = new FrameworkMenuListVM();
+        }
+        protected override FrameworkRole GetById(object Id)
+        {
+            if (ConfigInfo.HasMainHost)
+            {
+                return Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}").Result.Data.Entity;
+            }
+            else
+            {
+                return base.GetById(Id);
+            }
         }
 
         protected override void InitVM()
         {
             ListVM.CopyContext(this);
-            ListVM.Searcher.RoleCode = RoleCode;
+            ListVM.Searcher.RoleCode = Entity.RoleCode;
         }
 
         public async Task<bool> DoChangeAsync()
         {
             var all = FC.Where(x => x.Key.StartsWith("menu_")).ToList();
-            List<Guid> AllowedMenuIds = all.Where(x => x.Value.ToString() == "1").Select(x=> Guid.Parse(x.Key.Replace("menu_",""))).ToList();
+            List<Guid> AllowedMenuIds = all.Where(x => x.Value.ToString() == "1").Select(x => Guid.Parse(x.Key.Replace("menu_", ""))).ToList();
             var torem = AllowedMenuIds.Distinct();
-            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => x.RoleCode == RoleCode).Select(x => x.ID).ToList();
+            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => x.RoleCode == Entity.RoleCode).Select(x => x.ID).ToList();
 
             foreach (var oldid in oldIDs)
             {
@@ -41,12 +52,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             {
                 FunctionPrivilege fp = new FunctionPrivilege();
                 fp.MenuItemId = menuid;
-                fp.RoleCode = RoleCode;
+                fp.RoleCode = Entity.RoleCode;
                 fp.Allowed = true;
                 DC.Set<FunctionPrivilege>().Add(fp);
             }
             await DC.SaveChangesAsync();
-            await Wtm.RemoveUserCacheByRole(new string[] {RoleCode});
+            await Wtm.RemoveUserCacheByRole(Entity.RoleCode);
             return true;
         }
 

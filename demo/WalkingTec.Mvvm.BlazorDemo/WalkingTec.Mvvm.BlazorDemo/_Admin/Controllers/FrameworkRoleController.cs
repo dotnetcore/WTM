@@ -12,18 +12,29 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("MenuKey.RoleManagement")]
+    [ActionDescription("_Admin.RoleApi")]
     [ApiController]
     [Route("api/_[controller]")]
     public class FrameworkRoleController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(FrameworkRoleSearcher searcher)
+        public IActionResult Search(FrameworkRoleSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkRoleListVM>(passInit: true);
-            vm.Searcher = searcher;
-            return vm.GetJson(enumToString: false);
+            if (ConfigInfo.HasMainHost)
+            {
+                return Request.RedirectCall(Wtm).Result;
+            }
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<FrameworkRoleListVM>(passInit: true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson(enumToString: false));
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]
@@ -37,7 +48,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("GetPageActions")]
         [HttpGet("[action]/{id}")]
         [AllRights]
-        public FrameworkRoleMDVM2 GetPageActions(Guid id)
+        public FrameworkRoleMDVM2 GetPageActions(string id)
         {
             var vm = Wtm.CreateVM<FrameworkRoleMDVM2>(id);
             return vm;
@@ -115,7 +126,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkRoleBatchVM>();
-            List<string> RoleCode = new List<string>(); 
+            List<string> RoleCode = new List<string>();
             if (ids != null && ids.Count() > 0)
             {
                 RoleCode = DC.Set<FrameworkRole>().CheckIDs(new List<string>(ids)).Select(x => x.RoleCode).ToList();
@@ -183,13 +194,13 @@ namespace WalkingTec.Mvvm.Admin.Api
         public ActionResult Import(FrameworkRoleImportVM vm)
         {
 
-            if (vm != null && (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData()))
+            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());
             }
             else
             {
-                return Ok(vm?.EntityList?.Count ?? 0);
+                return Ok(vm.EntityList.Count);
             }
         }
 

@@ -19,11 +19,22 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(FrameworkGroupSearcher searcher)
+        public IActionResult Search(FrameworkGroupSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkGroupListVM>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ConfigInfo.HasMainHost)
+            {
+                return Request.RedirectCall(Wtm).Result;
+            }
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<FrameworkGroupListVM>(passInit: true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]

@@ -163,9 +163,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("_Admin.PageFunction")]
-        public PartialViewResult PageFunction(string RoleCode)
+        public PartialViewResult PageFunction(Guid id)
         {
-            var role = Wtm.CreateVM<FrameworkRoleMDVM>(x=>x.RoleCode == RoleCode);
+            var role = Wtm.CreateVM<FrameworkRoleMDVM>(id);
             role.ListVM.SearcherMode = ListVMSearchModeEnum.Custom2;
             return PartialView(role);
         }

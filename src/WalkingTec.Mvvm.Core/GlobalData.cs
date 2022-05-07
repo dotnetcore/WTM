@@ -45,14 +45,17 @@ namespace WalkingTec.Mvvm.Core
         public List<SimpleModule> AllModule { get; set; }
 
         private Func<List<SimpleMenu>> MenuGetFunc;
+        private Func<List<SimpleMenu>> MenuRealGetFunc;
 
         public List<SimpleMenu> AllMenus => MenuGetFunc?.Invoke();
+        public List<SimpleMenu> RealMenus => MenuRealGetFunc?.Invoke();
 
         /// <summary>
         /// 设置菜单委托
         /// </summary>
         /// <param name="func"></param>
         public void SetMenuGetFunc(Func<List<SimpleMenu>> func) => MenuGetFunc = func;
+        public void SetRealMenuGetFunc(Func<List<SimpleMenu>> func) => MenuRealGetFunc = func;
 
         public List<Type> GetTypesAssignableFrom<T>()
         {

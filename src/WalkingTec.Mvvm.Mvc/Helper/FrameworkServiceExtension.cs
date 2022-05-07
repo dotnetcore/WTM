@@ -76,12 +76,12 @@ namespace WalkingTec.Mvvm.Mvc
             return gd;
         }
 
-        private static List<SimpleMenu> GetAllMenus(List<SimpleModule> allModule, Configs ConfigInfo)
+        private static List<SimpleMenu> GetAllMenus(List<SimpleModule> allModule, bool isQuickdebug, List<CS> connections)
         {
             var localizer = new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
             var menus = new List<SimpleMenu>();
 
-            if (ConfigInfo.IsQuickDebug)
+            if (isQuickdebug)
             {
                 menus = new List<SimpleMenu>();
                 var areas = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").Select(x => x.Area?.AreaName).Distinct().ToList();
@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 try
                 {
-                    using (var dc = ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
+                    using (var dc = connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                     {
                         menus.AddRange(dc?.Set<FrameworkMenu>()
                                 .OrderBy(x => x.DisplayOrder)
@@ -745,7 +745,7 @@ namespace WalkingTec.Mvvm.Mvc
                 if (cache.TryGetValue(menuCacheKey, out List<SimpleMenu> rv) == false)
                 {
 
-                    var data = GetAllMenus(modules, configs);
+                    var data = GetAllMenus(modules, configs.IsQuickDebug, configs.Connections);
                     cache.Add(menuCacheKey, data, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                     menus = data;
                 }
@@ -756,6 +756,32 @@ namespace WalkingTec.Mvvm.Mvc
 
                 return menus;
             });
+            gd.SetRealMenuGetFunc(() =>
+            {
+                if (configs.IsQuickDebug == false)
+                {
+                    return gd.AllMenus;
+                }
+                else
+                {
+                    var menus = new List<SimpleMenu>();
+                    var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
+                    var menuCacheKey = "FFRealMenus";
+                    if (cache.TryGetValue(menuCacheKey, out List<SimpleMenu> rv) == false)
+                    {                        
+                        var data = GetAllMenus(modules, false, configs.Connections);
+                        cache.Add(menuCacheKey, data, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
+                        menus = data;
+                    }
+                    else
+                    {
+                        menus = rv;
+                    }
+
+                    return menus;
+                }
+            });
+
             foreach (var m in gd.AllModule)
             {
                 foreach (var a in m.Actions)

@@ -133,7 +133,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [Public]
         public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var file = fp.GetFile(id, true, Wtm.CreateDC(cskey: csName));
+            var file = fp.GetFile(id, true, Wtm.CreateDC(cskey:csName));
             if (file == null)
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);

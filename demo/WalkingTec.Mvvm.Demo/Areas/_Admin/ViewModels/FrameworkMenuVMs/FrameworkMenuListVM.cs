@@ -122,8 +122,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override IOrderedQueryable<FrameworkMenu_ListView> GetSearchQuery()
         {
-
-            var data = DC.Set<FrameworkMenu>().ToList();
+            List<FrameworkMenu> data = new List<FrameworkMenu>();
+            using (var maindc = Wtm.CreateDC(false, "default"))
+            {
+                data = DC.Set<FrameworkMenu>().ToList();
+            }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || x.Url.EndsWith("/Index") || string.IsNullOrEmpty(x.MethodName)).ToList();
             foreach (var item in topdata)
             {

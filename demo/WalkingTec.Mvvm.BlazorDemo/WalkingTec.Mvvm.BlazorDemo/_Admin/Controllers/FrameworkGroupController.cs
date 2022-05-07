@@ -12,18 +12,29 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("MenuKey.GroupManagement")]
+    [ActionDescription("_Admin.GroupApi")]
     [ApiController]
     [Route("api/_[controller]")]
     public class FrameworkGroupController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(FrameworkGroupSearcher searcher)
+        public IActionResult Search(FrameworkGroupSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkGroupListVM>(passInit: true);
-            vm.Searcher = searcher;
-            return vm.GetJson(enumToString: false);
+            if (ConfigInfo.HasMainHost)
+            {
+                return Request.RedirectCall(Wtm).Result;
+            }
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<FrameworkGroupListVM>(passInit: true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson(enumToString: false));
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]
@@ -151,13 +162,14 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public ActionResult Import(FrameworkGroupImportVM vm)
         {
-            if (vm != null && (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData()))
+
+            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());
             }
             else
             {
-                return Ok(vm?.EntityList?.Count ?? 0);
+                return Ok(vm.EntityList.Count);
             }
         }
 
