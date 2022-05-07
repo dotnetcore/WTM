@@ -149,9 +149,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             if (ConfigInfo.HasMainHost)
             {
-                Dictionary<string, string> headers = new Dictionary<string, string>();
-                headers.Add("Authorization", "Bearer " + Wtm.LoginUserInfo.RemoteToken);
-                var result = Wtm.CallAPI<string>("mainhost", "/api/_account/ChangePassword", HttpMethodEnum.POST, vm, 10,headers: headers).Result;
+                var result = Wtm.CallAPI<string>("mainhost", "/api/_account/ChangePassword", HttpMethodEnum.POST, vm, 10).Result;
                 if(result.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     return FFResult().CloseDialog().Alert(Localizer["Login.ChangePasswordSuccess"]);

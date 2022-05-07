@@ -780,6 +780,9 @@
   <data name="_Admin.GroupName" xml:space="preserve">
     <value>组名</value>
   </data>
+  <data name="_Admin.HasMainHost" xml:space="preserve">
+    <value>当前站点已设置了主站，无法进行此操作，请到主站进行相应操作</value>
+  </data>
   <data name="_Admin.HomePhone" xml:space="preserve">
     <value>座机</value>
   </data>

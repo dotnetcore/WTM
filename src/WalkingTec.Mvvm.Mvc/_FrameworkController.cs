@@ -736,6 +736,28 @@ namespace WalkingTec.Mvvm.Mvc
             return Content($"<script>window.location.href='{HttpUtility.UrlDecode(redirect)}'</script>", "text/html");
         }
 
-    }
+        [AllRights]
+        [HttpPost]
+        public async Task<ActionResult> RemoveUserCacheByAccount(string[] itcode)
+        {
+            await Wtm.RemoveUserCache(itcode);
+            return Ok();
+        }
 
+        [AllRights]
+        [HttpPost]
+        public async Task<ActionResult> RemoveUserCacheByRole(string[] rolecode)
+        {
+            await Wtm.RemoveUserCacheByRole(rolecode);
+            return Ok();
+        }
+
+        [AllRights]
+        [HttpPost]
+        public async Task<ActionResult> RemoveUserCacheByGroup(string[] groupcode)
+        {
+            await Wtm.RemoveUserCacheByGroup(groupcode);
+            return Ok();
+        }
+    }
 }

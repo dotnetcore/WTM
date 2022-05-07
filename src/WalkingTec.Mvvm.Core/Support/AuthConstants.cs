@@ -4,7 +4,7 @@ namespace WalkingTec.Mvvm.Core.Auth
     {
         public const string JwtTokenType = "Bearer";
         public const string AuthenticationType = "WTMAuthentication";
-        public const string CookieAuthName = "WTM.CookieWithJwtAuth";
+        public const string CookieAuthName = "CookieWithJwtAuth";
 
         public static class JwtClaimTypes
         {

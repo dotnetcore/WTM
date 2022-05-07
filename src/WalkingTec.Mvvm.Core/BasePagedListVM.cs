@@ -662,66 +662,68 @@ namespace WalkingTec.Mvvm.Core
                         query = GetSearchQuery();
                         break;
                 }
-
-                //如果设定了替换条件，则使用替换条件替换Query中的Where语句
-                if (ReplaceWhere != null)
+                if (query != null)
                 {
-                    var mod = new WhereReplaceModifier<TModel>(ReplaceWhere as Expression<Func<TModel,bool>>);
-                    var newExp = mod.Modify(query.Expression);
-                    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-                }
-                if (Searcher.SortInfo != null)
-                {
-                    var mod = new OrderReplaceModifier(Searcher.SortInfo);
-                    var newExp = mod.Modify(query.Expression);
-                    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-                }
-                //if (typeof(IPersistPoco).IsAssignableFrom( typeof(TModel)))
-                //{
-                //    var mod = new IsValidModifier();
-                //    var newExp = mod.Modify(query.Expression);
-                //    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-                //}
-                if (PassSearch == false)
-                {
-                    //如果需要分页，则添加分页语句
-                    if (NeedPage && Searcher.Limit != -1)
+                    //如果设定了替换条件，则使用替换条件替换Query中的Where语句
+                    if (ReplaceWhere != null)
                     {
-                        //获取返回数据的数量
-                        var count = query.Count();
-                        if (count < 0)
+                        var mod = new WhereReplaceModifier<TModel>(ReplaceWhere as Expression<Func<TModel, bool>>);
+                        var newExp = mod.Modify(query.Expression);
+                        query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+                    }
+                    if (Searcher.SortInfo != null)
+                    {
+                        var mod = new OrderReplaceModifier(Searcher.SortInfo);
+                        var newExp = mod.Modify(query.Expression);
+                        query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+                    }
+                    //if (typeof(IPersistPoco).IsAssignableFrom( typeof(TModel)))
+                    //{
+                    //    var mod = new IsValidModifier();
+                    //    var newExp = mod.Modify(query.Expression);
+                    //    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+                    //}
+                    if (PassSearch == false)
+                    {
+                        //如果需要分页，则添加分页语句
+                        if (NeedPage && Searcher.Limit != -1)
                         {
-                            count = 0;
+                            //获取返回数据的数量
+                            var count = query.Count();
+                            if (count < 0)
+                            {
+                                count = 0;
+                            }
+                            if (Searcher.Limit == 0)
+                            {
+                                Searcher.Limit = ConfigInfo?.UIOptions.DataTable.RPP ?? 20;
+                            }
+                            //根据返回数据的数量，以及预先设定的每页行数来设定数据量和总页数
+                            Searcher.Count = count;
+                            Searcher.PageCount = (int)Math.Ceiling((1.0 * Searcher.Count / Searcher.Limit));
+                            if (Searcher.Page <= 0)
+                            {
+                                Searcher.Page = 1;
+                            }
+                            if (Searcher.PageCount > 0 && Searcher.Page > Searcher.PageCount)
+                            {
+                                Searcher.Page = Searcher.PageCount;
+                            }
+                            EntityList = query.Skip((Searcher.Page - 1) * Searcher.Limit).Take(Searcher.Limit).AsNoTracking().ToList();
                         }
-                        if (Searcher.Limit == 0)
+                        else //如果不需要分页则直接获取数据
                         {
-                            Searcher.Limit = ConfigInfo?.UIOptions.DataTable.RPP ?? 20;
-                        }
-                        //根据返回数据的数量，以及预先设定的每页行数来设定数据量和总页数
-                        Searcher.Count = count;
-                        Searcher.PageCount = (int)Math.Ceiling((1.0 * Searcher.Count / Searcher.Limit));
-                        if (Searcher.Page <= 0)
-                        {
+                            EntityList = query.AsNoTracking().ToList();
+                            Searcher.Count = EntityList.Count();
+                            Searcher.Limit = EntityList.Count();
+                            Searcher.PageCount = 1;
                             Searcher.Page = 1;
                         }
-                        if (Searcher.PageCount > 0 && Searcher.Page > Searcher.PageCount)
-                        {
-                            Searcher.Page = Searcher.PageCount;
-                        }
-                        EntityList = query.Skip((Searcher.Page - 1) * Searcher.Limit).Take(Searcher.Limit).AsNoTracking().ToList();
                     }
-                    else //如果不需要分页则直接获取数据
+                    else
                     {
                         EntityList = query.AsNoTracking().ToList();
-                        Searcher.Count = EntityList.Count();
-                        Searcher.Limit = EntityList.Count();
-                        Searcher.PageCount = 1;
-                        Searcher.Page = 1;
                     }
-                }
-                else
-                {
-                    EntityList = query.AsNoTracking().ToList();
                 }
             }
             else

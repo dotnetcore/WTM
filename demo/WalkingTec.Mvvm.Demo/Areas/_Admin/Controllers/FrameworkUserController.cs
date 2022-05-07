@@ -18,6 +18,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Search", IsPage = true)]
         public ActionResult Index()
         {
+            if (ConfigInfo.HasMainHost)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkUserListVM>();
            // vm.Searcher.IsValid = true;
             return PartialView(vm);

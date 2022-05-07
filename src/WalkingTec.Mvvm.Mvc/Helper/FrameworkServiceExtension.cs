@@ -587,7 +587,7 @@ namespace WalkingTec.Mvvm.Mvc
                      })
                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                     {
-                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
+                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + conf.CookiePre+"."+ AuthConstants.CookieAuthName;
                         options.Cookie.HttpOnly = true;
                         options.Cookie.SameSite = SameSiteMode.Strict;
                         options.Cookie.Domain = string.IsNullOrEmpty(cookieOptions.Domain) ? null : cookieOptions.Domain;

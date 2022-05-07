@@ -181,7 +181,7 @@ namespace WalkingTec.Mvvm.Core
                 if (_loginUserInfo == null && HttpContext?.Request.Query.Any(x => x.Key == "_remotetoken") == true)
                 {
                     var remoteToken = HttpContext?.Request.Query["_remotetoken"][0];
-                    if (ConfigInfo.HasMainHost==false)
+                    if (ConfigInfo.HasMainHost == false)
                     {
                         var token = new JwtSecurityToken(remoteToken);
                         var userIdStr = token.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault();
@@ -189,38 +189,35 @@ namespace WalkingTec.Mvvm.Core
                         string usercode = userIdStr;
                         var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr + "$`$" + tenant}";
                         _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                        if (_loginUserInfo == null)
+                        try
                         {
-                            try
-                            {
-                                _loginUserInfo = ReloadUser(usercode);
-                            }
-                            catch { }
-                            if (_loginUserInfo != null)
-                            {
-                                Cache.Add(cacheKey, _loginUserInfo);
-                            }
-                            else
-                            {
-                                return null;
-                            }
+                            _loginUserInfo = ReloadUser(usercode);
+                        }
+                        catch { }
+                        if (_loginUserInfo != null)
+                        {
+                            Cache.Add(cacheKey, _loginUserInfo);
+                        }
+                        else
+                        {
+                            return null;
                         }
                     }
                     else if (string.IsNullOrEmpty(remoteToken) == false)
                     {
-                        Dictionary<string, string> headers = new Dictionary<string, string>();
-                        headers.Add("Authorization", "Bearer " + remoteToken);
-                        var user = CallAPI<LoginUserInfo>("mainhost","/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, headers: headers).Result;
-                        var rv = user.Data;
-                        if (rv != null)
+                        try
                         {
-                            rv.RemoteToken = remoteToken;
-                            _loginUserInfo = rv;
-                            var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{rv.ITCode + "$`$" + rv.TenantCode}";
-                            if (_loginUserInfo != null)
-                            {
-                                Cache.Add(cacheKey, _loginUserInfo);
-                            }
+                            _loginUserInfo = ReloadUser("null");
+                        }
+                        catch { }
+                        if (_loginUserInfo != null)
+                        {
+                            var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.ITCode + "$`$" + _loginUserInfo.TenantCode}";
+                            Cache.Add(cacheKey, _loginUserInfo);
+                        }
+                        else
+                        {
+                            return null;
                         }
                     }
                 }
@@ -282,23 +279,6 @@ namespace WalkingTec.Mvvm.Core
                 return null;
             }
             var user = DoLogin(itcode, null, null);
-            //if (this.HttpContext.Request.Headers.ContainsKey("Authorization"))
-            //{
-            //    Dictionary<string, string> headers = new Dictionary<string, string>();
-            //    headers.Add("Authorization", HttpContext.Request.Headers["Authorization"]);
-            //    var user = await CallAPI<LoginUserInfo>("", GetServerUrl() + "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = itcode, Password = "", IsReload=true }, headers: headers);
-            //    return user?.Data;
-            //}
-            //else
-            //{
-            //    var password = await BaseUserQuery.Where(x => x.ITCode.ToLower() == itcode.ToLower()).Select(x => x.Password).SingleOrDefaultAsync();
-            //    Dictionary<string, string> data = new Dictionary<string, string>();
-            //    data.Add("password", password);
-            //    data.Add("account", itcode);
-            //    data.Add("withmenu", "false");                
-            //    var user = await CallAPI<LoginUserInfo>("", this.HttpContext.Request.Scheme + "://" + this.HttpContext.Request.Host.ToString() + "/api/_account/login", HttpMethodEnum.POST, data);
-            //    return user?.Data;
-            //}
             return user;
         }
 
@@ -366,13 +346,13 @@ namespace WalkingTec.Mvvm.Core
         {
             if (ConfigInfo.HasMainHost)
             {
-                var remoteToken = _loginUserInfo?.RemoteToken;
+                var remoteToken = _loginUserInfo?.RemoteToken ?? HttpContext?.Request.Query?.Where(x => x.Key == "_remotetoken").Select(x => x.Value.First()).FirstOrDefault();
                 LoginUserInfo rv = null;
                 if (string.IsNullOrEmpty(remoteToken) == false)
                 {
                     Dictionary<string, string> headers = new Dictionary<string, string>();
                     headers.Add("Authorization", "Bearer " + remoteToken);
-                    var user = CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10,headers: headers).Result;
+                    var user = CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers).Result;
                     rv = user.Data;
                     if (rv != null)
                     {
@@ -381,13 +361,13 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else
                 {
-                    var loginjwt = CallAPI<Token>("mainhost",  "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = username, Password = password },10).Result;
+                    var loginjwt = CallAPI<Token>("mainhost", "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = username, Password = password }, 10).Result;
                     if (string.IsNullOrEmpty(loginjwt?.Data?.AccessToken) == false)
                     {
                         remoteToken = loginjwt?.Data?.AccessToken;
                         Dictionary<string, string> headers = new Dictionary<string, string>();
                         headers.Add("Authorization", "Bearer " + remoteToken);
-                        var user = CallAPI<LoginUserInfo>("mainhost",  "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { },10, headers: headers).Result;
+                        var user = CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers).Result;
                         rv = user.Data;
                         if (rv != null)
                         {
@@ -488,12 +468,71 @@ namespace WalkingTec.Mvvm.Core
         public async Task RemoveUserCache(
             params string[] userIds)
         {
-            foreach (var userId in userIds)
+            if (ConfigInfo.HasMainHost)
             {
-                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.TenantCode}";
-                await Cache.DeleteAsync(key);
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                for (int i = 0; i < userIds.Length; i++)
+                {
+                    data.Add($"itcode[{i}]", userIds[i]);
+                }
+                await CallAPI("mainhost", "/_framework/RemoveUserCacheByAccount", HttpMethodEnum.POST, data);
+            }
+            else
+            {
+                foreach (var userId in userIds)
+                {
+                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.TenantCode}";
+                    await Cache.DeleteAsync(key);
+                }
             }
         }
+
+        public async Task RemoveUserCacheByRole(
+    params string[] rolecode)
+        {
+            if (ConfigInfo.HasMainHost)
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                for (int i = 0; i < rolecode.Length; i++)
+                {
+                    data.Add($"rolecode[{i}]", rolecode[i]);
+                }
+                await CallAPI("mainhost", "/_framework/RemoveUserCacheByRole", HttpMethodEnum.POST, data);
+            }
+            else
+            {
+                var userids = DC.Set<FrameworkUserRole>().Where(x => rolecode.Contains(x.RoleCode)).Select(x => x.UserCode).ToArray();
+                foreach (var userId in userids)
+                {
+                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.TenantCode}";
+                    await Cache.DeleteAsync(key);
+                }
+            }
+        }
+
+        public async Task RemoveUserCacheByGroup(
+params string[] groupcode)
+        {
+            if (ConfigInfo.HasMainHost)
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                for (int i = 0; i < groupcode.Length; i++)
+                {
+                    data.Add($"groupcode[{i}]", groupcode[i]);
+                }
+                await CallAPI("mainhost", "/_framework/RemoveUserCacheByGroup", HttpMethodEnum.POST, data);
+            }
+            else
+            {
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => groupcode.Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
+                foreach (var userId in userids)
+                {
+                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.TenantCode}";
+                    await Cache.DeleteAsync(key);
+                }
+            }
+        }
+
 
         public bool SetCurrentTenant(string tenant)
         {
@@ -742,7 +781,7 @@ namespace WalkingTec.Mvvm.Core
                     var ids = dps.Where(x => x.TableName == dp.ModelName).Select(x => x.RelateId).ToList();
                     if (ids.Count > 0 && ids.Contains(null) == false)
                     {
-                        var skipids = dp.GetTreeParentIds(this,dps);
+                        var skipids = dp.GetTreeParentIds(this, dps);
                         List<string> subids = new List<string>();
                         subids.AddRange(GetSubIds(dp, ids, dp.ModelType, skipids));
                         subids = subids.Distinct().ToList();
@@ -759,7 +798,7 @@ namespace WalkingTec.Mvvm.Core
         private IEnumerable<string> GetSubIds(IDataPrivilege dp, List<string> p_id, Type modelType, List<string> skipids)
         {
             var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
-            var subids = dp.GetTreeSubIds(this,ids);
+            var subids = dp.GetTreeSubIds(this, ids);
             if (subids.Count > 0)
             {
                 return subids.Concat(GetSubIds(dp, subids, modelType, skipids));
@@ -1054,9 +1093,20 @@ namespace WalkingTec.Mvvm.Core
                 {
                     foreach (var item in headers)
                     {
-                        client.DefaultRequestHeaders.Add(item.Key, item.Value);
+                        if (client.DefaultRequestHeaders.Any(x => x.Key == item.Key) == false)
+                        {
+                            client.DefaultRequestHeaders.Add(item.Key, item.Value);
+                        }
                     }
                 }
+                if (domainName?.ToLower() == "mainhost" && string.IsNullOrEmpty(_loginUserInfo?.RemoteToken) == false)
+                {
+                    if (client.DefaultRequestHeaders.Any(x => x.Key == "Authorization") == false)
+                    {
+                        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _loginUserInfo.RemoteToken);
+                    }
+                }
+
                 //如果配置了代理，则使用代理
                 //设置超时
                 if (timeout.HasValue)

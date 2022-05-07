@@ -15,12 +15,10 @@ namespace WalkingTec.Mvvm.Mvc
         public static async Task<IActionResult> RedirectCall(this HttpRequest request, WTMContext wtm)
         {
             HttpMethodEnum method = Enum.Parse<HttpMethodEnum>(request.Method.ToString());
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", "Bearer " + wtm.LoginUserInfo.RemoteToken);
             ApiResult<string> rv = null;
             if (method == HttpMethodEnum.GET)
             {
-                rv = await wtm.CallAPI("mainhost", request.Path.ToString(),headers:headers);
+                rv = await wtm.CallAPI("mainhost", request.Path.ToString());
             }
             else
             {
@@ -31,7 +29,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         data.Add(item.Key, item.Value);
                     }
-                    rv = await wtm.CallAPI<string>("mainhost", request.Path.ToString(), method, data, headers: headers);
+                    rv = await wtm.CallAPI<string>("mainhost", request.Path.ToString(), method, data);
                 }
                 else
                 {
@@ -41,7 +39,7 @@ namespace WalkingTec.Mvvm.Mvc
                         s = request.HttpContext.Items["DONOTUSE_REQUESTBODY"].ToString();
                     }
                     HttpContent data = new StringContent(s, System.Text.Encoding.UTF8, "application/json");
-                    rv = await wtm.CallAPI<string>("mainhost", request.Path.ToString(), method, data, headers: headers);
+                    rv = await wtm.CallAPI<string>("mainhost", request.Path.ToString(), method, data);
                 }
             }
             if(rv.StatusCode == System.Net.HttpStatusCode.OK)

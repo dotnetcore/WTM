@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 {
@@ -10,16 +11,26 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
     {
         protected override List<GridAction> InitGridAction()
         {
-            return new List<GridAction>
+            if (ConfigInfo.HasMainHost)
             {
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Edit, "","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Delete, "", "_Admin",dialogWidth: 800),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
-                this.MakeAction("FrameworkGroup","DataFunction",Localizer["_Admin.DataPrivilege"],Localizer["_Admin.DataPrivilege"], GridActionParameterTypesEnum.SingleId,"_Admin",800,null,null,x=>x.GroupCode).SetShowInRow(),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
-            };
+                return new List<GridAction>
+                {
+                    this.MakeAction("FrameworkGroup","DataFunction",Localizer["_Admin.DataPrivilege"],Localizer["_Admin.DataPrivilege"], GridActionParameterTypesEnum.SingleId,"_Admin",800,null,null,x=>x.GroupCode).SetShowInRow(),
+                };
+            }
+            else
+            {
+                return new List<GridAction>
+                {
+                    this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800),
+                    this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Edit, "","_Admin", dialogWidth: 800),
+                    this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Delete, "", "_Admin",dialogWidth: 800),
+                    this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
+                    this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
+                    this.MakeAction("FrameworkGroup","DataFunction",Localizer["_Admin.DataPrivilege"],Localizer["_Admin.DataPrivilege"], GridActionParameterTypesEnum.SingleId,"_Admin",800,null,null,x=>x.GroupCode).SetShowInRow(),
+                    this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
+                };
+            }
         }
 
         protected override IEnumerable<IGridColumn<FrameworkGroup>> InitGridHeader()
@@ -34,12 +45,25 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
         public override IOrderedQueryable<FrameworkGroup> GetSearchQuery()
         {
-            var query = DC.Set<FrameworkGroup>()
-                .CheckContain(Searcher.GroupCode, x=>x.GroupCode)
-                .CheckContain(Searcher.GroupName, x=>x.GroupName)
-                .OrderBy(x => x.GroupCode);
-            return query;
+            if (ConfigInfo.HasMainHost)
+            {
+                var rv = Wtm.CallAPI<ApiListModel<FrameworkGroup>>("mainhost", "/api/_frameworkgroup/search", HttpMethodEnum.POST, this.Searcher).Result;
+                if (rv?.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    EntityList = rv.Data.Data;
+                    Searcher.PageCount = rv.Data.PageCount;
+                    Searcher.Count = rv.Data.Count;
+                }
+                return null;
+            }
+            else
+            {
+                var query = DC.Set<FrameworkGroup>()
+                    .CheckContain(Searcher.GroupCode, x => x.GroupCode)
+                    .CheckContain(Searcher.GroupName, x => x.GroupName)
+                    .OrderBy(x => x.GroupCode);
+                return query;
+            }
         }
-
     }
 }
