@@ -14,7 +14,9 @@ export default class extends Vue {
    * @memberof Action
    */
   readonly params = {};
-  mounted() {}
+  mounted() {
+
+  }
 }
 </script>
 <style lang="less">

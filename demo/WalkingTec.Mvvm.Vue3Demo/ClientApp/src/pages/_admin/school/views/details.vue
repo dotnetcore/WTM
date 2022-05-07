@@ -11,6 +11,9 @@
       <WtmField entityKey="SchoolType" />
       <WtmField entityKey="Remark" />
     </a-space>
+    <a-space>
+      <WtmField entityKey="Photos"  /> 
+    </a-space>
     <WtmField entityKey="Majors" :fieldProps="{ columnDefs, gridOptions }" debug />
   </WtmDetails>
 </template>
@@ -44,6 +47,7 @@ export default class extends mixins(PageDetailsBasics) {
       // }
     ];
   }
+
   get gridOptions(): GridOptions {
     return {};
   }

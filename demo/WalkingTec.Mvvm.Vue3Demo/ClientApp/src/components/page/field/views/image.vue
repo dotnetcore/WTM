@@ -1,21 +1,29 @@
 <template>
     <template v-if="_readonly">
         <a-image v-for="(item, index) in imageUrl"
-                 :key="index"
-                 :width="100"
-                 :src="item"
-                 :fallback="imagefallback" />
+             :key="index"
+             :width="100"
+             :src="item"
+             :fallback="imagefallback"
+        />
+     
     </template>
     <template v-else>
         <div class="w-avatar-uploader">
             <!-- <a-spin :spinning="spinning"> -->
             <!-- v-model:fileList="fileList" -->
+            <div v-for="(item,index) in fileList" :key="index">
+                 {{item}}
+            </div>
+
+            <img v-for="(item,index) in fileList" :key="index" :src="'http://localhost:8002'+item.url" width='50' />
             <a-upload :disabled="disabled || _readonly"
-                      :fileList="fileList"
                       name="file"
                       list-type="picture-card"
+                      :multiple="max == 1 ? false : true"
                       accept="image/*"
                       :action="action"
+                      :file-list="fileList"
                       :headers="headers"
                       :before-upload="beforeUpload"
                       :remove="onRemove"
@@ -83,7 +91,7 @@
 
         fileList = [];
         filedata = [];
-      async mounted() {
+        async mounted() {
             // this.onRequest();
             // if (this.value) {
             //   this.imageUrl = $System.FilesController.getDownloadUrl(this.value)
@@ -98,10 +106,15 @@
         }
         beforeUpload() { }
         onChange(event) {
-            this.fileList = event.fileList;
+            this.fileList = event.fileList
             if (event.file.status === "removed") {
-                this.formState.DeletedFileIds = [this.value];
-                this.value = null;
+                if(this.max == 9){
+                 this.formState.DeletedFileIds = [this.value];
+                    this.value = null;
+                }else{
+                    this.formState.DeletedFileIds = [this.value];
+                    this.value = null;
+                }
             }
             if (event.file.status === "uploading") {
                 this.spinning = true;
@@ -112,21 +125,29 @@
                         const Id = this.lodash.get(event, "file.response.Id");
                         this.value = Id;
                     } else {
-                        this.value = this.lodash.map(this.fileList, "response.Id");
+                        let value = this.lodash.map(event.fileList)
+                        this.value = this.lodash.map(value, (item, index) => {
+                            return {
+                                order:index,
+                                FileId:this.lodash.get(item, "Id") || this.lodash.get(item, "response.Id")
+                            }
+                        })
+                        console.log(this.value)
                     }
                 }
             }
         }
         @Watch("value")
         onValueChange(val, old) {
+            console.log('56')
             if (val) {
-                if (this.lodash.isArray(val)) {
+                if (this.max == 9) {
                     this.filedata = this.lodash.map(
                         val,
                         item => {
                             return {
-                                fileid: val,
-                                fileurl: $System.FilesController.getDownloadUrl(val),
+                                fileid: item['FileId'],
+                                fileurl: $System.FilesController.getDownloadUrl(item['FileId']),
                                 filename: $System.FilesController.getFileName(val)
                             }
                         }
@@ -139,17 +160,17 @@
                     }]
                 }
                 Promise.all(this.lodash.map(this.filedata, "filename")).then((ps) => {
-                    var ips = ps;
-                    if (this.fileList.length === 0) {
+                    var ips = ps; 
                         this.fileList = this.lodash.map(this.filedata, (item, index) => {
                             return {
                                 uid: item.fileid,
                                 name: ps[index],
+                                Id:item.fileid,
                                 status: "done",
                                 url: item.fileurl
                             };
                         });
-                    }
+                    
                 })
             }
         }
@@ -163,8 +184,9 @@
             }
         }
         onRemove(file) {
-            const response = this.lodash.get(file, 'response')
-            return response ? $System.FilesController.deleteFiles(response) : $System.FilesController.deleteFiles({ Id: file.uid })
+          
+            /*const response = this.lodash.get(file, 'response')
+            return response ? $System.FilesController.deleteFiles(response) : $System.FilesController.deleteFiles({ Id: file.uid })*/
         }
     }
     function getBase64(img: Blob, callback: (base64Url: string) => void) {

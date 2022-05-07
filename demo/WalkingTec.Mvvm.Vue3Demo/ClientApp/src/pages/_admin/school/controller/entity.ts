@@ -38,8 +38,16 @@ class Entity {
         // label 字段描述
         label: EnumLocaleLabel.SchoolType,
         rules: [{ required: true }]
-
     }
+
+
+    readonly Photos: WTM_EntitiesField = {
+        name: ['Entity','Photos'],
+        label: '上传图片',
+        valueType: WTM_ValueType.image,
+        fieldProps: { max: 9 },
+    }
+
     readonly Remark: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'Remark'],

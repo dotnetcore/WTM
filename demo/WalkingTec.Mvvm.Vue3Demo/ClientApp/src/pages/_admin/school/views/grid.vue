@@ -15,6 +15,7 @@ export default class extends Vue {
       {
         headerName: EnumLocaleLabel.ID,
         field: "ID",
+        maxWidth:100,
       },
       {
         headerName: EnumLocaleLabel.SchoolCode,
@@ -26,7 +27,7 @@ export default class extends Vue {
       },
       {
         headerName: EnumLocaleLabel.SchoolType,
-        field: "SchoolType",
+        field: "SchoolType"
       },
     ]
   };

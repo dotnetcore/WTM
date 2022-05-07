@@ -70,8 +70,7 @@ export function getColumnDefsAction(frameworkComponents): (ColGroupDef | ColDef)
             cellRenderer: 'RowAction',
             cellClass: 'w-row-action',
             pinned: window.innerWidth > 701 ? 'right' : '',
-            sortable: false,
-            minWidth: 140,
+            //sortable: false,
             suppressMenu: true,
             suppressColumnsToolPanel: true,
         }]
@@ -103,7 +102,7 @@ export function getColumnDefsCheckbox(checkboxSelection, theme: 'balham' | 'alpi
         editable: false,
         suppressColumnsToolPanel: true,
         filter: false,
-        resizable: false,
+        resizable: true,
         checkboxSelection: true,
         headerCheckboxSelection: true,
         width: width,
