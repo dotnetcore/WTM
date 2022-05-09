@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             if (ConfigInfo.HasMainHost)
             {
                 searcher.IsPlainText = false;
-                return Wtm.CallAPI<IActionResult>("mainhost", "/api/_frameworkrole/search", HttpMethodEnum.POST, searcher).Result.Data;
+                return Wtm.CallAPI<string>("mainhost", "/api/_frameworkrole/search", HttpMethodEnum.POST, searcher).Result.ToActionResult();
             }
             var vm = Wtm.CreateVM<FrameworkRoleListVM>(passInit: true);
             if (ModelState.IsValid)

@@ -42,21 +42,30 @@ namespace WalkingTec.Mvvm.Mvc
                     rv = await wtm.CallAPI<string>("mainhost", request.Path.ToString(), method, data);
                 }
             }
-            if(rv.StatusCode == System.Net.HttpStatusCode.OK)
+            return rv.ToActionResult();
+        }
+
+        public static IActionResult ToActionResult(this ApiResult<string> self)
+        {
+            if(self == null)
             {
-                return new OkObjectResult(rv.Data);
+                return new BadRequestResult();
             }
-            else if(rv.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (self.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return new OkObjectResult(self.Data);
+            }
+            else if (self.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return new UnauthorizedResult();
             }
-            else if(rv.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            else if (self.StatusCode == System.Net.HttpStatusCode.Forbidden)
             {
                 return new ForbidResult();
             }
-            else if(rv.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            else if (self.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                return new BadRequestObjectResult(rv.Errors);
+                return new BadRequestObjectResult(self.Errors);
             }
             return new BadRequestResult();
         }

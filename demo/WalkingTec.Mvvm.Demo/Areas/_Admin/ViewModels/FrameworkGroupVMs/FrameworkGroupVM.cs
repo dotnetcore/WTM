@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                     DC.Set<FrameworkUserGroup>().RemoveRange(ur);
                     DC.SaveChanges();
                     tran.Commit();
-                    await Wtm.RemoveUserCache(ur.Select(x => x.UserCode).ToArray());
+                    await Wtm.RemoveUserCacheByGroup(Entity.GroupCode);
                 }
                 catch
                 {

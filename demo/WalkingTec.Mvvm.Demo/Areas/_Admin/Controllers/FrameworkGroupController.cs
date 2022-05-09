@@ -26,17 +26,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public string Search(FrameworkGroupSearcher searcher)
+        public IActionResult Search(FrameworkGroupSearcher searcher)
         {
+            if (ConfigInfo.HasMainHost)
+            {
+                searcher.IsPlainText = false;
+                return Wtm.CallAPI<string>("mainhost", "/api/_frameworkgroup/search", HttpMethodEnum.POST, searcher).Result.ToActionResult();
+            }
             var vm = Wtm.CreateVM<FrameworkGroupListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
-                return vm.GetJson(false);
+                return Content(vm.GetJson(false));
             }
             else
             {
-                return vm.GetError();
+                return Content(vm.GetError());
             }
         }
         #endregion
@@ -132,7 +137,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 var itcodes = gr.Select(x => x.UserCode).ToArray();
                 DC.Set<FrameworkUserGroup>().RemoveRange(gr);
                 DC.SaveChanges();
-                await Wtm.RemoveUserCache(itcodes);
+                await Wtm.RemoveUserCacheByGroup(GroupCode.ToArray());
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.OprationSuccess"]);
             }
         }

@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (ConfigInfo.HasMainHost)
             {
-                return Wtm.CallAPI<IActionResult>("mainhost", "/api/_frameworkgroup/search", HttpMethodEnum.POST, searcher).Result.Data;
+                return Request.RedirectCall(Wtm).Result;
             }
             if (ModelState.IsValid)
             {
@@ -115,7 +115,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var itcodes = gr.Select(x => x.UserCode).ToArray();
                 DC.Set<FrameworkUserGroup>().RemoveRange(gr);
                 DC.SaveChanges();
-                await Wtm.RemoveUserCache(itcodes);
+                await Wtm.RemoveUserCacheByGroup(GroupCode.ToArray());
                 return Ok(ids.Count());
             }
         }
