@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
 
         public SchoolVM()
         {
-            SetInclude(x => x.Place, x=>x.Majors, x=>x.Photos);
+            SetInclude(x => x.Place, x=>x.Majors, x=>x.Photos, x=>x.Files);
         }
 
         protected override void InitVM()
