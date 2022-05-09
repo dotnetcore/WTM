@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (ConfigInfo.HasMainHost)
             {
-                return Request.RedirectCall(Wtm).Result;
+                return Wtm.CallAPI<IActionResult>("mainhost", "/api/_frameworkrole/search", HttpMethodEnum.POST, searcher).Result.Data;
             }
             if (ModelState.IsValid)
             {

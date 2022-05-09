@@ -274,7 +274,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [AllRights]
         public ActionResult GetUserById(string keywords)
         {
-            var users = DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
+            WalkingTec.Mvvm.Admin.Api.FrameworkUserController userapi = new Mvvm.Admin.Api.FrameworkUserController();
+            userapi.Wtm = Wtm;
+            var rv = userapi.GetUserById(keywords) as OkObjectResult;
+            List<ComboSelectListItem> users = new List<ComboSelectListItem>();
+            if(rv != null && rv.Value is List<ComboSelectListItem> ll)
+            {
+                users = ll;
+            }
             return JsonMore(users);
 
         }

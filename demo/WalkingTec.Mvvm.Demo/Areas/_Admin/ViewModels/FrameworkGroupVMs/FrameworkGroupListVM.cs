@@ -1,5 +1,6 @@
 // WTM默认页面 Wtm buidin page
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -7,8 +8,13 @@ using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 {
-    public class FrameworkGroupListVM : BasePagedListVM<FrameworkGroup, FrameworkGroupSearcher>
+    public class FrameworkGroupListVM : BasePagedListVM<FrameworkGroup_View, FrameworkGroupSearcher>
     {
+        public FrameworkGroupListVM()
+        {
+            NeedPage = false;
+        }
+
         protected override List<GridAction> InitGridAction()
         {
             if (ConfigInfo.HasMainHost)
@@ -33,37 +39,79 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             }
         }
 
-        protected override IEnumerable<IGridColumn<FrameworkGroup>> InitGridHeader()
+        protected override IEnumerable<IGridColumn<FrameworkGroup_View>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkGroup>>{
+            return new List<GridColumn<FrameworkGroup_View>>{
+                this.MakeGridHeader(x => x.GroupName, 220),
                 this.MakeGridHeader(x => x.GroupCode, 120),
-                this.MakeGridHeader(x => x.GroupName, 120),
-                this.MakeGridHeader(x => x.GroupRemark),
-                this.MakeGridHeaderAction(width: 300)
+                this.MakeGridHeader(x => x.ManagerName,220).SetFormat((a,b)=>{
+                    string rv = "";
+                    if(string.IsNullOrEmpty(a.ManagerName) == false)
+                    {
+                        rv += a.ManagerName;
+                    }
+                    if(string.IsNullOrEmpty(a.Manager) == false)
+                    {
+                        rv += $"({a.Manager})";
+                    }
+                    return rv;
+                }),
+              this.MakeGridHeader(x => x.GroupRemark),
+                 this.MakeGridHeader(x => x.ParentId).SetHide(),
+             this.MakeGridHeaderAction(width: 300)
             };
         }
 
-        public override IOrderedQueryable<FrameworkGroup> GetSearchQuery()
+        public override IOrderedQueryable<FrameworkGroup_View> GetSearchQuery()
         {
-            if (ConfigInfo.HasMainHost)
+            return  DC.Set<FrameworkGroup>()
+                .CheckContain(Searcher.GroupCode, x => x.GroupCode)
+                .CheckContain(Searcher.GroupName, x => x.GroupName)
+                 .GroupJoin(DC.Set<FrameworkUser>(), ok => ok.Manager, ik => ik.ITCode, (group, user) => new { user = user, group = group })
+                 .SelectMany(x => x.user.DefaultIfEmpty(), (a, b) => new FrameworkGroup_View
+                 {
+                     ID = a.group.ID,
+                     ParentId = a.group.ParentId,
+                     GroupCode = a.group.GroupCode,
+                     GroupName = a.group.GroupName,
+                     Manager = a.group.Manager,
+                     ManagerName = b.Name,
+                 })
+                .OrderBy(x => x.GroupCode);
+        }
+        public override void AfterDoSearcher()
+        {
+            var topdata = EntityList.MakeTree(x => x.GroupCode).FlatTree(x => x.GroupCode);
+            if (ControllerName.Contains("/api") == false)
             {
-                var rv = Wtm.CallAPI<ApiListModel<FrameworkGroup>>("mainhost", "/api/_frameworkgroup/search", HttpMethodEnum.POST, this.Searcher).Result;
-                if (rv?.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    EntityList = rv.Data.Data;
-                    Searcher.PageCount = rv.Data.PageCount;
-                    Searcher.Count = rv.Data.Count;
-                }
-                return null;
+                topdata.ForEach((x) => { int l = x.GetLevel(); for (int i = 0; i < l; i++) { x.GroupName = "&nbsp;&nbsp;&nbsp;&nbsp;" + x.GroupName; } });
             }
-            else
-            {
-                var query = DC.Set<FrameworkGroup>()
-                    .CheckContain(Searcher.GroupCode, x => x.GroupCode)
-                    .CheckContain(Searcher.GroupName, x => x.GroupName)
-                    .OrderBy(x => x.GroupCode);
-                return query;
-            }
+            EntityList = topdata;
+
         }
     }
+    public class FrameworkGroup_View : TreePoco<FrameworkGroup_View>
+    {
+        [Display(Name = "_Admin.GroupCode")]
+        public string GroupCode { get; set; }
+
+        [Display(Name = "_Admin.GroupName")]
+        public string GroupName { get; set; }
+
+        [Display(Name = "_Admin.Remark")]
+        public string GroupRemark { get; set; }
+
+        [Display(Name = "_Admin.GroupManager")]
+        public string Manager { get; set; }
+
+        [Display(Name = "_Admin.Tenant")]
+        public string TenantCode { get; set; }
+
+        [Display(Name = "_Admin.GroupManager")]
+        public string ManagerName { get; set; }
+
+        public bool HasChild { get => HasChildren; }
+
+    }
+
 }

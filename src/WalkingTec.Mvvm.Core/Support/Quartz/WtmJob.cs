@@ -20,6 +20,7 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
                 {
                     _ss = Sp.CreateScope();
                     _wtm = _ss.ServiceProvider.GetRequiredService<WTMContext>();
+                    _wtm.SetServiceProvider(_ss.ServiceProvider);
                 }
                 return _wtm;
             }
@@ -34,7 +35,7 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
 
         public void Dispose()
         {
-           _ss.Dispose();
+           _ss?.Dispose();
         }
     }
 }

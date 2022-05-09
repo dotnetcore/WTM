@@ -60,7 +60,6 @@ namespace WalkingTec.Mvvm.Core
 
         private int? _childrenDepth;
 
-
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>

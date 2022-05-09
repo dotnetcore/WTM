@@ -24,6 +24,7 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Remark")]
         public string GroupRemark { get; set; }
 
+        [Display(Name = "_Admin.GroupManager")]
         public string Manager { get; set; }
 
         [NotMapped]

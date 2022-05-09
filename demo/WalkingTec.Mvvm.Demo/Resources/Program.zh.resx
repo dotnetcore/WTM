@@ -777,6 +777,9 @@
   <data name="_Admin.GroupDp" xml:space="preserve">
     <value>用户组权限</value>
   </data>
+  <data name="_Admin.GroupManager" xml:space="preserve">
+    <value>部门主管</value>
+  </data>
   <data name="_Admin.GroupName" xml:space="preserve">
     <value>组名</value>
   </data>

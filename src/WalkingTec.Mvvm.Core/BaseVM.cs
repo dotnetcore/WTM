@@ -275,6 +275,7 @@ namespace WalkingTec.Mvvm.Core
         {
             Wtm = vm.Wtm;
             FC = vm.FC;
+            ControllerName = vm.ControllerName;
             CreatorAssembly = vm.CreatorAssembly;
         }
 

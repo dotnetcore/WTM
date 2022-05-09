@@ -180,6 +180,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return vm.GetExportData();
         }
 
+        [AllRights]
+        public IActionResult GetParents()
+        {
+            var data = DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName);
+            return JsonMore(data);
+        }
     }
 
 }

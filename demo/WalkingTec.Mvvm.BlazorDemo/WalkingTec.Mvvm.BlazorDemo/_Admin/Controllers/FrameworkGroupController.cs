@@ -23,13 +23,13 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (ConfigInfo.HasMainHost)
             {
-                return Request.RedirectCall(Wtm).Result;
+                return Wtm.CallAPI<IActionResult>("mainhost", "/api/_frameworkgroup/search", HttpMethodEnum.POST, searcher).Result.Data;
             }
             if (ModelState.IsValid)
             {
                 var vm = Wtm.CreateVM<FrameworkGroupListVM>(passInit: true);
                 vm.Searcher = searcher;
-                return Content(vm.GetJson(enumToString: false));
+                return Content(vm.GetJson());
             }
             else
             {
@@ -171,6 +171,14 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Ok(vm.EntityList.Count);
             }
+        }
+
+        [AllRights]
+        [HttpGet("[action]")]
+        public IActionResult GetParents()
+        {
+            var data = DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName);
+            return Ok(data);
         }
 
     }

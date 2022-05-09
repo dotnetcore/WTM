@@ -1,6 +1,7 @@
 // WTM默认页面 Wtm buidin page
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -16,6 +17,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             rv.AddGroup(SimpleField(x => x.GroupCode));
             return rv;
         }
+
+        public override void Validate()
+        {
+            var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.Manager).FirstOrDefault();
+            if (user == null)
+            {
+                MSD.AddModelError("Entity.Manager", Localizer["Sys.CannotFindUser", Entity.Manager]);
+            }
+            base.Validate();
+        }
+
 
         public override void DoEdit(bool updateAllFields = false)
         {
@@ -46,6 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                 }
             }
         }
-
     }
+
+
 }

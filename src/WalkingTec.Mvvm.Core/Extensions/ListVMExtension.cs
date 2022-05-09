@@ -358,6 +358,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <returns>json string</returns>
         public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true, bool enumToString = true) where T : TopBasePoco, new()
         {
+            if(self.Searcher.IsPlainText != null)
+            {
+                PlainText = self.Searcher.IsPlainText.Value;
+            }
+            if (self.Searcher.IsEnumToString != null)
+            {
+                enumToString = self.Searcher.IsEnumToString.Value;
+            }
             return $@"{{""Data"":{self.GetDataJson(PlainText,enumToString)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount},""Msg"":""success"",""Code"":200}}";
         }
 

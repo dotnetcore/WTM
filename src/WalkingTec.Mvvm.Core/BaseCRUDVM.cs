@@ -997,6 +997,13 @@ namespace WalkingTec.Mvvm.Core
                         //将字段名保存，为后面生成错误信息作准备
                         props.AddRange(field.GetProperties());
                     }
+                    if (typeof(ITenant).IsAssignableFrom(typeof(TModel)) && props.Any(x => x.Name.ToLower() == "tenantcode")==false)
+                    {
+                        ITenant ent = Entity as ITenant;
+                        var f = new DuplicatedField<TModel>(x => (x as ITenant).TenantCode);
+                        Expression exp = f.GetExpression(Entity, para);
+                        conditions.Add(exp);
+                    }
                     //如果要求判断id不重复，则去掉id不相等的判断，加入id相等的判断
                     if (props.Any(x => x.Name.ToLower() == "id"))
                     {

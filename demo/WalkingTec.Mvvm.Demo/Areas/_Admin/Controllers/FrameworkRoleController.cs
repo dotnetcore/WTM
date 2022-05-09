@@ -23,17 +23,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public string Search(FrameworkRoleSearcher searcher)
+        public IActionResult Search(FrameworkRoleSearcher searcher)
         {
+            if (ConfigInfo.HasMainHost)
+            {
+                searcher.IsPlainText = false;
+                return Wtm.CallAPI<IActionResult>("mainhost", "/api/_frameworkrole/search", HttpMethodEnum.POST, searcher).Result.Data;
+            }
             var vm = Wtm.CreateVM<FrameworkRoleListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
-                return vm.GetJson(false);
+                return Content(vm.GetJson(false));
             }
             else
             {
-                return vm.GetError();
+                return Content(vm.GetError());
             }
         }
 

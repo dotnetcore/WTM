@@ -46,25 +46,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         public override IOrderedQueryable<FrameworkRole> GetSearchQuery()
         {
-            if (ConfigInfo.HasMainHost)
-            {
-                var rv = Wtm.CallAPI<ApiListModel<FrameworkRole>>("mainhost", "/api/_frameworkrole/search", HttpMethodEnum.POST, this.Searcher).Result;
-                if (rv?.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    EntityList = rv.Data.Data;
-                    Searcher.PageCount = rv.Data.PageCount;
-                    Searcher.Count = rv.Data.Count;
-                }
-                return null;
-            }
-            else
-            {
-                var query = DC.Set<FrameworkRole>()
-                    .CheckContain(Searcher.RoleCode, x => x.RoleCode)
-                    .CheckContain(Searcher.RoleName, x => x.RoleName)
-                    .OrderBy(x => x.RoleCode);
-                return query;
-            }
+            var query = DC.Set<FrameworkRole>()
+                .CheckContain(Searcher.RoleCode, x => x.RoleCode)
+                .CheckContain(Searcher.RoleName, x => x.RoleName)
+                .OrderBy(x => x.RoleCode);
+            return query;
         }
 
     }

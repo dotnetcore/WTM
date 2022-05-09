@@ -22,11 +22,15 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult Search(FrameworkUserSearcher searcher)
         {
+            if (ConfigInfo.HasMainHost)
+            {
+                return Wtm.CallAPI<IActionResult>("mainhost", "/api/_frameworkuser/search", HttpMethodEnum.POST, searcher).Result.Data;
+            }
             if (ModelState.IsValid)
             {
                 var vm = Wtm.CreateVM<FrameworkUserListVM>(passInit: true);
                 vm.Searcher = searcher;
-                return Content(vm.GetJson(enumToString: false));
+                return Content(vm.GetJson());
             }
             else
             {
@@ -190,18 +194,35 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFrameworkRoles")]
         [ActionDescription("GetRoles")]
         [AllRights]
-        public ActionResult GetFrameworkRoles()
+        public IActionResult GetFrameworkRoles()
         {
+            if (ConfigInfo.HasMainHost)
+            {
+                return Request.RedirectCall(Wtm).Result;
+            }
             return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName));
         }
 
         [HttpGet("GetFrameworkGroups")]
         [ActionDescription("GetGroups")]
         [AllRights]
-        public ActionResult GetFrameworkGroups()
+        public IActionResult GetFrameworkGroups()
         {
+            if (ConfigInfo.HasMainHost)
+            {
+                return Request.RedirectCall(Wtm).Result;
+            }
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName));
         }
 
+        public IActionResult GetUserById(string keywords)
+        {
+            if (ConfigInfo.HasMainHost)
+            {
+                return Request.RedirectCall(Wtm).Result;
+            }
+            var users = DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
+            return Ok(users);
+        }
     }
 }

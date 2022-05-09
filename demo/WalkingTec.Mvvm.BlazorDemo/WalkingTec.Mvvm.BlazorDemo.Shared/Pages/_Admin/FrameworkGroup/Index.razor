@@ -14,33 +14,34 @@
 
 
 
-<Table @ref="dataTable" TItem="FrameworkGroup" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;">
+<Table @ref="dataTable" TItem="FrameworkGroup_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" OnTreeExpand="OnTreeExpand" IsTree="true">
     <TableColumns>
+        <TableColumn @bind-Field="@context.GroupName" Width="220"/>
         <TableColumn @bind-Field="@context.GroupCode" Width="180" />
-        <TableColumn @bind-Field="@context.GroupName" />
+        <TableColumn @bind-Field="@context.ManagerName" Width="220"/>
         <TableColumn @bind-Field="@context.GroupRemark" />
 
     </TableColumns>
     <TableToolbarTemplate>
         @if (IsAccessable("/api/_FrameworkGroup/Add")&& WtmBlazor.ConfigInfo.HasMainHost == false)
         {
-            <TableToolbarButton TItem="FrameworkGroup" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
+            <TableToolbarButton TItem="FrameworkGroup_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }
         @if (IsAccessable("/api/_FrameworkGroup/BatchDelete")&& WtmBlazor.ConfigInfo.HasMainHost == false)
         {
-            <TableToolbarPopconfirmButton TItem="FrameworkGroup" Color="Color.Primary"
+            <TableToolbarPopconfirmButton TItem="FrameworkGroup_View" Color="Color.Primary"
                                           Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }
         @if (IsAccessable("/api/_FrameworkGroup/Import")&& WtmBlazor.ConfigInfo.HasMainHost == false)
         {
-            <TableToolbarButton TItem="FrameworkGroup" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
+            <TableToolbarButton TItem="FrameworkGroup_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
         }
         @if (IsAccessable("/api/_FrameworkGroup/ExportExcel")&& WtmBlazor.ConfigInfo.HasMainHost == false)
         {
-            <TableToolbarButton TItem="FrameworkGroup" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+            <TableToolbarButton TItem="FrameworkGroup_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
     </TableToolbarTemplate>
     <RowButtonTemplate>
@@ -63,13 +64,13 @@
 @code{
 
     private FrameworkGroupSearcher SearchModel = new FrameworkGroupSearcher();
-    private Table<FrameworkGroup> dataTable;
+    private Table<FrameworkGroup_View> dataTable;
 
 
 
-    private async Task<QueryData<FrameworkGroup>> OnSearch(QueryPageOptions opts)
+    private async Task<QueryData<FrameworkGroup_View>> OnSearch(QueryPageOptions opts)
     {
-        return await StartSearch<FrameworkGroup>("/api/_FrameworkGroup/Search", SearchModel, opts);
+        return await StartSearchTree<FrameworkGroup_View>("/api/_FrameworkGroup/Search", SearchModel, opts);
     }
 
     private void DoSearch()
@@ -77,7 +78,12 @@
         dataTable.QueryAsync();
     }
 
-    private async Task OnCreateClick(IEnumerable<FrameworkGroup> items)
+        private async Task<IEnumerable<FrameworkGroup_View>> OnTreeExpand(FrameworkGroup_View data)
+    {
+        return await Task.FromResult(data.Children);
+    }
+
+    private async Task OnCreateClick(IEnumerable<FrameworkGroup_View> items)
     {
         if (await OpenDialog<Create>(WtmBlazor.Localizer["Sys.Create"]) == DialogResult.Yes)
         {
@@ -85,7 +91,7 @@
         }
     }
 
-    private async Task OnEditClick(FrameworkGroup item)
+    private async Task OnEditClick(FrameworkGroup_View item)
     {
         if (await OpenDialog<Edit>(WtmBlazor.Localizer["Sys.Edit"], x => x.id == item.ID.ToString()) == DialogResult.Yes)
         {
@@ -94,7 +100,7 @@
     }
 
 
-    private async Task OnDetailsClick(FrameworkGroup item)
+    private async Task OnDetailsClick(FrameworkGroup_View item)
     {
         await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());
     }
@@ -112,14 +118,14 @@
         }
     }
 
-    private async Task OnDeleteClick(FrameworkGroup item)
+    private async Task OnDeleteClick(FrameworkGroup_View item)
     {
         await PostsData(new List<string> { item.ID.ToString() }, $"/api/_FrameworkGroup/batchdelete", (s) => "Sys.OprationSuccess");
         await dataTable.QueryAsync();
     }
 
 
-    private async Task OnExportClick(IEnumerable<FrameworkGroup> items)
+    private async Task OnExportClick(IEnumerable<FrameworkGroup_View> items)
     {
         if (dataTable.SelectedRows?.Any() == true)
         {
@@ -130,7 +136,7 @@
             await Download("/api/_FrameworkGroup/ExportExcel", SearchModel);
         }
     }
-    private async Task OnImportClick(IEnumerable<FrameworkGroup> items)
+    private async Task OnImportClick(IEnumerable<FrameworkGroup_View> items)
     {
         if (await OpenDialog<Import>(WtmBlazor.Localizer["Sys.Import"]) == DialogResult.Yes)
         {

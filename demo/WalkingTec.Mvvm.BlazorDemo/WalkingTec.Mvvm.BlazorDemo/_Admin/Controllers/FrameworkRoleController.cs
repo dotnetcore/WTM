@@ -23,13 +23,13 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (ConfigInfo.HasMainHost)
             {
-                return Request.RedirectCall(Wtm).Result;
+                return Wtm.CallAPI<IActionResult>("mainhost", "/api/_frameworkrole/search", HttpMethodEnum.POST, searcher).Result.Data;
             }
             if (ModelState.IsValid)
             {
                 var vm = Wtm.CreateVM<FrameworkRoleListVM>(passInit: true);
                 vm.Searcher = searcher;
-                return Content(vm.GetJson(enumToString: false));
+                return Content(vm.GetJson());
             }
             else
             {
