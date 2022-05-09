@@ -14,6 +14,9 @@
     <a-space>
       <WtmField entityKey="Photos"  /> 
     </a-space>
+    <a-space>
+      <WtmField entityKey="Files"  /> 
+    </a-space>
     <WtmField entityKey="Majors" :fieldProps="{ columnDefs, gridOptions }" debug />
   </WtmDetails>
 </template>
@@ -65,4 +68,9 @@ export default class extends mixins(PageDetailsBasics) {
   }
 }
 </script>
-<style lang="less"></style>
+<style lang="less">
+  .ant-form-item{
+    row-gap: 0px;
+    flex-direction: inherit!important;
+  }
+</style>

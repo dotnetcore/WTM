@@ -61,7 +61,8 @@ export default class Grid extends Vue {
   }
 
   get options(): GridOptions {
-    const { frameworkComponents = {}, ...gridOptions } = this.gridOptions;
+    const { frameworkComponents = {}, ...gridOptions } = this.gridOptions
+
     const options: GridOptions = this.lodash.assign(
       {
         frameworkComponents: this.lodash.assign(

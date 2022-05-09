@@ -3,6 +3,11 @@
         <a-row :gutter="20">
             <a-col :md="12">
                 <WtmShortCut icon='fa-music fa' font="音乐" href = "https://github.com/dotnetcore/WTM"></WtmShortCut>
+                <WtmShortCut icon='fa fa-external-link-square' font="$i18n.t($locales.Page页面one)" href="/detail/_default/views/filtergroup"></WtmShortCut> 
+
+  <WtmShortCut icon='fa fa-area-chart' font="$i18n.t($locales.Page页面22222)" href="/detail/school/index"></WtmShortCut> 
+
+  <WtmShortCut icon='fa fa-angellist' font="$i18n.t($locales.Page页面3333)" href="/detail/school/views/create"></WtmShortCut> 
             </a-col>
             <a-col :md="12">
                 <a-card title="WTM—做最好的.netcore开源框架" >

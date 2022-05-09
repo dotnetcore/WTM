@@ -1,22 +1,29 @@
 <template>
     <template v-if="_readonly">
-        <a-image v-for="(item, index) in imageUrl"
+        <a-upload :disabled="true"
+              v-if="max !== 1" 
+              name="file"
+              list-type="picture-card"
+              accept="image/*"
+              :action="action"
+              :file-list="fileList"
+              :headers="headers"
+              v-bind="_fieldProps">
+        </a-upload>
+
+        <a-image 
+             v-for="(item, index) in imageUrl"
+             v-else
              :key="index"
              :width="100"
              :src="item"
              :fallback="imagefallback"
         />
-     
     </template>
     <template v-else>
         <div class="w-avatar-uploader">
             <!-- <a-spin :spinning="spinning"> -->
             <!-- v-model:fileList="fileList" -->
-            <div v-for="(item,index) in fileList" :key="index">
-                 {{item}}
-            </div>
-
-            <img v-for="(item,index) in fileList" :key="index" :src="'http://localhost:8002'+item.url" width='50' />
             <a-upload :disabled="disabled || _readonly"
                       name="file"
                       list-type="picture-card"
@@ -93,9 +100,9 @@
         filedata = [];
         async mounted() {
             // this.onRequest();
-            // if (this.value) {
-            //   this.imageUrl = $System.FilesController.getDownloadUrl(this.value)
-            // }
+            /*if (this.value) {
+               this.imageUrl = $System.FilesController.getDownloadUrl(this.value)
+            }*/
             if (this.debug) {
                 console.log("");
                 console.group(`Field ~ ${this.entityKey} ${this._name} `);
@@ -108,9 +115,15 @@
         onChange(event) {
             this.fileList = event.fileList
             if (event.file.status === "removed") {
-                if(this.max == 9){
-                 this.formState.DeletedFileIds = [this.value];
-                    this.value = null;
+                if(this.max !== 1){
+                     this.formState.DeletedFileIds.push(event.file.Id);
+                     let value = this.lodash.map(event.fileList)
+                     this.value = this.lodash.map(value, (item, index) => {
+                        return {
+                            order:index,
+                            FileId:this.lodash.get(item, "Id") || this.lodash.get(item, "response.Id")
+                        }
+                    })
                 }else{
                     this.formState.DeletedFileIds = [this.value];
                     this.value = null;
@@ -139,9 +152,8 @@
         }
         @Watch("value")
         onValueChange(val, old) {
-            console.log('56')
             if (val) {
-                if (this.max == 9) {
+                if (this.max !== 1) {
                     this.filedata = this.lodash.map(
                         val,
                         item => {
@@ -160,11 +172,9 @@
                     }]
                 }
                 Promise.all(this.lodash.map(this.filedata, "filename")).then((ps) => {
-                    var ips = ps; 
                         this.fileList = this.lodash.map(this.filedata, (item, index) => {
                             return {
                                 uid: item.fileid,
-                                name: ps[index],
                                 Id:item.fileid,
                                 status: "done",
                                 url: item.fileurl
@@ -184,7 +194,7 @@
             }
         }
         onRemove(file) {
-          
+            
             /*const response = this.lodash.get(file, 'response')
             return response ? $System.FilesController.deleteFiles(response) : $System.FilesController.deleteFiles({ Id: file.uid })*/
         }

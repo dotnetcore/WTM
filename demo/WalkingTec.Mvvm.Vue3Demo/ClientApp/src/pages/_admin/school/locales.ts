@@ -10,18 +10,24 @@ export enum EnumLocaleLabel {
     SchoolType = "school.SchoolType",
     Remark = "school.Remark",
     Majors = "school.Majors",
+    Photos = "school.Photos",
+    Files = "school.Files", 
 }
 export default {
     en: {
         [EnumLocaleLabel.ID]: 'ID',
         [EnumLocaleLabel.PageName]: 'school',
         [EnumLocaleLabel.SchoolCode]: 'SchoolCode',
-        [EnumLocaleLabel.Majors]:'Majors'
+        [EnumLocaleLabel.Majors]:'Majors',
+        [EnumLocaleLabel.Files]:'Files',
+        [EnumLocaleLabel.Photos]:'Photos'
     },
     zh: {
         [EnumLocaleLabel.ID]: 'ID',
         [EnumLocaleLabel.PageName]: '学校',
         [EnumLocaleLabel.SchoolCode]: 'SchoolCode',
-        [EnumLocaleLabel.Majors]:'Majors'
+        [EnumLocaleLabel.Majors]:'Majors',
+        [EnumLocaleLabel.Files]:'附件',
+        [EnumLocaleLabel.Photos]:'图片'
     }
 }

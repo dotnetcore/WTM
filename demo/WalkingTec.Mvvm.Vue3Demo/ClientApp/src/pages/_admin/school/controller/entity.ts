@@ -48,6 +48,15 @@ class Entity {
         fieldProps: { max: 9 },
     }
 
+     readonly Files: WTM_EntitiesField = {
+        // form 的 name 属性 解析为 Entity.ITCode
+        name: ['Entity', 'Files'],
+        valueType: WTM_ValueType.upload,
+        // label 字段描述
+        label: EnumLocaleLabel.Files,
+        fieldProps: { max: 9 }
+    }
+
     readonly Remark: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'Remark'],
