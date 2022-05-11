@@ -137,7 +137,7 @@ namespace WtmBlazorUtils
         {
             if (searcher != null)
             {
-                searcher.IsEnumToString = true;
+                searcher.IsEnumToString = false;
             }
             var rv = await WtmBlazor.Api.CallSearchApi<T>(url, searcher, options);
             QueryData<T> data = new QueryData<T>();

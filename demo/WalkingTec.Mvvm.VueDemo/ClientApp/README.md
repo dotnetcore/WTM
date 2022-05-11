@@ -75,7 +75,7 @@
 // frameworkuser/store/api.ts
 
 const search = {
-  url: "/api/_FrameworkUserBase/search", // 请求api的地址；支持{}写法，如果url有 {ID}会根据请求参数中的ID替换内容；
+  url: "/api/_FrameworkUser/search", // 请求api的地址；支持{}写法，如果url有 {ID}会根据请求参数中的ID替换内容；
   method: "post", // 请求类型
   dataType: "array", // 返回的数据类型 array | object
   contentType: "" // 请求herder.Content-Type值，默认json接口
