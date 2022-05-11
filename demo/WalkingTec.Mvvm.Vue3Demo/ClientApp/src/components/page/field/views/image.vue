@@ -116,7 +116,13 @@
             this.fileList = event.fileList
             if (event.file.status === "removed") {
                 if(this.max !== 1){
-                     this.formState.DeletedFileIds.push(event.file.Id);
+                    console.log(event)
+                     if(!this.formState.DeletedFileIds){
+                        this.formState.DeletedFileIds = [event.file.Id]
+                     }else{
+                        this.formState.DeletedFileIds.push(event.file.Id);
+                     }
+                     console.log(this.formState.DeletedFileIds,event.file.Id)
                      let value = this.lodash.map(event.fileList)
                      this.value = this.lodash.map(value, (item, index) => {
                         return {
@@ -194,9 +200,8 @@
             }
         }
         onRemove(file) {
-            
-            /*const response = this.lodash.get(file, 'response')
-            return response ? $System.FilesController.deleteFiles(response) : $System.FilesController.deleteFiles({ Id: file.uid })*/
+            const response = this.lodash.get(file, 'response')
+            return response ? $System.FilesController.deleteFiles(response) : $System.FilesController.deleteFiles({ Id: file.uid })
         }
     }
     function getBase64(img: Blob, callback: (base64Url: string) => void) {
