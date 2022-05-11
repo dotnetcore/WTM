@@ -130,13 +130,13 @@ class Entity {
         name: 'SelectedRolesCodes',
         label: EnumLocaleLabel.RoleName,
         valueType: WTM_ValueType.transfer,
-        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
+        request: async () => FieldRequest('/api/_FrameworkUser/GetFrameworkRoles'),
     }
     readonly LinkedVM_SelectedRolesCodes: WTM_EntitiesField = {
         name: ['LinkedVM', 'SelectedRolesCodes'],
         label: EnumLocaleLabel.RoleName,
         valueType: WTM_ValueType.transfer,
-        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
+        request: async () => FieldRequest('/api/_FrameworkUser/GetFrameworkRoles'),
     }
     /**
     * 备注预留
@@ -147,7 +147,7 @@ class Entity {
         name: 'SelectedGroupCodes',
         label: EnumLocaleLabel.GroupName,
         valueType: WTM_ValueType.transfer,
-        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkGroups'),
+        request: async () => FieldRequest('/api/_FrameworkUser/GetFrameworkGroups'),
     }
 }
 export const PageEntity = new Entity()

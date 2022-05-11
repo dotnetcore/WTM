@@ -32,11 +32,11 @@
             <TableColumn @bind-Field="@context.IsValid" ComponentType="@typeof(Switch)" />
         </TableColumns>
         <TableToolbarTemplate>
-            @if (IsAccessable("/api/_frameworkuserbase/Add"))
+            @if (IsAccessable("/api/_frameworkuser/Add"))
             {
                 <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
             }
-            @if (IsAccessable("/api/_frameworkuserbase/BatchDelete"))
+            @if (IsAccessable("/api/_frameworkuser/BatchDelete"))
             {
                 <TableToolbarPopconfirmButton TItem="FrameworkUser_View" Color="Color.Primary"
                                           Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
@@ -44,30 +44,30 @@
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
             }
 
-            @if (IsAccessable("/api/_frameworkuserbase/Import"))
+            @if (IsAccessable("/api/_frameworkuser/Import"))
             {
                 <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
             }
-            @if (IsAccessable("/api/_frameworkuserbase/ExportExcel"))
+            @if (IsAccessable("/api/_frameworkuser/ExportExcel"))
             {
                 <TableToolbarButton TItem="FrameworkUser_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
             }
         </TableToolbarTemplate>
         <RowButtonTemplate>
-            @if (IsAccessable("/api/_frameworkuserbase/Edit"))
+            @if (IsAccessable("/api/_frameworkuser/Edit"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
             }
-            @if (IsAccessable("/api/_frameworkuserbase/{id}"))
+            @if (IsAccessable("/api/_frameworkuser/{id}"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClick="()=>OnDetailsClick(context)" />
             }
-            @if (IsAccessable("/api/_frameworkuserbase/BatchDelete"))
+            @if (IsAccessable("/api/_frameworkuser/BatchDelete"))
             {
                 <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                                   Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
             }
-            @if (IsAccessable("/api/_frameworkuserbase/password"))
+            @if (IsAccessable("/api/_frameworkuser/password"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Warning" Icon="fa fa-key" Text="@WtmBlazor.Localizer["Login.ChangePassword"]" OnClick="() => OnPasswordClick(context)" />
             }
@@ -85,7 +85,7 @@ else
 
     private async Task<QueryData<FrameworkUser_View>> OnSearch(QueryPageOptions opts)
     {
-        return await StartSearch<FrameworkUser_View>("/api/_frameworkuserbase/search", SearchModel, opts);
+        return await StartSearch<FrameworkUser_View>("/api/_frameworkuser/search", SearchModel, opts);
     }
 
     private void DoSearch()
@@ -123,7 +123,7 @@ else
     {
         if (dataTable.SelectedRows?.Any() == true)
         {
-            await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/_frameworkuserbase/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
+            await PostsData(dataTable.SelectedRows.Select(x => x.ID).ToList(), $"/api/_frameworkuser/batchdelete", (s) => WtmBlazor.Localizer["Sys.BatchDeleteSuccess", s]);
             await dataTable.QueryAsync();
         }
         else
@@ -134,7 +134,7 @@ else
 
     private async Task OnDeleteClick(FrameworkUser_View item)
     {
-        await PostsData(new List<string> { item.ID.ToString() }, $"/api/_frameworkuserbase/batchdelete", (s) => "Sys.OprationSuccess");
+        await PostsData(new List<string> { item.ID.ToString() }, $"/api/_frameworkuser/batchdelete", (s) => "Sys.OprationSuccess");
         await dataTable.QueryAsync();
     }
 
@@ -143,11 +143,11 @@ else
     {
         if (dataTable.SelectedRows?.Any() == true)
         {
-            await Download("/api/_frameworkuserbase/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
+            await Download("/api/_frameworkuser/ExportExcelByIds", dataTable.SelectedRows.Select(x => x.ID.ToString()).ToList());
         }
         else
         {
-            await Download("/api/_frameworkuserbase/ExportExcel", SearchModel);
+            await Download("/api/_frameworkuser/ExportExcel", SearchModel);
         }
     }
     private async Task OnImportClick(IEnumerable<FrameworkUser_View> items)

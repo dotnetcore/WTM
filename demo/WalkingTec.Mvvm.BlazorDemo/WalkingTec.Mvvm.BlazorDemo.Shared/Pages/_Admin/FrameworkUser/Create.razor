@@ -44,14 +44,14 @@
 
         protected override async Task OnInitializedAsync()
         {
-            AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
-            AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
+            AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUser/GetFrameworkRoles");
+            AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUser/GetFrameworkGroups");
         }
 
 
         private async Task Submit(EditContext context)
         {
-            await PostsForm(vform, "/api/_frameworkuserbase/add", (s)=> "Sys.OprationSuccess");
+            await PostsForm(vform, "/api/_frameworkuser/add", (s)=> "Sys.OprationSuccess");
         }
 
         public void OnClose()

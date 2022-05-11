@@ -130,7 +130,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     try
                     {
-                        using (var dc = wtm.CreateDC(true))
+                        using (var dc = wtm.CreateDC(true,logerror:false))
                         {
                             if (dc != null)
                             {
