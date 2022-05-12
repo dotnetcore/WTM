@@ -2,7 +2,7 @@
     <div class="w-uploader" :class="{ 'w-uploader-readonly': _readonly }">
         <a-upload :fileList="fileList"
                   :disabled="disabled || _readonly"
-                  :multiple="true"
+                  :multiple="max == 1 ? false : true"
                   :action="action"
                   :headers="headers"
                   :before-upload="beforeUpload"
@@ -72,19 +72,21 @@
         onChange(event) {
             this.fileListCheck = 1
             this.fileList = event.fileList
+            console.log(event.fileList)
             if (event.file.status === "removed") {
                 if(this.max !== 1){
+                     let ID = this.lodash.get(event.file, "Id") || this.lodash.get(event.file, "response.Id")
                      if(!this.formState.DeletedFileIds){
-                        this.formState.DeletedFileIds = [event.file.Id]
+                        this.formState.DeletedFileIds = [ID]
                      }else{
-                        this.formState.DeletedFileIds.push(event.file.Id);
+                        this.formState.DeletedFileIds.push(ID);
                      }
                      let value = this.lodash.map(event.fileList)
                      this.value = this.lodash.map(value, (item, index) => {
                         return {
                             order:index,
-                            name:this.lodash.get(item, "name") || this.lodash.get(item, "response.Name"),
-                            FileId:this.lodash.get(item, "Id") || this.lodash.get(item, 'FileId') || this.lodash.get(item, "response.Id")
+                            FileId:this.lodash.get(item, "Id") || this.lodash.get(item, "response.Id"),
+                            name:this.lodash.get(item, "name") || this.lodash.get(item, "response")
                         }
                     })
                 }else{
@@ -102,12 +104,12 @@
                         this.value = Id;
                     } else {
                         let value = this.lodash.map(event.fileList)
-                        console.log(event.fileList)
+                        console.log(event.fileList,'done')
                         this.value = this.lodash.map(value, (item, index) => {
                             return {
                                 order:index,
-                                name:this.lodash.get(item, "name") || this.lodash.get(item, "response.Name"),
-                                FileId:this.lodash.get(item, "Id") || this.lodash.get(item, 'FileId') || this.lodash.get(item, "response.Id")
+                                FileId:this.lodash.get(item, "Id") || this.lodash.get(item, "response.Id"),
+                                name:this.lodash.get(item, "name") || this.lodash.get(item, "response")
                             }
                         })
                     }
@@ -116,52 +118,56 @@
         }
         @Watch("value")
         onValueChange(val, old) {
-            let that = this
-            if (val) {
-                if (this.max !== 1) {
-                    this.fileList = []
-                    this.lodash.map(
-                        val,
-                        item => {
-                            if(!item.name){
-                                $System.FilesController.getFileName(item['FileId']).then((res)=>{
-                                    console.log(res)
-                                     item.name = res
-                                })
+            console.log(this.fileList.length)
+            /*if(!this.lodash.map(val)[0] || this.lodash.map(val).length == 0){
+                console.log(val)
+                this.fileList = []
+                this.value = [] 
+            }else{*/
+                if (val) {
+                  /*  if(!this.lodash.map(val)[0] || this.lodash.map(val).length == 0){
+                        console.log(val)
+                        this.fileList = []
+                        this.value = [] 
+                        val = []
+                    }*/
+                    if (this.max !== 1) {
+                        this.filedata = this.lodash.map(
+                            val,
+                            item => {
+                                return {
+                                    FileId: item.FileId,
+                                    fileurl: $System.FilesController.getDownloadUrl(item.FileId),
+                                    filename: $System.FilesController.getFileName(item['FileId'])
+                                }
                             }
-                            
-                            setTimeout(()=>{
+                        );
+                    } else {
+                        this.filedata = [{
+                            FileId: val,
+                            fileurl: $System.FilesController.getDownloadUrl(val),
+                            filename: $System.FilesController.getFileName(val)
+                        }]
+                    }
+                    Promise.all(this.lodash.map(this.filedata, "filename")).then((ps) => {
+                        var ips = ps;
+                        if (this.fileList.length === 0) {
+                            this.fileList = this.lodash.map(this.filedata, (item, index) => {
                                 console.log(item)
-                                that.fileList.push({
-                                    Id: item['Id'] || item['FileId'],
-                                    fileurl: $System.FilesController.getDownloadUrl(item['FileId']),
-                                    name:item.name,
+                                return {
                                     uid: item.FileId,
+                                    name: ps[index],
+                                    Id:item.FileId,
                                     status: "done",
-                                })
-                            },that.fileListCheck == 1 ? 0 : 4000)
+                                    url: item.fileurl
+                                };
+                            });
+                            console.log(this.fileList)
                         }
-                    );
-                } else {
-                    this.filedata = [{
-                        FileId: val,
-                        fileurl: $System.FilesController.getDownloadUrl(val),
-                        filename: $System.FilesController.getFileName(val)
-                    }]
-                }
-               /* Promise.all(this.lodash.map(this.filedata, "filename")).then((ps) => {
-                        this.fileList = this.lodash.map(this.filedata, (item, index) => {
-                            return {
-                                uid: item.FileId,
-                                Id:item.FileId,
-                                status: "done",
-                                name:item.name,
-                                url: item.fileurl
-                            };
-                        });
-                    
-                })*/
+
+                    })
             }
+            
         }
 
         onRemove(file) {

@@ -11,14 +11,16 @@
               v-bind="_fieldProps">
         </a-upload>
 
-        <a-image 
-             v-for="(item, index) in imageUrl"
-             v-else
-             :key="index"
-             :width="100"
-             :src="item"
-             :fallback="imagefallback"
-        />
+        <a-upload :disabled="true"
+              v-if="max == 1" 
+              name="file"
+              list-type="picture-card"
+              accept="image/*"
+              :action="action"
+              :file-list="fileList"
+              :headers="headers"
+              v-bind="_fieldProps">
+        </a-upload>
     </template>
     <template v-else>
         <div class="w-avatar-uploader">
@@ -114,6 +116,7 @@
         beforeUpload() { }
         onChange(event) {
             this.fileList = event.fileList
+            console.log(this.fileList)
             if (event.file.status === "removed") {
                 if(this.max !== 1){
                     console.log(event)
@@ -122,7 +125,6 @@
                      }else{
                         this.formState.DeletedFileIds.push(event.file.Id);
                      }
-                     console.log(this.formState.DeletedFileIds,event.file.Id)
                      let value = this.lodash.map(event.fileList)
                      this.value = this.lodash.map(value, (item, index) => {
                         return {
@@ -151,44 +153,49 @@
                                 FileId:this.lodash.get(item, "Id") || this.lodash.get(item, "response.Id")
                             }
                         })
-                        console.log(this.value)
                     }
                 }
             }
         }
         @Watch("value")
         onValueChange(val, old) {
-            if (val) {
-                if (this.max !== 1) {
-                    this.filedata = this.lodash.map(
-                        val,
-                        item => {
-                            return {
+                if (val) {
+                  /*  console.log(this.lodash.map(val)[0] || this.lodash.map(val).length)
+                    if(!this.lodash.map(val)[0] || this.lodash.map(val).length == 0){
+                        console.log(val)
+                        this.fileList = []
+                        this.value = [] 
+                        return false
+                    }*/
+                    if (this.max !== 1) {
+                        this.filedata = this.lodash.map(
+                            val,
+                            item => {
+                              return {
                                 fileid: item['FileId'],
                                 fileurl: $System.FilesController.getDownloadUrl(item['FileId']),
                                 filename: $System.FilesController.getFileName(val)
+                              }
                             }
-                        }
-                    );
-                } else {
-                    this.filedata = [{
-                        fileid: val,
-                        fileurl: $System.FilesController.getDownloadUrl(val),
-                        filename: $System.FilesController.getFileName(val)
-                    }]
+                        );
+                    } else {
+                        this.filedata = [{
+                            fileid: val,
+                            fileurl: $System.FilesController.getDownloadUrl(val),
+                            filename: $System.FilesController.getFileName(val)
+                        }]
+                    }
+                    Promise.all(this.lodash.map(this.filedata, "filename")).then((ps) => {
+                            this.fileList = this.lodash.map(this.filedata, (item, index) => {
+                                return {
+                                    uid: item.fileid,
+                                    Id:item.fileid,
+                                    status: "done",
+                                    url: item.fileurl
+                                };
+                            });
+                    })
                 }
-                Promise.all(this.lodash.map(this.filedata, "filename")).then((ps) => {
-                        this.fileList = this.lodash.map(this.filedata, (item, index) => {
-                            return {
-                                uid: item.fileid,
-                                Id:item.fileid,
-                                status: "done",
-                                url: item.fileurl
-                            };
-                        });
-                    
-                })
-            }
         }
         handlePreview(file) {
             if (file) {
