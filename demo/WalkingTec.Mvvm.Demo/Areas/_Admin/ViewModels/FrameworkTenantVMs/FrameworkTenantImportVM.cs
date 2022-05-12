@@ -23,8 +23,12 @@ namespace WalkingTec.Mvvm.Demo._Admin.ViewModels.FrameworkTenantVMs
         public ExcelPropety DbContext_Excel = ExcelPropety.CreateProperty<FrameworkTenant>(x => x.DbContext);
         [Display(Name = "_Admin.TenantDomain")]
         public ExcelPropety TDomain_Excel = ExcelPropety.CreateProperty<FrameworkTenant>(x => x.TDomain);
+        [Display(Name = "_Admin.TenantEnableSub")]
+        public ExcelPropety EnableSub_Excel = ExcelPropety.CreateProperty<FrameworkTenant>(x => x.EnableSub);
+        [Display(Name = "Sys.Enable")]
+        public ExcelPropety Enabled_Excel = ExcelPropety.CreateProperty<FrameworkTenant>(x => x.Enabled);
 
-	    protected override void InitVM()
+        protected override void InitVM()
         {
         }
 

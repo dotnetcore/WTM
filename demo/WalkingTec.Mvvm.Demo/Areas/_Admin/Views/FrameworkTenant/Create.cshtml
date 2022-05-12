@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo._Admin.ViewModels.FrameworkTenantVMs.FrameworkTenantVM
+@model WalkingTec.Mvvm.Demo._Admin.ViewModels.FrameworkTenantVMs.FrameworkTenantVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
@@ -9,6 +9,9 @@
 <wt:combobox field="Entity.TDbType" />
 <wt:textbox field="Entity.DbContext" />
 <wt:textbox field="Entity.TDomain" />
+<wt:combobox field="Entity.EnableSub"/>
+<wt:combobox field="Entity.Enabled" default-value="true"/>
+
 </wt:row>
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
