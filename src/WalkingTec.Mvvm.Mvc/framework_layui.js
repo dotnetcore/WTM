@@ -803,6 +803,9 @@ window.ff = {
                 $.each(val, function (i, v) {
                     fieldElem.push({ name: item.attributes["wtm-name"].value, value: v });
                 });
+            if (val.length == 0) {
+                fieldElem.push({ name: item.attributes["wtm-name"].value, value: null });
+            }
         });
 
         var check = {};

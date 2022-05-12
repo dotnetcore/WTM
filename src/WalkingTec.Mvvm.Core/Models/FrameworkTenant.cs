@@ -43,6 +43,9 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Tenant")]
         public string TenantCode { get; set; }
 
+        [Display(Name = "_Admin.TenantEnableSub")]
+        public bool EnableSub { get; set; }
+
         [Display(Name = "Sys.Enable")]
         public bool Enabled { get; set; } = true;
 

@@ -927,6 +927,9 @@
   <data name="_Admin.TenantDomain" xml:space="preserve">
     <value>租户域名</value>
   </data>
+  <data name="_Admin.TenantEnableSub" xml:space="preserve">
+    <value>允许子租户</value>
+  </data>
   <data name="_Admin.TenantHost" xml:space="preserve">
     <value>主站</value>
   </data>
