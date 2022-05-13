@@ -4,6 +4,7 @@ import { VueI18n } from 'vue-i18n'
 import { frameworkComponents } from "./framework";
 import { AG_GRID_LOCALE_ZH } from "./locale";
 export default (i18n: VueI18n) => {
+
     const defaultOptions: GridOptions = {
         suppressColumnVirtualisation: true,
         rowBuffer: 0,
@@ -61,16 +62,17 @@ export default (i18n: VueI18n) => {
  * 行 操作
  * @param frameworkComponents 
  */
-export function getColumnDefsAction(frameworkComponents): (ColGroupDef | ColDef)[] {
+export function getColumnDefsAction(frameworkComponents,width): (ColGroupDef | ColDef)[] {
+console.log(width)
     if (lodash.has(frameworkComponents, 'RowAction')) {
         return [{
-            // minWidth: 0,
+            minWidth: width,
             headerName: 'action_name',
             field: 'RowAction',
             cellRenderer: 'RowAction',
             cellClass: 'w-row-action',
             pinned: window.innerWidth > 701 ? 'right' : '',
-            //sortable: false,
+            //sortable: true,
             suppressMenu: true,
             suppressColumnsToolPanel: true,
         }]
