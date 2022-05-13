@@ -19,7 +19,7 @@
 </template>
 <script lang="ts">
     import { Vue, Options, Watch, mixins, Inject } from "vue-property-decorator";
-    import { $System } from "@/client";
+    import { $System,globalProperties } from "@/client";
     import { FieldBasics } from "../script";
     @Options({ components: {} })
     export default class extends mixins(FieldBasics) {
@@ -137,7 +137,7 @@
                             item => {
                                 return {
                                     FileId: item.FileId,
-                                    fileurl: $System.FilesController.getDownloadUrl(item.FileId),
+                                    fileurl: globalProperties.$WtmConfig.WtmGlobalUrl+$System.FilesController.getDownloadUrl(item.FileId),
                                     filename: $System.FilesController.getFileName(item['FileId'])
                                 }
                             }
@@ -145,7 +145,7 @@
                     } else {
                         this.filedata = [{
                             FileId: val,
-                            fileurl: $System.FilesController.getDownloadUrl(val),
+                            fileurl: globalProperties.$WtmConfig.WtmGlobalUrl+$System.FilesController.getDownloadUrl(val),
                             filename: $System.FilesController.getFileName(val)
                         }]
                     }

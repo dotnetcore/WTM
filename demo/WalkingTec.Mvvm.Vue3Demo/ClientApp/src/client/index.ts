@@ -6,4 +6,4 @@ export * from "./globalProperties";
 export * from "./helpers";
 export * from "./locales";
 export * from "./createRouters";
-
+export * from "./config"
