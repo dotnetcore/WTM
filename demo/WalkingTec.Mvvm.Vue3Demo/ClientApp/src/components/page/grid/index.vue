@@ -5,7 +5,7 @@
       :columnDefs="getColumnDefs"
       :rowData="Pagination.dataSource"
       :gridOptions="options"
-      :width="width"
+      :oprationWidth="oprationWidth"
     />
   </div>
   <a-divider />
@@ -39,7 +39,7 @@ export default class Grid extends Vue {
   static Cache = new Map<string, any>()
   @Prop({ required: true }) readonly PageController: ControllerBasics;
   @Prop({ default: () => [] }) readonly columnDefs;
-  @Prop({ default: () => [] }) readonly width;
+  @Prop({ default: () => [] }) readonly oprationWidth;
   @Prop({ default: () => ({}) }) readonly gridOptions: GridOptions;
   @Prop({ default: () => true }) readonly checkboxSelection: boolean;
   @Ref("gridContent") readonly gridContent: HTMLDivElement;
@@ -55,13 +55,14 @@ export default class Grid extends Vue {
     return this.PageController.Pagination;
   }
   get getColumnDefs() {
+    console.log(this.oprationWidth)
+    let oprationWidth = this.oprationWidth.length == 0 ? 200 : this.oprationWidth
     return this.lodash.concat(
       getColumnDefsCheckbox(this.checkboxSelection, this.theme), 
       this.columnDefs,
-      getColumnDefsAction(this.gridOptions.frameworkComponents,this.width)
+      getColumnDefsAction(this.gridOptions.frameworkComponents,oprationWidth)
     );
   }
-
   get options(): GridOptions {
     const { frameworkComponents = {}, ...gridOptions } = this.gridOptions
 

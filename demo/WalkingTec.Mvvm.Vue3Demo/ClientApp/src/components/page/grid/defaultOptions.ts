@@ -62,11 +62,12 @@ export default (i18n: VueI18n) => {
  * 行 操作
  * @param frameworkComponents 
  */
-export function getColumnDefsAction(frameworkComponents,width): (ColGroupDef | ColDef)[] {
-console.log(width)
+export function getColumnDefsAction(frameworkComponents,oprationWidth): (ColGroupDef | ColDef)[] {
+    console.log(oprationWidth)
     if (lodash.has(frameworkComponents, 'RowAction')) {
         return [{
-            minWidth: width,
+            minWidth: oprationWidth,
+            maxWidth: oprationWidth,
             headerName: 'action_name',
             field: 'RowAction',
             cellRenderer: 'RowAction',

@@ -1,5 +1,5 @@
 <template>
-  <WtmGrid :PageController="PageController" :columnDefs="columnDefs" :gridOptions="gridOptions"  />
+  <WtmGrid :PageController="PageController" :columnDefs="columnDefs" :gridOptions="gridOptions" oprationWidth="400" />
 </template>
 <script lang="ts">
 import { ColDef, ColGroupDef, GridOptions } from "ag-grid-community";
