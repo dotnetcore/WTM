@@ -7,9 +7,15 @@
               accept="image/*"
               :action="action"
               :file-list="fileList"
+              @preview="handlePreview"
               :headers="headers"
               v-bind="_fieldProps">
-        </a-upload>
+        </a-upload>  
+
+         <!-- </a-spin> -->
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handlePreview(false)">
+                <img alt="example" style="width: 100%" :src="previewUrl" />
+            </a-modal>
 
         <a-upload :disabled="true"
               v-if="max == 1" 
@@ -18,6 +24,7 @@
               accept="image/*"
               :action="action"
               :file-list="fileList"
+              @preview="handlePreview"
               :headers="headers"
               v-bind="_fieldProps">
         </a-upload>
@@ -54,16 +61,13 @@
                     <div class="ant-upload-text">Upload</div>
                 </div>
             </a-upload>
-            <!-- </a-spin> -->
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handlePreview(false)">
-                <img alt="example" style="width: 100%" :src="previewUrl" />
-            </a-modal>
+           
         </div>
     </template>
 </template>
 <script lang="ts">
     import { Vue, Options, Watch, mixins, Inject } from "vue-property-decorator";
-    import { $System } from "@/client";
+    import { $System, globalProperties } from "@/client";
     import { FieldBasics } from "../script";
     @Options({ components: {} })
     export default class extends mixins(FieldBasics) {
@@ -105,6 +109,7 @@
             /*if (this.value) {
                this.imageUrl = $System.FilesController.getDownloadUrl(this.value)
             }*/
+            
             if (this.debug) {
                 console.log("");
                 console.group(`Field ~ ${this.entityKey} ${this._name} `);
@@ -167,13 +172,14 @@
                         this.value = [] 
                         return false
                     }*/
+                    console.log($System)
                     if (this.max !== 1) {
                         this.filedata = this.lodash.map(
                             val,
                             item => {
                               return {
                                 fileid: item['FileId'],
-                                fileurl: $System.FilesController.getDownloadUrl(item['FileId']),
+                                fileurl: globalProperties.$WtmConfig.WtmGlobalUrl+$System.FilesController.getDownloadUrl(item['FileId']),
                                 filename: $System.FilesController.getFileName(val)
                               }
                             }
@@ -181,7 +187,7 @@
                     } else {
                         this.filedata = [{
                             fileid: val,
-                            fileurl: $System.FilesController.getDownloadUrl(val),
+                            fileurl: globalProperties.$WtmConfig.WtmGlobalUrl+$System.FilesController.getDownloadUrl(val),
                             filename: $System.FilesController.getFileName(val)
                         }]
                     }
@@ -200,7 +206,7 @@
         handlePreview(file) {
             if (file) {
                 this.previewVisible = true;
-                this.previewUrl = "";
+                this.previewUrl = file.url;
             } else {
                 this.previewVisible = false;
                 this.previewUrl = "";
