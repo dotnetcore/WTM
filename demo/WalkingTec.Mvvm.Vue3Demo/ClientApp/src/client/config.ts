@@ -28,11 +28,6 @@ export class WtmConfig {
      */
     readonly target = ''// lodash.get(window, '__xt__env.target', process.env.target);
     /**
-     * 公共域名
-     * @memberof WtmGlobal
-     */
-    readonly WtmGlobalUrl = 'http://localhost:8598'
-    /**
      * 环境设备信息
      * @memberof XTGlobal
      */
