@@ -120,20 +120,20 @@ namespace WalkingTec.Mvvm.Core
 
         #region Tenant
 
-        private int? _tenantLevel;
+        private bool? _enableTenant;
 
         /// <summary>
         /// Is debug mode
         /// </summary>
-        public int TenantLevel
+        public bool EnableTenant
         {
             get
             {
-                return _tenantLevel ?? 0;
+                return _enableTenant ?? false;
             }
             set
             {
-                _tenantLevel = value;
+                _enableTenant = value;
             }
         }
 

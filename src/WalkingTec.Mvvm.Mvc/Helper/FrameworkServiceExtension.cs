@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 ID = Guid.NewGuid(),
                                 ParentId = modelmenu.ID,
                                 PageName = item.ActionDes == null ? item.ModuleName : item.ActionDes.Description,
-                                Url = url                               
+                                Url = url
                             });
                         }
                     }
@@ -587,7 +587,7 @@ namespace WalkingTec.Mvvm.Mvc
                      })
                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                     {
-                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + conf.CookiePre+"."+ AuthConstants.CookieAuthName;
+                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + conf.CookiePre + "." + AuthConstants.CookieAuthName;
                         options.Cookie.HttpOnly = true;
                         options.Cookie.SameSite = SameSiteMode.Strict;
                         options.Cookie.Domain = string.IsNullOrEmpty(cookieOptions.Domain) ? null : cookieOptions.Domain;
@@ -623,7 +623,7 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IServiceCollection AddWtmSwagger(this IServiceCollection services, bool useFullName=false)
+        public static IServiceCollection AddWtmSwagger(this IServiceCollection services, bool useFullName = false)
         {
             services.AddSwaggerGen(c =>
             {
@@ -756,30 +756,23 @@ namespace WalkingTec.Mvvm.Mvc
 
                 return menus;
             });
-            gd.SetRealMenuGetFunc(() =>
+            gd.SetTenantGetFunc(() =>
             {
-                if (configs.IsQuickDebug == false)
+                var tenants = new List<FrameworkTenant>();
+                var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
+                var tenantsCacheKey = "FFTenants";
+                if (cache.TryGetValue(tenantsCacheKey, out List<FrameworkTenant> rv) == false)
                 {
-                    return gd.AllMenus;
-                }
-                else
-                {
-                    var menus = new List<SimpleMenu>();
-                    var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
-                    var menuCacheKey = "FFRealMenus";
-                    if (cache.TryGetValue(menuCacheKey, out List<SimpleMenu> rv) == false)
-                    {                        
-                        var data = GetAllMenus(modules, false, configs.Connections);
-                        cache.Add(menuCacheKey, data, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
-                        menus = data;
-                    }
-                    else
+                    if (configs?.EnableTenant == true)
                     {
-                        menus = rv;
+                        using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
+                        {
+                            tenants = dc.Set<FrameworkTenant>().Where(x => x.Enabled).ToList();
+                        }
                     }
-
-                    return menus;
+                    cache.Add(tenantsCacheKey, tenants, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                 }
+                return tenants;
             });
 
             foreach (var m in gd.AllModule)
@@ -888,7 +881,7 @@ namespace WalkingTec.Mvvm.Mvc
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
             if (configs.IsQuickDebug == true || showInDebugOnly == false)
             {
-                app.UseSwagger();          
+                app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");

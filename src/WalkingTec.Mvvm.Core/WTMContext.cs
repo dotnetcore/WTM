@@ -560,41 +560,7 @@ params string[] groupcode)
             if (string.IsNullOrEmpty(cs))
             {
                 //判断多租户的dc
-                var tenants = ReadFromCache<List<FrameworkTenant>>("tenants", () =>
-                {
-                    try
-                    {
-                        var defaultdc = this.CreateDC(false, "default", false);
-                        if (ConfigInfo?.TenantLevel > 0)
-                        {
-                            var rv = defaultdc.Set<FrameworkTenant>().Where(x => x.Enabled).ToList();
-                            for (int i = 0; i < rv.Count; i++)
-                            {
-                                int level = 0;
-                                FrameworkTenant temp = rv[i];
-                                while (temp?.TenantCode != null)
-                                {
-                                    temp = rv.Where(x => x.TCode == temp.TenantCode).FirstOrDefault();
-                                    level++;
-                                }
-                                if (level >= ConfigInfo.TenantLevel)
-                                {
-                                    rv.RemoveAt(i);
-                                    i--;
-                                }
-                            }
-                            return rv;
-                        }
-                        else
-                        {
-                            return new List<FrameworkTenant>();
-                        }
-                    }
-                    catch
-                    {
-                        return new List<FrameworkTenant>();
-                    }
-                }, 36000);
+                var tenants = GlobaInfo.AllTenant;
                 string tc = _loginUserInfo?.CurrentTenant;
                 if (tc == null && HttpContext?.Request?.Host != null)
                 {
