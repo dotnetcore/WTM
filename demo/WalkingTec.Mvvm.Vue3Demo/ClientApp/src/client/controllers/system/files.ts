@@ -7,7 +7,9 @@
  */
 import { AjaxBasics, globalProperties } from "@/client";
 import lodash from 'lodash';
+import { saveAs } from 'file-saver';
 import { BindAll } from 'lodash-decorators';
+import { Regulars } from "../../helpers";
 @BindAll()
 export class FilesController {
     $ajax: AjaxBasics;
@@ -31,7 +33,8 @@ export class FilesController {
         },
         fileDownload: {
             url: "/api/_file/downloadFile/{Id}",
-            method: "get"
+            method: "get",
+            responseType: 'blob'
         }
     }
     async onInit() {
@@ -52,7 +55,18 @@ export class FilesController {
     deleteFiles(body) {
         return this.$ajax.request(lodash.assign({ body }, this.options.fileDelete)).toPromise()
     }
-
+    
+    /**
+     *下载文件
+     * @param body 
+     * @returns 
+     */
+    async downloadFile(id,name){
+        const res: any = await this.$ajax.request(lodash.assign({body:{ Id:id }}, this.options.fileDownload)).toPromise()
+        const disposition = res.xhr.getResponseHeader('content-disposition');
+        Regulars.filename.test(disposition);
+        saveAs(res.response, name);
+    }
     /**
      * 获取文件名
      * @param body 

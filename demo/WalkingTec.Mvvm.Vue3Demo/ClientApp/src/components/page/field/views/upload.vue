@@ -6,6 +6,7 @@
                   :action="action"
                   :headers="headers"
                   :before-upload="beforeUpload"
+                  @preview="handlePreview"
                   :remove="onRemove"
                   @change="onChange"
                   v-bind="_fieldProps">
@@ -104,7 +105,6 @@
                         this.value = Id;
                     } else {
                         let value = this.lodash.map(event.fileList)
-                        console.log(event.fileList,'done')
                         this.value = this.lodash.map(value, (item, index) => {
                             return {
                                 order:index,
@@ -118,7 +118,6 @@
         }
         @Watch("value")
         onValueChange(val, old) {
-            console.log(this.fileList.length)
             /*if(!this.lodash.map(val)[0] || this.lodash.map(val).length == 0){
                 console.log(val)
                 this.fileList = []
@@ -137,15 +136,15 @@
                             item => {
                                 return {
                                     FileId: item.FileId,
-                                    fileurl: globalProperties.$WtmConfig.WtmGlobalUrl+$System.FilesController.getDownloadUrl(item.FileId),
+                                    fileurl:  $System.FilesController.getDownloadUrl(item.FileId),
                                     filename: $System.FilesController.getFileName(item['FileId'])
                                 }
                             }
                         );
                     } else {
                         this.filedata = [{
-                            FileId: val,
-                            fileurl: globalProperties.$WtmConfig.WtmGlobalUrl+$System.FilesController.getDownloadUrl(val),
+                            FileId: val,  
+                            fileurl:  $System.FilesController.getDownloadUrl(val),
                             filename: $System.FilesController.getFileName(val)
                         }]
                     }
@@ -167,9 +166,12 @@
 
                     })
             }
-            
         }
-
+        
+        handlePreview(file){ 
+             const response = this.lodash.get(file, 'response')
+             return response ? $System.FilesController.downloadFile(response.Id,response.Name) : $System.FilesController.downloadFile(file.Id,file.name)
+        }
         onRemove(file) {
             const response = this.lodash.get(file, 'response')
             return response ? $System.FilesController.deleteFiles(response) : $System.FilesController.deleteFiles({ Id: file.uid })

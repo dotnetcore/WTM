@@ -33,7 +33,7 @@
         <div class="w-avatar-uploader">
             <!-- <a-spin :spinning="spinning"> -->
             <!-- v-model:fileList="fileList" -->
-            <a-upload :disabled="disabled || _readonly"
+            <a-upload 
                       name="file"
                       list-type="picture-card"
                       :multiple="max == 1 ? false : true"
@@ -61,7 +61,9 @@
                     <div class="ant-upload-text">Upload</div>
                 </div>
             </a-upload>
-           
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handlePreview(false)">
+                <img alt="example" style="width: 100%" :src="previewUrl" />
+            </a-modal>
         </div>
     </template>
 </template>
@@ -179,7 +181,7 @@
                             item => {
                               return {
                                 fileid: item['FileId'],
-                                fileurl: globalProperties.$WtmConfig.WtmGlobalUrl+$System.FilesController.getDownloadUrl(item['FileId']),
+                                fileurl: $System.FilesController.getDownloadUrl(item['FileId']),
                                 filename: $System.FilesController.getFileName(val)
                               }
                             }
@@ -187,7 +189,7 @@
                     } else {
                         this.filedata = [{
                             fileid: val,
-                            fileurl: globalProperties.$WtmConfig.WtmGlobalUrl+$System.FilesController.getDownloadUrl(val),
+                            fileurl: $System.FilesController.getDownloadUrl(val),
                             filename: $System.FilesController.getFileName(val)
                         }]
                     }
