@@ -11,8 +11,11 @@
 <wt:textbox field="Entity.TDomain" />
 <wt:combobox field="Entity.EnableSub"/>
 <wt:combobox field="Entity.Enabled" default-value="true"/>
-
 </wt:row>
+<wt:row items-per-row="ItemsPerRowEnum.One">
+  <wt:combobox field="AdminRoleCode"  item-url="/_admin/FrameworkUser/GetFrameworkRoles" padding-text="@Model.Localizer["_Admin.TenantRole"]"/>
+</wt:row>
+
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />

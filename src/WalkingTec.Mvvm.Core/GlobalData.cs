@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Core
         /// 可访问的url地址
         /// </summary>
         public List<string> AllAccessUrls { get; set; }
-
+        public List<string> AllHostOnlyUrls { get; set; }
         public Type CustomUserType { get; set; }
 
         private List<PropertyInfo> _customUserProperties;

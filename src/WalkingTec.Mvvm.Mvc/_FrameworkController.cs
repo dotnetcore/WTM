@@ -695,7 +695,7 @@ namespace WalkingTec.Mvvm.Mvc
         [Public]
         public IActionResult SetTenant(string tenant)
         {
-            Wtm.SetCurrentTenant(tenant);
+            Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
             var principal = Wtm.LoginUserInfo.CreatePrincipal();
             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
             return FFResult().AddCustomScript("location.reload();");

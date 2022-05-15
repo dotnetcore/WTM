@@ -5,12 +5,17 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.SpaServices.StaticFiles;
 
 namespace WalkingTec.Mvvm.Demo._Admin.ViewModels.FrameworkTenantVMs
 {
     public partial class FrameworkTenantVM : BaseCRUDVM<FrameworkTenant>
     {
+
+        [Display(Name = "_Admin.Role")]
+        [Required(ErrorMessage = "Validate.{0}required")]
+        public string AdminRoleCode { get; set; }
 
         public FrameworkTenantVM()
         {
@@ -47,6 +52,24 @@ namespace WalkingTec.Mvvm.Demo._Admin.ViewModels.FrameworkTenantVMs
                         DC.AddEntity(middle);
                     }
                     DC.SaveChanges();
+                }
+                else
+                {
+                    try
+                    {
+                        var context = string.IsNullOrEmpty(Entity.DbContext) ? "DataContext" : Entity.DbContext;
+                        var DcConstructor = CS.CisFull.Where(x => x.DeclaringType.Name.ToLower() == context.ToLower()).FirstOrDefault();
+                        var tenantdc = (IDataContext)DcConstructor?.Invoke(new object[] { Entity.TDb, Entity.TDbType });
+                        if (tenantdc.Database.EnsureCreated() == true)
+                        {
+                            var spa = Wtm.ServiceProvider.GetService<ISpaStaticFileProvider>();
+                            tenantdc.DataInit(Wtm.GlobaInfo.AllModule, spa != null, Entity.TCode);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        int a = 0;
+                    }
                 }
             }
             Cache.Delete("tenants");

@@ -184,8 +184,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="allModules"></param>
         /// <param name="IsSpa"></param>
+        /// <param name="TenantCode"></param>
         /// <returns>返回true表示需要进行初始化数据操作，返回false即数据库已经存在或不需要初始化数据</returns>
-        public async override Task<bool> DataInit(object allModules, bool IsSpa)
+        public async override Task<bool> DataInit(object allModules, bool IsSpa, string TenantCode = null)
         {
             bool rv = await Database.EnsureCreatedAsync();
             //判断是否存在初始数据
@@ -201,12 +202,12 @@ namespace WalkingTec.Mvvm.Core
                 var AllModules = allModules as List<SimpleModule>;
                 var roles = new FrameworkRole[]
                 {
-                    new FrameworkRole{ ID = Guid.NewGuid(), RoleCode = "001", RoleName = CoreProgram._localizer?["Sys.Admin"]},
-                    new FrameworkRole{ ID = Guid.NewGuid(), RoleCode = "002", RoleName = CoreProgram._localizer?["_Admin.User"]},
+                    new FrameworkRole{ ID = Guid.NewGuid(), RoleCode = "001", RoleName = CoreProgram._localizer?["Sys.Admin"], TenantCode=TenantCode},
+                    new FrameworkRole{ ID = Guid.NewGuid(), RoleCode = "002", RoleName = CoreProgram._localizer?["_Admin.User"], TenantCode=TenantCode},
                 };
 
                 var adminRole = roles[0];
-                if (Set<FrameworkMenu>().Any() == false)
+                if (Set<FrameworkMenu>().Any() == false && TenantCode == null)
                 {
                     var systemManagement = GetFolderMenu("SystemManagement");
                     var logList = IsSpa ? GetMenu2(AllModules, "ActionLog", "MenuKey.ActionLog",  1) : GetMenu(AllModules, "_Admin", "ActionLog", "Index", "MenuKey.ActionLog", 1);
@@ -693,8 +694,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="allModules"></param>
         /// <param name="IsSpa"></param>
+        /// <param name="TenantCode"></param>
         /// <returns>返回true表示需要进行初始化数据操作，返回false即数据库已经存在或不需要初始化数据</returns>
-        public async virtual Task<bool> DataInit(object allModules, bool IsSpa)
+        public async virtual Task<bool> DataInit(object allModules, bool IsSpa, string TenantCode = null)
         {
             bool rv = await Database.EnsureCreatedAsync();
             return rv;
@@ -845,7 +847,7 @@ namespace WalkingTec.Mvvm.Core
             throw new NotImplementedException();
         }
 
-        public Task<bool> DataInit(object AllModel, bool IsSpa)
+        public Task<bool> DataInit(object AllModel, bool IsSpa, string TenantCode = null)
         {
             throw new NotImplementedException();
         }

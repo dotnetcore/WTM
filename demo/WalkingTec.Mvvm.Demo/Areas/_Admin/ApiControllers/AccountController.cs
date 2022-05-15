@@ -92,7 +92,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult SetTenant(string tenant)
         {
-            bool rv = Wtm.SetCurrentTenant(tenant);
+            bool rv = Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
             return Ok(rv);
         }
 

@@ -292,5 +292,34 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             return vm.GetExportData();
         }
+
+        [AllRights]
+        public IActionResult GetFrameworkRoles()
+        {
+            WalkingTec.Mvvm.Admin.Api.FrameworkUserController userapi = new Mvvm.Admin.Api.FrameworkUserController();
+            userapi.Wtm = Wtm;
+            var rv = userapi.GetFrameworkRoles() as OkObjectResult;
+            List<ComboSelectListItem> users = new List<ComboSelectListItem>();
+            if (rv != null && rv.Value is List<ComboSelectListItem> ll)
+            {
+                users = ll;
+            }
+            return JsonMore(users);
+        }
+
+        [AllRights]
+        public IActionResult GetFrameworkGroups()
+        {
+            WalkingTec.Mvvm.Admin.Api.FrameworkUserController userapi = new Mvvm.Admin.Api.FrameworkUserController();
+            userapi.Wtm = Wtm;
+            var rv = userapi.GetFrameworkGroups() as OkObjectResult;
+            List<ComboSelectListItem> users = new List<ComboSelectListItem>();
+            if (rv != null && rv.Value is List<ComboSelectListItem> ll)
+            {
+                users = ll;
+            }
+            return JsonMore(users);
+        }
+
     }
 }

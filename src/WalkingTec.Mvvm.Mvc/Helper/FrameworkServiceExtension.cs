@@ -109,8 +109,6 @@ namespace WalkingTec.Mvvm.Mvc
                             });
                         }
                     }
-
-
                 }
             }
             else
@@ -159,6 +157,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var rightattr = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
                 var debugattr = ctrl.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                 var areaattr = ctrl.GetCustomAttributes(typeof(AreaAttribute), false);
+                var mainhostonlyattr = ctrl.GetCustomAttributes(typeof(MainHostOnlyAttribute), false);
                 var model = new SimpleModule
                 {
                     ClassName = ctrl.Name.Replace("Controller", string.Empty)
@@ -174,6 +173,10 @@ namespace WalkingTec.Mvvm.Mvc
                 if (pubattr1.Length > 0 || pubattr12.Length > 0 || rightattr.Length > 0 || debugattr.Length > 0)
                 {
                     model.IgnorePrivillege = true;
+                }
+                if(mainhostonlyattr.Length > 0)
+                {
+                    model.MainHostOnly = true;
                 }
                 if (typeof(BaseApiController).IsAssignableFrom(ctrl))
                 {
@@ -214,6 +217,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                     var postAttr = method.GetCustomAttributes(typeof(HttpPostAttribute), false);
+                    var mainhostonlyattr2 = method.GetCustomAttributes(typeof(MainHostOnlyAttribute), false);
                     //如果不是post的方法，则添加到controller的action列表里
                     if (postAttr.Length == 0)
                     {
@@ -221,13 +225,17 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             Module = model,
                             MethodName = method.Name,
-                            IgnorePrivillege = model.IgnorePrivillege
+                            IgnorePrivillege = model.IgnorePrivillege,
+                            MainHostOnly = model.MainHostOnly
                         };
                         if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
                             action.IgnorePrivillege = true;
                         }
-
+                        if(mainhostonlyattr2.Length > 0)
+                        {
+                            action.MainHostOnly = true;
+                        }
                         var attrs2 = method.GetCustomAttributes(typeof(ActionDescriptionAttribute), false);
                         if (attrs2.Length > 0)
                         {
@@ -258,6 +266,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var pubattr22 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
+                    var mainhostonlyattr2 = method.GetCustomAttributes(typeof(MainHostOnlyAttribute), false);
 
                     var postAttr = method.GetCustomAttributes(typeof(HttpPostAttribute), false);
                     //找到post的方法且没有同名的非post的方法，添加到controller的action列表里
@@ -274,12 +283,18 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             Module = model,
                             MethodName = method.Name,
-                            IgnorePrivillege = model.IgnorePrivillege
+                            IgnorePrivillege = model.IgnorePrivillege,
+                            MainHostOnly = model.MainHostOnly
                         };
                         if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
                             action.IgnorePrivillege = true;
                         }
+                        if (mainhostonlyattr2.Length > 0)
+                        {
+                            action.MainHostOnly = true;
+                        }
+
                         var attrs2 = method.GetCustomAttributes(typeof(ActionDescriptionAttribute), false);
                         if (attrs2.Length > 0)
                         {
@@ -735,7 +750,6 @@ namespace WalkingTec.Mvvm.Mvc
             var controllers = gd.GetTypesAssignableFrom<IBaseController>();
             gd.AllModule = GetAllModules(controllers);
             var modules = Utils.ResetModule(gd.AllModule, false);
-            gd.AllAccessUrls = GetAllAccessUrls(controllers);
             gd.CustomUserType = gd.GetTypesAssignableFrom<FrameworkUserBase>().Where(x => x.Name.ToLower() == "frameworkuser").FirstOrDefault();
             gd.SetMenuGetFunc(() =>
             {
@@ -761,7 +775,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var tenants = new List<FrameworkTenant>();
                 var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
                 var tenantsCacheKey = "FFTenants";
-                if (cache.TryGetValue(tenantsCacheKey, out List<FrameworkTenant> rv) == false)
+                if (cache.TryGetValue(tenantsCacheKey, out  tenants) == false)
                 {
                     if (configs?.EnableTenant == true)
                     {
@@ -808,6 +822,9 @@ namespace WalkingTec.Mvvm.Mvc
                     a.Url = u;
                 }
             }
+
+            gd.AllAccessUrls = gd.AllModule.SelectMany(x=>x.Actions).Where(x=>x.IgnorePrivillege==true || x.Module.IgnorePrivillege == true).Select(x=>x.Url).ToList();
+            gd.AllHostOnlyUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.MainHostOnly == true || x.Module.MainHostOnly == true).Select(x => x.Url).ToList();
             var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
             WtmFileProvider.Init(configs, gd);
             using (var scope = app.ApplicationServices.CreateScope())

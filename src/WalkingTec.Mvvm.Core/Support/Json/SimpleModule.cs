@@ -42,6 +42,7 @@ namespace WalkingTec.Mvvm.Core.Support.Json
 
         public bool IgnorePrivillege { get; set; }
 
+        public bool MainHostOnly { get; set; }
         public bool IsApi { get; set; }
 
         public string FullName

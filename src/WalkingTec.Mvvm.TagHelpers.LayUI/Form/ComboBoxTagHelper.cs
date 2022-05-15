@@ -95,6 +95,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     MultiSelect = true;
                 }
             }
+            output.Attributes.Add("wtm-multi", MultiSelect.ToString().ToLower());
             if (string.IsNullOrEmpty(ChangeFunc) == false)
             {
                 output.Attributes.Add("wtm-cf", FormatFuncName(ChangeFunc, false));

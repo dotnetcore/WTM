@@ -894,6 +894,9 @@
   <data name="_Admin.RoleName" xml:space="preserve">
     <value>角色名称</value>
   </data>
+  <data name="_Admin.SameRole" xml:space="preserve">
+    <value>除管理员外，用户无法修改自身所属角色的页面权限</value>
+  </data>
   <data name="_Admin.SelectedModel" xml:space="preserve">
     <value>选择模型</value>
   </data>
@@ -935,6 +938,9 @@
   </data>
   <data name="_Admin.TenantName" xml:space="preserve">
     <value>租户名称</value>
+  </data>
+  <data name="_Admin.TenantRole" xml:space="preserve">
+    <value>使用所选角色的权限建立本租户的管理员，账号admin，密码000000</value>
   </data>
   <data name="_Admin.UnsetPages" xml:space="preserve">
     <value>未设置页面</value>

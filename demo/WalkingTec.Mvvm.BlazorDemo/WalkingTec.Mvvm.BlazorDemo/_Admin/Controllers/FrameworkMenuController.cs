@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 var vm = Wtm.CreateVM<FrameworkMenuListVM2>(passInit: true);
                 vm.Searcher = searcher;
-                return Content(vm.GetJson(enumToString: false));
+                return Content(vm.GetJson());
             }
             else
             {

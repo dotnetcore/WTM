@@ -200,7 +200,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Request.RedirectCall(Wtm).Result;
             }
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName));
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x=>x.RoleCode));
         }
 
         [HttpGet("GetFrameworkGroups")]
@@ -212,7 +212,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Request.RedirectCall(Wtm).Result;
             }
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName));
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName, x=>x.GroupCode));
         }
 
         public IActionResult GetUserById(string keywords)

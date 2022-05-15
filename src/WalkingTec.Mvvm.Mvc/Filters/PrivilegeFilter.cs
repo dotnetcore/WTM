@@ -80,6 +80,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             var isAllRights = ad.MethodInfo.IsDefined(typeof(AllRightsAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(AllRightsAttribute), false);
             var isDebug = ad.MethodInfo.IsDefined(typeof(DebugOnlyAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(DebugOnlyAttribute), false);
+            var isHostOnly = ad.MethodInfo.IsDefined(typeof(MainHostOnlyAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(MainHostOnlyAttribute), false);
             if (controller.Wtm.ConfigInfo.IsFilePublic == true)
             {
                 if (ad.ControllerName == "_Framework" && (ad.MethodInfo.Name == "GetFile" || ad.MethodInfo.Name == "ViewFile"))
@@ -180,6 +181,13 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                 }
                 //context.HttpContext.ChallengeAsync().Wait();
+            }
+            else if (isHostOnly)
+            {
+                if(controller.Wtm.LoginUserInfo.TenantCode != null)
+                {
+                    context.Result = new BadRequestResult();
+                }
             }
             else
             {

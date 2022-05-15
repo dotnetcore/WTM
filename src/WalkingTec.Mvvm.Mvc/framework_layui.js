@@ -804,7 +804,8 @@ window.ff = {
                     fieldElem.push({ name: item.attributes["wtm-name"].value, value: v });
                 });
             if (val.length == 0) {
-                fieldElem.push({ name: item.attributes["wtm-name"].value, value: null });
+                var ismulti = item.attributes["wtm-multi"].value;                
+                fieldElem.push({ name: item.attributes["wtm-name"].value, value: ismulti=='true'?'':null });
             }
         });
 
@@ -870,7 +871,7 @@ window.ff = {
                 }
                 else {
                     filter[itemname] = item.value;
-                    if (filterback.hasOwnProperty(itemname) == true && item.value != "") {
+                    if (filterback.hasOwnProperty(itemname) == true && item.value != '') {
                         filterback[itemname] = undefined;
                     }
                 }

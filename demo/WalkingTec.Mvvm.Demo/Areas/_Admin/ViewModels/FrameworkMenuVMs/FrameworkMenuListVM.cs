@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -138,7 +139,21 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     item.ModuleName = Localizer[item.ModuleName];
                 }
-
+            }
+           if(Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.TenantCode != null)
+            {
+                for(int i = 0; i < topdata.Count; i++)
+                {
+                    var hostonly = Wtm.GlobaInfo.AllHostOnlyUrls;
+                    foreach (var au in hostonly)
+                    {
+                        if (new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
+                        {
+                            topdata.RemoveAt(i);
+                            i--;
+                        }
+                    }
+                }
             }
             topdata.ForEach((x) => { int l = x.GetLevel(); for (int i = 0; i < l; i++) { x.PageName = "&nbsp;&nbsp;&nbsp;&nbsp;" + x.PageName; } });
             if (SearcherMode == ListVMSearchModeEnum.Custom2)

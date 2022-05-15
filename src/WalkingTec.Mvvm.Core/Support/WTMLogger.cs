@@ -136,6 +136,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 try
                                 {
+                                    log.TenantCode = wtm.LoginUserInfo?.CurrentTenant;
                                     dc.AddEntity<ActionLog>(log);
                                     dc.SaveChanges();
                                 }

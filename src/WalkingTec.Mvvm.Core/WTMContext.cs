@@ -610,6 +610,21 @@ params string[] groupcode)
             {
                 return true;
             }
+            //租户用户不能访问标记[HostOnly]的方法
+            if(_configInfo.EnableTenant == true)
+            {
+                if(LoginUserInfo.TenantCode != null)
+                {
+                    var hostonly = _globaInfo.AllHostOnlyUrls;
+                    foreach (var au in hostonly)
+                    {
+                        if (new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
             //循环所有不限制访问的url，如果含有当前判断的url，则认为可以访问
             var publicActions = _globaInfo.AllAccessUrls;
             foreach (var au in publicActions)
