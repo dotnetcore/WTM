@@ -24,7 +24,11 @@ namespace WalkingTec.Mvvm.Core
 
         public string TenantCode { get; set; }
 
-        public string CurrentTenant { get; set; }
+        private string _currentTenant;
+        public string CurrentTenant {
+            get { return _currentTenant ?? TenantCode; }
+            set { _currentTenant = value; }
+        }
 
         public string RemoteToken { get; set; }
 
@@ -170,6 +174,25 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public IDataContext GetUserDC(WTMContext context)
+        {
+            if (context?.LoginUserInfo?.TenantCode == null)
+            {
+                return context.CreateDC(cskey: "default");
+            }
+            else
+            {
+                var item = context.GlobaInfo.AllTenant.Where(x => x.TCode == context?.LoginUserInfo?.TenantCode).FirstOrDefault();
+                if (item != null)
+                {
+                    return item.CreateDC(context.ConfigInfo.IsQuickDebug, context.LoggerFactory);
+                }
+                else
+                {
+                    return context.CreateDC(cskey: "default");
 
+                }
+            }
+        }
     }
 }

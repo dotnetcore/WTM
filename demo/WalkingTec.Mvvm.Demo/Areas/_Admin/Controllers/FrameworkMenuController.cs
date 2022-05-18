@@ -15,6 +15,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
     [ActionDescription("MenuKey.MenuMangement")]
+    [MainTenantOnly]
     public class FrameworkMenuController : BaseController
     {
         [ActionDescription("Sys.Search")]
@@ -174,8 +175,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("_Admin.RefreshMenu")]
         public async Task<ActionResult> RefreshMenu()
         {
-            Cache.Delete("FFMenus");
-            Cache.Delete("RealMenus");
+            Cache.Delete(nameof(GlobalData.AllMenus));
             var userids = DC.Set<FrameworkUser>().Select(x => x.ID.ToString().ToLower()).ToArray();
             await Wtm.RemoveUserCache(userids);
             return FFResult().Alert(Localizer["Sys.OprationSuccess"]);

@@ -971,7 +971,7 @@ namespace WalkingTec.Mvvm.Core
             if (checkCondition != null && checkCondition.Groups.Count > 0)
             {
                 //生成基础Query
-                var baseExp = DC.Set<TModel>().AsQueryable();
+                var baseExp = DC.Set<TModel>().IgnoreQueryFilters().AsQueryable();
                 var modelType = typeof(TModel);
                 ParameterExpression para = Expression.Parameter(modelType, "tm");
                 //循环所有重复字段组
@@ -997,7 +997,7 @@ namespace WalkingTec.Mvvm.Core
                         //将字段名保存，为后面生成错误信息作准备
                         props.AddRange(field.GetProperties());
                     }
-                    if (typeof(ITenant).IsAssignableFrom(typeof(TModel)) && props.Any(x => x.Name.ToLower() == "tenantcode")==false)
+                    if (typeof(ITenant).IsAssignableFrom(typeof(TModel)) && props.Any(x => x.Name.ToLower() == "tenantcode")==false && Wtm?.ConfigInfo.EnableTenant==true && group.UseTenant == true)
                     {
                         ITenant ent = Entity as ITenant;
                         var f = new DuplicatedField<TModel>(x => (x as ITenant).TenantCode);

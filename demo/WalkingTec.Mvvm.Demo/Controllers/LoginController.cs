@@ -52,9 +52,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                     return View(vm);
                 }
             }
-            var user = Wtm.DoLogin(vm.ITCode, vm.Password, null);
+            var user = Wtm.DoLogin(vm.ITCode, vm.Password, vm.Tenant);
             if (user == null)
             {
+                vm.MSD.AddModelError("", Localizer["Sys.LoginFailed"]);
                 return View(vm);
             }
             else

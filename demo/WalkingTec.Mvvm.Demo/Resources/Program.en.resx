@@ -198,7 +198,7 @@
   <data name="Codegen.SubField" xml:space="preserve">
     <value>Display field of linked poco</value>
   </data>
-  <data name="CodeGen.Success" xml:space="preserve">
+  <data name="Codegen.Success" xml:space="preserve">
     <value>Code has been generated, please close the debug and rebuild the solution.</value>
   </data>
   <data name="Codegen.TestNs" xml:space="preserve">
@@ -208,13 +208,16 @@
     <value>VMNs</value>
   </data>
   <data name="Login.ChangePassword" xml:space="preserve">
-    <value>Change my password</value>
+    <value>Change password</value>
   </data>
   <data name="Login.ChangePasswordSuccess" xml:space="preserve">
     <value>The password has been modified successfully. Please log in with the new password next time.</value>
   </data>
   <data name="Login.InputPassword" xml:space="preserve">
     <value>Please input password</value>
+  </data>
+  <data name="Login.InputTenant" xml:space="preserve">
+    <value>Please enter the tenant number</value>
   </data>
   <data name="Login.InputUserName" xml:space="preserve">
     <value>Please input user name</value>
@@ -266,6 +269,9 @@
   </data>
   <data name="MenuKey.DataPrivilege" xml:space="preserve">
     <value>Data Privilege</value>
+  </data>
+  <data name="MenuKey.FrameworkTenant" xml:space="preserve">
+    <value>Tenant management</value>
   </data>
   <data name="MenuKey.GroupManagement" xml:space="preserve">
     <value>Group Management</value>
@@ -456,11 +462,23 @@
   <data name="Sys.HideShow" xml:space="preserve">
     <value>Hide/Show</value>
   </data>
+  <data name="Sys.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
   <data name="Sys.Import" xml:space="preserve">
     <value>Import</value>
   </data>
   <data name="Sys.ImportError" xml:space="preserve">
     <value>Error occurs during import</value>
+  </data>
+  <data name="Sys.ImportStep1" xml:space="preserve">
+    <value>Click to download template</value>
+  </data>
+  <data name="Sys.ImportStep2" xml:space="preserve">
+    <value>Upload your template with data</value>
+  </data>
+  <data name="Sys.ImportStep3" xml:space="preserve">
+    <value>Import failed, please download error file for details</value>
   </data>
   <data name="Sys.ImportSuccess" xml:space="preserve">
     <value>{0} rows have been imported</value>
@@ -471,8 +489,14 @@
   <data name="Sys.Invalid" xml:space="preserve">
     <value>Invalid</value>
   </data>
+  <data name="Sys.Layout" xml:space="preserve">
+    <value>Layout</value>
+  </data>
   <data name="Sys.LayuiDateLan" xml:space="preserve">
     <value>EN</value>
+  </data>
+  <data name="Sys.LeftRight" xml:space="preserve">
+    <value>Horizontal</value>
   </data>
   <data name="Sys.LoadFailed" xml:space="preserve">
     <value>Failed to load</value>
@@ -485,6 +509,9 @@
   </data>
   <data name="Sys.Male" xml:space="preserve">
     <value>Male</value>
+  </data>
+  <data name="Sys.MoreSettings" xml:space="preserve">
+    <value>More</value>
   </data>
   <data name="Sys.NeedLogin" xml:space="preserve">
     <value>You havn't logged in or your login is expired, please login again.</value>
@@ -591,17 +618,29 @@
   <data name="Sys.SelectOneRowMin" xml:space="preserve">
     <value>Please select at least one row</value>
   </data>
+  <data name="Sys.SinglePage" xml:space="preserve">
+    <value>Single</value>
+  </data>
   <data name="Sys.Submit" xml:space="preserve">
     <value>Submit</value>
   </data>
   <data name="Sys.SubmitFailed" xml:space="preserve">
     <value>Failed to submit</value>
   </data>
+  <data name="Sys.Tabs" xml:space="preserve">
+    <value>Tabs</value>
+  </data>
+  <data name="Sys.Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
   <data name="Sys.Total" xml:space="preserve">
     <value>Total:</value>
   </data>
   <data name="Sys.UpdateDone" xml:space="preserve">
     <value>Update successfully</value>
+  </data>
+  <data name="Sys.UpDown" xml:space="preserve">
+    <value>Vertical</value>
   </data>
   <data name="Sys.UploadFailed" xml:space="preserve">
     <value>Upload failed</value>
@@ -702,6 +741,9 @@
   <data name="_Admin.CheckPage" xml:space="preserve">
     <value>Check Page</value>
   </data>
+  <data name="_Admin.Children" xml:space="preserve">
+    <value>Children</value>
+  </data>
   <data name="_Admin.ClassName" xml:space="preserve">
     <value>ClassName</value>
   </data>
@@ -774,8 +816,14 @@
   <data name="_Admin.GroupDp" xml:space="preserve">
     <value>Group Dp</value>
   </data>
+  <data name="_Admin.GroupManager" xml:space="preserve">
+    <value>Group Manager</value>
+  </data>
   <data name="_Admin.GroupName" xml:space="preserve">
     <value>Group name</value>
+  </data>
+  <data name="_Admin.HasMainHost" xml:space="preserve">
+    <value>This operation cannot be performed. Please go to the main site for corresponding operation</value>
   </data>
   <data name="_Admin.HomePhone" xml:space="preserve">
     <value>HomePhone</value>
@@ -793,7 +841,7 @@
     <value>Inherit</value>
   </data>
   <data name="_Admin.IsInside" xml:space="preserve">
-    <value>Inside</value>
+    <value>Domain</value>
   </data>
   <data name="_Admin.IsPublic" xml:space="preserve">
     <value>Public</value>
@@ -832,7 +880,7 @@
     <value>Name</value>
   </data>
   <data name="_Admin.NoIndexInModule" xml:space="preserve">
-    <value>There is no Index View in this Module</value>
+    <value>There is no View in this Module</value>
   </data>
   <data name="_Admin.NoPris" xml:space="preserve">
     <value>No privilege</value>
@@ -885,6 +933,9 @@
   <data name="_Admin.RoleName" xml:space="preserve">
     <value>Role name</value>
   </data>
+  <data name="_Admin.SameRole" xml:space="preserve">
+    <value>Except for administrators, users cannot modify the page permissions of their roles</value>
+  </data>
   <data name="_Admin.SelectedModel" xml:space="preserve">
     <value>Model</value>
   </data>
@@ -899,6 +950,42 @@
   </data>
   <data name="_Admin.Tenant" xml:space="preserve">
     <value>Tenant</value>
+  </data>
+  <data name="_Admin.TenantChoose" xml:space="preserve">
+    <value>Select tenant</value>
+  </data>
+  <data name="_Admin.TenantCode" xml:space="preserve">
+    <value>Tenant code</value>
+  </data>
+  <data name="_Admin.TenantDb" xml:space="preserve">
+    <value>Tenant database</value>
+  </data>
+  <data name="_Admin.TenantDbContext" xml:space="preserve">
+    <value>Tenant datacontext</value>
+  </data>
+  <data name="_Admin.TenantDbError" xml:space="preserve">
+    <value>Failed to create database</value>
+  </data>
+  <data name="_Admin.TenantDbType" xml:space="preserve">
+    <value>Tenant dbtype</value>
+  </data>
+  <data name="_Admin.TenantDomain" xml:space="preserve">
+    <value>Tenant host url</value>
+  </data>
+  <data name="_Admin.TenantEnableSub" xml:space="preserve">
+    <value>Sub tenant allowed</value>
+  </data>
+  <data name="_Admin.TenantHost" xml:space="preserve">
+    <value>Main Host</value>
+  </data>
+  <data name="_Admin.TenantName" xml:space="preserve">
+    <value>Tenant name</value>
+  </data>
+  <data name="_Admin.TenantNotAllowed" xml:space="preserve">
+    <value>The current tenant cannot use this feature</value>
+  </data>
+  <data name="_Admin.TenantRole" xml:space="preserve">
+    <value>Use the permissions of the selected role to establish the administrator of the tenant, account admin and password 000000</value>
   </data>
   <data name="_Admin.UnsetPages" xml:space="preserve">
     <value>Unset pages</value>

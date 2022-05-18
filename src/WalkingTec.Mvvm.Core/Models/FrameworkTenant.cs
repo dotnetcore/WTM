@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
@@ -63,6 +64,21 @@ namespace WalkingTec.Mvvm.Core
                     return false;
                 }
             }
+        }
+
+        public IDataContext CreateDC(bool isdebug, ILoggerFactory loggerFactory)
+        {
+            var context = string.IsNullOrEmpty(this.DbContext) ? "DataContext" : this.DbContext;
+            var DcConstructor = CS.CisFull.Where(x => x.DeclaringType.Name.ToLower() == context.ToLower()).FirstOrDefault();
+            var tenantdc = (IDataContext)DcConstructor?.Invoke(new object[] { this.TDb, this.TDbType });
+            tenantdc.IsDebug = isdebug;
+            if (loggerFactory != null)
+            {
+                tenantdc.SetLoggerFactory(loggerFactory);
+            }
+            tenantdc.SetTenantCode(this.TCode);
+            return tenantdc;
+
         }
     }
 }

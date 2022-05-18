@@ -1,38 +1,48 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Demo._Admin.ViewModels.FrameworkTenantVMs;
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs;
+using System.Linq;
 
-namespace WalkingTec.Mvvm.Demo.Controllers
+namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
     [ActionDescription("租户管理")]
+    [FixConnection(CsName = "default")]
     public partial class FrameworkTenantController : BaseController
     {
         #region Search
         [ActionDescription("Sys.Search")]
         public ActionResult Index()
         {
+            if(CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantListVM>();
             return PartialView(vm);
         }
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public string Search(FrameworkTenantSearcher searcher)
+        public IActionResult Search(FrameworkTenantSearcher searcher)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
-                return vm.GetJson(false);
+                return Content(vm.GetJson(false));
             }
             else
             {
-                return vm.GetError();
+                return Content(vm.GetError());
             }
         }
 
@@ -42,6 +52,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantVM>();
             return PartialView(vm);
         }
@@ -50,6 +64,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Create")]
         public ActionResult Create(FrameworkTenantVM vm)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -74,6 +92,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Edit")]
         public ActionResult Edit(string id)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantVM>(id);
             return PartialView(vm);
         }
@@ -83,6 +105,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ValidateFormItemOnly]
         public ActionResult Edit(FrameworkTenantVM vm)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -107,6 +133,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Delete")]
         public ActionResult Delete(string id)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantVM>(id);
             return PartialView(vm);
         }
@@ -115,6 +145,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Delete(string id, IFormCollection nouse)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
@@ -132,6 +166,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Details")]
         public ActionResult Details(string id)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantVM>(id);
             return PartialView(vm);
         }
@@ -142,6 +180,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchEdit")]
         public ActionResult BatchEdit(string[] IDs)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
@@ -150,6 +192,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchEdit")]
         public ActionResult DoBatchEdit(FrameworkTenantBatchVM vm, IFormCollection nouse)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             if (!ModelState.IsValid || !vm.DoBatchEdit())
             {
                 return PartialView("BatchEdit",vm);
@@ -166,6 +212,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
@@ -174,12 +224,17 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult DoBatchDelete(FrameworkTenantBatchVM vm, IFormCollection nouse)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
                 return PartialView("BatchDelete",vm);
             }
             else
             {
+                Cache.Delete(nameof(GlobalData.AllTenant));
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.BatchDeleteSuccess", vm.Ids.Length]);
             }
         }
@@ -189,6 +244,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 		[ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             var vm = Wtm.CreateVM<FrameworkTenantImportVM>();
             return PartialView(vm);
         }
@@ -197,6 +256,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Import")]
         public ActionResult Import(FrameworkTenantImportVM vm, IFormCollection nouse)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
                 return PartialView(vm);
@@ -212,8 +275,20 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public IActionResult ExportExcel(FrameworkTenantListVM vm)
         {
+            if (CanUseTenant() == false)
+            {
+                return Content(Localizer["_Admin.TenantNotAllowed"]);
+            }
             return vm.GetExportData();
         }
 
+        private bool CanUseTenant()
+        {
+            if(Wtm.LoginUserInfo != null && (Wtm.LoginUserInfo.CurrentTenant == null || Wtm.GlobaInfo.AllTenant.Any(x=>x.TCode == Wtm.LoginUserInfo.CurrentTenant && x.Enabled==true && x.EnableSub == true)))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

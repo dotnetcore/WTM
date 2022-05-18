@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.Core
     /// <typeparam name="T">重复数据类</typeparam>
     public class DuplicatedGroup<T>
     {
+        public bool UseTenant { get; set; } = true;
         public List<DuplicatedField<T>> Fields { get; set; }
     }
 

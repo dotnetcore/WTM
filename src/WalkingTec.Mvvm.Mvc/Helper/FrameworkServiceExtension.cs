@@ -157,7 +157,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var rightattr = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
                 var debugattr = ctrl.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                 var areaattr = ctrl.GetCustomAttributes(typeof(AreaAttribute), false);
-                var mainhostonlyattr = ctrl.GetCustomAttributes(typeof(MainHostOnlyAttribute), false);
+                var mainhostonlyattr = ctrl.GetCustomAttributes(typeof(MainTenantOnlyAttribute), false);
                 var model = new SimpleModule
                 {
                     ClassName = ctrl.Name.Replace("Controller", string.Empty)
@@ -217,7 +217,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                     var postAttr = method.GetCustomAttributes(typeof(HttpPostAttribute), false);
-                    var mainhostonlyattr2 = method.GetCustomAttributes(typeof(MainHostOnlyAttribute), false);
+                    var mainhostonlyattr2 = method.GetCustomAttributes(typeof(MainTenantOnlyAttribute), false);
                     //如果不是post的方法，则添加到controller的action列表里
                     if (postAttr.Length == 0)
                     {
@@ -266,7 +266,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var pubattr22 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
-                    var mainhostonlyattr2 = method.GetCustomAttributes(typeof(MainHostOnlyAttribute), false);
+                    var mainhostonlyattr2 = method.GetCustomAttributes(typeof(MainTenantOnlyAttribute), false);
 
                     var postAttr = method.GetCustomAttributes(typeof(HttpPostAttribute), false);
                     //找到post的方法且没有同名的非post的方法，添加到controller的action列表里
@@ -755,7 +755,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 var menus = new List<SimpleMenu>();
                 var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
-                var menuCacheKey = "FFMenus";
+                var menuCacheKey = nameof(GlobalData.AllMenus);
                 if (cache.TryGetValue(menuCacheKey, out List<SimpleMenu> rv) == false)
                 {
 
@@ -774,14 +774,14 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 var tenants = new List<FrameworkTenant>();
                 var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
-                var tenantsCacheKey = "FFTenants";
+                var tenantsCacheKey = nameof(GlobalData.AllTenant);
                 if (cache.TryGetValue(tenantsCacheKey, out  tenants) == false)
                 {
                     if (configs?.EnableTenant == true)
                     {
                         using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                         {
-                            tenants = dc.Set<FrameworkTenant>().Where(x => x.Enabled).ToList();
+                            tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
                         }
                     }
                     cache.Add(tenantsCacheKey, tenants, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });

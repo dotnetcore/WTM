@@ -162,7 +162,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 if (typeof(ITenant).IsAssignableFrom(item))
                 {
-                    var exp = Expression.Equal(Expression.Property(pe, "TenantCode"), Expression.PropertyOrField(Expression.Constant(this),"TenantCode"));
+                    var exp= Expression.Equal(Expression.Property(pe, "TenantCode"), Expression.PropertyOrField(Expression.Constant(this),"TenantCode"));
                     list.Add(exp);
                 }
                 if(list.Count > 0)
@@ -184,9 +184,8 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="allModules"></param>
         /// <param name="IsSpa"></param>
-        /// <param name="TenantCode"></param>
         /// <returns>返回true表示需要进行初始化数据操作，返回false即数据库已经存在或不需要初始化数据</returns>
-        public async override Task<bool> DataInit(object allModules, bool IsSpa, string TenantCode = null)
+        public async override Task<bool> DataInit(object allModules, bool IsSpa)
         {
             bool rv = await Database.EnsureCreatedAsync();
             //判断是否存在初始数据
@@ -216,9 +215,10 @@ namespace WalkingTec.Mvvm.Core
                     var groupList = IsSpa ? GetMenu2(AllModules, "FrameworkGroup", "MenuKey.GroupManagement",  4) : GetMenu(AllModules, "_Admin", "FrameworkGroup", "Index", "MenuKey.GroupManagement",  4);
                     var menuList = IsSpa ? GetMenu2(AllModules, "FrameworkMenu", "MenuKey.MenuMangement", 5) : GetMenu(AllModules, "_Admin", "FrameworkMenu", "Index", "MenuKey.MenuMangement",  5);
                     var dpList = IsSpa ? GetMenu2(AllModules, "DataPrivilege", "MenuKey.DataPrivilege",  6) : GetMenu(AllModules, "_Admin", "DataPrivilege", "Index", "MenuKey.DataPrivilege",  6);
+                    var tenantList = IsSpa ? GetMenu2(AllModules, "FrameworkTenant", "MenuKey.FrameworkTenant", 6) : GetMenu(AllModules, "_Admin", "FrameworkTenant", "Index", "MenuKey.FrameworkTenant", 7);
                     if (logList != null)
                     {
-                        var menus = new FrameworkMenu[] { logList, userList, roleList, groupList, menuList, dpList };
+                        var menus = new FrameworkMenu[] { logList, userList, roleList, groupList, menuList, dpList, tenantList };
                         foreach (var item in menus)
                         {
                             if (item != null)
@@ -248,7 +248,8 @@ namespace WalkingTec.Mvvm.Core
                             var groupList2 = GetMenu2(AllModules, "FrameworkGroup", "MenuKey.GroupManagement",  4);
                             var menuList2 = GetMenu2(AllModules, "FrameworkMenu", "MenuKey.MenuMangement", 5);
                             var dpList2 = GetMenu2(AllModules, "DataPrivilege", "MenuKey.DataPrivilege", 6);
-                            var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2 };
+                            var tenantList2 = GetMenu2(AllModules, "FrameworkTenant", "MenuKey.FrameworkTenant", 7);
+                            var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2, tenantList2 };
                             //apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += $"({Program._localizer["BuildinApi"]})"; });
                             foreach (var item in apis)
                             {
@@ -694,9 +695,8 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="allModules"></param>
         /// <param name="IsSpa"></param>
-        /// <param name="TenantCode"></param>
         /// <returns>返回true表示需要进行初始化数据操作，返回false即数据库已经存在或不需要初始化数据</returns>
-        public async virtual Task<bool> DataInit(object allModules, bool IsSpa, string TenantCode = null)
+        public async virtual Task<bool> DataInit(object allModules, bool IsSpa)
         {
             bool rv = await Database.EnsureCreatedAsync();
             return rv;
@@ -847,7 +847,7 @@ namespace WalkingTec.Mvvm.Core
             throw new NotImplementedException();
         }
 
-        public Task<bool> DataInit(object AllModel, bool IsSpa, string TenantCode = null)
+        public Task<bool> DataInit(object AllModel, bool IsSpa)
         {
             throw new NotImplementedException();
         }

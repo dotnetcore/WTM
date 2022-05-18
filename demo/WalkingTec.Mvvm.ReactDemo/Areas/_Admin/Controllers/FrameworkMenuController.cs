@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public async Task<ActionResult> RefreshMenu()
         {
-            Cache.Delete("FFMenus");
+            Cache.Delete(nameof(GlobalData.AllMenus));
             var userids = DC.Set<FrameworkUser>().Select(x => x.ITCode).ToArray();
             await Wtm.RemoveUserCache(userids);
             return Ok(Localizer["Sys.OprationSuccess"].Value);

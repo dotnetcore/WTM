@@ -242,6 +242,7 @@ namespace WalkingTec.Mvvm.Core
         private IStringLocalizerFactory _stringLocalizerFactory;
         private IStringLocalizer _localizer;
         private ILoggerFactory _loggerFactory;
+        public ILoggerFactory LoggerFactory { get { return _loggerFactory; } }
         public IStringLocalizer Localizer
         {
             get
@@ -405,16 +406,20 @@ namespace WalkingTec.Mvvm.Core
                 {
                     var userIdStr = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault() ?? username;
                     tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault() ?? tenant;
+                    var item = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
+                    _dc = item.CreateDC(ConfigInfo.IsQuickDebug, LoggerFactory);
                     rv = BaseUserQuery.IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == userIdStr.ToLower() && x.TenantCode == tenant && x.IsValid).SingleOrDefault();
                 }
                 else
                 {
-                    if (tenant == null)
+                    if (string.IsNullOrEmpty(tenant))
                     {
                         rv = BaseUserQuery.Where(x => x.ITCode.ToLower() == username.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid).SingleOrDefault();
                     }
                     else
                     {
+                        var item = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
+                        _dc = item.CreateDC(ConfigInfo.IsQuickDebug, LoggerFactory);
                         rv = BaseUserQuery.IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == username && x.Password == Utils.GetMD5String(password) && x.TenantCode == tenant && x.IsValid).SingleOrDefault();
                     }
                 }
@@ -481,7 +486,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 foreach (var userId in userIds)
                 {
-                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.TenantCode}";
+                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
                     await Cache.DeleteAsync(key);
                 }
             }
@@ -504,7 +509,7 @@ namespace WalkingTec.Mvvm.Core
                 var userids = DC.Set<FrameworkUserRole>().Where(x => rolecode.Contains(x.RoleCode)).Select(x => x.UserCode).ToArray();
                 foreach (var userId in userids)
                 {
-                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.TenantCode}";
+                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
                     await Cache.DeleteAsync(key);
                 }
             }
@@ -527,7 +532,7 @@ params string[] groupcode)
                 var userids = DC.Set<FrameworkUserGroup>().Where(x => groupcode.Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
                 foreach (var userId in userids)
                 {
-                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.TenantCode}";
+                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
                     await Cache.DeleteAsync(key);
                 }
             }
@@ -538,9 +543,12 @@ params string[] groupcode)
         {
             if (LoginUserInfo != null)
             {
-                LoginUserInfo.CurrentTenant = tenant;
-                LoginUserInfo = LoginUserInfo;
-                return true;
+                if (LoginUserInfo.TenantCode == null || LoginUserInfo.TenantCode==tenant || GlobaInfo.AllTenant.Any(x => x.TCode == tenant && x.TenantCode == LoginUserInfo.TenantCode))
+                {
+                    LoginUserInfo.CurrentTenant = tenant;
+                    LoginUserInfo = LoginUserInfo;
+                    return true;
+                }
             }
             return false;
         }
@@ -550,6 +558,24 @@ params string[] groupcode)
         {
             string cs = cskey ?? CurrentCS;
             string tenantCode = null;
+
+            var tenants = GlobaInfo.AllTenant;
+            string tc = _loginUserInfo?.CurrentTenant;
+            if (tc == null && HttpContext?.Request?.Host != null)
+            {
+                tc = tenants.Where(x => x.TDomain.ToLower() == HttpContext.Request.Host.ToString().ToLower()).Select(x => x.TCode).FirstOrDefault();
+            }
+            if (tc != null)
+            {
+                var item = tenants.Where(x => x.TCode == tc).FirstOrDefault();
+                tenantCode = tc;
+                //如果租户指定了数据库，则返回
+                if (string.IsNullOrEmpty(cs) && item?.IsUsingDB == true)
+                {
+                    return item.CreateDC(ConfigInfo.IsQuickDebug, logerror == true ? _loggerFactory : null);
+                }
+            }
+
             if (isLog == true)
             {
                 if (ConfigInfo.Connections?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
@@ -559,31 +585,6 @@ params string[] groupcode)
             }
             if (string.IsNullOrEmpty(cs))
             {
-                //判断多租户的dc
-                var tenants = GlobaInfo.AllTenant;
-                string tc = _loginUserInfo?.CurrentTenant;
-                if (tc == null && HttpContext?.Request?.Host != null)
-                {
-                    tc = tenants.Where(x => x.TDomain.ToLower() == HttpContext.Request.Host.ToString().ToLower()).Select(x => x.TCode).FirstOrDefault();
-                }
-                if (tc != null)
-                {
-                    var item = tenants.Where(x => x.TCode == tc).FirstOrDefault();
-                    tenantCode = tc;
-                    if (item != null && item.TDb != null && item.TDb != "" && item.TDbType != null)
-                    {
-                        var context = string.IsNullOrEmpty(item.DbContext) ? "DataContext" : item.DbContext;
-                        var DcConstructor = CS.CisFull.Where(x => x.DeclaringType.Name.ToLower() == context.ToLower()).FirstOrDefault();
-                        var tenantdc = (IDataContext)DcConstructor?.Invoke(new object[] { item.TDb, item.TDbType });
-                        tenantdc.IsDebug = ConfigInfo.IsQuickDebug;
-                        if (logerror == true)
-                        {
-                            tenantdc.SetLoggerFactory(_loggerFactory);
-                        }
-                        tenantdc.SetTenantCode(tenantCode);
-                        return tenantdc;
-                    }
-                }
                 cs = "default";
             }
             var rv = ConfigInfo.Connections.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault().CreateDC();

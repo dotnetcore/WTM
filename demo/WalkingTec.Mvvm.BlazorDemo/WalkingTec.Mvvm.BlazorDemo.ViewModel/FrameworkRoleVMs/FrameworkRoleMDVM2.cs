@@ -124,6 +124,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 FunctionPrivilege fp = new FunctionPrivilege();
                 fp.MenuItemId = menuid;
                 fp.RoleCode = Entity.RoleCode;
+                fp.TenantCode = LoginUserInfo.CurrentTenant;
                 fp.Allowed = true;
                 DC.Set<FunctionPrivilege>().Add(fp);
             }

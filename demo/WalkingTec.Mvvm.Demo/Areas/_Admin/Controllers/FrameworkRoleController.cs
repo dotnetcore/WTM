@@ -180,10 +180,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public async Task<ActionResult> PageFunction(FrameworkRoleMDVM vm, IFormCollection noUse)
         {
             await vm.DoChangeAsync();
-            if(vm.MSD.IsValid == false)
-            {
-                return FFResult().CloseDialog().Alert(vm.MSD.GetFirstError());
-            }
+            //if(vm.MSD.IsValid == false)
+            //{
+            //    return FFResult().CloseDialog().Alert(vm.MSD.GetFirstError());
+            //}
             return FFResult().CloseDialog().Alert(Localizer["Sys.OprationSuccess"]);
         }
 

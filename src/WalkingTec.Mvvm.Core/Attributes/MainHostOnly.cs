@@ -7,7 +7,7 @@ namespace WalkingTec.Mvvm.Core
     /// 标记Action只能由主用户访问，租户用户不能访问
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class MainHostOnlyAttribute : Attribute
+    public class MainTenantOnlyAttribute : Attribute
     {
     }
 }

@@ -126,7 +126,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             List<FrameworkMenu> data = new List<FrameworkMenu>();
             using (var maindc = Wtm.CreateDC(false, "default"))
             {
-                data = DC.Set<FrameworkMenu>().ToList();
+                data = maindc.Set<FrameworkMenu>().ToList();
             }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || x.Url.EndsWith("/Index") || string.IsNullOrEmpty(x.MethodName)).ToList();
             foreach (var item in topdata)
