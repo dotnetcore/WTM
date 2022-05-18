@@ -24,6 +24,7 @@ namespace WalkingTec.Mvvm.Core
         public List<string> AllHostOnlyUrls { get; set; }
         public Type CustomUserType { get; set; }
 
+        public bool IsSpa { get; set; }
         private List<PropertyInfo> _customUserProperties;
        public List<PropertyInfo> CustomUserProperties
         {

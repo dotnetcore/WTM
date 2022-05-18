@@ -215,6 +215,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName, x=>x.GroupCode));
         }
 
+        [HttpGet("GetUserById")]
         public IActionResult GetUserById(string keywords)
         {
             if (ConfigInfo.HasMainHost)

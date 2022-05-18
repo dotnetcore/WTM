@@ -784,7 +784,7 @@ namespace WalkingTec.Mvvm.Mvc
                             tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
                         }
                     }
-                    cache.Add(tenantsCacheKey, tenants, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
+                    cache.Add(tenantsCacheKey, tenants?? new List<FrameworkTenant>(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                 }
                 return tenants;
             });
@@ -827,6 +827,7 @@ namespace WalkingTec.Mvvm.Mvc
             gd.AllHostOnlyUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.MainHostOnly == true || x.Module.MainHostOnly == true).Select(x => x.Url).ToList();
             var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
             WtmFileProvider.Init(configs, gd);
+            gd.IsSpa = isspa == true || test != null;
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var fixdc = scope.ServiceProvider.GetRequiredService<IDataContext>();

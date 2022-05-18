@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.SpaServices.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
@@ -74,8 +72,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
                     if (tenantdc.Database.EnsureCreated() == true)
                     {
                         tenantdc.SetTenantCode(Entity.TCode);
-                        var spa = Wtm.ServiceProvider.GetService<ISpaStaticFileProvider>();
-                        tenantdc.DataInit(Wtm.GlobaInfo.AllModule, spa != null).Wait();
+                        tenantdc.DataInit(Wtm.GlobaInfo.AllModule, Wtm.GlobaInfo.IsSpa).Wait();
                     }
                     AddTenantData(tenantdc, fps);
                 }
