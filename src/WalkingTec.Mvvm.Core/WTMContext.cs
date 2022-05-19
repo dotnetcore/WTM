@@ -549,7 +549,7 @@ params string[] groupcode)
         {
             if (LoginUserInfo != null)
             {
-                if (LoginUserInfo.TenantCode == null || LoginUserInfo.TenantCode==tenant || GlobaInfo.AllTenant.Any(x => x.TCode == tenant && x.TenantCode == LoginUserInfo.TenantCode))
+                if (LoginUserInfo.TenantCode == null || LoginUserInfo.TenantCode == tenant || GlobaInfo.AllTenant.Any(x => x.TCode == tenant && x.TenantCode == LoginUserInfo.TenantCode))
                 {
                     LoginUserInfo.CurrentTenant = tenant;
                     LoginUserInfo = LoginUserInfo;
@@ -569,7 +569,7 @@ params string[] groupcode)
             string tc = _loginUserInfo?.CurrentTenant;
             if (tc == null && HttpContext?.Request?.Host != null)
             {
-                tc = tenants.Where(x => x.TDomain.ToLower() == HttpContext.Request.Host.ToString().ToLower()).Select(x => x.TCode).FirstOrDefault();
+                tc = tenants.Where(x => x.TDomain != null && x.TDomain.ToLower() == HttpContext.Request.Host.ToString().ToLower()).Select(x => x.TCode).FirstOrDefault();
             }
             if (tc != null)
             {
@@ -618,9 +618,9 @@ params string[] groupcode)
                 return true;
             }
             //租户用户不能访问标记[HostOnly]的方法
-            if(_configInfo.EnableTenant == true)
+            if (_configInfo.EnableTenant == true)
             {
-                if(LoginUserInfo.TenantCode != null)
+                if (LoginUserInfo.TenantCode != null)
                 {
                     var hostonly = _globaInfo.AllHostOnlyUrls;
                     foreach (var au in hostonly)

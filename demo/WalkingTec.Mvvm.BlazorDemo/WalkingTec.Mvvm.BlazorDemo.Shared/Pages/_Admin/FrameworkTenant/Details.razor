@@ -33,7 +33,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        AllParents = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkTenant/GetFrameworkRoles", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
+        AllParents = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUser/GetFrameworkRoles", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         var rv = await WtmBlazor.Api.CallAPI<FrameworkTenantVM>($"/api/_FrameworkTenant/{id}");
         Model = rv.Data;
     }
