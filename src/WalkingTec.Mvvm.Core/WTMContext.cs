@@ -407,7 +407,10 @@ namespace WalkingTec.Mvvm.Core
                     var userIdStr = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault() ?? username;
                     tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault() ?? tenant;
                     var item = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
-                    _dc = item.CreateDC(ConfigInfo.IsQuickDebug, LoggerFactory);
+                    if (item != null)
+                    {
+                        _dc = item.CreateDC(ConfigInfo.IsQuickDebug, LoggerFactory);
+                    }
                     rv = BaseUserQuery.IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == userIdStr.ToLower() && x.TenantCode == tenant && x.IsValid).SingleOrDefault();
                 }
                 else
@@ -419,7 +422,10 @@ namespace WalkingTec.Mvvm.Core
                     else
                     {
                         var item = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
-                        _dc = item.CreateDC(ConfigInfo.IsQuickDebug, LoggerFactory);
+                        if (item != null)
+                        {
+                            _dc = item.CreateDC(ConfigInfo.IsQuickDebug, LoggerFactory);
+                        }
                         rv = BaseUserQuery.IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == username && x.Password == Utils.GetMD5String(password) && x.TenantCode == tenant && x.IsValid).SingleOrDefault();
                     }
                 }
