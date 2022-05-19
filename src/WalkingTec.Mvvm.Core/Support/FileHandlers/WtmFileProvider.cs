@@ -93,6 +93,11 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 dc = _wtm.CreateDC();
             }
             var fh = CreateFileHandler(saveMode, dc);
+            if(fileName == null)
+            {
+                fileName = "unknown";
+            }
+            fileName = fileName.Replace("<", "").Replace(">","").Replace(" ", "");
             if (fh is WtmDataBaseFileHandler lfh)
             {
                 return lfh.UploadToDB(fileName, fileLength, data, group, subdir, extra);
@@ -198,6 +203,11 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 dc = _wtm.CreateDC();
             }
             rv = dc.Set<FileAttachment>().CheckID(id).Select(x => x.FileName).FirstOrDefault();
+            if(rv == null)
+            {
+                rv = "unknown";
+            }
+            rv = rv.Replace("<", "").Replace(">", "").Replace(" ", "");
             return rv;
         }
 

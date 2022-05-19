@@ -345,7 +345,7 @@ namespace WalkingTec.Mvvm.Core
 
         public LoginUserInfo DoLogin(string username, string password, string tenant)
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(tenant) == true)
             {
                 var remoteToken = _loginUserInfo?.RemoteToken ?? HttpContext?.Request.Query?.Where(x => x.Key == "_remotetoken").Select(x => x.Value.First()).FirstOrDefault();
                 LoginUserInfo rv = null;
