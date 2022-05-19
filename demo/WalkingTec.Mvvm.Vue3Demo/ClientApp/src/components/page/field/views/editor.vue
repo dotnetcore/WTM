@@ -32,7 +32,7 @@ export default class extends mixins(FieldBasics) {
     async mounted() {
         this.createQuill()
         console.log(this._name);
-        this.onValueChange(this.value, undefined);
+        //this.onValueChange(this.value, undefined);
         // this.onRequest();
         if (this.debug) {
             console.log("");
@@ -78,22 +78,30 @@ export default class extends mixins(FieldBasics) {
             //readOnly: true,
             theme: 'snow'
         })
+        let that = this
+        setTimeout(()=>{
+          if (that.value) {
+              that.Quill.root.innerHTML = that.value
+          }
+          that.Quill.on('text-change', (delta, oldContents, source) => {
+              that.value = that.lodash.invoke(that.Quill, 'getHTML')
+          })
+        },2000)
         
-        console.log(this.value)
         // this.Quill.on('editor-change', (delta, oldContents, source) => {
         //     console.log("LENG ~ editor-change", delta, oldContents, source)
         // })
     }
 
-    @Watch("value")
-        onValueChange(val, old) {
-           if (this.value) {
-            this.Quill.root.innerHTML = val
-        }
-        this.Quill.on('text-change', (delta, oldContents, source) => {
-            this.value = this.lodash.invoke(this.Quill, 'getHTML')
-        })
-        }
+    /*@Watch("value")
+    onValueChange(val, old) {
+      if (this.value) {
+          this.Quill.root.innerHTML = val
+      }
+      this.Quill.on('text-change', (delta, oldContents, source) => {
+          this.value = this.lodash.invoke(this.Quill, 'getHTML')
+      })
+    }*/
 
 }
 </script>
