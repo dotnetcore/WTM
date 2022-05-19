@@ -86,7 +86,7 @@ export default class extends mixins(FieldBasics) {
           that.Quill.on('text-change', (delta, oldContents, source) => {
               that.value = that.lodash.invoke(that.Quill, 'getHTML')
           })
-        },2000)
+        },3000)
         
         // this.Quill.on('editor-change', (delta, oldContents, source) => {
         //     console.log("LENG ~ editor-change", delta, oldContents, source)
