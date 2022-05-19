@@ -804,7 +804,8 @@ window.ff = {
                     fieldElem.push({ name: item.attributes["wtm-name"].value, value: v });
                 });
             if (val.length == 0) {
-                var ismulti = item.attributes["wtm-multi"].value;                
+                var ismulti = '';
+                try { ismulti = item.attributes["wtm-multi"].value } catch { }
                 fieldElem.push({ name: item.attributes["wtm-name"].value, value: ismulti=='true'?'':null });
             }
         });

@@ -77,6 +77,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("wtm-ctype", "tree");
             output.Attributes.Add("wtm-name", Field.Name);
+            output.Attributes.Add("wtm-multi", MultiSelect.ToString().ToLower());
             Id = string.IsNullOrEmpty(Id) ? Guid.NewGuid().ToNoSplitString() : Id;
 
                 List<object> vals = new List<object>();
