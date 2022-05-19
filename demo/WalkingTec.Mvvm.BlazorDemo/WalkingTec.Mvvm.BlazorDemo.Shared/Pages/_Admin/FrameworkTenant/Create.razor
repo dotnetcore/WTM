@@ -11,8 +11,8 @@
         <Select @bind-Value="@Model.Entity.TDbType" />
         <BootstrapInput @bind-Value="@Model.Entity.DbContext" />
         <BootstrapInput @bind-Value="@Model.Entity.TDomain" />
-        <Select @bind-Value="@Model.Entity.EnableSub" />
-        <Select @bind-Value="@Model.Entity.Enabled" />
+        <Select @bind-Value="@Model.Entity.EnableSub" Items="WtmBlazor.GlobalSelectItems.BoolItems"/>
+        <Select @bind-Value="@Model.Entity.Enabled" Items="WtmBlazor.GlobalSelectItems.BoolItems"/>
     </Row>
 
     <Row ItemsPerRow="ItemsPerRow.Two">
@@ -32,7 +32,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        AllParents = await WtmBlazor.Api.CallItemsApi("/_admin/FrameworkUser/GetFrameworkRoles", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
+        AllParents = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUser/GetFrameworkRoles", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
     }
 
     private async Task Submit(EditContext context)
