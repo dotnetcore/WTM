@@ -48,7 +48,13 @@ class Entity {
         fieldProps: { max: 9 },
     }
 
-     readonly Files: WTM_EntitiesField = {
+    readonly editor: WTM_EntitiesField = {
+        name: ['Entity','Remark'],
+        label: 'Remark',
+        valueType: WTM_ValueType.editor,
+    }
+
+    readonly Files: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'Files'],
         valueType: WTM_ValueType.upload,
@@ -57,14 +63,14 @@ class Entity {
         fieldProps: { max: 9 }
     }
 
-    readonly Remark: WTM_EntitiesField = {
+    /*readonly Remark: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'Remark'],
         // label 字段描述
         label: EnumLocaleLabel.Remark,
         rules: [{ required: true }]
 
-    }
+    }*/
     readonly Majors: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'Majors'],

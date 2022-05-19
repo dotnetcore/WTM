@@ -9,10 +9,13 @@
     </a-space>
     <a-space>
       <WtmField entityKey="SchoolType" />
-      <WtmField entityKey="Remark" />
+      <!-- <WtmField entityKey="Remark" /> -->
     </a-space>
     <a-space>
       <WtmField entityKey="Photos"  /> 
+    </a-space>
+    <a-space>
+      <WtmField entityKey="editor"  /> 
     </a-space>
     <a-space>
       <WtmField entityKey="Files"  /> 

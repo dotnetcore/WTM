@@ -42,7 +42,7 @@
                       :file-list="fileList"
                       :headers="headers"
                       :before-upload="beforeUpload"
-                      :remove="onRemove"
+                      :onRemove="onRemove"
                       @change="onChange"
                       @preview="handlePreview"
                       v-bind="_fieldProps">

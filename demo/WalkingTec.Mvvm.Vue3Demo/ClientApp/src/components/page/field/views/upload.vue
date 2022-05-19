@@ -7,7 +7,7 @@
                   :headers="headers"
                   :before-upload="beforeUpload"
                   @preview="handlePreview"
-                  :remove="onRemove"
+                  :onRemove="onRemove"
                   @change="onChange"
                   v-bind="_fieldProps">
             <div v-if="isPlusBottun">
@@ -152,7 +152,6 @@
                         var ips = ps;
                         if (this.fileList.length === 0) {
                             this.fileList = this.lodash.map(this.filedata, (item, index) => {
-                                console.log(item)
                                 return {
                                     uid: item.FileId,
                                     name: ps[index],
@@ -161,7 +160,6 @@
                                     url: item.fileurl
                                 };
                             });
-                            console.log(this.fileList)
                         }
 
                     })

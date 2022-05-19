@@ -62,4 +62,7 @@ export default class extends Vue {
 .ant-pro-sider .ant-layout-sider-children ::-webkit-scrollbar{
   width:0!important;
 }
+.ant-tabs-tab{
+  display:flex!important;
+}
 </style>

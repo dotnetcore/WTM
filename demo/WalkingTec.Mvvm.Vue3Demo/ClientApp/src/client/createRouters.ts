@@ -1,5 +1,3 @@
-
-
 interface Config {
     rc: any
     redirect?: string

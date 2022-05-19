@@ -47,6 +47,7 @@ module.exports = {
         resolve: {
             alias: {
                 'lodash-es': path.join(__dirname, 'node_modules/lodash'),
+                'jquery': path.resolve(__dirname, './node_modules/jquery/src/jquery'),
             },
         },
         plugins: [
@@ -64,6 +65,11 @@ module.exports = {
     },
 
     chainWebpack: config => {
+        config.plugin('provide').use(webpack.ProvidePlugin, [{
+            'window.Quill': 'quill/dist/quill.js',
+            'Quill': 'quill/dist/quill.js'
+        }]);
+        
         // config.module
         //     .rule('i18n-resource')
         //     .test(/\.(json5?|ya?ml)$/)
