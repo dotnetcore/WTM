@@ -16,16 +16,16 @@ namespace WalkingTec.Mvvm.Core
     /// FrameworkUser
     /// </summary>
     [Table("FrameworkTenants")]
-    public   class FrameworkTenant : BasePoco,ITenant
+    public class FrameworkTenant : BasePoco, ITenant
     {
         [Display(Name = "_Admin.TenantCode")]
         [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
-        public string TCode{ get; set; }
+        public string TCode { get; set; }
 
         [Display(Name = "_Admin.TenantName")]
         [Required(ErrorMessage = "Validate.{0}required")]
-        [StringLength(50,ErrorMessage = "Validate.{0}stringmax{1}")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string TName { get; set; }
 
         [Display(Name = "_Admin.TenantDb")]
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                if(string.IsNullOrEmpty(TDb) == false && TDbType != null)
+                if (string.IsNullOrEmpty(TDb) == false && TDbType != null)
                 {
                     return true;
                 }
@@ -71,6 +71,10 @@ namespace WalkingTec.Mvvm.Core
             var context = string.IsNullOrEmpty(this.DbContext) ? "DataContext" : this.DbContext;
             var DcConstructor = CS.CisFull.Where(x => x.DeclaringType.Name.ToLower() == context.ToLower()).FirstOrDefault();
             var tenantdc = (IDataContext)DcConstructor?.Invoke(new object[] { this.TDb, this.TDbType });
+            if (tenantdc == null)
+            {
+                return null;
+            }
             tenantdc.IsDebug = isdebug;
             if (loggerFactory != null)
             {
