@@ -4,7 +4,6 @@
             <div class="ql-editor" v-html="value"></div>
         </template>
         <!-- <template v-else> -->
-        {{value}}
         <div class="w-quill-container" v-show="!_readonly">
             <div ref="container"></div>
         </div>
