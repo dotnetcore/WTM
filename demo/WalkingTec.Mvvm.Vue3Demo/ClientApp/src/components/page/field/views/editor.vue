@@ -4,6 +4,7 @@
             <div class="ql-editor" v-html="value"></div>
         </template>
         <!-- <template v-else> -->
+        {{value}}
         <div class="w-quill-container" v-show="!_readonly">
             <div ref="container"></div>
         </div>
@@ -74,7 +75,7 @@ export default class extends mixins(FieldBasics) {
                     modules: ["Resize", "DisplaySize", "Toolbar"],
              },
             },
-            placeholder: 'Compose an epic...',
+            placeholder: ' ',
             //readOnly: true,
             theme: 'snow'
         })
@@ -86,7 +87,7 @@ export default class extends mixins(FieldBasics) {
           that.Quill.on('text-change', (delta, oldContents, source) => {
               that.value = that.lodash.invoke(that.Quill, 'getHTML')
           })
-        },3000)
+        },1000)
         
         // this.Quill.on('editor-change', (delta, oldContents, source) => {
         //     console.log("LENG ~ editor-change", delta, oldContents, source)
