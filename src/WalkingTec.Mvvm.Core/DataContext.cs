@@ -238,6 +238,7 @@ namespace WalkingTec.Mvvm.Core
                             groupList?.SetPropertyValue("Icon", "layui-icon layui-icon-group");
                             menuList?.SetPropertyValue("Icon", "layui-icon layui-icon-menu-fill");
                             dpList?.SetPropertyValue("Icon", "layui-icon layui-icon-auz");
+                            tenantList?.SetPropertyValue("Icon", " layui-icon layui-icon-share");
 
                             var apifolder = GetFolderMenu("Api");
                             apifolder.ShowOnMenu = false;
@@ -255,6 +256,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 if (item != null)
                                 {
+                                    item.ModuleName += "Api";
                                     apifolder.Children.Add(item);
 
                                 }
@@ -271,6 +273,7 @@ namespace WalkingTec.Mvvm.Core
                             groupList?.SetPropertyValue("Icon", " _wtmicon _wtmicon-zuzhiqunzu");
                             menuList?.SetPropertyValue("Icon", " _wtmicon _wtmicon--lumingpai");
                             dpList?.SetPropertyValue("Icon", " _wtmicon _wtmicon-anquan");
+                            tenantList?.SetPropertyValue("Icon", " _wtmicon _wtmicon-fenxiangfangshi");
                         }
                     }
                 }
@@ -303,6 +306,10 @@ namespace WalkingTec.Mvvm.Core
             var act = acts.Where(x => x.MethodName == actionName).SingleOrDefault();
             var rest = acts.Where(x => x.MethodName != actionName && x.IgnorePrivillege == false).ToList();
             FrameworkMenu menu = GetMenuFromAction(act, true, displayOrder);
+            if(act.Module.IsApi == true)
+            {
+                menu.ModuleName += "Api";
+            }
             if (menu != null)
             {
                 menu.PageName = pageKey;
@@ -312,6 +319,10 @@ namespace WalkingTec.Mvvm.Core
                     {
                         var sub = GetMenuFromAction(rest[i], false, (i + 1));
                         sub.PageName = pageKey;
+                        if (rest[i].Module.IsApi == true)
+                        {
+                            sub.ModuleName += "Api";
+                        }
                         menu.Children.Add(sub);
                     }
                 }

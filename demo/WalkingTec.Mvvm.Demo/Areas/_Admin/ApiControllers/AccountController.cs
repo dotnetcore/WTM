@@ -88,9 +88,9 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Content(JsonSerializer.Serialize(token), "application/json");
         }
 
-        [AllowAnonymous]
+        [AllRights]
         [HttpGet("[action]")]
-        public IActionResult SetTenant(string tenant)
+        public IActionResult SetTenant([FromQuery]string tenant)
         {
             bool rv = Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
             return Ok(rv);

@@ -13,7 +13,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("_Admin.UserApi")]
+    [ActionDescription("MenuKey.UserManagement")]
     [ApiController]
     [Route("api/_FrameworkUser")]
     public class FrameworkUserController : BaseApiController

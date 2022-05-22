@@ -37,6 +37,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
                 this.MakeGridHeader(x => x.TDbType),
                 this.MakeGridHeader(x => x.DbContext),
                 this.MakeGridHeader(x => x.TDomain),
+                this.MakeGridHeader(x => x.Enabled),
+                this.MakeGridHeader(x => x.EnableSub),
                 this.MakeGridHeaderAction(width: 200)
             };
         }
@@ -56,6 +58,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
                     TDbType = x.TDbType,
                     DbContext = x.DbContext,
                     TDomain = x.TDomain,
+                    Enabled = x.Enabled,
+                    EnableSub = x.EnableSub
                 })
                 .OrderBy(x => x.ID);
             return query;

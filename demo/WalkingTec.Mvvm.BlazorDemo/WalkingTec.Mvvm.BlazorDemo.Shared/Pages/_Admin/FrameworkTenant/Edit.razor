@@ -16,6 +16,7 @@
 
     <Row ItemsPerRow="ItemsPerRow.Two">
         <Select @bind-Value="@Model.AdminRoleCode" Items="@AllParents" />
+        <div style="padding-top:35px;">@WtmBlazor.Localizer["_Admin.TenantRole"]</div>
     </Row>
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />

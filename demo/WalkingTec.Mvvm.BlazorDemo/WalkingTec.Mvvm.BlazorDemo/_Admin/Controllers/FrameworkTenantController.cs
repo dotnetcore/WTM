@@ -12,7 +12,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("_Admin.TenantApi")]
+    [ActionDescription("MenuKey.FrameworkTenant")]
     [ApiController]
     [Route("api/_[controller]")]
     [FixConnection(CsName = "default")]
@@ -24,7 +24,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (CanUseTenant() == false)
             {
-                return BadRequest(Localizer["_Admin.TenantNotAllowed"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             if (ModelState.IsValid)
             {
@@ -52,7 +54,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (CanUseTenant() == false)
             {
-                return BadRequest(Localizer["_Admin.TenantNotAllowed"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             if (!ModelState.IsValid)
             {
@@ -79,7 +83,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (CanUseTenant() == false)
             {
-                return BadRequest(Localizer["_Admin.TenantNotAllowed"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             if (!ModelState.IsValid)
             {
@@ -105,7 +111,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (CanUseTenant() == false)
             {
-                return BadRequest(Localizer["_Admin.TenantNotAllowed"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             var vm = Wtm.CreateVM<FrameworkTenantBatchVM>();
             if (ids == null || ids.Count() == 0)
@@ -129,7 +137,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (CanUseTenant() == false)
             {
-                return BadRequest(Localizer["_Admin.TenantNotAllowed"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             var vm = Wtm.CreateVM<FrameworkTenantListVM>();
             vm.Searcher = searcher;
@@ -143,7 +153,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (CanUseTenant() == false)
             {
-                return BadRequest(Localizer["_Admin.TenantNotAllowed"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             var vm = Wtm.CreateVM<FrameworkTenantListVM>();
             if (ids != null && ids.Count() > 0)
@@ -160,7 +172,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (CanUseTenant() == false)
             {
-                return BadRequest(Localizer["_Admin.TenantNotAllowed"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             var vm = Wtm.CreateVM<FrameworkTenantImportVM>();
             var qs = new Dictionary<string, string>();
@@ -180,7 +194,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             if (CanUseTenant() == false)
             {
-                return BadRequest(Localizer["_Admin.TenantNotAllowed"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
@@ -191,6 +207,16 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return Ok(vm.EntityList.Count);
             }
         }
+
+        [HttpGet("GetFrameworkTenants")]
+        [ActionDescription("GetTenants")]
+        [AllRights]
+        public IActionResult GetFrameworkTenants()
+        {
+            return Ok(Wtm.GlobaInfo.AllTenant.AsQueryable().GetSelectListItems(Wtm,x=>x.TName,x=>x.TCode));
+        }
+
+
         private bool CanUseTenant()
         {
             if (Wtm.LoginUserInfo != null && (Wtm.LoginUserInfo.CurrentTenant == null || Wtm.GlobaInfo.AllTenant.Any(x => x.TCode == Wtm.LoginUserInfo.CurrentTenant && x.Enabled == true && x.EnableSub == true)))

@@ -10,7 +10,7 @@ using System.Linq;
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("租户管理")]
+    [ActionDescription("MenuKey.FrameworkTenant")]
     [FixConnection(CsName = "default")]
     public partial class FrameworkTenantController : BaseController
     {

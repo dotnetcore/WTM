@@ -701,6 +701,7 @@ namespace WalkingTec.Mvvm.Mvc
             return FFResult().AddCustomScript("location.reload();");
         }
 
+
         [Public]
         public IActionResult SetLanguageForBlazor(string culture, string redirect)
         {

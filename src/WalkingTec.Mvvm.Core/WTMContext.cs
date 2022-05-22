@@ -409,7 +409,7 @@ namespace WalkingTec.Mvvm.Core
                     var item = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
                     if (item != null)
                     {
-                        _dc = item.CreateDC(ConfigInfo.IsQuickDebug, LoggerFactory);
+                        _dc = item.CreateDC(this);
                     }
                     rv = BaseUserQuery.IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == userIdStr.ToLower() && x.TenantCode == tenant && x.IsValid).SingleOrDefault();
                 }
@@ -424,7 +424,7 @@ namespace WalkingTec.Mvvm.Core
                         var item = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
                         if (item != null)
                         {
-                            _dc = item.CreateDC(ConfigInfo.IsQuickDebug, LoggerFactory);
+                            _dc = item.CreateDC(this);
                         }
                         rv = BaseUserQuery.IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == username && x.Password == Utils.GetMD5String(password) && x.TenantCode == tenant && x.IsValid).SingleOrDefault();
                     }
@@ -578,7 +578,7 @@ params string[] groupcode)
                 //如果租户指定了数据库，则返回
                 if (string.IsNullOrEmpty(cs) && item?.IsUsingDB == true)
                 {
-                    return item.CreateDC(ConfigInfo.IsQuickDebug, logerror == true ? _loggerFactory : null);
+                    return item.CreateDC(this);
                 }
             }
 

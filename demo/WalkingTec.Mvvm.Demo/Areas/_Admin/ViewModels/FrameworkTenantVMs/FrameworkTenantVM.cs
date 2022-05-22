@@ -59,6 +59,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             using(var userdc = LoginUserInfo.GetUserDC(Wtm))
             {
                 fps = userdc.Set<FunctionPrivilege>().AsNoTracking().Where(x => x.RoleCode == AdminRoleCode).ToList();
+                if(Entity.EnableSub == false)
+                {
+                    var tenantmenus = Wtm.GlobaInfo.AllMenus.Where(x=>x.Url != null && (x.Url.ToLower().Contains("frameworktenant") || x.Url.ToLower().Contains("frameworkmenu"))).Select(x=>x.ID).ToList();
+                    fps = fps.Where(x=>tenantmenus.Contains(x.MenuItemId) == false).ToList();
+                }
+
                 if (Entity.IsUsingDB == false)
                 {
                     AddTenantData(userdc, fps);
@@ -68,7 +74,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             {
                 try
                 {
-                    var tenantdc = Entity.CreateDC(Wtm.ConfigInfo.IsQuickDebug, null);
+                    var tenantdc = Entity.CreateDC(Wtm);
                     if (tenantdc.Database.EnsureCreated() == true)
                     {
                         tenantdc.SetTenantCode(Entity.TCode);
@@ -96,7 +102,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             var admin = dc.Set<FrameworkUser>().AsNoTracking().IgnoreQueryFilters().Where(x => x.ITCode == itcode && x.TenantCode == Entity.TCode).FirstOrDefault();
             if (admin == null)
             {
-                admin = new FrameworkUser() { ITCode = "admin", Name = Entity.TCode + "_admin", Password = Utils.GetMD5String("000000"), TenantCode = Entity.TCode };
+                admin = new FrameworkUser() { ITCode = "admin", Name = Entity.TCode + "_admin", Password = Utils.GetMD5String("000000"), TenantCode = Entity.TCode, IsValid = true };
                 dc.AddEntity(admin);
             }
             var middle = dc.Set<FrameworkUserRole>().AsNoTracking().IgnoreQueryFilters().Where(x => x.UserCode == "admin" && x.RoleCode == "001" && x.TenantCode == Entity.TCode).FirstOrDefault();

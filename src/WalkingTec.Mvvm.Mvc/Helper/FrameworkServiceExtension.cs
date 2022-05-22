@@ -748,6 +748,8 @@ namespace WalkingTec.Mvvm.Mvc
             Core.CoreProgram._localizer = programLocalizer;
 
             var controllers = gd.GetTypesAssignableFrom<IBaseController>();
+            var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
+            gd.IsSpa = isspa == true || test != null;
             gd.AllModule = GetAllModules(controllers);
             var modules = Utils.ResetModule(gd.AllModule, false);
             gd.CustomUserType = gd.GetTypesAssignableFrom<FrameworkUserBase>().Where(x => x.Name.ToLower() == "frameworkuser").FirstOrDefault();
@@ -791,6 +793,13 @@ namespace WalkingTec.Mvvm.Mvc
 
             foreach (var m in gd.AllModule)
             {
+                if(isspa == false && m.IsApi == true)
+                {
+                    if (m.ModuleName.ToLower().EndsWith("api") == false)
+                    {
+                        m.ModuleName += "Api";
+                    }
+                }
                 foreach (var a in m.Actions)
                 {
                     string u = null;
@@ -825,9 +834,7 @@ namespace WalkingTec.Mvvm.Mvc
 
             gd.AllAccessUrls = gd.AllModule.SelectMany(x=>x.Actions).Where(x=>x.IgnorePrivillege==true || x.Module.IgnorePrivillege == true).Select(x=>x.Url).ToList();
             gd.AllHostOnlyUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.MainHostOnly == true || x.Module.MainHostOnly == true).Select(x => x.Url).ToList();
-            var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
             WtmFileProvider.Init(configs, gd);
-            gd.IsSpa = isspa == true || test != null;
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var fixdc = scope.ServiceProvider.GetRequiredService<IDataContext>();

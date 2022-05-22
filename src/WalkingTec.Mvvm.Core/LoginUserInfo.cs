@@ -185,7 +185,7 @@ namespace WalkingTec.Mvvm.Core
                 var item = context.GlobaInfo.AllTenant.Where(x => x.TCode == context?.LoginUserInfo?.TenantCode).FirstOrDefault();
                 if (item != null)
                 {
-                    return item.CreateDC(context.ConfigInfo.IsQuickDebug, context.LoggerFactory);
+                    return item.CreateDC(context);
                 }
                 else
                 {

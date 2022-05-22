@@ -66,23 +66,31 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public IDataContext CreateDC(bool isdebug, ILoggerFactory loggerFactory)
+        public IDataContext CreateDC(WTMContext wtm)
         {
-            var context = string.IsNullOrEmpty(this.DbContext) ? "DataContext" : this.DbContext;
-            var DcConstructor = CS.CisFull.Where(x => x.DeclaringType.Name.ToLower() == context.ToLower()).FirstOrDefault();
-            var tenantdc = (IDataContext)DcConstructor?.Invoke(new object[] { this.TDb, this.TDbType });
-            if (tenantdc == null)
+            if (IsUsingDB == false)
             {
-                return null;
+                var rv = wtm.CreateDC();
+                rv.SetTenantCode(TCode);
+                return rv;
             }
-            tenantdc.IsDebug = isdebug;
-            if (loggerFactory != null)
+            else
             {
-                tenantdc.SetLoggerFactory(loggerFactory);
+                var context = string.IsNullOrEmpty(this.DbContext) ? "DataContext" : this.DbContext;
+                var DcConstructor = CS.CisFull.Where(x => x.DeclaringType.Name.ToLower() == context.ToLower()).FirstOrDefault();
+                var tenantdc = (IDataContext)DcConstructor?.Invoke(new object[] { this.TDb, this.TDbType });
+                if (tenantdc == null)
+                {
+                    return null;
+                }
+                tenantdc.IsDebug = wtm.ConfigInfo.IsQuickDebug;
+                if (wtm.LoggerFactory != null)
+                {
+                    tenantdc.SetLoggerFactory(wtm.LoggerFactory);
+                }
+                tenantdc.SetTenantCode(this.TCode);
+                return tenantdc;
             }
-            tenantdc.SetTenantCode(this.TCode);
-            return tenantdc;
-
         }
     }
 }

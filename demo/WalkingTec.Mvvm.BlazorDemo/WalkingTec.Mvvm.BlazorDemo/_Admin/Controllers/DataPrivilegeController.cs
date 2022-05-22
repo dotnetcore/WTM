@@ -12,7 +12,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("_Admin.DataPrivilegeApi")]
+    [ActionDescription("MenuKey.DataPrivilege")]
     [ApiController]
     [Route("api/_[controller]")]
     public class DataPrivilegeController : BaseApiController
@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 var vm = Wtm.CreateVM<DataPrivilegeListVM>(passInit: true);
                 vm.Searcher = searcher;
-                return Content(vm.GetJson(enumToString: false));
+                return Content(vm.GetJson());
             }
             else
             {

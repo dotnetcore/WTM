@@ -33,18 +33,21 @@
             </div>
             @if (tenants.Count() > 0)
             {
-                <div class="header-right" style="width: 90px;">
+                <div class="header-right" style="width: 60px;">
                     <nav class="menu">
                         <div class="navbar navbar-expand d-flex">
                             <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" href="#">
-                                        <span class="mx-1" style="">@SelectedCulture</span>
+                                        <span class="mx-1" style="">@(UserInfo.CurrentTenant??wtmblazor.Localizer["_Admin.TenantHost"])</span>
                                     </a>
                                     <div class="dropdown-menu">
                                         <div class="dropdown-menu-arrow"></div>
-                                        <a @onclick="@(x=>SetTenant(""))" class="dropdown-item"><span class="nav-link-text">@wtmblazor.Localizer["_Admin.TenantHost"]</span></a>
-
+                                        <a @onclick="@(x=>SetTenant(null))" class="dropdown-item"><span class="nav-link-text">@wtmblazor.Localizer["_Admin.TenantHost"]</span></a>
+                                        @foreach (var t in tenants)
+                                        {
+                                            <a @onclick="@(x=>SetTenant(t.Value))" class="dropdown-item"><span class="nav-link-text">@t.Text</span></a>
+                                        }
                                     </div>
                                 </li>
                             </ul>
@@ -164,7 +167,7 @@
 
     private List<BootstrapBlazor.Components.MenuItem> Menus { get; set; }
 
-    private List<ComboSelectListItem> tenants = new List<ComboSelectListItem>();
+    private List<SelectedItem> tenants = new List<SelectedItem>();
     private string SelectedCulture
     {
         get
@@ -274,7 +277,7 @@
         }
         Menus = menus;
 
-         //tenants = wtmblazor. ConfigInfo.GlobaInfo.AllTenant.Where(x => x.TenantCode == Model.LoginUserInfo.TenantCode).AsQueryable().GetSelectListItems(Model.Wtm, x => x.TName, x => x.TCode);
+        tenants = await wtmblazor.Api.CallItemsApi("/api/_frameworktenant/GetFrameworkTenants");
         await base.OnInitializedAsync();
     }
 
@@ -324,6 +327,7 @@
 
     private async Task SetTenant(string Value)
     {
-        NavigationManager.NavigateTo(wtmblazor.GetServerUrl() + "/_Framework/SetTenant?tenant=@Model?.Wtm?.LoginUserInfo?.TenantCode", forceLoad: true);
+        _ = await wtmblazor.Api.CallAPI("/api/_account/SetTenant?tenant=" + Value);
+        _ = await JSRuntime.InvokeAsync<string>("urlFuncs.refresh");
     }
 }

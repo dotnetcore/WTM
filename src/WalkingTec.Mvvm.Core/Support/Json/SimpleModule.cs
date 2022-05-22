@@ -16,14 +16,18 @@ namespace WalkingTec.Mvvm.Core.Support.Json
         {
             get
             {
-                if (ActionDes?._localizer != null && string.IsNullOrEmpty(ActionDes?.Description) == false)
+                if (_name == null)
                 {
-                    return ActionDes._localizer[ActionDes.Description];
+                    if (ActionDes?._localizer != null && string.IsNullOrEmpty(ActionDes?.Description) == false)
+                    {
+                        _name= ActionDes._localizer[ActionDes.Description];
+                    }
+                    else
+                    {
+                        _name= _name ?? "";
+                    }
                 }
-                else
-                {
-                    return _name ?? "";
-                }
+                return _name;
             }
             set
             {

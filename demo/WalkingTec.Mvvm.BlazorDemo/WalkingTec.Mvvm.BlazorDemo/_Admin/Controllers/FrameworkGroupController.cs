@@ -12,7 +12,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("_Admin.GroupApi")]
+    [ActionDescription("MenuKey.GroupManagement")]
     [ApiController]
     [Route("api/_[controller]")]
     public class FrameworkGroupController : BaseApiController
@@ -115,7 +115,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var itcodes = gr.Select(x => x.UserCode).ToArray();
                 DC.Set<FrameworkUserGroup>().RemoveRange(gr);
                 DC.SaveChanges();
-                await Wtm.RemoveUserCache(itcodes);
+                await Wtm.RemoveUserCacheByGroup(GroupCode.ToArray());
                 return Ok(ids.Count());
             }
         }

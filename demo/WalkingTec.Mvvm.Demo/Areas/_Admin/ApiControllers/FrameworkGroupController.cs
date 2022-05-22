@@ -12,7 +12,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("_Admin.GroupApi")]
+    [ActionDescription("MenuKey.GroupManagement")]
     [ApiController]
     [Route("api/_[controller]")]
     public class FrameworkGroupController : BaseApiController

@@ -3,67 +3,75 @@
 @inherits BasePage
 @attribute [ActionDescription("MenuKey.FrameworkTenant", "WalkingTec.Mvvm.Admin.Api,FrameworkTenant")]
 
-<WTSearchPanel OnSearch="@DoSearch">
-    <ValidateForm Model="@SearchModel">
-        <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Inline">
-            <BootstrapInput @bind-Value="@SearchModel.TCode" />
-            <BootstrapInput @bind-Value="@SearchModel.TName" />
-            <BootstrapInput @bind-Value="@SearchModel.TDomain" />
-        </Row>
-    </ValidateForm>
-</WTSearchPanel>
+@if (WtmBlazor.ConfigInfo.HasMainHost == false)
+{
+    <WTSearchPanel OnSearch="@DoSearch">
+        <ValidateForm Model="@SearchModel">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Inline">
+                <BootstrapInput @bind-Value="@SearchModel.TCode" />
+                <BootstrapInput @bind-Value="@SearchModel.TName" />
+                <BootstrapInput @bind-Value="@SearchModel.TDomain" />
+            </Row>
+        </ValidateForm>
+    </WTSearchPanel>
 
 
 
-<Table @ref="dataTable" TItem="FrameworkTenant_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
+    <Table @ref="dataTable" TItem="FrameworkTenant_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
        ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;">
-    <TableColumns>
-        <TableColumn @bind-Field="@context.TCode" />
-        <TableColumn @bind-Field="@context.TName" />
-        <TableColumn @bind-Field="@context.TDb" />
-        <TableColumn @bind-Field="@context.TDbType" />
-        <TableColumn @bind-Field="@context.DbContext" />
-        <TableColumn @bind-Field="@context.TDomain" />
+        <TableColumns>
+            <TableColumn @bind-Field="@context.TCode" />
+            <TableColumn @bind-Field="@context.TName" />
+            <TableColumn @bind-Field="@context.TDb" />
+            <TableColumn @bind-Field="@context.TDbType" />
+            <TableColumn @bind-Field="@context.DbContext" />
+            <TableColumn @bind-Field="@context.TDomain" />
+            <TableColumn @bind-Field="@context.Enabled" />
+            <TableColumn @bind-Field="@context.EnableSub" />
 
-    </TableColumns>
-    <TableToolbarTemplate>
-        @if (IsAccessable("/api/_FrameworkTenant/Add"))
-        {
-            <TableToolbarButton TItem="FrameworkTenant_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
-        }
-        @if (IsAccessable("/api/_FrameworkTenant/BatchDelete"))
-        {
-            <TableToolbarPopconfirmButton TItem="FrameworkTenant_View" Color="Color.Primary"
+        </TableColumns>
+        <TableToolbarTemplate>
+            @if (IsAccessable("/api/_FrameworkTenant/Add"))
+            {
+                <TableToolbarButton TItem="FrameworkTenant_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
+            }
+            @if (IsAccessable("/api/_FrameworkTenant/BatchDelete"))
+            {
+                <TableToolbarPopconfirmButton TItem="FrameworkTenant_View" Color="Color.Primary"
                                       Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                       OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                       ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
-        }
-        @if (IsAccessable("/api/_FrameworkTenant/Import"))
-        {
-            <TableToolbarButton TItem="FrameworkTenant_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
-        }
-        @if (IsAccessable("/api/_FrameworkTenant/ExportExcel"))
-        {
-            <TableToolbarButton TItem="FrameworkTenant_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
-        }
-    </TableToolbarTemplate>
-    <RowButtonTemplate>
-        @if (IsAccessable("/api/_FrameworkTenant/Edit"))
-        {
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
-        }
-        @if (IsAccessable("/api/_FrameworkTenant/{id}"))
-        {
-            <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClick="() => OnDetailsClick(context)" />
-        }
-        @if (IsAccessable("/api/_FrameworkTenant/BatchDelete"))
-        {
-            <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+            }
+            @if (IsAccessable("/api/_FrameworkTenant/Import"))
+            {
+                <TableToolbarButton TItem="FrameworkTenant_View" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
+            }
+            @if (IsAccessable("/api/_FrameworkTenant/ExportExcel"))
+            {
+                <TableToolbarButton TItem="FrameworkTenant_View" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
+            }
+        </TableToolbarTemplate>
+        <RowButtonTemplate>
+            @if (IsAccessable("/api/_FrameworkTenant/Edit"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
+            }
+            @if (IsAccessable("/api/_FrameworkTenant/{id}"))
+            {
+                <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClick="() => OnDetailsClick(context)" />
+            }
+            @if (IsAccessable("/api/_FrameworkTenant/BatchDelete"))
+            {
+                <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                           Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
-        }
-    </RowButtonTemplate>
-</Table>
-
+            }
+        </RowButtonTemplate>
+    </Table>
+}
+else
+{
+        <div>@WtmBlazor.Localizer["_Admin.HasMainHost"]</div>
+}
 @code {
 
     private FrameworkTenantSearcher SearchModel = new FrameworkTenantSearcher();

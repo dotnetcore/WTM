@@ -11,7 +11,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("_Admin.ActionLogApi")]
+    [ActionDescription("MenuKey.ActionLog")]
     [ApiController]
     [Route("api/_[controller]")]
     public class ActionLogController : BaseApiController

@@ -11,7 +11,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("_Admin.ActionLogApi")]
+    [ActionDescription("MenuKey.ActionLog")]
     [ApiController]
     [Route("api/_[controller]")]
     public class ActionLogController : BaseApiController
@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 var vm = Wtm.CreateVM<ActionLogListVM>(passInit:true);
                 vm.Searcher = searcher;
-                return Content(vm.GetJson(enumToString: false));
+                return Content(vm.GetJson());
             }
             else
             {
