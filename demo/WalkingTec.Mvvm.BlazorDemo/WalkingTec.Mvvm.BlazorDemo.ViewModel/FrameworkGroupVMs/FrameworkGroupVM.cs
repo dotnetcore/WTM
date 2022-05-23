@@ -20,14 +20,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
         public override void Validate()
         {
-            var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.Manager).FirstOrDefault();
-            if (user == null)
+            if (string.IsNullOrEmpty(Entity.Manager) == false)
             {
-                MSD.AddModelError("Entity.Manager", Localizer["Sys.CannotFindUser", Entity.Manager]);
+                var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.Manager).FirstOrDefault();
+                if (user == null)
+                {
+                    MSD.AddModelError("Entity.Manager", Localizer["Sys.CannotFindUser", Entity.Manager]);
+                }
             }
             base.Validate();
         }
 
+        public override void DoAdd()
+        {
+            base.DoAdd();
+            Cache.Delete(nameof(GlobalData.AllGroups));
+        }
 
         public override void DoEdit(bool updateAllFields = false)
         {
@@ -37,10 +45,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             }
 
             base.DoEdit(updateAllFields);
+            Cache.Delete(nameof(GlobalData.AllGroups));
         }
 
         public override async Task DoDeleteAsync()
         {
+            Cache.Delete(nameof(GlobalData.AllGroups));
             using (var tran = DC.BeginTransaction())
             {
                 try

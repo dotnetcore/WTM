@@ -174,7 +174,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     model.IgnorePrivillege = true;
                 }
-                if(mainhostonlyattr.Length > 0)
+                if (mainhostonlyattr.Length > 0)
                 {
                     model.MainHostOnly = true;
                 }
@@ -232,7 +232,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             action.IgnorePrivillege = true;
                         }
-                        if(mainhostonlyattr2.Length > 0)
+                        if (mainhostonlyattr2.Length > 0)
                         {
                             action.MainHostOnly = true;
                         }
@@ -777,7 +777,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var tenants = new List<FrameworkTenant>();
                 var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
                 var tenantsCacheKey = nameof(GlobalData.AllTenant);
-                if (cache.TryGetValue(tenantsCacheKey, out  tenants) == false)
+                if (cache.TryGetValue(tenantsCacheKey, out tenants) == false)
                 {
                     if (configs?.EnableTenant == true)
                     {
@@ -786,14 +786,36 @@ namespace WalkingTec.Mvvm.Mvc
                             tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
                         }
                     }
-                    cache.Add(tenantsCacheKey, tenants?? new List<FrameworkTenant>(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
+                    cache.Add(tenantsCacheKey, tenants ?? new List<FrameworkTenant>(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                 }
                 return tenants;
             });
-
+            gd.SetGroupGetFunc(() =>
+            {
+                var groups = new List<SimpleGroup>();
+                var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
+                var groupsCacheKey = nameof(GlobalData.AllGroups);
+                if (cache.TryGetValue(groupsCacheKey, out groups) == false)
+                {
+                    using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
+                    {
+                        groups = dc.Set<FrameworkGroup>().IgnoreQueryFilters().Select(x => new SimpleGroup
+                        {
+                            ID = x.ID,
+                            GroupCode = x.GroupCode,
+                            GroupName = x.GroupName,
+                            Manager = x.Manager,
+                            ParentId = x.ParentId,
+                            Tenant = x.TenantCode
+                        }).ToList();
+                    }
+                    cache.Add(groupsCacheKey, groups ?? new List<SimpleGroup>(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
+                }
+                return groups;
+            });
             foreach (var m in gd.AllModule)
             {
-                if(isspa == false && m.IsApi == true)
+                if (isspa == false && m.IsApi == true)
                 {
                     if (m.ModuleName.ToLower().EndsWith("api") == false)
                     {
@@ -832,7 +854,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
 
-            gd.AllAccessUrls = gd.AllModule.SelectMany(x=>x.Actions).Where(x=>x.IgnorePrivillege==true || x.Module.IgnorePrivillege == true).Select(x=>x.Url).ToList();
+            gd.AllAccessUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true).Select(x => x.Url).ToList();
             gd.AllHostOnlyUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.MainHostOnly == true || x.Module.MainHostOnly == true).Select(x => x.Url).ToList();
             WtmFileProvider.Init(configs, gd);
             using (var scope = app.ApplicationServices.CreateScope())

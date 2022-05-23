@@ -75,8 +75,21 @@ namespace WalkingTec.Mvvm.Core
                 // 初始化用户信息
                 var roleIDs = userInfo.UserRoles.Select(x => x.RoleCode).ToList();
                 var groupIDs = userInfo.UserGroups.Select(x => x.GroupCode).ToList();
-
-
+                var groups = context.GlobaInfo.AllGroups.Where(x => groupIDs.Contains(x.GroupCode) && x.Tenant == userInfo.user.TenantCode).ToList();
+                var allgroups = groups.ToList();
+                for (int i = 0; i < allgroups.Count; i++)
+                {
+                    var group = allgroups[i];
+                    var children = context.GlobaInfo.AllGroups.Where(x => x.ParentId == group.ID).ToList();
+                    foreach (var child in children)
+                    {
+                        if(allgroups.Any(x=>x.ID == child.ID) == false)
+                        {
+                            allgroups.Add(child);
+                        }
+                    }
+                }
+                groupIDs = allgroups.Select(x => x.GroupCode).ToList();
                 var dataPris = await DC.Set<DataPrivilege>().AsNoTracking()
                                 .Where(x => x.UserCode == userInfo.user.ITCode || (x.GroupCode != null && groupIDs.Contains(x.GroupCode)))
                                 .Distinct()
@@ -90,7 +103,6 @@ namespace WalkingTec.Mvvm.Core
                     .ToListAsync();
 
                 var roles = DC.Set<FrameworkRole>().AsNoTracking().Where(x => roleIDs.Contains(x.RoleCode)).ToList();
-                var groups = DC.Set<FrameworkGroup>().AsNoTracking().Where(x => groupIDs.Contains(x.GroupCode)).ToList();
                 this.ITCode = userInfo.user.ITCode;
                 if (string.IsNullOrEmpty(this.Name))
                 {
@@ -109,7 +121,7 @@ namespace WalkingTec.Mvvm.Core
                     Attributes = new Dictionary<string, object>();
                 }
                 this.Roles = roles.Select(x => new SimpleRole { ID = x.ID, RoleCode = x.RoleCode, RoleName = x.RoleName }).ToList();
-                this.Groups = groups.Select(x => new SimpleGroup { ID = x.ID, GroupCode = x.GroupCode, GroupName = x.GroupName }).ToList();
+                this.Groups = groups;
                 this.DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserCode = x.UserCode, GroupCode = x.GroupCode }).ToList();
                 this.FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, RoleCode = x.RoleCode, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList();
             }

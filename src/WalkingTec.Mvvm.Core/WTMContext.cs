@@ -379,8 +379,8 @@ namespace WalkingTec.Mvvm.Core
                 if (rv != null)
                 {
                     var roleIDs = rv.Roles.Select(x => x.RoleCode).ToList();
+                    ProcessTreeGroup(rv.Groups);
                     var groupIDs = rv.Groups.Select(x => x.GroupCode).ToList();
-
 
                     var dataPris = DC.Set<DataPrivilege>().AsNoTracking()
                                     .Where(x => x.UserCode == rv.ITCode || (x.GroupCode != null && groupIDs.Contains(x.GroupCode)))
@@ -780,9 +780,19 @@ params string[] groupcode)
                         }));
                     }
                 }
-
             }
         }
+
+        public void ProcessTreeGroup(List<SimpleGroup> groups)
+        {
+            for(int i = 0; i < groups.Count; i++)
+            {
+                var group = groups[i];
+                var children = this.GlobaInfo.AllGroups.Where(x => x.ParentId == group.ID).ToList();
+                groups.AddRange(children);
+            }
+        }
+
         private IEnumerable<string> GetSubIds(IDataPrivilege dp, List<string> p_id, Type modelType, List<string> skipids)
         {
             var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();

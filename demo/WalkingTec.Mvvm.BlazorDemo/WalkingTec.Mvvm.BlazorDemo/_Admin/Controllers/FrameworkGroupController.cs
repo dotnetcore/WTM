@@ -116,6 +116,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 DC.Set<FrameworkUserGroup>().RemoveRange(gr);
                 DC.SaveChanges();
                 await Wtm.RemoveUserCacheByGroup(GroupCode.ToArray());
+                Cache.Delete(nameof(GlobalData.AllGroups));
                 return Ok(ids.Count());
             }
         }
@@ -169,6 +170,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
+                Cache.Delete(nameof(GlobalData.AllGroups));
                 return Ok(vm.EntityList.Count);
             }
         }

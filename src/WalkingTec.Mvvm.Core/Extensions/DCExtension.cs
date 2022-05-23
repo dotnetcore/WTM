@@ -65,10 +65,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //}
 
             //处理后面要使用的expression
-            //if (valueField == null)
-            //{
-            valueField = x => x.GetID().ToString();
-            //}
+            if (valueField == null)
+            {
+                valueField = x => x.GetID().ToString();
+            }
+            Expression<Func<T,string>> idfield = x => x.GetID().ToString();
             Expression<Func<T, string>> parentField = x => x.GetParentID().ToString();
 
             //定义PE
@@ -89,6 +90,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //绑定ParentId字段，形成类似 Value = valueField 的表达式
             var parentMI = typeof(TreeSelectListItem).GetMember("ParentId")[0];
             MemberBinding parentBind = Expression.Bind(parentMI, cp.Change(parentField.Body, pe));
+            //绑定d字段，形成类似 Value = valueField 的表达式
+            var IdMI = typeof(TreeSelectListItem).GetMember("Id")[0];
+            MemberBinding idBind = Expression.Bind(IdMI, cp.Change(idfield.Body, pe));
 
             //绑定Url字段，形成类似 Value = valueField 的表达式
             MemberBinding urlBind = null;
@@ -139,7 +143,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
 
             //合并创建新类和绑定字段的表达式，形成类似 new SimpleTextAndValue{ Text = textField, Value = valueField} 的表达式
-            MemberInitExpression init = Expression.MemberInit(newItem, textBind, valueBind, iconBind, parentBind, urlBind, tagBind, expandBind);
+            MemberInitExpression init = Expression.MemberInit(newItem, textBind, valueBind, iconBind, parentBind, urlBind, tagBind, expandBind,idBind);
 
             //将最终形成的表达式转化为Lambda，形成类似 x=> new SimpleTextAndValue { Text = x.textField, Value = x.valueField} 的表达式
             var lambda = Expression.Lambda<Func<T, TreeSelectListItem>>(init, pe);
@@ -160,7 +164,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
             rv.ForEach(x =>
             {
-                var c = rv.Where(y => y.ParentId == x.Value.ToString()).ToList();
+                var c = rv.Where(y => y.ParentId == x.Id.ToString()).ToList();
                 x.Children = c;
                 toDel.AddRange(c);
             });

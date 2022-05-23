@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         public List<ComboSelectListItem> AllRoles { get; set; }
 
         [JsonIgnore]
-        public List<ComboSelectListItem> AllGroups { get; set; }
+        public List<TreeSelectListItem> AllGroups { get; set; }
         [Display(Name = "_Admin.Role")]
         public List<string> SelectedRolesCodes { get; set; }
         [Display(Name = "_Admin.Group")]
@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         protected override void InitVM()
         {
             AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, y => y.RoleName, y => y.RoleCode);
-            AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, y => y.GroupName, y => y.GroupCode);
+            AllGroups = DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, y => y.GroupName, y => y.GroupCode);
             SelectedRolesCodes = DC.Set<FrameworkUserRole>().Where(x => x.UserCode == Entity.ITCode).Select(x => x.RoleCode).ToList();
             SelectedGroupCodes = DC.Set<FrameworkUserGroup>().Where(x => x.UserCode == Entity.ITCode).Select(x => x.GroupCode).ToList();
         }
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         protected override void ReInitVM()
         {
             AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, y => y.RoleName, y => y.RoleCode);
-            AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, y => y.GroupName, y => y.GroupCode);
+            AllGroups = DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, y => y.GroupName, y => y.GroupCode);
         }
 
         public override async Task DoAddAsync()
