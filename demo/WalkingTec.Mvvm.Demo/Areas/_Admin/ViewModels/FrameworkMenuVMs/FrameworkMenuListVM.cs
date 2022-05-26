@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 case ListVMSearchModeEnum.Custom2:
                     rv.AddRange(new GridColumn<FrameworkMenu_ListView>[] {
                         this.MakeGridHeader(x => x.PageName,200),
-                         this.MakeGridHeader(x => x.ParentID).SetHeader(Localizer["Sys.Operation"]).SetFormat((item, cell) => GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
+                         this.MakeGridHeader(x => x.ParentId).SetHeader(Localizer["Sys.Operation"]).SetFormat((item, cell) => GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
                    });
                     break;
                 default:
@@ -144,10 +144,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 for(int i = 0; i < topdata.Count; i++)
                 {
-                    var hostonly = Wtm.GlobaInfo.AllHostOnlyUrls;
+                    var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
                     foreach (var au in hostonly)
                     {
-                        if (new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
+                        if (topdata[i].Url != null && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
                         {
                             topdata.RemoveAt(i);
                             i--;
@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         ActionName = y.ActionName
                     }),
                     ExtraOrder = order++,
-                    ParentID = x.ParentId,
+                    ParentId = x.ParentId,
                     Parent = x.Parent,
                     IsInside = x.IsInside,
                     HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false,
@@ -203,8 +203,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     IsPublic = x.IsPublic,
                     DisplayOrder = x.DisplayOrder,
                     ExtraOrder = order++,
-
-                    ParentID = x.ParentId,
+                    ParentId = x.ParentId,
                     Icon = x.Icon,
                     HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
                 }).OrderBy(x => x.ExtraOrder);
@@ -216,48 +215,4 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
     }
 
-    public class FrameworkMenu_ListView : BasePoco
-    {
-        [Display(Name = "_Admin.PageName")]
-        public string PageName { get; set; }
-
-        [Display(Name = "Codegen.ModuleName")]
-        public string ModuleName { get; set; }
-
-        [Display(Name = "_Admin.ActionName")]
-        public string ActionName { get; set; }
-
-        [Display(Name = "_Admin.ShowOnMenu")]
-        public bool? ShowOnMenu { get; set; }
-
-        [Display(Name = "_Admin.FolderOnly")]
-        public bool? FolderOnly { get; set; }
-
-        [Display(Name = "_Admin.IsPublic")]
-        public bool? IsPublic { get; set; }
-
-        [Display(Name = "_Admin.DisplayOrder")]
-        public int? DisplayOrder { get; set; }
-
-        [Display(Name = "_Admin.Icon")]
-        public string Icon { get; set; }
-
-        public bool Allowed { get; set; }
-
-        public bool Denied { get; set; }
-
-        public bool HasChild { get; set; }
-
-        public string IconClass { get; set; }
-
-        public IEnumerable<FrameworkMenu_ListView> Children { get; set; }
-
-        public FrameworkMenu Parent { get; set; }
-
-        public Guid? ParentID { get; set; }
-
-        public int ExtraOrder { get; set; }
-
-        public bool? IsInside { get; set; }
-    }
 }

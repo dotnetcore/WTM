@@ -135,12 +135,42 @@ namespace WalkingTec.Mvvm.Mvc
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
             {
                 RedoUpdateModel(listVM);
-                var rv = new ContentResult
+                string url = "";
+                if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
                 {
-                    ContentType = "application/json",
-                    Content = $@"{{""Data"":{listVM.GetDataJson()},""Count"":{listVM.Searcher.Count},""Msg"":""success"",""Code"":{StatusCodes.Status200OK}}}"
+                    Type[] checktypes = new Type[3] { typeof(FrameworkUserBase), typeof(FrameworkGroup), typeof(FrameworkRole) };
+                    if (typeof(FrameworkUserBase).IsAssignableFrom(listVM.ModelType))
+                    {
+                        url = "/api/_frameworkuser/search";
+                    }
+                    else if (typeof(FrameworkGroup).IsAssignableFrom(listVM.ModelType))
+                    {
+                        url = "/api/_frameworkgroup/search";
+                    }
+                    else if (typeof(FrameworkRole).IsAssignableFrom(listVM.ModelType))
+                    {
+                        url = "/api/_frameworkrole/search";
+                    }                    
+                }
+                if(string.IsNullOrEmpty(url) == false)
+                {
+                    var result = Wtm.CallAPI<string>("mainhost", url, HttpMethodEnum.POST, listVM.Searcher, 10).Result;
+                    var rv = new ContentResult
+                    {
+                        ContentType = "application/json",
+                        Content = result.Data
                 };
-                return rv;
+                    return rv;
+                }
+                else
+                {
+                    var rv = new ContentResult
+                    {
+                        ContentType = "application/json",
+                        Content = $@"{{""Data"":{listVM.GetDataJson()},""Count"":{listVM.Searcher.Count},""Msg"":""success"",""Code"":{StatusCodes.Status200OK}}}"
+                    };
+                    return rv;
+                }
             }
             else
             {

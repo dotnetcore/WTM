@@ -193,9 +193,9 @@
 
     public async Task DeleteToken()
     {
+        var dir = await wtmblazor.Api.CallAPI("/api/_account/logout");
         await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmtoken");
         await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmrefreshtoken");
-        var dir = await wtmblazor.Api.CallAPI("/api/_account/logout");
         await JSRuntime.InvokeVoidAsync("urlFuncs.redirect", dir.Data);
     }
 

@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult Search(FrameworkRoleSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm).Result;
             }

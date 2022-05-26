@@ -12,13 +12,19 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public static class RequestExtension
     {
-        public static async Task<IActionResult> RedirectCall(this HttpRequest request, WTMContext wtm)
+        public static async Task<IActionResult> RedirectCall(this HttpRequest baserequest, WTMContext wtm, string url = null)
         {
+            var request = baserequest ?? wtm.HttpContext.Request;
             HttpMethodEnum method = Enum.Parse<HttpMethodEnum>(request.Method.ToString());
+            if (string.IsNullOrEmpty(url))
+            {
+                url = request.Path.ToString();
+            }
+            url += request.QueryString;
             ApiResult<string> rv = null;
             if (method == HttpMethodEnum.GET)
             {
-                rv = await wtm.CallAPI("mainhost", request.Path.ToString());
+                rv = await wtm.CallAPI("mainhost", url);
             }
             else
             {
@@ -29,7 +35,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         data.Add(item.Key, item.Value);
                     }
-                    rv = await wtm.CallAPI<string>("mainhost", request.Path.ToString(), method, data);
+                    rv = await wtm.CallAPI<string>("mainhost", url, method, data);
                 }
                 else
                 {
@@ -39,7 +45,7 @@ namespace WalkingTec.Mvvm.Mvc
                         s = request.HttpContext.Items["DONOTUSE_REQUESTBODY"].ToString();
                     }
                     HttpContent data = new StringContent(s, System.Text.Encoding.UTF8, "application/json");
-                    rv = await wtm.CallAPI<string>("mainhost", request.Path.ToString(), method, data);
+                    rv = await wtm.CallAPI<string>("mainhost", url, method, data);
                 }
             }
             return rv.ToActionResult();

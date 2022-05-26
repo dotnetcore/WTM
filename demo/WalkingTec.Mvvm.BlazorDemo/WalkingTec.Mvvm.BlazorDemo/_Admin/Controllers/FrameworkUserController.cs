@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult Search(FrameworkUserSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm).Result;
             }
@@ -196,9 +196,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         [AllRights]
         public IActionResult GetFrameworkRoles()
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
             {
-                return Request.RedirectCall(Wtm).Result;
+                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkRoles").Result;
             }
             return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x=>x.RoleCode));
         }
@@ -208,9 +208,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         [AllRights]
         public IActionResult GetFrameworkGroups()
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
             {
-                return Request.RedirectCall(Wtm).Result;
+                return Request.RedirectCall(Wtm,"/api/_frameworkuser/GetFrameworkGroups").Result;
             }
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm,  x => x.GroupName, x=>x.GroupCode));
         }
@@ -218,9 +218,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetUserById")]
         public IActionResult GetUserById(string keywords)
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
             {
-                return Request.RedirectCall(Wtm).Result;
+                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserById").Result;
             }
             var users = DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
             return Ok(users);

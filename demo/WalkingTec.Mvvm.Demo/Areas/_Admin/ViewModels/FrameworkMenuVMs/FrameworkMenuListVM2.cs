@@ -1,6 +1,9 @@
 // WTM默认页面 Wtm buidin page
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -25,7 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.DisplayOrder, 60),
                         this.MakeGridHeader(x => x.Icon, 100),
                         this.MakeGridHeader(x => x.Children, 100),
-                        this.MakeGridHeader(x=>x.ParentID).SetHide(),
+                        this.MakeGridHeader(x=>x.ParentId).SetHide(),
                         this.MakeGridHeaderAction(width: 290)
                     });
             return rv;
@@ -50,6 +53,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     item.ModuleName = Localizer[item.ModuleName];
                 }
             }
+            if (Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.TenantCode != null)
+            {
+                for (int i = 0; i < topdata.Count; i++)
+                {
+                    var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
+                    foreach (var au in hostonly)
+                    {
+                        if (topdata[i].Url != null && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
+                        {
+                            topdata.RemoveAt(i);
+                            i--;
+                        }
+                    }
+                }
+            }
+
             int order = 0;
             var data2 = topdata.Select(x => new FrameworkMenu_ListView
             {
@@ -62,16 +81,57 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 IsPublic = x.IsPublic,
                 DisplayOrder = x.DisplayOrder,
                 ExtraOrder = order++,
-                ParentID = x.ParentId,
+                ParentId = x.ParentId,
                 Icon = x.Icon,
                 HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
             }).OrderBy(x => x.ExtraOrder).ToList();
 
             return data2.AsQueryable() as IOrderedQueryable<FrameworkMenu_ListView>;
         }
+    }
+    public class FrameworkMenu_ListView : BasePoco
+    {
+        [Display(Name = "_Admin.PageName")]
+        public string PageName { get; set; }
 
+        [Display(Name = "Codegen.ModuleName")]
+        public string ModuleName { get; set; }
 
+        [Display(Name = "_Admin.ActionName")]
+        public string ActionName { get; set; }
 
+        [Display(Name = "_Admin.ShowOnMenu")]
+        public bool? ShowOnMenu { get; set; }
+
+        [Display(Name = "_Admin.FolderOnly")]
+        public bool? FolderOnly { get; set; }
+
+        [Display(Name = "_Admin.IsPublic")]
+        public bool? IsPublic { get; set; }
+
+        [Display(Name = "_Admin.DisplayOrder")]
+        public int? DisplayOrder { get; set; }
+
+        [Display(Name = "_Admin.Icon")]
+        public string Icon { get; set; }
+
+        public bool Allowed { get; set; }
+
+        public bool Denied { get; set; }
+
+        public bool HasChild { get; set; }
+
+        public string IconClass { get; set; }
+
+        public IEnumerable<FrameworkMenu_ListView> Children { get; set; }
+
+        public FrameworkMenu Parent { get; set; }
+
+        public Guid? ParentId { get; set; }
+
+        public int ExtraOrder { get; set; }
+
+        public bool? IsInside { get; set; }
     }
 
 }

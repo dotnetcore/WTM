@@ -1000,6 +1000,7 @@ namespace WalkingTec.Mvvm.Core
                     if (typeof(ITenant).IsAssignableFrom(typeof(TModel)) && props.Any(x => x.Name.ToLower() == "tenantcode")==false && Wtm?.ConfigInfo.EnableTenant==true && group.UseTenant == true)
                     {
                         ITenant ent = Entity as ITenant;
+                        ent.TenantCode = LoginUserInfo.CurrentTenant;
                         var f = new DuplicatedField<TModel>(x => (x as ITenant).TenantCode);
                         Expression exp = f.GetExpression(Entity, para);
                         conditions.Add(exp);

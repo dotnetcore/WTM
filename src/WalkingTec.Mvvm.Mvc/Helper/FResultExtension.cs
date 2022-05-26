@@ -78,6 +78,18 @@ namespace WalkingTec.Mvvm.Mvc
             return self;
         }
 
+        /// <summary>
+        /// 跳转浏览器页面
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        public static FResult RedirectUrl(this FResult self, string url)
+        {
+            self.ContentBuilder.Append($"window.location.url='{url}'");
+            return self;
+        }
+
+
         public static FResult AddCustomScript(this FResult self, string script)
         {
             self.ContentBuilder.Append(script);

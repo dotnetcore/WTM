@@ -3,8 +3,6 @@
 @inherits BasePage
 @attribute [ActionDescription("MenuKey.FrameworkTenant", "WalkingTec.Mvvm.Admin.Api,FrameworkTenant")]
 
-@if (WtmBlazor.ConfigInfo.HasMainHost == false)
-{
     <WTSearchPanel OnSearch="@DoSearch">
         <ValidateForm Model="@SearchModel">
             <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Inline">
@@ -14,8 +12,6 @@
             </Row>
         </ValidateForm>
     </WTSearchPanel>
-
-
 
     <Table @ref="dataTable" TItem="FrameworkTenant_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
        ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;">
@@ -67,11 +63,7 @@
             }
         </RowButtonTemplate>
     </Table>
-}
-else
-{
-        <div>@WtmBlazor.Localizer["_Admin.HasMainHost"]</div>
-}
+
 @code {
 
     private FrameworkTenantSearcher SearchModel = new FrameworkTenantSearcher();

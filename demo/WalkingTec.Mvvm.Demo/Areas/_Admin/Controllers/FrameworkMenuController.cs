@@ -185,6 +185,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [AllRights]
         public JsonResult GetActionsByModelId(string Id)
         {
+            if (string.IsNullOrEmpty(Id))
+            {
+                return JsonMore(new List<ComboSelectListItem>());
+            }
             var modules = Wtm.GlobaInfo.AllModule;
             var m =Utils.ResetModule(modules);
 

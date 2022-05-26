@@ -717,6 +717,7 @@ namespace WalkingTec.Mvvm.Mvc
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
             var localfactory = app.ApplicationServices.GetRequiredService<IStringLocalizerFactory>();
             var lop = app.ApplicationServices.GetService<WtmLocalizationOption>();
+
             //获取所有程序集
             //var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
             //if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
@@ -777,17 +778,17 @@ namespace WalkingTec.Mvvm.Mvc
                 var tenants = new List<FrameworkTenant>();
                 var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
                 var tenantsCacheKey = nameof(GlobalData.AllTenant);
-                if (cache.TryGetValue(tenantsCacheKey, out tenants) == false)
-                {
-                    if (configs?.EnableTenant == true)
+                    if (cache.TryGetValue(tenantsCacheKey, out tenants) == false)
                     {
-                        using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
+                        if (configs?.EnableTenant == true)
                         {
-                            tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
+                            using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
+                            {
+                                tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
+                            }
                         }
+                        cache.Add(tenantsCacheKey, tenants ?? new List<FrameworkTenant>(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                     }
-                    cache.Add(tenantsCacheKey, tenants ?? new List<FrameworkTenant>(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
-                }
                 return tenants;
             });
             gd.SetGroupGetFunc(() =>
@@ -855,7 +856,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
 
             gd.AllAccessUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true).Select(x => x.Url).ToList();
-            gd.AllHostOnlyUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.MainHostOnly == true || x.Module.MainHostOnly == true).Select(x => x.Url).ToList();
+            gd.AllMainTenantOnlyUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.MainHostOnly == true || x.Module.MainHostOnly == true).Select(x => x.Url).ToList();
             WtmFileProvider.Init(configs, gd);
             using (var scope = app.ApplicationServices.CreateScope())
             {

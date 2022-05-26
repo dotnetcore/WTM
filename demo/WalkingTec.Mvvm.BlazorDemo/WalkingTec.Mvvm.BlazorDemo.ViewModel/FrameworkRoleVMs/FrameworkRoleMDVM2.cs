@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         protected override FrameworkRole GetById(object Id)
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
             {
                 return Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}").Result.Data.Entity;
             }
@@ -46,12 +46,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
             if (Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.TenantCode != null)
             {
+                var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
                 for (int i = 0; i < topdata.Count; i++)
                 {
-                    var hostonly = Wtm.GlobaInfo.AllHostOnlyUrls;
                     foreach (var au in hostonly)
                     {
-                        if (new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
+                        if (topdata[i].Url != null && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
                         {
                             topdata.RemoveAt(i);
                             i--;

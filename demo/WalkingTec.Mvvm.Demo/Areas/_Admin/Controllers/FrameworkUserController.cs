@@ -8,6 +8,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
@@ -18,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Search", IsPage = true)]
         public ActionResult Index()
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -278,9 +279,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             userapi.Wtm = Wtm;
             var rv = userapi.GetUserById(keywords) as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
-            if(rv != null && rv.Value is List<ComboSelectListItem> ll)
+            if(rv != null && rv.Value != null)
             {
-                users = ll;
+                users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
             }
             return JsonMore(users);
 
@@ -300,9 +301,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             userapi.Wtm = Wtm;
             var rv = userapi.GetFrameworkRoles() as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
-            if (rv != null && rv.Value is List<ComboSelectListItem> ll)
+            if (rv != null && rv.Value != null)
             {
-                users = ll;
+                users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
             }
             return JsonMore(users);
         }
@@ -314,9 +315,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             userapi.Wtm = Wtm;
             var rv = userapi.GetFrameworkGroups() as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
-            if (rv != null && rv.Value is List<ComboSelectListItem> ll)
+            if (rv != null && rv.Value != null)
             {
-                users = ll;
+                users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
             }
             return JsonMore(users);
         }

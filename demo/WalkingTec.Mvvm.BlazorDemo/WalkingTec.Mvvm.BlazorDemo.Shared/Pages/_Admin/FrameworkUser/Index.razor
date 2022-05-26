@@ -3,7 +3,7 @@
 @inherits BasePage
 @attribute [ActionDescription("MenuKey.UserManagement", "WalkingTec.Mvvm.Admin.Api,FrameworkUser")]
 
-@if (WtmBlazor.ConfigInfo.HasMainHost == false)
+@if (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null)
 {
     <WTSearchPanel OnSearch="@DoSearch">
         <ValidateForm Model="@SearchModel">

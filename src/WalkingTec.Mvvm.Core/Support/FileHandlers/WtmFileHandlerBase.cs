@@ -11,13 +11,10 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
 {
     public abstract class WtmFileHandlerBase : IWtmFileHandler
     {
-        protected Configs _config;
-        protected IDataContext _dc;
-
-        public WtmFileHandlerBase(Configs config, IDataContext dc)
+        protected WTMContext _wtm;
+        public WtmFileHandlerBase(WTMContext wtm)
         {
-            _config = config;
-            _dc = dc;
+            _wtm = wtm;
         }
 
 

@@ -91,6 +91,14 @@ namespace WalkingTec.Mvvm.Core
             get
             {
                 _mainHost = Domains?.Where(x => x.Key.ToLower() == "mainhost").Select(x => x.Value.Address).FirstOrDefault();
+                if(_mainHost != null)
+                {
+                    _mainHost = _mainHost.Trim();
+                    if(_mainHost.EndsWith('/') || _mainHost.EndsWith('\\'))
+                    {
+                        _mainHost = _mainHost[0..^1];
+                    }
+                }
                 return _mainHost;
             }
         }

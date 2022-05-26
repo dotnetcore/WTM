@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Core
         /// 可访问的url地址
         /// </summary>
         public List<string> AllAccessUrls { get; set; }
-        public List<string> AllHostOnlyUrls { get; set; }
+        public List<string> AllMainTenantOnlyUrls { get; set; }
         public Type CustomUserType { get; set; }
 
         public bool IsSpa { get; set; }

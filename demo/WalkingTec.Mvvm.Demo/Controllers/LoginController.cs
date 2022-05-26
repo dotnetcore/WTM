@@ -90,6 +90,11 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [Public]
         public IActionResult Reg()
         {
+            if (ConfigInfo.HasMainHost)
+            {
+                
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<RegVM>();
             return PartialView(vm);
         }
@@ -123,7 +128,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             await Wtm.RemoveUserCache(Wtm.LoginUserInfo.ITCode);
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (ConfigInfo.HasMainHost == false)
+            if (ConfigInfo.HasMainHost == false || Wtm.LoginUserInfo?.CurrentTenant != null)
             {
                 HttpContext.Response.Redirect("/");
             }
@@ -148,14 +153,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("ChangePassword")]
         public ActionResult ChangePassword(ChangePasswordVM vm)
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
             {
                 var result = Wtm.CallAPI<string>("mainhost", "/api/_account/ChangePassword", HttpMethodEnum.POST, vm, 10).Result;
-                if(result.StatusCode == System.Net.HttpStatusCode.OK)
+                if (result.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     return FFResult().CloseDialog().Alert(Localizer["Login.ChangePasswordSuccess"]);
                 }
-                else if(result.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                else if (result.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
                     ModelState.Clear();
                     foreach (var item in result.Errors.Form)
@@ -169,7 +174,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                     return PartialView(vm);
                 }
                 else
-                {                 
+                {
                     return FFResult().CloseDialog().Alert(Localizer["Sys.Error"]);
                 }
             }

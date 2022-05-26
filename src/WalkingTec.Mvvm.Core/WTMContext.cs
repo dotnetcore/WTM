@@ -479,7 +479,7 @@ namespace WalkingTec.Mvvm.Core
         public async Task RemoveUserCache(
             params string[] userIds)
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
             {
                 Dictionary<string, object> data = new Dictionary<string, object>();
                 for (int i = 0; i < userIds.Length; i++)
@@ -501,7 +501,7 @@ namespace WalkingTec.Mvvm.Core
         public async Task RemoveUserCacheByRole(
     params string[] rolecode)
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
             {
                 Dictionary<string, object> data = new Dictionary<string, object>();
                 for (int i = 0; i < rolecode.Length; i++)
@@ -524,7 +524,7 @@ namespace WalkingTec.Mvvm.Core
         public async Task RemoveUserCacheByGroup(
 params string[] groupcode)
         {
-            if (ConfigInfo.HasMainHost)
+            if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
             {
                 Dictionary<string, object> data = new Dictionary<string, object>();
                 for (int i = 0; i < groupcode.Length; i++)
@@ -622,7 +622,7 @@ params string[] groupcode)
             {
                 if (LoginUserInfo.TenantCode != null)
                 {
-                    var hostonly = _globaInfo.AllHostOnlyUrls;
+                    var hostonly = _globaInfo.AllMainTenantOnlyUrls;
                     foreach (var au in hostonly)
                     {
                         if (new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))

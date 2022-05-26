@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Helper
             {
                 var sql = $"DELETE FROM {this.Wtm.DC.GetTableName<PersistedGrant>()} WHERE Expiration<'{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
                 this.Wtm.DC.RunSQL(sql);
-                Wtm.DoLog("清理过期的refreshToken", ActionLogTypesEnum.Job);
+                Wtm.DoLog("清理过期的refreshToken", ActionLogTypesEnum.Job,"Wtm_System","RefreshJwt");
             }
             catch { }
             return Task.CompletedTask;
