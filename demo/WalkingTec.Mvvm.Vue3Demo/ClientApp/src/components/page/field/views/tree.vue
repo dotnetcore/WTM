@@ -36,7 +36,7 @@
                 valueList.push(that.getText(that.dataSource,item))
             })
 
-            return valueList.join("/")
+            return valueList.join(",")
           }else{
             return that.getText(that.dataSource,this.value)
           }
@@ -52,10 +52,6 @@
         set value(value) {
             this.lodash.set(this.formState, this._name, value);
         }
-        get selectedKeys() {
-            return ['08da3f88-57d7-4c97-8df6-84660246d901']
-        }
-
         fileList = [];
         filedata = [];
         async mounted() {
