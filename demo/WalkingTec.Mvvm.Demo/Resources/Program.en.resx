@@ -951,6 +951,9 @@
   <data name="_Admin.Tenant" xml:space="preserve">
     <value>Tenant</value>
   </data>
+  <data name="_Admin.TenantAllowed" xml:space="preserve">
+    <value>Tenant allowed</value>
+  </data>
   <data name="_Admin.TenantChoose" xml:space="preserve">
     <value>Select tenant</value>
   </data>

@@ -305,7 +305,8 @@ namespace WalkingTec.Mvvm.Core
             var acts = allModules.Where(x => x.ClassName == controllerName && (areaName == null || x.Area?.Prefix?.ToLower() == areaName.ToLower())).SelectMany(x => x.Actions).ToList();
             var act = acts.Where(x => x.MethodName == actionName).SingleOrDefault();
             var rest = acts.Where(x => x.MethodName != actionName && x.IgnorePrivillege == false).ToList();
-            FrameworkMenu menu = GetMenuFromAction(act, true, displayOrder);
+            bool allowtenant = controllerName != "FrameworkMenu";
+            FrameworkMenu menu = GetMenuFromAction(act, true, displayOrder, allowtenant);
             if(act.Module.IsApi == true)
             {
                 menu.ModuleName += "Api";
@@ -317,7 +318,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (rest[i] != null)
                     {
-                        var sub = GetMenuFromAction(rest[i], false, (i + 1));
+                        var sub = GetMenuFromAction(rest[i], false, (i + 1), allowtenant);
                         sub.PageName = pageKey;
                         if (rest[i].Module.IsApi == true)
                         {
@@ -332,6 +333,7 @@ namespace WalkingTec.Mvvm.Core
 
         private FrameworkMenu GetMenu2(List<SimpleModule> allModules, string controllerName, string pageKey, int displayOrder)
         {
+            bool allowtenant = controllerName != "FrameworkMenu";
             var acts = allModules.Where(x => (x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}")&& x.IsApi == true).SelectMany(x => x.Actions).ToList();
             var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
             SimpleAction act = null;
@@ -339,7 +341,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 act = acts[0];
             }
-            FrameworkMenu menu = GetMenuFromAction(act, true, displayOrder);
+            FrameworkMenu menu = GetMenuFromAction(act, true, displayOrder, allowtenant);
             if (menu != null)
             {
                 menu.PageName = pageKey;
@@ -351,7 +353,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (rest[i] != null)
                     {
-                        var sub = GetMenuFromAction(rest[i], false,  (i + 1));
+                        var sub = GetMenuFromAction(rest[i], false,  (i + 1), allowtenant);
                         sub.PageName = pageKey;
                         menu.Children.Add(sub);
                     }
@@ -360,7 +362,7 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
-        private FrameworkMenu GetMenuFromAction(SimpleAction act, bool isMainLink,  int displayOrder = 1)
+        private FrameworkMenu GetMenuFromAction(SimpleAction act, bool isMainLink,  int displayOrder = 1, bool allowtenant = true)
         {
             if (act == null)
             {
@@ -379,6 +381,7 @@ namespace WalkingTec.Mvvm.Core
                 IsPublic = false,
                 IsInside = true,
                 DisplayOrder = displayOrder,
+                TenantAllowed = allowtenant
             };
             if (isMainLink)
             {

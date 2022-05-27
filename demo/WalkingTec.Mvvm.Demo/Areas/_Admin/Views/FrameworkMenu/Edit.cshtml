@@ -21,7 +21,8 @@
     </wt:row>
     <wt:row items-per-row="ItemsPerRowEnum.Two">
         <wt:textbox field="Entity.DisplayOrder" />
-    </wt:row>
+   <wt:combobox field="Entity.TenantAllowed" />
+   </wt:row>
     <wt:row items-per-row="ItemsPerRowEnum.Two">
         <wt:combobox field="IconFont" items="@IconFontsHelper.IconFontItems" enable-search="true" link-field="IconFontItem" trigger-url="/_Admin/FrameworkMenu/GetIconFontItems" />
         <wt:combobox field="IconFontItem" items="IconSelectItems" enable-search="true" />
