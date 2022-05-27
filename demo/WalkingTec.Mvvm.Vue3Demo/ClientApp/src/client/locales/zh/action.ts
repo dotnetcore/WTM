@@ -28,4 +28,6 @@ export default {
     'action_user_logout': '注销',
     'action_sys_refreshMenu': '刷新菜单',
     'action_privilege': '分配权限',
+    "action_delete_in_sure":'确定',
+    "action_delete_in_cancel":'取消',
 };

@@ -8,19 +8,25 @@
       <WtmField entityKey="SchoolName" />
     </a-space>
     <a-space>
+      <WtmField entityKey="tree" />
+    </a-space>
+    <a-space>
+      <WtmField entityKey="ParentId" />
+    </a-space>
+    <a-space>
       <WtmField entityKey="SchoolType" />
       <!-- <WtmField entityKey="Remark" /> -->
     </a-space>
     <a-space>
       <WtmField entityKey="Photos"  /> 
     </a-space>
-    <a-space>
-      <WtmField entityKey="editor"  /> 
-    </a-space>
+   <!--  <a-space>
+     <WtmField entityKey="editor"  /> 
+   </a-space> -->
     <a-space>
       <WtmField entityKey="Files"  /> 
     </a-space>
-    <WtmField entityKey="Majors" :fieldProps="{ columnDefs, gridOptions }" debug />
+    <WtmField entityKey="Majors" :fieldProps="{ columnDefs, gridOptions }" debug  />
   </WtmDetails>
 </template>
 <script lang="ts">

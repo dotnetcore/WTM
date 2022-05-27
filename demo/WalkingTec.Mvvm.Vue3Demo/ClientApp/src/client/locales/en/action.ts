@@ -28,4 +28,6 @@ export default {
     'action_user_logout': 'Logout',
     'action_sys_refreshMenu': 'Refresh Menu',
     'action_privilege': 'Privilege',
+    "action_delete_in_sure":'OK',
+    "action_delete_in_cancel":'Cancel',
 };

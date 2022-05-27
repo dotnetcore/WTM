@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-popconfirm :title="title" @confirm="onConfirm">
+    <a-popconfirm :title="title" @confirm="onConfirm" :okText="okText" :cancelText="cancelText">
       <a-button class="w-grid-del" type="link">
         <i18n-t :keypath="$locales.action_delete" />
       </a-button>
@@ -19,6 +19,12 @@ export default class extends Vue {
   readonly params = {};
   get title() {
     return this.$t(this.$locales.action_deleteConfirm, { text: 1 });
+  }
+  get okText() {
+    return this.$t(this.$locales.action_delete_in_sure);
+  }
+  get cancelText() {
+    return this.$t(this.$locales.action_delete_in_cancel);
   }
   get successMsg() {
     return this.$t(this.$locales.tips_success_operation);

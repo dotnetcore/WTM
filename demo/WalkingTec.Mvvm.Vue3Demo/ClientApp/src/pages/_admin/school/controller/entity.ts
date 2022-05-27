@@ -1,7 +1,6 @@
-
 import { $i18n, FieldRequest, WTM_EntitiesField, WTM_ValueType } from '@/client';
 import { EnumLocaleLabel } from '../locales';
-
+import router from '@/router';
 /**
  * 页面实体
  */
@@ -10,12 +9,17 @@ class Entity {
      * 备注预留
      * @type {WTM_EntitiesField}
      * @memberof Entity
-     */
+    */
     readonly ID: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'ID'],
         // label 字段描述
         label: EnumLocaleLabel.ID,
+    }
+    readonly ParentId: WTM_EntitiesField = {
+        name: ['Entity', 'ParentId'],
+        label:'ParentId',
+        valueType: WTM_ValueType.select,
     }
     readonly SchoolCode: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
@@ -30,7 +34,6 @@ class Entity {
         // label 字段描述
         label: EnumLocaleLabel.SchoolName,
         rules: [{ required: true }]
-
     }
     readonly SchoolType: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
@@ -63,14 +66,16 @@ class Entity {
         fieldProps: { max: 9 }
     }
 
-    /*readonly Remark: WTM_EntitiesField = {
+    readonly tree: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'Remark'],
         // label 字段描述
-        label: EnumLocaleLabel.Remark,
-        rules: [{ required: true }]
-
-    }*/
+        label: 'tree',
+        request: async () => FieldRequest("/api/City/GetCitysTree"),
+        valueType: WTM_ValueType.tree,
+        fieldProps: { multiple:true }
+    }
+    
     readonly Majors: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'Majors'],

@@ -4,7 +4,6 @@ import { delay } from "rxjs/operators";
 import { Emit, Inject, Options, Prop, Vue } from "vue-property-decorator";
 @Options({ components: {} })
 export class FieldBasics extends Vue {
-
     // form label 没有 取 name 数据
     @Prop({ type: String }) readonly label;
     // form name

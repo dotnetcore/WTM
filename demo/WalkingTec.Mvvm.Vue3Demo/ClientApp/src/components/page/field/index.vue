@@ -43,10 +43,12 @@ import Field_upload from "./views/upload.vue";
 import Field_grid from "./views/grid/index.vue";
 import Field_editor from "./views/editor.vue";
 import Field_icons from "./views/icons.vue";
+import Field_tree from "./views/tree.vue";
 @Options({
   components: {
     Item,
     Field_text,
+    Field_tree,
     Field_password,
     Field_textarea,
     Field_rate,

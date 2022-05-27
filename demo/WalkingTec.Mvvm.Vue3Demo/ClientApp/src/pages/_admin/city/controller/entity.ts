@@ -29,20 +29,17 @@ class Entity {
         // label 字段描述
         label: EnumLocaleLabel.Level,
     }
+    
+
     readonly ParentId: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'ParentId'],
         // label 字段描述
-        label: EnumLocaleLabel.ParentId,
-        valueType: WTM_ValueType.select,
-        request: async () => FieldRequest('/api/City/GetCitys'),
-        // rules: [{ required: true }]
-    }
-    readonly ParentId_Filter: WTM_EntitiesField = {
-        // form 的 name 属性 解析为 Entity.ITCode
-        name: 'ParentId',
-        // label 字段描述
-        label: EnumLocaleLabel.ParentId,
+        label: 'ParentId',
+        request: async () => FieldRequest("/api/City/GetCitysTree"),
+        valueType: WTM_ValueType.tree,
+        //是否是多选  multiple为true多选  multiple为false或者不写fieldProps单选
+        //fieldProps: { multiple:true }
     }
 }
 export const PageEntity = new Entity()

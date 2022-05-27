@@ -66,6 +66,8 @@ export enum WTM_ValueType {
     grid = "grid",
     /** 富文本 */
     editor = "editor",
+    /** 树 */
+    tree= "tree",
     icons = "icons",
     // radioButton = "radioButton",
     // progress = "progress",

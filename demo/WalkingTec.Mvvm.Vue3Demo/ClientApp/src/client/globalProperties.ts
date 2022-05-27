@@ -59,7 +59,12 @@ AjaxBasics.onError = function (error) {
 export const $Ajax = new AjaxBasics({ target: $WtmConfig.target })
 export function FieldRequest(request: string | AjaxRequest) {
     return $Ajax.request<any>(request).pipe(map(value => {
-        return lodash.map(value, item => {
+        let result= value
+        let data = JSON.parse(JSON.stringify(result).replace(/"Value"/g,'"value"'))
+        data = JSON.parse(JSON.stringify(data).replace(/"Text"/g,'"title"'))
+        data = JSON.parse(JSON.stringify(data).replace(/"Children"/g,'"children"'))
+
+        return lodash.map(data, item => {
             return {
                 key: lodash.get(item, 'Value'),
                 label: lodash.get(item, 'Text'),
@@ -67,6 +72,8 @@ export function FieldRequest(request: string | AjaxRequest) {
                 ...item
             }
         })
+        
+        
     })).toPromise()
 }
 export const globalProperties = {
