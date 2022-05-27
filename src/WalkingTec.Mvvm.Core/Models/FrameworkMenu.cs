@@ -63,6 +63,10 @@ namespace WalkingTec.Mvvm.Core
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool? IsInside { get; set; }
 
+        [Display(Name = "_Admin.TenantAllowed")]
+        public bool? TenantAllowed { get; set; }
+
+
         /// <summary>
         /// Url
         /// </summary>
