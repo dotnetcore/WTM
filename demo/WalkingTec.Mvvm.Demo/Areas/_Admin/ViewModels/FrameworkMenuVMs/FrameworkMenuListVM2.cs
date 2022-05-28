@@ -53,21 +53,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     item.ModuleName = Localizer[item.ModuleName];
                 }
             }
-            if (Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.TenantCode != null)
-            {
-                for (int i = 0; i < topdata.Count; i++)
-                {
-                    var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
-                    foreach (var au in hostonly)
-                    {
-                        if (topdata[i].Url != null && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
-                        {
-                            topdata.RemoveAt(i);
-                            i--;
-                        }
-                    }
-                }
-            }
+
 
             int order = 0;
             var data2 = topdata.Select(x => new FrameworkMenu_ListView

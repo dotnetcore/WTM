@@ -56,14 +56,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
         private void TenantOperation()
         {
             List<FunctionPrivilege> fps = new List<FunctionPrivilege>();
-            using(var userdc = LoginUserInfo.GetUserDC(Wtm))
+            using (var userdc = LoginUserInfo.GetUserDC(Wtm))
             {
                 fps = userdc.Set<FunctionPrivilege>().AsNoTracking().Where(x => x.RoleCode == AdminRoleCode).ToList();
-                if(Entity.EnableSub == false)
+                List<Guid> tenantmenus = new List<Guid>();
+                using (var defaultdc = Wtm.CreateDC(false, "default", false))
                 {
-                    var tenantmenus = Wtm.GlobaInfo.AllMenus.Where(x=>x.Url != null && (x.Url.ToLower().Contains("frameworktenant") || x.Url.ToLower().Contains("frameworkmenu"))).Select(x=>x.ID).ToList();
-                    fps = fps.Where(x=>tenantmenus.Contains(x.MenuItemId) == false).ToList();
+                    tenantmenus = defaultdc.Set<FrameworkMenu>().Where(x => x.TenantAllowed == false || (x.Url.ToLower().Contains("frameworktenant") && Entity.EnableSub == false) || x.Url.ToLower().Contains("frameworkmenu")).Select(x => x.ID).ToList();
                 }
+                fps = fps.Where(x => tenantmenus.Contains(x.MenuItemId) == false).ToList();
 
                 if (Entity.IsUsingDB == false)
                 {
@@ -113,7 +114,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             }
             dc.SaveChanges();
             var toremove = dc.Set<FunctionPrivilege>().IgnoreQueryFilters().Where(x => x.RoleCode == "001" && x.TenantCode == Entity.TCode).ToList();
-            toremove.ForEach(x=> dc.DeleteEntity(x));
+            toremove.ForEach(x => dc.DeleteEntity(x));
             foreach (var item in fps)
             {
                 dc.Set<FunctionPrivilege>().Add(new FunctionPrivilege

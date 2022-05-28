@@ -40,25 +40,34 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             List<FrameworkMenu> data = new List<FrameworkMenu>();
             using (var maindc = Wtm.CreateDC(false, "default"))
             {
-                data = DC.Set<FrameworkMenu>().ToList();
+                data = maindc.Set<FrameworkMenu>().ToList();
             }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
 
-            if (Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.TenantCode != null)
+            if (Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.CurrentTenant != null)
             {
-                var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
+                var ct = Wtm.GlobaInfo.AllTenant.Where(x => x.TCode == LoginUserInfo.CurrentTenant).FirstOrDefault();
                 for (int i = 0; i < topdata.Count; i++)
                 {
+                    if (topdata[i].TenantAllowed == false || (topdata[i].Url != null && ct.EnableSub == false && topdata[i].Url.ToLower().Contains("frameworktenant")))
+                    {
+                        topdata.RemoveAt(i);
+                        i--;
+                        continue;
+                    }
+                    var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
                     foreach (var au in hostonly)
                     {
                         if (topdata[i].Url != null && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
                         {
                             topdata.RemoveAt(i);
                             i--;
+                            break;
                         }
                     }
                 }
             }
+
 
             int order = 0;
             var data2 = topdata.Select(x => new Page_View

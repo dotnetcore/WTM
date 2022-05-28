@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Core.Support.Json
         public bool? IsInside { get; set; }
         public bool FolderOnly { get; set; }
         public string MethodName { get; set; }
-
+        public bool? TenantAllowed { get; set; }
         public bool IsParentShowOnMenu(List<SimpleMenu> all)
         {
             if(this.ParentId == null)

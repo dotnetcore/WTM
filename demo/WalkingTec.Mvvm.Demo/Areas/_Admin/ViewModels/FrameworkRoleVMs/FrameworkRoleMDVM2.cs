@@ -40,18 +40,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             List<FrameworkMenu> data = new List<FrameworkMenu>();
             using (var maindc = Wtm.CreateDC(false, "default"))
             {
-                data = DC.Set<FrameworkMenu>().ToList();
+                data = maindc.Set<FrameworkMenu>().ToList();
             }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
 
-            if (Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.TenantCode != null)
+            if (Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.CurrentTenant != null)
             {
                 var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
                 for (int i = 0; i < topdata.Count; i++)
                 {
                     foreach (var au in hostonly)
                     {
-                        if (topdata[i].Url != null && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
+                        if (topdata[i].TenantAllowed == false || (topdata[i].Url != null && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url)))
                         {
                             topdata.RemoveAt(i);
                             i--;

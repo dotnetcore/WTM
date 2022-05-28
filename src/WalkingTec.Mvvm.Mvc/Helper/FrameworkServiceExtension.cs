@@ -90,7 +90,8 @@ namespace WalkingTec.Mvvm.Mvc
                     var modelmenu = new SimpleMenu
                     {
                         ID = Guid.NewGuid(),
-                        PageName = area ?? localizer["Sys.DefaultArea"]
+                        PageName = area ?? localizer["Sys.DefaultArea"],
+                        TenantAllowed = true,
                     };
                     menus.Add(modelmenu);
                     var cModules = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api" && x.Area?.AreaName == area).ToList();
@@ -105,7 +106,8 @@ namespace WalkingTec.Mvvm.Mvc
                                 ID = Guid.NewGuid(),
                                 ParentId = modelmenu.ID,
                                 PageName = item.ActionDes == null ? item.ModuleName : item.ActionDes.Description,
-                                Url = url
+                                Url = url,
+                                TenantAllowed = true
                             });
                         }
                     }
@@ -131,7 +133,8 @@ namespace WalkingTec.Mvvm.Mvc
                                     IsPublic = x.IsPublic,
                                     FolderOnly = x.FolderOnly,
                                     MethodName = x.MethodName,
-                                    IsInside = x.IsInside
+                                    IsInside = x.IsInside,
+                                    TenantAllowed = x.TenantAllowed
                                 })
                                 .ToList());
                     }

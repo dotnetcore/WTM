@@ -140,10 +140,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     item.ModuleName = Localizer[item.ModuleName];
                 }
             }
-           if(Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.TenantCode != null)
+           if(Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.CurrentTenant != null)
             {
+                var ct = Wtm.GlobaInfo.AllTenant.Where(x => x.TCode == LoginUserInfo.CurrentTenant).FirstOrDefault();
                 for(int i = 0; i < topdata.Count; i++)
                 {
+                    if (topdata[i].TenantAllowed == false || (topdata[i].Url != null && ct.EnableSub == false && topdata[i].Url.ToLower().Contains("frameworktenant")))
+                    {
+                        topdata.RemoveAt(i);
+                        i--;
+                        continue;
+                    }
                     var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
                     foreach (var au in hostonly)
                     {
@@ -151,6 +158,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         {
                             topdata.RemoveAt(i);
                             i--;
+                            break;
                         }
                     }
                 }

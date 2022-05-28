@@ -279,9 +279,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             userapi.Wtm = Wtm;
             var rv = userapi.GetUserById(keywords) as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
-            if(rv != null && rv.Value != null)
+            if (rv != null && rv.Value is string && rv.Value != null)
             {
                 users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
+            }
+            else if (rv != null && rv.Value is List<ComboSelectListItem> c)
+            {
+                users = c;
             }
             return JsonMore(users);
 
@@ -301,9 +305,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             userapi.Wtm = Wtm;
             var rv = userapi.GetFrameworkRoles() as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
-            if (rv != null && rv.Value != null)
+            if (rv != null && rv.Value is string && rv.Value != null)
             {
                 users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
+            }
+            else if (rv != null && rv.Value is List<ComboSelectListItem> c)
+            {
+                users = c;
             }
             return JsonMore(users);
         }
@@ -315,9 +323,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             userapi.Wtm = Wtm;
             var rv = userapi.GetFrameworkGroups() as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
-            if (rv != null && rv.Value != null)
+            if (rv != null && rv.Value is string && rv.Value != null)
             {
                 users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
+            }
+            else if(rv != null && rv.Value is List<ComboSelectListItem> c)
+            {
+                users = c;
             }
             return JsonMore(users);
         }

@@ -679,6 +679,10 @@ params string[] groupcode)
         /// <returns>true代表可以访问，false代表不能访问</returns>
         protected bool IsAccessable(SimpleMenu menu, List<SimpleMenu> menus)
         {
+            if(LoginUserInfo.CurrentTenant != null && menu.TenantAllowed == false)
+            {
+                return false;
+            }
             //寻找当前菜单的页面权限
             var find = LoginUserInfo?.FunctionPrivileges.Where(x => x.MenuItemId == menu.ID && x.Allowed == true).FirstOrDefault();
             //如果能找到直接对应的页面权限
@@ -1097,7 +1101,7 @@ params string[] groupcode)
                         }
                     }
                 }
-                if (domainName?.ToLower() == "mainhost" && string.IsNullOrEmpty(_loginUserInfo?.RemoteToken) == false)
+                if (string.IsNullOrEmpty(_loginUserInfo?.RemoteToken) == false)
                 {
                     if (client.DefaultRequestHeaders.Any(x => x.Key == "Authorization") == false)
                     {

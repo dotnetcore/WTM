@@ -211,10 +211,15 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFrameworkTenants")]
         [ActionDescription("GetTenants")]
         [AllRights]
-        public IActionResult GetFrameworkTenants()
+        public IActionResult GetFrameworkTenants(string parent)
         {
-            return Ok(Wtm.GlobaInfo.AllTenant.AsQueryable().GetSelectListItems(Wtm,x=>x.TName,x=>x.TCode));
+            if (parent == "")
+            {
+                parent = null;
+            }
+            return Ok(Wtm.GlobaInfo.AllTenant.AsQueryable().Where(x => x.TenantCode == parent).GetSelectListItems(Wtm, x => x.TName, x => x.TCode));
         }
+
 
 
         private bool CanUseTenant()
