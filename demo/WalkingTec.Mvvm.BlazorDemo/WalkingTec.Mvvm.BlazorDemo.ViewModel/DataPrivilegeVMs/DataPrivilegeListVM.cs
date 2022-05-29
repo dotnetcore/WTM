@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             IOrderedQueryable<DataPrivilege_ListView> query = null;
             if (Searcher.DpType == DpTypeEnum.User)
             {
-                query = DC.Set<DataPrivilege>()
+                query = DC.Set<DataPrivilege>().Where(x=>x.UserCode != null)
                     .CheckContain(Searcher.Name, x => x.UserCode)
                     .CheckContain(Searcher.TableName, x => x.TableName)
                     .GroupBy(x => new { x.UserCode, x.TableName }, x => x.RelateId)
@@ -102,7 +102,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             else
             {
-                query = DC.Set<DataPrivilege>()
+                query = DC.Set<DataPrivilege>().Where(x=>x.GroupCode != null)
                     .CheckContain(Searcher.Name, x => x.GroupCode)
                     .CheckContain(Searcher.TableName, x => x.TableName)
                        .GroupBy(x => new { x.GroupCode, x.TableName }, x => x.RelateId)

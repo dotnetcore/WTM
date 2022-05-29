@@ -124,11 +124,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                 }
                                 FrameworkMenu menu = new FrameworkMenu();
                                 menu.FolderOnly = false;
-                                menu.IsPublic = false;
+                                menu.IsPublic = Entity.IsPublic;
                                 menu.Parent = Entity;
                                 menu.ShowOnMenu = false;
                                 menu.DisplayOrder = order++;
-                                menu.Privileges = new List<FunctionPrivilege>();
                                 menu.IsInside = true;
                                 menu.Domain = Entity.Domain;
                                 menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -159,6 +158,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             if (FC.ContainsKey("Entity.Children") == false)
             {
                 FC.Add("Entity.Children", 0);
+                FC.Add("Entity.Children[0].IsPublic", 0);
+                FC.Add("Entity.Children[0].PageName", 0);
+                FC.Add("Entity.Children[0].ModuleName", 0);
+                FC.Add("Entity.Children[0].ActionName", 0);
+                FC.Add("Entity.Children[0].ClassName", 0);
+                FC.Add("Entity.Children[0].MethodName", 0);
+                FC.Add("Entity.Children[0].Url", 0);
             }
             base.DoEdit(updateAllFields);
             List<Guid> guids = new List<Guid>();
@@ -216,11 +222,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             {
                                 FrameworkMenu menu = new FrameworkMenu();
                                 menu.FolderOnly = false;
-                                menu.IsPublic = false;
+                                menu.IsPublic = Entity.IsPublic;
                                 menu.Parent = Entity;
                                 menu.ShowOnMenu = false;
                                 menu.DisplayOrder = order++;
-                                menu.Privileges = new List<FunctionPrivilege>();
                                 menu.IsInside = true;
                                 menu.Domain = Entity.Domain;
                                 menu.PageName = action.ActionDes?.Description ?? action.ActionName;

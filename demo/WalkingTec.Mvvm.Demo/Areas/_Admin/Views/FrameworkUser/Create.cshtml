@@ -18,8 +18,8 @@
           <wt:textbox field="Entity.Name" />
           <wt:upload field="Entity.PhotoId" upload-type="ImageFile" thumb-width="128" />
         </wt:row>
-        <wt:checkbox field="SelectedRolesCodes" items="AllRoles" />
-        <wt:tree field="SelectedGroupCodes" items="AllGroups" />
+        <wt:checkbox field="SelectedRolesCodes" item-url="/_admin/FrameworkUser/GetFrameworkRoles" />
+        <wt:tree field="SelectedGroupCodes" item-url="/_admin/FrameworkUser/GetFrameworkGroups" />
       </wt:tabcontent>
       <wt:tabcontent>
         <wt:row items-per-row="ItemsPerRowEnum.Two">

@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("{id}")]
         public FrameworkUserVM Get(Guid id)
         {
-            var vm = Wtm.CreateVM<FrameworkUserVM>(id, passInit:true);
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id);
             return vm;
         }
 
@@ -240,7 +240,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkGroups").Result;
             }
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+            return Ok(DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
 
 

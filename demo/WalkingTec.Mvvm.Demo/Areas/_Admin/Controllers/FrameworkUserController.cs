@@ -390,12 +390,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             WalkingTec.Mvvm.Admin.Api.FrameworkUserController userapi = new Mvvm.Admin.Api.FrameworkUserController();
             userapi.Wtm = Wtm;
             var rv = userapi.GetFrameworkGroups() as OkObjectResult;
-            List<ComboSelectListItem> users = new List<ComboSelectListItem>();
+            List<TreeSelectListItem> users = new List<TreeSelectListItem>();
             if (rv != null && rv.Value is string && rv.Value != null)
             {
-                users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
+                users = System.Text.Json.JsonSerializer.Deserialize<List<TreeSelectListItem>>(rv.Value.ToString());
             }
-            else if (rv != null && rv.Value is List<ComboSelectListItem> c)
+            else if (rv != null && rv.Value is List<TreeSelectListItem> c)
             {
                 users = c;
             }
