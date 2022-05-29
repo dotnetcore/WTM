@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Demo.Controllers;
 using WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Demo;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace WalkingTec.Mvvm.Demo.Test
 {
@@ -136,7 +136,7 @@ namespace WalkingTec.Mvvm.Demo.Test
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data = context.Set<TreeTest>().Find(v.ID);
+                var data = context.Set<TreeTest>().IgnoreQueryFilters().Where(x => x.ID == v.ID).FirstOrDefault();
                 Assert.AreEqual(data.IsValid, false);
           }
 
@@ -236,8 +236,8 @@ namespace WalkingTec.Mvvm.Demo.Test
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data1 = context.Set<TreeTest>().Find(v1.ID);
-                var data2 = context.Set<TreeTest>().Find(v2.ID);
+                var data1 = context.Set<TreeTest>().IgnoreQueryFilters().Where(x => x.ID == v1.ID).FirstOrDefault();
+                var data2 = context.Set<TreeTest>().IgnoreQueryFilters().Where(x=> x.ID == v2.ID).FirstOrDefault();
                 Assert.AreEqual(data1.IsValid, false);
             Assert.AreEqual(data2.IsValid, false);
             }

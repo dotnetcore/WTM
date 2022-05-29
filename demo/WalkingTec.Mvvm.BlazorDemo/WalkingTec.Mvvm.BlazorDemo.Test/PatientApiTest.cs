@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.PatientVMs;
 using WalkingTec.Mvvm.Demo.Models.Virus;
 using WalkingTec.Mvvm.BlazorDemo.DataAccess;
 using WalkingTec.Mvvm.Demo.Models;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Test
 {
@@ -177,8 +177,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.Test
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data1 = context.Set<Patient>().Find(v1.ID);
-                var data2 = context.Set<Patient>().Find(v2.ID);
+                var data1 = context.Set<Patient>().IgnoreQueryFilters().Where(x=>x.ID == v1.ID).FirstOrDefault();
+                var data2 = context.Set<Patient>().IgnoreQueryFilters().Where(x => x.ID == v2.ID).FirstOrDefault();
                 Assert.AreEqual(data1.IsValid, false);
             Assert.AreEqual(data2.IsValid, false);
             }
