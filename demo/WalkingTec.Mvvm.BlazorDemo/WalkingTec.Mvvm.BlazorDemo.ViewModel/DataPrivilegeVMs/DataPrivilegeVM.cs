@@ -14,7 +14,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     {
         public List<ComboSelectListItem> TableNames { get; set; }
         public List<ComboSelectListItem> AllItems { get; set; }
-        public List<ComboSelectListItem> AllGroups { get; set; }
         [Display(Name = "_Admin.AllowedDp")]
         public List<string> SelectedItemsID { get; set; }
 
@@ -35,7 +34,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             TableNames = new List<ComboSelectListItem>();
             if (ControllerName.Contains("/api") == false)
             {
-                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x=>x.GroupCode);
                 TableNames = Wtm.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             }
             SelectedItemsID = new List<string>();
@@ -76,7 +74,19 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 }
                 else
                 {
-                    var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.UserCode).FirstOrDefault();
+                    string user = null;
+                    if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+                    {
+                        var check = Wtm.CallAPI<List<ComboSelectListItem>>("mainhost", "/api/_frameworkuser/GetUserById").Result;
+                        if (check.Data != null)
+                        {
+                            user = check.Data.Where(x => x.Value.ToString() == Entity.UserCode).Select(x => x.Value.ToString()).FirstOrDefault();
+                        }
+                    }
+                    else
+                    {
+                        user = DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.UserCode).Select(x=>x.ITCode).FirstOrDefault();
+                    }
                     if (user == null)
                     {
                         MSD.AddModelError("Entity.UserCode", Localizer["Sys.CannotFindUser", Entity.UserCode]);
@@ -124,6 +134,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.UserCode = Entity.UserCode;
                     dp.TableName = this.Entity.TableName;
+                    dp.TenantCode = LoginUserInfo.CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
 
                 }
@@ -135,6 +146,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                         dp.RelateId = id;
                         dp.UserCode = Entity.UserCode;
                         dp.TableName = this.Entity.TableName;
+                        dp.TenantCode = LoginUserInfo.CurrentTenant;
                         DC.Set<DataPrivilege>().Add(dp);
                     }
                 }
@@ -147,6 +159,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.GroupCode = Entity.GroupCode;
                     dp.TableName = this.Entity.TableName;
+                    dp.TenantCode = LoginUserInfo.CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
                 else
@@ -157,6 +170,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                         dp.RelateId = id;
                         dp.GroupCode = Entity.GroupCode;
                         dp.TableName = this.Entity.TableName;
+                        dp.TenantCode = LoginUserInfo.CurrentTenant;
                         DC.Set<DataPrivilege>().Add(dp);
                     }
                 }

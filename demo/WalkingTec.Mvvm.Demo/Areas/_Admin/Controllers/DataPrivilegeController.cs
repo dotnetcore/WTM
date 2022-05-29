@@ -132,5 +132,23 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             return vm.GetExportData();
         }
+        [AllRights]
+        public IActionResult GetUserGroups()
+        {
+            WalkingTec.Mvvm.Admin.Api.DataPrivilegeController userapi = new Mvvm.Admin.Api.DataPrivilegeController();
+            userapi.Wtm = Wtm;
+            var rv = userapi.GetUserGroups() as OkObjectResult;
+            List<ComboSelectListItem> users = new List<ComboSelectListItem>();
+            if (rv != null && rv.Value is string && rv.Value != null)
+            {
+                users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
+            }
+            else if (rv != null && rv.Value is List<ComboSelectListItem> c)
+            {
+                users = c;
+            }
+            return JsonMore(users);
+        }
+
     }
 }

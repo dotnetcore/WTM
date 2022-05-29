@@ -137,10 +137,13 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public ActionResult GetUserGroups()
+        public IActionResult GetUserGroups()
         {
-            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName);
-            return Ok(rv);
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_DataPrivilege/GetUserGroups").Result;
+            }
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
     }
 

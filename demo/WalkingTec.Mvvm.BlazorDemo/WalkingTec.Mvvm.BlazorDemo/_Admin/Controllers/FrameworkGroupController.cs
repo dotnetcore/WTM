@@ -49,6 +49,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult Add(FrameworkGroupVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
@@ -72,6 +76,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPut("[action]")]
         public IActionResult Edit(FrameworkGroupVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
@@ -94,6 +102,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupBatchVM>();
             List<string> GroupCode = new List<string>();
             if (ids != null && ids.Count() > 0)
@@ -125,6 +137,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
@@ -135,6 +151,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupListVM>();
             if (ids != null && ids.Count() > 0)
             {
@@ -148,6 +168,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
@@ -164,6 +188,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         public ActionResult Import(FrameworkGroupImportVM vm)
         {
 
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());

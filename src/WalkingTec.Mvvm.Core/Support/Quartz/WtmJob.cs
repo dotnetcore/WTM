@@ -35,7 +35,10 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
 
         public void Dispose()
         {
+            _wtm.Dispose();
+            _wtm=null;
            _ss?.Dispose();
-        }
+            _ss = null;
+         }
     }
 }

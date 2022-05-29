@@ -25,7 +25,7 @@ using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
-    public class WTMContext
+    public class WTMContext:IDisposable
     {
         private HttpContext _httpContext;
         public HttpContext HttpContext { get => _httpContext; }
@@ -1313,6 +1313,11 @@ params string[] groupcode)
             {
                 return this.HttpContext.Request.Scheme + "://" + this.HttpContext.Request.Host.ToString();
             }
+        }
+
+        public void Dispose()
+        {
+            this.DC?.Dispose();
         }
 
         #endregion

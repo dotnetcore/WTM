@@ -50,7 +50,7 @@
     {
         Model.DpType = dptype;
         AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
-        AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetUserGroups");
+        AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetUserGroups", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
     }
 
     /// <summary>

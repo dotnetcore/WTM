@@ -75,7 +75,28 @@ namespace WalkingTec.Mvvm.Core
                 // 初始化用户信息
                 var roleIDs = userInfo.UserRoles.Select(x => x.RoleCode).ToList();
                 var groupIDs = userInfo.UserGroups.Select(x => x.GroupCode).ToList();
-                var groups = context.GlobaInfo.AllGroups.Where(x => groupIDs.Contains(x.GroupCode) && x.Tenant == userInfo.user.TenantCode).ToList();
+                List<SimpleGroup> groups = new List<SimpleGroup>();
+                var dbtenant = context.GlobaInfo.AllTenant.Where(x => x.TCode == userInfo.user.TenantCode && x.IsUsingDB == true).FirstOrDefault();
+                if (dbtenant != null)
+                {
+                    using (var tdc = dbtenant.CreateDC(context))
+                    {
+                        groups = tdc.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.GroupCode) && x.TenantCode == userInfo.user.TenantCode)
+                            .Select(x=> new SimpleGroup
+                            {
+                                ID = x.ID,
+                                GroupCode = x.GroupCode,
+                                GroupName = x.GroupName,
+                                Manager = x.Manager,
+                                ParentId = x.ParentId,
+                                Tenant  = x.TenantCode
+                            }).ToList();
+                    }
+                }
+                else
+                {
+                     groups = context.GlobaInfo.AllGroups.Where(x => groupIDs.Contains(x.GroupCode) && x.Tenant == userInfo.user.TenantCode).ToList();
+                }
                 var allgroups = groups.ToList();
                 for (int i = 0; i < allgroups.Count; i++)
                 {

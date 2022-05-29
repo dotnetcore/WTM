@@ -80,6 +80,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult Add(FrameworkRoleVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
@@ -103,6 +107,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPut("[action]")]
         public IActionResult Edit(FrameworkRoleVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
@@ -125,6 +133,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkRoleBatchVM>();
             List<string> RoleCode = new List<string>();
             if (ids != null && ids.Count() > 0)
@@ -155,6 +167,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
@@ -165,6 +181,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             if (ids != null && ids.Count() > 0)
             {
@@ -178,6 +198,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkRoleImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
@@ -193,6 +217,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public ActionResult Import(FrameworkRoleImportVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
@@ -203,7 +231,5 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return Ok(vm.EntityList.Count);
             }
         }
-
-
     }
 }

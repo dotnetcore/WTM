@@ -148,7 +148,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     listStyle={undefined}
-                    dataSource={Request.cache({ url: "/api/_FrameworkUser/GetFrameworkGroups" })}
+                    dataSource={Request.cache({ url: "/api/_FrameworkGroup/GetFrameworkGroups" })}
                 />
             }
 

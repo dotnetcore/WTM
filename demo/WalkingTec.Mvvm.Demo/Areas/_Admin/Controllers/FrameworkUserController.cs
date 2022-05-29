@@ -32,6 +32,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public string Search(FrameworkUserSearcher searcher)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Localizer["_Admin.HasMainHost"];
+            }
             var vm = Wtm.CreateVM<FrameworkUserListVM>(passInit: true);
             if (ModelState.IsValid)
             {
@@ -48,6 +52,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkUserVM>();
             return PartialView(vm);
         }
@@ -56,6 +64,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Create")]
         public async Task<ActionResult> Create(FrameworkUserVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -78,6 +90,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Edit")]
         public ActionResult Edit(string id)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkUserVM>(id);
             vm.Entity.Password = null;
             return PartialView(vm);
@@ -88,6 +104,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ValidateFormItemOnly]
         public async Task<ActionResult> Edit(FrameworkUserVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (ModelState.Any(x => x.Key != "Entity.Password" && x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid))
             {
                 return PartialView(vm);
@@ -111,6 +131,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Login.ChangePassword")]
         public ActionResult Password(Guid id)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkUserVM>(id, passInit: true);
             vm.Entity.Password = null;
             return PartialView(vm);
@@ -120,6 +144,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public ActionResult Password(FrameworkUserVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var keys = ModelState.Keys.ToList();
             foreach (var item in keys)
             {
@@ -150,6 +178,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Delete")]
         public ActionResult Delete(Guid id)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkUserVM>(id);
             return PartialView(vm);
         }
@@ -158,6 +190,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(Guid id, IFormCollection nouse)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkUserVM>(id);
             await vm.DoDeleteAsync();
             if (!ModelState.IsValid)
@@ -181,6 +217,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchEdit")]
         public ActionResult BatchEdit(string[] IDs)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkUserBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
@@ -189,6 +229,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchEdit")]
         public ActionResult DoBatchEdit(FrameworkUserBatchVM vm, IFormCollection nouse)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid || !vm.DoBatchEdit())
             {
                 return PartialView("BatchEdit", vm);
@@ -203,6 +247,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkUserBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
@@ -211,6 +259,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public async Task<ActionResult> DoBatchDelete(FrameworkUserBatchVM vm, IFormCollection nouse)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             List<string> itcode = new List<string>();
             itcode = DC.Set<FrameworkUser>().CheckIDs(new List<string>(vm.Ids)).Select(x => x.ITCode).ToList();
             if (!ModelState.IsValid || !vm.DoBatchDelete())
@@ -244,6 +296,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkUserImportVM>();
             return PartialView(vm);
         }
@@ -252,6 +308,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Import")]
         public ActionResult Import(FrameworkUserImportVM vm, IFormCollection nouse)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
                 return PartialView(vm);
@@ -265,6 +325,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Enable")]
         public ActionResult Enable(Guid id, bool enable)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             FrameworkUser user = new FrameworkUser { ID = id };
             user.IsValid = enable;
             DC.UpdateProperty(user, x => x.IsValid);
@@ -295,6 +359,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public IActionResult ExportExcel(FrameworkUserListVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             return vm.GetExportData();
         }
 
@@ -327,12 +395,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             {
                 users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
             }
-            else if(rv != null && rv.Value is List<ComboSelectListItem> c)
+            else if (rv != null && rv.Value is List<ComboSelectListItem> c)
             {
                 users = c;
             }
             return JsonMore(users);
         }
+
 
     }
 }

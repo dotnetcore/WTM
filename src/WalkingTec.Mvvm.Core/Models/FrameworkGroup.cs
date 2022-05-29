@@ -8,7 +8,7 @@ namespace WalkingTec.Mvvm.Core
 {
 
     [Table("FrameworkGroups")]
-    public class FrameworkGroup : TreePoco<FrameworkGroup>
+    public class FrameworkGroup : TreePoco<FrameworkGroup>,ITenant
     {
         [Display(Name = "_Admin.GroupCode")]
         [Required(ErrorMessage = "Validate.{0}required")]
