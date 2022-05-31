@@ -166,6 +166,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 DC.Set<FrameworkUserRole>().RemoveRange(ur);
                 DC.SaveChanges();
                 await Wtm.RemoveUserCache(itcodes);
+                await Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant);
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
@@ -195,6 +196,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
+                Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }

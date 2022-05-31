@@ -40,14 +40,10 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public IActionResult Get(Guid id)
+        public FrameworkUserVM Get(Guid id)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
-            {
-                return Request.RedirectCall(Wtm).Result;
-            }
             var vm = Wtm.CreateVM<FrameworkUserVM>(id);
-            return Ok(vm);
+            return vm;
         }
 
         [ActionDescription("Sys.Create")]
@@ -243,6 +239,18 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkGroups").Result;
+            }
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+        }
+
+        [HttpGet("GetFrameworkGroupsTree")]
+        [ActionDescription("GetGroupsTree")]
+        [AllRights]
+        public IActionResult GetFrameworkGroupsTree()
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkGroupsTree").Result;
             }
             return Ok(DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }

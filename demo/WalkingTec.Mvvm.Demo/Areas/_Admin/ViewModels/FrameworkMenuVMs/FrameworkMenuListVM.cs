@@ -47,7 +47,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.ShowOnMenu),
                         this.MakeGridHeader(x => x.FolderOnly),
                         this.MakeGridHeader(x => x.IsPublic),
-                        this.MakeGridHeader(x => x.DisplayOrder),
+                       this.MakeGridHeader(x => x.TenantAllowed),
+                       this.MakeGridHeader(x => x.DisplayOrder),
                         this.MakeGridHeader(x => x.Icon, 100).SetFormat(PhotoIdFormat),
                         this.MakeGridHeaderAction(width: 270)
                     });
@@ -186,12 +187,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         ID = y.ID,
                         Allowed = allowed.Contains(y.ID),
                         ActionName = y.ActionName
-                    }),
+                    }).ToList(),
                     ExtraOrder = order++,
                     ParentId = x.ParentId,
-                    Parent = x.Parent,
                     IsInside = x.IsInside,
-                    HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false,
+                    TenantAllowed = x.TenantAllowed,
                     Allowed = allowed.Contains(x.ID),
                     Denied = denied.Contains(x.ID)
                 }).OrderBy(x => x.ExtraOrder);
@@ -211,9 +211,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     IsPublic = x.IsPublic,
                     DisplayOrder = x.DisplayOrder,
                     ExtraOrder = order++,
+                    TenantAllowed = x.TenantAllowed,
                     ParentId = x.ParentId,
-                    Icon = x.Icon,
-                    HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
+                    Icon = x.Icon
                 }).OrderBy(x => x.ExtraOrder);
 
                 return data2.AsQueryable() as IOrderedQueryable<FrameworkMenu_ListView>;

@@ -170,7 +170,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 DC.Set<FrameworkUserGroup>().RemoveRange(gr);
                 DC.SaveChanges();
                 await Wtm.RemoveUserCacheByGroup(GroupCode.ToArray());
-                Cache.Delete(nameof(GlobalData.AllGroups));
+                await Wtm.RemoveGroupCache(Wtm.LoginUserInfo?.CurrentTenant);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.OprationSuccess"]);
             }
         }
@@ -200,7 +200,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                Cache.Delete(nameof(GlobalData.AllGroups));
+                Wtm.RemoveGroupCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }

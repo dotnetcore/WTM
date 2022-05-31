@@ -32,6 +32,7 @@
         <Switch @bind-Value="@Model.Entity.ShowOnMenu"  IsDisabled="true"/>
         <Switch @bind-Value="@Model.Entity.FolderOnly"  IsDisabled="true"/>
         <Switch @bind-Value="@Model.Entity.IsPublic"  IsDisabled="true"/>
+        <NullSwitch @bind-Value="@Model.Entity.TenantAllowed"  IsDisabled="true"/>
     </Row>
         <div class="modal-footer table-modal-footer">
             <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />

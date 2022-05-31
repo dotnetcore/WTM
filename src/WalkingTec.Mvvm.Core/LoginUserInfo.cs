@@ -51,100 +51,130 @@ namespace WalkingTec.Mvvm.Core
         /// 用户的数据权限列表
         /// </summary>
         public List<SimpleDataPri> DataPrivileges { get; set; }
-
+        public long TimeTick { get; set; } = DateTime.Now.Ticks;
         public async System.Threading.Tasks.Task LoadBasicInfoAsync(WTMContext context)
         {
-            if (string.IsNullOrEmpty(this.UserId) || context?.DC == null || context.BaseUserQuery == null)
+            if (string.IsNullOrEmpty(this.ITCode) || context?.DC == null || context.BaseUserQuery == null)
             {
                 return;
             }
             var DC = context.DC;
-            Guid userid = Guid.Empty;
-            Guid.TryParse(this.UserId, out userid);
-            var userInfo = await context.BaseUserQuery
-                                        .Where(x => x.ID == userid && x.IsValid)
-                                        .Select(x => new {
-                                            user = x,
-                                            UserRoles = DC.Set<FrameworkUserRole>().Where(y => y.UserCode == x.ITCode).ToList(),
-                                            UserGroups = DC.Set<FrameworkUserGroup>().Where(y => y.UserCode == x.ITCode).ToList(),
-                                        })
-                                        .FirstOrDefaultAsync();
+            List<SimpleGroup> allgroups = context.GetTenantGroups(this.TenantCode);
+            List<SimpleRole> allroles = context.GetTenantRoles(this.TenantCode);
 
-            if (userInfo != null)
+            if (this.Groups == null || this.Roles == null)
             {
-                // 初始化用户信息
-                var roleIDs = userInfo.UserRoles.Select(x => x.RoleCode).ToList();
-                var groupIDs = userInfo.UserGroups.Select(x => x.GroupCode).ToList();
-                List<SimpleGroup> groups = new List<SimpleGroup>();
-                var dbtenant = context.GlobaInfo.AllTenant.Where(x => x.TCode == userInfo.user.TenantCode && x.IsUsingDB == true).FirstOrDefault();
-                if (dbtenant != null)
+                var userInfo = await context.BaseUserQuery
+                                            .Where(x => x.ITCode == ITCode)
+                                            .Select(x => new
+                                            {
+                                                user = x,
+                                                UserRoles = DC.Set<FrameworkUserRole>().Where(y => y.UserCode == x.ITCode).ToList(),
+                                                UserGroups = DC.Set<FrameworkUserGroup>().Where(y => y.UserCode == x.ITCode).ToList(),
+                                            })
+                                            .FirstOrDefaultAsync();
+
+                if (userInfo != null)
                 {
-                    using (var tdc = dbtenant.CreateDC(context))
+                    // 初始化用户信息
+                    var roleIDs = userInfo.UserRoles.Select(x => x.RoleCode).ToList();
+                    var groupIDs = userInfo.UserGroups.Select(x => x.GroupCode).ToList();
+                    List<SimpleGroup> groups = allgroups.Where(x => groupIDs.Contains(x.GroupCode)).ToList();
+                    List<SimpleRole>roles = allroles.Where(x => roleIDs.Contains(x.RoleCode)).ToList();
+                    this.ITCode = userInfo.user.ITCode;
+                    if (string.IsNullOrEmpty(this.Name))
                     {
-                        groups = tdc.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.GroupCode) && x.TenantCode == userInfo.user.TenantCode)
-                            .Select(x=> new SimpleGroup
-                            {
-                                ID = x.ID,
-                                GroupCode = x.GroupCode,
-                                GroupName = x.GroupName,
-                                Manager = x.Manager,
-                                ParentId = x.ParentId,
-                                Tenant  = x.TenantCode
-                            }).ToList();
+                        this.Name = userInfo.user.Name;
                     }
-                }
-                else
-                {
-                     groups = context.GlobaInfo.AllGroups.Where(x => groupIDs.Contains(x.GroupCode) && x.Tenant == userInfo.user.TenantCode).ToList();
-                }
-                var allgroups = groups.ToList();
-                for (int i = 0; i < allgroups.Count; i++)
-                {
-                    var group = allgroups[i];
-                    var children = context.GlobaInfo.AllGroups.Where(x => x.ParentId == group.ID).ToList();
-                    foreach (var child in children)
+                    if (this.PhotoId == null)
                     {
-                        if(allgroups.Any(x=>x.ID == child.ID) == false)
+                        this.PhotoId = userInfo.user.PhotoId;
+                    }
+                    if (string.IsNullOrEmpty(this.TenantCode))
+                    {
+                        this.TenantCode = userInfo.user.TenantCode;
+                    }
+                    if (Attributes == null)
+                    {
+                        Attributes = new Dictionary<string, object>();
+                    }
+                    foreach (var item in context.GlobaInfo.CustomUserProperties)
+                    {
+                        if (Attributes.ContainsKey(item.Name) == false)
                         {
-                            allgroups.Add(child);
+                            Attributes.Add(item.Name, item.GetValue(userInfo.user));
                         }
                     }
+                    this.Roles = roles;
+                    this.Groups = groups;
                 }
-                groupIDs = allgroups.Select(x => x.GroupCode).ToList();
-                var dataPris = await DC.Set<DataPrivilege>().AsNoTracking()
-                                .Where(x => x.UserCode == userInfo.user.ITCode || (x.GroupCode != null && groupIDs.Contains(x.GroupCode)))
-                                .Distinct()
-                                .ToListAsync();
-               context.ProcessTreeDp(dataPris);
+            }
 
-                //查找登录用户的页面权限
-                var funcPrivileges = await DC.Set<FunctionPrivilege>().AsNoTracking()
-                    .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
-                    .Distinct()
-                    .ToListAsync();
+            var moregroups = this.Groups.ToList();
+            for (int i = 0; i < moregroups.Count; i++)
+            {
+                var group = moregroups[i];
+                var children = allgroups.Where(x => x.ParentId == group.ID).ToList();
+                foreach (var child in children)
+                {
+                    if (moregroups.Any(x => x.ID == child.ID) == false)
+                    {
+                        moregroups.Add(child);
+                    }
+                }
+            }
+            var gc = moregroups.Select(x => x.GroupCode).ToList();
+            var rc = this.Roles.Select(x=>x.RoleCode).ToList();
 
-                var roles = DC.Set<FrameworkRole>().AsNoTracking().Where(x => roleIDs.Contains(x.RoleCode)).ToList();
-                this.ITCode = userInfo.user.ITCode;
-                if (string.IsNullOrEmpty(this.Name))
+            //查找登录用户的页面权限
+            var funcPrivileges = await DC.Set<FunctionPrivilege>().AsNoTracking()
+                .Where(x => x.RoleCode != null && rc.Contains(x.RoleCode))
+                .Distinct()
+                .ToListAsync();
+            var dataPris = await DC.Set<DataPrivilege>().AsNoTracking()
+                .Where(x => x.UserCode == this.ITCode || (x.GroupCode != null && gc.Contains(x.GroupCode)))
+                .Distinct()
+                .ToListAsync();
+            ProcessTreeDp(dataPris,context);
+            this.DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserCode = x.UserCode, GroupCode = x.GroupCode }).ToList();
+            this.FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, RoleCode = x.RoleCode, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList();
+        }
+
+        public void ProcessTreeDp(List<DataPrivilege> dps,WTMContext context)
+        {
+            var dpsSetting = context.DataPrivilegeSettings;
+            foreach (var dp in dpsSetting)
+            {
+                if (typeof(TreePoco).IsAssignableFrom(dp.ModelType))
                 {
-                    this.Name = userInfo.user.Name;
+                    var ids = dps.Where(x => x.TableName == dp.ModelName).Select(x => x.RelateId).ToList();
+                    if (ids.Count > 0 && ids.Contains(null) == false)
+                    {
+                        var skipids = dp.GetTreeParentIds(context, dps);
+                        List<string> subids = new List<string>();
+                        subids.AddRange(GetSubIds(dp, ids, dp.ModelType, skipids,context));
+                        subids = subids.Distinct().ToList();
+                        subids.ForEach(x => dps.Add(new DataPrivilege
+                        {
+                            TableName = dp.ModelName,
+                            RelateId = x.ToString()
+                        }));
+                    }
                 }
-                if (this.PhotoId == null)
-                {
-                    this.PhotoId = userInfo.user.PhotoId;
-                }
-                if (string.IsNullOrEmpty(this.TenantCode))
-                {
-                    this.TenantCode = userInfo.user.TenantCode;
-                }
-                if(Attributes == null)
-                {
-                    Attributes = new Dictionary<string, object>();
-                }
-                this.Roles = roles.Select(x => new SimpleRole { ID = x.ID, RoleCode = x.RoleCode, RoleName = x.RoleName }).ToList();
-                this.Groups = groups;
-                this.DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserCode = x.UserCode, GroupCode = x.GroupCode }).ToList();
-                this.FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, RoleCode = x.RoleCode, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList();
+            }
+        }
+
+        private IEnumerable<string> GetSubIds(IDataPrivilege dp, List<string> p_id, Type modelType, List<string> skipids, WTMContext context)
+        {
+            var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
+            var subids = dp.GetTreeSubIds(context, ids);
+            if (subids.Count > 0)
+            {
+                return subids.Concat(GetSubIds(dp, subids, modelType, skipids,context));
+            }
+            else
+            {
+                return new List<string>();
             }
         }
 

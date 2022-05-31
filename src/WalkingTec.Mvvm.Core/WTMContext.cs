@@ -25,7 +25,7 @@ using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
-    public class WTMContext:IDisposable
+    public class WTMContext : IDisposable
     {
         private HttpContext _httpContext;
         public HttpContext HttpContext { get => _httpContext; }
@@ -189,18 +189,21 @@ namespace WalkingTec.Mvvm.Core
                         string usercode = userIdStr;
                         var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr + "$`$" + tenant}";
                         _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                        try
+                        if (_loginUserInfo == null)
                         {
-                            _loginUserInfo = ReloadUser(usercode);
-                        }
-                        catch { }
-                        if (_loginUserInfo != null)
-                        {
-                            Cache.Add(cacheKey, _loginUserInfo);
-                        }
-                        else
-                        {
-                            return null;
+                            try
+                            {
+                                _loginUserInfo = ReloadUser(usercode);
+                            }
+                            catch { }
+                            if (_loginUserInfo != null)
+                            {
+                                Cache.Add(cacheKey, _loginUserInfo);
+                            }
+                            else
+                            {
+                                return null;
+                            }
                         }
                     }
                     else if (string.IsNullOrEmpty(remoteToken) == false)
@@ -345,10 +348,22 @@ namespace WalkingTec.Mvvm.Core
 
         public LoginUserInfo DoLogin(string username, string password, string tenant)
         {
+            if(tenant == "")
+            {
+                tenant = null;
+            }
+            if (tenant == null && HttpContext.User.Identity.IsAuthenticated)
+            {
+                tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault() ?? tenant;
+            }
             if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(tenant) == true)
             {
                 var remoteToken = _loginUserInfo?.RemoteToken ?? HttpContext?.Request.Query?.Where(x => x.Key == "_remotetoken").Select(x => x.Value.First()).FirstOrDefault();
-                LoginUserInfo rv = null;
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
+                    remoteToken = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.RToken).Select(x => x.Value).FirstOrDefault();
+                }
+                    LoginUserInfo rv = null;
                 if (string.IsNullOrEmpty(remoteToken) == false)
                 {
                     Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -360,7 +375,7 @@ namespace WalkingTec.Mvvm.Core
                         rv.RemoteToken = remoteToken;
                     }
                 }
-                else
+                else if(string.IsNullOrEmpty(password)==false)
                 {
                     var loginjwt = CallAPI<Token>("mainhost", "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = username, Password = password }, 10).Result;
                     if (string.IsNullOrEmpty(loginjwt?.Data?.AccessToken) == false)
@@ -378,72 +393,55 @@ namespace WalkingTec.Mvvm.Core
                 }
                 if (rv != null)
                 {
-                    var roleIDs = rv.Roles.Select(x => x.RoleCode).ToList();
-                    ProcessTreeGroup(rv.Groups);
-                    var groupIDs = rv.Groups.Select(x => x.GroupCode).ToList();
-
-                    var dataPris = DC.Set<DataPrivilege>().AsNoTracking()
-                                    .Where(x => x.UserCode == rv.ITCode || (x.GroupCode != null && groupIDs.Contains(x.GroupCode)))
-                                    .Distinct()
-                                    .ToList();
-                    ProcessTreeDp(dataPris);
-
-                    //查找登录用户的页面权限
-                    var funcPrivileges = DC.Set<FunctionPrivilege>().AsNoTracking()
-                        .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
-                        .Distinct()
-                        .ToList();
-
-                    rv.DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserCode = x.UserCode, GroupCode = x.GroupCode }).ToList();
-                    rv.FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, RoleCode = x.RoleCode, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList();
+                    var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{rv.ITCode + "$`$" + rv.TenantCode}";
+                    var cacheuser = Cache.Get<LoginUserInfo>(cacheKey);
+                    if (cacheuser != null && cacheuser.TimeTick >= rv.TimeTick)
+                    {
+                        rv = cacheuser;
+                    }
+                    else
+                    {
+                        rv.LoadBasicInfoAsync(this).Wait();
+                    }
                 }
                 return rv;
             }
             else
             {
-                object rv = null;
-                if (string.IsNullOrEmpty(password))
+                bool exist = false;
+                username = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault() ?? username;
+                var ct = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
+                if (ct != null)
                 {
-                    var userIdStr = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault() ?? username;
-                    tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault() ?? tenant;
-                    var item = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
-                    if (item != null)
-                    {
-                        _dc = item.CreateDC(this);
-                    }
-                    rv = BaseUserQuery.IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == userIdStr.ToLower() && x.TenantCode == tenant && x.IsValid).SingleOrDefault();
+                    _dc = ct.CreateDC(this);
+                }
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
+                    exist = BaseUserQuery.IgnoreQueryFilters().Any(x => x.ITCode.ToLower() == username.ToLower() && x.TenantCode == tenant && x.IsValid);
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(tenant))
-                    {
-                        rv = BaseUserQuery.Where(x => x.ITCode.ToLower() == username.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid).SingleOrDefault();
-                    }
-                    else
-                    {
-                        var item = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
-                        if (item != null)
-                        {
-                            _dc = item.CreateDC(this);
-                        }
-                        rv = BaseUserQuery.IgnoreQueryFilters().Where(x => x.ITCode.ToLower() == username && x.Password == Utils.GetMD5String(password) && x.TenantCode == tenant && x.IsValid).SingleOrDefault();
-                    }
+                    exist = BaseUserQuery.IgnoreQueryFilters().Any(x => x.ITCode.ToLower() == username && x.Password == Utils.GetMD5String(password) && x.TenantCode == tenant && x.IsValid);
                 }
-                if (rv == null)
+                if (exist == false)
                 {
                     return null;
                 }
+
                 LoginUserInfo user = new LoginUserInfo
                 {
-                    UserId = (rv as FrameworkUserBase).ID.ToString()
+                    ITCode = username,
+                    TenantCode = tenant
                 };
-                user.LoadBasicInfoAsync(this).Wait();
-                foreach (var item in GlobaInfo.CustomUserProperties)
+                var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{username + "$`$" + tenant}";
+                var cacheuser = Cache.Get<LoginUserInfo>(cacheKey);
+                if (cacheuser != null)
                 {
-                    if (user.Attributes.ContainsKey(item.Name) == false)
-                    {
-                        user.Attributes.Add(item.Name, item.GetValue(rv));
-                    }
+                    user = cacheuser;
+                }
+                else
+                {
+                    user.LoadBasicInfoAsync(this).Wait();
                 }
                 var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
                 var token = authService.IssueTokenAsync(user).Result;
@@ -465,7 +463,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     Cache.Add(key, data, new DistributedCacheEntryOptions()
                     {
-                        SlidingExpiration = new TimeSpan(0, 0, timeout.Value)
+                        AbsoluteExpirationRelativeToNow = new TimeSpan(0, 0, timeout.Value)
                     });
                 }
                 return data;
@@ -479,69 +477,92 @@ namespace WalkingTec.Mvvm.Core
         public async Task RemoveUserCache(
             params string[] userIds)
         {
-            if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
+            foreach (var userId in userIds)
             {
-                Dictionary<string, object> data = new Dictionary<string, object>();
-                for (int i = 0; i < userIds.Length; i++)
-                {
-                    data.Add($"itcode[{i}]", userIds[i]);
-                }
-                await CallAPI("mainhost", "/_framework/RemoveUserCacheByAccount", HttpMethodEnum.POST, data);
-            }
-            else
-            {
-                foreach (var userId in userIds)
-                {
-                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
-                    await Cache.DeleteAsync(key);
-                }
+                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
+                await Cache.DeleteAsync(key);
             }
         }
 
         public async Task RemoveUserCacheByRole(
     params string[] rolecode)
         {
-            if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
+            var userids = DC.Set<FrameworkUserRole>().Where(x => rolecode.Contains(x.RoleCode)).Select(x => x.UserCode).ToArray();
+            foreach (var userId in userids)
             {
-                Dictionary<string, object> data = new Dictionary<string, object>();
-                for (int i = 0; i < rolecode.Length; i++)
-                {
-                    data.Add($"rolecode[{i}]", rolecode[i]);
-                }
-                await CallAPI("mainhost", "/_framework/RemoveUserCacheByRole", HttpMethodEnum.POST, data);
-            }
-            else
-            {
-                var userids = DC.Set<FrameworkUserRole>().Where(x => rolecode.Contains(x.RoleCode)).Select(x => x.UserCode).ToArray();
-                foreach (var userId in userids)
-                {
-                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
-                    await Cache.DeleteAsync(key);
-                }
+                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
+                await Cache.DeleteAsync(key);
             }
         }
 
         public async Task RemoveUserCacheByGroup(
 params string[] groupcode)
         {
-            if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
+            var userids = DC.Set<FrameworkUserGroup>().Where(x => groupcode.Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
+            foreach (var userId in userids)
             {
-                Dictionary<string, object> data = new Dictionary<string, object>();
-                for (int i = 0; i < groupcode.Length; i++)
-                {
-                    data.Add($"groupcode[{i}]", groupcode[i]);
-                }
-                await CallAPI("mainhost", "/_framework/RemoveUserCacheByGroup", HttpMethodEnum.POST, data);
+                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
+                await Cache.DeleteAsync(key);
             }
-            else
+        }
+
+        public async Task RemoveGroupCache(string tenant)
+        {
+            var key = $"{GlobalConstants.CacheKey.TenantGroups}:{tenant}";
+            await Cache.DeleteAsync(key);
+        }
+
+        public async Task RemoveRoleCache(string tenant)
+        {
+            var key = $"{GlobalConstants.CacheKey.TenantRoles}:{tenant}";
+            await Cache.DeleteAsync(key);
+        }
+
+        public List<SimpleGroup> GetTenantGroups(string tenant)
+        {
+            var key = $"{GlobalConstants.CacheKey.TenantGroups}:{tenant}";
+            var rv = ReadFromCache<List<SimpleGroup>>(key, () =>
             {
-                var userids = DC.Set<FrameworkUserGroup>().Where(x => groupcode.Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
-                foreach (var userId in userids)
+                
+                List<SimpleGroup> groups = null;
+                var dbtenant = GlobaInfo.AllTenant.Where(x => x.TCode == tenant && x.IsUsingDB == true).FirstOrDefault();
+                using (var dc = dbtenant == null ? ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC() : dbtenant.CreateDC(this))
                 {
-                    var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
-                    await Cache.DeleteAsync(key);
+                    groups = dc.Set<FrameworkGroup>().IgnoreQueryFilters().Where(x => x.TenantCode == tenant).Select(x => new SimpleGroup
+                    {
+                        ID = x.ID,
+                        GroupCode = x.GroupCode,
+                        GroupName = x.GroupName,
+                        Manager = x.Manager,
+                        ParentId = x.ParentId,
+                        Tenant = x.TenantCode
+                    }).ToList();
                 }
-            }
+                return groups;
+            }, 360000);
+            return rv;
+        }
+
+        public List<SimpleRole> GetTenantRoles(string tenant)
+        {
+            var key = $"{GlobalConstants.CacheKey.TenantRoles}:{tenant}";
+            var rv = ReadFromCache<List<SimpleRole>>(key, () =>
+            {
+                List<SimpleRole> roles = null;
+                var dbtenant = GlobaInfo.AllTenant.Where(x => x.TCode == tenant && x.IsUsingDB == true).FirstOrDefault();
+                using (var dc = dbtenant == null ? ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC() : dbtenant.CreateDC(this))
+                {
+                    roles = dc.Set<FrameworkRole>().IgnoreQueryFilters().Where(x => x.TenantCode == tenant).Select(x => new SimpleRole
+                    {
+                        ID = x.ID,
+                        RoleCode = x.RoleCode,
+                        RoleName = x.RoleName,
+                        Tenant = x.TenantCode
+                    }).ToList();
+                }
+                return roles;
+            }, 360000);
+            return rv;
         }
 
 
@@ -565,7 +586,7 @@ params string[] groupcode)
             string cs = cskey ?? CurrentCS;
             string tenantCode = null;
 
-            var tenants = GlobaInfo.AllTenant;
+            var tenants = GlobaInfo.AllTenant ?? new List<FrameworkTenant>();
             string tc = _loginUserInfo?.CurrentTenant;
             if (tc == null && HttpContext?.Request?.Host != null)
             {
@@ -679,7 +700,7 @@ params string[] groupcode)
         /// <returns>true代表可以访问，false代表不能访问</returns>
         protected bool IsAccessable(SimpleMenu menu, List<SimpleMenu> menus)
         {
-            if(LoginUserInfo.CurrentTenant != null && menu.TenantAllowed == false)
+            if (LoginUserInfo.CurrentTenant != null && menu.TenantAllowed == false)
             {
                 return false;
             }
@@ -763,53 +784,6 @@ params string[] groupcode)
             });
         }
 
-        public void ProcessTreeDp(List<DataPrivilege> dps)
-        {
-            var dpsSetting = this.DataPrivilegeSettings;
-            foreach (var dp in dpsSetting)
-            {
-                if (typeof(TreePoco).IsAssignableFrom(dp.ModelType))
-                {
-                    var ids = dps.Where(x => x.TableName == dp.ModelName).Select(x => x.RelateId).ToList();
-                    if (ids.Count > 0 && ids.Contains(null) == false)
-                    {
-                        var skipids = dp.GetTreeParentIds(this, dps);
-                        List<string> subids = new List<string>();
-                        subids.AddRange(GetSubIds(dp, ids, dp.ModelType, skipids));
-                        subids = subids.Distinct().ToList();
-                        subids.ForEach(x => dps.Add(new DataPrivilege
-                        {
-                            TableName = dp.ModelName,
-                            RelateId = x.ToString()
-                        }));
-                    }
-                }
-            }
-        }
-
-        public void ProcessTreeGroup(List<SimpleGroup> groups)
-        {
-            for(int i = 0; i < groups.Count; i++)
-            {
-                var group = groups[i];
-                var children = this.GlobaInfo.AllGroups.Where(x => x.ParentId == group.ID).ToList();
-                groups.AddRange(children);
-            }
-        }
-
-        private IEnumerable<string> GetSubIds(IDataPrivilege dp, List<string> p_id, Type modelType, List<string> skipids)
-        {
-            var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
-            var subids = dp.GetTreeSubIds(this, ids);
-            if (subids.Count > 0)
-            {
-                return subids.Concat(GetSubIds(dp, subids, modelType, skipids));
-            }
-            else
-            {
-                return new List<string>();
-            }
-        }
 
 
         #region CreateVM

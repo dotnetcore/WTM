@@ -39,14 +39,10 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public IActionResult Get(Guid id)
+        public FrameworkGroupVM Get(Guid id)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
-            {
-                return Request.RedirectCall(Wtm).Result;
-            }
             var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
-            return Ok(vm);
+            return vm;
         }
 
         [ActionDescription("Sys.Create")]
@@ -132,7 +128,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 DC.Set<FrameworkUserGroup>().RemoveRange(gr);
                 DC.SaveChanges();
                 await Wtm.RemoveUserCacheByGroup(GroupCode.ToArray());
-                Cache.Delete(nameof(GlobalData.AllGroups));
+                Wtm.RemoveGroupCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
                 return Ok(ids.Count());
             }
         }
@@ -202,7 +198,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                Cache.Delete(nameof(GlobalData.AllGroups));
+                Wtm.RemoveGroupCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
                 return Ok(vm.EntityList.Count);
             }
         }

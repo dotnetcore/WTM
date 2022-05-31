@@ -794,29 +794,6 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 return tenants;
             });
-            gd.SetGroupGetFunc(() =>
-            {
-                var groups = new List<SimpleGroup>();
-                var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
-                var groupsCacheKey = nameof(GlobalData.AllGroups);
-                if (cache.TryGetValue(groupsCacheKey, out groups) == false)
-                {
-                    using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
-                    {
-                        groups = dc.Set<FrameworkGroup>().IgnoreQueryFilters().Select(x => new SimpleGroup
-                        {
-                            ID = x.ID,
-                            GroupCode = x.GroupCode,
-                            GroupName = x.GroupName,
-                            Manager = x.Manager,
-                            ParentId = x.ParentId,
-                            Tenant = x.TenantCode
-                        }).ToList();
-                    }
-                    cache.Add(groupsCacheKey, groups ?? new List<SimpleGroup>(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
-                }
-                return groups;
-            });
             foreach (var m in gd.AllModule)
             {
                 if (isspa == false && m.IsApi == true)

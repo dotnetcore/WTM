@@ -54,7 +54,10 @@ namespace WalkingTec.Mvvm.Mvc.Auth
             {
                 cls.Add(new Claim(AuthConstants.JwtClaimTypes.TenantCode, loginUserInfo.TenantCode));
             }
-
+            if (string.IsNullOrEmpty(loginUserInfo.RemoteToken) == false)
+            {
+                cls.Add(new Claim(AuthConstants.JwtClaimTypes.RToken, loginUserInfo.RemoteToken));
+            }
             var tokeOptions = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Audience,

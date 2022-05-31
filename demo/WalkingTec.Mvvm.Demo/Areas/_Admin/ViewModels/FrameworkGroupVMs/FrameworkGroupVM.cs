@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
         public override void DoAdd()
         {
             base.DoAdd();
-            Cache.Delete(nameof(GlobalData.AllGroups));
+            Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant).Wait();
         }
 
         public override void DoEdit(bool updateAllFields = false)
@@ -45,12 +45,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             }
 
             base.DoEdit(updateAllFields);
-            Cache.Delete(nameof(GlobalData.AllGroups));
+            Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant).Wait();
         }
 
         public override async Task DoDeleteAsync()
         {
-            Cache.Delete(nameof(GlobalData.AllGroups));
             using (var tran = DC.BeginTransaction())
             {
                 try
@@ -61,6 +60,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                     DC.SaveChanges();
                     tran.Commit();
                     await Wtm.RemoveUserCacheByGroup(Entity.GroupCode);
+                    await Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant);
                 }
                 catch
                 {

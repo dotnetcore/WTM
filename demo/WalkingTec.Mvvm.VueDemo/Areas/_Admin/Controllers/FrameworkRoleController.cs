@@ -39,14 +39,10 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public IActionResult Get(Guid id)
+        public FrameworkRoleVM Get(Guid id)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
-            {
-                return Request.RedirectCall(Wtm).Result;
-            }
             var vm = Wtm.CreateVM<FrameworkRoleVM>(id);
-            return Ok(vm);
+            return vm;
         }
 
         [ActionDescription("GetPageActions")]
@@ -163,6 +159,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 DC.Set<FrameworkUserRole>().RemoveRange(ur);
                 DC.SaveChanges();
                 await Wtm.RemoveUserCache(itcodes);
+                await Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant);
                 return Ok(ids.Count());
             }
         }
@@ -232,6 +229,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
+                Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
                 return Ok(vm.EntityList.Count);
             }
         }

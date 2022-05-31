@@ -128,6 +128,20 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
+
+        [HttpGet("[action]/{id}")]
+        [ActionDescription("GetUserPhoto")]
+        [Public]
+        public async Task<IActionResult> GetUserPhoto([FromServices] WtmFileProvider fp, string id, string csName = null, int? width = null, int? height = null)
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Redirect(Wtm.ConfigInfo.MainHost+ Request.Path);
+            }
+            return await this.GetFile(fp,id, csName, width, height);
+        }
+
+
         [HttpGet("[action]/{id}")]
         [ActionDescription("DownloadFile")]
         [Public]

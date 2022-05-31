@@ -18,6 +18,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             return rv;
         }
 
+        public override void DoAdd()
+        {
+            base.DoAdd();
+            Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
+        }
+
         public override void DoEdit(bool updateAllFields = false)
         {
             if (FC.ContainsKey("Entity.RoleCode"))
@@ -25,6 +31,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 FC.Remove("Entity.RoleCode");
             }
             base.DoEdit(updateAllFields);
+            Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
         }
 
         public override async Task DoDeleteAsync()
@@ -39,6 +46,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                     DC.SaveChanges();
                     tran.Commit();
                     await Wtm.RemoveUserCacheByRole(Entity.RoleCode);
+                    await Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant);
                 }
                 catch
                 {

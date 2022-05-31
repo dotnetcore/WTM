@@ -7,27 +7,30 @@ using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
-    [ActionDescription("MenuKey.GroupManagement")]
+    [ActionDescription("MenuKey.FrameworkTenant")]
     [ApiController]
     [Route("api/_[controller]")]
-    public class FrameworkGroupController : BaseApiController
+    [FixConnection(CsName = "default")]
+    public class FrameworkTenantController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(FrameworkGroupSearcher searcher)
+        public IActionResult Search(FrameworkTenantSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (CanUseTenant() == false)
             {
-                return Request.RedirectCall(Wtm).Result;
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             if (ModelState.IsValid)
             {
-                var vm = Wtm.CreateVM<FrameworkGroupListVM>(passInit: true);
+                var vm = Wtm.CreateVM<FrameworkTenantListVM>(passInit: true);
                 vm.Searcher = searcher;
                 return Content(vm.GetJson());
             }
@@ -39,19 +42,21 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public FrameworkGroupVM Get(Guid id)
+        public FrameworkTenantVM Get(Guid id)
         {
-            var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
+            var vm = Wtm.CreateVM<FrameworkTenantVM>(id);
             return vm;
         }
 
         [ActionDescription("Sys.Create")]
         [HttpPost("[action]")]
-        public IActionResult Add(FrameworkGroupVM vm)
+        public IActionResult Add(FrameworkTenantVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (CanUseTenant() == false)
             {
-                return Content(Localizer["_Admin.HasMainHost"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             if (!ModelState.IsValid)
             {
@@ -74,11 +79,13 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("[action]")]
-        public IActionResult Edit(FrameworkGroupVM vm)
+        public IActionResult Edit(FrameworkTenantVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (CanUseTenant() == false)
             {
-                return Content(Localizer["_Admin.HasMainHost"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             if (!ModelState.IsValid)
             {
@@ -100,20 +107,16 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public async Task<IActionResult> BatchDelete(string[] ids)
+        public IActionResult BatchDelete(string[] ids)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (CanUseTenant() == false)
             {
-                return Content(Localizer["_Admin.HasMainHost"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
-            var vm = Wtm.CreateVM<FrameworkGroupBatchVM>();
-            List<string> GroupCode = new List<string>();
-            if (ids != null && ids.Count() > 0)
-            {
-                GroupCode = DC.Set<FrameworkGroup>().CheckIDs(new List<string>(ids)).Select(x => x.GroupCode).ToList();
-                vm.Ids = ids;
-            }
-            else
+            var vm = Wtm.CreateVM<FrameworkTenantBatchVM>();
+            if (ids == null || ids.Count() == 0)
             {
                 return Ok();
             }
@@ -123,25 +126,22 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                var gr = DC.Set<FrameworkUserGroup>().Where(x => GroupCode.Contains(x.GroupCode)).ToList();
-                var itcodes = gr.Select(x => x.UserCode).ToArray();
-                DC.Set<FrameworkUserGroup>().RemoveRange(gr);
-                DC.SaveChanges();
-                await Wtm.RemoveUserCacheByGroup(GroupCode.ToArray());
-                Wtm.RemoveGroupCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
+                Cache.Delete(nameof(GlobalData.AllTenant));
                 return Ok(ids.Count());
             }
         }
 
         [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
+        public IActionResult ExportExcel(FrameworkTenantSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (CanUseTenant() == false)
             {
-                return Content(Localizer["_Admin.HasMainHost"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
-            var vm = Wtm.CreateVM<FrameworkGroupListVM>();
+            var vm = Wtm.CreateVM<FrameworkTenantListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             return vm.GetExportData();
@@ -151,11 +151,13 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (CanUseTenant() == false)
             {
-                return Content(Localizer["_Admin.HasMainHost"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
-            var vm = Wtm.CreateVM<FrameworkGroupListVM>();
+            var vm = Wtm.CreateVM<FrameworkTenantListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -168,11 +170,13 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (CanUseTenant() == false)
             {
-                return Content(Localizer["_Admin.HasMainHost"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
-            var vm = Wtm.CreateVM<FrameworkGroupImportVM>();
+            var vm = Wtm.CreateVM<FrameworkTenantImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
@@ -185,12 +189,14 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Import")]
         [HttpPost("[action]")]
-        public ActionResult Import(FrameworkGroupImportVM vm)
+        public ActionResult Import(FrameworkTenantImportVM vm)
         {
 
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (CanUseTenant() == false)
             {
-                return Content(Localizer["_Admin.HasMainHost"]);
+                ModelState.Clear();
+                ModelState.AddModelError(" TenantNotAllowed", Localizer["_Admin.TenantNotAllowed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
@@ -198,18 +204,32 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                Wtm.RemoveGroupCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
                 return Ok(vm.EntityList.Count);
             }
         }
 
+        [HttpGet("GetFrameworkTenants")]
+        [ActionDescription("GetTenants")]
         [AllRights]
-        [HttpGet("[action]")]
-        public IActionResult GetParents()
+        public IActionResult GetFrameworkTenants(string parent)
         {
-            var data = DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName);
-            return Ok(data);
+            if(parent == "")
+            {
+                parent = null;
+            }
+            return Ok(Wtm.GlobaInfo.AllTenant.AsQueryable().Where(x=> x.TenantCode == parent).GetSelectListItems(Wtm,x=>x.TName,x=>x.TCode));
         }
+
+
+        private bool CanUseTenant()
+        {
+            if (Wtm.LoginUserInfo != null && (Wtm.LoginUserInfo.CurrentTenant == null || Wtm.GlobaInfo.AllTenant.Any(x => x.TCode == Wtm.LoginUserInfo.CurrentTenant && x.Enabled == true && x.EnableSub == true)))
+            {
+                return true;
+            }
+            return false;
+        }
+
 
     }
 }

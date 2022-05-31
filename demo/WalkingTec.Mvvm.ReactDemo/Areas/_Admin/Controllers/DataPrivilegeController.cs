@@ -145,6 +145,17 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
+
+        [AllRights]
+        [HttpGet("[action]")]
+        public IActionResult GetUserGroupsTree()
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_DataPrivilege/GetUserGroupsTree").Result;
+            }
+            return Ok(DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+        }
     }
 
     public class SimpleDpModel

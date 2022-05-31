@@ -159,6 +159,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 DC.Set<FrameworkUserRole>().RemoveRange(ur);
                 DC.SaveChanges();
                 await Wtm.RemoveUserCache(itcodes);
+                await Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant);
                 return Ok(ids.Count());
             }
         }
@@ -228,6 +229,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
+                Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
                 return Ok(vm.EntityList.Count);
             }
         }

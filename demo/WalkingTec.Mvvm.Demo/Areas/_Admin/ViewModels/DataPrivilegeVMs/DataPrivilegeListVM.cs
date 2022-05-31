@@ -141,30 +141,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             else
             {
-                var dbtenant = Wtm.GlobaInfo.AllTenant.Where(x => x.TCode == Wtm.LoginUserInfo?.CurrentTenant && x.IsUsingDB == true).FirstOrDefault();
-                if (dbtenant != null)
+                var ag = Wtm.GetTenantGroups(Wtm.LoginUserInfo?.CurrentTenant);
+                foreach (var item in ag)
                 {
-                    using (var tdc = dbtenant.CreateDC(Wtm))
-                    {
-                        var allgroups = tdc.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.GroupCode) && x.TenantCode == Wtm.LoginUserInfo.CurrentTenant)
-                            .Select(x => new 
-                            {
-                                GroupCode = x.GroupCode,
-                                GroupName = x.GroupName,
-                            }).ToList();
-                        foreach (var group in allgroups)
-                        {
-                            groupdata.TryAdd(group.GroupCode, group.GroupName);
-                        }
-                    }
-                }
-                else
-                {
-                    var groups = Wtm.GlobaInfo.AllGroups.Where(x => groupIDs.Contains(x.GroupCode) && x.Tenant == Wtm.LoginUserInfo.CurrentTenant).ToList();
-                    foreach (var group in groups)
-                    {
-                        groupdata.TryAdd(group.GroupCode, group.GroupName);
-                    }
+                    groupdata.TryAdd(item.GroupCode, item.GroupName);
                 }
             }
             foreach (var item in EntityList)

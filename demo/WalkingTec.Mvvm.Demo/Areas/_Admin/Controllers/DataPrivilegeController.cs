@@ -137,13 +137,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             WalkingTec.Mvvm.Admin.Api.DataPrivilegeController userapi = new Mvvm.Admin.Api.DataPrivilegeController();
             userapi.Wtm = Wtm;
-            var rv = userapi.GetUserGroups() as OkObjectResult;
-            List<ComboSelectListItem> users = new List<ComboSelectListItem>();
+            var rv = userapi.GetUserGroupsTree() as OkObjectResult;
+            List<TreeSelectListItem> users = new List<TreeSelectListItem>();
             if (rv != null && rv.Value is string && rv.Value != null)
             {
-                users = System.Text.Json.JsonSerializer.Deserialize<List<ComboSelectListItem>>(rv.Value.ToString());
+                users = System.Text.Json.JsonSerializer.Deserialize<List<TreeSelectListItem>>(rv.Value.ToString());
             }
-            else if (rv != null && rv.Value is List<ComboSelectListItem> c)
+            else if (rv != null && rv.Value is List<TreeSelectListItem> c)
             {
                 users = c;
             }

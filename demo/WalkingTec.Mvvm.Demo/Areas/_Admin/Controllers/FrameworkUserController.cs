@@ -389,7 +389,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             WalkingTec.Mvvm.Admin.Api.FrameworkUserController userapi = new Mvvm.Admin.Api.FrameworkUserController();
             userapi.Wtm = Wtm;
-            var rv = userapi.GetFrameworkGroups() as OkObjectResult;
+            var rv = userapi.GetFrameworkGroupsTree() as OkObjectResult;
             List<TreeSelectListItem> users = new List<TreeSelectListItem>();
             if (rv != null && rv.Value is string && rv.Value != null)
             {

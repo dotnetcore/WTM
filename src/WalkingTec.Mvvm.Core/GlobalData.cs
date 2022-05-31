@@ -47,18 +47,15 @@ namespace WalkingTec.Mvvm.Core
 
         private Func<List<SimpleMenu>> MenuGetFunc;
         private Func<List<FrameworkTenant>> TenantGetFunc;
-        private Func<List<SimpleGroup>> GroupGetFunc;
 
         public List<SimpleMenu> AllMenus => MenuGetFunc?.Invoke();
         public List<FrameworkTenant> AllTenant => TenantGetFunc?.Invoke();
-        public List<SimpleGroup> AllGroups => GroupGetFunc?.Invoke();
         /// <summary>
         /// 设置菜单委托
         /// </summary>
         /// <param name="func"></param>
         public void SetMenuGetFunc(Func<List<SimpleMenu>> func) => MenuGetFunc = func;
         public void SetTenantGetFunc(Func<List<FrameworkTenant>> func) => TenantGetFunc = func;
-        public void SetGroupGetFunc(Func<List<SimpleGroup>> func) => GroupGetFunc = func;
 
         public List<Type> GetTypesAssignableFrom<T>()
         {

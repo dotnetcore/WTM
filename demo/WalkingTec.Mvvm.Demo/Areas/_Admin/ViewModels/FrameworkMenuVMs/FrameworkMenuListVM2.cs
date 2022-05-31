@@ -26,6 +26,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.FolderOnly, 60),
                         this.MakeGridHeader(x => x.IsPublic, 60),
                         this.MakeGridHeader(x => x.DisplayOrder, 60),
+                        this.MakeGridHeader(x => x.TenantAllowed, 60),
                         this.MakeGridHeader(x => x.Icon, 100),
                         this.MakeGridHeader(x => x.Children, 100),
                         this.MakeGridHeader(x=>x.ParentId).SetHide(),
@@ -68,14 +69,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 DisplayOrder = x.DisplayOrder,
                 ExtraOrder = order++,
                 ParentId = x.ParentId,
-                Icon = x.Icon,
-                HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
+                TenantAllowed = x.TenantAllowed,
+                Icon = x.Icon
             }).OrderBy(x => x.ExtraOrder).ToList();
 
             return data2.AsQueryable() as IOrderedQueryable<FrameworkMenu_ListView>;
         }
     }
-    public class FrameworkMenu_ListView : BasePoco
+    public class FrameworkMenu_ListView : TreePoco<FrameworkMenu_ListView>
     {
         [Display(Name = "_Admin.PageName")]
         public string PageName { get; set; }
@@ -105,19 +106,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public bool Denied { get; set; }
 
-        public bool HasChild { get; set; }
+        public bool HasChild { get => HasChildren; }
 
         public string IconClass { get; set; }
 
-        public IEnumerable<FrameworkMenu_ListView> Children { get; set; }
-
-        public FrameworkMenu Parent { get; set; }
-
-        public Guid? ParentId { get; set; }
 
         public int ExtraOrder { get; set; }
 
         public bool? IsInside { get; set; }
+
+        [Display(Name = "_Admin.TenantAllowed")]
+        public bool? TenantAllowed { get; set; }
+
     }
 
 }

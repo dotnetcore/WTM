@@ -26,6 +26,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.FolderOnly, 60),
                         this.MakeGridHeader(x => x.IsPublic, 60),
                         this.MakeGridHeader(x => x.DisplayOrder, 60),
+                        this.MakeGridHeader(x => x.TenantAllowed, 60),
                         this.MakeGridHeader(x => x.Icon, 100),
                         this.MakeGridHeader(x => x.Children, 100),
                         this.MakeGridHeader(x=>x.ParentId).SetHide(),
@@ -68,6 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 DisplayOrder = x.DisplayOrder,
                 ExtraOrder = order++,
                 ParentId = x.ParentId,
+                TenantAllowed = x.TenantAllowed,
                 Icon = x.Icon
             }).OrderBy(x => x.ExtraOrder).ToList();
 
@@ -112,6 +114,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public int ExtraOrder { get; set; }
 
         public bool? IsInside { get; set; }
+
+        [Display(Name = "_Admin.TenantAllowed")]
+        public bool? TenantAllowed { get; set; }
+
     }
 
 }

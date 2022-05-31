@@ -114,6 +114,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
             T value,
             DistributedCacheEntryOptions options = null)
         {
+            if(options == null && typeof(T) == typeof(LoginUserInfo) ){
+                options = new DistributedCacheEntryOptions()
+                {
+                    AbsoluteExpirationRelativeToNow = new System.TimeSpan(7, 0, 0, 0)
+                };
+            }
             if (options == null)
                 cache.Set(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, CoreProgram.DefaultJsonOption)));
             else

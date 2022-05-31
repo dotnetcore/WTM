@@ -240,6 +240,18 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkGroups").Result;
             }
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+        }
+
+        [HttpGet("GetFrameworkGroupsTree")]
+        [ActionDescription("GetGroupsTree")]
+        [AllRights]
+        public IActionResult GetFrameworkGroupsTree()
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkGroupsTree").Result;
+            }
             return Ok(DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
 

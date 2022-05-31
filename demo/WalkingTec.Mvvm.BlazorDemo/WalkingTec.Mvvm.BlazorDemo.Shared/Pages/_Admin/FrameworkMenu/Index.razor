@@ -12,6 +12,7 @@
         <TableColumn @bind-Field="@context.ShowOnMenu" ComponentType="@typeof(Switch)"/>
         <TableColumn @bind-Field="@context.FolderOnly"   ComponentType="@typeof(Switch)"/>
         <TableColumn @bind-Field="@context.IsPublic"   ComponentType="@typeof(Switch)"/>
+        <TableColumn @bind-Field="@context.TenantAllowed"   ComponentType="@typeof(Switch)"/>
         <TableColumn @bind-Field="@context.DisplayOrder" Sortable="true"  />
         <TableColumn @bind-Field="@context.Icon">
             <Template Context="value">

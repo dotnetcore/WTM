@@ -25,6 +25,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 claims.Add(new Claim(AuthConstants.JwtClaimTypes.TenantCode, self.TenantCode));
             }
+            if (!string.IsNullOrEmpty(self.RemoteToken))
+            {
+                claims.Add(new Claim(AuthConstants.JwtClaimTypes.RToken, self.RemoteToken));
+            }
             var id = new ClaimsIdentity(
                 claims.Distinct(new ClaimComparer()),
                 AuthConstants.AuthenticationType,

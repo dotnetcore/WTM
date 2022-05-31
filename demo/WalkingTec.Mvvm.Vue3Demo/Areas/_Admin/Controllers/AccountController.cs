@@ -70,27 +70,29 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
-            var user = Wtm.DoLogin(loginInfo.Account, loginInfo.Password, loginInfo.Tenant);
-            if (user == null)
+            if (string.IsNullOrEmpty(loginInfo.RemoteToken))
             {
-                ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"]);
-                return BadRequest(ModelState.GetErrorJson());
+                var user = Wtm.DoLogin(loginInfo.Account, loginInfo.Password, loginInfo.Tenant);
+                if (user == null)
+                {
+                    ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"]);
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+
+                //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
+
+                Wtm.LoginUserInfo = user;
             }
-
-            //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
-
-            Wtm.LoginUserInfo = user;
             var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
-
             var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
             return Content(JsonSerializer.Serialize(token), "application/json");
         }
 
-        [AllowAnonymous]
+        [AllRights]
         [HttpGet("[action]")]
-        public IActionResult SetTenant(string tenant)
+        public IActionResult SetTenant([FromQuery]string tenant)
         {
-            bool rv = Wtm.SetCurrentTenant(tenant);
+            bool rv = Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
             return Ok(rv);
         }
 
@@ -172,6 +174,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ChangePassword(ChangePasswordVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm).Result;
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
@@ -191,13 +197,21 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [AllRights]
+        [Public]
         [HttpGet("[action]")]
-        public async Task Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Clear();
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            Ok();
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                await Wtm.CallAPI<string>("mainhost", "/api/_account/logout", HttpMethodEnum.GET, new { }, 10);
+                return Ok(ConfigInfo.MainHost);
+            }
+            else
+            {
+                HttpContext.Session.Clear();
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return Ok("/");
+            }
         }
 
     }
@@ -207,6 +221,8 @@ namespace WalkingTec.Mvvm.Admin.Api
         public string Account { get; set; }
         public string Password { get; set; }
         public string Tenant { get; set; }
+
+        public string RemoteToken { get; set; }
     }
     public class SimpleReg
     {
