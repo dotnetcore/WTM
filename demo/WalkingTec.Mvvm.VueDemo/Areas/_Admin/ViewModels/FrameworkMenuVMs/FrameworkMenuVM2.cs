@@ -280,7 +280,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
             }
             DC.SaveChanges();
-            Wtm.RemoveUserCacheByRole(SelectedRolesIds.ToArray());
+            Wtm.RemoveUserCacheByRole(SelectedRolesCodes.ToArray());
         }
 
 

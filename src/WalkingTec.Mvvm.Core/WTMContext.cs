@@ -454,7 +454,7 @@ namespace WalkingTec.Mvvm.Core
         {
             if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
             {
-                var rv = CallAPI<Token>("mainhost", "/api/_account/refreshtoken?", HttpMethodEnum.POST, new  { refreshToken = refreshtoken }).Result;
+                var rv = CallAPI<Token>("mainhost", $"/api/_account/RefreshToken?refreshToken={refreshtoken}", HttpMethodEnum.POST, new  {  }).Result;
                 return rv.Data;
             }
             else

@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         [Public]
         [ProducesResponseType(typeof(Token), StatusCodes.Status200OK)]
-        public async Task<IActionResult> RefreshToken(string refreshToken)
+        public IActionResult RefreshToken(string refreshToken)
         {
             var rv = Wtm.RefreshToken(refreshToken);
             if (rv == null)

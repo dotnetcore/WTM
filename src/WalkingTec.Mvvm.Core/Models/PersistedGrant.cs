@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
     [Table("PersistedGrants")]
     public class PersistedGrant : TopBasePoco
     {
-        [StringLength(200)]
+        [StringLength(50)]
         public string Type { get; set; }
 
         public string UserCode { get; set; }
@@ -29,6 +29,6 @@ namespace WalkingTec.Mvvm.Core
 
         [StringLength(50)]
         public string RefreshToken { get; set; }
-
+        public string RemoteToken { get; set; }
     }
 }
