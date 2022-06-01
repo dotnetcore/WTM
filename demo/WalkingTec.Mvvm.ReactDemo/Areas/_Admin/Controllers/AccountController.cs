@@ -130,11 +130,11 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [HttpPost("[action]")]
-        [Public]
+        [AllRights]
         [ProducesResponseType(typeof(Token), StatusCodes.Status200OK)]
         public IActionResult RefreshToken(string refreshToken)
         {
-            var rv = Wtm.RefreshToken(refreshToken);
+            var rv = Wtm.RefreshToken();
             if (rv == null)
             {
                 return BadRequest();

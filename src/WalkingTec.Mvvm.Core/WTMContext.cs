@@ -450,19 +450,30 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public Token RefreshToken(string refreshtoken)
+        public Token RefreshToken()
         {
-            //if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
-            //{
-            //    var rv = CallAPI<Token>("mainhost", $"/api/_account/RefreshToken?refreshToken={refreshtoken}", HttpMethodEnum.POST, new  {  }).Result;
-            //    return rv.Data;
-            //}
-            //else
-            //{
-                var _authService = ServiceProvider.GetRequiredService<ITokenService>();
-                var rv =_authService.RefreshTokenAsync(refreshtoken).Result;
-                return rv;
-           // }
+            if(LoginUserInfo == null)
+            {
+                return null;
+            }
+            string rt = null;
+            if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
+            {
+                var r = CallAPI<Token>("mainhost", $"/api/_account/RefreshToken", HttpMethodEnum.POST, new { }).Result;
+                rt = r?.Data?.AccessToken;
+            }
+            else
+            {
+                rt = LoginUserInfo.RemoteToken;
+           }
+            var _authService = ServiceProvider.GetRequiredService<ITokenService>();
+            var rv = _authService.IssueTokenAsync(new LoginUserInfo
+            {
+                ITCode = LoginUserInfo.ITCode,
+                TenantCode = LoginUserInfo.TenantCode,
+                RemoteToken = rt
+            }).Result;
+            return rv;
         }
 
         public T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
