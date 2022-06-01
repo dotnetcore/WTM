@@ -70,19 +70,16 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
-            if (string.IsNullOrEmpty(loginInfo.RemoteToken))
+            var user = Wtm.DoLogin(loginInfo.Account, loginInfo.Password, loginInfo.Tenant);
+            if (user == null)
             {
-                var user = Wtm.DoLogin(loginInfo.Account, loginInfo.Password, loginInfo.Tenant);
-                if (user == null)
-                {
-                    ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"]);
-                    return BadRequest(ModelState.GetErrorJson());
-                }
-
-                //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
-
-                Wtm.LoginUserInfo = user;
+                ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"]);
+                return BadRequest(ModelState.GetErrorJson());
             }
+
+            //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
+
+            Wtm.LoginUserInfo = user;
             var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
             var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
             return Content(JsonSerializer.Serialize(token), "application/json");
@@ -90,7 +87,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public IActionResult SetTenant([FromQuery]string tenant)
+        public IActionResult SetTenant([FromQuery] string tenant)
         {
             bool rv = Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
             return Ok(rv);
@@ -137,7 +134,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ProducesResponseType(typeof(Token), StatusCodes.Status200OK)]
         public async Task<IActionResult> RefreshToken(string refreshToken)
         {
-            var rv = await _authService.RefreshTokenAsync(refreshToken);
+            var rv = Wtm.RefreshToken(refreshToken);
             if (rv == null)
             {
                 return BadRequest();
@@ -150,7 +147,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public IActionResult CheckUserInfo(bool IsApi=true)
+        public IActionResult CheckUserInfo(bool IsApi = true)
         {
             if (Wtm.LoginUserInfo == null)
             {

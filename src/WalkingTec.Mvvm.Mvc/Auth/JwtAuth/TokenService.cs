@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
             var refreshToken = new PersistedGrant()
             {
                 UserCode = loginUserInfo.ITCode + "$`$" + loginUserInfo.TenantCode,
-                Type = "refresh_token",
+                Type = loginUserInfo.RemoteToken,
                 CreationTime = DateTime.Now,
                 RefreshToken = Guid.NewGuid().ToString("N"),
                 Expiration = DateTime.Now.AddSeconds(_jwtOptions.RefreshTokenExpires)
@@ -124,6 +124,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
                 {
                     ITCode = pair[0],
                     TenantCode = pair[1],
+                    RemoteToken = persistedGrant.Type
                 };
 
                 // 颁发 token

@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
     [Table("PersistedGrants")]
     public class PersistedGrant : TopBasePoco
     {
-        [StringLength(50)]
+        [StringLength(200)]
         public string Type { get; set; }
 
         public string UserCode { get; set; }
