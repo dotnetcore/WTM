@@ -17,22 +17,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public ModelExpression Items { get; set; }
         public bool ShowLine { get; set; } = true;
         /// <summary>
-        /// 点击事件
-        /// </summary>
-        /// <summary>
-        /// 点击时触发的js函数名，func(data)格式;
-        /// <para>
-        /// data.elem得到当前节点元素;
-        /// </para>
-        /// <para>
-        /// data.data得到当前点击的节点数据
-        /// </para>
-        /// <para>
-        /// data.state得到当前节点的展开状态：open、close、normal
-        /// </para>
-        /// </summary>
-        public string ClickFunc { get; set; }
-        /// <summary>
         /// 勾选事件
         /// </summary>
         /// <summary>
@@ -47,9 +31,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// data.checked是否被选中
         /// </para>
         /// </summary>
-        public string CheckFunc { get; set; }
+        public string ChangeFunc { get; set; }
         public bool AutoRow { get; set; }
         public bool? EnableSearch { get; set; }
+        public ModelExpression LinkField { get; set; }
+
+        public string LinkId { get; set; }
+        public string TriggerUrl { get; set; }
 
         public TreeTagHelper(IOptionsMonitor<Configs> configs)
         {
@@ -162,6 +150,19 @@ var {Id} = xmSelect.render({{
 		indent: 20
 	}},
 	height: '400px',
+    on:function(data){{
+        {((LinkField != null || string.IsNullOrEmpty(LinkId) == false) ? @$"
+            if (eval(""{(string.IsNullOrEmpty(ChangeFunc) ? "1==1" : FormatFuncName(ChangeFunc))}"") != false) {{
+                var u = ""{(TriggerUrl ?? "")}"";
+                if (u.indexOf(""?"") == -1) {{
+                    u += ""?t="" + new Date().getTime();
+                }}
+                for (var i = 0; i < data.arr.length; i++) {{
+                    u += ""&id="" + data.arr[i].value;
+                }}
+                ff.ChainChange(u, $('#{Id}')[0])
+        }}" : FormatFuncName(ChangeFunc))}
+   }},
 	data:  {JsonSerializer.Serialize(treeitems)}
 }})
 </script>

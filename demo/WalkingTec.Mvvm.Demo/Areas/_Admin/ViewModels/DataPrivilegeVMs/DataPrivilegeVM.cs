@@ -260,8 +260,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             else
             {
-                var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == Entity.GroupCode).Select(x => x.UserCode).ToArray();
-                await Wtm.RemoveUserCache(userids);
+                await Wtm.RemoveUserCacheByGroup(Entity.GroupCode);
             }
         }
 

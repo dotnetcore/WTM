@@ -85,6 +85,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                 }
             }
             DC.SaveChanges();
+            Wtm.RemoveUserCacheByGroup(GroupCode).Wait();
             return true;
         }
 

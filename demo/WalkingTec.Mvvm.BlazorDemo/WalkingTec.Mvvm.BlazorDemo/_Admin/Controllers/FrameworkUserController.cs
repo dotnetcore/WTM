@@ -257,6 +257,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [HttpGet("GetUserById")]
+        [AllRights]
         public IActionResult GetUserById(string keywords)
         {
             if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
@@ -264,6 +265,30 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserById").Result;
             }
             var users = DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
+            return Ok(users);
+        }
+
+        [HttpGet("GetUserByGroup")]
+        [AllRights]
+        public IActionResult GetUserByGroup(string keywords)
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserByGroup").Result;
+            }
+            var users = DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == keywords).Select(x=>x.UserCode).ToList();
+            return Ok(users);
+        }
+
+        [HttpGet("GetUserByRole")]
+        [AllRights]
+        public IActionResult GetUserByRole(string keywords)
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserByRole").Result;
+            }
+            var users = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == keywords).Select(x => x.UserCode).ToList();
             return Ok(users);
         }
     }

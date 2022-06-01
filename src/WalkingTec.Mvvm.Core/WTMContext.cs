@@ -487,7 +487,22 @@ namespace WalkingTec.Mvvm.Core
         public async Task RemoveUserCacheByRole(
     params string[] rolecode)
         {
-            var userids = DC.Set<FrameworkUserRole>().Where(x => rolecode.Contains(x.RoleCode)).Select(x => x.UserCode).ToArray();
+            List<string> userids = new List<string>();
+            if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(LoginUserInfo?.CurrentTenant) == true)
+            {
+                foreach (var item in rolecode)
+                {
+                    var rv = await CallAPI<List<string>>("mainhost", $"/api/_frameworkuser/GetUserByRole?keywords={item}");
+                    if (rv != null && rv.Data != null)
+                    {
+                        userids.AddRange(rv.Data);
+                    }
+                }
+            }
+            else
+            {
+                userids = DC.Set<FrameworkUserRole>().Where(x => rolecode.Contains(x.RoleCode)).Select(x => x.UserCode).ToList();
+            }
             foreach (var userId in userids)
             {
                 var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
@@ -498,7 +513,22 @@ namespace WalkingTec.Mvvm.Core
         public async Task RemoveUserCacheByGroup(
 params string[] groupcode)
         {
-            var userids = DC.Set<FrameworkUserGroup>().Where(x => groupcode.Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
+            List<string> userids = new List<string>();
+            if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(LoginUserInfo?.CurrentTenant) == true)
+            {
+                foreach (var item in groupcode)
+                {
+                    var rv = await CallAPI<List<string>>("mainhost", $"/api/_frameworkuser/GetUserByGroup?keywords={item}");
+                    if (rv != null && rv.Data != null)
+                    {
+                        userids.AddRange(rv.Data);
+                    }
+                }
+            }
+            else
+            {
+                userids = DC.Set<FrameworkUserGroup>().Where(x => groupcode.Contains(x.GroupCode)).Select(x => x.UserCode).ToList();
+            }
             foreach (var userId in userids)
             {
                 var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
@@ -508,14 +538,17 @@ params string[] groupcode)
 
         public async Task RemoveGroupCache(string tenant)
         {
-            var key = $"{GlobalConstants.CacheKey.TenantGroups}:{tenant}";
-            await Cache.DeleteAsync(key);
+
+                var key = $"{GlobalConstants.CacheKey.TenantGroups}:{tenant}";
+                await Cache.DeleteAsync(key);
         }
 
         public async Task RemoveRoleCache(string tenant)
         {
-            var key = $"{GlobalConstants.CacheKey.TenantRoles}:{tenant}";
-            await Cache.DeleteAsync(key);
+
+                var key = $"{GlobalConstants.CacheKey.TenantRoles}:{tenant}";
+                await Cache.DeleteAsync(key);
+            
         }
 
         public List<SimpleGroup> GetTenantGroups(string tenant)
