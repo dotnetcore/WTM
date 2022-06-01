@@ -452,17 +452,17 @@ namespace WalkingTec.Mvvm.Core
 
         public Token RefreshToken(string refreshtoken)
         {
-            if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
-            {
-                var rv = CallAPI<Token>("mainhost", $"/api/_account/RefreshToken?refreshToken={refreshtoken}", HttpMethodEnum.POST, new  {  }).Result;
-                return rv.Data;
-            }
-            else
-            {
+            //if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
+            //{
+            //    var rv = CallAPI<Token>("mainhost", $"/api/_account/RefreshToken?refreshToken={refreshtoken}", HttpMethodEnum.POST, new  {  }).Result;
+            //    return rv.Data;
+            //}
+            //else
+            //{
                 var _authService = ServiceProvider.GetRequiredService<ITokenService>();
                 var rv =_authService.RefreshTokenAsync(refreshtoken).Result;
                 return rv;
-            }
+           // }
         }
 
         public T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
