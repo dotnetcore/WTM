@@ -22,18 +22,19 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <summary>
         /// 勾选时触发的js函数名，func(data)格式;
         /// <para>
-        /// data.elem得到当前节点元素;
+        /// data.arr得到当前选中数据数组;
         /// </para>
         /// <para>
-        /// data.data得到当前点击的节点数据
+        /// data.change得到本次操作变化的数据数组
         /// </para>
         /// <para>
-        /// data.checked是否被选中
+        /// data.isadd得到本次操作是增加还是删除
         /// </para>
         /// </summary>
         public string ChangeFunc { get; set; }
         public bool AutoRow { get; set; }
         public bool? EnableSearch { get; set; }
+        public bool? ShowToolbar { get; set; } = true;
         public ModelExpression LinkField { get; set; }
 
         public string LinkId { get; set; }
@@ -125,7 +126,7 @@ var {Id} = xmSelect.render({{
         }}
     }},
     toolbar: {{
-        show: true,
+        show: {ShowToolbar.Value.ToString().ToLower()},
         list: ['CLEAR']}}," : $@"
         toolbar: {{show: true,list: ['ALL', 'REVERSE', 'CLEAR']}},
         model: {{
