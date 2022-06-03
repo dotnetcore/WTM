@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 if (MSD.IsValid)
                 {
                     trans.Commit();
-                    await Wtm.RemoveUserCache(Entity.ITCode.ToString());
+                    await Wtm.RemoveUserCache(Entity.ITCode);
                 }
                 else
                 {
@@ -159,7 +159,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     tran.Rollback();
                 }
             }
-            await Wtm.RemoveUserCache(Entity.ITCode.ToString());
+            await Wtm.RemoveUserCache(Entity.ITCode);
         }
 
         public void ChangePassword()

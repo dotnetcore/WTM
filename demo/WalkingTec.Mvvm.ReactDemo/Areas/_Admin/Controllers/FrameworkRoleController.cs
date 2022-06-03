@@ -158,7 +158,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var itcodes = ur.Select(x => x.UserCode).ToArray();
                 DC.Set<FrameworkUserRole>().RemoveRange(ur);
                 DC.SaveChanges();
-                await Wtm.RemoveUserCache(itcodes);
+                await Wtm.RemoveUserCacheByRole(itcodes);
                 await Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant);
                 return Ok(ids.Count());
             }

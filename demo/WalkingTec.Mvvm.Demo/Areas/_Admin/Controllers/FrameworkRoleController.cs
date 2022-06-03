@@ -165,7 +165,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 var itcodes = ur.Select(x => x.UserCode).ToArray();
                 DC.Set<FrameworkUserRole>().RemoveRange(ur);
                 DC.SaveChanges();
-                await Wtm.RemoveUserCache(itcodes);
+                await Wtm.RemoveUserCacheByRole(RoleCode.ToArray());
                 await Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant);
                 return FFResult().CloseDialog().RefreshGrid();
             }
