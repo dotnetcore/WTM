@@ -33,33 +33,28 @@ namespace WalkingTec.Mvvm.Mvc
                 context.Response.Cookies.Append("pagemode", wtm.ConfigInfo.PageMode.ToString());
                 context.Response.Cookies.Append("tabmode", wtm.ConfigInfo.TabMode.ToString());
             }
-            if (context.Request.ContentLength > 0 && context.Request.ContentLength < 512000)
+            if (context.Request.ContentLength > 0 && context.Request.HasFormContentType == false)
             {
-                context.Request.EnableBuffering();
-                context.Request.Body.Position = 0;
-                StreamReader tr = new StreamReader(context.Request.Body);
-                string body = tr.ReadToEndAsync().Result;
-                context.Request.Body.Position = 0;
-                if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
+                try
                 {
-                    context.Items.Add("DONOTUSE_REQUESTBODY", body);
+                    context.Request.EnableBuffering();
+                    context.Request.Body.Position = 0;
+                    StreamReader tr = new StreamReader(context.Request.Body);
+                    string body = tr.ReadToEndAsync().Result;
+                    context.Request.Body.Position = 0;
+                    if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
+                    {
+                        context.Items.Add("DONOTUSE_REQUESTBODY", body);
+                    }
+                    else
+                    {
+                        context.Items["DONOTUSE_REQUESTBODY"] = body;
+                    }
                 }
-                else
-                {
-                    context.Items["DONOTUSE_REQUESTBODY"] = body;
+                catch {
+                    context.Request.Body.Position = 0;
                 }
             }
-            //if(wtm.ConfigInfo.Domains != null)
-            //{
-            //    var mainHost = wtm.ConfigInfo.Domains.Where(x=>x.Key== "mainhost").Select(x=>x.Value.Address).FirstOrDefault();
-            //    if(string.IsNullOrEmpty(mainHost) == false)
-            //    {
-            //        if(context.Request.RouteValues["controller"]?.ToString()?.ToLower() == "login")
-            //        {
-            //            var test = await context.Request.RedirectCall(wtm, "mainhost");
-            //        }
-            //    }
-            //}
             await _next(context);
             if (context.Response.StatusCode == 404)
             {

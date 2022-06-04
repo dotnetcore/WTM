@@ -44,8 +44,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             var query = DC.Set<City>()
                 .CheckContain(Searcher.Name, x=>x.Name)
                 .DPWhere(Wtm, x=>x.ID)
-                .DPWhere(Wtm, x=>x.ParentId)
-                .DPWhere(Wtm, x => x.Parent.Children[0].Children[0].ID)
+                //.DPWhere(Wtm, x=>x.ParentId)
+                //.DPWhere(Wtm, x => x.Parent.Children[0].Children[0].ID)
                 .Select(x => new City_View
                 {
 				    ID = x.ID,

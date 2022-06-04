@@ -1,0 +1,19 @@
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs.FrameworkTenantVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+	<wt:quote>@Localizer["Sys.DeleteConfirm"]</wt:quote>
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:display field="Entity.TCode" />
+<wt:display field="Entity.TName" />
+<wt:display field="Entity.TDb" />
+<wt:display field="Entity.TDbType" />
+<wt:display field="Entity.DbContext" />
+<wt:display field="Entity.TDomain" />
+</wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@Localizer["Sys.Delete"]"/>
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

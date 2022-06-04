@@ -16,7 +16,7 @@
     <wt:textbox field="Entity.UserCode" search-url="/_Admin/FrameworkUser/GetUserById" />
   </wt:row>
   <wt:row id="grouprow">
-    <wt:combobox field="Entity.GroupCode" items="AllGroups" />
+    <wt:tree field="Entity.GroupCode" item-url="/_Admin/DataPrivilege/GetUserGroups" />
   </wt:row>
   <br /><br />
   <wt:row align="AlignEnum.Right">

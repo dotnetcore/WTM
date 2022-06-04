@@ -12,7 +12,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
     [ActionDescription("MenuKey.ActionLog")]
-    [FixConnection(CsName = "defaultlog")]
     public class ActionLogController : BaseController
     {
         [ActionDescription("Sys.Search")]

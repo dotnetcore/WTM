@@ -165,12 +165,12 @@ namespace WalkingTec.Mvvm.Core
                     query = query.Include(item);
                 }
             }
-            if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
-            {
-                var mod = new IsValidModifier();
-                var newExp = mod.Modify(query.Expression);
-                query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-            }
+            //if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
+            //{
+            //    var mod = new IsValidModifier();
+            //    var newExp = mod.Modify(query.Expression);
+            //    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+            //}
 
             //获取数据
             rv = query.CheckID(Id).AsNoTracking().SingleOrDefault();
@@ -257,7 +257,11 @@ namespace WalkingTec.Mvvm.Core
                     ent.CreateBy = LoginUserInfo?.ITCode;
                 }
             }
-
+            if (typeof(ITenant).IsAssignableFrom(typeof(TModel)))
+            {
+                ITenant ent = Entity as ITenant;
+                ent.TenantCode = LoginUserInfo?.CurrentTenant;
+            }
             if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
             {
                 (Entity as IPersistPoco).IsValid = true;
@@ -324,6 +328,11 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         ent.CreateBy = LoginUserInfo?.ITCode;
                                     }
+                                }
+                                if (typeof(ITenant).IsAssignableFrom(typeof(TModel)))
+                                {
+                                    ITenant ent = Entity as ITenant;
+                                    ent.TenantCode = LoginUserInfo?.CurrentTenant;
                                 }
                             }
                         }
@@ -456,7 +465,11 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         if (itempro.Name.ToLower() == fkname.ToLower())
                                         {
-                                            itempro.SetValue(newitem, Entity.GetID());
+                                            try
+                                            {
+                                                itempro.SetValue(newitem, Entity.GetID());
+                                            }
+                                            catch { }
                                             found = true;
                                         }
                                     }
@@ -569,6 +582,11 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         ent.CreateBy = LoginUserInfo?.ITCode;
                                     }
+                                }
+                                if (typeof(ITenant).IsAssignableFrom(typeof(TModel)))
+                                {
+                                    ITenant ent = Entity as ITenant;
+                                    ent.TenantCode = LoginUserInfo?.CurrentTenant;
                                 }
                                 DC.AddEntity(item);
                             }
@@ -953,7 +971,7 @@ namespace WalkingTec.Mvvm.Core
             if (checkCondition != null && checkCondition.Groups.Count > 0)
             {
                 //生成基础Query
-                var baseExp = DC.Set<TModel>().AsQueryable();
+                var baseExp = DC.Set<TModel>().IgnoreQueryFilters().AsQueryable();
                 var modelType = typeof(TModel);
                 ParameterExpression para = Expression.Parameter(modelType, "tm");
                 //循环所有重复字段组
@@ -978,6 +996,14 @@ namespace WalkingTec.Mvvm.Core
                         }
                         //将字段名保存，为后面生成错误信息作准备
                         props.AddRange(field.GetProperties());
+                    }
+                    if (typeof(ITenant).IsAssignableFrom(typeof(TModel)) && props.Any(x => x.Name.ToLower() == "tenantcode")==false && Wtm?.ConfigInfo.EnableTenant==true && group.UseTenant == true)
+                    {
+                        ITenant ent = Entity as ITenant;
+                        ent.TenantCode = LoginUserInfo.CurrentTenant;
+                        var f = new DuplicatedField<TModel>(x => (x as ITenant).TenantCode);
+                        Expression exp = f.GetExpression(Entity, para);
+                        conditions.Add(exp);
                     }
                     //如果要求判断id不重复，则去掉id不相等的判断，加入id相等的判断
                     if (props.Any(x => x.Name.ToLower() == "id"))

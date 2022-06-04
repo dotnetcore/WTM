@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [Public]
         public IActionResult GetFileName([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            return Ok(fp.GetFileName(id, ConfigInfo.CreateDC(csName)));
+            return Ok(fp.GetFileName(id, Wtm.CreateDC(cskey: csName)));
         }
 
         [HttpGet("[action]/{id}")]
@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [Public]
         public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, string csName = null, int? width = null, int? height = null)
         {
-            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id, true, Wtm.CreateDC(cskey: csName));
 
 
             if (file == null)
@@ -129,12 +129,26 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
+
+        [HttpGet("[action]/{id}")]
+        [ActionDescription("GetUserPhoto")]
+        [Public]
+        public async Task<IActionResult> GetUserPhoto([FromServices] WtmFileProvider fp, string id, string csName = null, int? width = null, int? height = null)
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Redirect(Wtm.ConfigInfo.MainHost+ Request.Path);
+            }
+            return await this.GetFile(fp,id, csName, width, height);
+        }
+
+
         [HttpGet("[action]/{id}")]
         [ActionDescription("DownloadFile")]
         [Public]
         public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(csName));
+            var file = fp.GetFile(id, true, Wtm.CreateDC(cskey:csName));
             if (file == null)
             {
                 return BadRequest(Localizer["Sys.FileNotFound"]);
@@ -153,7 +167,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("DeleteFile")]
         public IActionResult DeletedFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            fp.DeleteFile(id, ConfigInfo.CreateDC(csName));
+            fp.DeleteFile(id, Wtm.CreateDC(cskey: csName));
             return Ok(true);
         }
     }

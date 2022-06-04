@@ -32,9 +32,6 @@ namespace WalkingTec.Mvvm.Core
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool IsInherit { get; set; }
 
-        [Display(Name = "_Admin.Privileges")]
-        public List<FunctionPrivilege> Privileges { get; set; }
-
         /// <summary>
         /// ClassName
         /// </summary>
@@ -66,6 +63,10 @@ namespace WalkingTec.Mvvm.Core
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool? IsInside { get; set; }
 
+        [Display(Name = "_Admin.TenantAllowed")]
+        public bool? TenantAllowed { get; set; }
+
+
         /// <summary>
         /// Url
         /// </summary>
@@ -75,6 +76,5 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Icon")]
         [StringLength(50)]
         public string Icon { get; set; }
-
     }
 }

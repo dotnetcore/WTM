@@ -23,10 +23,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         {
         }
 
-        /// <summary>
-        /// 验证重复字段
-        /// </summary>
-        /// <returns></returns>
         public override DuplicatedInfo<FrameworkUser> SetDuplicatedCheck()
         {
             var rv = CreateFieldsInfo(SimpleField(x => x.ITCode));
@@ -35,7 +31,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         protected override void InitVM()
         {
-            SelectedRolesCodes = DC.Set<FrameworkUserRole>().Where(x=>x.UserCode == Entity.ITCode).Select(x=>x.RoleCode).ToList();
+            SelectedRolesCodes = DC.Set<FrameworkUserRole>().Where(x => x.UserCode == Entity.ITCode).Select(x => x.RoleCode).ToList();
             SelectedGroupCodes = DC.Set<FrameworkUserGroup>().Where(x => x.UserCode == Entity.ITCode).Select(x => x.GroupCode).ToList();
         }
 
@@ -89,10 +85,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             }
             using (var trans = DC.BeginTransaction())
             {
-                if(SelectedRolesCodes != null)
+                if (SelectedRolesCodes != null)
                 {
                     List<Guid> todelete = new List<Guid>();
-                    todelete.AddRange( DC.Set<FrameworkUserRole>().AsNoTracking().Where(x=> x.UserCode == Entity.ITCode).Select(x=>x.ID));
+                    todelete.AddRange(DC.Set<FrameworkUserRole>().AsNoTracking().Where(x => x.UserCode == Entity.ITCode).Select(x => x.ID));
                     foreach (var item in todelete)
                     {
                         DC.DeleteEntity(new FrameworkUserRole { ID = item });
@@ -135,7 +131,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 if (MSD.IsValid)
                 {
                     trans.Commit();
-                    await Wtm.RemoveUserCache(Entity.ID.ToString());
+                    await Wtm.RemoveUserCache(Entity.ITCode);
                 }
                 else
                 {
@@ -146,8 +142,24 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override async Task DoDeleteAsync()
         {
-            await base.DoDeleteAsync();
-            await Wtm.RemoveUserCache(Entity.ID.ToString());
+            using (var tran = DC.BeginTransaction())
+            {
+                try
+                {
+                    await base.DoDeleteAsync();
+                    var ur = DC.Set<FrameworkUserRole>().Where(x => x.UserCode == Entity.ITCode);
+                    DC.Set<FrameworkUserRole>().RemoveRange(ur);
+                    var ug = DC.Set<FrameworkUserGroup>().Where(x => x.UserCode == Entity.ITCode);
+                    DC.Set<FrameworkUserGroup>().RemoveRange(ug);
+                    DC.SaveChanges();
+                    tran.Commit();
+                }
+                catch
+                {
+                    tran.Rollback();
+                }
+            }
+            await Wtm.RemoveUserCache(Entity.ITCode);
         }
 
         public void ChangePassword()

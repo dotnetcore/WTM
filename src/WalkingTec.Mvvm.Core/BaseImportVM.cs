@@ -211,7 +211,7 @@ namespace WalkingTec.Mvvm.Core
                 if (Wtm.ServiceProvider != null)
                 {
                     var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
-                    file = fp.GetFile(UploadFileId, true, DC);
+                    file = fp.GetFile(UploadFileId, true,Wtm.CreateDC(false,"default"));
                 }
                 if (file == null)
                 {
@@ -460,6 +460,12 @@ namespace WalkingTec.Mvvm.Core
                     {
                         SetEntityFieldValue(entity, mep.Value, rowIndex, mep.Key, item);
                     }
+                    if (typeof(ITenant).IsAssignableFrom(entity.GetType()))
+                    {
+                        ITenant ent = entity as ITenant;
+                        ent.TenantCode = LoginUserInfo?.CurrentTenant;
+                    }
+
                 }
 
                 //给子表赋值
@@ -511,6 +517,12 @@ namespace WalkingTec.Mvvm.Core
                                         (SubTypeEntity as IBasePoco).CreateTime = DateTime.Now;
                                         (SubTypeEntity as IBasePoco).CreateBy = LoginUserInfo?.ITCode;
                                     }
+                                    if (typeof(ITenant).IsAssignableFrom(SubTypeEntity.GetType()))
+                                    {
+                                        ITenant ent = SubTypeEntity as ITenant;
+                                        ent.TenantCode = LoginUserInfo?.CurrentTenant;
+                                    }
+
                                     //var context = new ValidationContext(SubTypeEntity);
                                     //var validationResults = new List<ValidationResult>();
                                     //TryValidateObject(SubTypeEntity, context, validationResults);
@@ -704,7 +716,7 @@ namespace WalkingTec.Mvvm.Core
                         Expression conExp = conditions[0];
                         for (int i = 1; i < conditions.Count; i++)
                         {
-                            conExp = Expression.And(conExp, conditions[i]);
+                            conExp = Expression.AndAlso(conExp, conditions[i]);
                         }
 
                         MethodCallExpression whereCallExpression = Expression.Call(
@@ -923,7 +935,7 @@ namespace WalkingTec.Mvvm.Core
                 DoReInit();
                 return false;
             }
-
+            var ModelType = typeof(P);
             //循环数据列表
             List<P> ListAdd = new List<P>();
             foreach (var item in EntityList)
@@ -987,7 +999,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (exist == null)
                     {
-                        if (typeof(IPersistPoco).IsAssignableFrom(item.GetType()))
+                        if (typeof(IPersistPoco).IsAssignableFrom(ModelType))
                         {
                             (item as IPersistPoco).IsValid = true;
                         }
@@ -999,6 +1011,12 @@ namespace WalkingTec.Mvvm.Core
                     (item as IBasePoco).CreateTime = DateTime.Now;
                     (item as IBasePoco).CreateBy = LoginUserInfo?.ITCode;
                 }
+                if (typeof(ITenant).IsAssignableFrom(ModelType))
+                {
+                    ITenant ent = item as ITenant;
+                    ent.TenantCode = LoginUserInfo?.CurrentTenant;
+                }
+
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
                 if (ConfigInfo.Connections.Where(x => x.Key == (CurrentCS ?? "default")).FirstOrDefault().DbType == DBTypeEnum.SqlServer && !HasSubTable && UseBulkSave == true)
                 {

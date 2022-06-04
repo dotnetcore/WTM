@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     public class WtmLocalFileHandler : WtmFileHandlerBase
     {
 
-        public WtmLocalFileHandler(Configs config, IDataContext dc) : base(config, dc)
+        public WtmLocalFileHandler(WTMContext wtm) : base(wtm)
         {
         }
 
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
 
         public override (string path, string handlerInfo) Upload(string fileName, long fileLength, Stream data, string group = null, string subdir = null, string extra = null)
         {
-            var localSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "local").Select(x => x.Value).FirstOrDefault();
+            var localSettings = _wtm.ConfigInfo.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "local").Select(x => x.Value).FirstOrDefault();
 
             var groupdir = "";
             if (string.IsNullOrEmpty(group))
@@ -91,7 +91,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             string rv = "";
             if (path.StartsWith("."))
             {
-                rv = Path.Combine(_config.HostRoot, path);
+                rv = Path.Combine(_wtm.ConfigInfo.HostRoot, path);
             }
             else
             {

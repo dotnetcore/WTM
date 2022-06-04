@@ -16,15 +16,23 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("MenuKey.MenuMangement")]
     [ApiController]
     [Route("api/_[controller]")]
+    [MainTenantOnly]
     public class FrameworkMenuController : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(BaseSearcher searcher)
+        public ActionResult Search(BaseSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkMenuListVM2>(passInit: true);
-            vm.Searcher = searcher;
-            return vm.GetJson(enumToString: false);
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<FrameworkMenuListVM2>(passInit: true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]
@@ -138,9 +146,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public async Task<ActionResult> RefreshMenu()
         {
-            Cache.Delete("FFMenus");
-            var userids = DC.Set<FrameworkUser>().Select(x => x.ITCode).ToArray();
-            await Wtm.RemoveUserCache(userids);
+            Cache.Delete(nameof(GlobalData.AllMenus));
             return Ok(Localizer["Sys.OprationSuccess"].Value);
         }
 

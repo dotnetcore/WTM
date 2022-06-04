@@ -105,6 +105,36 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        public static List<T> FlatTree<T>(this T self, Func<T, object> order = null)
+    where T : TreePoco<T>
+        {
+            List<T> rv = new List<T>();
+            rv.Add(self);
+            rv.AddRange(self.GetAllChildren(order));
+            return rv;
+        }
+
+        public static List<T> MakeTree<T>(this List<T> self, Func<T, object> order = null)
+      where T : TreePoco<T>
+        {
+            List<T> rv = new List<T>();
+            if (order != null)
+            {
+                self = self.OrderBy(order).ToList();
+            }
+            foreach (var item in self)
+            {
+                if(item.Children == null)
+                {
+                    item.Children = new List<T>();
+                }
+                var children = self.Where(x => x.ParentId == item.ID).ToList();
+                children.ForEach(x =>x.Parent = item);
+                item.Children.AddRange(children);
+                rv.Add(item);                
+            }
+            return rv.Where(x=>x.ParentId == null).ToList();
+        }
         /// <summary>
         /// 将树形结构列表转变为标准列表
         /// </summary>

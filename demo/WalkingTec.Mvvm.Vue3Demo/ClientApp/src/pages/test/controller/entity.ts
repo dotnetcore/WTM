@@ -80,7 +80,7 @@ class Entity {
         name: WTM_ValueType.select,
         label: WTM_ValueType.select,
         valueType: WTM_ValueType.select,
-        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
+        request: async () => FieldRequest('/api/_FrameworkUser/GetFrameworkRoles'),
     }
     readonly SelectedModule: WTM_EntitiesField = {
         name: 'SelectedModule',
@@ -119,13 +119,13 @@ class Entity {
         name: WTM_ValueType.checkbox,
         label: WTM_ValueType.checkbox,
         valueType: WTM_ValueType.checkbox,
-        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
+        request: async () => FieldRequest('/api/_FrameworkUser/GetFrameworkRoles'),
     }
     readonly [WTM_ValueType.transfer]: WTM_EntitiesField = {
         name: WTM_ValueType.transfer,
         label: WTM_ValueType.transfer,
         valueType: WTM_ValueType.transfer,
-        request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles'),
+        request: async () => FieldRequest('/api/_FrameworkUser/GetFrameworkRoles'),
     }
     readonly [WTM_ValueType.editor]: WTM_EntitiesField = {
         name: WTM_ValueType.editor,

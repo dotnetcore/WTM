@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Name { get; set; }
 
-        [Display(Name = "Login.Password")]
+        [Display(Name = "Login.NewPassword")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Password { get; set; }

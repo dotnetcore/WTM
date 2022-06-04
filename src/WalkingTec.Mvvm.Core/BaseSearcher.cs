@@ -43,6 +43,8 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public IModelStateService MSD { get => Wtm?.MSD; }
 
+        public bool? IsPlainText { get; set; }
+        public bool? IsEnumToString { get; set; }
         /// <summary>
         /// 获取VM的全名
         /// </summary>

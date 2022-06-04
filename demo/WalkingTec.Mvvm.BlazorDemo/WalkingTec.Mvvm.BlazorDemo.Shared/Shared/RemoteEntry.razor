@@ -1,0 +1,29 @@
+@page "/remoteentry"
+@layout EmptyLayout
+@attribute [Public]
+@inherits BasePage
+@inject NavigationManager navigationManager
+
+
+@code {
+    private string RemoteToken;
+    private string redirect;
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.RemoteToken = navigationManager.QueryString("_remotetoken");
+        this.redirect = navigationManager.QueryString("redirect");
+        var rv = await WtmBlazor.Api.CallAPI<DynamicData>($"/api/_account/loginjwt?_remotetoken={this.RemoteToken}", HttpMethodEnum.POST, new { Account = "", Password = "", RemoteToken = this.RemoteToken });
+        if (rv.Data != null)
+        {
+            var token = rv.Data.Fields["access_token"].ToString();
+            var rtoken = rv.Data.Fields["refresh_token"].ToString();
+            await SetToken(token, rtoken);
+        }
+        if (string.IsNullOrEmpty(this.redirect))
+        {
+            this.redirect = "/";
+        }
+        navigationManager.NavigateTo( this.redirect,true);
+    }
+}

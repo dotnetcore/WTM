@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Core
         bool IsFake { get; set; }
 
         bool IsDebug { get; set; }
-
+        string TenantCode { get; }
         DBTypeEnum DBType { get; set; }
         /// <summary>
         /// AddEntity
@@ -139,5 +139,6 @@ namespace WalkingTec.Mvvm.Core
         object CreateCommandParameter(string name, object value, ParameterDirection dir);
 
         void SetLoggerFactory(ILoggerFactory factory);
+        void SetTenantCode(string tc);
     }
 }

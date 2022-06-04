@@ -3,7 +3,9 @@
 <wt:form vm="@Model">
   <wt:display field="Entity.GroupCode" />
   <wt:textbox field="Entity.GroupName" />
-  <wt:textarea field="Entity.GroupRemark" />
+    <wt:tree field="Entity.ParentId" item-url="/_Admin/FrameworkGroup/GetParents"/>
+  <wt:textbox field="Entity.Manager" search-url="/_Admin/FrameworkUser/GetUserById" />
+<wt:textarea field="Entity.GroupRemark" />
   <wt:hidden field="Entity.ID" />
   <wt:row align=" AlignEnum.Right">
     <wt:submitbutton />

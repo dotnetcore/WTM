@@ -48,7 +48,7 @@
      *       ]
      *   },
      * 接口数据
-     * request: async () => FieldRequest('/api/_FrameworkUserBase/GetFrameworkRoles')
+     * request: async () => FieldRequest('/api/_FrameworkUser/GetFrameworkRoles')
      */
     request?: ProFieldRequestData | undefined;
     /** 

@@ -60,9 +60,9 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         public IWtmFileHandler CreateFileHandler(string saveMode = null, IDataContext dc = null)
         {
             ConstructorInfo ci = null;
-            if(dc == null)
+            if(dc != null)
             {
-                dc = _wtm.CreateDC();
+                _wtm.DC = dc;
             }
             if (string.IsNullOrEmpty(saveMode))
             {
@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             if (ci == null)
             {
-                return new WtmDataBaseFileHandler(_wtm.ConfigInfo, dc);
+                return new WtmDataBaseFileHandler(_wtm);
             }
             else
             {
@@ -93,6 +93,11 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 dc = _wtm.CreateDC();
             }
             var fh = CreateFileHandler(saveMode, dc);
+            if(fileName == null)
+            {
+                fileName = "unknown";
+            }
+            fileName = fileName.Replace("<", "").Replace(">","").Replace(" ", "");
             if (fh is WtmDataBaseFileHandler lfh)
             {
                 return lfh.UploadToDB(fileName, fileLength, data, group, subdir, extra);
@@ -117,6 +122,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                     file.FileExt = ext;
                     file.Path = rv.path;
                     file.HandlerInfo = rv.handlerInfo;
+                    file.TenantCode = _wtm.LoginUserInfo.CurrentTenant;
                     dc.AddEntity(file);
                     dc.SaveChanges();
                     return file;
@@ -198,6 +204,11 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 dc = _wtm.CreateDC();
             }
             rv = dc.Set<FileAttachment>().CheckID(id).Select(x => x.FileName).FirstOrDefault();
+            if(rv == null)
+            {
+                rv = "unknown";
+            }
+            rv = rv.Replace("<", "").Replace(">", "").Replace(" ", "");
             return rv;
         }
 

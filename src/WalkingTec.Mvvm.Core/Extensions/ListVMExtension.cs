@@ -359,24 +359,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <returns>json string</returns>
         public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true, bool enumToString = true, Func<Dictionary<string, object>> func = null) where T : TopBasePoco, new()
         {
-            if (!self.IsSearched) self.DoSearch();
-
-			StringBuilder builder = new("{", capacity: 1024);
-			var dic = func?.Invoke();
-
-			// 如果用户的附加字典不为空，则添加用户自定义的信息
-			if (dic != null) foreach (var item in dic) builder.Append($"\"{item.Key}\":\"{item.Value}\",");
-
-			// 设置wtm必要的数据
-			builder
-				.Append($"\"Code\":200,")
-				.Append($"\"Count\":{self.Searcher.Count},")
-				.Append($"\"Data\":{self.GetDataJson(PlainText, enumToString)},")
-				.Append($"\"Msg\":\"success\",")
-				.Append($"\"Page\":{self.Searcher.Page},")
-				.Append($"\"PageCount\":{self.Searcher.PageCount}")
-				.Append('}');
-			return builder.ToString();
+            if(self.Searcher.IsPlainText != null)
+            {
+                PlainText = self.Searcher.IsPlainText.Value;
+            }
+            if (self.Searcher.IsEnumToString != null)
+            {
+                enumToString = self.Searcher.IsEnumToString.Value;
+            }
+            return $@"{{""Data"":{self.GetDataJson(PlainText,enumToString)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount},""Msg"":""success"",""Code"":200}}";
         }
 
         public static object GetJsonForApi<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true) where T : TopBasePoco, new()

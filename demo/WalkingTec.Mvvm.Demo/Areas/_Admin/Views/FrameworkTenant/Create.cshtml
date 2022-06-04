@@ -1,0 +1,24 @@
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs.FrameworkTenantVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+    <wt:row items-per-row="ItemsPerRowEnum.Two">
+        <wt:textbox field="Entity.TCode" />
+        <wt:textbox field="Entity.TName" />
+        <wt:textbox field="Entity.TDb" colspan="2" />
+        <wt:combobox field="Entity.TDbType" />
+        <wt:textbox field="Entity.DbContext" />
+        <wt:textbox field="Entity.TDomain" colspan="2" />
+        <wt:combobox field="Entity.EnableSub" />
+        <wt:combobox field="Entity.Enabled" default-value="true" />
+    </wt:row>
+
+    <wt:row items-per-row="ItemsPerRowEnum.One">
+        <wt:combobox field="AdminRoleCode" item-url="/_admin/FrameworkUser/GetFrameworkRoles" padding-text="@Localizer["_Admin.TenantRole"]" />
+    </wt:row>
+
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

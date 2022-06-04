@@ -546,7 +546,12 @@ namespace WalkingTec.Mvvm.Core
 
         public static string GetCS(string cs, string mode, Configs config)
         {
-            if (string.IsNullOrEmpty(cs) || config.Connections.Any(x => x.Key.ToLower() == cs.ToLower()) == false)
+            if(cs == null)
+            {
+                return null;
+            }
+
+            if (config.Connections.Any(x => x.Key.ToLower() == cs.ToLower()) == false)
             {
                 cs = "default";
             }

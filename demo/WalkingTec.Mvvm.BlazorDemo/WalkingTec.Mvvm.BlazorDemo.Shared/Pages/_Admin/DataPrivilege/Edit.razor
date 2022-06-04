@@ -47,7 +47,7 @@
     protected override async Task OnInitializedAsync()
     {
         AllPrivileges = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetPrivileges");
-        AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetUserGroups");
+        AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_DataPrivilege/GetUserGroups", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
         var rv = await WtmBlazor.Api.CallAPI<DataPrivilegeVM>($"/api/_DataPrivilege/Get?TableName={TableName}&TargetId={TargetId}&DpType={DpType}");
         AllPrivilegeTableNames = await WtmBlazor.Api.CallItemsApi($"/api/_DataPrivilege/GetPrivilegeByTableName?table={TableName}");
         Model = rv.Data;

@@ -1,0 +1,14 @@
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs.FrameworkTenantImportVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+    <wt:row align="AlignEnum.Right">
+        <wt:downloadTemplateButton vm="@Model" />
+    </wt:row>
+    <wt:upload field="UploadFileId" label-text="@Model.Localizer["Sys.UploadTemplate"]" upload-type="ExcelFile" />
+    <wt:grid vm="ErrorListVM" use-local-data="true" hidden-checkbox="true" hidden-grid-index="true" hidden-panel="true"  height="300"/>
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

@@ -8,14 +8,17 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
     public class LoginVM : BaseVM
     {
         [Display(Name = "_Admin.Account")]
-        [Required(AllowEmptyStrings = false)]
+        [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string ITCode { get; set; }
 
         [Display(Name = "Login.Password")]
-        [Required(AllowEmptyStrings = false)]
+        [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string Password { get; set; }
+
+        [Display(Name = "_Admin.Tenant")]
+        public string Tenant { get; set; }
 
         [Display(Name = "Login.RememberMe")]
         public bool RememberLogin { get; set; }
@@ -46,33 +49,5 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         [Display(Name = "Login.InputValidation")]
         public string VerifyCode { get; set; }
 
-        /// <summary>
-        /// 进行登录
-        /// </summary>
-        /// <param name="ignorePris">外部传递的页面权限</param>
-        /// <returns>登录用户的信息</returns>
-        public async System.Threading.Tasks.Task<LoginUserInfo> DoLoginAsync(bool ignorePris = false)
-        {
-            //根据用户名和密码查询用户
-            var rv = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password == Utils.GetMD5String(Password) && x.IsValid).Select(x => new { itcode = x.ITCode, id = x.GetID() }).SingleOrDefaultAsync();
-
-            //如果没有找到则输出错误
-            if (rv == null)
-            {
-                MSD.AddModelError("", Localizer["Sys.LoginFailed"]);
-                return null;
-            }
-            else
-            {
-                LoginUserInfo user = new LoginUserInfo
-                {
-                    ITCode = rv.itcode,
-                    UserId = rv.id.ToString()
-                };
-                //读取角色，用户组，页面权限，数据权限等框架配置信息
-                await user.LoadBasicInfoAsync(Wtm);
-                return user;
-            }
-        }
     }
 }

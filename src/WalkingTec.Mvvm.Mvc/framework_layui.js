@@ -803,6 +803,11 @@ window.ff = {
                 $.each(val, function (i, v) {
                     fieldElem.push({ name: item.attributes["wtm-name"].value, value: v });
                 });
+            if (val.length == 0) {
+                var ismulti = '';
+                try { ismulti = item.attributes["wtm-multi"].value } catch { }
+                fieldElem.push({ name: item.attributes["wtm-name"].value, value: ismulti=='true'?'':null });
+            }
         });
 
         var check = {};
@@ -867,7 +872,7 @@ window.ff = {
                 }
                 else {
                     filter[itemname] = item.value;
-                    if (filterback.hasOwnProperty(itemname) == true && item.value != "") {
+                    if (filterback.hasOwnProperty(itemname) == true && item.value != '') {
                         filterback[itemname] = undefined;
                     }
                 }

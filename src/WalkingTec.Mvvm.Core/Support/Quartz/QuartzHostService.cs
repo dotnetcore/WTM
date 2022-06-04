@@ -91,7 +91,6 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
                 catch { }
             }
             // 开始运行
-            await Task.Delay(5000);
             await _scheduler.Start(cancellationToken);
         }
 

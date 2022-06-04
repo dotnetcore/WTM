@@ -7,12 +7,14 @@ using WalkingTec.Mvvm.Core.Attributes;
 namespace WalkingTec.Mvvm.Core
 {
     [Table("FrameworkUserRoles")]
-    public class FrameworkUserRole : BasePoco
+    public class FrameworkUserRole : BasePoco, ITenant
     {
         [Required]
         public string UserCode { get; set; }
         [Required]
         [Display(Name = "_Admin.Role")]
         public string RoleCode { get; set; }
+        [Display(Name = "_Admin.Tenant")]
+        public string TenantCode { get; set; }
     }
 }

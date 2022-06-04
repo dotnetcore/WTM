@@ -76,12 +76,12 @@ namespace WalkingTec.Mvvm.Mvc
             return gd;
         }
 
-        private static List<SimpleMenu> GetAllMenus(List<SimpleModule> allModule, Configs ConfigInfo)
+        private static List<SimpleMenu> GetAllMenus(List<SimpleModule> allModule, bool isQuickdebug, List<CS> connections)
         {
             var localizer = new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
             var menus = new List<SimpleMenu>();
 
-            if (ConfigInfo.IsQuickDebug)
+            if (isQuickdebug)
             {
                 menus = new List<SimpleMenu>();
                 var areas = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").Select(x => x.Area?.AreaName).Distinct().ToList();
@@ -90,7 +90,8 @@ namespace WalkingTec.Mvvm.Mvc
                     var modelmenu = new SimpleMenu
                     {
                         ID = Guid.NewGuid(),
-                        PageName = area ?? localizer["Sys.DefaultArea"]
+                        PageName = area ?? localizer["Sys.DefaultArea"],
+                        TenantAllowed = true,
                     };
                     menus.Add(modelmenu);
                     var cModules = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api" && x.Area?.AreaName == area).ToList();
@@ -105,19 +106,18 @@ namespace WalkingTec.Mvvm.Mvc
                                 ID = Guid.NewGuid(),
                                 ParentId = modelmenu.ID,
                                 PageName = item.ActionDes == null ? item.ModuleName : item.ActionDes.Description,
-                                Url = url                               
+                                Url = url,
+                                TenantAllowed = true
                             });
                         }
                     }
-
-
                 }
             }
             else
             {
                 try
                 {
-                    using (var dc = ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
+                    using (var dc = connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                     {
                         menus.AddRange(dc?.Set<FrameworkMenu>()
                                 .OrderBy(x => x.DisplayOrder)
@@ -130,7 +130,11 @@ namespace WalkingTec.Mvvm.Mvc
                                     DisplayOrder = x.DisplayOrder,
                                     ShowOnMenu = x.ShowOnMenu,
                                     Icon = x.Icon,
-                                    IsPublic = x.IsPublic
+                                    IsPublic = x.IsPublic,
+                                    FolderOnly = x.FolderOnly,
+                                    MethodName = x.MethodName,
+                                    IsInside = x.IsInside,
+                                    TenantAllowed = x.TenantAllowed
                                 })
                                 .ToList());
                     }
@@ -156,6 +160,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var rightattr = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
                 var debugattr = ctrl.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                 var areaattr = ctrl.GetCustomAttributes(typeof(AreaAttribute), false);
+                var mainhostonlyattr = ctrl.GetCustomAttributes(typeof(MainTenantOnlyAttribute), false);
                 var model = new SimpleModule
                 {
                     ClassName = ctrl.Name.Replace("Controller", string.Empty)
@@ -171,6 +176,10 @@ namespace WalkingTec.Mvvm.Mvc
                 if (pubattr1.Length > 0 || pubattr12.Length > 0 || rightattr.Length > 0 || debugattr.Length > 0)
                 {
                     model.IgnorePrivillege = true;
+                }
+                if (mainhostonlyattr.Length > 0)
+                {
+                    model.MainHostOnly = true;
                 }
                 if (typeof(BaseApiController).IsAssignableFrom(ctrl))
                 {
@@ -211,6 +220,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                     var postAttr = method.GetCustomAttributes(typeof(HttpPostAttribute), false);
+                    var mainhostonlyattr2 = method.GetCustomAttributes(typeof(MainTenantOnlyAttribute), false);
                     //如果不是post的方法，则添加到controller的action列表里
                     if (postAttr.Length == 0)
                     {
@@ -218,13 +228,17 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             Module = model,
                             MethodName = method.Name,
-                            IgnorePrivillege = model.IgnorePrivillege
+                            IgnorePrivillege = model.IgnorePrivillege,
+                            MainHostOnly = model.MainHostOnly
                         };
                         if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
                             action.IgnorePrivillege = true;
                         }
-
+                        if (mainhostonlyattr2.Length > 0)
+                        {
+                            action.MainHostOnly = true;
+                        }
                         var attrs2 = method.GetCustomAttributes(typeof(ActionDescriptionAttribute), false);
                         if (attrs2.Length > 0)
                         {
@@ -255,6 +269,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var pubattr22 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
+                    var mainhostonlyattr2 = method.GetCustomAttributes(typeof(MainTenantOnlyAttribute), false);
 
                     var postAttr = method.GetCustomAttributes(typeof(HttpPostAttribute), false);
                     //找到post的方法且没有同名的非post的方法，添加到controller的action列表里
@@ -271,12 +286,18 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             Module = model,
                             MethodName = method.Name,
-                            IgnorePrivillege = model.IgnorePrivillege
+                            IgnorePrivillege = model.IgnorePrivillege,
+                            MainHostOnly = model.MainHostOnly
                         };
                         if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
                             action.IgnorePrivillege = true;
                         }
+                        if (mainhostonlyattr2.Length > 0)
+                        {
+                            action.MainHostOnly = true;
+                        }
+
                         var attrs2 = method.GetCustomAttributes(typeof(ActionDescriptionAttribute), false);
                         if (attrs2.Length > 0)
                         {
@@ -584,7 +605,7 @@ namespace WalkingTec.Mvvm.Mvc
                      })
                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                     {
-                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
+                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + conf.CookiePre + "." + AuthConstants.CookieAuthName;
                         options.Cookie.HttpOnly = true;
                         options.Cookie.SameSite = SameSiteMode.Strict;
                         options.Cookie.Domain = string.IsNullOrEmpty(cookieOptions.Domain) ? null : cookieOptions.Domain;
@@ -620,7 +641,7 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IServiceCollection AddWtmSwagger(this IServiceCollection services, bool useFullName=false)
+        public static IServiceCollection AddWtmSwagger(this IServiceCollection services, bool useFullName = false)
         {
             services.AddSwaggerGen(c =>
             {
@@ -699,6 +720,7 @@ namespace WalkingTec.Mvvm.Mvc
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
             var localfactory = app.ApplicationServices.GetRequiredService<IStringLocalizerFactory>();
             var lop = app.ApplicationServices.GetService<WtmLocalizationOption>();
+
             //获取所有程序集
             //var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
             //if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
@@ -730,19 +752,20 @@ namespace WalkingTec.Mvvm.Mvc
             Core.CoreProgram._localizer = programLocalizer;
 
             var controllers = gd.GetTypesAssignableFrom<IBaseController>();
+            var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
+            gd.IsSpa = isspa == true || test != null;
             gd.AllModule = GetAllModules(controllers);
             var modules = Utils.ResetModule(gd.AllModule, false);
-            gd.AllAccessUrls = GetAllAccessUrls(controllers);
             gd.CustomUserType = gd.GetTypesAssignableFrom<FrameworkUserBase>().Where(x => x.Name.ToLower() == "frameworkuser").FirstOrDefault();
             gd.SetMenuGetFunc(() =>
             {
                 var menus = new List<SimpleMenu>();
                 var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
-                var menuCacheKey = "FFMenus";
+                var menuCacheKey = nameof(GlobalData.AllMenus);
                 if (cache.TryGetValue(menuCacheKey, out List<SimpleMenu> rv) == false)
                 {
 
-                    var data = GetAllMenus(modules, configs);
+                    var data = GetAllMenus(modules, configs.IsQuickDebug, configs.Connections);
                     cache.Add(menuCacheKey, data, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                     menus = data;
                 }
@@ -753,8 +776,33 @@ namespace WalkingTec.Mvvm.Mvc
 
                 return menus;
             });
+            gd.SetTenantGetFunc(() =>
+            {
+                var tenants = new List<FrameworkTenant>();
+                var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
+                var tenantsCacheKey = nameof(GlobalData.AllTenant);
+                    if (cache.TryGetValue(tenantsCacheKey, out tenants) == false)
+                    {
+                        if (configs?.EnableTenant == true)
+                        {
+                            using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
+                            {
+                                tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
+                            }
+                        }
+                        cache.Add(tenantsCacheKey, tenants ?? new List<FrameworkTenant>(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
+                    }
+                return tenants;
+            });
             foreach (var m in gd.AllModule)
             {
+                if (isspa == false && m.IsApi == true)
+                {
+                    if (m.ModuleName.ToLower().EndsWith("api") == false)
+                    {
+                        m.ModuleName += "Api";
+                    }
+                }
                 foreach (var a in m.Actions)
                 {
                     string u = null;
@@ -786,7 +834,9 @@ namespace WalkingTec.Mvvm.Mvc
                     a.Url = u;
                 }
             }
-            var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
+
+            gd.AllAccessUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true).Select(x => x.Url).ToList();
+            gd.AllMainTenantOnlyUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.MainHostOnly == true || x.Module.MainHostOnly == true).Select(x => x.Url).ToList();
             WtmFileProvider.Init(configs, gd);
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -859,7 +909,7 @@ namespace WalkingTec.Mvvm.Mvc
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
             if (configs.IsQuickDebug == true || showInDebugOnly == false)
             {
-                app.UseSwagger();          
+                app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");

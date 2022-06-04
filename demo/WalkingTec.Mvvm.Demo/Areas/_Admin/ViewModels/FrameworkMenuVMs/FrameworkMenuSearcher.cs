@@ -24,6 +24,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         [Display(Name = "_Admin.FolderOnly")]
         public bool? FolderOnly { get; set; }
 
-        public Guid? RoleID { get; set; }
+        public string RoleCode { get; set; }
     }
 }

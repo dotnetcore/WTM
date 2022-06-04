@@ -41,9 +41,9 @@
 
         protected override async Task OnInitializedAsync()
         {
-            AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkRoles");
-            AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUserBase/GetFrameworkGroups");
-            var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUserBase/{id}");
+            AllRoles = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUser/GetFrameworkRoles");
+            AllGroups = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUser/GetFrameworkGroups");
+            var rv = await WtmBlazor.Api.CallAPI<FrameworkUserVM>($"/api/_FrameworkUser/{id}");
             Model = rv.Data;
         }
 

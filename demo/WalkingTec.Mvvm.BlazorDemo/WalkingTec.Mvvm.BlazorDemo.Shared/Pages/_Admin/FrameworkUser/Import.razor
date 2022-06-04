@@ -36,12 +36,12 @@
         }
         private  async Task DownloadTemplate()
         {
-            await Download("/api/_frameworkuserbase/GetExcelTemplate", new { }, HttpMethodEnum.GET);
+            await Download("/api/_frameworkuser/GetExcelTemplate", new { }, HttpMethodEnum.GET);
         }
 
         private async Task Submit(EditContext context)
         {
-            await PostsForm(vform, "/api/_frameworkuserbase/import",(s)=> WtmBlazor.Localizer["Sys.ImportSuccess",s],(err) => {
+            await PostsForm(vform, "/api/_frameworkuser/import",(s)=> WtmBlazor.Localizer["Sys.ImportSuccess",s],(err) => {
                 if (err.Form.ContainsKey("Entity.ErrorFileId"))
                 {
                     ErrorRowStyle = "display:visiable";

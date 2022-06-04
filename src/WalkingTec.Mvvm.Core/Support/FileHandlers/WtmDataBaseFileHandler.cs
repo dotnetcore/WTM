@@ -14,13 +14,13 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     {
         private static string _modeName = "database";
 
-        public WtmDataBaseFileHandler(Configs config, IDataContext dc) : base(config, dc)
+        public WtmDataBaseFileHandler(WTMContext wtm) : base(wtm)
         {
         }
 
         public override Stream GetFileData(IWtmFile file)
         {
-            var rv = _dc.Set<FileAttachment>().CheckID(file.GetID()).FirstOrDefault();
+            var rv = _wtm.DC.Set<FileAttachment>().CheckID(file.GetID()).FirstOrDefault();
             if (rv != null)
             {
                 return new MemoryStream((rv as FileAttachment).FileData);
@@ -37,6 +37,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             file.UploadTime = DateTime.Now;
             file.SaveMode = _modeName;
             file.ExtraInfo = extra;
+            file.TenantCode = _wtm.LoginUserInfo.CurrentTenant;
             var ext = string.Empty;
             if (string.IsNullOrEmpty(fileName) == false)
             {
@@ -49,8 +50,8 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 data.CopyTo(dataStream);
                 file.FileData = dataStream.ToArray();
             }
-                _dc.AddEntity(file);
-                _dc.SaveChanges();
+            _wtm.DC.AddEntity(file);
+            _wtm.DC.SaveChanges();
             return file;
         }
     }

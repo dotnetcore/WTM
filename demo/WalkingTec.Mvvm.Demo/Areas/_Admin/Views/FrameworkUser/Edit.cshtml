@@ -18,15 +18,15 @@
           <wt:textbox field="Entity.Name" />
           <wt:upload field="Entity.PhotoId" upload-type="ImageFile" thumb-width="128" />
         </wt:row>
-        <wt:checkbox field="SelectedRolesCodes" items="AllRoles" />
-        <wt:checkbox field="SelectedGroupCodes" items="AllGroups" />
+        <wt:checkbox field="SelectedRolesCodes" item-url="/_admin/FrameworkUser/GetFrameworkRoles" />
+        <wt:tree field="SelectedGroupCodes" item-url="/_admin/FrameworkUser/GetFrameworkGroups" />
       </wt:tabcontent>
       <wt:tabcontent>
         <wt:row items-per-row="ItemsPerRowEnum.Two">
           <wt:combobox field="Entity.Gender" />
         </wt:row>
         <wt:row items-per-row="ItemsPerRowEnum.Two">
-          <wt:textbox field="Entity.CellPhone" default-value="13912345678"/>
+          <wt:textbox field="Entity.CellPhone" />
           <wt:textbox field="Entity.HomePhone" />
         </wt:row>
         <wt:row items-per-row="ItemsPerRowEnum.Two">

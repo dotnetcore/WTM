@@ -8,7 +8,7 @@ namespace WalkingTec.Mvvm.Core
 {
 
     [Table("FrameworkGroups")]
-    public class FrameworkGroup : BasePoco
+    public class FrameworkGroup : TreePoco<FrameworkGroup>,ITenant
     {
         [Display(Name = "_Admin.GroupCode")]
         [Required(ErrorMessage = "Validate.{0}required")]
@@ -23,6 +23,9 @@ namespace WalkingTec.Mvvm.Core
 
         [Display(Name = "_Admin.Remark")]
         public string GroupRemark { get; set; }
+
+        [Display(Name = "_Admin.GroupManager")]
+        public string Manager { get; set; }
 
         [NotMapped]
         [Display(Name = "_Admin.UsersCount")]

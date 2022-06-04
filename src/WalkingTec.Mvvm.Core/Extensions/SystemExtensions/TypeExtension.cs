@@ -181,6 +181,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                nameof(TopBasePoco.BatchError),
                nameof(TopBasePoco.Checked),
                nameof(TopBasePoco.ExcelIndex),
+               nameof(ITenant.TenantCode)
             };
             if (typeof(IBasePoco).IsAssignableFrom(self))
             {
@@ -318,6 +319,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                nameof(TopBasePoco.BatchError),
                nameof(TopBasePoco.Checked),
                nameof(TopBasePoco.ExcelIndex),
+               nameof(ITenant.TenantCode)
             };
             if (typeof(IBasePoco).IsAssignableFrom(self))
             {

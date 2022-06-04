@@ -105,6 +105,11 @@
     private void IsPublicPage()
     {
         var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri?.ToLower());
+        var i =  url.IndexOf('?');
+        if(i >= 0)
+        {
+            url = url[0..i];
+        }
         if (this.WtmBlazor.PublicPages.Any(x => Regex.IsMatch(url, x)))
         {
             IsPublic = true;

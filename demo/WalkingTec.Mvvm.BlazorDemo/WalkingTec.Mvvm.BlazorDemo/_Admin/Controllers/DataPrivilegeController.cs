@@ -19,11 +19,18 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(DataPrivilegeSearcher searcher)
+        public ActionResult Search(DataPrivilegeSearcher searcher)
         {
-            var vm = Wtm.CreateVM<DataPrivilegeListVM>(passInit: true);
-            vm.Searcher = searcher;
-            return vm.GetJson(enumToString: false);
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<DataPrivilegeListVM>(passInit: true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]
@@ -34,7 +41,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (DpType == DpTypeEnum.User)
             {
                 vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.UserCode == TargetId && x.DpType == DpType);
-                
             }
             else
             {
@@ -131,10 +137,24 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public ActionResult GetUserGroups()
+        public IActionResult GetUserGroups()
         {
-            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x=>x.GroupCode);
-            return Ok(rv);
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_DataPrivilege/GetUserGroups").Result;
+            }
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+        }
+
+        [AllRights]
+        [HttpGet("[action]")]
+        public IActionResult GetUserGroupsTree()
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_DataPrivilege/GetUserGroupsTree").Result;
+            }
+            return Ok(DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
     }
 

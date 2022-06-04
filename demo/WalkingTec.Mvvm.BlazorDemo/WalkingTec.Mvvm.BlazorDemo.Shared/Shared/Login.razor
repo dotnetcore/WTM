@@ -1,5 +1,5 @@
 @page "/login"
-@using  WalkingTec.Mvvm.Demo.ViewModel.HomeVMs
+@using WalkingTec.Mvvm.Demo.ViewModel.HomeVMs
 @inherits BasePage
 @layout EmptyLayout
 
@@ -14,6 +14,10 @@
                 <ValidateForm Model="@Model" OnValidSubmit="@Submit">
                     <BootstrapInput @bind-Value="@Model.ITCode" />
                     <BootstrapInput @bind-Value="@Model.Password" type="password" />
+                    @if (WtmBlazor?.ConfigInfo?.EnableTenant == true)
+                    {
+                        <BootstrapInput @bind-Value="@Model.Tenant" PlaceHolder="@WtmBlazor.Localizer["Login.InputTenant"]" />
+                    }
                     <Button ButtonType="ButtonType.Submit" Text="@WtmBlazor.Localizer["Login.Login"]" style="width:100%;margin-top:20px;" IsAsync="true" />
                 </ValidateForm>
             </div>
@@ -37,7 +41,7 @@
     protected override void OnInitialized()
     {
         bgnumber = new Random().Next(1, 6);
-        if(WtmBlazor.ConfigInfo.IsQuickDebug == true)
+        if (WtmBlazor.ConfigInfo.IsQuickDebug == true)
         {
             Model.ITCode = "admin";
             Model.Password = "000000";
@@ -47,12 +51,12 @@
 
     private async Task Submit(EditContext context)
     {
-        var rv = await WtmBlazor.Api.CallAPI<DynamicData>("/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = Model.ITCode, Password = Model.Password });
+        var rv = await WtmBlazor.Api.CallAPI<DynamicData>("/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = Model.ITCode, Password = Model.Password , Tenant = Model.Tenant});
         if (rv.StatusCode == System.Net.HttpStatusCode.OK)
         {
             var token = rv.Data.Fields["access_token"].ToString();
             var rtoken = rv.Data.Fields["refresh_token"].ToString();
-            await SetToken(token,rtoken);
+            await SetToken(token, rtoken);
             var userinfo = await WtmBlazor.Api.CallAPI<LoginUserInfo>("/api/_account/CheckUserInfo", HttpMethodEnum.GET, new { });
 
             if (userinfo.StatusCode == System.Net.HttpStatusCode.OK)

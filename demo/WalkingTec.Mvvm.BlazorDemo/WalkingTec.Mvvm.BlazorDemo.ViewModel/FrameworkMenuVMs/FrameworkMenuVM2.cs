@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             if (Entity.Url != null && Entity.IsInside == true)
             {
-                SelectedModule = modules.Where(x => x.IsApi == true && (x.FullName == Entity.ClassName )).FirstOrDefault()?.FullName;
+                SelectedModule = modules.Where(x => x.IsApi == true && (x.FullName == Entity.ClassName)).FirstOrDefault()?.FullName;
                 if (SelectedModule != null)
                 {
                     var urls = modules.Where(x => x.FullName == SelectedModule && x.IsApi == true).SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == false).Select(x => x.Url).ToList();
@@ -128,7 +128,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                 menu.Parent = Entity;
                                 menu.ShowOnMenu = false;
                                 menu.DisplayOrder = order++;
-                                menu.Privileges = new List<FunctionPrivilege>();
                                 menu.IsInside = true;
                                 menu.Domain = Entity.Domain;
                                 menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -227,7 +226,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                 menu.Parent = Entity;
                                 menu.ShowOnMenu = false;
                                 menu.DisplayOrder = order++;
-                                menu.Privileges = new List<FunctionPrivilege>();
                                 menu.IsInside = true;
                                 menu.Domain = Entity.Domain;
                                 menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -281,8 +279,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                 }
             }
-
             DC.SaveChanges();
+            Wtm.RemoveUserCacheByRole(SelectedRolesCodes.ToArray()).Wait();
         }
 
 

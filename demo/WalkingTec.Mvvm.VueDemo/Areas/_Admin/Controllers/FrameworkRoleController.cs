@@ -19,11 +19,22 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(FrameworkRoleSearcher searcher)
+        public IActionResult Search(FrameworkRoleSearcher searcher)
         {
-            var vm = Wtm.CreateVM<FrameworkRoleListVM>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm).Result;
+            }
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<FrameworkRoleListVM>(passInit: true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]
@@ -37,7 +48,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("GetPageActions")]
         [HttpGet("[action]/{id}")]
         [AllRights]
-        public FrameworkRoleMDVM2 GetPageActions(Guid id)
+        public FrameworkRoleMDVM2 GetPageActions(string id)
         {
             var vm = Wtm.CreateVM<FrameworkRoleMDVM2>(id);
             return vm;
@@ -69,6 +80,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult Add(FrameworkRoleVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
@@ -92,6 +107,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPut("[action]")]
         public IActionResult Edit(FrameworkRoleVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
@@ -114,9 +133,15 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkRoleBatchVM>();
+            List<string> RoleCode = new List<string>();
             if (ids != null && ids.Count() > 0)
             {
+                RoleCode = DC.Set<FrameworkRole>().CheckIDs(new List<string>(ids)).Select(x => x.RoleCode).ToList();
                 vm.Ids = ids;
             }
             else
@@ -129,13 +154,12 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                List<Guid?> roleids = new List<Guid?>();
-                foreach (var item in vm?.Ids)
-                {
-                    roleids.Add(Guid.Parse(item));
-                }
-                var userids = DC.Set<FrameworkUserRole>().Where(x => DC.Set<FrameworkRole>().Where(y=> roleids.Contains(y.ID)).Select(y=>y.RoleCode).Contains(x.RoleCode)).Select(x => x.UserCode).ToArray();
-                await Wtm.RemoveUserCache(userids);
+                var ur = DC.Set<FrameworkUserRole>().Where(x => RoleCode.Contains(x.RoleCode)).ToList();
+                var itcodes = ur.Select(x => x.UserCode).ToArray();
+                DC.Set<FrameworkUserRole>().RemoveRange(ur);
+                DC.SaveChanges();
+                await Wtm.RemoveUserCacheByRole(itcodes);
+                await Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant);
                 return Ok(ids.Count());
             }
         }
@@ -144,6 +168,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
@@ -154,6 +182,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             if (ids != null && ids.Count() > 0)
             {
@@ -167,6 +199,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkRoleImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
@@ -182,6 +218,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public ActionResult Import(FrameworkRoleImportVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
@@ -189,10 +229,9 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
+                Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
                 return Ok(vm.EntityList.Count);
             }
         }
-
-
     }
 }

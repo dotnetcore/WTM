@@ -135,6 +135,10 @@ namespace WtmBlazorUtils
 
         public async Task<QueryData<T>> StartSearch<T>(string url, BaseSearcher searcher, QueryPageOptions options) where T : class, new()
         {
+            if (searcher != null)
+            {
+                searcher.IsEnumToString = false;
+            }
             var rv = await WtmBlazor.Api.CallSearchApi<T>(url, searcher, options);
             QueryData<T> data = new QueryData<T>();
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
@@ -151,6 +155,10 @@ namespace WtmBlazorUtils
 
         public async Task<QueryData<T>> StartSearchTree<T>(string url, BaseSearcher searcher, QueryPageOptions options) where T : class, new()
         {
+            if (searcher != null)
+            {
+                searcher.IsEnumToString = false;
+            }
             var rv = await WtmBlazor.Api.CallSearchApi<T>(url, searcher, options);
             QueryData<T> data = new QueryData<T>();
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)

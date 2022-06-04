@@ -128,7 +128,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                 menu.Parent = Entity;
                                 menu.ShowOnMenu = false;
                                 menu.DisplayOrder = order++;
-                                menu.Privileges = new List<FunctionPrivilege>();
                                 menu.IsInside = true;
                                 menu.Domain = Entity.Domain;
                                 menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -227,7 +226,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                 menu.Parent = Entity;
                                 menu.ShowOnMenu = false;
                                 menu.DisplayOrder = order++;
-                                menu.Privileges = new List<FunctionPrivilege>();
                                 menu.IsInside = true;
                                 menu.Domain = Entity.Domain;
                                 menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -281,8 +279,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                 }
             }
-
             DC.SaveChanges();
+            Wtm.RemoveUserCacheByRole(SelectedRolesCodes.ToArray()).Wait();
         }
 
 

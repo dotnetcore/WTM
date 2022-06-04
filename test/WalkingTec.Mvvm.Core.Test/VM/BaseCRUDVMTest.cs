@@ -210,8 +210,8 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                Assert.AreEqual(1, context.Set<Student>().Count());
-                var rv = context.Set<Student>().ToList()[0];
+                Assert.AreEqual(1, context.Set<Student>().IgnoreQueryFilters().Count());
+                var rv = context.Set<Student>().IgnoreQueryFilters().ToList()[0];
                 Assert.AreEqual(false, rv.IsValid);
                 Assert.AreEqual("studentuser", rv.UpdateBy);
                 Assert.IsTrue(DateTime.Now.Subtract(rv.UpdateTime.Value).Seconds < 10);
@@ -246,20 +246,20 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             //删除子表数据，主表应该无变化
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                Assert.AreEqual(1, context.Set<GoodsSpecification>().Count());
+                Assert.AreEqual(1, context.Set<GoodsSpecification>().IgnoreQueryFilters().Count());
                 _goodsvm.DC = context;
-                _goodsvm.Entity = context.Set<GoodsSpecification>().Include(x=>x.Catalog).Where(x => x.ID == g.ID).FirstOrDefault();
+                _goodsvm.Entity = context.Set<GoodsSpecification>().IgnoreQueryFilters().Include(x=>x.Catalog).Where(x => x.ID == g.ID).FirstOrDefault();
                 _goodsvm.DoDelete();
             }
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                Assert.AreEqual(1, context.Set<GoodsSpecification>().Count());
-                var rv = context.Set<GoodsSpecification>().ToList()[0];
+                Assert.AreEqual(1, context.Set<GoodsSpecification>().IgnoreQueryFilters().Count());
+                var rv = context.Set<GoodsSpecification>().IgnoreQueryFilters().ToList()[0];
                 Assert.AreEqual(false, rv.IsValid);
                 Assert.AreEqual("goodsuser", rv.UpdateBy);
 
-                var rv2 = context.Set<GoodsCatalog>().ToList()[0];
+                var rv2 = context.Set<GoodsCatalog>().IgnoreQueryFilters().ToList()[0];
                 Assert.AreEqual(true, rv2.IsValid);
 
                 Assert.IsTrue(DateTime.Now.Subtract(rv.UpdateTime.Value).Seconds < 10);
@@ -301,12 +301,12 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var rv2 = context.Set<GoodsCatalog>().ToList()[0];
+                var rv2 = context.Set<GoodsCatalog>().IgnoreQueryFilters().ToList()[0];
                 Assert.AreEqual(false, rv2.IsValid);
                 Assert.AreEqual("goodcatalogsuser", rv2.UpdateBy);
 
-                Assert.AreEqual(1, context.Set<GoodsSpecification>().Count());
-                var rv = context.Set<GoodsSpecification>().ToList()[0];
+                Assert.AreEqual(1, context.Set<GoodsSpecification>().IgnoreQueryFilters().Count());
+                var rv = context.Set<GoodsSpecification>().IgnoreQueryFilters().ToList()[0];
                 Assert.AreEqual(false, rv.IsValid);
                 Assert.AreEqual("goodcatalogsuser", rv.UpdateBy);
 

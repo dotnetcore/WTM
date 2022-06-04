@@ -1,0 +1,69 @@
+@page "/_Admin/FrameworkTenant/Import"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
+@inherits BasePage
+
+
+<ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
+    <Row ItemsPerRow="ItemsPerRow.Three">
+        <span style="font-size: 18px; position: relative;top:5px;"><Badge Color="Color.Info">1</Badge>点击右侧按钮下载模板 </span>
+        <Button type="button" Size="Size.Small" OnClick="DownloadTemplate" Text="@WtmBlazor.Localizer["Sys.DownloadTemplate"]" IsAsync="true" />
+    </Row>
+    <Row ItemsPerRow="ItemsPerRow.Three">
+        <span style="font-size: 18px; position: relative;top:30px;"><Badge Color="Color.Info">2</Badge>将编辑好的模板上传 </span>
+        <WTSimpleUpload @bind-Value="Model.UploadFileId" LabelText=""></WTSimpleUpload>
+    </Row>
+    <Row ItemsPerRow="ItemsPerRow.Two" style="@ErrorRowStyle">
+        <span style="font-size: 18px; position: relative;top:5px;"><Badge Color="Color.Danger">3</Badge>导入失败，请下载错误文件查看详情 </span>
+        <Button type="button" Size="Size.Small" OnClick="DownloadErrorFile" Text="@WtmBlazor.Localizer["Sys.Download"]" IsAsync="true" />
+    </Row>
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Import"]" IsAsync="true" />
+    </div>
+</ValidateForm>
+
+@code {
+    private FrameworkTenantImportVM Model = new FrameworkTenantImportVM() { };
+    private ValidateForm vform { get; set; }
+    private string ErrorRowStyle = "display:none";
+    private string ErrorFileId;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == true)
+        {
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    private async Task DownloadTemplate()
+    {
+        await Download("/api/_FrameworkTenant/GetExcelTemplate", new { }, HttpMethodEnum.GET);
+    }
+
+    private async Task Submit(EditContext context)
+    {
+        await PostsForm(vform, "/api/_FrameworkTenant/import", (s) => WtmBlazor.Localizer["Sys.ImportSuccess", s], (err) =>
+        {
+            if (err.Form.ContainsKey("Entity.ErrorFileId"))
+            {
+                ErrorRowStyle = "display:visiable";
+                ErrorFileId = err.Form["Entity.ErrorFileId"];
+            }
+            else
+            {
+                WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], err.GetFirstError());
+            }
+        });
+    }
+
+    private async Task DownloadErrorFile()
+    {
+        await Download($"/api/_file/DownloadFile/{ErrorFileId}", new { }, HttpMethodEnum.GET);
+    }
+
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

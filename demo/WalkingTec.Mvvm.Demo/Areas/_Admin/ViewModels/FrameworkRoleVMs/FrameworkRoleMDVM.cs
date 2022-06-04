@@ -17,17 +17,28 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
         {
             ListVM = new FrameworkMenuListVM();
         }
+        protected override FrameworkRole GetById(object Id)
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}").Result.Data.Entity;
+            }
+            else
+            {
+                return base.GetById(Id);
+            }
+        }
 
         protected override void InitVM()
         {
             ListVM.CopyContext(this);
-            ListVM.Searcher.RoleID = Entity.ID;
+            ListVM.Searcher.RoleCode = Entity.RoleCode;
         }
 
         public async Task<bool> DoChangeAsync()
         {
             var all = FC.Where(x => x.Key.StartsWith("menu_")).ToList();
-            List<Guid> AllowedMenuIds = all.Where(x => x.Value.ToString() == "1").Select(x=> Guid.Parse(x.Key.Replace("menu_",""))).ToList();
+            List<Guid> AllowedMenuIds = all.Where(x => x.Value.ToString() == "1").Select(x => Guid.Parse(x.Key.Replace("menu_", ""))).ToList();
             var torem = AllowedMenuIds.Distinct();
             var oldIDs = DC.Set<FunctionPrivilege>().Where(x => x.RoleCode == Entity.RoleCode).Select(x => x.ID).ToList();
 
@@ -42,12 +53,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 FunctionPrivilege fp = new FunctionPrivilege();
                 fp.MenuItemId = menuid;
                 fp.RoleCode = Entity.RoleCode;
+                fp.TenantCode = LoginUserInfo.CurrentTenant;
                 fp.Allowed = true;
                 DC.Set<FunctionPrivilege>().Add(fp);
             }
             await DC.SaveChangesAsync();
-            var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == Entity.RoleCode).Select(x => x.UserCode).ToArray();
-            await Wtm.RemoveUserCache(userids);
+            await Wtm.RemoveUserCacheByRole(Entity.RoleCode);
             return true;
         }
 
