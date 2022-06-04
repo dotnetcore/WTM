@@ -144,7 +144,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("_Admin.RefreshMenu")]
         [HttpGet("[action]")]
-        public async Task<ActionResult> RefreshMenu()
+        public  ActionResult RefreshMenu()
         {
             Cache.Delete(nameof(GlobalData.AllMenus));
             return Ok(Localizer["Sys.OprationSuccess"].Value);

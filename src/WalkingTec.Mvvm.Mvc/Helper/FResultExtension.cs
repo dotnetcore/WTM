@@ -82,6 +82,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// 跳转浏览器页面
         /// </summary>
         /// <param name="self"></param>
+        /// <param name="url">url</param>
         /// <returns></returns>
         public static FResult RedirectUrl(this FResult self, string url)
         {
