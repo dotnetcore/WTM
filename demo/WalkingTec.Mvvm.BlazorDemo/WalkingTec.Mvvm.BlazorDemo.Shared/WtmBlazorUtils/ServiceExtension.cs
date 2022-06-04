@@ -50,7 +50,7 @@ namespace WtmBlazorUtils
             });
             JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
             jsonOptions.PropertyNamingPolicy = null;
-            jsonOptions.IgnoreNullValues = true;
+            jsonOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
             jsonOptions.AllowTrailingCommas = true;
             jsonOptions.Converters.Add(new DateTimeConverter());

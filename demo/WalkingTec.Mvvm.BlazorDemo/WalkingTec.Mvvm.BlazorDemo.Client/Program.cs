@@ -12,7 +12,7 @@ var configs = builder.Configuration.Get<Configs>();
 builder.RootComponents.Add<WalkingTec.Mvvm.BlazorDemo.Shared.App>("app");
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
 builder.Services.AddBootstrapBlazor(null, options => { options.ResourceManagerStringLocalizerType = typeof(WalkingTec.Mvvm.BlazorDemo.Shared.Program); });
-builder.Services.AddWtmBlazor(builder.Configuration, builder.HostEnvironment.BaseAddress);
+builder.Services.AddWtmBlazor(configs, builder.HostEnvironment.BaseAddress);
 var host = builder.Build();
 var jsInterop = host.Services.GetRequiredService<IJSRuntime>();
 var result = await jsInterop.InvokeAsync<string>("localStorageFuncs.get", "wtmculture");

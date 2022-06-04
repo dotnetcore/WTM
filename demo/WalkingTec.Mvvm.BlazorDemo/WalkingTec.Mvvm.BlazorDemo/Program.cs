@@ -41,15 +41,16 @@ builder.Services.AddMvc(options =>
 })
 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
 .AddWtmDataAnnotationsLocalization(typeof(Program));
+var config = builder.Configuration.Get<Configs>();
 
-if (builder.Configuration.Get<Configs>().BlazorMode == BlazorModeEnum.Server)
+if (config.BlazorMode == BlazorModeEnum.Server)
 {
     builder.Services.AddServerSideBlazor();
     builder.Services.AddBootstrapBlazor(null, options =>
     {
         options.ResourceManagerStringLocalizerType = typeof(WalkingTec.Mvvm.BlazorDemo.Shared.Program);
     });
-    builder.Services.AddWtmBlazor(builder.Configuration);
+    builder.Services.AddWtmBlazor(config);
 }
 
 
@@ -62,7 +63,6 @@ builder.Services.AddWtmContext(builder.Configuration, (options) => {
 
 
 var app = builder.Build();
-IOptionsMonitor<Configs> config = app.Services.GetRequiredService<IOptionsMonitor<Configs>>();
 
 IconFontsHelper.GenerateIconFont("wwwroot/font", "wwwroot/font-awesome");
 
@@ -73,7 +73,7 @@ if (app.Environment.EnvironmentName == "Development")
 }
 else
 {
-    app.UseExceptionHandler(config.CurrentValue.ErrorHandler);
+    app.UseExceptionHandler(config.ErrorHandler);
 }
 app.UseStaticFiles();
 app.UseWtmStaticFiles();
@@ -85,7 +85,7 @@ app.UseAuthorization();
 app.UseSession();
 app.UseWtmSwagger(false);
 app.UseWtm();
-if (config.CurrentValue.BlazorMode == BlazorModeEnum.Server)
+if (config.BlazorMode == BlazorModeEnum.Server)
 {
     app.UseEndpoints(endpoints =>
     {
