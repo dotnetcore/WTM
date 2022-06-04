@@ -781,17 +781,21 @@ namespace WalkingTec.Mvvm.Mvc
                 var tenants = new List<FrameworkTenant>();
                 var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
                 var tenantsCacheKey = nameof(GlobalData.AllTenant);
-                    if (cache.TryGetValue(tenantsCacheKey, out tenants) == false)
+                if (cache.TryGetValue(tenantsCacheKey, out tenants) == false)
+                {
+                    if (configs?.EnableTenant == true)
                     {
-                        if (configs?.EnableTenant == true)
+                        using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                         {
-                            using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
-                            {
-                                tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
-                            }
+                            tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
                         }
-                        cache.Add(tenantsCacheKey, tenants ?? new List<FrameworkTenant>(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                     }
+                    if(tenants == null)
+                    {
+                        tenants = new List<FrameworkTenant>();
+                    }
+                    cache.Add(tenantsCacheKey, tenants, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
+                }
                 return tenants;
             });
             foreach (var m in gd.AllModule)
