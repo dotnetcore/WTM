@@ -173,7 +173,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("_Admin.RefreshMenu")]
-        public async Task<ActionResult> RefreshMenu()
+        public ActionResult RefreshMenu()
         {
             Cache.Delete(nameof(GlobalData.AllMenus));
             return FFResult().Alert(Localizer["Sys.OprationSuccess"]);

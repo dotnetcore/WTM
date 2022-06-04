@@ -1307,6 +1307,7 @@ params string[] groupcode)
         /// <param name="postdata">提交字段</param>
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
+        /// <param name="headers">自定义header</param>
         /// <returns></returns>
         public async Task<ApiResult<string>> CallAPI(string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, int? timeout = null, string proxy = null, Dictionary<string, string> headers = null)
         {
