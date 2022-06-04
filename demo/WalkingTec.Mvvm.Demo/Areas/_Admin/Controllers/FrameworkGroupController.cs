@@ -234,6 +234,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [AllRights]
         public IActionResult GetParents()
         {
+            WalkingTec.Mvvm.Admin.Api.FrameworkGroupController userapi = new Mvvm.Admin.Api.FrameworkGroupController();
+            userapi.Wtm = Wtm;
+            var rv = userapi.GetParentsTree() as OkObjectResult;
+            List<TreeSelectListItem> users = new List<TreeSelectListItem>();
+            if (rv != null && rv.Value is string && rv.Value != null)
+            {
+                users = System.Text.Json.JsonSerializer.Deserialize<List<TreeSelectListItem>>(rv.Value.ToString());
+            }
+            else if (rv != null && rv.Value is List<TreeSelectListItem> c)
+            {
+                users = c;
+            }
+            return JsonMore(users);
+
+
+
             var data = DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName);
             return JsonMore(data);
         }

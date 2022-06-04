@@ -207,9 +207,24 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetParents()
         {
-            var data = DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName);
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_frameworkgroup/GetParents").Result;
+            }
+            var data = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName);
             return Ok(data);
         }
 
+        [AllRights]
+        [HttpGet("[action]")]
+        public IActionResult GetParentsTree()
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_frameworkgroup/GetParentsTree").Result;
+            }
+            var data = DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName);
+            return Ok(data);
+        }
     }
 }
