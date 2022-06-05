@@ -179,6 +179,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             }
                         }
                     }
+                    base.OnActionExecuting(context);
+                    return;
                 }
                 //context.HttpContext.ChallengeAsync().Wait();
             }
@@ -202,11 +204,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             };
                             context.Result = cr;
                         }
+                        base.OnActionExecuting(context);
+                        return;
                     }
                 }
             }
-            else
-            {
+
                 if (isAllRights == false)
                 {
                     bool canAccess = controller.Wtm.IsAccessable(controller.BaseUrl);
@@ -246,7 +249,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
                     }
                 }
-            }
+            
             base.OnActionExecuting(context);
         }
 

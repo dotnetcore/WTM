@@ -247,11 +247,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 users = c;
             }
             return JsonMore(users);
-
-
-
-            var data = DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName);
-            return JsonMore(data);
         }
 
     }
