@@ -1,6 +1,30 @@
 # 更新日志
 
 ## v6.x.x
+##6.2.0(2022-6-5)
+
+本次为大版本更新，包含中断性更改，老项目升级时需要手动更新旧数据库以及覆盖默认生成的项目文件
+
+* **新增：**  新增多租户支持，支持单数据库，独立数据库以及混合模式，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/MultiTenant
+* **新增：**  新增单点登录支持，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/SSO
+* **新增：**  新增统一用户，角色，用户组管理支持，WTM现在可以用来架构微服务风格的分布式系统。
+* **新增：**  Layui和Blazor新增默认的多租户管理界面，其他UI后续会添加
+* **新增：**  新增MainTenantOnlyAttribute，用于标记方法不能被子租户使用
+* **修改：**  用户组修改为树形结构，可作为部门组织结构使用，为下一步工作流做好准备
+* **修改：**  由于用户组修改为树形结构，用户组的数据权限也可以向下继承
+* **修改：**  重构用户登录，重新登陆，权限验证等逻辑，更大程度上使用缓存，大幅提高性能
+* **修改：**  用户表的其他字段现在会被自动读取到LoginUserInfo.Attributes中
+* **修改：**  Blazor支持最新的BB控件库
+* **修改：**  修复了文件上传的一些安全性问题
+* **修改：**  优化导出操作
+* **修改：**  修复Layui Combobox和Tree控件的一些bug
+* **中断性修改：**  移除了系统自带的PersistedGrant表,简化了jwt登录流程，现在不再需要一个单独的RefreshToken来刷新Token，而是登陆后调用RefreshToken接口刷新当前用户的Token
+* **中断性修改：**  系统自带的表，除了FrameworkMenu外，都新增了TenantCode字段
+* **中断性修改：**  系统自带的FrameworkGroup字段发生了改变，变为树形结构，且增加了Manager字段
+* **中断性修改：**  新增新的系统表FrameworkTenant
+* **中断性修改：**  Appsettings文件中新增EnableTenant配置
+
+
 
 ##6.1.1(2022-4-1) 
 * **新增：**  集成Quartz作业调度，为后续工作流所需内部定时任务做好准备，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/Quartz
@@ -39,6 +63,28 @@
 * **修改：**  修改了layui多选控件设置必填的bug
 
 ## v5.x.x 
+
+##5.9.0(2022-6-5)
+
+本次为大版本更新，包含中断性更改，老项目升级时需要手动更新旧数据库
+
+* **新增：**  新增多租户支持，支持单数据库，独立数据库以及混合模式，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/MultiTenant
+* **新增：**  新增单点登录支持，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/SSO
+* **新增：**  新增统一用户，角色，用户组管理支持，WTM现在可以用来架构微服务风格的分布式系统。
+* **新增：**  Layui和Blazor新增默认的多租户管理界面，其他UI后续会添加
+* **修改：**  用户组修改为树形结构，可作为部门组织结构使用，为下一步工作流做好准备
+* **修改：**  由于用户组修改为树形结构，用户组的数据权限也可以向下继承
+* **修改：**  重构用户登录，重新登陆，权限验证等逻辑，更大程度上使用缓存，大幅提高性能
+* **修改：**  Blazor支持最新的BB控件库
+* **修改：**  修复了文件上传的一些安全性问题
+* **修改：**  优化导出操作
+* **修改：**  修复Layui Combobox和Tree控件的一些bug
+* **中断性修改：**  移除了系统自带的PersistedGrant表,简化了jwt登录流程，现在不再需要一个单独的RefreshToken来刷新Token，而是登陆后调用RefreshToken接口刷新当前用户的Token
+* **中断性修改：**  系统自带的表，除了FrameworkMenu外，都新增了TenantCode字段
+* **中断性修改：**  系统自带的FrameworkGroup字段发生了改变，变为树形结构，且增加了Manager字段
+* **中断性修改：**  新增新的系统表FrameworkTenant
+* **中断性修改：**  Appsettings文件中新增EnableTenant配置
+
 
 ##5.8.3(2022-4-1) 
 * **新增：**  集成Quartz作业调度，为后续工作流所需内部定时任务做好准备，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/Quartz
