@@ -161,10 +161,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (string.IsNullOrEmpty(ItemUrl) == false)
             {
-                if (_wtm.HttpContext?.Request?.Host != null)
-                {
-                    ItemUrl = _wtm.HttpContext.Request.IsHttps ? "https://" : "http://" + _wtm.HttpContext?.Request?.Host.ToString() + ItemUrl;
-                }
+                //if (_wtm.HttpContext?.Request?.Host != null)
+                //{
+                //    ItemUrl = _wtm.HttpContext.Request.IsHttps ? "https://" : "http://" + _wtm.HttpContext?.Request?.Host.ToString() + ItemUrl;
+                //}
                 output.PostElement.AppendHtml($"<script>ff.LoadComboItems('combo','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(selectVal)})</script>");
             }
 
