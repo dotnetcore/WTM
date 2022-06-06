@@ -116,7 +116,11 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return BadRequest(ModelState.GetErrorJson());
             }
             var vm = Wtm.CreateVM<FrameworkTenantBatchVM>();
-            if (ids == null || ids.Count() == 0)
+            if (ids != null && ids.Count() > 0)
+            {
+                vm.Ids = ids;
+            }
+            else
             {
                 return Ok();
             }
