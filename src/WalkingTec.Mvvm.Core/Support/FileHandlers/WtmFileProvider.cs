@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             int count = 1;
             foreach (var item in types)
             {
-                var cons = item.GetConstructor(new Type[] { typeof(Configs), typeof(IDataContext) });
+                var cons = item.GetConstructor(new Type[] { typeof(WTMContext)});
                 var nameattr = item.GetCustomAttribute<DisplayAttribute>();
                 string name = "";
                 if (nameattr == null)
@@ -52,7 +52,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             if (_defaultHandler == null && types.Count > 0)
             {
-                _defaultHandler = types[0].GetConstructor(new Type[] { typeof(Configs), typeof(IDataContext) });
+                _defaultHandler = types[0].GetConstructor(new Type[] { typeof(WTMContext) });
             }
 
         }
@@ -82,7 +82,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             else
             {
-                return ci.Invoke(new object[] { _wtm.ConfigInfo, dc }) as IWtmFileHandler;
+                return ci.Invoke(new object[] { _wtm }) as IWtmFileHandler;
             }
         }
 
