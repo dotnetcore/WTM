@@ -235,7 +235,6 @@ namespace WalkingTec.Mvvm.Core
         public void DoInit()
         {
             InitVM();
-            InitSubVM(this);
             OnAfterInit?.Invoke(this);
         }
 
@@ -281,6 +280,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         protected virtual void InitVM()
         {
+            InitSubVM(this);
         }
 
         /// <summary>

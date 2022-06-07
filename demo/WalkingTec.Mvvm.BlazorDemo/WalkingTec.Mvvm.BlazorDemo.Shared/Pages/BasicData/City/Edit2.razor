@@ -1,0 +1,52 @@
+@page "/BasicData/City/Edit2/{id}"
+@using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData
+@using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs;
+@inherits BasePage
+
+<ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
+        <Tab IsBorderCard="true">
+            <TabItem Text="user">
+                <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
+                    <BootstrapInput @bind-Value="@Model.vm1.Entity.Name" />
+                </Row>
+                <Row>
+                </Row>
+            </TabItem>
+            <TabItem Text="role">
+                <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
+                    <BootstrapInput @bind-Value="@Model.vm2.Entity.Name" />
+                </Row>
+            </TabItem>
+        </Tab>
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+        <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Edit"]" IsAsync="true" />
+    </div>
+</ValidateForm>
+
+@code {
+
+    private GroupVMTest Model = new GroupVMTest();
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var rv = await WtmBlazor.Api.CallAPI<GroupVMTest>($"/api/City/GetGroup/{id}");
+        Model = rv.Data;
+         await base.OnInitializedAsync();
+   }
+
+    private async Task Submit(EditContext context)
+    {
+        await PostsForm(vform, $"/api/City/editgroupvm", (s) => "Sys.OprationSuccess", method: HttpMethodEnum.PUT);
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

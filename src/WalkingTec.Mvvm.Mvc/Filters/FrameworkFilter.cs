@@ -60,7 +60,6 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.FC = new Dictionary<string, object>();
                     model.CreatorAssembly = this.GetType().Assembly.FullName;
                     model.ControllerName = context.HttpContext.Request.Path;
-                    SetSubVm(model);
 
                     try
                     {
@@ -105,6 +104,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             catch { }
                         }
                     }
+                    SetSubVm(model);
 
                     //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
                     if (model is IBaseBatchVM<BaseVM> temp)
@@ -154,10 +154,6 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         {
                             searcher.DoInit();
                         }
-                    }
-                    if (model.GetType().IsSubclassOf(typeof(BaseVM)))
-                    {
-                        model.DoInit();
                     }
                     model.Validate();
                     var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();
