@@ -19,7 +19,7 @@
 
 
 
-<Table @ref="dataTable" TItem="ActionLog" ShowLineNo="true" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
+<Table @ref="dataTable" TItem="ActionLog" ShowLineNo="true" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false" AllowResizing="true"
        ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" FixedExtendButtonsColumn="true" ShowDefaultButtons="false" style="margin-top:10px;">
     <TableColumns>
         <TableColumn @bind-Field="@context.LogType" Width="120" />

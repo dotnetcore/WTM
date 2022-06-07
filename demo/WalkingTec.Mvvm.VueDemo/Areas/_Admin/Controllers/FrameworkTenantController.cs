@@ -42,14 +42,10 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public IActionResult Get(Guid id)
+        public FrameworkTenantVM Get(Guid id)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
-            {
-                return Request.RedirectCall(Wtm).Result;
-            }
             var vm = Wtm.CreateVM<FrameworkTenantVM>(id);
-            return Ok(vm);
+            return vm;
         }
 
         [ActionDescription("Sys.Create")]
@@ -120,7 +116,11 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return BadRequest(ModelState.GetErrorJson());
             }
             var vm = Wtm.CreateVM<FrameworkTenantBatchVM>();
-            if (ids == null || ids.Count() == 0)
+            if (ids != null && ids.Count() > 0)
+            {
+                vm.Ids = ids;
+            }
+            else
             {
                 return Ok();
             }

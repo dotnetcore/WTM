@@ -79,10 +79,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override async Task DoEditAsync(bool updateAllFields = false)
         {
-            if (FC.ContainsKey("Entity.ITCode"))
-            {
-                FC.Remove("Entity.ITCode");
-            }
             using (var trans = DC.BeginTransaction())
             {
                 if (SelectedRolesCodes != null)

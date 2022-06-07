@@ -503,9 +503,10 @@ namespace WalkingTec.Mvvm.Core
                             foreach (var field in FC.Keys)
                             {
                                 var f = field.ToLower();
-                                if (f.StartsWith("entity." + pro.Name.ToLower() + "[0]."))
+                                
+                                if (f.StartsWith($"{this.GetParentStr().ToLower()}entity." + pro.Name.ToLower() + "[0]."))
                                 {
-                                    string name = f.Replace("entity." + pro.Name.ToLower() + "[0].", "");
+                                    string name = f.Replace($"{this.GetParentStr().ToLower()}entity." + pro.Name.ToLower() + "[0].", "");
                                     setnames.Add(name);
                                 }
                             }
@@ -526,7 +527,8 @@ namespace WalkingTec.Mvvm.Core
                                             if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && (updateAllFields == true || setnames.Contains(itempro.Name.ToLower())))
                                             {
                                                 var notmapped = itempro.GetCustomAttribute<NotMappedAttribute>();
-                                                if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false)
+                                                var cannotedit = itempro.GetCustomAttribute<CanNotEditAttribute>();
+                                                if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false && cannotedit == null)
                                                 {
                                                     DC.UpdateProperty(i, itempro.Name);
                                                 }
@@ -639,15 +641,34 @@ namespace WalkingTec.Mvvm.Core
 
             if (updateAllFields == false)
             {
+                if (typeof(TreePoco).IsAssignableFrom(typeof(TModel)))
+                {
+                    var cid = Entity.GetID();
+                    var pid = Entity.GetParentID();
+                    if(cid != null && pid != null &&  cid.ToString()== pid.ToString())
+                    {
+                        var pkey = FC.Keys.Where(x => x.ToLower() == "entity.parentid").FirstOrDefault();
+                        if (string.IsNullOrEmpty(pkey) == false)
+                        {
+                            FC.Remove(pkey);
+                        }
+                    }
+                }
                 foreach (var field in FC.Keys)
                 {
                     var f = field.ToLower();
-                    if (f.StartsWith("entity.") && !f.Contains("["))
+                    if (f.StartsWith($"{this.GetParentStr().ToLower()}entity.") && !f.Contains("["))
                     {
-                        string name = f.Replace("entity.", "");
+                        string name = f.Replace($"{this.GetParentStr().ToLower()}entity.", "");
                         try
                         {
-                            DC.UpdateProperty(Entity, pros.Where(x => x.Name.ToLower() == name).Select(x => x.Name).FirstOrDefault());
+                            var itempro = pros.Where(x => x.Name.ToLower() == name).FirstOrDefault();
+                            var notmapped = itempro.GetCustomAttribute<NotMappedAttribute>();
+                            var cannotedit = itempro.GetCustomAttribute<CanNotEditAttribute>();
+                            if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false && cannotedit == null)
+                            {
+                                DC.UpdateProperty(Entity, itempro.Name);
+                            }
                         }
                         catch (Exception)
                         {

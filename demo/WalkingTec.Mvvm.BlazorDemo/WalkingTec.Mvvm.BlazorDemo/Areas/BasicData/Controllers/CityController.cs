@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs;
 using WalkingTec.Mvvm.Demo.Models;
-
+using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 {
@@ -42,6 +42,15 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
             return vm;
         }
 
+        [ActionDescription("Sys.Get")]
+        [HttpGet("GetGroup/{id}")]
+        public GroupVMTest GetGroup(string id)
+        {
+            var vm = Wtm.CreateVM<GroupVMTest>(values:x=>x.EntityId == id);
+            return vm;
+        }
+
+
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
         public IActionResult Add(CityVM vm)
@@ -62,7 +71,52 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
                     return Ok(vm.Entity);
                 }
             }
+        }
 
+        [ActionDescription("Sys.Create")]
+        [HttpPost("addgroupvm")]
+        public IActionResult AddGroupVM(GroupVMTest vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                vm.vm1.DoAdd();
+                vm.vm2.DoAdd();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+                else
+                {
+                    return Ok(vm);
+                }
+            }
+        }
+
+        [ActionDescription("Sys.Create")]
+        [HttpPut("editgroupvm")]
+        public IActionResult EditGroupVM(GroupVMTest vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                vm.vm1.DoEdit();
+                vm.vm2.DoEdit();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+                else
+                {
+                    return Ok(vm);
+                }
+            }
         }
 
         [ActionDescription("Sys.Edit")]

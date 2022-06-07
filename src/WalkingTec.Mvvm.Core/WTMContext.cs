@@ -443,6 +443,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     user.LoadBasicInfoAsync(this).Wait();
                 }
+                user.RemoteToken = null;
                 var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
                 var token = authService.IssueTokenAsync(user).Result;
                 user.RemoteToken = token.AccessToken;
@@ -906,6 +907,7 @@ params string[] groupcode)
             {
                 cvm.SetEntityById(Id);
             }
+            SetSubVm(rv, passInit);
             //if viewmodel is derrived from IBaseBatchVM<>，set ViewMode's Ids property,and init it's ListVM and EditModel properties
             if (rv is IBaseBatchVM<BaseVM> temp)
             {
@@ -984,6 +986,37 @@ params string[] groupcode)
             }
             return rv;
         }
+
+        private void SetSubVm(BaseVM vm, bool passInit)
+        {
+            var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
+            foreach (var prop in sub)
+            {
+                var subins = prop.GetValue(vm) as BaseVM;
+                bool exist = subins == null ? false : true;
+                if (subins == null)
+                {
+                    subins = prop.PropertyType.GetConstructor(Type.EmptyTypes).Invoke(null) as BaseVM;
+                }
+                if (subins != null)
+                {
+                    subins.CopyContext(vm);
+                    subins.ParentVM = vm;
+                    subins.PropertyNameInParent = prop.Name;
+                   if (passInit == false)
+                    {
+                        subins.DoInit();
+                    }
+                    if (exist == false)
+                    {
+                        vm.SetPropertyValue(prop.Name, subins);
+                    }
+                    SetSubVm(subins,passInit);
+                }
+            }
+
+        }
+
 
         /// <summary>
         /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel

@@ -116,7 +116,11 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return BadRequest(ModelState.GetErrorJson());
             }
             var vm = Wtm.CreateVM<FrameworkTenantBatchVM>();
-            if (ids == null || ids.Count() == 0)
+            if (ids != null && ids.Count() > 0)
+            {
+                vm.Ids = ids;
+            }
+            else
             {
                 return Ok();
             }
@@ -213,12 +217,13 @@ namespace WalkingTec.Mvvm.Admin.Api
         [AllRights]
         public IActionResult GetFrameworkTenants(string parent)
         {
-            if(parent == "")
+            if (parent == "")
             {
                 parent = null;
             }
-            return Ok(Wtm.GlobaInfo.AllTenant.AsQueryable().Where(x=> x.TenantCode == parent).GetSelectListItems(Wtm,x=>x.TName,x=>x.TCode));
+            return Ok(Wtm.GlobaInfo.AllTenant.AsQueryable().Where(x => x.TenantCode == parent).GetSelectListItems(Wtm, x => x.TName, x => x.TCode));
         }
+
 
 
         private bool CanUseTenant()

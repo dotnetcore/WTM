@@ -39,11 +39,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
         public override void DoEdit(bool updateAllFields = false)
         {
-            if (FC.ContainsKey("Entity.GroupCode"))
-            {
-                FC.Remove("Entity.GroupCode");
-            }
-
             base.DoEdit(updateAllFields);
             Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant).Wait();
         }

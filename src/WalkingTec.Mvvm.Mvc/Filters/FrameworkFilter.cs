@@ -18,6 +18,7 @@ using System.Text.Json;
 using WalkingTec.Mvvm.Core.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -59,16 +60,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.FC = new Dictionary<string, object>();
                     model.CreatorAssembly = this.GetType().Assembly.FullName;
                     model.ControllerName = context.HttpContext.Request.Path;
-                    //if (ctrl is BaseController c)
-                    //{
-                    //    model.WtmContext.WindowIds = c.WindowIds;
-                    //    model.UIService = c.UIService;
-                    //}
-                    //else
-                    //{
-                    //    model.WindowIds = "";
-                    //    model.UIService = new DefaultUIService();
-                    //}
+
                     try
                     {
                         var f = context.HttpContext.Request.Form;
@@ -112,32 +104,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             catch { }
                         }
                     }
-                    //if (model is IBaseCRUDVM<TopBasePoco> crud)
-                    //{
-                    //    var pros = crud.Entity.GetType().GetProperties();
-                    //    foreach (var pro in pros)
-                    //    {
-                    //        if (model.FC.ContainsKey("Entity." + pro.Name))
-                    //        {
-                    //            //找到类型为List<xxx>的字段
-                    //            if (pro.PropertyType.GenericTypeArguments.Count() > 0)
-                    //            {
-                    //                //获取xxx的类型
-                    //                var ftype = pro.PropertyType.GenericTypeArguments.First();
-                    //                //如果xxx继承自TopBasePoco
-                    //                if (ftype.IsSubclassOf(typeof(TopBasePoco)))
-                    //                {
-                    //                    //界面传过来的子表数据
+                    SetSubVm(model);
 
-                    //                    if (pro.GetValue(crud.Entity) is IEnumerable<TopBasePoco> list && list.Count() == 0)
-                    //                    {
-                    //                        pro.SetValue(crud.Entity, null);
-                    //                    }
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-                    //}
                     //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
                     if (model is IBaseBatchVM<BaseVM> temp)
                     {
@@ -193,7 +161,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         foreach (var v in invalid)
                         {
-                            if (v?.StartsWith("Entity.") == true)
+                            if (v?.StartsWith($"{model.GetParentStr()}Entity.") == true)
                             {
                                 Regex r = new Regex("(.*?)\\[.*?\\](.*?$)");
                                 var m = r.Match(v);
@@ -202,7 +170,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 {
                                     check = m.Groups[1] + "[0]" + m.Groups[2];
                                 }
-                                if (model.FC.Keys.Any(x=>x.ToLower() == check.ToLower()) == false)
+                                if (model.FC.Keys.Any(x => x.ToLower() == check.ToLower()) == false)
                                 {
                                     ctrl.ModelState.Remove(v);
                                 }
@@ -236,7 +204,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                 }
 
-                if(item.Value is BaseSearcher se)
+                if (item.Value is BaseSearcher se)
                 {
                     se.FC = new Dictionary<string, object>();
                     se.Wtm = ctrl.Wtm;
@@ -248,7 +216,31 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             base.OnActionExecuting(context);
         }
 
+        private void SetSubVm(BaseVM vm)
+        {
+            var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
+            foreach (var prop in sub)
+            {
+                var subins = prop.GetValue(vm) as BaseVM;
+                bool exist = subins == null ? false : true;
+                if (subins == null)
+                {
+                    subins = prop.PropertyType.GetConstructor(Type.EmptyTypes).Invoke(null) as BaseVM;
+                }
+                if(subins != null)
+                {
+                    subins.CopyContext(vm);
+                    subins.ParentVM = vm;
+                    subins.PropertyNameInParent = prop.Name;
+                    if (exist == false)
+                    {
+                        vm.SetPropertyValue(prop.Name, subins);
+                    }
+                    SetSubVm(subins);
+                }
+            }
 
+        }
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
@@ -273,7 +265,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             if (context.Result is ViewResult vr)
             {
-                viewName = vr.ViewName??"";
+                viewName = vr.ViewName ?? "";
                 if (viewName?.StartsWith("/") == false)
                 {
                     var viewEngine = context.HttpContext.RequestServices.GetRequiredService<ICompositeViewEngine>();
@@ -294,7 +286,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 {
                     model.CurrentView = viewName;
                     string pagetitle = string.Empty;
-                    var menu = Utils.FindMenu(context.HttpContext.Request.Path,ctrl.GlobaInfo.AllMenus);
+                    var menu = Utils.FindMenu(context.HttpContext.Request.Path, ctrl.GlobaInfo.AllMenus);
                     if (menu == null)
                     {
                         var ctrlDes = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
@@ -315,12 +307,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             var pmenu = ctrl.GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
                             if (pmenu != null)
                             {
-                                    pmenu.PageName = Core.CoreProgram._localizer?[pmenu.PageName];
+                                pmenu.PageName = Core.CoreProgram._localizer?[pmenu.PageName];
 
                                 pagetitle = pmenu.PageName + " - ";
                             }
                         }
-                            menu.PageName = Core.CoreProgram._localizer?[menu.PageName];
+                        menu.PageName = Core.CoreProgram._localizer?[menu.PageName];
                         pagetitle += menu.PageName;
                     }
                     if (string.IsNullOrEmpty(pagetitle) == false)
@@ -339,7 +331,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.CurrentView = viewName;
                     (context.Result as ViewResult).ViewData.Model = model;
                 }
-               if (model != null)
+                if (model != null)
                 {
                     model.CurrentView = viewName;
                     context.HttpContext.Response.Cookies.Append("divid", model?.ViewDivId);
@@ -375,33 +367,33 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             {
                 return;
             }
-            if ( nolog == false)
+            if (nolog == false)
             {
-                    var log = new ActionLog();
-                    var ctrlDes = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
-                    var actDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
-                    var postDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
+                var log = new ActionLog();
+                var ctrlDes = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+                var actDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+                var postDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
 
-                    log.LogType = context.Exception == null ? ActionLogTypesEnum.Normal : ActionLogTypesEnum.Exception;
-                    log.ActionTime = DateTime.Now;
-                    log.ITCode = ctrl.Wtm?.LoginUserInfo?.ITCode ?? string.Empty;
-                    // 给日志的多语言属性赋值
-                    log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
-                    log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
-                    log.ActionUrl = context.HttpContext.Request.Path;
-                    log.IP = context.HttpContext.GetRemoteIpAddress();
-                    log.Remark = context.Exception?.ToString() ?? string.Empty;
-                    if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 2000)
-                    {
-                        log.Remark = log.Remark.Substring(0, 2000);
-                    }
-                    var starttime = context.HttpContext.Items["actionstarttime"] as DateTime?;
-                    if (starttime != null)
-                    {
-                        log.Duration = DateTime.Now.Subtract(starttime.Value).TotalSeconds;
-                    }
-                    try
-                    {
+                log.LogType = context.Exception == null ? ActionLogTypesEnum.Normal : ActionLogTypesEnum.Exception;
+                log.ActionTime = DateTime.Now;
+                log.ITCode = ctrl.Wtm?.LoginUserInfo?.ITCode ?? string.Empty;
+                // 给日志的多语言属性赋值
+                log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
+                log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
+                log.ActionUrl = context.HttpContext.Request.Path;
+                log.IP = context.HttpContext.GetRemoteIpAddress();
+                log.Remark = context.Exception?.ToString() ?? string.Empty;
+                if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 2000)
+                {
+                    log.Remark = log.Remark.Substring(0, 2000);
+                }
+                var starttime = context.HttpContext.Items["actionstarttime"] as DateTime?;
+                if (starttime != null)
+                {
+                    log.Duration = DateTime.Now.Subtract(starttime.Value).TotalSeconds;
+                }
+                try
+                {
                     var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ActionLog>>();
                     if (logger != null)
                     {
@@ -410,8 +402,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             return a.GetLogString();
                         });
                     }
-                    }
-                    catch { }
+                }
+                catch { }
             }
             if (context.Exception != null)
             {

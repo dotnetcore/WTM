@@ -26,10 +26,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         public override void DoEdit(bool updateAllFields = false)
         {
-            if (FC.ContainsKey("Entity.RoleCode"))
-            {
-                FC.Remove("Entity.RoleCode");
-            }
             base.DoEdit(updateAllFields);
             Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
         }

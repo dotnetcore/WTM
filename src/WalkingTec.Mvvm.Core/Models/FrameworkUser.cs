@@ -20,6 +20,7 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Account")]
         [Required(ErrorMessage = "Validate.{0}required")]
         [StringLength(50,ErrorMessage = "Validate.{0}stringmax{1}")]
+        [CanNotEdit]
         public string ITCode { get; set; }
 
         [Display(Name = "_Admin.Password")]
