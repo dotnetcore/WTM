@@ -527,7 +527,8 @@ namespace WalkingTec.Mvvm.Core
                                             if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && (updateAllFields == true || setnames.Contains(itempro.Name.ToLower())))
                                             {
                                                 var notmapped = itempro.GetCustomAttribute<NotMappedAttribute>();
-                                                if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false)
+                                                var cannotedit = itempro.GetCustomAttribute<CanNotEditAttribute>();
+                                                if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false && cannotedit == null)
                                                 {
                                                     DC.UpdateProperty(i, itempro.Name);
                                                 }
@@ -661,7 +662,13 @@ namespace WalkingTec.Mvvm.Core
                         string name = f.Replace($"{this.GetParentStr().ToLower()}entity.", "");
                         try
                         {
-                            DC.UpdateProperty(Entity, pros.Where(x => x.Name.ToLower() == name).Select(x => x.Name).FirstOrDefault());
+                            var itempro = pros.Where(x => x.Name.ToLower() == name).FirstOrDefault();
+                            var notmapped = itempro.GetCustomAttribute<NotMappedAttribute>();
+                            var cannotedit = itempro.GetCustomAttribute<CanNotEditAttribute>();
+                            if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false && cannotedit == null)
+                            {
+                                DC.UpdateProperty(Entity, itempro.Name);
+                            }
                         }
                         catch (Exception)
                         {

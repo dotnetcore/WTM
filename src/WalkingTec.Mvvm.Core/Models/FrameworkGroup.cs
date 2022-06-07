@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.Core
         [Required(ErrorMessage = "Validate.{0}required")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Validate.{0}number")]
         [StringLength(100, ErrorMessage = "Validate.{0}stringmax{1}")]
+        [CanNotEdit]
         public string GroupCode { get; set; }
 
         [Display(Name = "_Admin.GroupName")]

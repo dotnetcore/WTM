@@ -443,6 +443,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     user.LoadBasicInfoAsync(this).Wait();
                 }
+                user.RemoteToken = null;
                 var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
                 var token = authService.IssueTokenAsync(user).Result;
                 user.RemoteToken = token.AccessToken;
