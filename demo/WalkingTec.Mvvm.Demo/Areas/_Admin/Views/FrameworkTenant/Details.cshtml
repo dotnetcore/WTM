@@ -1,0 +1,19 @@
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs.FrameworkTenantVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:display field="Entity.TCode" />
+<wt:display field="Entity.TName" />
+<wt:display field="Entity.TDb" />
+<wt:display field="Entity.TDbType" />
+<wt:display field="Entity.DbContext" />
+<wt:display field="Entity.TDomain" />
+<wt:display field="Entity.EnableSub"/>
+<wt:display field="Entity.Enabled" default-value="true"/>
+
+</wt:row>
+    <wt:row align="AlignEnum.Right">
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

@@ -12,6 +12,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
         {
             var actions = new List<GridAction>
             {
+                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
                 this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
             };
@@ -73,23 +74,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 .CheckContain(Searcher.IP, x=>x.IP)
                 .CheckBetween(Searcher.ActionTime?.GetStartTime(), Searcher.ActionTime?.GetEndTime(), x=>x.ActionTime, includeMax:false)
                 .CheckWhere(Searcher.Duration,x=>x.Duration >= Searcher.Duration)
-                .Select(x=>new ActionLog()
-                {
-                    ID          = x.ID,
-                    ModuleName  = x.ModuleName,
-                    ITCode      = x.ITCode,
-                    ActionTime  = x.ActionTime,
-                    ActionName  = x.ActionName,
-                    ActionUrl   = x.ActionUrl,
-                    Duration    = x.Duration,
-                    IP          = x.IP,
-                    LogType     = x.LogType,
-                    Remark      = x.Remark,
-                    CreateBy    = x.CreateBy,
-                    CreateTime  = x.CreateTime,
-                    UpdateBy    = x.UpdateBy,
-                    UpdateTime  = x.UpdateTime
-                })
                 .OrderByDescending(x=>x.ActionTime);
 
             return query;

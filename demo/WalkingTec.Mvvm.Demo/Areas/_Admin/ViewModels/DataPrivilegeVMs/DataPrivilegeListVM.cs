@@ -34,7 +34,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         {
             return new List<GridColumn<DataPrivilege_ListView>>{
                 this.MakeGridHeader(x => x.Name, 200),
-                this.MakeGridHeader(x => x.TableName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
+                this.MakeGridHeader(x => x.PName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
+                this.MakeGridHeader(x => x.TableName),
                 this.MakeGridHeader(x => x.RelateIDs),
                 this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Localizer["Sys.Operation"]).SetDisableExport(),
                 this.MakeGridHeader(x => x.DpType).SetHide(true),
@@ -85,15 +86,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             IOrderedQueryable<DataPrivilege_ListView> query = null;
             if (Searcher.DpType == DpTypeEnum.User)
             {
-                query = DC.Set<DataPrivilege>()
-                    .Join(DC.Set<FrameworkUser>(), ok => ok.UserCode, ik => ik.ITCode, (dp, user) => new { dp = dp, user = user })
-                    .CheckContain(Searcher.Name, x => x.user.Name)
-                    .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                    .GroupBy(x => new { x.user.Name, x.user.ITCode, x.dp.TableName }, x => x.dp.RelateId)
+                query = DC.Set<DataPrivilege>().Where(x=>x.UserCode != null)
+                    .CheckContain(Searcher.Name, x => x.UserCode)
+                    .CheckContain(Searcher.TableName, x => x.TableName)
+                    .GroupBy(x => new { x.UserCode, x.TableName }, x => x.RelateId)
                     .Select(x => new DataPrivilege_ListView
                     {
-                        TargetId = x.Key.ITCode,
-                        Name = x.Key.Name,
+                        TargetId = x.Key.UserCode,
+                        Name = x.Key.UserCode,
                         TableName = x.Key.TableName,
                         RelateIDs = x.Count(),
                         DpType = (int)Searcher.DpType
@@ -102,15 +102,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             else
             {
-                query = DC.Set<DataPrivilege>()
-                    .Join(DC.Set<FrameworkGroup>(), ok => ok.GroupCode, ik => ik.GroupCode, (dp, group) => new { dp = dp, group = group })
-                    .CheckContain(Searcher.Name, x => x.group.GroupName)
-                    .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                       .GroupBy(x => new { x.group.GroupName, x.group.GroupCode, x.dp.TableName }, x => x.dp.RelateId)
+                query = DC.Set<DataPrivilege>().Where(x=>x.GroupCode != null)
+                    .CheckContain(Searcher.Name, x => x.GroupCode)
+                    .CheckContain(Searcher.TableName, x => x.TableName)
+                       .GroupBy(x => new { x.GroupCode, x.TableName }, x => x.RelateId)
                        .Select(x => new DataPrivilege_ListView
                        {
                            TargetId = x.Key.GroupCode,
-                           Name = x.Key.GroupName,
+                           Name = "",
                            TableName = x.Key.TableName,
                            RelateIDs = x.Count(),
                            DpType = (int)Searcher.DpType
@@ -119,6 +118,40 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
             }
             return query;
+        }
+
+        public override void AfterDoSearcher()
+        {
+            if (Searcher.DpType == DpTypeEnum.User)
+            {
+                return;
+            }
+            var groupIDs = EntityList.Select(x=>x.TargetId).ToList();
+            Dictionary<string, string> groupdata = new Dictionary<string, string>();
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                var dd = Wtm.CallAPI<List<ComboSelectListItem>>("mainhost", "/api/_frameworkuser/GetFrameworkGroups").Result;
+                if(dd.Data != null)
+                {
+                    foreach (var item in dd.Data)
+                    {
+                        groupdata.TryAdd(item.Value.ToString(), item.Text);
+                    }
+                }
+            }
+            else
+            {
+                var ag = Wtm.GetTenantGroups(Wtm.LoginUserInfo?.CurrentTenant);
+                foreach (var item in ag)
+                {
+                    groupdata.TryAdd(item.GroupCode, item.GroupName);
+                }
+            }
+            foreach (var item in EntityList)
+            {
+                item.Name = groupdata.ContainsKey(item.TargetId) ? groupdata[item.TargetId] : "";
+            }
+            base.AfterDoSearcher();
         }
     }
 
@@ -137,6 +170,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public Guid? DomainID { get; set; }
 
         public string Edit { get; set; }
+
+        [Display(Name = "_Admin.DataPrivilegeName")]
+        public string PName { get; set; }
     }
 
 }

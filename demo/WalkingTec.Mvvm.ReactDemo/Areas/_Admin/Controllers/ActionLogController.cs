@@ -18,11 +18,18 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public string Search(ActionLogSearcher searcher)
+        public IActionResult Search(ActionLogSearcher searcher)
         {
-            var vm = Wtm.CreateVM<ActionLogListVM>(passInit: true);
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ModelState.IsValid)
+            {
+                var vm = Wtm.CreateVM<ActionLogListVM>(passInit:true);
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Sys.Get")]

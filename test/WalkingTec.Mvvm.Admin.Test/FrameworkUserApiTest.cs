@@ -27,8 +27,8 @@ namespace WalkingTec.Mvvm.Admin.Test
         [TestMethod]
         public void SearchTest()
         {
-            string rv = _controller.Search(new FrameworkUserSearcher());
-            Assert.IsTrue(string.IsNullOrEmpty(rv)==false);
+            var rv = _controller.Search(new FrameworkUserSearcher());
+            Assert.IsTrue(string.IsNullOrEmpty((rv as ContentResult)?.Content)==false);
         }
 
         [TestMethod]

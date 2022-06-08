@@ -9,6 +9,5 @@ namespace WalkingTec.Mvvm.Core
         public int Expires { get; set; } = 3600;
         public string SecurityKey { get; set; } = "wtm";
         public string LoginPath { get; set; }
-        public int RefreshTokenExpires { get; set; }
     }
 }

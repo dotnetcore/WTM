@@ -6,109 +6,67 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.Extensions.Options;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
     [HtmlTargetElement("wt:tree",  TagStructure = TagStructure.WithoutEndTag)]
     public class TreeTagHelper : BaseFieldTag
     {
+        public string EmptyText { get; set; }
         public ModelExpression Items { get; set; }
         public bool ShowLine { get; set; } = true;
-        /// <summary>
-        /// 点击事件
-        /// </summary>
-        /// <summary>
-        /// 点击时触发的js函数名，func(data)格式;
-        /// <para>
-        /// data.elem得到当前节点元素;
-        /// </para>
-        /// <para>
-        /// data.data得到当前点击的节点数据
-        /// </para>
-        /// <para>
-        /// data.state得到当前节点的展开状态：open、close、normal
-        /// </para>
-        /// </summary>
-        public string ClickFunc { get; set; }
         /// <summary>
         /// 勾选事件
         /// </summary>
         /// <summary>
         /// 勾选时触发的js函数名，func(data)格式;
         /// <para>
-        /// data.elem得到当前节点元素;
+        /// data.arr得到当前选中数据数组;
         /// </para>
         /// <para>
-        /// data.data得到当前点击的节点数据
+        /// data.change得到本次操作变化的数据数组
         /// </para>
         /// <para>
-        /// data.checked是否被选中
+        /// data.isadd得到本次操作是增加还是删除
         /// </para>
         /// </summary>
-        public string CheckFunc { get; set; }
+        public string ChangeFunc { get; set; }
+        public bool AutoRow { get; set; }
+        public bool? EnableSearch { get; set; }
+        public bool? ShowToolbar { get; set; } = true;
+        public ModelExpression LinkField { get; set; }
+
+        public string LinkId { get; set; }
+        public string TriggerUrl { get; set; }
+
+        public TreeTagHelper(IOptionsMonitor<Configs> configs)
+        {
+            if (EmptyText == null)
+            {
+                EmptyText = THProgram._localizer["Sys.PleaseSelect"];
+            }
+            if (EnableSearch == null)
+            {
+                EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
+            }
+        }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             bool MultiSelect = false;
             var type = Field.Metadata.ModelType;
-            if (type.IsArray || (type.IsGenericType && typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition())))// Array or List
+            if (Field.Name.Contains("[") || type.IsArray || type.IsList())// Array or List
             {
                 MultiSelect = true;
             }
-            string oncheck = "";
-            string onclick = "";
-            if (MultiSelect != true)
-            {
-                var formid = "";
-                if (context.Items.ContainsKey("formid"))
-                {
-                    formid = $",'{context.Items["formid"]}form'";
-                }
-
-                onclick = $@"
-                ,click: function(data){{
-                    var ele = data.elem.find('.layui-tree-main:first');
-                    if(last{Id} != null){{
-                        last{Id}.css('background-color','');
-                        last{Id}.find('.layui-tree-txt').css('color','');
-                    }}
-                    $('#tree{Id}hidden').html('');
-                    if(last{Id} != null && last{Id}.is(ele)){{
-                        last{Id} = null;
-                    }}
-                    else{{
-                        ele.css('background-color','#5fb878');
-                        ele.find('.layui-tree-txt').css('color','#fff');
-                        $('#tree{Id}hidden').append(""<input type='hidden' name='{Field?.Name}' value='""+data.data.id+""'/>"");
-                        last{Id} = ele;
-                    }}
-                    {FormatFuncName(CheckFunc)};
-                  }}";
-            }
-            else
-            {
-                onclick = $@"
-,click: function(data){{
-    {FormatFuncName(ClickFunc)};
-  }}";
-
-            }
-            oncheck = $@"
-                ,oncheck: function(data){{
-                    if(loaded{Id} == false) return;
-                    var checkData = layui.tree.getChecked('{Id}');
-                    var ids = ff.getTreeChecked(checkData);
-                    $('#tree{Id}hidden').html('');
-                    for(var i=0;i<ids.length;i++){{
-                        $('#tree{Id}hidden').append(""<input type='hidden' name='{Field?.Name}' value='""+ids[i]+""'/>"");
-                    }}
-                    {FormatFuncName(CheckFunc)};
-                  }}";
 
             output.TagName = "div";
-            output.Attributes.Add("id", "div" + Id);
+            output.Attributes.Add("id", Id);
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("wtm-ctype", "tree");
             output.Attributes.Add("wtm-name", Field.Name);
+            output.Attributes.Add("wtm-multi", MultiSelect.ToString().ToLower());
             Id = string.IsNullOrEmpty(Id) ? Guid.NewGuid().ToNoSplitString() : Id;
 
                 List<object> vals = new List<object>();
@@ -134,31 +92,79 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
                 var script = $@"
 <script>
-layui.use(['tree'],function(){{
-  var last{Id} = null;
-  var loaded{Id} = false;
-  layui.tree.render({{
-    id:'{Id}',elem: '#div{Id}',onlyIconControl:{(!MultiSelect).ToString().ToLower()}, showCheckbox:{MultiSelect.ToString().ToLower()},showLine:{ShowLine.ToString().ToLower()}
-    ,data: {JsonSerializer.Serialize(treeitems)} {oncheck} {onclick}
-  }});
-  loaded{Id} = true;";
-
-            var defaultselect = "";
-            if (Field.Model != null) {
-               defaultselect = $@"
-    var selected = $(""div[data-id='{Field.Model.ToString()}']"");
-    var selected2 = selected.find('.layui-tree-main:first');
-    selected2.css('background-color','#5fb878');
-    selected2.find('.layui-tree-txt').css('color','#fff');
-    last{Id} = selected2;
-";
-            }
-
-            if (MultiSelect == false && Field.Model != null)
-                {
-                script += defaultselect;
-                }
-                script += $@"
+var {Id} = xmSelect.render({{
+    el: '#{Id}',
+    name:'{Field.Name}',
+    tips:'{EmptyText}',
+    {(THProgram._localizer["Sys.LayuiDateLan"] == "CN" ? "language:'zn'," : "language:'en',")}
+	autoRow: {AutoRow.ToString().ToLower()},
+	filterable: {EnableSearch.ToString().ToLower()},
+    template({{ item, sels, name, value }}){{
+        if(item.icon !== undefined && item.icon != """"&& item.icon != null){{
+			return '<i class=""'+item.icon+'""></i>' + item.name;
+        }}
+        else{{
+            return item.name;
+        }}
+	}},
+    {(MultiSelect == false ? $@"
+    radio: true,
+    clickClose: true,
+    model: {{
+        label: {{
+            type: 'abc' ,
+            abc: {{
+                template: function(item, sels){{
+                    if(sels[0].icon !== undefined && sels[0].icon != """" && sels[0].icon != null){{
+                        return '<i class=""'+sels[0].icon+'""></i>' + sels[0].name;
+                    }}
+                    else{{
+                        return sels[0].name;
+                    }}
+                }}
+            }}
+        }}
+    }},
+    toolbar: {{
+        show: {ShowToolbar.Value.ToString().ToLower()},
+        list: ['CLEAR']}}," : $@"
+        toolbar: {{show: true,list: ['ALL', 'REVERSE', 'CLEAR']}},
+        model: {{
+		label: {{
+			block: {{
+				template: function(item, sels){{
+                    if(item.icon !== undefined && item.icon != """"&& item.icon != null){{
+					    return '<i class=""'+item.icon+'""></i>' + item.name;
+                    }}
+                    else{{
+                        return item.name;
+                    }}
+				}},
+			}},
+		}}
+	}},
+")}	tree: {{
+        strict: false,
+		show: true,
+		showFolderIcon: true,
+		showLine: true,
+		indent: 20
+	}},
+	height: '400px',
+    on:function(data){{
+        {((LinkField != null || string.IsNullOrEmpty(LinkId) == false) ? @$"
+            if (eval(""{(string.IsNullOrEmpty(ChangeFunc) ? "1==1" : FormatFuncName(ChangeFunc))}"") != false) {{
+                var u = ""{(TriggerUrl ?? "")}"";
+                if (u.indexOf(""?"") == -1) {{
+                    u += ""?t="" + new Date().getTime();
+                }}
+                for (var i = 0; i < data.arr.length; i++) {{
+                    u += ""&id="" + data.arr[i].value;
+                }}
+                ff.ChainChange(u, $('#{Id}')[0])
+        }}" : FormatFuncName(ChangeFunc))}
+   }},
+	data:  {JsonSerializer.Serialize(treeitems)}
 }})
 </script>
 ";
@@ -167,7 +173,6 @@ layui.use(['tree'],function(){{
                 {
                     output.PostElement.AppendHtml($@"<script>
 ff.LoadComboItems('tree','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(vals)},function(){{
-    {defaultselect}
 }})
 
 </script>");
@@ -206,6 +211,8 @@ ff.LoadComboItems('tree','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Seria
                     Title = s.Text,
                     Url = s.Url,
                     Expand = s.Expended,
+                    Disabled = s.Disabled,
+                    Icon = s.Icon
                     //Children = new List<LayuiTreeItem>()
                 };
                 if (values.Contains(s.Value.ToString()))

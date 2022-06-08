@@ -139,7 +139,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     listStyle={undefined}
-                    dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" })}
+                    dataSource={Request.cache({ url: "/api/_FrameworkUser/GetFrameworkRoles" })}
                 />
             },
             /** 用户组 */
@@ -148,7 +148,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     listStyle={undefined}
-                    dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkGroups" })}
+                    dataSource={Request.cache({ url: "/api/_FrameworkUser/GetFrameworkGroups" })}
                 />
             }
 

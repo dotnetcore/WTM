@@ -95,38 +95,38 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         break;
                     }
-                    if (item.LinkField != null || item.LinkId != null)
-                    {
-                        if (!string.IsNullOrEmpty(item.TriggerUrl))
-                        {
-                            output.PostElement.AppendHtml($@"
-<script>
-layui.use(['form'],function(){{
-  var form = layui.form;
-  form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
-    {FormatFuncName(item.ChangeFunc)};
-    ff.ChainChange('{item.TriggerUrl}/'+data.value,data.elem)
-    ff.changeComboIcon(data);
-  }});
-}})
-</script>
-");
-                        }
-                    }
-                    else
-                    {
-                        output.PostElement.AppendHtml($@"
-<script>
-layui.use(['form'],function(){{
-  var form = layui.form;
-  form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
-    {FormatFuncName(item.ChangeFunc)};
-    ff.changeComboIcon(data);
-  }});
-}})
-</script>
-");
-                    }
+//                    if (item.LinkField != null || item.LinkId != null)
+//                    {
+//                        if (!string.IsNullOrEmpty(item.TriggerUrl))
+//                        {
+//                            output.PostElement.AppendHtml($@"
+//<script>
+//layui.use(['form'],function(){{
+//  var form = layui.form;
+//  form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
+//    {FormatFuncName(item.ChangeFunc)};
+//    ff.ChainChange('{item.TriggerUrl}/'+data.value,data.elem)
+//    ff.changeComboIcon(data);
+//  }});
+//}})
+//</script>
+//");
+//                        }
+//                    }
+//                    else
+//                    {
+//                        output.PostElement.AppendHtml($@"
+//<script>
+//layui.use(['form'],function(){{
+//  var form = layui.form;
+//  form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
+//    {FormatFuncName(item.ChangeFunc)};
+//    ff.changeComboIcon(data);
+//  }});
+//}})
+//</script>
+//");
+//                    }
                     break;
                 case CheckBoxTagHelper item:
                     if (string.IsNullOrEmpty(item.ChangeFunc) == false)

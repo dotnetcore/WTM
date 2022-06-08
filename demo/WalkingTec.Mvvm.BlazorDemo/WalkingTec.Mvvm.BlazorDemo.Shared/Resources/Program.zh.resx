@@ -216,6 +216,9 @@
   <data name="Login.InputPassword" xml:space="preserve">
     <value>请输入密码</value>
   </data>
+  <data name="Login.InputTenant" xml:space="preserve">
+    <value>请输入租户号</value>
+  </data>
   <data name="Login.InputUserName" xml:space="preserve">
     <value>请输入用户名</value>
   </data>
@@ -266,6 +269,9 @@
   </data>
   <data name="MenuKey.DataPrivilege" xml:space="preserve">
     <value>数据权限</value>
+  </data>
+  <data name="MenuKey.FrameworkTenant" xml:space="preserve">
+    <value>租户管理</value>
   </data>
   <data name="MenuKey.GroupManagement" xml:space="preserve">
     <value>用户组管理</value>
@@ -813,8 +819,14 @@
   <data name="_Admin.GroupDp" xml:space="preserve">
     <value>用户组权限</value>
   </data>
+  <data name="_Admin.GroupManager" xml:space="preserve">
+    <value>部门主管</value>
+  </data>
   <data name="_Admin.GroupName" xml:space="preserve">
     <value>组名</value>
+  </data>
+  <data name="_Admin.HasMainHost" xml:space="preserve">
+    <value>当前站点已设置了主站，无法进行此操作，请到主站进行相应操作</value>
   </data>
   <data name="_Admin.HomePhone" xml:space="preserve">
     <value>座机</value>
@@ -839,6 +851,9 @@
   </data>
   <data name="_Admin.IsValid" xml:space="preserve">
     <value>是否有效</value>
+  </data>
+  <data name="_Admin.Job" xml:space="preserve">
+    <value>作业</value>
   </data>
   <data name="_Admin.Length" xml:space="preserve">
     <value>长度</value>
@@ -921,6 +936,9 @@
   <data name="_Admin.RoleName" xml:space="preserve">
     <value>角色名称</value>
   </data>
+  <data name="_Admin.SameRole" xml:space="preserve">
+    <value>除管理员外，用户无法修改自身所属角色的页面权限</value>
+  </data>
   <data name="_Admin.SelectedModel" xml:space="preserve">
     <value>选择模型</value>
   </data>
@@ -935,6 +953,45 @@
   </data>
   <data name="_Admin.Tenant" xml:space="preserve">
     <value>租户</value>
+  </data>
+  <data name="_Admin.TenantAllowed" xml:space="preserve">
+    <value>租户可见</value>
+  </data>
+  <data name="_Admin.TenantChoose" xml:space="preserve">
+    <value>选择租户</value>
+  </data>
+  <data name="_Admin.TenantCode" xml:space="preserve">
+    <value>租户编号</value>
+  </data>
+  <data name="_Admin.TenantDb" xml:space="preserve">
+    <value>租户数据库</value>
+  </data>
+  <data name="_Admin.TenantDbContext" xml:space="preserve">
+    <value>数据库架构</value>
+  </data>
+  <data name="_Admin.TenantDbError" xml:space="preserve">
+    <value>创建数据库失败</value>
+  </data>
+  <data name="_Admin.TenantDbType" xml:space="preserve">
+    <value>数据库类型</value>
+  </data>
+  <data name="_Admin.TenantDomain" xml:space="preserve">
+    <value>租户域名</value>
+  </data>
+  <data name="_Admin.TenantEnableSub" xml:space="preserve">
+    <value>允许子租户</value>
+  </data>
+  <data name="_Admin.TenantHost" xml:space="preserve">
+    <value>主站</value>
+  </data>
+  <data name="_Admin.TenantName" xml:space="preserve">
+    <value>租户名称</value>
+  </data>
+  <data name="_Admin.TenantNotAllowed" xml:space="preserve">
+    <value>当前租户无法使用该功能</value>
+  </data>
+  <data name="_Admin.TenantRole" xml:space="preserve">
+    <value>使用所选角色的权限建立本租户的管理员，账号admin，密码000000</value>
   </data>
   <data name="_Admin.UnsetPages" xml:space="preserve">
     <value>未设置页面</value>

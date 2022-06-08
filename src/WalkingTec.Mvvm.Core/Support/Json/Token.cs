@@ -1,7 +1,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core.Support.Json
 {
     public class Token
     {

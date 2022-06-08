@@ -8,7 +8,7 @@ namespace WalkingTec.Mvvm.Core
     /// FunctionPrivilege
     /// </summary>
     [Table("FunctionPrivileges")]
-    public class FunctionPrivilege : BasePoco
+    public class FunctionPrivilege : BasePoco,ITenant
     {
         [Display(Name = "_Admin.Role")]
         public string RoleCode { get; set; }
@@ -16,11 +16,11 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.MenuItem")]
         public Guid MenuItemId { get; set; }
 
-        [Display(Name = "_Admin.MenuItem")]
-        public FrameworkMenu MenuItem { get; set; }
-
         [Display(Name = "_Admin.Allowed")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public bool? Allowed { get; set; }
+        [Display(Name = "_Admin.Tenant")]
+        public string TenantCode { get; set; }
+
     }
 }

@@ -15,7 +15,7 @@
 
 
 <Table @ref="dataTable" TItem="FrameworkRole" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;">
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" AllowResizing="true">
     <TableColumns>
         <TableColumn @bind-Field="@context.RoleCode" Width="180" />
         <TableColumn @bind-Field="@context.RoleName" />
@@ -23,36 +23,36 @@
 
     </TableColumns>
     <TableToolbarTemplate>
-        @if (IsAccessable("/api/_FrameworkRole/Add"))
+        @if (IsAccessable("/api/_FrameworkRole/Add") &&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
         {
             <TableToolbarButton TItem="FrameworkRole" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }
-        @if (IsAccessable("/api/_FrameworkRole/BatchDelete"))
+        @if (IsAccessable("/api/_FrameworkRole/BatchDelete")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
         {
             <TableToolbarPopconfirmButton TItem="FrameworkRole" Color="Color.Primary"
                                           Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }
-        @if (IsAccessable("/api/_FrameworkRole/Import"))
+        @if (IsAccessable("/api/_FrameworkRole/Import")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
         {
             <TableToolbarButton TItem="FrameworkRole" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
         }
-        @if (IsAccessable("/api/_FrameworkRole/ExportExcel"))
+        @if (IsAccessable("/api/_FrameworkRole/ExportExcel")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
         {
             <TableToolbarButton TItem="FrameworkRole" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
     </TableToolbarTemplate>
     <RowButtonTemplate>
-            @if (IsAccessable("/api/_FrameworkRole/Edit"))
+            @if (IsAccessable("/api/_FrameworkRole/Edit")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
             }
-            @if (IsAccessable("/api/_FrameworkRole/{id}"))
+            @if (IsAccessable("/api/_FrameworkRole/{id}")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClick="() => OnDetailsClick(context)" />
             }
-            @if (IsAccessable("/api/_FrameworkRole/BatchDelete"))
+            @if (IsAccessable("/api/_FrameworkRole/BatchDelete")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
             {
                 <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                                   Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />

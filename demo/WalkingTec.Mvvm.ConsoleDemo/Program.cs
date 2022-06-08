@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
+using WalkingTec.Mvvm.Core.Support.Quartz;
 using WalkingTec.Mvvm.Demo;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
@@ -24,7 +26,7 @@ namespace WalkingTec.Mvvm.ConsoleDemo
         {
             Console.WriteLine("Start...");
             DateTime check = DateTime.Now;
-            StartUp();
+            StartUpAsync();
             Console.WriteLine(DateTime.Now.Subtract(check).TotalSeconds);
             //var context = GetWtmContext();
             //var test = context.CallAPI("baidu","/").Result;
@@ -36,11 +38,12 @@ namespace WalkingTec.Mvvm.ConsoleDemo
             Console.ReadLine();
         }
 
-        static void StartUp()
+        static void StartUpAsync()
         {
             var services = new ServiceCollection();
             services.AddWtmContextForConsole();
             Provider = services.BuildServiceProvider();
+            _= Provider.GetRequiredService<QuartzHostService>().StartAsync(new System.Threading.CancellationToken());
         }
 
         static WTMContext GetWtmContext()

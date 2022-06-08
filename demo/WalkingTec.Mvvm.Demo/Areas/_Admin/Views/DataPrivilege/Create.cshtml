@@ -16,7 +16,7 @@
     <wt:textbox field="Entity.UserCode" search-url="/_Admin/FrameworkUser/GetUserById" />
   </wt:row>
   <wt:row id="grouprow">
-    <wt:combobox field="Entity.GroupCode" items="AllGroups" />
+    <wt:tree field="Entity.GroupCode" item-url="/_Admin/DataPrivilege/GetUserGroups" />
   </wt:row>
   <br /><br />
   <wt:row align="AlignEnum.Right">
@@ -26,7 +26,7 @@
 </wt:form>
 <script>
   DbTypeChange({ value: $("[name='DpType'][checked]").val() });
-  IsAllChange({ value: '@Model.IsAll.ToString().ToLower()' });
+  IsAllChange({ arr:[ {value: '@Model.IsAll.ToString().ToLower()' }]});
   var selectedtablename = "@Model.Entity.TableName";
   function DbTypeChange(data) {
         if (data.value == 'UserGroup') {
@@ -39,7 +39,7 @@
         }
     }
     function IsAllChange(data) {
-        if (data.value == 'true') {
+        if ( data.arr[0].value == 'true') {
             $('#selector').css('display', 'none');
         }
         else {
@@ -47,7 +47,7 @@
         }
     }
     function PriTypeChange(data) {
-        selectedtablename = data.value;
+        selectedtablename = data.arr[0].value;
         ff.clearSelector("DataPrivilegeVM_SelectedItemsID");
     }
     function SetTableName() {

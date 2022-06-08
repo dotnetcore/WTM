@@ -161,7 +161,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
             //指定哪些模型需要数据权限
-            //pris.Add(new DataPrivilegeInfo<City>("城市权限", m => m.Name));
+            pris.Add(new DataPrivilegeInfo<City>("城市权限", m => m.Name));
 
             //pris.Add(new DataPrivilegeInfo<FrameworkRole>("角色权限", m => m.RoleName));
             //pris.Add(new DataPrivilegeInfo<City>("城市权限", m => m.Name));

@@ -10,12 +10,13 @@ namespace WalkingTec.Mvvm.Core
     /// FrameworkRole
     /// </summary>
     [Table("FrameworkRoles")]
-    public class FrameworkRole : BasePoco
+    public class FrameworkRole : BasePoco,ITenant
     {
         [Display(Name = "_Admin.RoleCode")]
         [Required(ErrorMessage = "Validate.{0}required")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Validate.{0}number")]
         [StringLength(100, ErrorMessage = "Validate.{0}stringmax{1}")]
+        [CanNotEdit]
         public string RoleCode { get; set; }
 
         [Display(Name = "_Admin.RoleName")]

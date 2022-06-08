@@ -12,14 +12,16 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Exception")]
         Exception,
         [Display(Name = "_Admin.Debug")]
-        Debug
+        Debug,
+        [Display(Name = "_Admin.Job")]
+        Job
     };
 
     /// <summary>
     /// ActionLog
     /// </summary>
     [Table("ActionLogs")]
-    public class ActionLog : BasePoco, ICloneable
+    public class ActionLog : BasePoco,ITenant, ICloneable
     {
         [Display(Name = "_Admin.Module")]
         [StringLength(255, ErrorMessage = "Validate.{0}stringmax{1}")]
@@ -52,6 +54,8 @@ namespace WalkingTec.Mvvm.Core
 
         [Display(Name = "_Admin.LogType")]
         public ActionLogTypesEnum LogType { get; set; }
+        [Display(Name = "_Admin.Tenant")]
+        public string TenantCode { get; set; }
 
         public object Clone()
         {

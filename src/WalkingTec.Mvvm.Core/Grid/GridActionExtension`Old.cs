@@ -148,6 +148,8 @@ namespace WalkingTec.Mvvm.Core
             self.ParameterType = parameterType;
             return self;
         }
+
+
         /// <summary>
         /// 如果不为null，则只运行这个变量设定的script，其他的属性都不起作用    
         /// </summary>

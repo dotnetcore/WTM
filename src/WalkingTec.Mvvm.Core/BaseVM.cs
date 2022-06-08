@@ -139,11 +139,11 @@ namespace WalkingTec.Mvvm.Core
         /// 获取配置文件的信息
         /// </summary>
         [JsonIgnore]
-        public Configs ConfigInfo { get=> Wtm?.ConfigInfo; }
+        public Configs ConfigInfo { get => Wtm?.ConfigInfo; }
 
 
         [JsonIgnore]
-        public IUIService UIService { get=> Wtm?.UIService; }
+        public IUIService UIService { get => Wtm?.UIService; }
 
         /// <summary>
         /// 当前弹出层ID
@@ -164,7 +164,7 @@ namespace WalkingTec.Mvvm.Core
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
-        public LoginUserInfo LoginUserInfo { get=> Wtm?.LoginUserInfo;}
+        public LoginUserInfo LoginUserInfo { get => Wtm?.LoginUserInfo; }
 
         /// <summary>
         /// 当前Url
@@ -206,6 +206,12 @@ namespace WalkingTec.Mvvm.Core
 
         [JsonIgnore]
         public IStringLocalizer Localizer { get => Wtm?.Localizer; }
+
+        [JsonIgnore]
+        public string PropertyNameInParent { get; set; }
+        [JsonIgnore]
+        public BaseVM ParentVM { get; set; }
+
         #endregion
 
         #region Event
@@ -238,16 +244,43 @@ namespace WalkingTec.Mvvm.Core
         public void DoReInit()
         {
             ReInitVM();
+            ReInitSubVM(this);
             OnAfterReInit?.Invoke(this);
         }
 
+        private void InitSubVM(BaseVM vm)
+        {
+            var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
+            foreach (var prop in sub)
+            {
+                var subins = prop.GetValue(vm) as BaseVM;
+                if (subins != null)
+                {
+                    subins.DoInit();
+                }
+                InitSubVM(subins);
+            }
+        }
 
-
+        private void ReInitSubVM(BaseVM vm)
+        {
+            var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
+            foreach (var prop in sub)
+            {
+                var subins = prop.GetValue(vm) as BaseVM;
+                if (subins != null)
+                {
+                    subins.DoReInit();
+                }
+                ReInitSubVM(subins);
+            }
+        }
         /// <summary>
         /// 初始化ViewModel，框架会在创建VM实例之后自动调用本函数
         /// </summary>
         protected virtual void InitVM()
         {
+            InitSubVM(this);
         }
 
         /// <summary>
@@ -275,9 +308,21 @@ namespace WalkingTec.Mvvm.Core
         {
             Wtm = vm.Wtm;
             FC = vm.FC;
+            ControllerName = vm.ControllerName;
             CreatorAssembly = vm.CreatorAssembly;
         }
 
+        public string GetParentStr()
+        {
+            string rv = "";
+            var p = this;
+            while (p != null && string.IsNullOrEmpty(p.PropertyNameInParent)==false)
+            {
+                rv = p.PropertyNameInParent + "." + rv;
+                p = p.ParentVM;
+            }
+            return rv;
+        }
         #endregion
 
     }

@@ -6,9 +6,9 @@
   <wt:row items-per-row="ItemsPerRowEnum.Three">
     <wt:textbox field="Searcher.ITCode" />
     <wt:textbox field="Searcher.Name" />
-    <wt:combobox field="Searcher.IsValid" empty-text="@Localizer["Sys.All"]" />
+    <wt:combobox field="Searcher.IsValid" empty-text="@Localizer["Sys.All"]" default-value="true" />
   </wt:row>
 </wt:searchpanel>
-<wt:grid     vm="@Model" url="/_Admin/FrameworkUser/Search" />
+<wt:grid     vm="@Model" url="/_Admin/FrameworkUser/Search" multi-line=true/>
 
 <!-- WTM默认页面 Wtm buidin page-->

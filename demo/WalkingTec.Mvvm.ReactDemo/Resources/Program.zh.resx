@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -216,6 +216,9 @@
   <data name="Login.InputPassword" xml:space="preserve">
     <value>请输入密码</value>
   </data>
+  <data name="Login.InputTenant" xml:space="preserve">
+    <value>请输入租户号</value>
+  </data>
   <data name="Login.InputUserName" xml:space="preserve">
     <value>请输入用户名</value>
   </data>
@@ -266,6 +269,9 @@
   </data>
   <data name="MenuKey.DataPrivilege" xml:space="preserve">
     <value>数据权限</value>
+  </data>
+  <data name="MenuKey.FrameworkTenant" xml:space="preserve">
+    <value>租户管理</value>
   </data>
   <data name="MenuKey.GroupManagement" xml:space="preserve">
     <value>用户组管理</value>
@@ -459,11 +465,23 @@
   <data name="Sys.HideShow" xml:space="preserve">
     <value>侧边伸缩</value>
   </data>
+  <data name="Sys.Home" xml:space="preserve">
+    <value>首页</value>
+  </data>
   <data name="Sys.Import" xml:space="preserve">
     <value>导入</value>
   </data>
   <data name="Sys.ImportError" xml:space="preserve">
     <value>导入时发生错误</value>
+  </data>
+  <data name="Sys.ImportStep1" xml:space="preserve">
+    <value>点击右侧按钮下载模板</value>
+  </data>
+  <data name="Sys.ImportStep2" xml:space="preserve">
+    <value>将编辑好的模板上传</value>
+  </data>
+  <data name="Sys.ImportStep3" xml:space="preserve">
+    <value>导入失败，请下载错误文件查看详情</value>
   </data>
   <data name="Sys.ImportSuccess" xml:space="preserve">
     <value>成功导入{0}行数据</value>
@@ -474,8 +492,14 @@
   <data name="Sys.Invalid" xml:space="preserve">
     <value>无效</value>
   </data>
+  <data name="Sys.Layout" xml:space="preserve">
+    <value>布局</value>
+  </data>
   <data name="Sys.LayuiDateLan" xml:space="preserve">
     <value>CN</value>
+  </data>
+  <data name="Sys.LeftRight" xml:space="preserve">
+    <value>左右结构</value>
   </data>
   <data name="Sys.LoadFailed" xml:space="preserve">
     <value>加载失败</value>
@@ -488,6 +512,9 @@
   </data>
   <data name="Sys.Male" xml:space="preserve">
     <value>男</value>
+  </data>
+  <data name="Sys.MoreSettings" xml:space="preserve">
+    <value>更多设置</value>
   </data>
   <data name="Sys.NeedLogin" xml:space="preserve">
     <value>您没有登录或登录已过期，请重新登陆</value>
@@ -594,17 +621,29 @@
   <data name="Sys.SelectOneRowMin" xml:space="preserve">
     <value>请至少选择一行</value>
   </data>
+  <data name="Sys.SinglePage" xml:space="preserve">
+    <value>单页面</value>
+  </data>
   <data name="Sys.Submit" xml:space="preserve">
     <value>提交</value>
   </data>
   <data name="Sys.SubmitFailed" xml:space="preserve">
     <value>提交失败</value>
   </data>
+  <data name="Sys.Tabs" xml:space="preserve">
+    <value>多标签</value>
+  </data>
+  <data name="Sys.Theme" xml:space="preserve">
+    <value>主题</value>
+  </data>
   <data name="Sys.Total" xml:space="preserve">
     <value>合计：</value>
   </data>
   <data name="Sys.UpdateDone" xml:space="preserve">
     <value>更新成功</value>
+  </data>
+  <data name="Sys.UpDown" xml:space="preserve">
+    <value>上下结构</value>
   </data>
   <data name="Sys.UploadFailed" xml:space="preserve">
     <value>上传失败</value>
@@ -705,6 +744,9 @@
   <data name="_Admin.CheckPage" xml:space="preserve">
     <value>检查页面</value>
   </data>
+  <data name="_Admin.Children" xml:space="preserve">
+    <value>子项</value>
+  </data>
   <data name="_Admin.ClassName" xml:space="preserve">
     <value>类名</value>
   </data>
@@ -777,8 +819,14 @@
   <data name="_Admin.GroupDp" xml:space="preserve">
     <value>用户组权限</value>
   </data>
+  <data name="_Admin.GroupManager" xml:space="preserve">
+    <value>部门主管</value>
+  </data>
   <data name="_Admin.GroupName" xml:space="preserve">
     <value>组名</value>
+  </data>
+  <data name="_Admin.HasMainHost" xml:space="preserve">
+    <value>当前站点已设置了主站，无法进行此操作，请到主站进行相应操作</value>
   </data>
   <data name="_Admin.HomePhone" xml:space="preserve">
     <value>座机</value>
@@ -796,13 +844,16 @@
     <value>继承</value>
   </data>
   <data name="_Admin.IsInside" xml:space="preserve">
-    <value>内部地址</value>
+    <value>地址类型</value>
   </data>
   <data name="_Admin.IsPublic" xml:space="preserve">
     <value>公开</value>
   </data>
   <data name="_Admin.IsValid" xml:space="preserve">
     <value>是否有效</value>
+  </data>
+  <data name="_Admin.Job" xml:space="preserve">
+    <value>作业</value>
   </data>
   <data name="_Admin.Length" xml:space="preserve">
     <value>长度</value>
@@ -832,7 +883,7 @@
     <value>姓名</value>
   </data>
   <data name="_Admin.NoIndexInModule" xml:space="preserve">
-    <value>模块中没有找到Index页面</value>
+    <value>模块中没有找到页面</value>
   </data>
   <data name="_Admin.NoPris" xml:space="preserve">
     <value>无权限</value>
@@ -885,6 +936,9 @@
   <data name="_Admin.RoleName" xml:space="preserve">
     <value>角色名称</value>
   </data>
+  <data name="_Admin.SameRole" xml:space="preserve">
+    <value>除管理员外，用户无法修改自身所属角色的页面权限</value>
+  </data>
   <data name="_Admin.SelectedModel" xml:space="preserve">
     <value>选择模型</value>
   </data>
@@ -899,6 +953,45 @@
   </data>
   <data name="_Admin.Tenant" xml:space="preserve">
     <value>租户</value>
+  </data>
+  <data name="_Admin.TenantAllowed" xml:space="preserve">
+    <value>租户可见</value>
+  </data>
+  <data name="_Admin.TenantChoose" xml:space="preserve">
+    <value>选择租户</value>
+  </data>
+  <data name="_Admin.TenantCode" xml:space="preserve">
+    <value>租户编号</value>
+  </data>
+  <data name="_Admin.TenantDb" xml:space="preserve">
+    <value>租户数据库</value>
+  </data>
+  <data name="_Admin.TenantDbContext" xml:space="preserve">
+    <value>数据库架构</value>
+  </data>
+  <data name="_Admin.TenantDbError" xml:space="preserve">
+    <value>创建数据库失败</value>
+  </data>
+  <data name="_Admin.TenantDbType" xml:space="preserve">
+    <value>数据库类型</value>
+  </data>
+  <data name="_Admin.TenantDomain" xml:space="preserve">
+    <value>租户域名</value>
+  </data>
+  <data name="_Admin.TenantEnableSub" xml:space="preserve">
+    <value>允许子租户</value>
+  </data>
+  <data name="_Admin.TenantHost" xml:space="preserve">
+    <value>主站</value>
+  </data>
+  <data name="_Admin.TenantName" xml:space="preserve">
+    <value>租户名称</value>
+  </data>
+  <data name="_Admin.TenantNotAllowed" xml:space="preserve">
+    <value>当前租户无法使用该功能</value>
+  </data>
+  <data name="_Admin.TenantRole" xml:space="preserve">
+    <value>使用所选角色的权限建立本租户的管理员，账号admin，密码000000</value>
   </data>
   <data name="_Admin.UnsetPages" xml:space="preserve">
     <value>未设置页面</value>

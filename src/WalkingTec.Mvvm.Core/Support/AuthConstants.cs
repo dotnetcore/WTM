@@ -4,7 +4,7 @@ namespace WalkingTec.Mvvm.Core.Auth
     {
         public const string JwtTokenType = "Bearer";
         public const string AuthenticationType = "WTMAuthentication";
-        public const string CookieAuthName = "WTM.CookieWithJwtAuth";
+        public const string CookieAuthName = "CookieWithJwtAuth";
 
         public static class JwtClaimTypes
         {
@@ -138,6 +138,7 @@ namespace WalkingTec.Mvvm.Core.Auth
             //     The role
             public const string Role = "role";
             public const string TenantCode = "tenant";
+            public const string RToken = "rtoken";
             //
             // Summary:
             //     JWT ID. A unique identifier for the token, which can be used to prevent reuse

@@ -2,37 +2,40 @@
 @inherits BasePage
 @inject NavigationManager NavigationManager
 
-@if (hasToken == true || IsPublic == true)
-{
-    <Router AppAssembly="@typeof(Program).Assembly" OnNavigateAsync="OnNavigateAsync">
-        <Found Context="routeData">
-            <CascadingValue Value="User" IsFixed="false">
-                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-            </CascadingValue>
-        </Found>
-        <NotFound>
-            <LayoutView Layout="@typeof(EmptyLayout)">
-                <p>Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
-}
-else if (hasToken == false)
-{
-    <Router AppAssembly="@typeof(Program).Assembly">
-        <Found Context="routeData">
-            <CascadingValue Value="User" IsFixed="false">
-                <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }" />
-            </CascadingValue>
-        </Found>
-        <NotFound>
-            <LayoutView Layout="@typeof(EmptyLayout)">
-                <p>Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
-}
-@code{
+<BootstrapBlazorRoot>
+    @if (hasToken == true || IsPublic == true)
+    {
+        <Router AppAssembly="@typeof(Program).Assembly" OnNavigateAsync="OnNavigateAsync">
+            <Found Context="routeData">
+                <CascadingValue Value="User" IsFixed="false">
+                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                </CascadingValue>
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(EmptyLayout)">
+                    <p>Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    }
+    else if (hasToken == false)
+    {
+        <Router AppAssembly="@typeof(Program).Assembly">
+            <Found Context="routeData">
+                <CascadingValue Value="User" IsFixed="false">
+                    <Login @bind-LoginSuccess="hasToken" OnUserInfoSet="async ()=> {User = await GetUserInfo(); }" />
+                </CascadingValue>
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(EmptyLayout)">
+                    <p>Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    }
+</BootstrapBlazorRoot>
+
+@code {
 
     private LoginUserInfo User;
     private bool? hasToken { get; set; }
@@ -75,7 +78,7 @@ else if (hasToken == false)
                     }
                     else
                     {
-                        await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.Errors.Message[0]);
+                        //await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.Errors.Message[0]);
                         hasToken = false;
                     }
                 }
@@ -102,6 +105,11 @@ else if (hasToken == false)
     private void IsPublicPage()
     {
         var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri?.ToLower());
+        var i =  url.IndexOf('?');
+        if(i >= 0)
+        {
+            url = url[0..i];
+        }
         if (this.WtmBlazor.PublicPages.Any(x => Regex.IsMatch(url, x)))
         {
             IsPublic = true;

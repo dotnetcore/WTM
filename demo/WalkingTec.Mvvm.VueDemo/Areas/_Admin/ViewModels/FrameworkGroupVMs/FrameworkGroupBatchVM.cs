@@ -16,30 +16,5 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             ListVM = new FrameworkGroupListVM();
         }
 
-        public override bool DoBatchDelete()
-        {
-            using (var trans = DC.BeginTransaction())
-            {
-                var userorleids = DC.Set<FrameworkUserGroup>().AsNoTracking().Where(y => DC.Set<FrameworkGroup>().CheckIDs(Ids.ToList(), null).Select(x => x.GroupCode).Contains(y.GroupCode)).Select(x => x.ID);
-                foreach (var item in userorleids)
-                {
-                    FrameworkUserGroup f = new FrameworkUserGroup { ID = item };
-                    DC.DeleteEntity(f);
-                }
-                DC.SaveChanges();
-                base.DoBatchDelete();
-                if (MSD.IsValid == true)
-                {
-                    trans.Commit();
-                }
-                else
-                {
-                    trans.Rollback();
-                }
-            }
-
-            return base.DoBatchDelete();
-        }
-
     }
 }

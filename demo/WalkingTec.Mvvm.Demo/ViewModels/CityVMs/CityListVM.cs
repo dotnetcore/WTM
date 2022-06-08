@@ -18,7 +18,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             return new List<GridAction>
             {
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
-                this.MakeStandardAction("City", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
+                this.MakeAction("City","CreateGroup","groupadd","groupadd", GridActionParameterTypesEnum.NoId).SetShowInRow(false),
+               this.MakeStandardAction("City", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
+                this.MakeAction("City","EditGroup","groupadd","groupedit", GridActionParameterTypesEnum.SingleId).SetShowInRow(true).SetHideOnToolBar(),
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.Delete, Localizer["Sys.Delete"], "", dialogWidth: 800),
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.Details, Localizer["Sys.Details"], "", dialogWidth: 800),
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.BatchEdit, Localizer["Sys.BatchEdit"], "", dialogWidth: 800),
@@ -43,6 +45,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         {
             var query = DC.Set<City>()
                 .CheckContain(Searcher.Name, x=>x.Name)
+                .DPWhere(Wtm, x=>x.ID)
+                //.DPWhere(Wtm, x=>x.ParentId)
+                //.DPWhere(Wtm, x => x.Parent.Children[0].Children[0].ID)
                 .Select(x => new City_View
                 {
 				    ID = x.ID,

@@ -44,7 +44,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             List<string> values = new List<string>();
             if (modeltype.IsBoolOrNullableBool())
             {
-                values.Add(Field.Model.ToString());
+                if (Field.Model == null)
+                {
+                    values.Add("False");
+                }
+                else
+                {
+                    values.Add(Field.Model.ToString());
+                }
             }
             else
             {

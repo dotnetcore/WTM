@@ -5,13 +5,14 @@
 
 
 <Table @ref="dataTable" TItem="FrameworkMenu_ListView" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" OnTreeExpand="OnTreeExpand" IsTree="true">
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" OnTreeExpand="OnTreeExpand" IsTree="true" AllowResizing="true">
     <TableColumns>
         <TableColumn @bind-Field="@context.PageName" Width="180" />
         <TableColumn @bind-Field="@context.ModuleName" />
         <TableColumn @bind-Field="@context.ShowOnMenu" ComponentType="@typeof(Switch)"/>
         <TableColumn @bind-Field="@context.FolderOnly"   ComponentType="@typeof(Switch)"/>
         <TableColumn @bind-Field="@context.IsPublic"   ComponentType="@typeof(Switch)"/>
+        <TableColumn @bind-Field="@context.TenantAllowed"   ComponentType="@typeof(Switch)"/>
         <TableColumn @bind-Field="@context.DisplayOrder" Sortable="true"  />
         <TableColumn @bind-Field="@context.Icon">
             <Template Context="value">

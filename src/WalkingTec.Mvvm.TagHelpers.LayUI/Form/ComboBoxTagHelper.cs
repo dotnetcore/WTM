@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 启用搜索
         /// 注意：多选与搜索不能同时启用
         /// </summary>
-        public bool EnableSearch { get; set; }
+        public bool? EnableSearch { get; set; }
 
         public ModelExpression Items { get; set; }
 
@@ -40,9 +40,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <summary>
         /// 是否多选
         /// 默认根据Field 绑定的值类型进行判断。Array or List 即多选，否则单选
-        /// 注意：多选与搜索不能同时启用
         /// </summary>
         public bool? MultiSelect { get; set; }
+        public bool AutoRow { get; set; }
 
         /// <summary>
         /// 改变选择时触发的js函数，func(data)格式;
@@ -65,16 +65,19 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 EmptyText = THProgram._localizer["Sys.PleaseSelect"];
             }
-            EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
+            if (EnableSearch == null)
+            {
+                EnableSearch = configs.CurrentValue.UIOptions.ComboBox.DefaultEnableSearch;
+            }
             _wtm = wtm;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "select";
+            output.TagName = "div";
+            output.Attributes.Add("id", Id);
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("name", Field.Name);
-            output.Attributes.Add("lay-filter", $"_WTMMultiCombo_{Guid.NewGuid()}_" + Field.Name);
             output.Attributes.Add("wtm-name", Field.Name);
             output.Attributes.Add("wtm-ctype", "combo");
             if (Disabled == true)
@@ -92,14 +95,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     MultiSelect = true;
                 }
             }
-            if (MultiSelect.Value)
-            {
-                output.Attributes.Add("wtm-combo", "MULTI_COMBO");
-            }
-            if (!MultiSelect.Value && EnableSearch)
-            {
-                output.Attributes.Add("lay-search", string.Empty);
-            }
+            output.Attributes.Add("wtm-multi", MultiSelect.ToString().ToLower());
             if (string.IsNullOrEmpty(ChangeFunc) == false)
             {
                 output.Attributes.Add("wtm-cf", FormatFuncName(ChangeFunc, false));
@@ -122,10 +118,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.Attributes.Add("wtm-turl", TriggerUrl);
             }
             var contentBuilder = new StringBuilder();
-            if (string.IsNullOrEmpty(EmptyText) == false)
-            {
-                contentBuilder.Append($"<option value=''>{EmptyText}</option>");
-            }
 
             output.PreElement.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
 
@@ -169,10 +161,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (string.IsNullOrEmpty(ItemUrl) == false)
             {
-                if (_wtm.HttpContext?.Request?.Host != null)
-                {
-                    ItemUrl = _wtm.HttpContext.Request.IsHttps ? "https://" : "http://" + _wtm.HttpContext?.Request?.Host.ToString() + ItemUrl;
-                }
+                //if (_wtm.HttpContext?.Request?.Host != null)
+                //{
+                //    ItemUrl = _wtm.HttpContext.Request.IsHttps ? "https://" : "http://" + _wtm.HttpContext?.Request?.Host.ToString() + ItemUrl;
+                //}
                 output.PostElement.AppendHtml($"<script>ff.LoadComboItems('combo','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(selectVal)})</script>");
             }
 
@@ -239,44 +231,108 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                 }
             }
-            if (MultiSelect == true)
-            {
-                foreach (var item in listItems)
-                {
-                    contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")}>{item.Text}</option>");
-                }
 
-                // 添加默认选中项
-                var selected = listItems.Where(x => x.Selected).ToList();
-                var mulvalues = selected.ToSepratedString(x => x.Value, seperator: "`");
-                var mulnamess = selected.ToSepratedString(x => x.Text, seperator: "`");
-                output.Attributes.Add("wtm-combovalue", $"{mulvalues}");
-                output.Attributes.Add("wtm-comboname", $"{mulnamess}");
-            }
-            else // 添加用户设置的设置源
-            {
-                foreach (var item in listItems)
-                {
-                    if (item.Selected == true)
-                    {
-                        if (Disabled == true)
-                        {
-                            output.PostElement.AppendHtml($"<input name='{Field.Name}' value='{item.Value}' text='{item.Text}' type='hidden' />");
-                        }
-                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")} selected>{item.Text}</option>");
-                    }
-                    else
-                    {
-                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.Icon) ? string.Empty : $" icon='{item.Icon}'")} {(item.Disabled == true ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
-                    }
-                }
-
-            }
-            output.Content.SetHtmlContent(contentBuilder.ToString());
+            var script = $@"
+<script>
+var {Id} = xmSelect.render({{
+    el: '#{Id}',
+    name:'{Field.Name}',
+    tips:'{EmptyText}',
+    disabled: {Disabled.ToString().ToLower()},
+    {(THProgram._localizer["Sys.LayuiDateLan"] =="CN"? "language:'zn'," : "language:'en',")}
+	autoRow: {AutoRow.ToString().ToLower()},
+	filterable: {EnableSearch.ToString().ToLower()},
+    template({{ item, sels, name, value }}){{
+        if(item.icon !== undefined && item.icon != """"&& item.icon != null){{
+			return '<i class=""'+item.icon+'""></i>' + item.name;
+        }}
+        else{{
+            return item.name;
+        }}
+	}},
+    {(MultiSelect == false ? $@"
+    radio: true,
+    clickClose: true,
+    model: {{
+        label: {{
+            type: 'abc' ,
+            abc: {{
+                template: function(item, sels){{
+                    if(sels[0].icon !== undefined && sels[0].icon != """" && sels[0].icon != null){{
+                        return '<i class=""'+sels[0].icon+'""></i>' + sels[0].name;
+                    }}
+                    else{{
+                        return sels[0].name;
+                    }}
+                }}
+            }}
+        }}
+    }},
+    toolbar: {{
+        show: true,
+        list: ['CLEAR']}}," : $@"
+        toolbar: {{show: true,list: ['ALL', 'REVERSE', 'CLEAR']}},
+        model: {{
+		label: {{
+			block: {{
+				template: function(item, sels){{
+                    if(item.icon !== undefined && item.icon != """"&& item.icon != null){{
+					    return '<i class=""'+item.icon+'""></i>' + item.name;
+                    }}
+                    else{{
+                        return item.name;
+                    }}
+				}},
+			}},
+		}}
+	}},
+")}
+	height: '400px',
+    on:function(data){{
+        {((LinkField != null || string.IsNullOrEmpty(LinkId) == false)?@$"
+            if (eval(""{(string.IsNullOrEmpty(ChangeFunc)?"1==1":FormatFuncName(ChangeFunc))}"") != false) {{
+                var u = ""{(TriggerUrl??"")}"";
+                if (u.indexOf(""?"") == -1) {{
+                    u += ""?t="" + new Date().getTime();
+                }}
+                for (var i = 0; i < data.arr.length; i++) {{
+                    u += ""&id="" + data.arr[i].value;
+                }}
+                ff.ChainChange(u, $('#{Id}')[0])
+        }}" : FormatFuncName(ChangeFunc))}
+   }},
+	data:  {JsonSerializer.Serialize(GetLayuiTree(listItems,selectVal))}
+}})
+</script>
+";
+            output.PostElement.AppendHtml(script);
             #endregion
 
 
             base.Process(context, output);
         }
+
+        private List<LayuiTreeItem> GetLayuiTree(IEnumerable<ComboSelectListItem> tree, List<string> values)
+        {
+            List<LayuiTreeItem> rv = new List<LayuiTreeItem>();
+            foreach (var s in tree)
+            {
+                var news = new LayuiTreeItem
+                {
+                    Id = s.Value.ToString(),
+                    Title = s.Text,
+                    Disabled = s.Disabled,
+                    Checked = s.Selected,
+                    Icon = s.Icon
+                };
+                if (values.Contains(s.Value.ToString().ToLower()))
+                {
+                    news.Checked = true;
+                }
+                rv.Add(news);
+            }
+            return rv;
+        }
+
     }
 }

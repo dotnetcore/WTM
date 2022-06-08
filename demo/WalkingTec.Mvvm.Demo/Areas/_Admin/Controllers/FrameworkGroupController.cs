@@ -26,17 +26,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public string Search(FrameworkGroupSearcher searcher)
+        public IActionResult Search(FrameworkGroupSearcher searcher)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                searcher.IsPlainText = false;
+                return Wtm.CallAPI<string>("mainhost", "/api/_frameworkgroup/search", HttpMethodEnum.POST, searcher).Result.ToActionResult();
+            }
             var vm = Wtm.CreateVM<FrameworkGroupListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
-                return vm.GetJson(false);
+                return Content(vm.GetJson(false));
             }
             else
             {
-                return vm.GetError();
+                return Content(vm.GetError());
             }
         }
         #endregion
@@ -44,6 +49,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Create")]
         public ActionResult Create()
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupVM>();
             return PartialView(vm);
         }
@@ -52,6 +61,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Create")]
         public ActionResult Create(FrameworkGroupVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -66,6 +79,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Edit")]
         public ActionResult Edit(Guid id)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
             return PartialView(vm);
         }
@@ -75,6 +92,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ValidateFormItemOnly]
         public ActionResult Edit(FrameworkGroupVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -89,6 +110,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Delete")]
         public ActionResult Delete(Guid id)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
             return PartialView(vm);
         }
@@ -97,6 +122,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Delete")]
         public async Task<ActionResult> Delete(Guid id, IFormCollection noUse)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
             await vm.DoDeleteAsync();
             if (!ModelState.IsValid)
@@ -113,6 +142,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult BatchDelete(Guid[] ids)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupBatchVM>(Ids: ids);
             return PartialView(vm);
         }
@@ -121,6 +154,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public async Task<ActionResult> DoBatchDelete(FrameworkGroupBatchVM vm, IFormCollection noUse)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             List<string> GroupCode = DC.Set<FrameworkGroup>().CheckIDs(new List<string>(vm.Ids)).Select(x => x.GroupCode).ToList();
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {                
@@ -132,7 +169,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 var itcodes = gr.Select(x => x.UserCode).ToArray();
                 DC.Set<FrameworkUserGroup>().RemoveRange(gr);
                 DC.SaveChanges();
-                await Wtm.RemoveUserCache(itcodes);
+                await Wtm.RemoveUserCacheByGroup(GroupCode.ToArray());
+                await Wtm.RemoveGroupCache(Wtm.LoginUserInfo?.CurrentTenant);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.OprationSuccess"]);
             }
         }
@@ -140,6 +178,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Import")]
         public ActionResult Import()
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             var vm = Wtm.CreateVM<FrameworkGroupImportVM>();
             return PartialView(vm);
         }
@@ -148,12 +190,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Import")]
         public ActionResult Import(FrameworkGroupImportVM vm, IFormCollection nouse)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
                 return PartialView(vm);
             }
             else
             {
+                Wtm.RemoveGroupCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["Sys.ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
@@ -177,7 +224,29 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public IActionResult ExportExcel(FrameworkGroupListVM vm)
         {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Content(Localizer["_Admin.HasMainHost"]);
+            }
             return vm.GetExportData();
+        }
+
+        [AllRights]
+        public IActionResult GetParents()
+        {
+            WalkingTec.Mvvm.Admin.Api.FrameworkGroupController userapi = new Mvvm.Admin.Api.FrameworkGroupController();
+            userapi.Wtm = Wtm;
+            var rv = userapi.GetParentsTree() as OkObjectResult;
+            List<TreeSelectListItem> users = new List<TreeSelectListItem>();
+            if (rv != null && rv.Value is string && rv.Value != null)
+            {
+                users = System.Text.Json.JsonSerializer.Deserialize<List<TreeSelectListItem>>(rv.Value.ToString());
+            }
+            else if (rv != null && rv.Value is List<TreeSelectListItem> c)
+            {
+                users = c;
+            }
+            return JsonMore(users);
         }
 
     }

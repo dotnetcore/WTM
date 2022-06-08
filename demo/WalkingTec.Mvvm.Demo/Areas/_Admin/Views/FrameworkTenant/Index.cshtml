@@ -1,0 +1,11 @@
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs.FrameworkTenantListVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:textbox field="Searcher.TCode" />
+<wt:textbox field="Searcher.TName" />
+<wt:textbox field="Searcher.TDomain" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" url="/_Admin/FrameworkTenant/Search"/>

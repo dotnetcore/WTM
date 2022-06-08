@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using WalkingTec.Mvvm.Core;
@@ -200,8 +201,8 @@ $('#{search.SearchBtnId}').on('click', function () {{
                         {
                             firstkey = key;
                         }
-                        output.PostElement.AppendHtml($@"
-$(""#{Id}"").find(""button[type=submit]:first"").parent().prepend(""<div class='layui-input-block' style='text-align:left'><label style='color:red'>{error.ErrorMessage}</label></div>"");
+                                                output.PostElement.AppendHtml($@"
+$(""#{Id}"").find(""button[type=submit]:first"").parent().prepend(""<div class='layui-input-block' style='text-align:left'><label style='color:red'>{Regex.Replace(error.ErrorMessage,"<script>","", RegexOptions.IgnoreCase)}</label></div>"");
 ");
                     }
                     if (haserror == true)

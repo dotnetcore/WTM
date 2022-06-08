@@ -9,15 +9,16 @@ using WalkingTec.Mvvm.Core.Json;
 
 namespace WtmBlazorUtils
 {
-    public static class ServiceExtension
+    public static class NavigationExtension
     {
-        public static void AddWtmBlazor(this IServiceCollection self, Configs config, string baseAddress="")
+        public static void AddWtmBlazor(this IServiceCollection self, Configs config, string baseAddress = "")
         {
             self.AddScoped<GlobalItems>();
             self.AddSingleton<Configs>(config);
             string url = "";
             Domain domain = null;
-            if(config.Domains.TryGetValue("server",out domain) && string.IsNullOrEmpty(domain?.Url) == false){
+            if (config.Domains.TryGetValue("server", out domain) && string.IsNullOrEmpty(domain?.Url) == false)
+            {
                 url = domain.Url;
             }
             else

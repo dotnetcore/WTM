@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,6 +7,8 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -16,12 +16,16 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SixLabors.Fonts;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
-using WalkingTec.Mvvm.Core.Support.Json;
-using WalkingTec.Mvvm.Mvc.Model;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -31,6 +35,7 @@ namespace WalkingTec.Mvvm.Mvc
     {
 
         [HttpPost]
+        [Public]
         public IActionResult Selector(string _DONOT_USE_VMNAME
             , string _DONOT_USE_KFIELD
             , string _DONOT_USE_VFIELD
@@ -130,12 +135,42 @@ namespace WalkingTec.Mvvm.Mvc
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
             {
                 RedoUpdateModel(listVM);
-                var rv = new ContentResult
+                string url = "";
+                if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
                 {
-                    ContentType = "application/json",
-                    Content = $@"{{""Data"":{listVM.GetDataJson()},""Count"":{listVM.Searcher.Count},""Msg"":""success"",""Code"":{StatusCodes.Status200OK}}}"
+                    Type[] checktypes = new Type[3] { typeof(FrameworkUserBase), typeof(FrameworkGroup), typeof(FrameworkRole) };
+                    if (typeof(FrameworkUserBase).IsAssignableFrom(listVM.ModelType))
+                    {
+                        url = "/api/_frameworkuser/search";
+                    }
+                    else if (typeof(FrameworkGroup).IsAssignableFrom(listVM.ModelType))
+                    {
+                        url = "/api/_frameworkgroup/search";
+                    }
+                    else if (typeof(FrameworkRole).IsAssignableFrom(listVM.ModelType))
+                    {
+                        url = "/api/_frameworkrole/search";
+                    }                    
+                }
+                if(string.IsNullOrEmpty(url) == false)
+                {
+                    var result = Wtm.CallAPI<string>("mainhost", url, HttpMethodEnum.POST, listVM.Searcher, 10).Result;
+                    var rv = new ContentResult
+                    {
+                        ContentType = "application/json",
+                        Content = result.Data
                 };
-                return rv;
+                    return rv;
+                }
+                else
+                {
+                    var rv = new ContentResult
+                    {
+                        ContentType = "application/json",
+                        Content = $@"{{""Data"":{listVM.GetDataJson()},""Count"":{listVM.Searcher.Count},""Msg"":""success"",""Code"":{StatusCodes.Status200OK}}}"
+                    };
+                    return rv;
+                }
             }
             else
             {
@@ -294,7 +329,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var FileData = Request.Form.Files[0];
             var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, extra, sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
-            return JsonMore(new { Id = file.GetID(), Name = file.FileName});
+            return JsonMore(new { Id = file.GetID(), Name = file.FileName });
         }
 
         [HttpPost]
@@ -307,7 +342,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var FileData = Request.Form.Files[0];
 
-            Image oimage = Image.FromStream(FileData.OpenReadStream());
+            Image oimage = Image.Load(FileData.OpenReadStream());
             if (oimage == null)
             {
                 return JsonMore(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
@@ -321,10 +356,11 @@ namespace WalkingTec.Mvvm.Mvc
                 height = width * oimage.Height / oimage.Width;
             }
             MemoryStream ms = new MemoryStream();
-            oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            oimage.Mutate(x => x.Resize(width.Value, height.Value));
+            oimage.SaveAsJpeg(ms);
             ms.Position = 0;
 
-            var file = fp.Upload(FileData.FileName, ms.Length, ms, groupName,subdir,extra,sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
+            var file = fp.Upload(FileData.FileName, ms.Length, ms, groupName, subdir, extra, sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
             oimage.Dispose();
             ms.Dispose();
             return JsonMore(new { Id = file.GetID(), Name = file.FileName });
@@ -353,13 +389,13 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFileName")]
         public IActionResult GetFileName([FromServices] WtmFileProvider fp, Guid id, string _DONOT_USE_CS = "default")
         {
-            return Ok(fp.GetFileName(id.ToString(), ConfigInfo.CreateDC(_DONOT_USE_CS)));
+            return Ok(fp.GetFileName(id.ToString(), Wtm.CreateDC(cskey: _DONOT_USE_CS)));
         }
 
         [ActionDescription("GetFile")]
         public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
-            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(_DONOT_USE_CS));
+            var file = fp.GetFile(id, true, Wtm.CreateDC(cskey: _DONOT_USE_CS));
             if (file == null)
             {
                 return new EmptyResult();
@@ -368,7 +404,7 @@ namespace WalkingTec.Mvvm.Mvc
             try
             {
                 rv = file.DataStream;
-                Image oimage = Image.FromStream(rv);
+                Image oimage = Image.Load(rv);
                 if (oimage != null && (width != null || height != null))
                 {
                     if (width == null)
@@ -380,7 +416,8 @@ namespace WalkingTec.Mvvm.Mvc
                         height = oimage.Height * width / oimage.Width;
                     }
                     var ms = new MemoryStream();
-                    oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    oimage.Mutate(x => x.Resize(width.Value, height.Value));
+                    oimage.SaveAsJpeg(ms);
                     rv.Dispose();
                     rv = ms;
                 }
@@ -407,7 +444,7 @@ namespace WalkingTec.Mvvm.Mvc
             rv.Position = 0;
             if (stream == false)
             {
-                    return File(rv, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
+                return File(rv, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
             }
             else
             {
@@ -417,7 +454,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 else
                 {
-                    Response.Headers.TryAdd("Content-Disposition",$"inline; filename=\"{HttpUtility.UrlEncode( file.FileName)}\"");
+                    Response.Headers.TryAdd("Content-Disposition", $"inline; filename=\"{HttpUtility.UrlEncode(file.FileName)}\"");
                     await rv.CopyToAsync(Response.Body);
                     rv.Dispose();
                     return new EmptyResult();
@@ -428,7 +465,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("ViewFile")]
         public IActionResult ViewFile([FromServices] WtmFileProvider fp, string id, string width, string _DONOT_USE_CS = "default")
         {
-            var file = fp.GetFile(id, false, ConfigInfo.CreateDC(_DONOT_USE_CS));
+            var file = fp.GetFile(id, false, Wtm.CreateDC(cskey: _DONOT_USE_CS));
             string html = string.Empty;
             var ext = file.FileExt.ToLower();
             if (ext == "pdf")
@@ -449,6 +486,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         }
 
+        [Public]
         public IActionResult OutSide(string url)
         {
             url = HttpUtility.UrlDecode(url);
@@ -464,12 +502,12 @@ namespace WalkingTec.Mvvm.Mvc
                     var pmenu = GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
                     if (pmenu != null)
                     {
-                            pmenu.PageName = Core.CoreProgram._localizer?[pmenu.PageName];
+                        pmenu.PageName = Core.CoreProgram._localizer?[pmenu.PageName];
 
                         pagetitle = pmenu.PageName + " - ";
                     }
                 }
-                    menu.PageName = Core.CoreProgram._localizer?[menu.PageName];
+                menu.PageName = Core.CoreProgram._localizer?[menu.PageName];
 
                 pagetitle += menu.PageName;
             }
@@ -484,169 +522,15 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        /// <summary>
-        /// 移除没有权限访问的菜单
-        /// </summary>
-        /// <param name="menus">菜单列表</param>
-        /// <param name="info">用户信息</param>
-        private void RemoveUnAccessableMenu(List<Menu> menus, LoginUserInfo info)
-        {
-            if (menus == null)
-            {
-                return;
-            }
-
-            List<Menu> toRemove = new List<Menu>();
-            //如果没有指定用户信息，则用当前用户的登录信息
-            if (info == null)
-            {
-                info = Wtm.LoginUserInfo;
-            }
-            //循环所有菜单项
-            foreach (var menu in menus)
-            {
-                //判断是否有权限，如果没有，则添加到需要移除的列表中
-                var url = menu.Url;
-                if (!string.IsNullOrEmpty(url) && url.StartsWith("/_framework/outside?url="))
-                {
-                    url = url.Replace("/_framework/outside?url=", "");
-                }
-                if (!string.IsNullOrEmpty(url) && Wtm.IsAccessable(url) == false)
-                {
-                    toRemove.Add(menu);
-                }
-                //如果有权限，则递归调用本函数检查子菜单
-                else
-                {
-                    RemoveUnAccessableMenu(menu.Children, info);
-                }
-            }
-            //删除没有权限访问的菜单
-            foreach (var remove in toRemove)
-            {
-                menus.Remove(remove);
-            }
-        }
-
-        /// <summary>
-        /// RemoveEmptyMenu
-        /// </summary>
-        /// <param name="menus"></param>
-        private void RemoveEmptyMenu(List<Menu> menus)
-        {
-            if (menus == null)
-            {
-                return;
-            }
-            List<Menu> toRemove = new List<Menu>();
-            //循环所有菜单项
-            foreach (var menu in menus)
-            {
-                RemoveEmptyMenu(menu.Children);
-                if ((menu.Children == null || menu.Children.Count == 0) && (string.IsNullOrEmpty(menu.Url)))
-                {
-                    toRemove.Add(menu);
-                }
-            }
-            foreach (var remove in toRemove)
-            {
-                menus.Remove(remove);
-            }
-        }
-
-        private void LocalizeMenu(List<Menu> menus)
-        {
-            if (menus == null)
-            {
-                return;
-            }
-            //循环所有菜单项
-            foreach (var menu in menus)
-            {
-                LocalizeMenu(menu.Children);
-                    menu.Title = Core.CoreProgram._localizer?[menu.Title];
-            }
-        }
-
-        /// <summary>
-        /// genreate menu
-        /// </summary>
-        /// <param name="menus"></param>
-        /// <param name="resultMenus"></param>
-        /// <param name="quickDebug"></param>
-        private void GenerateMenuTree(List<SimpleMenu> menus, List<Menu> resultMenus, bool quickDebug = false)
-        {
-            resultMenus.AddRange(menus.Where(x => x.ParentId == null).Select(x => new Menu()
-            {
-                Id = x.ID,
-                Title = x.PageName,
-                Url = x.Url,
-                Order = x.DisplayOrder,
-                Icon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
-            })
-            .OrderBy(x => x.Order)
-            .ToList());
-
-            foreach (var menu in resultMenus)
-            {
-                var temp = menus.Where(x => x.ParentId == menu.Id).Select(x => new Menu()
-                {
-                    Id = x.ID,
-                    Title = x.PageName,
-                    Url = x.Url,
-                    Order = x.DisplayOrder,
-                    Icon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
-                })
-                .OrderBy(x => x.Order)
-                .ToList();
-                if (temp.Count() > 0)
-                {
-                    menu.Children = temp;
-                    foreach (var item in menu.Children)
-                    {
-                        item.Children = menus.Where(x => x.ParentId == item.Id).Select(x => new Menu()
-                        {
-                            Title = x.PageName,
-                            Url = x.Url,
-                            Order = x.DisplayOrder,
-                            Icon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
-                        })
-                        .OrderBy(x => x.Order)
-                        .ToList();
-
-                        if (item.Children.Count() == 0)
-                            item.Children = null;
-                    }
-                }
-            }
-        }
 
         [HttpGet]
         public IActionResult Menu()
         {
-            if (Wtm.ConfigInfo.IsQuickDebug == true)
+            var resultMenus = GlobaInfo.AllMenus.ToLayuiMenu(Wtm);
+            return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
             {
-                var resultMenus = new List<Menu>();
-                GenerateMenuTree(GlobaInfo.AllMenus, resultMenus, true);
-                RemoveEmptyMenu(resultMenus);
-                LocalizeMenu(resultMenus);
-                return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
-                {
-                    IgnoreNullValues = true
-                }), "application/json");
-            }
-            else
-            {
-                var resultMenus = new List<Menu>();
-                GenerateMenuTree(GlobaInfo.AllMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
-                RemoveUnAccessableMenu(resultMenus, Wtm.LoginUserInfo);
-                RemoveEmptyMenu(resultMenus);
-                LocalizeMenu(resultMenus);
-                return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
-                {
-                    IgnoreNullValues = true
-                }), "application/json");
-            }
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
+            }), "application/json");
         }
 
         [AllowAnonymous]
@@ -729,34 +613,31 @@ namespace WalkingTec.Mvvm.Mvc
             HttpContext.Session.Set<string>("verify_code", chkCode);
 
             //创建画布
-            Bitmap bmp = new Bitmap(codeW, codeH);
-            Graphics g = Graphics.FromImage(bmp);
-            g.Clear(Color.Linen);
+            Image bmp = new Image<Rgba32>(codeW, codeH);
 
             //画噪线
             for (int i = 0; i < 3; i++)
             {
-                int x1 = rnd.Next(codeW);
-                int y1 = rnd.Next(codeH);
-                int x2 = rnd.Next(codeW);
-                int y2 = rnd.Next(codeH);
+                float x1 = rnd.Next(codeW);
+                float y1 = rnd.Next(codeH);
+                float x2 = rnd.Next(codeW);
+                float y2 = rnd.Next(codeH);
 
                 Color clr = color[rnd.Next(color.Length)];
-                g.DrawLine(new Pen(clr), x1, y1, x2, y2);
+                bmp.Mutate(x => x.DrawLines(clr, 1.0f, new PointF(x1, y1), new PointF(x2, y2)));
             }
             //画验证码
             for (int i = 0; i < chkCode.Length; i++)
             {
-                string fnt = font[rnd.Next(font.Length)];
-                Font ft = new Font(fnt, fontSize);
+                Font ft = new Font(SystemFonts.Get("Arial"), fontSize);
                 Color clr = color[rnd.Next(color.Length)];
-                g.DrawString(chkCode[i].ToString(), ft, new SolidBrush(clr), (float)i * 18, (float)0);
+                bmp.Mutate(x => x.DrawText(chkCode[i].ToString(), ft, clr, new PointF((float)i * 18, (float)0)));
             }
             //将验证码写入图片内存流中，以image/png格式输出
             MemoryStream ms = new MemoryStream();
             try
             {
-                bmp.Save(ms, ImageFormat.Png);
+                bmp.SaveAsPng(ms);
                 return File(ms.ToArray(), "image/jpeg");
             }
             catch (Exception)
@@ -765,7 +646,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
             finally
             {
-                g.Dispose();
                 bmp.Dispose();
             }
         }
@@ -843,6 +723,16 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [Public]
+        public IActionResult SetTenant(string tenant)
+        {
+            Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
+            var principal = Wtm.LoginUserInfo.CreatePrincipal();
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
+            return FFResult().AddCustomScript("location.reload();");
+        }
+
+
+        [Public]
         public IActionResult SetLanguageForBlazor(string culture, string redirect)
         {
             Response.Cookies.Append(
@@ -851,7 +741,7 @@ namespace WalkingTec.Mvvm.Mvc
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
             );
 
-            return Content($"<script>window.location.href='{HttpUtility.UrlDecode(redirect)}';</script>","text/html");
+            return Content($"<script>window.location.href='{HttpUtility.UrlDecode(redirect)}';</script>", "text/html");
         }
 
 
@@ -862,6 +752,43 @@ namespace WalkingTec.Mvvm.Mvc
             return this.Unauthorized();
         }
 
-    }
+        [Public]
+        public async Task<ActionResult> RemoteEntry(string redirect)
+        {
+            if (string.IsNullOrEmpty(redirect))
+            {
+                redirect = "/";
+            }
+            if (Wtm?.LoginUserInfo != null)
+            {
+                var principal = Wtm.LoginUserInfo.CreatePrincipal();
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
+            }
+            return Content($"<script>window.location.href='{HttpUtility.UrlDecode(redirect)}'</script>", "text/html");
+        }
 
+        [AllRights]
+        [HttpPost]
+        public async Task<ActionResult> RemoveUserCacheByAccount(string[] itcode)
+        {
+            await Wtm.RemoveUserCache(itcode);
+            return Ok();
+        }
+
+        [AllRights]
+        [HttpPost]
+        public async Task<ActionResult> RemoveUserCacheByRole(string[] rolecode)
+        {
+            await Wtm.RemoveUserCacheByRole(rolecode);
+            return Ok();
+        }
+
+        [AllRights]
+        [HttpPost]
+        public async Task<ActionResult> RemoveUserCacheByGroup(string[] groupcode)
+        {
+            await Wtm.RemoveUserCacheByGroup(groupcode);
+            return Ok();
+        }
+    }
 }

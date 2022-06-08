@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -20,11 +21,12 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     public class HomeController : BaseController
     {
         [AllRights]
-        public IActionResult Index()
+        public IActionResult Index(string redirect)
         {
             ViewData["title"] = "WTM";
             return View();
         }
+
 
         [AllowAnonymous]
         public IActionResult PIndex()

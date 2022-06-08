@@ -1,8 +1,10 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs.FrameworkGroupVM
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs.FrameworkGroupVM
 
 <wt:form vm="@Model">
   <wt:textbox field="Entity.GroupCode" />
   <wt:textbox field="Entity.GroupName" />
+  <wt:tree field="Entity.ParentId" item-url="/_Admin/FrameworkGroup/GetParents"/>
+  <wt:textbox field="Entity.Manager" search-url="/_Admin/FrameworkUser/GetUserById" />
   <wt:textarea field="Entity.GroupRemark" />
   <wt:row align="AlignEnum.Right">
     <wt:submitbutton />

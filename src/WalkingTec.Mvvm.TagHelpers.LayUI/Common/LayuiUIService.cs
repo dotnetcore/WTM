@@ -165,7 +165,38 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
 
         public string MakeViewButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, int? width = null, int? height = null, string title = null, bool resizable = true, string _DONOT_USE_CS = "default", bool maxed = false, string buttonClass = null, string style = null)
         {
-            return MakeDialogButton(buttonType, $"/_Framework/ViewFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}&width={width}", buttonText, width, height, title, null, true, resizable, maxed,buttonClass, style);
+            var  buttonID = Guid.NewGuid().ToString();
+            var innerClick = "";
+            string windowid = Guid.NewGuid().ToString();
+            var url = $"/_Framework/GetFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}";
+            innerClick = $"layui.layer.photos({{photos: {{data: [{{src: '{url}'}}]}},anim: 5}});";
+            string funcname = $"x{buttonID.Replace("-", "")}click";
+            var click = $"<script>function {funcname}(){{{innerClick};return false;}}</script>";
+            string rv = "";
+            if (buttonType == ButtonTypesEnum.Link)
+            {
+                rv = $"<a id='{buttonID}' onclick='{funcname}()' style='{style ?? "color:blue;cursor:pointer"}' class='{buttonClass ?? ""}'>{buttonText}</a>";
+            }
+            if (buttonType == ButtonTypesEnum.Button)
+            {
+                rv = $"<a id='{buttonID}' onclick='{funcname}()' style='{style ?? ""}' class='layui-btn {(string.IsNullOrEmpty(buttonClass) ? "layui-btn-primary layui-btn-xs" : $"{buttonClass}")}'>{buttonText}</a>";
+            }
+            switch (buttonType)
+            {
+                case ButtonTypesEnum.Button:
+                    rv = $"<a id='{buttonID}' onclick='{funcname}()' style='{style ?? ""}' class='layui-btn {(string.IsNullOrEmpty(buttonClass) ? "layui-btn-primary layui-btn-xs" : $"{buttonClass}")}'>{buttonText}</a>";
+                    break;
+                case ButtonTypesEnum.Link:
+                    rv = $"<a id='{buttonID}' onclick='{funcname}()' style='{style ?? "color:blue;cursor:pointer"}' class='{buttonClass ?? ""}'>{buttonText}</a>";
+                    break;
+                case ButtonTypesEnum.Img:
+                    rv = $"<img src='{url}&width={width??50}&height={height??50}' id='{buttonID}' onclick='{funcname}()' style='{style ?? "color:blue;cursor:pointer"}' class='{buttonClass ?? ""}'/>";
+                    break;
+                default:
+                    break;
+            }
+            rv += click;
+            return rv;
         }
 
         public string MakeScriptButton(ButtonTypesEnum buttonType, string buttonText, string script = "", string buttonID = null, string url = null, string buttonClass = null, string style=null)

@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Core
 
         #region Domains
 
-        private Dictionary<string,Domain> _domains;
+        private Dictionary<string, Domain> _domains;
 
         /// <summary>
         /// ConnectionStrings
@@ -56,10 +56,14 @@ namespace WalkingTec.Mvvm.Core
             }
             set
             {
-                _domains = value;
+                _domains = new Dictionary<string, Domain>();
+                foreach (var domain in value)
+                {
+                    _domains.Add(domain.Key.ToLower(), domain.Value);
+                }
                 foreach (var item in _domains)
                 {
-                    if(item.Value != null)
+                    if (item.Value != null)
                     {
                         item.Value.Name = item.Key;
                     }
@@ -67,6 +71,37 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        private bool? _hasMainHost;
+        public bool HasMainHost
+        {
+            get
+            {
+                if (_hasMainHost == null)
+                {
+                    _mainHost = Domains?.Where(x => x.Key.ToLower() == "mainhost").Select(x => x.Value.Address).FirstOrDefault();
+                    _hasMainHost = !string.IsNullOrEmpty(_mainHost);
+                }
+                return _hasMainHost == true;
+            }
+        }
+
+        private string _mainHost;
+        public string MainHost
+        {
+            get
+            {
+                _mainHost = Domains?.Where(x => x.Key.ToLower() == "mainhost").Select(x => x.Value.Address).FirstOrDefault();
+                if(_mainHost != null)
+                {
+                    _mainHost = _mainHost.Trim();
+                    if(_mainHost.EndsWith('/') || _mainHost.EndsWith('\\'))
+                    {
+                        _mainHost = _mainHost[0..^1];
+                    }
+                }
+                return _mainHost;
+            }
+        }
         #endregion
 
 
@@ -90,6 +125,28 @@ namespace WalkingTec.Mvvm.Core
         }
 
         #endregion
+
+        #region Tenant
+
+        private bool? _enableTenant;
+
+        /// <summary>
+        /// Is debug mode
+        /// </summary>
+        public bool EnableTenant
+        {
+            get
+            {
+                return _enableTenant ?? false;
+            }
+            set
+            {
+                _enableTenant = value;
+            }
+        }
+
+        #endregion
+
 
         public string ErrorHandler { get; set; } = "/_Framework/Error";
 
@@ -189,7 +246,7 @@ namespace WalkingTec.Mvvm.Core
 
         #region Custom settings
 
-        private Dictionary<string,string> _appSettings;
+        private Dictionary<string, string> _appSettings;
 
         /// <summary>
         /// Custom settings
@@ -229,7 +286,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         UploadLimit = DefaultConfigConsts.DEFAULT_UPLOAD_LIMIT,
                         SaveFileMode = "database",
-                        Settings = new Dictionary<string, List<FileHandlerOptions>>()                        
+                        Settings = new Dictionary<string, List<FileHandlerOptions>>()
                     };
                 }
                 return _fileUploadOptions;
@@ -390,7 +447,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                if(_supportLanguages == null)
+                if (_supportLanguages == null)
                 {
                     _supportLanguages = new List<CultureInfo>();
                     var lans = Languages.Split(",");
@@ -454,10 +511,11 @@ namespace WalkingTec.Mvvm.Core
             set
             {
                 _jwtOption = value;
-                if(_jwtOption.SecurityKey.Length < 18)
+                if (_jwtOption.SecurityKey.Length < 18)
                 {
                     var count = 18 - _jwtOption.SecurityKey.Length;
-                    for (int i = 0; i < count; i++){
+                    for (int i = 0; i < count; i++)
+                    {
                         _jwtOption.SecurityKey += "x";
                     }
                 }
@@ -465,16 +523,6 @@ namespace WalkingTec.Mvvm.Core
         }
 
         #endregion
-
-        public IDataContext CreateDC(string csName = null)
-        {
-            if (string.IsNullOrEmpty(csName))
-            {
-                csName = "default";
-            }
-            var cs = Connections.Where(x => x.Key.ToLower() == csName.ToLower()).FirstOrDefault();
-            return cs?.CreateDC();
-        }
 
     }
 }

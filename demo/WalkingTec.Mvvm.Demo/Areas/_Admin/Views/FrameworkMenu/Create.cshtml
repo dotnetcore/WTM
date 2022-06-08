@@ -21,6 +21,7 @@
   </wt:row>
   <wt:row items-per-row="ItemsPerRowEnum.Two">
     <wt:textbox field="Entity.DisplayOrder" />
+   <wt:combobox field="Entity.TenantAllowed" />
   </wt:row>
   <wt:row items-per-row="ItemsPerRowEnum.Two">
     <wt:combobox field="IconFont" items="@IconFontsHelper.IconFontItems" enable-search="true" link-field="IconFontItem" trigger-url="/_Admin/FrameworkMenu/GetIconFontItems" />
@@ -63,7 +64,10 @@
     }
   }
   function ModelChange(data) {
-    var st = $('#FrameworkMenuVM_SelectedModule').find('option:selected').text();
+    var st = "";
+    if(data.arr.length>0){
+      st = data.arr[0].name;
+    }
     $('#FrameworkMenuVM_Entity_PageName').val(st);
   }
 </script>

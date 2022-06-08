@@ -40,6 +40,8 @@ namespace WalkingTec.Mvvm.Core.Support.Json
 
         public bool IgnorePrivillege { get; set; }
 
+        public bool MainHostOnly { get; set; }
+
         private string _url;
         public string Url
         {

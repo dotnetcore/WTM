@@ -33,6 +33,23 @@ namespace WtmBlazorUtils
             set;
         }
 
+        public object _userinfo;
+
+        [CascadingParameter(Name = "BodyContext")]
+        public object UserInfoForDialog
+        {
+            get
+            {
+                return _userinfo;
+            }
+            set
+            {
+                _userinfo = value;
+                UserInfo = value as LoginUserInfo;
+            }
+        }
+
+
         [Parameter]
         public Action<DialogResult> OnCloseDialog { get; set; }
 
@@ -42,9 +59,9 @@ namespace WtmBlazorUtils
         }
 
 
-        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.Large)
+        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.ExtraExtraLarge, LoginUserInfo userinfo = null, bool isMax = false)
         {
-            return await WtmBlazor.OpenDialog(Title, Values, size);
+            return await WtmBlazor.OpenDialog(Title, Values, size, userinfo??this.UserInfo, isMax);
         }
 
         public async Task<bool> PostsData(object data, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
@@ -118,6 +135,10 @@ namespace WtmBlazorUtils
 
         public async Task<QueryData<T>> StartSearch<T>(string url, BaseSearcher searcher, QueryPageOptions options) where T : class, new()
         {
+            if (searcher != null)
+            {
+                searcher.IsEnumToString = false;
+            }
             var rv = await WtmBlazor.Api.CallSearchApi<T>(url, searcher, options);
             QueryData<T> data = new QueryData<T>();
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
@@ -134,6 +155,10 @@ namespace WtmBlazorUtils
 
         public async Task<QueryData<T>> StartSearchTree<T>(string url, BaseSearcher searcher, QueryPageOptions options) where T : class, new()
         {
+            if (searcher != null)
+            {
+                searcher.IsEnumToString = false;
+            }
             var rv = await WtmBlazor.Api.CallSearchApi<T>(url, searcher, options);
             QueryData<T> data = new QueryData<T>();
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
@@ -205,24 +230,24 @@ namespace WtmBlazorUtils
 
         public async Task<string> GetToken()
         {
-            return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmtoken");
+            return await GetLocalStorage<string>("wtmtoken");
         }
 
         public async Task<string> GetRefreshToken()
         {
-            return await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmrefreshtoken");
+            return await GetLocalStorage<string>("wtmrefreshtoken");
         }
 
         public async Task SetToken(string token, string refreshtoken)
         {
-            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", "wtmtoken", token);
-            await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", "wtmrefreshtoken", refreshtoken);
+            await SetLocalStorage("wtmtoken", token);
+            await SetLocalStorage("wtmrefreshtoken", refreshtoken);
         }
 
         public async Task DeleteToken()
         {
-            await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmtoken");
-            await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", "wtmrefreshtoken");
+            await DeleteLocalStorage("wtmtoken");
+            await DeleteLocalStorage("wtmrefreshtoken");
         }
 
         public async Task SetUserInfo(LoginUserInfo userinfo)
@@ -232,8 +257,7 @@ namespace WtmBlazorUtils
 
         public async Task<LoginUserInfo> GetUserInfo()
         {
-            string rv = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmuser");
-            var user = JsonSerializer.Deserialize<LoginUserInfo>(rv);
+            var user = await GetLocalStorage<LoginUserInfo>("wtmuser");
             JsonSerializerOptions options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -242,6 +266,47 @@ namespace WtmBlazorUtils
             user.Attributes["Menus"] = JsonSerializer.Deserialize<SimpleMenuApi[]>(user.Attributes["Menus"].ToString(), options);
             return user;
         }
+
+        public async Task<T> GetLocalStorage<T>(string key) where T : class
+        {
+            string rv = "";
+            while (true)
+            {
+                string part = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", System.Threading.CancellationToken.None, key, rv.Length);
+                if(part == null)
+                {
+                    return null;
+                }
+                rv += part;
+                if (part.Length < 20000)
+                {
+                    break;
+                }
+            }
+            if(typeof(T) == typeof(string))
+            {
+                return rv as T;
+            }
+            var obj = JsonSerializer.Deserialize<T>(rv);
+            return obj;
+        }
+
+        public async Task SetLocalStorage<T>(string key, T data) where T : class
+        {
+            if (typeof(T) == typeof(string))
+            {
+                await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", key, data);
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("localStorageFuncs.set", key, JsonSerializer.Serialize(data));
+            }
+        }
+        public async Task DeleteLocalStorage(string key)
+        {
+            await JSRuntime.InvokeAsync<string>("localStorageFuncs.remove", key);
+        }
+
 
         public bool IsAccessable(string url)
         {
@@ -270,14 +335,9 @@ namespace WtmBlazorUtils
 
         public async Task Download(string url, object data, HttpMethodEnum method = HttpMethodEnum.POST)
         {
-            var server = WtmBlazor.ConfigInfo.Domains.Where(x => x.Key.ToLower() == "serverpub").Select(x=>x.Value).FirstOrDefault();
-            if (server != null)
-            {
-                url = server.Address.TrimEnd('/') + url;
-            }
+            url = WtmBlazor.GetServerUrl() + url;
             await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data, CoreProgram.DefaultPostJsonOption), method.ToString());
         }
-
 
     }
 
@@ -395,15 +455,23 @@ namespace WtmBlazorUtils
             }
         }
 
-        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.None)
+        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size? size = null, LoginUserInfo userinfo = null, bool isMax = false)
         {
             TaskCompletionSource<DialogResult> ReturnTask = new TaskCompletionSource<DialogResult>();
             SetValuesParser p = new SetValuesParser();
+            if(size != null)
+            {
+                size = Size.ExtraLarge;
+            }
             DialogOption option = new DialogOption
             {
                 ShowCloseButton = false,
                 ShowFooter = false,
-                Size = size,
+                IsDraggable = true,
+                ShowMaximizeButton = !isMax,
+                FullScreenSize = isMax==true?FullScreenSize.Always:FullScreenSize.Medium,
+                Size =  size.Value,
+                BodyContext = userinfo,
                 Title = Title
             };
             option.BodyTemplate = builder =>
@@ -433,6 +501,22 @@ namespace WtmBlazorUtils
             await Dialog.Show(option);
             var rv = await ReturnTask.Task;
             return rv;
+        }
+        public string GetServerUrl()
+        {
+            var server = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "serverpub").Select(x => x.Value).FirstOrDefault();
+            if (server == null)
+            {
+                server = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "server").Select(x => x.Value).FirstOrDefault();
+            }
+            if (server != null)
+            {
+                return server.Address.TrimEnd('/');
+            }
+            else
+            {
+                return "";
+            }
         }
 
     }

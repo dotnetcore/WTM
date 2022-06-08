@@ -1,5 +1,154 @@
 # 更新日志
+
+## v6.x.x
+
+##6.2.2(2022-6-7)
+* **HotFix：**  修复附件上传问题
+
+##6.2.1(2022-6-7)
+
+* **新增：**  新增CanNotEditAttribute，用于标记在模型属性上，指明该字段不应该被修改。
+* **新增：**  优化VM内包含其他VM时框架默认的处理方法，现在框架默认会自动给子VM赋必须的值，并和表单提交的值对应。
+* **修改：**  修复MainTenantOnly属性会导致权限失效的问题
+* **修改：**  修复登录时Token会加长的问题
+* **修改：**  修复Blazor模式无法删除租户的问题
+* **修改：**  修复Blazor模式添加外部菜单的显示问题
+* **修改：**  修复LayUI模式Combobox在Https下无法下载数据的问题
+
+##6.2.0(2022-6-5)
+
+本次为大版本更新，包含中断性更改，老项目升级时需要手动更新旧数据库以及覆盖默认生成的项目文件
+
+* **新增：**  新增多租户支持，支持单数据库，独立数据库以及混合模式，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/MultiTenant
+* **新增：**  新增单点登录支持，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/SSO
+* **新增：**  新增统一用户，角色，用户组管理支持，WTM现在可以用来架构微服务风格的分布式系统。
+* **新增：**  Layui和Blazor新增默认的多租户管理界面，其他UI后续会添加
+* **新增：**  新增MainTenantOnlyAttribute，用于标记方法不能被子租户使用
+* **修改：**  用户组修改为树形结构，可作为部门组织结构使用，为下一步工作流做好准备
+* **修改：**  由于用户组修改为树形结构，用户组的数据权限也可以向下继承
+* **修改：**  重构用户登录，重新登陆，权限验证等逻辑，更大程度上使用缓存，大幅提高性能
+* **修改：**  用户表的其他字段现在会被自动读取到LoginUserInfo.Attributes中
+* **修改：**  Blazor支持最新的BB控件库
+* **修改：**  修复了文件上传的一些安全性问题
+* **修改：**  优化导出操作
+* **修改：**  修复Layui Combobox和Tree控件的一些bug
+* **中断性修改：**  移除了系统自带的PersistedGrant表,简化了jwt登录流程，现在不再需要一个单独的RefreshToken来刷新Token，而是登陆后调用RefreshToken接口刷新当前用户的Token
+* **中断性修改：**  系统自带的表，除了FrameworkMenu外，都新增了TenantCode字段
+* **中断性修改：**  系统自带的FrameworkGroup字段发生了改变，变为树形结构，且增加了Manager字段
+* **中断性修改：**  新增新的系统表FrameworkTenant
+* **中断性修改：**  Appsettings文件中新增EnableTenant配置
+
+
+
+##6.1.1(2022-4-1) 
+* **新增：**  集成Quartz作业调度，为后续工作流所需内部定时任务做好准备，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/Quartz
+* **修改：**  日志分类中增加了“作业”一项
+* **修改：**  Layui模式下登录现在会统一调用/api/_account/login方法，为后续单点登录做好准备
+* **修改：**  现在当用户缓存失效时，框架会自动调用/api/_account/login或/api/_account/loginJwt获取用户信息，如无特殊情况，不需要再重写ReloadUser方法了
+* **修改：**  修复layui数据权限维护时下拉菜单的bug
+老项目更新时，除了升级Nuget包，还应该通过官网或Plus生成新项目，将系统自带的Controller和View覆盖一下
+
+##6.0.7(2022-3-21) 
+* **HotFix：**  修复使用用xmselect引发的联动和TreeContainer的bug
+
+##6.0.6(2022-3-20) 
+* **修改：**  使用xmselect控件重写了Layui的Combobox和Tree，老用户更新的时候需要手动添加xmselect的js文件：https://gitee.com/maplemei/xm-select/releases/v1.2.4
+把这个文件放到wwwroot/layui下面。LayUI项目的用户还需要手动在/Views/Shared/_Layout.cshtml文件中加入对这个js的引用， 其他UI类型的项目不需要，但是因为其他UI类型的项目代码生成器也是用的layui的界面，所以还是需要copy xm-select的js文件到wwwroot/layui下面的
+
+* **修改：**  Layui模式下修复了数据列表指定line-height的bug
+* **修改：**  Layui模式下MakeViewButton方法现在可以生成更美观的图片预览
+* **修改：**  验证码现在会自动读取系统安装的字体，linux下部署的时候不会出现找不到字体的问题了
+* **修改：**  Blazor项目默认使用自带的字体文件
+* **修改：**  修复Blazor项目中向localstorage存储大量数据报错的问题
+* **修改：**  Blazor的弹出窗口现在可以最大化和拖动
+* **修改：**  修复Blazor项目中切换多语言有可能报错的问题
+
+##6.0.5(2022-2-28) 
+* **修改：**  默认初始化数据中加入了普通用户角色
+* **修改：**  优化了数据权限查询语句
+* **修改：**  修复登录用户保存信息是并发的问题
+* **修改：**  修复了layui模式radio控件绑定空值的bug
+
+
+##6.0.2(2021-12-26) 
+* **修改：**  修改Blazor默认代码生成，适应BootstrapStrap 6.x新版本
+* **修改：**  再次更新数据权限逻辑，新的默认逻辑为，如果设定了数据权限的表本身继承了BasePoco，而且没有给当前用户配置任何数据权限，那么用户默认可以看到自己加的数据。如果给用户配置了数据权限，则根据数据权限的配置显示数据，不管是否是当前用户添加的。
+* **修改：**  修改了layui transfer控件绑定数据的bug
+* **修改：**  修改了layui多选控件设置必填的bug
+
 ## v5.x.x 
+
+##5.9.2(2022-6-7)
+* **HotFix：**  修复附件上传问题
+
+
+##5.9.1(2022-6-7)
+
+* **新增：**  新增CanNotEditAttribute，用于标记在模型属性上，指明该字段不应该被修改。
+* **新增：**  优化VM内包含其他VM时框架默认的处理方法，现在框架默认会自动给子VM赋必须的值，并和表单提交的值对应。
+* **修改：**  修复MainTenantOnly属性会导致权限失效的问题
+* **修改：**  修复登录时Token会加长的问题
+* **修改：**  修复Blazor模式无法删除租户的问题
+* **修改：**  修复Blazor模式添加外部菜单的显示问题
+* **修改：**  修复LayUI模式Combobox在Https下无法下载数据的问题
+
+
+##5.9.0(2022-6-5)
+
+本次为大版本更新，包含中断性更改，老项目升级时需要手动更新旧数据库
+
+* **新增：**  新增多租户支持，支持单数据库，独立数据库以及混合模式，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/MultiTenant
+* **新增：**  新增单点登录支持，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/SSO
+* **新增：**  新增统一用户，角色，用户组管理支持，WTM现在可以用来架构微服务风格的分布式系统。
+* **新增：**  Layui和Blazor新增默认的多租户管理界面，其他UI后续会添加
+* **修改：**  用户组修改为树形结构，可作为部门组织结构使用，为下一步工作流做好准备
+* **修改：**  由于用户组修改为树形结构，用户组的数据权限也可以向下继承
+* **修改：**  重构用户登录，重新登陆，权限验证等逻辑，更大程度上使用缓存，大幅提高性能
+* **修改：**  Blazor支持最新的BB控件库
+* **修改：**  修复了文件上传的一些安全性问题
+* **修改：**  优化导出操作
+* **修改：**  修复Layui Combobox和Tree控件的一些bug
+* **中断性修改：**  移除了系统自带的PersistedGrant表,简化了jwt登录流程，现在不再需要一个单独的RefreshToken来刷新Token，而是登陆后调用RefreshToken接口刷新当前用户的Token
+* **中断性修改：**  系统自带的表，除了FrameworkMenu外，都新增了TenantCode字段
+* **中断性修改：**  系统自带的FrameworkGroup字段发生了改变，变为树形结构，且增加了Manager字段
+* **中断性修改：**  新增新的系统表FrameworkTenant
+* **中断性修改：**  Appsettings文件中新增EnableTenant配置
+
+
+##5.8.3(2022-4-1) 
+* **新增：**  集成Quartz作业调度，为后续工作流所需内部定时任务做好准备，使用方法参见文档 https://wtmdoc.walkingtec.cn/#/Global/Quartz
+* **修改：**  日志分类中增加了“作业”一项
+* **修改：**  Layui模式下登录现在会统一调用/api/_account/login方法，为后续单点登录做好准备
+* **修改：**  现在当用户缓存失效时，框架会自动调用/api/_account/login或/api/_account/loginJwt获取用户信息，如无特殊情况，不需要再重写ReloadUser方法了
+* **修改：**  修复layui数据权限维护时下拉菜单的bug
+* **修改：**  图形操作改用ImageSharp
+老项目更新时，除了升级Nuget包，还应该通过官网或Plus生成新项目，将系统自带的Controller和View覆盖一下
+
+##5.7.9(2022-3-21) 
+* **HotFix：**  修复使用用xmselect引发的联动和TreeContainer的bug
+
+##5.7.7(2022-3-20) 
+* **修改：**  使用xmselect控件重写了Layui的Combobox和Tree，老用户更新的时候需要手动添加xmselect的js文件：https://gitee.com/maplemei/xm-select/releases/v1.2.4
+把这个文件放到wwwroot/layui下面。LayUI项目的用户还需要手动在/Views/Shared/_Layout.cshtml文件中加入对这个js的引用， 其他UI类型的项目不需要，但是因为其他UI类型的项目代码生成器也是用的layui的界面，所以还是需要copy xm-select的js文件到wwwroot/layui下面的
+
+* **修改：**  Layui模式下修复了数据列表指定line-height的bug
+* **修改：**  Layui模式下MakeViewButton方法现在可以生成更美观的图片预览
+* **修改：**  验证码现在会自动读取系统安装的字体，linux下部署的时候不会出现找不到字体的问题了
+* **修改：**  Blazor项目默认使用自带的字体文件
+* **修改：**  修复Blazor项目中向localstorage存储大量数据报错的问题
+* **修改：**  Blazor的弹出窗口现在可以最大化和拖动
+* **修改：**  修复Blazor项目中切换多语言有可能报错的问题
+
+##5.7.6(2022-2-28) 
+* **修改：**  默认初始化数据中加入了普通用户角色
+* **修改：**  优化了数据权限查询语句
+* **修改：**  修复登录用户保存信息是并发的问题
+* **修改：**  修复了layui模式radio控件绑定空值的bug
+
+##5.7.3 (2021-12-26) 
+* **修改：**  再次更新数据权限逻辑，新的默认逻辑为，如果设定了数据权限的表本身继承了BasePoco，而且没有给当前用户配置任何数据权限，那么用户默认可以看到自己加的数据。如果给用户配置了数据权限，则根据数据权限的配置显示数据，不管是否是当前用户添加的。
+* **修改：**  修改了layui transfer控件绑定数据的bug
+* **修改：**  修改了layui多选控件设置必填的bug
 
 ##5.7.1 (2021-12-8) 
 * **修改：**  还原了数据权限的默认逻辑

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -19,13 +20,46 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         }
 
+        protected override FrameworkRole GetById(object Id)
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}").Result.Data.Entity;
+            }
+            else
+            {
+                return base.GetById(Id);
+            }
+        }
+
         protected override void InitVM()
         {
             var allowedids = DC.Set<FunctionPrivilege>()
                                         .Where(x => x.RoleCode == Entity.RoleCode && x.Allowed == true).Select(x => x.MenuItemId)
                                         .ToList();
-            var data = DC.Set<FrameworkMenu>().ToList();
+            List<FrameworkMenu> data = new List<FrameworkMenu>();
+            using (var maindc = Wtm.CreateDC(false, "default"))
+            {
+                data = maindc.Set<FrameworkMenu>().ToList();
+            }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
+
+            if (Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.CurrentTenant != null)
+            {
+                var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
+                for (int i = 0; i < topdata.Count; i++)
+                {
+                    foreach (var au in hostonly)
+                    {
+                        if (topdata[i].TenantAllowed == false || (topdata[i].Url != null && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url)))
+                        {
+                            topdata.RemoveAt(i);
+                            i--;
+                        }
+                    }
+                }
+            }
+
             int order = 0;
             var data2 = topdata.Select(x => new Page_View
             {
@@ -90,12 +124,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 FunctionPrivilege fp = new FunctionPrivilege();
                 fp.MenuItemId = menuid;
                 fp.RoleCode = Entity.RoleCode;
+                fp.TenantCode = LoginUserInfo.CurrentTenant;
                 fp.Allowed = true;
                 DC.Set<FunctionPrivilege>().Add(fp);
             }
             await DC.SaveChangesAsync();
-            var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == Entity.RoleCode).Select(x => x.UserCode).ToArray();
-            await Wtm.RemoveUserCache(userids);
+            await Wtm.RemoveUserCacheByRole(Entity.RoleCode);
             return true;
         }
 

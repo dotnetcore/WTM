@@ -546,7 +546,12 @@ namespace WalkingTec.Mvvm.Core
 
         public static string GetCS(string cs, string mode, Configs config)
         {
-            if (string.IsNullOrEmpty(cs) || config.Connections.Any(x => x.Key.ToLower() == cs.ToLower()) == false)
+            if(cs == null)
+            {
+                return null;
+            }
+
+            if (config.Connections.Any(x => x.Key.ToLower() == cs.ToLower()) == false)
             {
                 cs = "default";
             }
@@ -691,6 +696,10 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>返回大写32位MD5值</returns>
         public static string GetMD5String(string str)
         {
+            if(str == null)
+            {
+                return "";
+            }
             byte[] buffer = Encoding.UTF8.GetBytes(str);
 
             return MD5String(buffer);

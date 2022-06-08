@@ -76,8 +76,28 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             var modules = Wtm.GlobaInfo.AllModule;
             var m = Utils.ResetModule(modules);
-
+            m = m.GroupBy(x => new { x.Area?.AreaName, x.IsApi }).SelectMany(x => x).ToList();
+            string area = "";
+            bool? isapi = null;
+            for(int i = 0; i < m.Count; i++)
+            {
+                if(area != m[i].Area?.AreaName || isapi != m[i].IsApi)
+                {
+                    area = m[i].Area?.AreaName;
+                    isapi = m[i].IsApi;
+                    var mm = "-----" + (m[i].Area?.AreaName ?? "Default") +(m[i].IsApi == true?"(api)":"")+ "-----";
+                    m.Insert(i, new SimpleModule { ModuleName = mm, NameSpace = "", ClassName = "" });
+                    i++;
+                }
+            }
             AllModules = m.ToListItems(y => y.ModuleName, y => y.FullName);
+            foreach (var item in AllModules)
+            {
+                if(item.Value.ToString() == ",")
+                {
+                    item.Disabled = true;
+                }
+            }
             if (string.IsNullOrEmpty(SelectedModule) == false || (string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true))
             {
                 if (string.IsNullOrEmpty(SelectedModule))
@@ -189,7 +209,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.Parent = Entity;
                             menu.ShowOnMenu = false;
                             menu.DisplayOrder = order++;
-                            menu.Privileges = new List<FunctionPrivilege>();
                             menu.IsInside = true;
                             menu.Domain = Entity.Domain;
                             menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -299,7 +318,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.Parent = Entity;
                             menu.ShowOnMenu = false;
                             menu.DisplayOrder = order++;
-                            menu.Privileges = new List<FunctionPrivilege>();
                             menu.IsInside = true;
                             menu.Domain = Entity.Domain;
                             menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -348,12 +366,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         fp.MenuItemId = menuid;
                         fp.RoleCode = code;
                         fp.Allowed = true;
+                        fp.TenantCode = LoginUserInfo?.CurrentTenant;
                         DC.Set<FunctionPrivilege>().Add(fp);
                     }
                 }
             }
-
             DC.SaveChanges();
+            Wtm.RemoveUserCacheByRole(SelectedRolesIds.ToArray());
         }
 
 

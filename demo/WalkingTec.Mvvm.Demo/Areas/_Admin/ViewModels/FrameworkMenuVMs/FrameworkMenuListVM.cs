@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -36,7 +37,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 case ListVMSearchModeEnum.Custom2:
                     rv.AddRange(new GridColumn<FrameworkMenu_ListView>[] {
                         this.MakeGridHeader(x => x.PageName,200),
-                         this.MakeGridHeader(x => x.ParentID).SetHeader(Localizer["Sys.Operation"]).SetFormat((item, cell) => GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
+                         this.MakeGridHeader(x => x.ParentId).SetHeader(Localizer["Sys.Operation"]).SetFormat((item, cell) => GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
                    });
                     break;
                 default:
@@ -46,7 +47,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.ShowOnMenu),
                         this.MakeGridHeader(x => x.FolderOnly),
                         this.MakeGridHeader(x => x.IsPublic),
-                        this.MakeGridHeader(x => x.DisplayOrder),
+                       this.MakeGridHeader(x => x.TenantAllowed),
+                       this.MakeGridHeader(x => x.DisplayOrder),
                         this.MakeGridHeader(x => x.Icon, 100).SetFormat(PhotoIdFormat),
                         this.MakeGridHeaderAction(width: 270)
                     });
@@ -122,8 +124,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override IOrderedQueryable<FrameworkMenu_ListView> GetSearchQuery()
         {
-
-            var data = DC.Set<FrameworkMenu>().ToList();
+            List<FrameworkMenu> data = new List<FrameworkMenu>();
+            using (var maindc = Wtm.CreateDC(false, "default"))
+            {
+                data = maindc.Set<FrameworkMenu>().ToList();
+            }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || x.Url.EndsWith("/Index") || string.IsNullOrEmpty(x.MethodName)).ToList();
             foreach (var item in topdata)
             {
@@ -135,13 +140,35 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     item.ModuleName = Localizer[item.ModuleName];
                 }
-
+            }
+           if(Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.CurrentTenant != null)
+            {
+                var ct = Wtm.GlobaInfo.AllTenant.Where(x => x.TCode == LoginUserInfo.CurrentTenant).FirstOrDefault();
+                for(int i = 0; i < topdata.Count; i++)
+                {
+                    if (topdata[i].TenantAllowed == false || (topdata[i].Url != null && ct.EnableSub == false && topdata[i].Url.ToLower().Contains("frameworktenant")))
+                    {
+                        topdata.RemoveAt(i);
+                        i--;
+                        continue;
+                    }
+                    var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
+                    foreach (var au in hostonly)
+                    {
+                        if (topdata[i].Url != null && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(topdata[i].Url))
+                        {
+                            topdata.RemoveAt(i);
+                            i--;
+                            break;
+                        }
+                    }
+                }
             }
             topdata.ForEach((x) => { int l = x.GetLevel(); for (int i = 0; i < l; i++) { x.PageName = "&nbsp;&nbsp;&nbsp;&nbsp;" + x.PageName; } });
             if (SearcherMode == ListVMSearchModeEnum.Custom2)
             {
                 var pris = DC.Set<FunctionPrivilege>()
-                                .Where(x => x.RoleCode == DC.Set<FrameworkRole>().CheckID(Searcher.RoleID, null).Select(x => x.RoleCode).FirstOrDefault()).ToList();
+                                .Where(x => x.RoleCode == Searcher.RoleCode).ToList();
                 var allowed = pris.Where(x => x.Allowed == true).Select(x => x.MenuItemId).ToList();
                 var denied = pris.Where(x => x.Allowed == false).Select(x => x.MenuItemId).ToList();
                 int order = 0;
@@ -160,12 +187,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         ID = y.ID,
                         Allowed = allowed.Contains(y.ID),
                         ActionName = y.ActionName
-                    }),
+                    }).ToList(),
                     ExtraOrder = order++,
-                    ParentID = x.ParentId,
-                    Parent = x.Parent,
+                    ParentId = x.ParentId,
                     IsInside = x.IsInside,
-                    HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false,
+                    TenantAllowed = x.TenantAllowed,
                     Allowed = allowed.Contains(x.ID),
                     Denied = denied.Contains(x.ID)
                 }).OrderBy(x => x.ExtraOrder);
@@ -185,10 +211,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     IsPublic = x.IsPublic,
                     DisplayOrder = x.DisplayOrder,
                     ExtraOrder = order++,
-
-                    ParentID = x.ParentId,
-                    Icon = x.Icon,
-                    HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
+                    TenantAllowed = x.TenantAllowed,
+                    ParentId = x.ParentId,
+                    Icon = x.Icon
                 }).OrderBy(x => x.ExtraOrder);
 
                 return data2.AsQueryable() as IOrderedQueryable<FrameworkMenu_ListView>;
@@ -198,48 +223,4 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
     }
 
-    public class FrameworkMenu_ListView : BasePoco
-    {
-        [Display(Name = "_Admin.PageName")]
-        public string PageName { get; set; }
-
-        [Display(Name = "Codegen.ModuleName")]
-        public string ModuleName { get; set; }
-
-        [Display(Name = "_Admin.ActionName")]
-        public string ActionName { get; set; }
-
-        [Display(Name = "_Admin.ShowOnMenu")]
-        public bool? ShowOnMenu { get; set; }
-
-        [Display(Name = "_Admin.FolderOnly")]
-        public bool? FolderOnly { get; set; }
-
-        [Display(Name = "_Admin.IsPublic")]
-        public bool? IsPublic { get; set; }
-
-        [Display(Name = "_Admin.DisplayOrder")]
-        public int? DisplayOrder { get; set; }
-
-        [Display(Name = "_Admin.Icon")]
-        public string Icon { get; set; }
-
-        public bool Allowed { get; set; }
-
-        public bool Denied { get; set; }
-
-        public bool HasChild { get; set; }
-
-        public string IconClass { get; set; }
-
-        public IEnumerable<FrameworkMenu_ListView> Children { get; set; }
-
-        public FrameworkMenu Parent { get; set; }
-
-        public Guid? ParentID { get; set; }
-
-        public int ExtraOrder { get; set; }
-
-        public bool? IsInside { get; set; }
-    }
 }

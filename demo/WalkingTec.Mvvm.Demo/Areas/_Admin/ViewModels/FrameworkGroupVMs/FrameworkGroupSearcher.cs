@@ -15,5 +15,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
         [Display(Name = "_Admin.GroupName")]
         public string GroupName { get; set; }
+
     }
 }

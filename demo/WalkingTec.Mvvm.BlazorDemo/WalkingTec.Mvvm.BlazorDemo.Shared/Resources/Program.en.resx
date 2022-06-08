@@ -216,6 +216,9 @@
   <data name="Login.InputPassword" xml:space="preserve">
     <value>Please input password</value>
   </data>
+  <data name="Login.InputTenant" xml:space="preserve">
+    <value>Please enter the tenant number</value>
+  </data>
   <data name="Login.InputUserName" xml:space="preserve">
     <value>Please input user name</value>
   </data>
@@ -266,6 +269,9 @@
   </data>
   <data name="MenuKey.DataPrivilege" xml:space="preserve">
     <value>Data Privilege</value>
+  </data>
+  <data name="MenuKey.FrameworkTenant" xml:space="preserve">
+    <value>Tenant management</value>
   </data>
   <data name="MenuKey.GroupManagement" xml:space="preserve">
     <value>Group Management</value>
@@ -810,8 +816,14 @@
   <data name="_Admin.GroupDp" xml:space="preserve">
     <value>Group Dp</value>
   </data>
+  <data name="_Admin.GroupManager" xml:space="preserve">
+    <value>Group Manager</value>
+  </data>
   <data name="_Admin.GroupName" xml:space="preserve">
     <value>Group name</value>
+  </data>
+  <data name="_Admin.HasMainHost" xml:space="preserve">
+    <value>This operation cannot be performed. Please go to the main site for corresponding operation</value>
   </data>
   <data name="_Admin.HomePhone" xml:space="preserve">
     <value>HomePhone</value>
@@ -836,6 +848,9 @@
   </data>
   <data name="_Admin.IsValid" xml:space="preserve">
     <value>IsValid</value>
+  </data>
+  <data name="_Admin.Job" xml:space="preserve">
+    <value>Job</value>
   </data>
   <data name="_Admin.Length" xml:space="preserve">
     <value>Length</value>
@@ -918,6 +933,9 @@
   <data name="_Admin.RoleName" xml:space="preserve">
     <value>Role name</value>
   </data>
+  <data name="_Admin.SameRole" xml:space="preserve">
+    <value>Except for administrators, users cannot modify the page permissions of their roles</value>
+  </data>
   <data name="_Admin.SelectedModel" xml:space="preserve">
     <value>Model</value>
   </data>
@@ -932,6 +950,45 @@
   </data>
   <data name="_Admin.Tenant" xml:space="preserve">
     <value>Tenant</value>
+  </data>
+  <data name="_Admin.TenantAllowed" xml:space="preserve">
+    <value>Tenant allowed</value>
+  </data>
+  <data name="_Admin.TenantChoose" xml:space="preserve">
+    <value>Select tenant</value>
+  </data>
+  <data name="_Admin.TenantCode" xml:space="preserve">
+    <value>Tenant code</value>
+  </data>
+  <data name="_Admin.TenantDb" xml:space="preserve">
+    <value>Tenant database</value>
+  </data>
+  <data name="_Admin.TenantDbContext" xml:space="preserve">
+    <value>Tenant datacontext</value>
+  </data>
+  <data name="_Admin.TenantDbError" xml:space="preserve">
+    <value>Failed to create database</value>
+  </data>
+  <data name="_Admin.TenantDbType" xml:space="preserve">
+    <value>Tenant dbtype</value>
+  </data>
+  <data name="_Admin.TenantDomain" xml:space="preserve">
+    <value>Tenant host url</value>
+  </data>
+  <data name="_Admin.TenantEnableSub" xml:space="preserve">
+    <value>Sub tenant allowed</value>
+  </data>
+  <data name="_Admin.TenantHost" xml:space="preserve">
+    <value>Main Host</value>
+  </data>
+  <data name="_Admin.TenantName" xml:space="preserve">
+    <value>Tenant name</value>
+  </data>
+  <data name="_Admin.TenantNotAllowed" xml:space="preserve">
+    <value>The current tenant cannot use this feature</value>
+  </data>
+  <data name="_Admin.TenantRole" xml:space="preserve">
+    <value>Use the permissions of the selected role to establish the administrator of the tenant, account admin and password 000000</value>
   </data>
   <data name="_Admin.UnsetPages" xml:space="preserve">
     <value>Unset pages</value>

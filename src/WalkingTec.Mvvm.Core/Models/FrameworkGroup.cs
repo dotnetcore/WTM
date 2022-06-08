@@ -8,12 +8,13 @@ namespace WalkingTec.Mvvm.Core
 {
 
     [Table("FrameworkGroups")]
-    public class FrameworkGroup : BasePoco
+    public class FrameworkGroup : TreePoco<FrameworkGroup>,ITenant
     {
         [Display(Name = "_Admin.GroupCode")]
         [Required(ErrorMessage = "Validate.{0}required")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Validate.{0}number")]
         [StringLength(100, ErrorMessage = "Validate.{0}stringmax{1}")]
+        [CanNotEdit]
         public string GroupCode { get; set; }
 
         [Display(Name = "_Admin.GroupName")]
@@ -23,6 +24,9 @@ namespace WalkingTec.Mvvm.Core
 
         [Display(Name = "_Admin.Remark")]
         public string GroupRemark { get; set; }
+
+        [Display(Name = "_Admin.GroupManager")]
+        public string Manager { get; set; }
 
         [NotMapped]
         [Display(Name = "_Admin.UsersCount")]

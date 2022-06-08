@@ -75,22 +75,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == false)
             {
-                if (Entity.Url != null && Entity.Url != "")
+                if (Entity.Url != null && Entity.Url != "" && Entity.Url.StartsWith("/") == false)
                 {
-                    if (string.IsNullOrEmpty(Entity.Domain) == true)
+                    if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
                     {
-                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false && Entity.Url.StartsWith("@") == false)
-                        {
-                            Entity.Url = "http://" + Entity.Url;
-                        }
+                        Entity.Url = "http://" + Entity.Url;
                     }
-                    else
-                    {
-                        if (Entity.Url.StartsWith("/") == false)
-                        {
-                            Entity.Url = "/" + Entity.Url;
-                        }
-                    }
+                }
+                if (Entity.Url != null)
+                {
                     Entity.Url = Entity.Url.TrimEnd('/');
                 }
             }
@@ -128,7 +121,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                 menu.Parent = Entity;
                                 menu.ShowOnMenu = false;
                                 menu.DisplayOrder = order++;
-                                menu.Privileges = new List<FunctionPrivilege>();
                                 menu.IsInside = true;
                                 menu.Domain = Entity.Domain;
                                 menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -181,22 +173,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == false)
             {
-                if (Entity.Url != null && Entity.Url != "")
+                if (Entity.Url != null && Entity.Url != "" && Entity.Url.StartsWith("/") == false)
                 {
-                    if (string.IsNullOrEmpty(Entity.Domain) == true)
+                    if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
                     {
-                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false && Entity.Url.StartsWith("@") == false)
-                        {
-                            Entity.Url = "http://" + Entity.Url;
-                        }
+                        Entity.Url = "http://" + Entity.Url;
                     }
-                    else
-                    {
-                        if (Entity.Url.StartsWith("/") == false)
-                        {
-                            Entity.Url = "/" + Entity.Url;
-                        }
-                    }
+                }
+                if (Entity.Url != null)
+                {
                     Entity.Url = Entity.Url.TrimEnd('/');
                 }
             }
@@ -227,7 +212,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                 menu.Parent = Entity;
                                 menu.ShowOnMenu = false;
                                 menu.DisplayOrder = order++;
-                                menu.Privileges = new List<FunctionPrivilege>();
                                 menu.IsInside = true;
                                 menu.Domain = Entity.Domain;
                                 menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -281,8 +265,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                 }
             }
-
             DC.SaveChanges();
+            Wtm.RemoveUserCacheByRole(SelectedRolesCodes.ToArray()).Wait();
         }
 
 

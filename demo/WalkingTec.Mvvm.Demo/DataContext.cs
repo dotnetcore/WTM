@@ -48,6 +48,7 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<LinkTest> LinkTests { get; set; }
         public DbSet<LinkTest2> LinkTest2 { get; set; }
         public DbSet<TreeTest> TreeTests { get; set; }
+
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {
             var state = await base.DataInit(allModules, IsSpa);
@@ -69,13 +70,15 @@ namespace WalkingTec.Mvvm.Demo
                     ITCode = "admin",
                     Password = Utils.GetMD5String("000000"),
                     IsValid = true,
-                    Name = "Admin"
+                    Name = "Admin",
+                    TenantCode = TenantCode
                 };
 
                 var userrole = new FrameworkUserRole
                 {
                     UserCode = user.ITCode,
-                    RoleCode = "001"
+                    RoleCode = "001",
+                    TenantCode= TenantCode
                 };
                 Set<FrameworkUser>().Add(user);
                 Set<FrameworkUserRole>().Add(userrole);

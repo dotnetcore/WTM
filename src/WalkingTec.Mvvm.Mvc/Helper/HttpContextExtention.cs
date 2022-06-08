@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
 
 namespace WalkingTec.Mvvm.Mvc
@@ -22,6 +23,5 @@ namespace WalkingTec.Mvvm.Mvc
                 return self.Connection.RemoteIpAddress.ToString();
             }
         }
-
     }
 }

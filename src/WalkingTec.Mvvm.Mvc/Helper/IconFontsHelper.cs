@@ -43,7 +43,8 @@ namespace WalkingTec.Mvvm.Mvc
             _iconFontItems = iconFontHashSet.Select(x => new ComboSelectListItem
             {
                 Text = x,
-                Value = x
+                Value = x,
+                Icon = x
             }).ToList();
 
             _iconFontDicItems = new Dictionary<string, List<MenuItem>>();

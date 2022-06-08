@@ -25,7 +25,8 @@
         <TableColumn @bind-Field="@context.Name_view"  />
     </TableColumns>
     <TableToolbarTemplate>
-        @if (IsAccessable("/api/City/add"))
+             <TableToolbarButton TItem="City_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="GroupVM测试" OnClickCallback="OnCreateClick2" />
+       @if (IsAccessable("/api/City/add"))
         {
             <TableToolbarButton TItem="City_View" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }
@@ -48,7 +49,8 @@
     </TableToolbarTemplate>
     <RowButtonTemplate>
         <div style="padding-right:10px;">
-            @if (IsAccessable("/api/City/Edit"))
+                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="groupvmedit" OnClick="() => OnEditClick2(context)" />
+           @if (IsAccessable("/api/City/Edit"))
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
             }
@@ -99,6 +101,14 @@
         }
     }
 
+    private async Task OnCreateClick2(IEnumerable<City_View> items)
+    {
+        if (await OpenDialog<Create2>("GroupVMTest") == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
+    }
+
     private async Task OnEditClick(City_View item)
     {
         if (await OpenDialog<Edit>(WtmBlazor.Localizer["Sys.Edit"], x => x.id == item.ID.ToString()) == DialogResult.Yes)
@@ -107,6 +117,13 @@
         }
     }
 
+        private async Task OnEditClick2(City_View item)
+    {
+        if (await OpenDialog<Edit2>(WtmBlazor.Localizer["Sys.Edit"], x => x.id == item.ID.ToString()) == DialogResult.Yes)
+        {
+            await dataTable.QueryAsync();
+        }
+    }
     private async Task OnDetailsClick(City_View item)
     {
         await OpenDialog<Details>(WtmBlazor.Localizer["Sys.Details"], x => x.id == item.ID.ToString());

@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.Core
     /// <typeparam name="T">重复数据类</typeparam>
     public class DuplicatedGroup<T>
     {
+        public bool UseTenant { get; set; } = true;
         public List<DuplicatedField<T>> Fields { get; set; }
     }
 
@@ -286,10 +287,10 @@ namespace WalkingTec.Mvvm.Core
                 }
                 if (innerExp.Count > 1)
                 {
-                    exp = Expression.And(innerExp[0], innerExp[1]);
+                    exp = Expression.AndAlso(innerExp[0], innerExp[1]);
                     for (int i = 2; i < innerExp.Count; i++)
                     {
-                        exp = Expression.And(exp, innerExp[i]);
+                        exp = Expression.AndAlso(exp, innerExp[i]);
                     }
                 }
                 //调用any函数，形成 .Any(x=> x.field==value && x.field1==value1....)的形式

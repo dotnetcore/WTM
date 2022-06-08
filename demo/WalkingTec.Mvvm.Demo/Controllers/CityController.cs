@@ -102,6 +102,37 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
             }
         }
+
+        [ActionDescription("Sys.Create")]
+        public ActionResult CreateGroup()
+        {
+            var vm = Wtm.CreateVM<GroupVMTest>();
+            return PartialView(vm);
+        }
+        [HttpPost]
+        [ActionDescription("Sys.Create")]
+        public ActionResult CreateGroup(GroupVMTest vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView(vm);
+            }
+            else
+            {
+                vm.vm1.DoAdd();
+                vm.vm2.DoAdd();
+                if (!ModelState.IsValid)
+                {
+                    vm.DoReInit();
+                    return PartialView(vm);
+                }
+                else
+                {
+                    return FFResult().CloseDialog().RefreshGrid();
+                }
+            }
+        }
+
         #endregion
 
         #region Edit
@@ -109,8 +140,17 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult Edit(string id)
         {
             var vm = Wtm.CreateVM<CityVM>(id);
+            vm.CityChildrenList1.Searcher.ParentId = id;
             return PartialView(vm);
         }
+
+        [ActionDescription("Sys.Edit")]
+        public ActionResult EditGroup(string id)
+        {
+            var vm = Wtm.CreateVM<GroupVMTest>(values: x=>x.EntityId == id);           
+            return PartialView(vm);
+        }
+
 
         [ActionDescription("Sys.Edit")]
         [HttpPost]
@@ -135,6 +175,31 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
             }
         }
+        [ActionDescription("Sys.Edit")]
+        [HttpPost]
+        [ValidateFormItemOnly]
+        public ActionResult EditGroup(GroupVMTest vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView(vm);
+            }
+            else
+            {
+                vm.vm1.DoEdit();
+                vm.vm2.DoEdit();
+                if (!ModelState.IsValid)
+                {
+                    vm.DoReInit();
+                    return PartialView(vm);
+                }
+                else
+                {
+                    return FFResult().CloseDialog().RefreshGrid();
+                }
+            }
+        }
+
         #endregion
 
         #region Delete

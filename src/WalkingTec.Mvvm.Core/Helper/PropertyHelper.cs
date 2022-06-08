@@ -127,9 +127,14 @@ namespace WalkingTec.Mvvm.Core
                 {
                     me = le.Body as MemberExpression;
                 }
-                if (le.Body is UnaryExpression)
+                else if (le.Body is UnaryExpression)
                 {
                     me = (le.Body as UnaryExpression).Operand as MemberExpression;
+                }
+                else if(le.Body is MethodCallExpression mexp && mexp.Method.Name == "get_Item")
+                {
+                    object index = 0;
+                    me = mexp.Object as MemberExpression;
                 }
             }
             string rv = "";

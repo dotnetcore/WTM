@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -20,32 +21,38 @@ namespace WalkingTec.Mvvm.Mvc
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IOptionsMonitor<Configs> configs)
+        public async Task InvokeAsync(HttpContext context, WTMContext wtm)
         {
             var max = context.Features.Get<IHttpMaxRequestBodySizeFeature>();
             if (max.IsReadOnly == false)
             {
-                max.MaxRequestBodySize = configs.CurrentValue.FileUploadOptions.UploadLimit;
+                max.MaxRequestBodySize = wtm.ConfigInfo.FileUploadOptions.UploadLimit;
             }
             if (context.Request.Path == "/")
             {
-                context.Response.Cookies.Append("pagemode", configs.CurrentValue.PageMode.ToString());
-                context.Response.Cookies.Append("tabmode", configs.CurrentValue.TabMode.ToString());
+                context.Response.Cookies.Append("pagemode", wtm.ConfigInfo.PageMode.ToString());
+                context.Response.Cookies.Append("tabmode", wtm.ConfigInfo.TabMode.ToString());
             }
-            if (context.Request.ContentLength > 0 && context.Request.ContentLength < 512000)
+            if (context.Request.ContentLength > 0 && context.Request.HasFormContentType == false)
             {
-                context.Request.EnableBuffering();
-                context.Request.Body.Position = 0;
-                StreamReader tr = new StreamReader(context.Request.Body);
-                string body = tr.ReadToEndAsync().Result;
-                context.Request.Body.Position = 0;
-                if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
+                try
                 {
-                    context.Items.Add("DONOTUSE_REQUESTBODY", body);
+                    context.Request.EnableBuffering();
+                    context.Request.Body.Position = 0;
+                    StreamReader tr = new StreamReader(context.Request.Body);
+                    string body = tr.ReadToEndAsync().Result;
+                    context.Request.Body.Position = 0;
+                    if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
+                    {
+                        context.Items.Add("DONOTUSE_REQUESTBODY", body);
+                    }
+                    else
+                    {
+                        context.Items["DONOTUSE_REQUESTBODY"] = body;
+                    }
                 }
-                else
-                {
-                    context.Items["DONOTUSE_REQUESTBODY"] = body;
+                catch {
+                    context.Request.Body.Position = 0;
                 }
             }
             await _next(context);
