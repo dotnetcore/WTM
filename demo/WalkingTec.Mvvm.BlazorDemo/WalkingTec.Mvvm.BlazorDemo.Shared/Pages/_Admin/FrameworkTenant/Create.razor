@@ -33,7 +33,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        AllParents = await WtmBlazor.Api.CallItemsApi("/api/_FrameworkUser/GetFrameworkRoles", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
+        AllParents = await WtmBlazor.Api.CallItemsApi("/api/_account/GetFrameworkRoles", placeholder: WtmBlazor.Localizer["Sys.PleaseSelect"]);
     }
 
     private async Task Submit(EditContext context)

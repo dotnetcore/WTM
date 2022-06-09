@@ -25,15 +25,6 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AllRights]
     public class AccountController : BaseApiController
     {
-        private readonly ILogger _logger;
-        private readonly ITokenService _authService;
-        public AccountController(
-            ILogger<AccountController> logger,
-            ITokenService authService)
-        {
-            _logger = logger;
-            _authService = authService;
-        }
 
         [AllowAnonymous]
         [HttpPost("[action]")]
@@ -209,6 +200,79 @@ namespace WalkingTec.Mvvm.Admin.Api
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return Ok("/");
             }
+        }
+
+        [HttpGet("GetFrameworkRoles")]
+        [ActionDescription("GetRoles")]
+        [AllRights]
+        public IActionResult GetFrameworkRoles()
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_account/GetFrameworkRoles").Result;
+            }
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x => x.RoleCode));
+        }
+
+        [HttpGet("GetFrameworkGroups")]
+        [ActionDescription("GetGroups")]
+        [AllRights]
+        public IActionResult GetFrameworkGroups()
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_account/GetFrameworkGroups").Result;
+            }
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+        }
+
+        [HttpGet("GetFrameworkGroupsTree")]
+        [ActionDescription("GetGroupsTree")]
+        [AllRights]
+        public IActionResult GetFrameworkGroupsTree()
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_account/GetFrameworkGroupsTree").Result;
+            }
+            return Ok(DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+        }
+
+
+        [HttpGet("GetUserById")]
+        [AllRights]
+        public IActionResult GetUserById(string keywords)
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_account/GetUserById").Result;
+            }
+            var users = DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
+            return Ok(users);
+        }
+
+        [HttpGet("GetUserByGroup")]
+        [AllRights]
+        public IActionResult GetUserByGroup(string keywords)
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_account/GetUserByGroup").Result;
+            }
+            var users = DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == keywords).Select(x => x.UserCode).ToList();
+            return Ok(users);
+        }
+
+        [HttpGet("GetUserByRole")]
+        [AllRights]
+        public IActionResult GetUserByRole(string keywords)
+        {
+            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            {
+                return Request.RedirectCall(Wtm, "/api/_account/GetUserByRole").Result;
+            }
+            var users = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == keywords).Select(x => x.UserCode).ToList();
+            return Ok(users);
         }
 
     }
