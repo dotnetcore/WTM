@@ -20,4 +20,5 @@ export default {
     'tips_bool_false': 'No',
     'tips_all': 'All',
     'tips_theme_loading': 'Load theme',
+    'FrameworkTenantAdminRoleCodeTip':'Use the permissions of the selected role to establish the administrator of this tenant, account admin password 000000'
 };

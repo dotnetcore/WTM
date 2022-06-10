@@ -19,4 +19,5 @@ export default {
     'tips_bool_false': '否',
     'tips_all': '全部',
     'tips_theme_loading': '正在加载主题',
+    'FrameworkTenantAdminRoleCodeTip':'使用所选角色的权限建立本租户的管理员,账号 admin 密码000000'
 };

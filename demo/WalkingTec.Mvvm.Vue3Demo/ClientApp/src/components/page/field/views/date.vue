@@ -33,7 +33,6 @@ export default class extends mixins(FieldBasics) {
   }
   created(){
   }
- 
 }
 </script>
 <style lang="less">
