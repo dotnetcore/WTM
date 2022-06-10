@@ -15,7 +15,7 @@ import ViewDetails from "./views/details.vue";
 import ViewFilter from "./views/filter.vue";
 import ViewGrid from "./views/grid.vue";
 @Options({
-  name: "WalkingTec.Mvvm.Admin.Api",
+  name: "WalkingTec.Mvvm.Admin.Api,FrameworkTenant",
   components: {
     ViewAction,
     ViewFilter,
@@ -27,7 +27,7 @@ export default class extends Vue {
   /**
    * 后端控制器标识
    */
-   static controller = "WalkingTec.Mvvm.Admin.Api"
+   static controller = "WalkingTec.Mvvm.Admin.Api,FrameworkTenant"
   /**
    * 当前页面控制器
    * 子组件 通过 Inject 均可访问

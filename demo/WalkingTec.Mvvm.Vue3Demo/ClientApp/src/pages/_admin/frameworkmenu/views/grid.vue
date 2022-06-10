@@ -13,7 +13,9 @@ import { EnumLocaleLabel } from "../locales";
 import RowAction from "./action.vue";
 @Options({ components: {} })
 export default class extends Vue {
+
   @Inject() readonly PageController: PageController;
+
   get columnDefs(): (ColDef | ColGroupDef)[] {
     return [
       {
@@ -37,6 +39,7 @@ export default class extends Vue {
       }
     ];
   }
+  
   get gridOptions(): GridOptions {
     return {
       treeData: true,

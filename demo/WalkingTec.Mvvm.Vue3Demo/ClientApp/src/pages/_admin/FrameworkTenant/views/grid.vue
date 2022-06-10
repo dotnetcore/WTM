@@ -10,47 +10,47 @@ import RowAction from "./action.vue";
 @Options({ components: {} })
 export default class extends Vue {
   @Inject() readonly PageController: PageController;
-  columnDefs: (ColDef | ColGroupDef)[] = [
-    {
-      headerName: EnumLocaleLabel.TCode,
-      field: "TCode",
-    },
-    {
-      headerName: EnumLocaleLabel.TName,
-      field: "TName",
-    },
-    {
-      headerName: EnumLocaleLabel.TDb,
-      field: "TDb",
-    },
-    {
-      headerName: EnumLocaleLabel.DbContext,
-      field: "DbContext",
-    },
-     {
-      headerName: EnumLocaleLabel.TDbType,
-      field: "TDbType",
-    },
-     {
-      headerName: EnumLocaleLabel.Enabled,
-      field: "Enabled",
-      cellRenderer: function (row) {
-        return row.value == 'true' ? '启用' : '未启用'
+  get columnDefs(): (ColDef | ColGroupDef)[] {
+      return [
+      {
+        headerName: EnumLocaleLabel.TCode,
+        field: "TCode",
       },
-    },
-    {
-      headerName: EnumLocaleLabel.EnableSub,
-      field: "EnableSub",
-      cellRenderer: function (row) {
-        return row.value == 'true' ? '允许' : '不允许'
+      {
+        headerName: EnumLocaleLabel.TName,
+        field: "TName",
       },
-    },
-    {
-      headerName: EnumLocaleLabel.TDomain,
-      field: "TDomain",
-    }
-  ];
+      {
+        headerName: EnumLocaleLabel.TDb,
+        field: "TDb",
+      },
+      {
+        headerName: EnumLocaleLabel.DbContext,
+        field: "DbContext",
+      },
+       {
+        headerName: EnumLocaleLabel.TDbType,
+        field: "TDbType",
+      },
+      {
+        headerName: EnumLocaleLabel.Enabled,
+        field: "Enabled",
+        cellRenderer: this.$FrameworkComponents.switch
+      },
+      {
+        headerName: EnumLocaleLabel.EnableSub,
+        field: "EnableSub",
+        cellRenderer: this.$FrameworkComponents.switch
+      },
+      {
+        headerName: EnumLocaleLabel.TDomain,
+        field: "TDomain",
+      }
+    ];
+  }
+
   get gridOptions(): GridOptions {
+    console.log(this.$FrameworkComponents)
     return {
       frameworkComponents: {
         RowAction: this.__wtmToRowAction(RowAction, this.PageController)
