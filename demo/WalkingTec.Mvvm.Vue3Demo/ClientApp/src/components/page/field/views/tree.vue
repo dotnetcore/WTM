@@ -10,6 +10,7 @@
         :multiple="multiple ? true : false"
         :tree-checkable = "multiple ? true : false"
         allow-clear
+        :placeholder="_placeholder"
         search-placeholder="Please select"
       />
    </template>

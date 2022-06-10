@@ -28,6 +28,16 @@ class Entity {
         label: EnumLocaleLabel.GroupName,
         rules: [{ required: true }],
     }
+    readonly ParentId: WTM_EntitiesField = {
+        name: ['Entity', 'ParentId'],
+        label: EnumLocaleLabel.ParentId,
+        request: async () => FieldRequest("/api/_FrameworkGroup/GetParentsTree"),
+        valueType: WTM_ValueType.tree,
+    }
+    readonly Manager: WTM_EntitiesField = {
+        name: ['Entity', 'Manager'],
+        label: EnumLocaleLabel.Manager,
+    }
     readonly GroupName_Filter: WTM_EntitiesField = {
         name: 'GroupName',
         label: EnumLocaleLabel.GroupName,

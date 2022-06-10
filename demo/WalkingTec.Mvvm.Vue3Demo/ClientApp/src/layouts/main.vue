@@ -10,9 +10,10 @@
     <template v-slot:rightContentRender>
       <RightContentRender />
     </template>
-    <!-- <template v-slot:headerContentRender>
+    <!-- 标题栏右侧选项 -->
+    <template v-slot:headerContentRender>
       <Tabs />
-    </template>-->
+    </template>
     <!-- 标签页 -->
     <Tabs />
     <!-- 主界面 -->

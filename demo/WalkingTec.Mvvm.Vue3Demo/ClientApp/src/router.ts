@@ -94,6 +94,7 @@ class AppRouter {
       pageName = undefined;
     // 菜单名称
     const menus = $System.UserController.UserMenus.findMenus(to.path);
+    console.log(menus)
     if (menus && menus.Text) {
       pageName = menus.Text
     }

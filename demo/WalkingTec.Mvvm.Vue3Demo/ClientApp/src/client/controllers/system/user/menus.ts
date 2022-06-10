@@ -3,9 +3,9 @@ import lodash from "lodash";
 import queryString from 'query-string';
 import { Subject } from "rxjs";
 import { createApp, createVNode } from 'vue';
-/**
- * 用户菜单
- */
+/*** 
+ 用户菜单
+*/
 export class UserMenus {
     constructor() {
     }

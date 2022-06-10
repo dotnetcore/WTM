@@ -4,14 +4,17 @@
   </template>
   <template v-else>
     <a-date-picker
-      v-model:value="value"
-      :placeholder="_placeholder"
+      v-model="value"
+      style="width:100%;"
+      format="YYYY-MM-DD HH:mm:ss"
+      :placeholder="value ? value : _placeholder"
       :disabled="disabled"
       v-bind="_fieldProps"
     />
   </template>
 </template>
 <script lang="ts">
+import { $System, globalProperties } from "@/client";
 import { Vue, Options, Prop, mixins, Inject } from "vue-property-decorator";
 import { FieldBasics } from "../script";
 @Options({ components: {} })
@@ -22,17 +25,31 @@ export default class extends mixins(FieldBasics) {
   @Inject() readonly formValidate;
   // 实体
   @Inject() readonly PageEntity;
-  // 表单类型
   @Inject({ default: "" }) readonly formType;
   async mounted() {
-    // this.onRequest();
-    if (this.debug) {
-      console.log("");
-      console.group(`Field ~ ${this.entityKey} ${this._name} `);
-      console.log(this);
-      console.groupEnd();
-    }
   }
+  methods: {
+    //Moment,
+  }
+  created(){
+  }
+ 
 }
 </script>
-<style lang="less"></style>
+<style lang="less">
+input::-webkit-input-placeholder{
+  color:rgba(0, 0, 0, 0.85)!important;
+}
+
+input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+  color:rgba(0, 0, 0, 0.85)!important;
+}
+
+input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+  color:rgba(0, 0, 0, 0.85)!important;
+}
+
+input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
+  color:rgba(0, 0, 0, 0.85)!important;
+}
+</style>

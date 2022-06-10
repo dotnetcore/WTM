@@ -1,13 +1,25 @@
 <template>
   <WtmDetails :loading="Entities.loading" :onFinish="onFinish">
-    <template v-show="false">
+    <template >
       <WtmField entityKey="ID" />
     </template>
-    <WtmField entityKey="GroupCode" />
-    <WtmField entityKey="GroupName" />
-    <WtmField entityKey="ParentId" />
-    <WtmField entityKey="Manager" />
-    <WtmField entityKey="GroupRemark" />
+    <a-space>
+      <WtmField entityKey="TCode" />
+      <WtmField entityKey="TName" />
+    </a-space>
+    <a-space>
+      <WtmField entityKey="TDb" />
+      <WtmField entityKey="TDbType" />
+    </a-space>
+    <a-space>
+      <WtmField entityKey="DbContext" />
+      <WtmField entityKey="TDomain" />
+    </a-space>
+    <a-space>
+      <WtmField entityKey="EnableSub" />
+      <WtmField entityKey="Enabled" />
+    </a-space>
+    <WtmField entityKey="AdminRoleCode" />
   </WtmDetails>
 </template>
 <script lang="ts">
