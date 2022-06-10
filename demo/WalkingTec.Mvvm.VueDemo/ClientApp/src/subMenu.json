@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "ParentId": null,
     "Id": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
@@ -40,25 +40,32 @@
     "Id": "77c21b96-f6aa-41b1-bace-ce94c1ce8b61",
     "Text": "dataprivilege",
     "Url": "/dataprivilege"
-  }
-,{
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "2c7dc631-5b41-458b-91f9-7c3cd82bce0f",
+    "Text": "frameworktenant",
+    "Url": "/frameworktenant"
+  },
+  {
     "Id": "c4664415-83c4-4cac-88fe-386932644bcd",
     "ParentId": null,
     "Text": "学生管理",
     "Url": "/student"
-    }
-,{
+  },
+  {
     "Id": "5359c7e7-f25a-4bd7-8f1a-7fda3d5b4f2f",
     "ParentId": null,
     "Text": "学校管理",
     "Url": "/school"
-    }
-,{
+  },
+  {
     "Id": "43640dcf-04f5-4969-8e80-c1bd75ca135f",
     "ParentId": null,
     "Text": "专业管理",
     "Url": "/major"
-    }
+  }
+
 
 
 

@@ -39,6 +39,10 @@ namespace WalkingTec.Mvvm.Demo
                 .ConfigureWebHostDefaults(webBuilder =>
                  {
                      webBuilder.UseStartup<Startup>();
+                     webBuilder.ConfigureKestrel(serverOptions =>
+                     {
+                         serverOptions.Limits.MaxConcurrentConnections = 10;
+                     });
                  });
         }
 

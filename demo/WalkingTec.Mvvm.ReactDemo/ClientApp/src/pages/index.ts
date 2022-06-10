@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 export default {
     actionlog: {
         name: 'MenuKey.Log',
@@ -36,7 +36,13 @@ export default {
         controller: 'WalkingTec.Mvvm.Admin.Api,DataPrivilege',
         component: React.lazy(() => import('./dataprivilege'))
     }
-    
+    , frameworktenant: {
+        name: 'MenuKey.FrameworkTenant',
+        path: '/frameworktenant',
+        controller: 'WalkingTec.Mvvm.Admin.Api,FrameworkTenant',
+        component: React.lazy(() => import('./frameworktenant'))
+    }
+
 , school: {
         name: '学校管理',
         path: '/school',
@@ -64,7 +70,9 @@ export default {
         controller: 'WalkingTec.Mvvm.ReactDemo.Controllers,City',
         component: React.lazy(() => import('./city'))
     }
+
 /**WTM**/
+ 
  
  
  

@@ -69,7 +69,14 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
                                 builder = builder.WithCronSchedule(startAttr.Cron);
                             }
                             else {
-                                builder = builder.StartNow();
+                                if (repeatAttr != null && repeatAttr.DelaySeconds > 0)
+                                {
+                                    builder = builder.StartAt(DateTime.Now.AddSeconds(repeatAttr.DelaySeconds));
+                                }
+                                else
+                                {
+                                    builder = builder.StartNow();
+                                }
                                 if(repeatAttr != null)
                                 {
                                     if(repeatAttr.IsForever == true)

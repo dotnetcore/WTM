@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 页面集合
  */
 export default {
@@ -56,7 +56,14 @@ export default {
     path: '/major',
     controller: 'WalkingTec.Mvvm.VueDemo.Controllers,Major'
     }
+
+, frameworktenant: {
+    name: '租户管理',
+    path: '/frameworktenant',
+    controller: 'WalkingTec.Mvvm.Admin.Api,FrameworkTenant'
+    }
 /**WTM**/
+ 
  
  
  

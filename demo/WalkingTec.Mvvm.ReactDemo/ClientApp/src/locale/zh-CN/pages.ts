@@ -9,6 +9,7 @@ export default {
     'MenuKey.RoleManagement': '角色管理',
     'MenuKey.SystemManagement': '系统管理',
     'MenuKey.UserManagement': '用户管理',
-    'MenuKey.test.step': '三级菜单',
+     ‘MenuKey.FrameworkTenant’: '多租户',
+   'MenuKey.test.step': '三级菜单',
     'MenuKey.test.step2': '四级菜单',
 };
