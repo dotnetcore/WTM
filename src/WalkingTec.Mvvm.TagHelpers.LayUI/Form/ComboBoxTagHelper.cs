@@ -141,12 +141,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     foreach (var item in Field.Model as dynamic)
                     {
-                        selectVal.Add(item.ToString().ToLower());
+                        selectVal.Add(item.ToString());
                     }
                 }
                 else
                 {
-                    selectVal.Add(Field.Model.ToString().ToLower());
+                    selectVal.Add(Field.Model.ToString());
                 }
             }
 
@@ -154,7 +154,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (string.IsNullOrEmpty(DefaultValue) == false)
                 {
-                    selectVal.AddRange(DefaultValue.Split(',').Select(x => x.ToLower()));
+                    selectVal.AddRange(DefaultValue.Split(','));
                 }
             }
 
@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
                     if (checktype.IsEnumOrNullableEnum())
                     {
-                        listItems = checktype.ToListItems(DefaultValue ?? Field.Model);
+                        listItems = checktype.ToListItems(Field.Model?? DefaultValue);
                     }
                     else if (checktype == typeof(bool) || checktype == typeof(bool?))
                     {
@@ -189,7 +189,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             df = test;
                         }
-                        listItems = Utils.GetBoolCombo(BoolComboTypes.Custom, df ?? (bool?)Field.Model, YesText, NoText);
+                        listItems = Utils.GetBoolCombo(BoolComboTypes.Custom, (bool?)Field.Model??df, YesText, NoText);
                     }
                 }
                 else // 添加用户设置的设置源
@@ -206,7 +206,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         }
                         foreach (var item in listItems)
                         {
-                            if (selectVal.Contains(item.Value?.ToString().ToLower()))
+                            if (selectVal.Contains(item.Value?.ToString()))
                             {
                                 item.Selected = true;
                             }
@@ -225,7 +225,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                             {
                                 Text = item?.ToString(),
                                 Value = item?.ToString(),
-                                Selected = selectVal.Contains(item?.ToString().ToLower())
+                                Selected = selectVal.Contains(item?.ToString())
                             });
                         }
                     }
@@ -325,7 +325,7 @@ var {Id} = xmSelect.render({{
                     Checked = s.Selected,
                     Icon = s.Icon
                 };
-                if (values.Contains(s.Value.ToString().ToLower()))
+                if (values.Contains(s.Value.ToString()))
                 {
                     news.Checked = true;
                 }
