@@ -18,11 +18,7 @@ export default class extends Vue {
     {
       headerName: EnumLocaleLabel.GroupName,
       field: "GroupName",
-    },
-    {
-      headerName: EnumLocaleLabel.GroupRemark,
-      field: "GroupRemark",
-    },
+    }
   ];
   get gridOptions(): GridOptions {
     return {
