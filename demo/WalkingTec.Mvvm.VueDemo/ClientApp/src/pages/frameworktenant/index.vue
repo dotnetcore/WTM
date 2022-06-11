@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <card>
         <wtm-search-box :ref="searchRefName" :events="searchEvent" :formOptions="SEARCH_DATA" :needCollapse="true" :isActive.sync="isActive" />
         <!-- 操作按钮 -->
@@ -51,23 +51,22 @@ export default class Index extends Vue {
                 inline: true
             },
             formItem: {
-                "TName":{
-                    label: "租户名称",
+             "TCode":{
+                    label:  this.$t("frameworktenant.TCode"),
+                    rules: [],
+                    type: "input"
+              },
+            "TName":{
+                    label: this.$t("frameworktenant.TName"),
                     rules: [],
                     type: "input"
               },
                 "TDomain":{
-                    label: "租户域名",
+                    label: this.$t("frameworktenant.TDomain"),
                     rules: [],
                     type: "input"
-              },
-                "TenantCode":{
-                    label: "租户",
-                    rules: [],
-                    type: "input"
-                    ,isHidden: !this.isActive
-              },
-
+                     ,isHidden: !this.isActive
+             }
             }
         };
     }

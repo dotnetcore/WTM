@@ -1,6 +1,10 @@
 <template>
     <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
-        <wtm-create-form :ref="refName" :status="status" :options="formOptions" ></wtm-create-form>
+        <wtm-create-form :ref="refName" :status="status" :options="formOptions" >
+            <template #temptext>
+                {{$t("frameworktenant.temptext")}}
+        </template>
+        </wtm-create-form>
     </wtm-dialog-box>
 </template>
 
@@ -20,6 +24,8 @@ export default class Index extends Vue {
 
     @State
     getFrameworkRolesData;
+
+
     // 表单结构
     get formOptions() {
         const filterMethod = (query, item) => {
@@ -34,23 +40,23 @@ export default class Index extends Vue {
                     isHidden: true
                 },
              "Entity.TCode":{
-                 label: "租户编号",
-                 rules: [{ required: true, message: "租户编号"+this.$t("form.notnull"),trigger: "blur" }],
+                 label: this.$t("frameworktenant.TCode"),
+                 rules: [{ required: true, message: this.$t("frameworktenant.TCode")+this.$t("form.notnull"),trigger: "blur" }],
                     type: "input"
             },
              "Entity.TName":{
-                 label: "租户名称",
-                 rules: [{ required: true, message: "租户名称"+this.$t("form.notnull"),trigger: "blur" }],
+                 label: this.$t("frameworktenant.TName"),
+                 rules: [{ required: true, message: this.$t("frameworktenant.TName")+this.$t("form.notnull"),trigger: "blur" }],
                     type: "input"
             },
              "Entity.TDb":{
-                 label: "租户数据库",
+                 label: this.$t("frameworktenant.TDb"),
                 span:24,
                  rules: [],
                     type: "input"
             },
              "Entity.TDbType":{
-                 label: "数据库类型",
+                 label: this.$t("frameworktenant.TDbType"),
                  rules: [],
                     type: "select",
                     children: TDbTypeTypes,
@@ -59,38 +65,40 @@ export default class Index extends Vue {
                     }
             },
              "Entity.DbContext":{
-                 label: "数据库架构",
+                 label: this.$t("frameworktenant.DbContext"),
                  rules: [],
                     type: "input"
             },
              "Entity.TDomain":{
-                 label: "租户域名",
-                 rules: [],
-                    type: "input"
-            },
-             "Entity.TenantCode":{
-                 label: "租户",
-                 rules: [],
+                 label: this.$t("frameworktenant.TDomain"),
+                   span:24,
+              rules: [],
                     type: "input"
             },
              "Entity.EnableSub":{
-                 label: "允许子租户",
-                 rules: [{ required: true, message: "允许子租户"+this.$t("form.notnull"),trigger: "blur" }],
+                 label: this.$t("frameworktenant.EnableSub"),
+                 rules: [{ required: true, message: this.$t("frameworktenant.EnableSub")+this.$t("form.notnull"),trigger: "blur" }],
                     type: "switch"
             },
              "Entity.Enabled":{
-                 label: "启用",
-                 rules: [{ required: true, message: "启用"+this.$t("form.notnull"),trigger: "blur" }],
+                 label: this.$t("frameworktenant.Enabled"),
+                 rules: [{ required: true, message:this.$t("frameworktenant.Enabled")+this.$t("form.notnull"),trigger: "blur" }],
                     type: "switch"
             },
            "AdminRoleCode": {
-                   label: "启用2",
+                   label: this.$t("frameworktenant.AdminRoleCode"),
                     type: "select",
                     children: this.getFrameworkRolesData,
                     props: {
                         clearable: true
                     }
-                }
+                },
+                   "temptext": {
+                    type: "wtmSlot",
+                  span:24,
+                  slotKey: "temptext"
+            },
+
             }
         };
     }

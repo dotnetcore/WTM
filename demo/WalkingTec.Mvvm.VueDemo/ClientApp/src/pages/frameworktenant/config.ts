@@ -1,4 +1,4 @@
-﻿import i18n from "@/lang";
+import i18n from "@/lang";
 
 export const ASSEMBLIES: Array<string> = [
   "add",
@@ -13,40 +13,36 @@ export const TABLE_HEADER: Array<object> = [
 
     {
         key: "TCode",
-        label: "租户编号"
+        label:  i18n.t("frameworktenant.TCode")
     },
     {
         key: "TName",
-        label: "租户名称"
+        label:  i18n.t("frameworktenant.TName")
     },
     {
         key: "TDb",
-        label: "租户数据库"
+        label:  i18n.t("frameworktenant.TDb")
     },
     {
         key: "TDbType",
-        label: "数据库类型"
+        label:  i18n.t("frameworktenant.TDbType")
     },
     {
         key: "DbContext",
-        label: "数据库架构"
+        label:  i18n.t("frameworktenant.DbContext")
     },
     {
         key: "TDomain",
-        label: "租户域名"
-    },
-    {
-        key: "TenantCode",
-        label: "租户"
+        label:  i18n.t("frameworktenant.TDomain")
     },
     {
         key: "EnableSub",
-        label: "允许子租户",
+        label:  i18n.t("frameworktenant.EnableSub"),
         isSlot: true 
     },
     {
         key: "Enabled",
-        label: "启用",
+        label:  i18n.t("frameworktenant.Enabled"),
         isSlot: true 
     },
   { isOperate: true, label: i18n.t(`table.actions`), actions: ["detail", "edit", "deleted"] } //操作列
