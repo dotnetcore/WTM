@@ -65,7 +65,10 @@ export default class extends mixins(FieldBasics) {
     return this._readonly || this.disabled;
   }
   get rowData() {
-    return this.value || [];
+    return this.value.map((item,index)=>{
+      item._rowKey = index+1
+      return item
+    }) || [];
   }
   get columnDefs(): (ColDef | ColGroupDef)[] {
     let columnDefs = this.lodash.concat<ColDef | ColGroupDef>(
@@ -134,6 +137,8 @@ export default class extends mixins(FieldBasics) {
     const rowData = this.lodash.isArray(this.value)
       ? this.lodash.clone(this.value)
       : [];
+
+      console.log(rowData)
     rowData.push({ _rowKey: rowData.length + 1 });
     this.value = rowData;
   }

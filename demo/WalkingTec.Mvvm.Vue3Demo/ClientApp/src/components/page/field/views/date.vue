@@ -4,10 +4,10 @@
   </template>
   <template v-else>
     <a-date-picker
-      v-model="value"
+      v-model:value="value"
       style="width:100%;"
       format="YYYY-MM-DD HH:mm:ss"
-      :placeholder="value ? value : _placeholder"
+      :placeholder="_placeholder"
       :disabled="disabled"
       v-bind="_fieldProps"
     />
@@ -15,7 +15,9 @@
 </template>
 <script lang="ts">
 import { $System, globalProperties } from "@/client";
-import { Vue, Options, Prop, mixins, Inject } from "vue-property-decorator";
+import { Vue, Options, Watch, mixins, Inject } from "vue-property-decorator";
+import dayjs, { Dayjs } from 'dayjs';
+import { defineComponent, ref } from 'vue';
 import { FieldBasics } from "../script";
 @Options({ components: {} })
 export default class extends mixins(FieldBasics) {
@@ -26,12 +28,23 @@ export default class extends mixins(FieldBasics) {
   // 实体
   @Inject() readonly PageEntity;
   @Inject({ default: "" }) readonly formType;
+/*  get value(){
+     return ref<Dayjs>(dayjs('2015-06-06', 'YYYY-MM-DD'))
+  }*/
+  get value() {
+      return this.lodash.get(this.formState, this._name)
+  }
+  set value(value) {
+      this.lodash.set(this.formState, this._name, value);
+  }
   async mounted() {
+    this.onValueChange(this.value, undefined);
   }
-  methods: {
-    //Moment,
-  }
-  created(){
+  @Watch("value")
+  onValueChange(val, old) {
+      if(val){
+        this.value = ref<Dayjs>(dayjs(val, 'YYYY-MM-DD'))
+      }
   }
 }
 </script>
