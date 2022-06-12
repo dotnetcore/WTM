@@ -1,13 +1,5 @@
 export default {
     zh: {
-        // menu: {
-        //     actionlog: "日志管理",
-        //     frameworkgroup: "用户组管理",
-        //     frameworkrole: "角色管理",
-        //     frameworkuser: "用户管理",
-        //     frameworkmenu: "菜单管理",
-        //     dataprivilege: "数据权限"
-        // },
         frameworkmenu: {
             LabelWidth: "100px",
             PageName: "页面名称",
@@ -21,19 +13,12 @@ export default {
             Directory :"目录",
             ShowOnMenu: "菜单显示",
             Public: "公开",
+            TenantAllowed:"租户访问",
             Action: "动作名称",
             pleaseEnterDisplayOrder: "请输入顺序"
         }
     },
     en: {
-        // menu: {
-        //     actionlog: "ActionLog",
-        //     frameworkgroup: "FrameworkGroup",
-        //     frameworkrole: "FrameworkRole",
-        //     frameworkuser: "FrameworkUser",
-        //     frameworkmenu: "FrameworkMenu",
-        //     dataprivilege: "DataPrivilege"
-        // },
         frameworkmenu: {
             LabelWidth: "120px",
             PageName: "Page Name",
@@ -47,7 +32,8 @@ export default {
             Directory :"Directory",
             ShowOnMenu: "ShowOnMenu",
             Public: "Public",
-            Action: "Actions",
+             TenantAllowed:"Tenant allowed",
+           Action: "Actions",
             pleaseEnterDisplayOrder: "please enter display order"
     }
   }

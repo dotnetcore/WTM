@@ -689,6 +689,23 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
+                if (typeof(TreePoco).IsAssignableFrom(typeof(TModel)))
+                {
+                    var cid = Entity.GetID();
+                    var pid = Entity.GetParentID();
+                    if (cid != null && pid != null && cid.ToString() == pid.ToString())
+                    {
+                        var parentid =Entity.GetType().GetSingleProperty("ParentId");
+                        if(parentid != null)
+                        {
+                            try
+                            {
+                                parentid.SetValue(Entity, null);
+                            }
+                            catch { }
+                        }
+                    }
+                }
                 DC.UpdateEntity(Entity);
             }
         }

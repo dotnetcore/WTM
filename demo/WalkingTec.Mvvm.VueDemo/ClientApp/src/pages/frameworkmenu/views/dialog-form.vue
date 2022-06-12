@@ -53,6 +53,7 @@ export default class Index extends Vue {
             FolderOnly: false,
             ShowOnMenu: true,
             IsPublic: false,
+            TenantAllowed:true,
             DisplayOrder: 0,
             IconType: "",
             Icon: ""
@@ -138,6 +139,11 @@ export default class Index extends Vue {
                 "Entity.IsPublic": {
                     type: "switch",
                     label: this.$t("frameworkmenu.Public"),
+                    defaultValue: false
+                },
+                    "Entity.TenantAllowed": {
+                    type: "switch",
+                    label: this.$t("frameworkmenu.TenantAllowed"),
                     defaultValue: false
                 },
                 "Entity.DisplayOrder": {

@@ -7,6 +7,7 @@ export default {
     frameworkuser: "用户管理",
     frameworkmenu: "菜单管理",
     dataprivilege: "数据权限",
+    frameworktenant: "租户管理",
     systemManagement: "系统管理"
   },
   navbar: {

@@ -104,6 +104,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                         }
                         var ms = new MemoryStream();
                         oimage.Mutate(x => x.Resize(width.Value, height.Value));
+                        oimage.SaveAsJpeg(ms);
                         ms.Position = 0;
                         await ms?.CopyToAsync(Response.Body);
                         file.DataStream.Dispose();

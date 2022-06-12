@@ -11,11 +11,23 @@
             <template #Icon="rowData">
                 <wtm-icon :icon="rowData.row.Icon" />
             </template>
+            <template #FolderOnly="rowData">
+                <el-switch :value="rowData.row.FolderOnly === 'true' || rowData.row.FolderOnly === true" disabled />
+            </template>
+            <template #ShowOnMenu="rowData">
+                <el-switch :value="rowData.row.ShowOnMenu === 'true' || rowData.row.ShowOnMenu === true" disabled />
+            </template>
+            <template #IsPublic="rowData">
+                <el-switch :value="rowData.row.IsPublic === 'true' || rowData.row.IsPublic === true" disabled />
+            </template>
+            <template #TenantAllowed="rowData">
+                <el-switch :value="rowData.row.TenantAllowed === 'true' || rowData.row.TenantAllowed === true" disabled />
+            </template>
         </wtm-table-box>
-        <!-- 弹出框 -->
-        <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
-        <!-- 导入 -->
-        <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
+            <!-- 弹出框 -->
+            <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
+            <!-- 导入 -->
+            <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
     </card>
 </template>
 

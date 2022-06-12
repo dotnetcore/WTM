@@ -417,11 +417,11 @@ namespace WalkingTec.Mvvm.Core
                 }
                 if (HttpContext.User.Identity.IsAuthenticated)
                 {
-                    exist = BaseUserQuery.IgnoreQueryFilters().Any(x => x.ITCode.ToLower() == username.ToLower() && x.TenantCode == tenant && x.IsValid);
+                    exist = BaseUserQuery.IgnoreQueryFilters().Any(x => x.ITCode.ToLower() == username.ToLower() && x.TenantCode == tenant && x.IsValid==true);
                 }
                 else
                 {
-                    exist = BaseUserQuery.IgnoreQueryFilters().Any(x => x.ITCode.ToLower() == username && x.Password == Utils.GetMD5String(password) && x.TenantCode == tenant && x.IsValid);
+                    exist = BaseUserQuery.IgnoreQueryFilters().Any(x => x.ITCode.ToLower() == username && x.Password == Utils.GetMD5String(password) && x.TenantCode == tenant && x.IsValid==true);
                 }
                 if (exist == false)
                 {

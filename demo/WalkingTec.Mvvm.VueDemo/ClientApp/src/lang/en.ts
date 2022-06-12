@@ -7,6 +7,7 @@ export default {
     frameworkuser: "User management",
     frameworkmenu: "Menu management",
     dataprivilege: "Data privileges",
+    frameworktenant: "Tenant",
     systemManagement: "System"
   },
   navbar: {

@@ -3,6 +3,7 @@ export default {
     'pages.outerChain': 'Outer chain',
     'pages.static': 'Static',
     'MenuKey.DataPrivilege': 'Data Privilege',
+    ‘MenuKey.FrameworkTenant’: 'Tenant',
     'MenuKey.Log': 'Log',
     'MenuKey.GroupManagement': 'Group Management',
     'MenuKey.MenuMangement': 'Menu Mangement',

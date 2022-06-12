@@ -293,6 +293,7 @@ namespace WalkingTec.Mvvm.Core
                 IsInside = true,
                 FolderOnly = true,
                 IsPublic = false,
+                TenantAllowed = true,
                 DisplayOrder = 1
             };
             return menu;

@@ -32,17 +32,22 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
         public int Repeat { get; set; }
         public bool IsForever { get; set; }
         public int IntervalInSeconds { get; set; }
+
+        public int DelaySeconds { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="interval">间隔时间，单位秒</param>
         /// <param name="repeat">重复的次数</param>
         /// <param name="isForever">是否一直重复</param>
-        public QuartzRepeatAttribute(int interval,int repeat, bool isForever)
+        /// <param name="delaySeconds">延迟多少秒开始第一次运行</param>
+        public QuartzRepeatAttribute(int interval,int repeat, bool isForever,int delaySeconds=10)
         {
             this.Repeat = repeat;
             this.IsForever = isForever;
             this.IntervalInSeconds = interval;
+            this.DelaySeconds = delaySeconds;
         }
     }
 

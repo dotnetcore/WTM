@@ -8,7 +8,9 @@ exports.default = {
             frameworkrole: "角色管理",
             frameworkuser: "用户管理",
             frameworkmenu: "菜单管理",
-            dataprivilege: "数据权限"
+            dataprivilege: "数据权限",
+            frameworktenant: "租户管理"
+
         }
     },
     en: {
@@ -18,7 +20,8 @@ exports.default = {
             frameworkrole: "Roles",
             frameworkuser: "Users",
             frameworkmenu: "Menus",
-            dataprivilege: "Permissions"
+            dataprivilege: "Permissions",
+            frameworktenant: "Tenant"
         }
     }
 };
