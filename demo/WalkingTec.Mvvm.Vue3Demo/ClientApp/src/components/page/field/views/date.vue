@@ -49,19 +49,5 @@ export default class extends mixins(FieldBasics) {
 }
 </script>
 <style lang="less">
-input::-webkit-input-placeholder{
-  color:rgba(0, 0, 0, 0.85)!important;
-}
 
-input::-moz-placeholder{   /* Mozilla Firefox 19+ */
-  color:rgba(0, 0, 0, 0.85)!important;
-}
-
-input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
-  color:rgba(0, 0, 0, 0.85)!important;
-}
-
-input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
-  color:rgba(0, 0, 0, 0.85)!important;
-}
 </style>
