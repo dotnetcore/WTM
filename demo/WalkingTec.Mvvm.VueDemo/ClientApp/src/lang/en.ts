@@ -23,13 +23,16 @@ export default {
     full: "full screen",
     language: "language",
     set: "Set up",
-    password: 'Password',
-    oldPassword: 'Old Password',
-    newPassword: 'New Password',
-    confirmNewPassword: 'Confirm New Password',
+    password: "Password",
+    oldPassword: "Old Password",
+    newPassword: "New Password",
+    confirmNewPassword: "Confirm New Password",
     pleaseEnterOldPassword: "Please Enter Old Password",
     pleaseEnterNewPassword: "Please Enter New Password",
-    pleaseEnterConfirmNewPassword: "Please Enter Confirm New Password"
+    pleaseEnterConfirmNewPassword: "Please Enter Confirm New Password",
+    tenant: "Tenant",
+    setTenantSuccess: "Set Tenant Success",
+    mainHost: "Main Host"
   },
   login: {
     title: "Login Form",
@@ -38,6 +41,7 @@ export default {
     password: "Password",
     pleaseEnterUsername: "Please Enter User Name",
     pleaseEnterPassword: "Please Enter Password",
+    pleaseEnterTenant: "Please Enter Tenant",
     any: "any",
     thirdparty: "Or connect with",
     thirdpartyTips:
@@ -174,18 +178,18 @@ export default {
   form: {
     pleaseEnter: "Please enter ",
     upload: "Upload",
-      clickUpload: "Click to upload",
-      confirmDeletion: "Are you sure to delete?",
-      prompt: "Info",
-      ImportSucceeded: "Import succeeded",
-      successfullyDeleted: "Delete succeeded",
-      failedToDelete: "Delete failed",
-      ExportSucceeded: "Export succeeded",
-      SuccessfullyModified: "Edit succeeded",
+    clickUpload: "Click to upload",
+    confirmDeletion: "Are you sure to delete?",
+    prompt: "Info",
+    ImportSucceeded: "Import succeeded",
+    successfullyDeleted: "Delete succeeded",
+    failedToDelete: "Delete failed",
+    ExportSucceeded: "Export succeeded",
+    SuccessfullyModified: "Edit succeeded",
     all: "All",
     selected: "Selected",
     yes: "Yes",
-      no: "No",
-      notnull: " can not be null"
+    no: "No",
+    notnull: " can not be null"
   }
 };

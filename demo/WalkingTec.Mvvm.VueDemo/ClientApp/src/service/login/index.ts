@@ -5,17 +5,24 @@ import { contentType } from "@/config/enum";
  */
 // 登陆
 const login = {
-    url: config.headerApi + "/_Account/Login",
-    method: "post",
-    contentType: contentType.form
+  url: config.headerApi + "/_Account/Login",
+  method: "post",
+  contentType: contentType.form
 };
 // 发送验证码
 const verificationCode = {
-    url: "/verification_code/send",
-    method: "post"
+  url: "/verification_code/send",
+  method: "post"
+};
+
+// 验证登陆
+const testLogin = {
+  url: "/api/_Account/Login",
+  method: "get"
 };
 
 export default {
-    login,
-    verificationCode
+  login,
+  verificationCode,
+  testLogin
 };

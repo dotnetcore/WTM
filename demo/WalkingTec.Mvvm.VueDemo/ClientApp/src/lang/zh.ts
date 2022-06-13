@@ -23,13 +23,16 @@ export default {
     full: "全屏",
     language: "语言",
     set: "设置",
-    password: '修改密码',
-    oldPassword: '旧密码',
-    newPassword: '新密码',
-    confirmNewPassword: '确认密码',
+    password: "修改密码",
+    oldPassword: "旧密码",
+    newPassword: "新密码",
+    confirmNewPassword: "确认密码",
     pleaseEnterOldPassword: "请输入旧密码",
     pleaseEnterNewPassword: "请输入新密码",
-    pleaseEnterConfirmNewPassword: "请输入确认密码"
+    pleaseEnterConfirmNewPassword: "请输入确认密码",
+    tenant: "租户号",
+    setTenantSuccess: "设置租户号成功",
+    mainHost: "主站"
   },
   login: {
     title: "系统登录",
@@ -38,6 +41,7 @@ export default {
     password: "密码",
     pleaseEnterUsername: "请输入账号",
     pleaseEnterPassword: "请输入密码",
+    pleaseEnterTenant: "请输入租户号",
     any: "随便填",
     thirdparty: "第三方登录",
     thirdpartyTips: "本地不能模拟，请结合自己业务进行模拟！！！"
@@ -97,7 +101,7 @@ export default {
     confirm: "确 定",
     detail: "详情",
     custom: "自定义列",
-    download:"下载",
+    download: "下载",
     startdate: "开始时间",
     enddate: "结束时间"
   },
@@ -176,10 +180,10 @@ export default {
     failedToDelete: "删除失败",
     ExportSucceeded: "导出成功",
     SuccessfullyModified: "修改成功",
-      all: "全部",
-      selected: "已选",
-      yes: "是",
-      no: "否",
-      notnull:"不能为空"
+    all: "全部",
+    selected: "已选",
+    yes: "是",
+    no: "否",
+    notnull: "不能为空"
   }
 };

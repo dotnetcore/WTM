@@ -8,6 +8,10 @@ const config = {
    */
   tokenKey: "token",
   /**
+   * token 名称
+   */
+  tenantCodeKey: "TENANT_CODE",
+  /**
    * global cookies
    */
   globalKey: "global",
