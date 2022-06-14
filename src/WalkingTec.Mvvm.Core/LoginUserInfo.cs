@@ -81,6 +81,7 @@ namespace WalkingTec.Mvvm.Core
                     var groupIDs = userInfo.UserGroups.Select(x => x.GroupCode).ToList();
                     List<SimpleGroup> groups = allgroups.Where(x => groupIDs.Contains(x.GroupCode)).ToList();
                     List<SimpleRole>roles = allroles.Where(x => roleIDs.Contains(x.RoleCode)).ToList();
+                    this.UserId = userInfo.user.ID.ToString();
                     this.ITCode = userInfo.user.ITCode;
                     if (string.IsNullOrEmpty(this.Name))
                     {

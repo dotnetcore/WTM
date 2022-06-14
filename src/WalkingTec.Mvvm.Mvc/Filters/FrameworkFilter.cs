@@ -63,12 +63,15 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
                     try
                     {
-                        var f = context.HttpContext.Request.Form;
-                        foreach (var key in f.Keys)
+                        if (context.HttpContext.Request.HasFormContentType)
                         {
-                            if (model.FC.Keys.Contains(key) == false)
+                            var f = context.HttpContext.Request.Form;
+                            foreach (var key in f.Keys)
                             {
-                                model.FC.Add(key, f[key]);
+                                if (model.FC.Keys.Contains(key) == false)
+                                {
+                                    model.FC.Add(key, f[key]);
+                                }
                             }
                         }
                         if (context.HttpContext.Request.QueryString != QueryString.Empty)

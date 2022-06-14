@@ -7,11 +7,19 @@
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import { Action } from "vuex-class";
+import { Action, State } from "vuex-class";
 import mixinForm from "@/vue-custom/mixin/form-mixin";
 
 @Component({ mixins: [mixinForm()] })
 export default class Index extends Vue {
+
+        @Action
+    getFrameworkGroups;
+
+    @State
+    getFrameworkGroupsData;
+
+
     get formOptions() {
         return {
             formProps: {
@@ -40,12 +48,24 @@ export default class Index extends Vue {
                         trigger: "blur"
                     }
                 },
-                "Entity.GroupRemark": {
+                 "Entity.ParentId": {
+                    type: "select",
+                    label: this.$t("frameworkgroup.ParentId"),
+                    children: this.getFrameworkGroupsData
+                },
+                "Entity.Manager": {
+                    type: "input",
+                    label: this.$t("frameworkgroup.Manager")
+                },
+               "Entity.GroupRemark": {
                     type: "input",
                     label: this.$t("frameworkgroup.GroupRemark")
                 }
             }
         };
+    }
+      created() {
+        this.getFrameworkGroups();
     }
 }
 </script>

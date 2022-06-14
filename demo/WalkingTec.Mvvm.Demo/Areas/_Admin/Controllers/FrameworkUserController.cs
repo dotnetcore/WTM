@@ -339,7 +339,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [AllRights]
         public ActionResult GetUserById(string keywords)
         {
-            WalkingTec.Mvvm.Admin.Api.FrameworkUserController userapi = new Mvvm.Admin.Api.FrameworkUserController();
+            WalkingTec.Mvvm.Admin.Api.AccountController userapi = new WalkingTec.Mvvm.Admin.Api.AccountController();
             userapi.Wtm = Wtm;
             var rv = userapi.GetUserById(keywords) as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
@@ -369,7 +369,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [AllRights]
         public IActionResult GetFrameworkRoles()
         {
-            WalkingTec.Mvvm.Admin.Api.FrameworkUserController userapi = new Mvvm.Admin.Api.FrameworkUserController();
+            WalkingTec.Mvvm.Admin.Api.AccountController userapi = new WalkingTec.Mvvm.Admin.Api.AccountController();
             userapi.Wtm = Wtm;
             var rv = userapi.GetFrameworkRoles() as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
@@ -387,7 +387,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [AllRights]
         public IActionResult GetFrameworkGroups()
         {
-            WalkingTec.Mvvm.Admin.Api.FrameworkUserController userapi = new Mvvm.Admin.Api.FrameworkUserController();
+            WalkingTec.Mvvm.Admin.Api.AccountController userapi = new WalkingTec.Mvvm.Admin.Api.AccountController();
             userapi.Wtm = Wtm;
             var rv = userapi.GetFrameworkGroupsTree() as OkObjectResult;
             List<TreeSelectListItem> users = new List<TreeSelectListItem>();

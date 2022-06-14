@@ -50,6 +50,11 @@ const imported = {
   method: "post"
 };
 
+const getFrameworkGroups = {
+  url: reqPath + "GetParents",
+  method: "get"
+};
+
 export default {
   search,
   add,
@@ -59,5 +64,6 @@ export default {
   exportExcel,
   exportExcelByIds,
   getExcelTemplate,
+    getFrameworkGroups,
   imported
 };

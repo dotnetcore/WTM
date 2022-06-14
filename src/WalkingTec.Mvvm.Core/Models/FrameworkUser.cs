@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Core
         public string Name { get; set; }
 
         [Display(Name = "_Admin.IsValid")]
-        public bool IsValid { get; set; }
+        public bool IsValid { get; set; } = true;
 
         [Display(Name = "_Admin.Photo")]
         public Guid? PhotoId { get; set; }
