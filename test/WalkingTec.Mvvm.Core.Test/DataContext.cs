@@ -26,6 +26,9 @@ namespace WalkingTec.Mvvm.Core.Test
         public DbSet<StudentMajorTop> StudentMajorTops { get; set; }
 
         public DbSet<GoodsSpecification> GoodsSpecifications { get; set; }
-        public DbSet<GoodsCatalog> GoodsCatalogs { get; set; }
+        public DbSet<SchoolNoFK> SchoolNoFKs { get; set; }
+        public DbSet<MajorNoFK> MajorNoFKs { get; set; }
+        public DbSet<StudentNoFK> StudentNoFKs { get; set; }
+        public DbSet<StudentMajorNoFK> StudentMajorNoFKs { get; set; }
     }
 }
