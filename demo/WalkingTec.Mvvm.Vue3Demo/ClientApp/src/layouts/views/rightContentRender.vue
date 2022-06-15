@@ -11,6 +11,24 @@
     <!-- 用户菜单 -->
     <a-dropdown>
       <div>
+        <UserOutlined />
+        <a-divider type="vertical" style="margin: 0 3px;" />
+        <span>{{MainHost}}</span>
+      </div>
+      <template #overlay>
+        <a-menu>
+          <a-menu-item  @click="changeGetTenantsList('MainHostMenu')">
+            {{MainHostMenu}}
+          </a-menu-item>
+          <a-menu-item :key="item" v-for="(item,index) in getTenantsList" @click="changeGetTenantsList(item)">
+            {{item.Text}}
+          </a-menu-item>
+        </a-menu>
+      </template>
+    </a-dropdown>
+    <!-- 用户菜单 -->
+    <a-dropdown>
+      <div>
         <a-avatar size="small" :src="getAvatar(System.UserController.UserInfo)" />
         <a-divider type="vertical" style="margin: 0 3px;" />
         <span v-text="System.UserController.UserInfo.Name"></span>
@@ -60,7 +78,7 @@ import { Vue, Options, Inject } from "vue-property-decorator";
 export default class extends Vue {
   /**
    * 从 Aapp 中 注入 系统管理
-   */
+  */
   @Inject({ from: SystemController.Symbol }) System: SystemController;
   get languages() {
     const languageIcons = {
@@ -85,6 +103,11 @@ export default class extends Vue {
   getAvatar(Info) {
     return Info.PhotoId ? this.System.FilesController.getDownloadUrl(Info.PhotoId) : require('@/assets/img/user.png')
   }
+  MainHost = ''
+  get MainHostMenu(){
+    return this.$t(this.$locales.login_tenant_main)
+  }
+  getTenantsList = []
   changeLanguage(event) {
     this.$i18n.locale = event.key;
     localStorage.setItem('locale', event.key);
@@ -109,8 +132,23 @@ export default class extends Vue {
         break;
     }
   }
+  changeGetTenantsList(e){
+    this.MainHost = e === 'MainHostMenu' ? this.$t(this.$locales.login_tenant_main) : e.Text
+    this.System.TenantsController.SetTenant(e === 'MainHostMenu' ? null : e.Value)
+    location.reload()
+  }
   created() { }
-  mounted() { }
+  mounted() { 
+    this.getTenantsListFun(this.System.UserController.UserInfo['TenantCode'] || null)
+  }
+  async getTenantsListFun(data){
+    let that = this
+    const res: any = await this.System.TenantsController.TenantsList(data)
+    this.getTenantsList = res
+    this.MainHost = this.System.UserController.UserInfo['CurrentTenant'] ? 
+        this.lodash.filter(res, ['Value', this.System.UserController.UserInfo['CurrentTenant']])[0].Text :
+        this.$t(this.$locales.login_tenant_main)
+  }
 }
 </script>
 <style lang="less">

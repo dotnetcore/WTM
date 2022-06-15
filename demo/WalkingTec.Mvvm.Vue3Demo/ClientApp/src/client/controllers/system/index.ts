@@ -9,6 +9,7 @@ import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
 import { UserController } from './user';
 import { FilesController } from './files';
+import { TenantsController } from './tenants';
 @BindAll()
 export class SystemController {
     /** SystemController 唯一标识  */
@@ -24,10 +25,16 @@ export class SystemController {
      */
     FilesController = new FilesController();
     /**
+     * 租户管理控制器
+     * @memberof SystemController
+     */
+    TenantsController = new TenantsController();
+    /**
      * 初始化
      */
     async onInit() {
         this.FilesController.onInit()
+        this.TenantsController.onInit()
         await this.UserController.onInit()
     }
 }

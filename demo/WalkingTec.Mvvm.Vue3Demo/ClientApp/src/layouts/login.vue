@@ -10,7 +10,7 @@
                     @finish="onFinish">
                 <a-divider>$title$</a-divider>
                 <a-form-item>
-                    <a-input v-model:value="formState.account" placeholder="Username">
+                    <a-input v-model:value="formState.account" :placeholder="$t($locales.login_username)">
                         <template #prefix>
                             <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
                         </template>
@@ -19,7 +19,16 @@
                 <a-form-item>
                     <a-input v-model:value="formState.password"
                              type="password"
-                             placeholder="Password">
+                             :placeholder="$t($locales.login_password)">
+                        <template #prefix>
+                            <LockOutlined style="color: rgba(0, 0, 0, 0.25)" />
+                        </template>
+                    </a-input>
+                </a-form-item>
+                <a-form-item>
+                    <a-input v-model:value="formState.tenant"
+                             type="tenant"
+                             :placeholder="$t($locales.login_tenant)">
                         <template #prefix>
                             <LockOutlined style="color: rgba(0, 0, 0, 0.25)" />
                         </template>
@@ -50,6 +59,7 @@
 <script lang="ts">
     import { SystemController } from "@/client";
     import { Inject, Options, Vue } from "vue-property-decorator";
+    import {$locales, $i18n} from "@/client";
     @Options({ components: {} })
     export default class extends Vue {
         /**
