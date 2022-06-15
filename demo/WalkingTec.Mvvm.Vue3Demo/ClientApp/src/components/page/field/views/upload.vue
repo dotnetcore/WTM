@@ -73,7 +73,6 @@
         onChange(event) {
             this.fileListCheck = 1
             this.fileList = event.fileList
-            console.log(event.fileList)
             if (event.file.status === "removed") {
                 if(this.max !== 1){
                      let ID = this.lodash.get(event.file, "Id") || this.lodash.get(event.file, "response.Id")

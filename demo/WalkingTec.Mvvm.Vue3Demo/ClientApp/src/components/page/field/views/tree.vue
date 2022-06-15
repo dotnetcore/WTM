@@ -61,7 +61,7 @@
         }
         @Watch("value")
         onValueChange(val, old) {
-            console.log(val)
+            
         }
 
         getText(treeData,value) {
