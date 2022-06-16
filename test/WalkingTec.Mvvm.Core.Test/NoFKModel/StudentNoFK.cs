@@ -15,6 +15,7 @@ namespace WalkingTec.Mvvm.Core.Test
         [Display(Name = "账号")]
         [Required(ErrorMessage = "{0}是必填项")]
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [CanNotEdit]
         public string LoginName { get; set; }
 
         [Display(Name = "密码")]

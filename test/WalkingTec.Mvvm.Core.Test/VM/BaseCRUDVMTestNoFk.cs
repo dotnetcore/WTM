@@ -220,15 +220,14 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public void One2ManyTableDelete()
         {
             One2ManyDoAdd();
-
+            _schoolvm.SetInclude(x => x.Majors);
+            Guid id;
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var id = context.Set<SchoolNoFK>().AsNoTracking().First().ID;
-                _schoolvm.DC = context;
-                _schoolvm.Entity = context.Set<SchoolNoFK>().Include(x=>x.Majors).Where(x => x.ID == id).FirstOrDefault();
-                _schoolvm.DoDelete();
+                 id = context.Set<SchoolNoFK>().AsNoTracking().First().ID;
             }
-
+            _schoolvm.SetEntityById(id);
+            _schoolvm.DoDelete();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 Assert.AreEqual(0, context.Set<SchoolNoFK>().Count());
@@ -240,15 +239,14 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public void One2ManySubDelete()
         {
             One2ManyDoAdd();
-
+            _majorvm.SetInclude(x => x.School);
+            Guid id;
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var id = context.Set<MajorNoFK>().AsNoTracking().First().ID;
-                var m = context.Set<MajorNoFK>().Include(x => x.School).Where(x => x.ID == id).FirstOrDefault();
-                _majorvm.DC = context;
-                _majorvm.Entity = m;
-                _majorvm.DoDelete();
+                 id = context.Set<MajorNoFK>().AsNoTracking().First().ID;
             }
+            _majorvm.SetEntityById(id);
+            _majorvm.DoDelete();
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
@@ -264,13 +262,14 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         {
             Many2ManyDoAdd();
 
+            _studentvm.SetInclude(x => x.StudentMajor, x => x.StudentMajor[0].Major);
+            Guid id;
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var id = context.Set<StudentNoFK>().AsNoTracking().First().ID;
-                _studentvm.DC = context;
-                _studentvm.Entity = context.Set<StudentNoFK>().Include(x => x.StudentMajor).Where(x => x.ID == id).FirstOrDefault();
-                _studentvm.DoRealDelete();
+                 id = context.Set<StudentNoFK>().AsNoTracking().First().ID;
             }
+            _studentvm.SetEntityById(id);
+            _studentvm.DoRealDelete();
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
@@ -292,13 +291,13 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _studentvm.Entity = s;
             _studentvm.DoAdd();
 
+            _studentvm.SetInclude(x => x.StudentMajor, x => x.StudentMajor[0].Major);
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 Assert.AreEqual(1, context.Set<StudentNoFK>().Count());
-                _studentvm.DC = context;
-                _studentvm.Entity = context.Set<StudentNoFK>().Include(x => x.StudentMajor).Where(x => x.ID == s.ID).FirstOrDefault();
-                _studentvm.DoRealDelete();
             }
+            _studentvm.SetEntityById(s.ID);
+            _studentvm.DoRealDelete();
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
@@ -421,9 +420,9 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var id = context.Set<SchoolNoFK>().Select(x=>x.ID).First();
+                var old = context.Set<SchoolNoFK>().AsNoTracking().First();
                 var mid = context.Set<MajorNoFK>().Select(x => x.ID).First();
-                SchoolNoFK s = new SchoolNoFK { ID = id };
+                SchoolNoFK s = new SchoolNoFK { ID=old.ID, SchoolCode=old.SchoolCode };
                 s.Majors = new List<MajorNoFK>
                 {
                     new MajorNoFK
@@ -444,8 +443,8 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 var id = context.Set<SchoolNoFK>().Select(x => x.SchoolCode).First();
                 Assert.AreEqual(1, context.Set<SchoolNoFK>().Count());
                 Assert.AreEqual(2, context.Set<MajorNoFK>().Where(x=>x.SchoolId == id).Count());
-                var rv1 = context.Set<MajorNoFK>().Where(x=>x.MajorCode == "111update").SingleOrDefault();
-                Assert.AreEqual("111update", rv1.MajorCode);
+                var rv1 = context.Set<MajorNoFK>().Where(x=>x.MajorCode == "111").SingleOrDefault();
+                Assert.AreEqual("111", rv1.MajorCode);
                 Assert.AreEqual(null, rv1.MajorName);
                 Assert.AreEqual(null, rv1.MajorType);
                 var rv2 = context.Set<MajorNoFK>().Where(x => x.MajorCode == "333").SingleOrDefault();
@@ -473,9 +472,9 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var id = context.Set<SchoolNoFK>().Select(x => x.ID).First();
-                var mid = context.Set<Major>().Select(x => x.ID).First();
-                SchoolNoFK s = new SchoolNoFK { ID = id };
+                var old = context.Set<SchoolNoFK>().AsNoTracking().First();
+                var mid = context.Set<MajorNoFK>().Select(x => x.ID).First();
+                SchoolNoFK s = new SchoolNoFK { ID = old.ID, SchoolCode = old.SchoolCode };
                 s.Majors = new List<MajorNoFK>
                 {
                     new MajorNoFK
@@ -500,8 +499,8 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 var id = context.Set<SchoolNoFK>().Select(x => x.SchoolCode).First();
                 Assert.AreEqual(1, context.Set<SchoolNoFK>().Count());
                 Assert.AreEqual(2, context.Set<MajorNoFK>().Where(x => x.SchoolId == id).Count());
-                var rv1 = context.Set<MajorNoFK>().Where(x => x.MajorCode == "111update").SingleOrDefault();
-                Assert.AreEqual("111update", rv1.MajorCode);
+                var rv1 = context.Set<MajorNoFK>().Where(x => x.MajorCode == "111").SingleOrDefault();
+                Assert.AreEqual("111", rv1.MajorCode);
                 Assert.AreEqual("major1", rv1.MajorName);
                 Assert.AreEqual( MajorTypeEnum.Optional, rv1.MajorType);
                 var rv2 = context.Set<MajorNoFK>().Where(x => x.MajorCode == "333").SingleOrDefault();
@@ -528,7 +527,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                var id = context.Set<SchoolNoFK>().Select(x => x.ID).First();
+                var old = context.Set<SchoolNoFK>().AsNoTracking().First();
                 var mid = context.Set<MajorNoFK>().Select(x => x.ID).First();
 
                 MajorNoFK m = new MajorNoFK { ID = mid };
@@ -536,7 +535,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 m.MajorName = "mbbb";
                 m.School = new SchoolNoFK
                 {
-                    ID = id,
+                    ID = old.ID,
                     SchoolName = "aaa",
                     SchoolCode = "bbb",
                     Remark = "ccc"
@@ -561,11 +560,9 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 var id = context.Set<SchoolNoFK>().Select(x => x.SchoolCode).First();
                 Assert.AreEqual(1, context.Set<SchoolNoFK>().Count());
                 Assert.AreEqual(2, context.Set<MajorNoFK>().Where(x => x.SchoolId == id).Count());
-                var rv1 = context.Set<MajorNoFK>().Where(x => x.MajorCode == "maaa").SingleOrDefault();
-                Assert.AreEqual("maaa", rv1.MajorCode);
+                var rv1 = context.Set<MajorNoFK>().Where(x => x.MajorName == "mbbb").SingleOrDefault();
                 Assert.AreEqual("mbbb", rv1.MajorName);
-                var rv2 = context.Set<SchoolNoFK>().Where(x => x.SchoolCode == "bbb").SingleOrDefault();
-                Assert.AreEqual("bbb", rv2.SchoolCode);
+                var rv2 = context.Set<SchoolNoFK>().Where(x => x.SchoolCode == "000").SingleOrDefault();
                 Assert.AreEqual("aaa", rv2.SchoolName);
 
             }
@@ -715,7 +712,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public void GetTest()
         {
             One2ManyDoAdd();
-            _majorvm.SetInclude(x => x.School, x => x.StudentMajors[0].StudentId, x => x.MajorType, x => x.School.SchoolCode);
+            _majorvm.SetInclude(x => x.School, x => x.StudentMajors[0].Student, x => x.MajorType, x => x.School.SchoolCode);
             Guid id;
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {

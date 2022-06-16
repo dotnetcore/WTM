@@ -168,17 +168,17 @@ namespace WalkingTec.Mvvm.Core
             var ModelType = typeof(TModel);
             //建立基础查询
             var query = DC.Set<TModel>().AsQueryable();
-            List<List<(MemberInfo mi, Type t)>> includeInfo = new List<List<(MemberInfo mi, Type t)>>();
+            List<IncludeInfo> includeInfo = new List<IncludeInfo>();
             //循环添加其他设定的Include
             if (_toInclude != null)
             {
                 foreach (var item in _toInclude)
                 {
-                    List<(MemberInfo mi, Type t)> exps = new List<(MemberInfo mi, Type t)>();
+                    List<IncludeInfo> exps = new List<IncludeInfo>();
                     Expression current = item.Body;
                     while (current != null && current.NodeType != ExpressionType.Parameter)
                     {
-                        if(current.NodeType == ExpressionType.MemberAccess)
+                        if (current.NodeType == ExpressionType.MemberAccess)
                         {
                             MemberExpression me = current as MemberExpression;
                             Type mt = me.Member.GetMemberType();
@@ -189,42 +189,54 @@ namespace WalkingTec.Mvvm.Core
                             }
                             if (typeof(TopBasePoco).IsAssignableFrom(testTypt))
                             {
-                                exps.Insert(0, (me.Member, mt));
+                                IncludeInfo newinfo = new IncludeInfo
+                                {
+                                    mi = me.Member,
+                                    t = mt
+                                };
+                                var top = exps.FirstOrDefault();
+                                if (top != null)
+                                {
+                                    newinfo.Next = top;
+                                    top.Pre = newinfo;
+                                }
+                                exps.Insert(0, newinfo);
                             }
                             current = me.Expression;
                         }
-                        else if(current.NodeType == ExpressionType.Call)
+                        else if (current.NodeType == ExpressionType.Call)
                         {
                             MethodCallExpression mc = current as MethodCallExpression;
                             current = mc.Object;
                         }
-                        else if(current.NodeType == ExpressionType.Convert)
+                        else if (current.NodeType == ExpressionType.Convert)
                         {
-                           UnaryExpression ue = current as UnaryExpression;
+                            UnaryExpression ue = current as UnaryExpression;
                             current = ue.Operand;
                         }
                     }
-                    if(exps.Count == 0)
+                    if (exps.Count == 0)
                     {
                         continue;
                     }
-                    includeInfo.Add(exps);
+                    includeInfo.Add(exps[0]);
                     Expression includeExpression = query.Expression;
                     ParameterExpression para = Expression.Parameter(ModelType, "x");
-                    MemberExpression newme = Expression.MakeMemberAccess(para,exps[0].mi);
+                    MemberExpression newme = Expression.MakeMemberAccess(para, exps[0].mi);
 
-                    if (exps[0].mi.GetCustomAttribute<NotMappedAttribute>()!= null){
+                    if (exps[0].IsNotMapped)
+                    {
                         continue;
                     }
                     includeExpression = Expression.Call(
                              null,
-                             IncludeMethodInfo.MakeGenericMethod(ModelType,exps[0].t),
+                             IncludeMethodInfo.MakeGenericMethod(ModelType, exps[0].t),
                              includeExpression,
                              Expression.Lambda(newme, new ParameterExpression[] { para }));
 
-                    for(int i=1;i< exps.Count; i++)
+                    for (int i = 1; i < exps.Count; i++)
                     {
-                        if (exps[i].mi.GetCustomAttribute<NotMappedAttribute>() != null)
+                        if (exps[i].IsNotMapped)
                         {
                             break; ;
                         }
@@ -234,7 +246,7 @@ namespace WalkingTec.Mvvm.Core
                             stype = stype.GetGenericArguments()[0];
                         }
                         para = Expression.Parameter(stype, "s");
-                        newme =  Expression.MakeMemberAccess(para,exps[i].mi);
+                        newme = Expression.MakeMemberAccess(para, exps[i].mi);
                         if (exps[i - 1].t.IsList())
                         {
                             includeExpression = Expression.Call(
@@ -255,13 +267,38 @@ namespace WalkingTec.Mvvm.Core
                     query = query.Provider.CreateQuery<TModel>(includeExpression);
                 }
             }
-            //if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
-            //{
-            //    var mod = new IsValidModifier();
-            //    var newExp = mod.Modify(query.Expression);
-            //    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-            //}
 
+            List<IncludeInfo> softincludes = includeInfo.Where(x => x.HasNotMapped == true).ToList();
+            if (softincludes.Count > 0)
+            {
+                ParameterExpression pe = Expression.Parameter(ModelType);
+                NewExpression newItem = Expression.New(ModelType);
+
+                var pp = ModelType.GetAllProperties();
+                List<MemberBinding> bindExps = new List<MemberBinding>();
+                foreach (var pro in pp)
+                {
+                    if (pro.GetCustomAttribute<NotMappedAttribute>() == null)
+                    {
+                        var right = Expression.MakeMemberAccess(pe, pro);
+                        MemberBinding bind = Expression.Bind(pro, right);
+                        bindExps.Add(bind);
+                    }
+                    else
+                    {
+                        var soft = softincludes.Where(x => x.mi.Name == pro.Name).FirstOrDefault();
+                        if (soft != null)
+                        {
+                            var right = soft.SoftSelect(pe, DC);
+                            MemberBinding bind = Expression.Bind(pro, right);
+                            bindExps.Add(bind);
+                        }
+                    }
+                }
+                MemberInitExpression init = Expression.MemberInit(newItem, bindExps);
+                var lambda = Expression.Lambda<Func<TModel, TModel>>(init, pe);
+                query = query.Select(lambda);
+            }
             //获取数据
             rv = query.CheckID(Id).AsNoTracking().SingleOrDefault();
             if (rv == null)
@@ -282,80 +319,6 @@ namespace WalkingTec.Mvvm.Core
                     rv.SetPropertyValue(f.Name, file);
                 }
             }
-            //处理字段关联的include
-            foreach (var item in includeInfo)
-            {
-                object obj = rv;
-                foreach (var exp in item)
-                {
-                    if(exp.mi.GetCustomAttribute<NotMappedAttribute>() == null)
-                    {
-                        break;
-                    }
-                    Type stype = exp.t;
-                    if (stype.IsList())
-                    {
-                        stype = stype.GetGenericArguments()[0];
-                    }
-                    if (obj.GetType().IsList() == false)
-                    {
-                        var existvalue = obj.GetPropertyValue(exp.mi.Name);
-                        if (existvalue != null)
-                        {
-                            obj = existvalue;
-                            continue;
-                        }
-                    }
-                    var set = DC.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(stype);
-                    var q = set.Invoke(DC, null) as IQueryable<TopBasePoco>;
-                    if (exp.t.IsList() == false)
-                    {
-                        var softkey = stype.GetCustomAttribute<SoftKeyAttribute>();
-                        if (softkey == null)
-                        {
-                            break;
-                        }
-                        ParameterExpression pe = Expression.Parameter(stype);
-                        Expression member = Expression.MakeMemberAccess(pe, stype.GetSingleProperty(softkey.PropertyName));
-                        Expression condition = Expression.Equal(member, Expression.Constant(obj.GetPropertyValue(exp.mi.Name + "Id")));
-                        Expression whereCallExpression = Expression.Call(
-                             typeof(Queryable),
-                             "Where",
-                             new Type[] { stype },
-                             q.Expression,
-                             Expression.Lambda(condition, new ParameterExpression[] { pe }));
-                        var result =q.Provider.CreateQuery<TopBasePoco>(whereCallExpression).AsNoTracking().SingleOrDefault();
-                        obj.SetPropertyValue(exp.mi.Name, result);
-                        obj = result;
-                    }
-                    else
-                    {
-                        string fk = exp.mi.GetCustomAttribute<SoftFKAttribute>()?.PropertyName;
-                        if (string.IsNullOrEmpty(fk))
-                        {
-                            break ;
-                        }
-                        var softkey = obj.GetType().GetCustomAttribute<SoftKeyAttribute>();
-                        if (softkey == null)
-                        {
-                            break;
-                        }
-                        ParameterExpression pe = Expression.Parameter(stype);
-                        Expression member = Expression.MakeMemberAccess(pe, stype.GetSingleProperty(fk));
-                        Expression condition = Expression.Equal(member, Expression.Constant(obj.GetPropertyValue(softkey.PropertyName)));
-                        Expression whereCallExpression = Expression.Call(
-                             typeof(Queryable),
-                             "Where",
-                             new Type[] { stype },
-                             q.Expression,
-                             Expression.Lambda(condition, new ParameterExpression[] { pe }));
-                        var result = q.Provider.CreateQuery<TopBasePoco>(whereCallExpression).AsNoTracking().ToList();
-                        obj.SetPropertyValue(exp.mi.Name, result);
-                        obj = result;
-                    }
-                }
-            }
-
             return rv;
         }
 
@@ -452,7 +415,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 if (pro.GetCustomAttribute<NotMappedAttribute>() != null)
                                 {
-                                     fkname = pro.GetCustomAttribute<SoftFKAttribute>()?.PropertyName;
+                                    fkname = pro.GetCustomAttribute<SoftFKAttribute>()?.PropertyName;
                                     softkey = typeof(TModel).GetCustomAttribute<SoftKeyAttribute>().PropertyName;
                                 }
                             }
@@ -473,22 +436,22 @@ namespace WalkingTec.Mvvm.Core
                                         {
                                             try
                                             {
-                                                itempro.SetValue(newitem,  string.IsNullOrEmpty(softkey) ? Entity.GetID() : Entity.GetPropertyValue(softkey));
-                                                found = true;
+                                                itempro.SetValue(newitem, string.IsNullOrEmpty(softkey) ? Entity.GetID() : Entity.GetPropertyValue(softkey));
                                             }
                                             catch { }
+                                            found = true;
                                         }
                                     }
                                 }
-                                if(string.IsNullOrEmpty(softkey) == false)
+                                if (string.IsNullOrEmpty(softkey) == false)
                                 {
-                                    DC.AddEntity(newitem);                                    
+                                    DC.AddEntity(newitem);
                                 }
                             }
                             //如果没有找到相应的外建字段，则可能是多对多的关系，或者做了特殊的设定，这种情况框架无法支持，直接退出本次循环
                             if (found == false)
                             {
-                                    continue;
+                                continue;
                             }
                             //循环页面传过来的子表数据,自动设定添加日期和添加人
                             foreach (var newitem in list)
@@ -577,15 +540,15 @@ namespace WalkingTec.Mvvm.Core
                 IBasePoco ent = Entity as IBasePoco;
                 //if (ent.UpdateTime == null)
                 //{
-                    ent.UpdateTime = DateTime.Now;
+                ent.UpdateTime = DateTime.Now;
                 //}
                 //if (string.IsNullOrEmpty(ent.UpdateBy))
                 //{
-                    ent.UpdateBy = LoginUserInfo?.ITCode;
+                ent.UpdateBy = LoginUserInfo?.ITCode;
                 //}
             }
             var pros = typeof(TModel).GetAllProperties();
-            pros = pros.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(NotMappedAttribute)) == false).ToList();
+            //pros = pros.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(NotMappedAttribute)) == false).ToList();
             if (typeof(TModel) != typeof(FileAttachment))
             {
                 foreach (var pro in pros)
@@ -608,13 +571,20 @@ namespace WalkingTec.Mvvm.Core
                     if (ftype.IsSubclassOf(typeof(TopBasePoco)))
                     {
                         //界面传过来的子表数据
-
+                        //获取外键字段名称
+                        string fkname = DC.GetFKName<TModel>(pro.Name);
+                        string softkey = "";
+                        if (string.IsNullOrEmpty(fkname))
+                        {
+                            if (pro.GetCustomAttribute<NotMappedAttribute>() != null)
+                            {
+                                fkname = pro.GetCustomAttribute<SoftFKAttribute>()?.PropertyName;
+                                softkey = typeof(TModel).GetCustomAttribute<SoftKeyAttribute>().PropertyName;
+                            }
+                        }
                         if (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list && list.Count() > 0)
                         {
-                            //获取外键字段名称
-                            string fkname = DC.GetFKName<TModel>(pro.Name);
                             var itemPros = ftype.GetAllProperties();
-
                             bool found = false;
                             foreach (var newitem in list)
                             {
@@ -644,7 +614,7 @@ namespace WalkingTec.Mvvm.Core
                                         {
                                             try
                                             {
-                                                itempro.SetValue(newitem, Entity.GetID());
+                                                itempro.SetValue(newitem, string.IsNullOrEmpty(softkey) ? Entity.GetID() : Entity.GetPropertyValue(softkey));
                                             }
                                             catch { }
                                             found = true;
@@ -658,29 +628,31 @@ namespace WalkingTec.Mvvm.Core
                                 continue;
                             }
 
-
-                            TModel _entity = null;
-                            //打开新的数据库联接,获取数据库中的主表和子表数据
-                            //using (var ndc = DC.CreateNew())
-                            //{
-                            _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
-                            //}
-                            if (_entity == null)
-                            {
-                                MSD.AddModelError(" ", Localizer["Sys.EditFailed"]);
-                                return;
-                            }
+                            var set = DC.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(ftype);
+                            var dataquery = set.Invoke(DC, null) as IQueryable<TopBasePoco>;
+                            ParameterExpression pe = Expression.Parameter(ftype);
+                            Expression member = Expression.MakeMemberAccess(pe, ftype.GetSingleProperty(fkname));
+                            member = Expression.Call(member, "ToString", new Type[] { });
+                            Expression right = Expression.Constant(string.IsNullOrEmpty(softkey) ? Entity.GetID().ToString() : Entity.GetPropertyValue(softkey).ToString());
+                            Expression condition = Expression.Equal(member, right);
+                            var exp = Expression.Call(
+                                  typeof(Queryable),
+                                  "Where",
+                                  new Type[] { ftype },
+                                  dataquery.Expression,
+                                  Expression.Lambda(condition, new ParameterExpression[] { pe }));
+                            var q = dataquery.Provider.CreateQuery(exp) as IQueryable<TopBasePoco>;
+                            IEnumerable<TopBasePoco> data = q.AsNoTracking().ToList();
                             //比较子表原数据和新数据的区别
                             IEnumerable<TopBasePoco> toadd = null;
                             IEnumerable<TopBasePoco> toremove = null;
-                            IEnumerable<TopBasePoco> data = _entity.GetType().GetSingleProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
                             Utils.CheckDifference(data, list, out toremove, out toadd);
                             //设定子表应该更新的字段
                             List<string> setnames = new List<string>();
                             foreach (var field in FC.Keys)
                             {
                                 var f = field.ToLower();
-                                
+
                                 if (f.StartsWith($"{this.GetParentStr().ToLower()}entity." + pro.Name.ToLower() + "[0]."))
                                 {
                                     string name = f.Replace($"{this.GetParentStr().ToLower()}entity." + pro.Name.ToLower() + "[0].", "");
@@ -773,41 +745,48 @@ namespace WalkingTec.Mvvm.Core
                         else if ((pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
                         {
                             var itemPros = ftype.GetAllProperties();
-                            var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
-                            if (_entity != null)
+                            var set = DC.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(ftype);
+                            var dataquery = set.Invoke(DC, null) as IQueryable<TopBasePoco>;
+                            ParameterExpression pe = Expression.Parameter(ftype);
+                            Expression member = Expression.MakeMemberAccess(pe, ftype.GetSingleProperty(fkname));
+                            member = Expression.Call(member, "ToString", new Type[] { });
+                            Expression right = Expression.Constant(string.IsNullOrEmpty(softkey) ? Entity.GetID().ToString() : Entity.GetPropertyValue(softkey).ToString());
+                            Expression condition = Expression.Equal(member, right);
+                            var exp = Expression.Call(
+                                  typeof(Queryable),
+                                  "Where",
+                                  new Type[] { ftype },
+                                  dataquery.Expression,
+                                  Expression.Lambda(condition, new ParameterExpression[] { pe }));
+                            var q = dataquery.Provider.CreateQuery(exp) as IQueryable<TopBasePoco>;
+                            IEnumerable<TopBasePoco> removeData = q.AsNoTracking().ToList();
+
+                            foreach (var item in removeData)
                             {
-                                IEnumerable<TopBasePoco> removeData = _entity.GetType().GetSingleProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
                                 //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
-                                if (removeData is IEnumerable<IPersistPoco> removePersistPocoData)
+                                if (typeof(IPersistPoco).IsAssignableFrom(ftype))
                                 {
-                                    foreach (var item in removePersistPocoData)
+                                    (item as IPersistPoco).IsValid = false;
+                                    if (typeof(IBasePoco).IsAssignableFrom(ftype))
                                     {
-                                        (item as IPersistPoco).IsValid = false;
-                                        if (typeof(IBasePoco).IsAssignableFrom(item.GetType()))
-                                        {
-                                            (item as IBasePoco).UpdateTime = DateTime.Now;
-                                            (item as IBasePoco).UpdateBy = LoginUserInfo?.ITCode;
-                                        }
-                                        dynamic i = item;
-                                        DC.UpdateEntity(i);
+                                        (item as IBasePoco).UpdateTime = DateTime.Now;
+                                        (item as IBasePoco).UpdateBy = LoginUserInfo?.ITCode;
                                     }
+                                    dynamic i = item;
+                                    DC.UpdateEntity(i);
                                 }
                                 else
                                 {
-                                    foreach (var item in removeData)
+                                    foreach (var itempro in itemPros)
                                     {
-                                        foreach (var itempro in itemPros)
+                                        if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
                                         {
-                                            if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
-                                            {
-                                                itempro.SetValue(item, null);
-                                            }
+                                            itempro.SetValue(item, null);
                                         }
-                                        dynamic i = item;
-                                        DC.DeleteEntity(i);
                                     }
+                                    dynamic i = item;
+                                    DC.DeleteEntity(i);
                                 }
-
                             }
                         }
                     }
@@ -822,7 +801,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     var cid = Entity.GetID();
                     var pid = Entity.GetParentID();
-                    if(cid != null && pid != null &&  cid.ToString()== pid.ToString())
+                    if (cid != null && pid != null && cid.ToString() == pid.ToString())
                     {
                         var pkey = FC.Keys.Where(x => x.ToLower() == "entity.parentid").FirstOrDefault();
                         if (string.IsNullOrEmpty(pkey) == false)
@@ -872,8 +851,8 @@ namespace WalkingTec.Mvvm.Core
                     var pid = Entity.GetParentID();
                     if (cid != null && pid != null && cid.ToString() == pid.ToString())
                     {
-                        var parentid =Entity.GetType().GetSingleProperty("ParentId");
-                        if(parentid != null)
+                        var parentid = Entity.GetType().GetSingleProperty("ParentId");
+                        if (parentid != null)
                         {
                             try
                             {
@@ -1212,7 +1191,7 @@ namespace WalkingTec.Mvvm.Core
                         //将字段名保存，为后面生成错误信息作准备
                         props.AddRange(field.GetProperties());
                     }
-                    if (typeof(ITenant).IsAssignableFrom(typeof(TModel)) && props.Any(x => x.Name.ToLower() == "tenantcode")==false && Wtm?.ConfigInfo.EnableTenant==true && group.UseTenant == true)
+                    if (typeof(ITenant).IsAssignableFrom(typeof(TModel)) && props.Any(x => x.Name.ToLower() == "tenantcode") == false && Wtm?.ConfigInfo.EnableTenant == true && group.UseTenant == true)
                     {
                         ITenant ent = Entity as ITenant;
                         ent.TenantCode = LoginUserInfo.CurrentTenant;
@@ -1291,5 +1270,195 @@ namespace WalkingTec.Mvvm.Core
             return new[] { "Entity." + pi.Name };
         }
 
+    }
+
+    class IncludeInfo
+    {
+        public MemberInfo mi { get; set; }
+        public Type t { get; set; }
+        public IncludeInfo Next { get; set; }
+        public IncludeInfo Pre { get; set; }
+
+        private bool? _isnotmapped;
+        public bool IsNotMapped
+        {
+            get
+            {
+                if (_isnotmapped == null)
+                {
+                    _isnotmapped = mi.GetCustomAttribute<NotMappedAttribute>() != null;
+                }
+                return _isnotmapped.Value;
+            }
+        }
+
+        public bool HasNotMapped
+        {
+            get
+            {
+                var cur = this;
+                while (cur != null)
+                {
+                    if (cur.IsNotMapped == true)
+                    {
+                        return true;
+                    }
+                    cur = cur.Next;
+                }
+                return false;
+            }
+        }
+
+        private string _softkey;
+        public string SoftKey
+        {
+            get
+            {
+                if (_softkey == null)
+                {
+                    _softkey = InnerType.GetCustomAttribute<SoftKeyAttribute>()?.PropertyName ?? "";
+
+                }
+                return _softkey;
+            }
+        }
+
+        private string _softfk;
+        public string SoftFK
+        {
+            get
+            {
+                if (_softfk == null)
+                {
+                    _softfk = mi.GetCustomAttribute<SoftFKAttribute>()?.PropertyName ?? "";
+
+                }
+                return _softfk;
+            }
+        }
+
+        private Type? _innerType;
+        public Type InnerType
+        {
+            get
+            {
+                if (_innerType == null)
+                {
+                    Type stype = this.t;
+                    if (stype.IsList())
+                    {
+                        stype = stype.GetGenericArguments()[0];
+                    }
+                    _innerType = stype;
+                }
+                return _innerType;
+            }
+        }
+
+        public Expression SoftSelect(ParameterExpression parentpe, IDataContext DC)
+        {
+            Expression rv = Expression.Constant(null);
+
+            if (this.IsNotMapped == false)
+            {
+                rv = Expression.MakeMemberAccess(parentpe, parentpe.Type.GetSingleProperty(this.mi.Name));
+            }
+            else
+            {
+                if (this.t.IsList() == false)
+                {
+                    if (string.IsNullOrEmpty(this.SoftKey))
+                    {
+                        return rv;
+                    }
+                    var set = DC.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(InnerType);
+                    rv = Expression.Call(Expression.Constant(DC), set);
+                    ParameterExpression pe = Expression.Parameter(InnerType);
+                    Expression member = Expression.MakeMemberAccess(pe, InnerType.GetSingleProperty(this.SoftKey));
+                    Expression right = Expression.MakeMemberAccess(parentpe, parentpe.Type.GetSingleProperty(this.mi.Name + "Id"));
+                    Expression condition = Expression.Equal(member, right);
+                    rv = Expression.Call(
+                         typeof(Queryable),
+                         "Where",
+                         new Type[] { InnerType },
+                         rv,
+                         Expression.Lambda(condition, new ParameterExpression[] { pe }));
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(this.SoftFK))
+                    {
+                        return rv;
+                    }
+                    var parentkey = parentpe.Type.GetCustomAttribute<SoftKeyAttribute>()?.PropertyName;
+                    if (string.IsNullOrEmpty(parentkey))
+                    {
+                        return rv;
+                    }
+                    var set = DC.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(InnerType);
+                    rv = Expression.Call(Expression.Constant(DC), set);
+                    ParameterExpression pe = Expression.Parameter(InnerType);
+                    Expression member = Expression.MakeMemberAccess(pe, InnerType.GetSingleProperty(this.SoftFK));
+                    Expression right = Expression.MakeMemberAccess(parentpe, parentpe.Type.GetSingleProperty(parentkey));
+                    Expression condition = Expression.Equal(member, right);
+                    rv = Expression.Call(
+                         typeof(Queryable),
+                         "Where",
+                         new Type[] { InnerType },
+                         rv,
+                         Expression.Lambda(condition, new ParameterExpression[] { pe }));
+                }
+            }
+            if (this.Next != null)
+            {
+                ParameterExpression pe = Expression.Parameter(this.InnerType);
+                NewExpression newItem = Expression.New(this.InnerType);
+                var pros = this.InnerType.GetAllProperties();
+                List<MemberBinding> bindExps = new List<MemberBinding>();
+                foreach (var pro in pros)
+                {
+                    if (pro.GetCustomAttribute<NotMappedAttribute>() == null)
+                    {
+                        var right = Expression.MakeMemberAccess(pe, pro);
+                        MemberBinding bind = Expression.Bind(pro, right);
+                        bindExps.Add(bind);
+                    }
+                    else if (this.Next.mi.Name == pro.Name)
+                    {
+                        var right = this.Next.SoftSelect(pe, DC);
+                        MemberBinding bind = Expression.Bind(pro, right);
+                        bindExps.Add(bind);
+                    }
+                }
+
+                MemberInitExpression init = Expression.MemberInit(newItem, bindExps);
+                var lambda = Expression.Lambda(init, pe);
+
+                rv = Expression.Call(
+               typeof(Queryable),
+               "Select",
+               new Type[] { InnerType, InnerType },
+               rv,
+               lambda);
+            }
+
+            if (this.t.IsList() == false)
+            {
+                rv = Expression.Call(
+                   typeof(Enumerable),
+                   "FirstOrDefault",
+                   new Type[] { InnerType },
+                   rv);
+            }
+            else
+            {
+                rv = Expression.Call(
+              typeof(Enumerable),
+              "ToList",
+              new Type[] { InnerType },
+              rv);
+            }
+            return rv;
+        }
     }
 }

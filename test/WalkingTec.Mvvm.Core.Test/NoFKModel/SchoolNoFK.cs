@@ -15,6 +15,7 @@ namespace WalkingTec.Mvvm.Core.Test
         [Display(Name = "学校编码")]
         [Required(ErrorMessage = "{0}是必填项")]
         [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
+        [CanNotEdit]
         public string SchoolCode { get; set; }
 
         [Display(Name = "学校名称")]
