@@ -69,16 +69,17 @@ namespace WalkingTec.Mvvm.Core
                                             .Select(x => new
                                             {
                                                 user = x,
-                                                UserRoles = DC.Set<FrameworkUserRole>().Where(y => y.UserCode == x.ITCode).ToList(),
-                                                UserGroups = DC.Set<FrameworkUserGroup>().Where(y => y.UserCode == x.ITCode).ToList(),
+                                                UserRoles = DC.Set<FrameworkUserRole>().Where(y => y.UserCode == x.ITCode).Select(x=>x.RoleCode).ToList(),
+                                                UserGroups = DC.Set<FrameworkUserGroup>().Where(y => y.UserCode == x.ITCode).Select(x=>x.GroupCode).ToList(),
                                             })
+                                            .AsSingleQuery()
                                             .FirstOrDefaultAsync();
 
                 if (userInfo != null)
                 {
                     // 初始化用户信息
-                    var roleIDs = userInfo.UserRoles.Select(x => x.RoleCode).ToList();
-                    var groupIDs = userInfo.UserGroups.Select(x => x.GroupCode).ToList();
+                    var roleIDs = userInfo.UserRoles.ToList();
+                    var groupIDs = userInfo.UserGroups.ToList();
                     List<SimpleGroup> groups = allgroups.Where(x => groupIDs.Contains(x.GroupCode)).ToList();
                     List<SimpleRole>roles = allroles.Where(x => roleIDs.Contains(x.RoleCode)).ToList();
                     this.UserId = userInfo.user.ID.ToString();

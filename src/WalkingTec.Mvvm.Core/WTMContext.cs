@@ -183,7 +183,12 @@ namespace WalkingTec.Mvvm.Core
                     var remoteToken = HttpContext?.Request.Query["_remotetoken"][0];
                     if (ConfigInfo.HasMainHost == false)
                     {
-                        var token = new JwtSecurityToken(remoteToken);
+                        JwtSecurityToken token = new JwtSecurityToken();
+                        try
+                        {
+                            token = new JwtSecurityToken(remoteToken);
+                        }
+                        catch { }
                         var userIdStr = token.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault();
                         var tenant = token.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault();
                         string usercode = userIdStr;
@@ -411,6 +416,11 @@ namespace WalkingTec.Mvvm.Core
                 bool exist = false;
                 username = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault() ?? username;
                 var ct = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
+                //如果找不到指定的tenant，说明租户不存在，直接返回null
+                if(ct == null && string.IsNullOrEmpty(tenant) == false)
+                {
+                    return null;
+                }
                 if (ct != null)
                 {
                     _dc = ct.CreateDC(this);
@@ -701,7 +711,7 @@ params string[] groupcode)
             //租户用户不能访问标记[HostOnly]的方法
             if (_configInfo.EnableTenant == true)
             {
-                if (LoginUserInfo.TenantCode != null)
+                if (LoginUserInfo?.TenantCode != null)
                 {
                     var hostonly = _globaInfo.AllMainTenantOnlyUrls;
                     foreach (var au in hostonly)
@@ -716,8 +726,8 @@ params string[] groupcode)
             //循环所有不限制访问的url，如果含有当前判断的url，则认为可以访问
             var publicActions = _globaInfo.AllAccessUrls;
             foreach (var au in publicActions)
-            {
-                if (new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))
+            {                
+                if (au != "/" && new Regex("^" + au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))
                 {
                     return true;
                 }
