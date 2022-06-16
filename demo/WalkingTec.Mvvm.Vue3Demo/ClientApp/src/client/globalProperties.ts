@@ -67,7 +67,7 @@ export function FieldRequest(request: string | AjaxRequest) {
         return lodash.map(data, item => {
             return {
                 key: lodash.get(item, 'Value'),
-                label: lodash.get(item, 'Text'),
+                label: lodash.get(item, 'title'),
                 value: lodash.get(item, 'Value'),
                 ...item
             }

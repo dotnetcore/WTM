@@ -30,7 +30,7 @@ export class TenantsController {
     }
 
     async SetTenant(tenantcode){
-        const res: any = await this.$ajax.request(lodash.assign({body:{ tenant:tenantcode }}, this.options.SetTenant)).toPromise()
+        const res: any = await this.$ajax.request(lodash.assign({body:{ tenant:tenantcode || null }}, this.options.SetTenant)).toPromise()
     }
 }
 

@@ -5,6 +5,8 @@ interface UserInfo {
     ITCode: string
     Name: string
     PhotoId: string
+    TenantCode: string 
+    CurrentTenant: string
     Roles: Array<{
         ID: string
         RoleCode: string

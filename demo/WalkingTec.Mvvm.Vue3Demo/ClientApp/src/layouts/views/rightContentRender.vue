@@ -8,12 +8,13 @@
         </template>
       </a-button>
     </div> -->
-    <!-- 用户菜单 -->
-    <a-dropdown>
+    <!-- 租户 -->
+    <a-dropdown v-if="getTenantsList.length > 0">
       <div>
         <UserOutlined />
         <a-divider type="vertical" style="margin: 0 3px;" />
-        <span>{{MainHost}}</span>
+        <span v-if="MainHost">{{MainHost}}</span>
+        <span v-else>{{MainHostMenu}}</span>
       </div>
       <template #overlay>
         <a-menu>
@@ -128,14 +129,15 @@ export default class extends Vue {
         this.$router.replace({ query: this.lodash.assign({},this.$route.query,{ changePassword: '' }) })
         break;
       case this.$locales.action_user_logout:
+        window.location.reload()
         this.System.UserController.onLogOut()
         break;
     }
   }
   changeGetTenantsList(e){
-    this.MainHost = e === 'MainHostMenu' ? this.$t(this.$locales.login_tenant_main) : e.Text
     this.System.TenantsController.SetTenant(e === 'MainHostMenu' ? null : e.Value)
-    location.reload()
+    localStorage.setItem('MainHostMenu',e === 'MainHostMenu' ? this.$t(this.$locales.login_tenant_main) : e.Text)
+    this.System.UserController.onCheckLogin()
   }
   created() { }
   mounted() { 
@@ -145,9 +147,7 @@ export default class extends Vue {
     let that = this
     const res: any = await this.System.TenantsController.TenantsList(data)
     this.getTenantsList = res
-    this.MainHost = this.System.UserController.UserInfo['CurrentTenant'] ? 
-        this.lodash.filter(res, ['Value', this.System.UserController.UserInfo['CurrentTenant']])[0].Text :
-        this.$t(this.$locales.login_tenant_main)
+    this.MainHost = localStorage.getItem('MainHostMenu') ? localStorage.getItem('MainHostMenu') : this.lodash.filter(res, ['Value', this.System.UserController.UserInfo['CurrentTenant']])[0].Text
   }
 }
 </script>
