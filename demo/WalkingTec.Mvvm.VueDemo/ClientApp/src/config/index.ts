@@ -5,6 +5,7 @@ const config = {
   headerApi: "/api",
   /**
    * token 名称
+   * @TODO vuex 持久化
    */
   tokenKey: "token",
   /**

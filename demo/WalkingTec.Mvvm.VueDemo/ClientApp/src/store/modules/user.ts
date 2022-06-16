@@ -21,18 +21,20 @@ export interface IUserState {
   info: any;
   currentTenant: string;
   tenantCode: string;
+  isMainHost: boolean;
 }
 
 @Module({ dynamic: true, store, name: "user" })
 class User extends VuexModule implements IUserState {
   public token = getToken() || "";
-  public name = "";
+  public name: string = "";
   public roles: Array<any> = [];
   public actionList: string[] = [];
   public menus: Array<any> = [];
   public info = {};
-  public currentTenant = "";
-  public tenantCode = "";
+  public currentTenant: string = "";
+  public tenantCode: string = "";
+  public isMainHost: boolean = false;
 
   @Mutation
   private SET_TOKEN(token: string) {
@@ -74,6 +76,11 @@ class User extends VuexModule implements IUserState {
     this.tenantCode = tenantCode;
   }
 
+  @Mutation
+  private SET_IS_MAIN_HOST(isMainHost: boolean) {
+    this.isMainHost = isMainHost;
+  }
+
   @Action
   public async GetUserInfo() {
     const data = await _request({
@@ -100,6 +107,7 @@ class User extends VuexModule implements IUserState {
     this.SET_INFO({ Id, ITCode, Name, PhotoId });
     this.SET_CURRENT_TENANT(CurrentTenant);
     this.SET_TENANT_CODE(TenantCode);
+    this.SET_IS_MAIN_HOST(Attributes.IsMainHost);
   }
 
   @Action

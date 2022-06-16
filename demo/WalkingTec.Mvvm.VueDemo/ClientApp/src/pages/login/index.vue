@@ -53,7 +53,7 @@ export default class Login extends Vue {
   @Action
   login;
   @Action
-  testLogin;
+  loginRemote;
 
   formData = {
     account: config.development ? "admin" : "",
@@ -72,7 +72,7 @@ export default class Login extends Vue {
     const remotetoken = searchParams.get("_remotetoken");
     this.redirect = searchParams.get("redirect");
     if (remotetoken) {
-      this.checkLogin({ remotetoken, redirect: this.redirect });
+      this.checkLogin({ _remotetoken: remotetoken, redirect: this.redirect });
     }
   }
 
@@ -90,7 +90,7 @@ export default class Login extends Vue {
   }
 
   checkLogin(data) {
-    this["testLogin"](data).then(res => {
+    this["loginRemote"](data).then(res => {
       setCookie(config.tokenKey, res.Id);
       location.href = `/index.html#/?redirect=${this.redirect}`;
     });

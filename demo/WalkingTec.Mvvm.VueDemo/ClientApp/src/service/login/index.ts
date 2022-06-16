@@ -16,13 +16,13 @@ const verificationCode = {
 };
 
 // 验证登陆
-const testLogin = {
-  url: "/api/_Account/Login",
+const loginRemote = {
+  url: "/api/_Account/LoginRemote",
   method: "get"
 };
 
 export default {
   login,
   verificationCode,
-  testLogin
+  loginRemote
 };
