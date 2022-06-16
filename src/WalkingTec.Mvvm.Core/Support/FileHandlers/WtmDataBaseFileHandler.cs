@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             file.UploadTime = DateTime.Now;
             file.SaveMode = _modeName;
             file.ExtraInfo = extra;
-            file.TenantCode = _wtm.LoginUserInfo.CurrentTenant;
+            file.TenantCode = _wtm.LoginUserInfo?.CurrentTenant;
             var ext = string.Empty;
             if (string.IsNullOrEmpty(fileName) == false)
             {

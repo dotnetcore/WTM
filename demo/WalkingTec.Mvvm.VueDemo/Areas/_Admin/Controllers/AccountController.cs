@@ -76,6 +76,19 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Content(JsonSerializer.Serialize(token), "application/json");
         }
 
+        [Public]
+        [HttpGet("[action]")]
+        public async Task<IActionResult> LoginRemote([FromQuery] string _remotetoken)
+        {
+            if (Wtm?.LoginUserInfo != null)
+            {
+                var principal = Wtm.LoginUserInfo.CreatePrincipal();
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
+            }
+            return CheckUserInfo();
+        }
+
+
         [AllRights]
         [HttpGet("[action]")]
         public IActionResult SetTenant([FromQuery] string tenant)
