@@ -1,5 +1,6 @@
 // WTM默认页面 Wtm buidin page
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json;
@@ -166,6 +167,22 @@ namespace WalkingTec.Mvvm.Admin.Api
                 }
                 forapi.DataPrivileges = null;
                 forapi.FunctionPrivileges = null;
+                if (forapi.Attributes == null)
+                {
+                    forapi.Attributes = new Dictionary<string, object>();
+                }
+                if (forapi.Attributes.ContainsKey("IsMainHost"))
+                {
+                    forapi.Attributes.Remove("IsMainHost");
+                }
+                if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(Wtm.LoginUserInfo.TenantCode) == true)
+                {
+                    forapi.Attributes.Add("IsMainHost", true);
+                }
+                else
+                {
+                    forapi.Attributes.Add("IsMainHost", false);
+                }
                 return Ok(forapi);
             }
         }

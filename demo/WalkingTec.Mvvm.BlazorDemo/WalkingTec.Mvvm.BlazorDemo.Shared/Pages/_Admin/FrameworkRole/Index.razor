@@ -23,36 +23,36 @@
 
     </TableColumns>
     <TableToolbarTemplate>
-        @if (IsAccessable("/api/_FrameworkRole/Add") &&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
+        @if (IsAccessable("/api/_FrameworkRole/Add") && UserInfo.Attributes["IsMainHost"].ToString() == "False")
         {
             <TableToolbarButton TItem="FrameworkRole" Color="Color.Primary" Icon="fa fa-fw fa-plus" Text="@WtmBlazor.Localizer["Sys.Create"]" OnClickCallback="OnCreateClick" />
         }
-        @if (IsAccessable("/api/_FrameworkRole/BatchDelete")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
+        @if (IsAccessable("/api/_FrameworkRole/BatchDelete")&& UserInfo.Attributes["IsMainHost"].ToString() == "False")
         {
             <TableToolbarPopconfirmButton TItem="FrameworkRole" Color="Color.Primary"
                                           Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }
-        @if (IsAccessable("/api/_FrameworkRole/Import")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
+        @if (IsAccessable("/api/_FrameworkRole/Import")&& UserInfo.Attributes["IsMainHost"].ToString() == "False")
         {
             <TableToolbarButton TItem="FrameworkRole" Color="Color.Primary" Icon="fa fa-fw fa-upload" Text="@WtmBlazor.Localizer["Sys.Import"]" OnClickCallback="@OnImportClick" />
         }
-        @if (IsAccessable("/api/_FrameworkRole/ExportExcel")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
+        @if (IsAccessable("/api/_FrameworkRole/ExportExcel")&&  UserInfo.Attributes["IsMainHost"].ToString() == "False")
         {
             <TableToolbarButton TItem="FrameworkRole" Color="Color.Primary" Icon="fa fa-fw fa-download" Text="@WtmBlazor.Localizer["Sys.Export"]" OnClickCallback="@OnExportClick" IsAsync="true" />
         }
     </TableToolbarTemplate>
     <RowButtonTemplate>
-            @if (IsAccessable("/api/_FrameworkRole/Edit")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
+            @if (IsAccessable("/api/_FrameworkRole/Edit")&&  UserInfo.Attributes["IsMainHost"].ToString() == "False")
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Success" Icon="fa fa-edit" Text="@WtmBlazor.Localizer["Sys.Edit"]" OnClick="() => OnEditClick(context)" />
             }
-            @if (IsAccessable("/api/_FrameworkRole/{id}")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
+            @if (IsAccessable("/api/_FrameworkRole/{id}")&&  UserInfo.Attributes["IsMainHost"].ToString() == "False")
             {
                 <TableCellButton Size="Size.ExtraSmall" Color="Color.Info" Icon="fa fa-info" Text="@WtmBlazor.Localizer["Sys.Details"]" OnClick="() => OnDetailsClick(context)" />
             }
-            @if (IsAccessable("/api/_FrameworkRole/BatchDelete")&&  (WtmBlazor.ConfigInfo.HasMainHost == false || UserInfo.CurrentTenant != null))
+            @if (IsAccessable("/api/_FrameworkRole/BatchDelete")&& UserInfo.Attributes["IsMainHost"].ToString() == "False")
             {
                 <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                                   Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
