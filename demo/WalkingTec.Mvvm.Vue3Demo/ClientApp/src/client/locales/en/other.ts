@@ -4,4 +4,8 @@ export default {
     'update_pwd_old': 'Old password',
     'update_pwd_confirm': 'Confirm pwd',
     'update_pwd_inconsistent': 'Passwords are inconsistent!',
+    'login_username':'username',
+    'login_password':'password',
+    'login_tenant':'tenant',
+    'login_tenant_main':'MainHost'
 };

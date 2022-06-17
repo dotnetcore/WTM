@@ -123,7 +123,6 @@
         beforeUpload() { }
         onChange(event) {
             this.fileList = event.fileList
-            console.log(this.fileList)
             if (event.file.status === "removed") {
                 if(this.max !== 1){
                     console.log(event)
@@ -174,7 +173,6 @@
                         this.value = [] 
                         return false
                     }*/
-                    console.log($System)
                     if (this.max !== 1) {
                         this.filedata = this.lodash.map(
                             val,
