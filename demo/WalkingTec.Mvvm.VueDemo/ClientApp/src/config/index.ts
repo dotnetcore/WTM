@@ -5,8 +5,13 @@ const config = {
   headerApi: "/api",
   /**
    * token 名称
+   * @TODO vuex 持久化
    */
   tokenKey: "token",
+  /**
+   * token 名称
+   */
+  tenantCodeKey: "TENANT_CODE",
   /**
    * global cookies
    */

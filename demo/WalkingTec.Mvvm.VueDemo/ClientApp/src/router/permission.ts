@@ -22,26 +22,38 @@ const getPageTitle = (key: string) => {
   return `${settings.title}`;
 };
 
-const bindLang = ({zh, en}) => {
+const bindLang = ({ zh, en }) => {
   const localKey = Object.keys(zh).length > 0 ? Object.keys(zh)[0] : "";
-  if (localKey && !i18n.getLocaleMessage('en')[localKey]) {
-      i18n.mergeLocaleMessage("en", en);
-      i18n.mergeLocaleMessage("zh", zh);
-    }
-}
+  if (localKey && !i18n.getLocaleMessage("en")[localKey]) {
+    i18n.mergeLocaleMessage("en", en);
+    i18n.mergeLocaleMessage("zh", zh);
+  }
+};
 
 router.beforeEach(async (to: Route, _: Route, next: any) => {
   // 路由
   const loadI18n = (isFirst: Boolean = false) => {
+    const redirect = to.query.redirect; //如果来源路由有query
     // 加载语言
-    import(`@/pages${to.path}/local.ts`).then(LOCAL => {
-        bindLang(LOCAL.default)
-        isFirst ? next({ ...to, replace: true }) : next();
-    }).catch(() => {
-        console.warn('找不到 多语言文件');
-        isFirst ? next({ ...to, replace: true }) : next();
-    })
-  }
+    import(`@/pages${to.path}/local.ts`)
+      .then(LOCAL => {
+        bindLang(LOCAL.default);
+        //console.log("isFirst", isFirst, redirect, to);
+        isFirst
+          ? next({
+              ...to,
+              // path: redirect || to.path,
+              replace: true
+            })
+          : next();
+      })
+      .catch(() => {
+        console.warn("找不到 多语言文件");
+        isFirst
+          ? next({ ...to, path: redirect || to.path, replace: true })
+          : next();
+      });
+  };
   NProgress.start();
   if (UserModule.token) {
     // Check roles
@@ -52,6 +64,7 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
         RoutesModule.GenerateRoutes(UserModule.menus);
         router.addRoutes(RoutesModule.dynamicRoutes);
         loadI18n(UserModule.roles.length > 0);
+        // next({ path: redirect }); //跳转到目的路由
       } catch (err) {
         Message.error(err || "Has Error");
         location.href = "/login.html";
@@ -83,5 +96,3 @@ router.afterEach((to: Route) => {
   // set page title
   document.title = getPageTitle(to.meta.title);
 });
-
-

@@ -19,16 +19,22 @@ export interface IUserState {
   actionList: string[];
   menus: any[];
   info: any;
+  currentTenant: string;
+  tenantCode: string;
+  isMainHost: boolean;
 }
 
 @Module({ dynamic: true, store, name: "user" })
 class User extends VuexModule implements IUserState {
   public token = getToken() || "";
-  public name = "";
+  public name: string = "";
   public roles: Array<any> = [];
   public actionList: string[] = [];
   public menus: Array<any> = [];
   public info = {};
+  public currentTenant: string = "";
+  public tenantCode: string = "";
+  public isMainHost: boolean = false;
 
   @Mutation
   private SET_TOKEN(token: string) {
@@ -60,6 +66,21 @@ class User extends VuexModule implements IUserState {
     this.menus = menus;
   }
 
+  @Mutation
+  private SET_CURRENT_TENANT(currentTenant: string) {
+    this.currentTenant = currentTenant;
+  }
+
+  @Mutation
+  private SET_TENANT_CODE(tenantCode: string) {
+    this.tenantCode = tenantCode;
+  }
+
+  @Mutation
+  private SET_IS_MAIN_HOST(isMainHost: boolean) {
+    this.isMainHost = isMainHost;
+  }
+
   @Action
   public async GetUserInfo() {
     const data = await _request({
@@ -69,12 +90,24 @@ class User extends VuexModule implements IUserState {
     if (!data) {
       throw Error("Verification failed, please Login again.");
     }
-    const { Id, ITCode, Name, PhotoId, Roles, Attributes } = data;
+    const {
+      Id,
+      ITCode,
+      Name,
+      PhotoId,
+      Roles,
+      Attributes,
+      CurrentTenant,
+      TenantCode
+    } = data;
     this.SET_ROLES(Roles);
     this.SET_NAME(Name);
     this.SET_ACTIONS(Attributes.Actions);
     this.SET_MENUS(Attributes.Menus);
     this.SET_INFO({ Id, ITCode, Name, PhotoId });
+    this.SET_CURRENT_TENANT(CurrentTenant);
+    this.SET_TENANT_CODE(TenantCode);
+    this.SET_IS_MAIN_HOST(Attributes.IsMainHost);
   }
 
   @Action
