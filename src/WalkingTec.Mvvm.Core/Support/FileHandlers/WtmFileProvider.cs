@@ -122,7 +122,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                     file.FileExt = ext;
                     file.Path = rv.path;
                     file.HandlerInfo = rv.handlerInfo;
-                    file.TenantCode = _wtm.LoginUserInfo.CurrentTenant;
+                    file.TenantCode = _wtm.LoginUserInfo?.CurrentTenant;
                     dc.AddEntity(file);
                     dc.SaveChanges();
                     return file;

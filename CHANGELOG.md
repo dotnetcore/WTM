@@ -2,6 +2,11 @@
 
 ## v6.x.x
 
+##6.2.4(2022-6-16)
+* **修改：**  优化登录
+* **修改：**  修复WtmFileProvider直接使用的问题
+* **新增：**  为配合WtmPlus的新功能，框架底层增加SoftKey,SoftFK属性，用于标记非主键关联的模型
+
 ##6.2.3(2022-6-12)
 * **新增：**  QuartzRepeatAttribute增加了DelaySeconds参数，可以控制延迟多少秒启动服务
 * **修改：**  恢复LoginUserInfo中的UserId以兼容老系统
@@ -85,6 +90,12 @@
 * **修改：**  修改了layui多选控件设置必填的bug
 
 ## v5.x.x 
+
+##5.9.4(2022-6-16)
+* **修改：**  优化登录
+* **修改：**  修复WtmFileProvider直接使用的问题
+* **新增：**  为配合WtmPlus的新功能，框架底层增加SoftKey,SoftFK属性，用于标记非主键关联的模型
+
 
 ##5.9.3(2022-6-12)
 * **新增：**  QuartzRepeatAttribute增加了DelaySeconds参数，可以控制延迟多少秒启动服务

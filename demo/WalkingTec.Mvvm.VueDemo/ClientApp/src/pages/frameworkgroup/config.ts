@@ -9,8 +9,24 @@ export const ASSEMBLIES: Array<string> = [
 ];
 
 export const TABLE_HEADER: Array<object> = [
-    { key: "GroupCode", sortable: true, label: i18n.t(`frameworkgroup.GroupCode`) },
-  { key: "GroupName", sortable: true, label: i18n.t(`frameworkgroup.GroupName`) },
-  { key: "ManagerName", sortable: true, label: i18n.t(`frameworkgroup.Manager`) },
-  { isOperate: true, label: i18n.t(`table.actions`), actions: ["detail", "edit", "deleted"] } //操作列
+  {
+    key: "GroupCode",
+    sortable: true,
+    label: i18n.t(`frameworkgroup.GroupCode`)
+  },
+  {
+    key: "GroupName",
+    sortable: true,
+    label: i18n.t(`frameworkgroup.GroupName`)
+  },
+  {
+    key: "ManagerName",
+    sortable: true,
+    label: i18n.t(`frameworkgroup.Manager`)
+  },
+  {
+    isOperate: true,
+    label: i18n.t(`table.actions`),
+    actions: ["detail", "edit", "deleted"]
+  } //操作列
 ];
