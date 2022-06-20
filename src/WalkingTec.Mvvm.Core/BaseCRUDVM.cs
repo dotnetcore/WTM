@@ -579,7 +579,7 @@ namespace WalkingTec.Mvvm.Core
                             if (pro.GetCustomAttribute<NotMappedAttribute>() != null)
                             {
                                 fkname = pro.GetCustomAttribute<SoftFKAttribute>()?.PropertyName;
-                                softkey = typeof(TModel).GetCustomAttribute<SoftKeyAttribute>().PropertyName;
+                                softkey = typeof(TModel).GetCustomAttribute<SoftKeyAttribute>()?.PropertyName;
                             }
                         }
                         if (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list && list.Count() > 0)
@@ -744,6 +744,10 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else if ((pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
                         {
+                            if (string.IsNullOrEmpty(fkname))
+                            {
+                                continue;
+                            }
                             var itemPros = ftype.GetAllProperties();
                             var set = DC.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(ftype);
                             var dataquery = set.Invoke(DC, null) as IQueryable<TopBasePoco>;
