@@ -62,7 +62,9 @@ export default {
     clipboard: "Clipboard",
     i18n: "I18n",
     externalLink: "Enlace externo",
-    profile: "Profile"
+    profile: "Profile",
+    isMainHost:
+      "This operation cannot be performed. Please go to the main site for corresponding operation"
   },
   navbar: {
     logOut: "Salir",

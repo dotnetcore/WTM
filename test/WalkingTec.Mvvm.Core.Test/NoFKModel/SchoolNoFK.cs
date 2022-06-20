@@ -33,6 +33,10 @@ namespace WalkingTec.Mvvm.Core.Test
         [NotMapped]
         [SoftFK(nameof(MajorNoFK.SchoolId))]
         public List<MajorNoFK> Majors { get; set; }
+
+        [Display(Name = "专业")]
+        [NotMapped]
+        public List<Major> Majors2 { get; set; }
     }
 
 }

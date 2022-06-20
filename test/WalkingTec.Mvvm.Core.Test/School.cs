@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -37,6 +38,10 @@ namespace WalkingTec.Mvvm.Core.Test
 
         [Display(Name = "专业")]
         public List<Major> Majors { get; set; }
+
+        [Display(Name = "专业")]
+        [NotMapped]
+        public List<Major> Majors2 { get; set; }
     }
 
 }
