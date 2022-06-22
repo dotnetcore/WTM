@@ -52,7 +52,7 @@ export class UserMenus {
                 path = queryString.stringifyUrl({ url: '/webview', query: { src: data.Url, name: data.Text } })
             }
             data = lodash.assign({ path }, {
-                router: { to: path },
+                router: { to: path===undefined?{}:path },
                 meta: {
                     icon: createVNode('span', { class: data.Icon, style: 'margin-right:10px' }),//createApp({ template: `<span class="${data.Icon}">` }),
                     title: data.Text
