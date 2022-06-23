@@ -48,6 +48,7 @@ class Entity {
             return table ? FieldRequest({ url: '/api/_DataPrivilege/GetPrivilegeByTableName', body: { table } }) : []
         },
         label: EnumLocaleLabel.SelectedItemsID,
+        fieldProps: { mode: 'tags' }
     }
     readonly IsAll: WTM_EntitiesField = {
         name: 'IsAll',

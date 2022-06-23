@@ -17,7 +17,7 @@ export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
     Entity: {
-
+      
     },
   };
   created() { }

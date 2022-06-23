@@ -28,29 +28,29 @@
       </template>
     </a-dropdown>
     <!-- 用户菜单 -->
-    <a-dropdown>
-      <div>
-        <a-avatar size="small" :src="getAvatar(System.UserController.UserInfo)" />
-        <a-divider type="vertical" style="margin: 0 3px;" />
-        <span v-text="System.UserController.UserInfo.Name"></span>
-      </div>
-      <template #overlay>
-        <a-menu @click="changeUserMenu">
-          <a-menu-item :key="$locales.action_user_codeGenerator">
-            <i18n-t :keypath="$locales.action_user_codeGenerator" />
-          </a-menu-item>
-          <a-menu-item :key="$locales.action_user_apiDocument">
-            <i18n-t :keypath="$locales.action_user_apiDocument" />
-          </a-menu-item>
-          <a-menu-item :key="$locales.action_user_changePassword">
-            <i18n-t :keypath="$locales.action_user_changePassword" />
-          </a-menu-item>
-          <a-menu-item :key="$locales.action_user_logout">
-            <i18n-t :keypath="$locales.action_user_logout" />
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
+   <a-dropdown>
+     <div>
+       <a-avatar size="small" :src="getAvatar(System.UserController.UserInfo)" />
+       <a-divider type="vertical" style="margin: 0 3px;" />
+       <span v-text="System.UserController.UserInfo.Name"></span>
+     </div>
+     <template #overlay>
+       <a-menu @click="changeUserMenu">
+         <a-menu-item :key="$locales.action_user_codeGenerator">
+           <i18n-t :keypath="$locales.action_user_codeGenerator" />
+         </a-menu-item>
+         <a-menu-item :key="$locales.action_user_apiDocument">
+           <i18n-t :keypath="$locales.action_user_apiDocument" />
+         </a-menu-item>
+         <a-menu-item :key="$locales.action_user_changePassword">
+           <i18n-t :keypath="$locales.action_user_changePassword" />
+         </a-menu-item>
+         <a-menu-item :key="$locales.action_user_logout">
+           <i18n-t :keypath="$locales.action_user_logout" />
+         </a-menu-item>
+       </a-menu>
+     </template>
+   </a-dropdown>
     <!-- 多语言 -->
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
@@ -73,7 +73,7 @@
 </template>
 <script lang="ts">
 import { SystemController } from "@/client";
-import { Vue, Options, Inject } from "vue-property-decorator";
+import { Vue, Options, Watch, mixins, Inject } from "vue-property-decorator";
 // Component definition
 @Options({ components: {} })
 export default class extends Vue {
@@ -101,9 +101,11 @@ export default class extends Vue {
     };
     return this.lodash.get(languageLabels, key)
   }
+  value = null
   getAvatar(Info) {
     return Info.PhotoId ? this.System.FilesController.getDownloadUrl(Info.PhotoId) : require('@/assets/img/user.png')
   }
+  
   MainHost = ''
   get MainHostMenu(){
     return this.$t(this.$locales.login_tenant_main)
@@ -113,6 +115,9 @@ export default class extends Vue {
     this.$i18n.locale = event.key;
     localStorage.setItem('locale', event.key);
     this.System.UserController.onCheckLogin()
+    if(this.$t(this.$locales.login_tenant_main) == localStorage.getItem('MainHostMenu')){
+      localStorage.setItem('MainHostMenu',this.$t(this.$locales.login_tenant_main))
+    }
     // 触发事件
     // dispatchEvent(new CustomEvent('languages'));
     // window.location.reload()
@@ -141,13 +146,16 @@ export default class extends Vue {
   }
   created() { }
   mounted() { 
-    this.getTenantsListFun(this.System.UserController.UserInfo['TenantCode'] || null)
+    let that = this
+    setTimeout(()=>{
+      that.getTenantsListFun(that.System.UserController.UserInfo['TenantCode'] || null)
+    },500)
   }
   async getTenantsListFun(data){
     let that = this
     const res: any = await this.System.TenantsController.TenantsList(data)
+    this.MainHost = localStorage.getItem('MainHostMenu') ? localStorage.getItem('MainHostMenu') : this.System.UserController.UserInfo['CurrentTenant'] ? this.lodash.filter(res, ['Value', this.System.UserController.UserInfo['CurrentTenant']])[0].Text : this.$t(this.$locales.login_tenant_main)
     this.getTenantsList = res
-    this.MainHost = localStorage.getItem('MainHostMenu') ? localStorage.getItem('MainHostMenu') : this.lodash.filter(res, ['Value', this.System.UserController.UserInfo['CurrentTenant']])[0].Text
   }
 }
 </script>

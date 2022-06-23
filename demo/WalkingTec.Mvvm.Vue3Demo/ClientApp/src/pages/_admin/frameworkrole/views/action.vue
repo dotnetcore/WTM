@@ -1,5 +1,5 @@
 <template>
-  <WtmAction :PageController="PageController" :params="params">
+  <WtmAction :PageController="PageController" :params="params" :include="include">
     <!-- 作用域插槽 其他插槽 看 components>page>action-->
     <template v-slot:default="{ isPageAction, ButtonProps }">
       <a-button
@@ -27,12 +27,21 @@
 <script lang="ts">
 import { Inject, Options, Vue } from "vue-property-decorator";
 import { PageController } from "../controller";
+import { SystemController } from "@/client";
 @Options({ components: {} })
 export default class extends Vue {
   // page Inject 注入 row 为 toRowAction 注入
+  @Inject({ from: SystemController.Symbol }) System: SystemController;
   @Inject() readonly PageController: PageController;
   get Pagination() {
     return this.PageController.Pagination;
+  }
+  get include() {
+    if(!JSON.parse(localStorage.getItem('x-user'))['_UserInfo']['Attributes']['IsMainHost']){
+        return [this.EnumActionType.Info, this.EnumActionType.Insert, this.EnumActionType.Update, this.EnumActionType.Export, this.EnumActionType.Import, this.EnumActionType.Delete]
+    }else{
+        return []
+    }
   }
   /**
    * 行 操作 aggrid 传入
@@ -56,7 +65,7 @@ export default class extends Vue {
   }
   /**
    * 分配权限
-   */
+  */
   onPrivilege() {
     const dataKey = this.isRowAction
       ? this.lodash.get(this.params, "data.ID")

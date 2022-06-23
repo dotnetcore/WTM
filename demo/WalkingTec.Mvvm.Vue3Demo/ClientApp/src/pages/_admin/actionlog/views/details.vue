@@ -29,7 +29,9 @@ import { PageController } from "../controller";
 export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
-    Entity: {}
+    Entity: {
+         
+    }
   };
   created() {}
   mounted() {

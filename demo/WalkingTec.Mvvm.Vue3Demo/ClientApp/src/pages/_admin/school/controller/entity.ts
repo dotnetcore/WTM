@@ -16,11 +16,6 @@ class Entity {
         // label 字段描述
         label: EnumLocaleLabel.ID,
     }
-    readonly ParentId: WTM_EntitiesField = {
-        name: ['Entity', 'ParentId'],
-        label:'ParentId',
-        valueType: WTM_ValueType.select,
-    }
     readonly SchoolCode: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
         name: ['Entity', 'SchoolCode'],
@@ -66,14 +61,14 @@ class Entity {
         fieldProps: { max: 9 }
     }
 
-    readonly tree: WTM_EntitiesField = {
+    readonly ParentId: WTM_EntitiesField = {
         // form 的 name 属性 解析为 Entity.ITCode
-        name: ['Entity', 'Remark'],
+        name: ['Entity', 'ParentId'],
         // label 字段描述
-        label: 'tree',
+        label: 'ParentId',
         request: async () => FieldRequest("/api/City/GetCitysTree"),
         valueType: WTM_ValueType.tree,
-        fieldProps: { multiple:true }
+        fieldProps: { multiple:false }
     }
     
     readonly Majors: WTM_EntitiesField = {
@@ -82,6 +77,13 @@ class Entity {
         // label 字段描述
         label: EnumLocaleLabel.Majors,
         valueType: WTM_ValueType.grid
+    }
+    readonly Remark: WTM_EntitiesField = {
+        // form 的 name 属性 解析为 Entity.ITCode
+        name: ['Entity', 'Remark'],
+        // label 字段描述
+        label: EnumLocaleLabel.Remark,
+        rules: [{ required: true }]
     }
 }
 export const PageEntity = new Entity()

@@ -9,13 +9,13 @@ export class PageController extends WTM.ControllerBasics {
             // 搜索
             search: '/api/_dataprivilege/search',
             // 详情
-            details: '/api/_dataprivilege/get',
+            details: '/api/_dataprivilege/get/',
             // 添加
             insert: '/api/_dataprivilege/add',
             // 修改
             update: '/api/_dataprivilege/edit',
-            // 删除 单&多
-            delete: '/api/_dataprivilege/BatchDelete',
+            // 删除
+            delete: '/api/_dataprivilege/Delete',
             // 导入
             import: '/api/_dataprivilege/import',
             // 导出

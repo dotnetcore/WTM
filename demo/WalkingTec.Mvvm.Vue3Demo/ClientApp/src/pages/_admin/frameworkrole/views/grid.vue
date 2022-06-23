@@ -1,6 +1,7 @@
 <template>
   <WtmGrid
     :PageController="PageController"
+    oprationWidth="300"
     :columnDefs="columnDefs"
     :gridOptions="gridOptions"
   />
@@ -35,7 +36,9 @@ export default class extends Vue {
       },
     };
   }
-  created() {}
+  created() {
+    
+  }
 }
 </script>
 <style lang="less">

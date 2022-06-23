@@ -31,7 +31,7 @@ export default class extends mixins(PageDetailsBasics) {
     return this.formState.DpType == 'UserGroup'
   }
   get body() {
-    return this.lodash.assign({ ID: this.ID }, this.lodash.pick(this.$route.query, ['TableName', 'TargetId']));
+    return this.lodash.assign({ ID: this.ID }, this.lodash.pick(this.$route.query, ['TableName', 'TargetId','DpType']));
   }
   created() { }
   mounted() {

@@ -14,7 +14,7 @@ export default {
     'action_exportSelect': ' 导出选择',
     'action_deleteConfirm': ' 确定删除这{text}条数据么 ?',
     'action_open': ' 展开',
-    'action_retract': ' 收起',
+    'action_retract': ' 收起', 
     'action_close': ' 关闭',
     'action_submit': ' 提交',
     'action_login': '登录',

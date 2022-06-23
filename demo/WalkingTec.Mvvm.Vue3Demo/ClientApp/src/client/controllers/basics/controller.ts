@@ -205,9 +205,28 @@ export class ControllerBasics<T = any> {
       } else {
         ids = [key]
       }
-      await this.$ajax.request(lodash.assign({ body: ids }, this.getAjaxRequest('delete'))).toPromise()
+      await this.$ajax.request(lodash.assign({ body:ids }, this.getAjaxRequest('delete'))).toPromise()
       this.Pagination.onSelectionChanged([])
       this.Pagination.onRemove(key);
+      ControllerBasics.$msg(msg)
+      this.onToggleLoading(false);
+    } catch (error) {
+      console.error(error)
+      this.onToggleLoading(false);
+      throw error
+    }
+  }
+  /**
+   * 根据 key 删除数据(单个)
+   * @param {string} key
+   * @returns {T[]}
+   * @memberof Pagination
+   */
+  async onRemoveSimple(ID,key: any, msg?: string) {
+    try {
+      await this.$ajax.request(lodash.assign({ body:key }, this.getAjaxRequest('delete'))).toPromise()
+      this.Pagination.onSelectionChanged([])
+      this.Pagination.onRemove(ID);
       ControllerBasics.$msg(msg)
       this.onToggleLoading(false);
     } catch (error) {

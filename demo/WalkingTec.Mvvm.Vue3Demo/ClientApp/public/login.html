@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/axios.min.js"></script> 
+  </head>
+  <body>
+  </body>
+  <script>
+      function getQueryVariable(variable) {
+        let href = window.location.href
+        let query = href.substring(href.indexOf('?')+1);
+        let vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            let pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
+      }
+      let _remotetoken = getQueryVariable('_remotetoken')
+      let redirect = getQueryVariable('redirect') ? getQueryVariable('redirect') : '/'
+      axios.get('/api/_Account/LoginRemote?_remotetoken='+_remotetoken).then(function (data) {
+         localStorage.removeItem('x-user')
+         let _UserInfo = {
+           _UserInfo:data.data
+         }
+         localStorage.setItem('x-user',JSON.stringify(_UserInfo))
+         location.href = redirect
+      })
+  </script>
+</html>

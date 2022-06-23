@@ -37,10 +37,8 @@ export class UserEntity {
         // persist({ _UserInfo: { type: "object" } })(this)
     }
     /**
-     * 用户信息
-     * @type {*}
-     * @memberof UserEntity
-     */
+     * 用户信息 * @type {*}  * @memberof UserEntity
+    */
     @persist('object')
     @observable
     private _UserInfo: UserInfo = undefined;

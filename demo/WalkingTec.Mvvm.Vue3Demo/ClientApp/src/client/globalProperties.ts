@@ -63,7 +63,6 @@ export function FieldRequest(request: string | AjaxRequest) {
         let data = JSON.parse(JSON.stringify(result).replace(/"Value"/g,'"value"'))
         data = JSON.parse(JSON.stringify(data).replace(/"Text"/g,'"title"'))
         data = JSON.parse(JSON.stringify(data).replace(/"Children"/g,'"children"'))
-
         return lodash.map(data, item => {
             return {
                 key: lodash.get(item, 'Value'),
@@ -72,10 +71,9 @@ export function FieldRequest(request: string | AjaxRequest) {
                 ...item
             }
         })
-        
-        
     })).toPromise()
 }
+
 export const globalProperties = {
     $WtmConfig,
     $Ajax,

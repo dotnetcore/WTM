@@ -8,14 +8,11 @@
       <WtmField entityKey="SchoolName" />
     </a-space>
     <a-space>
-      <WtmField entityKey="tree" />
-    </a-space>
-    <a-space>
       <WtmField entityKey="ParentId" />
     </a-space>
     <a-space>
       <WtmField entityKey="SchoolType" />
-      <!-- <WtmField entityKey="Remark" /> -->
+      <WtmField entityKey="Remark" /> 
     </a-space>
     <a-space>
       <WtmField entityKey="Photos"  /> 

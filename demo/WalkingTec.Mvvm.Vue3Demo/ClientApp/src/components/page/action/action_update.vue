@@ -58,13 +58,15 @@ export default class extends mixins(ActionBasics) {
       return this.__wtmToDetails({ details: "", _batch: "" });
     }
     const rowData = this.getRowData();
-    let query = {};
+    let query = {}
     if (this.lodash.hasIn(this.$props, "toQuery")) {
       query = this.lodash.invoke(this.$props, "toQuery", rowData, this);
+      console.log(query)
       if (!this.lodash.isEmpty(query)) {
         return this.__wtmToDetails(query);
       }
     }
+    console.log(query)
     this.__wtmToDetails(
       this.lodash.assign(
         {

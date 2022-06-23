@@ -36,6 +36,5 @@ class Entity {
         name: ['Entity', 'RoleRemark'],
         label: EnumLocaleLabel.RoleRemark,
     }
-
 }
 export const PageEntity = new Entity()

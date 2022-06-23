@@ -20,7 +20,6 @@
         @Prop({ type: String, default: 'Y' }) namey;
         @Prop({ type: String, default: '附加' }) nameaddition;
         @Prop({ type: String, default: '' }) namecategory;
-
         @Prop({ type: Boolean, default: false }) opensmooth;
         @Prop({ type: Boolean, default: true }) showlegent;
         @Prop({ type: Boolean, default: true }) showtooltip;
