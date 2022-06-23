@@ -30,6 +30,10 @@
          let _UserInfo = {
            _UserInfo:data.data
          }
+        _UserInfo._UserInfo['access_token'] = 'access_token'
+        _UserInfo._UserInfo['expires_in'] =  'expires_in'
+        _UserInfo._UserInfo['token_type'] = 'token_type'
+        _UserInfo._UserInfo['refresh_token'] = 'refresh_token'
          localStorage.setItem('x-user',JSON.stringify(_UserInfo))
          location.href = redirect
       })
