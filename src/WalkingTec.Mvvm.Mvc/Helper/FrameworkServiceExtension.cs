@@ -599,7 +599,17 @@ namespace WalkingTec.Mvvm.Mvc
 
                              ValidateIssuerSigningKey = true,
                              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey)),
-
+                             LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
+                             {
+                                 if(expires == null)
+                                 {
+                                     return true;
+                                 }
+                                 else
+                                 {
+                                     return expires.Value > DateTime.UtcNow;
+                                 }
+                             },                            
                              ValidateLifetime = true
                          };
                      })
