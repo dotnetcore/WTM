@@ -459,8 +459,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
                 
                 //如果dps为空，则拼接一个返回假的表达式，这样就查询不出任何数据
-                if (dps == null || tableName == "")
+                if (dps == null)
                 {
+                    if(tableName == "")
+                    {
+                        continue;
+                    }
                     exp = falseExp;
                 }
                 else
