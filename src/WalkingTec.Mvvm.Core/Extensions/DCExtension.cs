@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -978,14 +979,30 @@ where S : struct
         {
             try
             {
-                var test = self.Model.FindEntityType(sourceType).GetForeignKeys().Where(x => x.DependentToPrincipal?.Name == FieldName).FirstOrDefault();
-                if (test != null && test.Properties.Count > 0)
+                var pro = sourceType.GetSingleProperty(FieldName);
+                if (pro.GetCustomAttribute<NotMappedAttribute>() != null)
                 {
-                    return test.Properties[0].Name;
+                    var idpro = sourceType.GetSingleProperty(FieldName + "Id");
+                    if(idpro != null)
+                    {
+                        return idpro.Name;
+                    }
+                    else
+                    {
+                        return "";
+                    }
                 }
                 else
                 {
-                    return "";
+                    var test = self.Model.FindEntityType(sourceType).GetForeignKeys().Where(x => x.DependentToPrincipal?.Name == FieldName).FirstOrDefault();
+                    if (test != null && test.Properties.Count > 0)
+                    {
+                        return test.Properties[0].Name;
+                    }
+                    else
+                    {
+                        return "";
+                    }
                 }
             }
             catch

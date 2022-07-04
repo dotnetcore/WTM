@@ -368,6 +368,15 @@ namespace WalkingTec.Mvvm.Core
                     if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
                     {
                         pro.SetValue(Entity, null);
+                        string fkname = DC.GetFKName2<TModel>(pro.Name);
+                        var fkpro = pros.Where(x => x.Name == fkname).FirstOrDefault();
+                        if (fkpro != null)
+                        {
+                            if (fkpro.PropertyType == typeof(string) && fkpro.GetValue(Entity)?.ToString() == "")
+                            {
+                                fkpro.SetValue(Entity, null);
+                            }
+                        }
                     }
                 }
             }
@@ -556,6 +565,15 @@ namespace WalkingTec.Mvvm.Core
                     if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
                     {
                         pro.SetValue(Entity, null);
+                        string fkname = DC.GetFKName2<TModel>(pro.Name);
+                        var fkpro = pros.Where(x => x.Name == fkname).FirstOrDefault();
+                        if (fkpro != null)
+                        {
+                            if (fkpro.PropertyType == typeof(string) && fkpro.GetValue(Entity)?.ToString() == "")
+                            {
+                                fkpro.SetValue(Entity, null);
+                            }
+                        }
                     }
                 }
             }

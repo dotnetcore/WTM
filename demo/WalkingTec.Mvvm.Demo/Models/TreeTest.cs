@@ -15,9 +15,9 @@ namespace WalkingTec.Mvvm.Demo.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public new int ID { get; set; }
+        public new string ID { get; set; }
 
-        public new int? ParentId { get; set; }
+        public new string ParentId { get; set; }
 
         [Display(Name = "名称")]
         [Required(ErrorMessage = "名称是必填项")]
