@@ -559,7 +559,7 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
         {
             if (node.Expression.NodeType == ExpressionType.Parameter)
             {
-                var rv = Expression.MakeMemberAccess(_pe, node.Member);
+                var rv = Expression.MakeMemberAccess(_pe, _pe.Type.GetSingleProperty(node.Member.Name));
                 return rv;
             }
             else
