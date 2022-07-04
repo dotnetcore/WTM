@@ -595,18 +595,25 @@ params string[] groupcode)
             {
                 
                 List<SimpleGroup> groups = null;
-                var dbtenant = GlobaInfo.AllTenant.Where(x => x.TCode == tenant && x.IsUsingDB == true).FirstOrDefault();
-                using (var dc = dbtenant == null ? ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC() : dbtenant.CreateDC(this))
+                try
                 {
-                    groups = dc.Set<FrameworkGroup>().IgnoreQueryFilters().Where(x => x.TenantCode == tenant).Select(x => new SimpleGroup
+                    var dbtenant = GlobaInfo.AllTenant.Where(x => x.TCode == tenant && x.IsUsingDB == true).FirstOrDefault();
+                    using (var dc = dbtenant == null ? ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC() : dbtenant.CreateDC(this))
                     {
-                        ID = x.ID,
-                        GroupCode = x.GroupCode,
-                        GroupName = x.GroupName,
-                        Manager = x.Manager,
-                        ParentId = x.ParentId,
-                        Tenant = x.TenantCode
-                    }).ToList();
+                        groups = dc.Set<FrameworkGroup>().IgnoreQueryFilters().Where(x => x.TenantCode == tenant).Select(x => new SimpleGroup
+                        {
+                            ID = x.ID,
+                            GroupCode = x.GroupCode,
+                            GroupName = x.GroupName,
+                            Manager = x.Manager,
+                            ParentId = x.ParentId,
+                            Tenant = x.TenantCode
+                        }).ToList();
+                    }
+                }
+                catch
+                {
+                    groups = new List<SimpleGroup>();
                 }
                 return groups;
             }, 360000);
@@ -619,16 +626,23 @@ params string[] groupcode)
             var rv = ReadFromCache<List<SimpleRole>>(key, () =>
             {
                 List<SimpleRole> roles = null;
-                var dbtenant = GlobaInfo.AllTenant.Where(x => x.TCode == tenant && x.IsUsingDB == true).FirstOrDefault();
-                using (var dc = dbtenant == null ? ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC() : dbtenant.CreateDC(this))
+                try
                 {
-                    roles = dc.Set<FrameworkRole>().IgnoreQueryFilters().Where(x => x.TenantCode == tenant).Select(x => new SimpleRole
+                    var dbtenant = GlobaInfo.AllTenant.Where(x => x.TCode == tenant && x.IsUsingDB == true).FirstOrDefault();
+                    using (var dc = dbtenant == null ? ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC() : dbtenant.CreateDC(this))
                     {
-                        ID = x.ID,
-                        RoleCode = x.RoleCode,
-                        RoleName = x.RoleName,
-                        Tenant = x.TenantCode
-                    }).ToList();
+                        roles = dc.Set<FrameworkRole>().IgnoreQueryFilters().Where(x => x.TenantCode == tenant).Select(x => new SimpleRole
+                        {
+                            ID = x.ID,
+                            RoleCode = x.RoleCode,
+                            RoleName = x.RoleName,
+                            Tenant = x.TenantCode
+                        }).ToList();
+                    }
+                }
+                catch
+                {
+                    roles = new List<SimpleRole>();
                 }
                 return roles;
             }, 360000);

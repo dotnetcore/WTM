@@ -1,8 +1,9 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs.TreeTestVM
+@model WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs.TreeTestVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
 <wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:textbox field="Entity.ID" />
 <wt:textbox field="Entity.Name" />
 <wt:textbox field="Entity.Test" />
 <wt:combobox field="Entity.ParentId" items="AllParents"/>

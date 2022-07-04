@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.Core.Json
                                     if (newitem != null)
                                     {
                                         string subkey = ftype.FullName + newitem?.GetID() ?? "";
-                                        if (datacache.ContainsKey(subkey) == false)
+                                        if (datacache.ContainsKey(subkey) == false || (Entity is TreePoco && pro.Name == "Children"))
                                         {
                                             RemoveCycleReference(newitem, datacache.ToDictionary(x=>x.Key,x=>x.Value));
                                             found = true;

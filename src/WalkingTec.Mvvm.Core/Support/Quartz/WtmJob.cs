@@ -8,7 +8,7 @@ using Quartz;
 
 namespace WalkingTec.Mvvm.Core.Support.Quartz
 {
-    public class WtmJob : IJob,IDisposable
+    public class WtmJob : IJob, IDisposable
     {
         private IServiceScope _ss;
         private WTMContext _wtm;
@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
         {
             get
             {
-                if(_wtm == null)
+                if (_wtm == null)
                 {
                     _ss = Sp.CreateScope();
                     _wtm = _ss.ServiceProvider.GetRequiredService<WTMContext>();
@@ -30,15 +30,15 @@ namespace WalkingTec.Mvvm.Core.Support.Quartz
 
         public virtual async Task Execute(IJobExecutionContext context)
         {
-             await Task.Run(() => { });
+            await Task.Run(() => { });
         }
 
         public void Dispose()
         {
-            _wtm.Dispose();
-            _wtm=null;
-           _ss?.Dispose();
+            _wtm?.Dispose();
+            _wtm = null;
+            _ss?.Dispose();
             _ss = null;
-         }
+        }
     }
 }

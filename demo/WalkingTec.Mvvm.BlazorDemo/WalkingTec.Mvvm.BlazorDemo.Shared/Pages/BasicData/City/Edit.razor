@@ -1,5 +1,6 @@
 @page "/BasicData/City/Edit/{id}"
 @using WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs;
+@using WalkingTec.Mvvm.Demo.Models;
 @inherits BasePage
 
 <ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
@@ -9,6 +10,16 @@
             <BootstrapInput @bind-Value="@Model.Entity.Test"  />
             <Select @bind-Value="@Model.Entity.ParentId" Items="@AllCitys" PlaceHolder="@WtmBlazor.Localizer["Sys.All"]"/>
     </Row>
+     <Table TItem="City"
+              IsPagination="false" IsTracking=true
+              IsStriped="true" IsBordered="true" IsMultipleSelect="true" @bind-Items="@AreaParentList"
+              ShowToolbar="true" ShowExtendButtons="true" ShowSkeleton="true" EditMode="EditMode.InCell" ShowToastAfterSaveOrDeleteModel="false">
+      <TableColumns>
+        <TableColumn @bind-Field="@context.Name" Text="@WtmBlazor.Localizer["Page.省名称"]" />
+      </TableColumns>
+
+    </Table>
+
     <div class="modal-footer table-modal-footer">
         <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
         <Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Edit"]" IsAsync="true" />
@@ -23,6 +34,7 @@
     public string id { get; set; }
 
     private List<SelectedItem> AllCitys = new List<SelectedItem>();
+            private IEnumerable<City> AreaParentList { get; set; } = new List<City>();
 
 
     protected override async Task OnInitializedAsync()
@@ -32,12 +44,14 @@
 
         var rv = await WtmBlazor.Api.CallAPI<CityVM>($"/api/City/{id}");
         Model = rv.Data;
-         await base.OnInitializedAsync();
+         AreaParentList = Model.Entity.Children;
+        await base.OnInitializedAsync();
    }
 
     private async Task Submit(EditContext context)
     {
-        await PostsForm(vform, $"/api/City/edit", (s) => "Sys.OprationSuccess", method: HttpMethodEnum.PUT);
+          Model.Entity.Children = AreaParentList.ToList();                
+      await PostsForm(vform, $"/api/City/edit", (s) => "Sys.OprationSuccess", method: HttpMethodEnum.PUT);
     }
 
     public void OnClose()

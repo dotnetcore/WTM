@@ -244,41 +244,68 @@
             var usermenu = UserInfo.Attributes["Menus"] as WalkingTec.Mvvm.Core.Support.Json.SimpleMenuApi[];
 
             var formatedmenu = new List<FrameworkMenu>();
-            foreach (var item in usermenu)
-            {
-                if (item.ParentId == null)
-                {
-                    formatedmenu.Add(new FrameworkMenu
-                        {
-                            ID = new Guid(item.Id),
-                            PageName = item.Text,
-                            Icon = item.Icon,
-                            Url = item.Url,
-                            Children = new List<FrameworkMenu>()
-                        });
-                }
-                else
-                {
-                    var parent = formatedmenu.Where(x => x.ID.ToString() == item.ParentId).FirstOrDefault();
-                    if (parent != null)
-                    {
-                        parent.Children.Add(new FrameworkMenu
-                            {
-                                ID = new Guid(item.Id),
-                                PageName = item.Text,
-                                Icon = item.Icon,
-                                Url = item.Url,
-                                Children = new List<FrameworkMenu>()
-                            });
-                    }
-                }
-            }
+			formatedmenu.AddRange(toMenuTree(usermenu.AsQueryable()));
+            //foreach (var item in usermenu)
+            //{
+            //    if (item.ParentId == null)
+            //    {
+            //        formatedmenu.Add(new FrameworkMenu
+            //            {
+            //                ID = new Guid(item.Id),
+            //                PageName = item.Text,
+            //                Icon = item.Icon,
+            //                Url = item.Url,
+            //                Children = new List<FrameworkMenu>()
+            //            });
+            //    }
+            //    else
+            //    {
+            //        var parent = formatedmenu.Where(x => x.ID.ToString() == item.ParentId).FirstOrDefault();
+            //        if (parent != null)
+            //        {
+            //            parent.Children.Add(new FrameworkMenu
+            //                {
+            //                    ID = new Guid(item.Id),
+            //                    PageName = item.Text,
+            //                    Icon = item.Icon,
+            //                    Url = item.Url,
+            //                    Children = new List<FrameworkMenu>()
+            //                });
+            //        }
+            //    }
+            //}
             GetMenuFromFrameworkMenu(formatedmenu).ForEach(x => menus.Add(x));
         }
         Menus = menus;
 
         tenants = await wtmblazor.Api.CallItemsApi($"/api/_frameworktenant/GetFrameworkTenants?parent={UserInfo.TenantCode}");
         await base.OnInitializedAsync();
+    }
+	
+    /// <summary>
+    /// 整理为树形
+    /// </summary>
+    /// <param name="origs">来源列表</param>
+    /// <param name="parentID">当前级的父ID</param>
+    /// <returns></returns>
+    private List<FrameworkMenu> toMenuTree(IQueryable<WalkingTec.Mvvm.Core.Support.Json.SimpleMenuApi> origs,string parentID=null)
+    {
+        var rets = new List<FrameworkMenu>();
+        var _thisList = origs.Where(t => t.ParentId==parentID);
+        foreach (var item in _thisList)
+        {
+            var _item = new FrameworkMenu
+                {
+                    ID = new Guid(item.Id),
+                    PageName = item.Text,
+                    Icon = item.Icon,
+                    Url = item.Url,
+                    Children = new List<FrameworkMenu>()
+                };
+            _item.Children.AddRange(toMenuTree(origs, item.Id));
+            rets.Add(_item);
+        }
+        return rets;
     }
 
     private List<BootstrapBlazor.Components.MenuItem> GetMenuFromFrameworkMenu(List<FrameworkMenu> input)
