@@ -110,8 +110,12 @@ class AppRouter {
   }
 
   onInit() {
-    let createRouters = this.createRouters().map(item=>{
-       if(item.name.split('-').length > 2){
+      let createRouters = this.createRouters().map(item => {
+          var ll = 2;
+          if (item.name.indexOf("-default-")> 0) {
+              ll = 3;
+          }
+       if(item.name.split('-').length > ll){
          item.son = 'true'
        }
        return item
