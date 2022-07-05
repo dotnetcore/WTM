@@ -116,7 +116,8 @@ class AppRouter {
               ll = 3;
           }
        if(item.name.split('-').length > ll){
-         item.son = 'true'
+           item.son = 'true';
+           item.name = item.name.replace("-views-", "-");
        }
        return item
     }) 
