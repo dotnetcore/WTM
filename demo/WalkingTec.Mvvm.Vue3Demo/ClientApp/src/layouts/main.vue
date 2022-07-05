@@ -75,7 +75,7 @@ export default class extends Vue {
       return production;
     }
     const RouterConfig = router.RouterConfig.filter(
-      item => !lodash.eq(item.name, "NotFound")
+      item => !lodash.eq(item.name, "NotFound") && !item['son']
     );
     const menus = [
       {
@@ -99,7 +99,7 @@ export default class extends Vue {
             }
           });
           // console.log("LENG ~ extends ~ data ~ data", data)
-          return data;
+          return data
         })
       },
       {

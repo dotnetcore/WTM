@@ -110,6 +110,12 @@ class AppRouter {
   }
 
   onInit() {
+    let createRouters = this.createRouters().map(item=>{
+       if(item.name.split('-').length > 2){
+         item.son = 'true'
+       }
+       return item
+    }) 
     this.RouterConfig = lodash.concat([
       {
         path: '/',
@@ -121,7 +127,7 @@ class AppRouter {
         name: 'webview',
         component: webview
       }
-    ], this.createRouters(), [
+    ], createRouters , [
       {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
@@ -156,8 +162,8 @@ class AppRouter {
         var a = lodash.assign({ label: $i18n.t(`PageName.${lodash.get(item, 'name')}`), value: lodash.get(item, 'component.name') }, item)
         return a;
     })
-
   }
+
   toArray() {
     let PagesCache = []
     this.PagesCache.forEach(x => {
@@ -168,7 +174,6 @@ class AppRouter {
   createRouters() {
     let rv= createRouters({
       rc: this.PageFiles,
-      filter: (fileName) => !/[\\/](view|views|children)[\\/]/.test(fileName),
       component: (file) => {
         return file.default
       }
