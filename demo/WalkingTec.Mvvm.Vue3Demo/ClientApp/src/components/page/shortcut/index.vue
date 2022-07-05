@@ -1,7 +1,7 @@
 <template>
 		<a
             :href="href"
-            target="_blank"
+            
         >
             <div><span :class="icon"></span></div>
             {{font}}
@@ -18,6 +18,10 @@
 				type:String,
 				default:''
 			},
+			target: {
+				type: String,
+				default:'self'
+            },
 			font:{
 				type:String,
 				default:''
