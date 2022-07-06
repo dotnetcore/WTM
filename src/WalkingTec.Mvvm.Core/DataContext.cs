@@ -306,7 +306,7 @@ namespace WalkingTec.Mvvm.Core
             var rest = acts.Where(x => x.MethodName != actionName && x.IgnorePrivillege == false).ToList();
             bool allowtenant = controllerName != "FrameworkMenu";
             FrameworkMenu menu = GetMenuFromAction(act, true, displayOrder, allowtenant);
-            if(act.Module.IsApi == true)
+            if(act?.Module?.IsApi == true)
             {
                 menu.ModuleName += "Api";
             }
