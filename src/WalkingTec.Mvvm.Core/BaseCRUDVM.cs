@@ -771,8 +771,8 @@ namespace WalkingTec.Mvvm.Core
                             var dataquery = set.Invoke(DC, null) as IQueryable<TopBasePoco>;
                             ParameterExpression pe = Expression.Parameter(ftype);
                             Expression member = Expression.MakeMemberAccess(pe, ftype.GetSingleProperty(fkname));
-                            member = Expression.Call(member, "ToString", new Type[] { });
-                            Expression right = Expression.Constant(string.IsNullOrEmpty(softkey) ? Entity.GetID().ToString() : Entity.GetPropertyValue(softkey).ToString());
+                            //member = Expression.Call(member, "ToString", new Type[] { });
+                            Expression right = Expression.Constant(string.IsNullOrEmpty(softkey) ? Entity.GetID() : Entity.GetPropertyValue(softkey), member.Type);
                             Expression condition = Expression.Equal(member, right);
                             var exp = Expression.Call(
                                   typeof(Queryable),
