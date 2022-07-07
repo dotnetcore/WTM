@@ -74,7 +74,7 @@ class Entity {
         // label 启用
         label: EnumLocaleLabel.AdminRoleCode,
         valueType: WTM_ValueType.select,
-        request: async () => FieldRequest('/api/_FrameworkUser/GetFrameworkRoles'),
+        request: async () => FieldRequest('/api/_account/GetFrameworkRoles'),
         rules: [{ required: true }],
     }
 }

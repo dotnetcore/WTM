@@ -35,7 +35,8 @@ export default class extends mixins(PageDetailsBasics) {
   @Inject() readonly PageController: PageController;
   @Provide({ reactive: true }) formState = {
     Entity: {
-      
+          Enabled: true,
+          EnableSub: false      
     },
   };
   EnumLocaleLabel = EnumLocaleLabel
