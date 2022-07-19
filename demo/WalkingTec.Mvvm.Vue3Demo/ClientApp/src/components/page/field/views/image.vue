@@ -1,5 +1,5 @@
 <template>
-    <template v-if="_readonly">
+    <template v-if="disabled || _readonly">
         <a-upload :disabled="true"
               v-if="max !== 1" 
               name="file"
