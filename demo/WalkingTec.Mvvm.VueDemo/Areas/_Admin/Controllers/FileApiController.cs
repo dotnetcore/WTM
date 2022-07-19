@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.StaticFiles;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Core.Extensions;
+using System.Linq;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
@@ -129,6 +131,18 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
+        [HttpGet("[action]/{id}")]
+        [ActionDescription("GetFileName")]
+        [Public]
+        public IActionResult GetFileInfo([FromServices] WtmFileProvider fp, string id, string csName = null)
+        {
+            FileAttachment rv = new FileAttachment();
+            using (var dc = Wtm.CreateDC(cskey: csName))
+            {
+                rv = dc.Set<FileAttachment>().CheckID(id).FirstOrDefault();
+            }
+            return Ok(rv);
+        }
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetUserPhoto")]

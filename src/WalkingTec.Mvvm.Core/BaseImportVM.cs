@@ -211,7 +211,9 @@ namespace WalkingTec.Mvvm.Core
                 if (Wtm.ServiceProvider != null)
                 {
                     var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
+                    var tempdc = Wtm.DC;
                     file = fp.GetFile(UploadFileId, true,Wtm.CreateDC(false,"default"));
+                    Wtm.DC = tempdc;
                 }
                 if (file == null)
                 {

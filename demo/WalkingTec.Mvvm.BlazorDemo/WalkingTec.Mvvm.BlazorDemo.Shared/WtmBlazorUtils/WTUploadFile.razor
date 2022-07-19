@@ -74,14 +74,16 @@
             List<UploadFile> temp = new List<UploadFile>();
             if (IsMultiple == false)
             {
-                var rv = await WtmBlazor.Api.CallAPI<string>($"/api/_file/GetFileName/{Value}", HttpMethodEnum.GET,  new Dictionary<string,string>());
+                var rv = await WtmBlazor.Api.CallAPI<FileAttachment>($"/api/_file/GetFileInfo/{Value}", HttpMethodEnum.GET,  new Dictionary<string,string>());
                 if (rv.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     temp.Add(new UploadFile
                     {
-                        FileName = rv.Data
+                        FileName = rv.Data.FileName,
+                        Size = rv.Data.Length,
+                        PrevUrl = $"/api/_file/GetFile/{Value}"
                     });
-                    files.Add(Value.ToString(), rv.Data.ToString());
+                    files.Add(Value.ToString(), $"/api/_file/GetFile/{Value}");
 
                 }
                 else
@@ -96,14 +98,16 @@
                 var list = Value as IEnumerable<ISubFile>;
                 foreach (var item in list)
                 {
-                    var rv = await WtmBlazor.Api.CallAPI<string>($"/api/_file/GetFileName/{item.FileId}", HttpMethodEnum.GET, new object());
+                    var rv = await WtmBlazor.Api.CallAPI<FileAttachment>($"/api/_file/GetFileInfo/{item.FileId}", HttpMethodEnum.GET, new object());
                     if (rv.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         temp.Add(new UploadFile
                         {
-                            FileName = rv.Data
-                        });
-                        files.Add(item.FileId.ToString(), rv.Data.ToString());
+                        FileName = rv.Data.FileName,
+                        Size = rv.Data.Length,
+                         PrevUrl = $"/api/_file/GetFile/{item.FileId}"
+                       });
+                        files.Add(item.FileId.ToString(), $"/api/_file/GetFile/{item.FileId}");
                     }
                 }
                 dlist = temp;
@@ -129,7 +133,7 @@
             var rv = await WtmBlazor.Api.CallAPI<DynamicData>("/api/_file/Upload", HttpMethodEnum.POST, new Dictionary<string, string>(), filedata, file.File.Name);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                files.Add(rv.Data.Fields["Id"].ToString(), file.File.Name);
+                files.Add(rv.Data.Fields["Id"].ToString(), $"/api/_file/GetFile/{rv.Data.Fields["Id"]}");
                 if (IsMultiple)
                 {
                     CurrentValue = (TValue)PropertyHelper.MakeList(typeof(TValue).GetGenericArguments()[0], "FileId", files.Select(x => x.Key).ToArray());
@@ -150,7 +154,7 @@
 
     private async Task<bool> OnAvatarDelete(UploadFile file)
     {
-        var idstr = files.Where(x => x.Value == file.OriginFileName || x.Key == file.FileName).Select(x => x.Key).FirstOrDefault();
+        var idstr = files.Where(x => x.Value == file.OriginFileName || x.Value == file.PrevUrl).Select(x => x.Key).FirstOrDefault();
         if (idstr != null)
         {
             var rv = await WtmBlazor.Api.CallAPI($"/api/_file/DeletedFile/{idstr}");

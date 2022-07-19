@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Core.Json;
 
 namespace WtmBlazorUtils
 {
-    public static class NavigationExtension
+    public static class ServiceExtension
     {
         public static void AddWtmBlazor(this IServiceCollection self, Configs config, string baseAddress = "")
         {
