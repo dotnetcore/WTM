@@ -211,9 +211,9 @@ namespace WalkingTec.Mvvm.Core
                 if (Wtm.ServiceProvider != null)
                 {
                     var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
-                    var tempdc = Wtm.DC;
+                   // var tempdc = Wtm.DC;
                     file = fp.GetFile(UploadFileId, true,Wtm.CreateDC(false,"default"));
-                    Wtm.DC = tempdc;
+                    //Wtm.DC = tempdc;
                 }
                 if (file == null)
                 {
@@ -908,7 +908,7 @@ namespace WalkingTec.Mvvm.Core
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fp.DeleteFile(item.ToString(), DC.ReCreate());
+                    fp.DeleteFile(item.ToString(), Wtm.CreateDC(false, "default"));
                 }
             }
 
@@ -1058,7 +1058,7 @@ namespace WalkingTec.Mvvm.Core
             if (string.IsNullOrEmpty(UploadFileId) == false && Wtm.ServiceProvider != null)
             {
                 var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
-                fp.DeleteFile(UploadFileId, DC.ReCreate());
+                fp.DeleteFile(UploadFileId, Wtm.CreateDC(false, "default"));
             }
 
             return true;
