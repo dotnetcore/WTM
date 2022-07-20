@@ -1,16 +1,18 @@
 @namespace WtmBlazorUtils
 @inherits WTComponent
 @inject WtmBlazorContext WtmBlazor
+@inject IJSRuntime JSRuntime
 @using System.Threading;
 @using System.Linq.Expressions;
 @using System.IO;
+@using System.Text.Json;
 @typeparam TValue
 
 <div>
     @if (dlist != null)
     {
         <ButtonUpload @ref="uploader" Value="Value" ValueExpression="ValueExpression" ValueChanged="ValueChanged" Accept="*/*" IsSingle="!IsMultiple" ShowProgress="true" OnChange="@OnAvatarUpload"
-                      OnDelete="@OnAvatarDelete" DisplayText="@LabelText" DefaultFileList="@dlist" IsDisabled="@IsDisabled"></ButtonUpload>
+                      OnDelete="@OnAvatarDelete" DisplayText="@LabelText" DefaultFileList="@dlist" IsDisabled="@IsDisabled" ShowDownloadButton=true OnDownload="OnDownload"></ButtonUpload>
     }
 </div>
 @code{
@@ -81,7 +83,7 @@
                     {
                         FileName = rv.Data.FileName,
                         Size = rv.Data.Length,
-                        PrevUrl = $"/api/_file/GetFile/{Value}"
+                        PrevUrl = $"/api/_file/DownloadFile/{Value}"
                     });
                     files.Add(Value.ToString(), $"/api/_file/GetFile/{Value}");
 
@@ -105,7 +107,7 @@
                         {
                         FileName = rv.Data.FileName,
                         Size = rv.Data.Length,
-                         PrevUrl = $"/api/_file/GetFile/{item.FileId}"
+                         PrevUrl = $"/api/_file/DownloadFile/{item.FileId}"
                        });
                         files.Add(item.FileId.ToString(), $"/api/_file/GetFile/{item.FileId}");
                     }
@@ -134,6 +136,7 @@
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 files.Add(rv.Data.Fields["Id"].ToString(), $"/api/_file/GetFile/{rv.Data.Fields["Id"]}");
+                file.PrevUrl = $"/api/_file/DownloadFile/{rv.Data.Fields["Id"]}";
                 if (IsMultiple)
                 {
                     CurrentValue = (TValue)PropertyHelper.MakeList(typeof(TValue).GetGenericArguments()[0], "FileId", files.Select(x => x.Key).ToArray());
@@ -212,4 +215,10 @@
         }
     }
 
+    private async Task OnDownload(UploadFile file)
+    {
+            var url = WtmBlazor.GetServerUrl() + file.PrevUrl;
+            await JSRuntime.InvokeVoidAsync("urlFuncs.download", url,null,"GET");
+        
+    }
 }

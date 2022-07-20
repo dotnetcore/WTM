@@ -11,7 +11,8 @@
         <Select @bind-Value="@Model.Entity.SchoolType" PlaceHolder="@WtmBlazor.Localizer["Sys.PleaseSelect"]" />
         <BootstrapInput @bind-Value="@Model.Entity.Remark" />
         <WTUploadImage @bind-Value="@Model.Entity.PhotoId" />
-        <WTUploadFile @bind-Value="@Model.Entity.FileId" />
+         <WTUploadFile @bind-Value="@Model.Entity.Photos" />
+       <WTUploadFile @bind-Value="@Model.Entity.FileId" />
     </Row>
     <Table TItem="Major"
            IsPagination="false" 
