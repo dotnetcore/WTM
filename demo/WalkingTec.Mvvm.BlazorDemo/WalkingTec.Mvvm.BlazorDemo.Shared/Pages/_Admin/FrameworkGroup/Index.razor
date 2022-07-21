@@ -15,7 +15,7 @@
 
 
 <Table @ref="dataTable" TItem="FrameworkGroup_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" OnTreeExpand="OnTreeExpand" IsTree="true" AllowResizing="true">
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" TreeNodeConverter="(x)=>WtmBlazor.DefaultTreeConverter(x)"  IsTree="true" AllowResizing="true">
     <TableColumns>
         <TableColumn @bind-Field="@context.GroupName" Width="220"/>
         <TableColumn @bind-Field="@context.GroupCode" Width="180" />

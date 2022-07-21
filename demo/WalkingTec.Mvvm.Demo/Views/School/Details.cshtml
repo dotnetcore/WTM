@@ -1,9 +1,9 @@
 @model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolVM
 
 <wt:form vm="@Model">
-  <wt:row items-per-row="ItemsPerRowEnum.Two">
-    <wt:display field="Entity.SchoolCode" padding-text="km/l"/>
-    <wt:display field="Entity.SchoolName" padding-text="km/l"/>
+  <wt:row items-per-row="ItemsPerRowEnum.Three">
+    <wt:display field="Entity.SchoolCode" padding-text="km/l" hide-label="true"/>
+    <wt:display field="Entity.SchoolName" label-width="60" />
     <wt:display field="Entity.SchoolType" padding-text="km/l"/>
     <wt:display field="Entity.Remark" padding-text="km/l"/>
     <wt:multiupload field="Entity.Photos" disabled="true" upload-type="ImageFile"/>

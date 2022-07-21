@@ -11,7 +11,8 @@
         <Display @bind-Value="@Model.Entity.SchoolType" ShowLabel="true" />
         <Display @bind-Value="@Model.Entity.Remark" ShowLabel="true" />
         <WTUploadImage @bind-Value="@Model.Entity.PhotoId" IsDisabled="true" ShowLabel="true" />
-        @if (Model.Entity.FileId.HasValue)
+         <WTUploadFile @bind-Value="@Model.Entity.Photos" IsDisabled="true" ShowLabel="true" />
+       @if (Model.Entity.FileId.HasValue)
         {
             <div>
                 <label class="control-label is-display">文件</label>

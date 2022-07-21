@@ -5,7 +5,7 @@
 
 
 <Table @ref="dataTable" TItem="FrameworkMenu_ListView" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" OnTreeExpand="OnTreeExpand" IsTree="true" AllowResizing="true">
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" TreeNodeConverter="(x)=>WtmBlazor.DefaultTreeConverter(x)" IsTree="true" AllowResizing="true">
     <TableColumns>
         <TableColumn @bind-Field="@context.PageName" Width="180" />
         <TableColumn @bind-Field="@context.ModuleName" />
