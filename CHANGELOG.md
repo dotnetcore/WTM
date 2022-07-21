@@ -2,6 +2,27 @@
 
 ## v6.x.x
 
+##6.3.0(2022-7-22)
+* **修改：**  优化Blazor的用户信息，提升页面效率
+* **修改：**  配合BootStrapBlazor控件的最新版本，更新树形列表
+* **修改：**  Blazor文件上传控件增加了文件下载
+* **修改：**  修复多数据库导入的bug
+* **修改：**  修复Layui模式Selector绑定非主键时显示的问题
+* **修改：**  修复Layui模式Display控件的样式
+
+##6.2.6(2022-7-5)
+* **修改：**  修复Jwt登录时间验证的问题
+* **修改：**  修复Layui模式中Tree控件禁用的问题
+* **修改：**  移除过时引用
+* **修改：**  修复主键类型为string时Crud的问题
+* **修改：**  修复WtmJob Displose时的bug
+* **修改：**  优化Blazor菜单，感谢akin的PR
+
+##6.2.4(2022-6-16)
+* **修改：**  优化登录
+* **修改：**  修复WtmFileProvider直接使用的问题
+* **新增：**  为配合WtmPlus的新功能，框架底层增加SoftKey,SoftFK属性，用于标记非主键关联的模型
+
 ##6.2.3(2022-6-12)
 * **新增：**  QuartzRepeatAttribute增加了DelaySeconds参数，可以控制延迟多少秒启动服务
 * **修改：**  恢复LoginUserInfo中的UserId以兼容老系统
@@ -84,7 +105,29 @@
 * **修改：**  修改了layui transfer控件绑定数据的bug
 * **修改：**  修改了layui多选控件设置必填的bug
 
-## v5.x.x 
+## v5.x.x
+
+##5.10.0(2022-7-22)
+* **修改：**  优化Blazor的用户信息，提升页面效率
+* **修改：**  配合BootStrapBlazor控件的最新版本，更新树形列表
+* **修改：**  Blazor文件上传控件增加了文件下载
+* **修改：**  修复多数据库导入的bug
+* **修改：**  修复Layui模式Selector绑定非主键时显示的问题
+* **修改：**  修复Layui模式Display控件的样式
+
+##5.9.6(2022-7-5)
+* **修改：**  修复Jwt登录时间验证的问题
+* **修改：**  修复Layui模式中Tree控件禁用的问题
+* **修改：**  移除过时引用
+* **修改：**  修复主键类型为string时Crud的问题
+* **修改：**  修复WtmJob Displose时的bug
+* **修改：**  优化Blazor菜单，感谢akin的PR
+
+##5.9.4(2022-6-16)
+* **修改：**  优化登录
+* **修改：**  修复WtmFileProvider直接使用的问题
+* **新增：**  为配合WtmPlus的新功能，框架底层增加SoftKey,SoftFK属性，用于标记非主键关联的模型
+
 
 ##5.9.3(2022-6-12)
 * **新增：**  QuartzRepeatAttribute增加了DelaySeconds参数，可以控制延迟多少秒启动服务
