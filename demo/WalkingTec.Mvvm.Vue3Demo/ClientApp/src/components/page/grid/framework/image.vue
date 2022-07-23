@@ -1,7 +1,6 @@
 <template>
   <div>
    <a-image :width="40" :src="'/api/_file/downloadFile/'+params.value" :fallback="imagefallback" v-if="params.value" />
-   <span v-else>暂无图片</span>
   </div>
 </template>
 
