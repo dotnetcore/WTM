@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using System.Linq.Expressions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 {
@@ -170,7 +171,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 listVM.NeedPage = false;
                 listVM.IsSearched = false;
                 listVM.ClearEntityList();
-                listVM.SearcherMode = ListVMSearchModeEnum.Batch;
+                //listVM.SearcherMode = ListVMSearchModeEnum.Batch;
+                var para = Expression.Parameter(listVM.ModelType);
+                var idproperty = listVM.ModelType.GetSingleProperty(ValBind == null ? "ID" : ValBind?.Metadata.PropertyName);
+                var pro = Expression.Property(para, idproperty);
+                listVM.ReplaceWhere = listVM.Ids.GetContainIdExpression(listVM.ModelType, Expression.Parameter(listVM.ModelType), pro);
+
                 if (!string.IsNullOrEmpty(Paras))
                 {
                     var p = Paras.Split(',');

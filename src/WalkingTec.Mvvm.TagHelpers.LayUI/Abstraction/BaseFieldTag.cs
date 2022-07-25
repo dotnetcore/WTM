@@ -152,18 +152,23 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 if(LabelText != "") {
                     lb = $"{requiredDot}{LabelText}:";
                 }
-
+                string instyle = $"style=\"{(LabelWidth == null || string.IsNullOrEmpty(PaddingText) == false ? "" : "margin-left:" + (LabelWidth + 30) + "px;")}";
+                if(this is DisplayTagHelper)
+                {
+                    instyle += "width:unset;";
+                }
+                instyle += "\"";
                 preHtml += $@"
 <div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item layui-form"" lay-filter=""{layfilter}div"">
     <label for=""{Id}"" class=""layui-form-label"" {(LabelWidth == null ? "style='min-height:21px;'" : "style='min-height:21px;width:" + LabelWidth + "px'")}>{lb}</label>
-    <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" {(LabelWidth == null || string.IsNullOrEmpty(PaddingText)==false ? "" : "style='margin-left:" + (LabelWidth + 30) + "px'")}>
+    <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" {instyle}>
 ";
             }
             else
             {
                 preHtml += $@"
 <div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item layui-form"" lay-filter=""{layfilter}div"">
-    <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" style=""margin-left:0px"">
+    <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" style=""{(this is DisplayTagHelper ? "margin-left:0px;width:unset;" : "margin-left:0px;")}"">
 ";
             }
             if (string.IsNullOrEmpty(PaddingText))

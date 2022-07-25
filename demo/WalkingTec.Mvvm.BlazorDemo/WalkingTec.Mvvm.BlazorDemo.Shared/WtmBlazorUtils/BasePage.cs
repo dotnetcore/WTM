@@ -519,5 +519,21 @@ namespace WtmBlazorUtils
             }
         }
 
+        public Task<IEnumerable<TableTreeNode<T>>> DefaultTreeConverter<T>(IEnumerable<T> data) where T:TreePoco<T>
+        {
+            List<TableTreeNode<T>> rv = new List<TableTreeNode<T>>();
+            if(data == null || data.Count() == 0)
+            {
+                return Task.FromResult(rv.AsEnumerable());
+            }
+            foreach (var item in data)
+            {
+                TableTreeNode<T> tt = new TableTreeNode<T>(item);
+                tt.HasChildren = item.HasChildren;
+                tt.Items = DefaultTreeConverter<T>(item.Children).Result;
+                rv.Add(tt);
+            }
+            return Task.FromResult(rv.AsEnumerable());
+        }
     }
 }

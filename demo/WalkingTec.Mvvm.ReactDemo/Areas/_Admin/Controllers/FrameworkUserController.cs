@@ -291,5 +291,36 @@ namespace WalkingTec.Mvvm.Admin.Api
             var users = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == keywords).Select(x => x.UserCode).ToList();
             return Ok(users);
         }
+
+        [ActionDescription("Login.ChangePassword")]
+        [HttpPut("[action]")]
+        public  IActionResult Password(FrameworkUserVM vm)
+        {
+            var keys = ModelState.Keys.ToList();
+            foreach (var item in keys)
+            {
+                if (item != "Entity.Password")
+                {
+                    ModelState.Remove(item);
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                vm.ChangePassword();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+                else
+                {
+                    return Ok(vm.Entity);
+                }
+            }
+        }
+
     }
 }

@@ -7,7 +7,7 @@
     {
         <Router AppAssembly="@typeof(Program).Assembly" OnNavigateAsync="OnNavigateAsync">
             <Found Context="routeData">
-                <CascadingValue Value="User" IsFixed="false">
+                <CascadingValue Value="User" IsFixed="true">
                     <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
                 </CascadingValue>
             </Found>

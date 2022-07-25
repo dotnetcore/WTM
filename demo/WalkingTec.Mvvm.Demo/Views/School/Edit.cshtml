@@ -1,10 +1,10 @@
 @model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolVM
 
 <wt:form vm="@Model">
-  <wt:row>
-    <wt:textbox field="Entity.SchoolCode" />
-    <wt:textbox field="Entity.SchoolName" />
-    <wt:combobox field="Entity.SchoolType" />
+  <wt:row items-per-row=" ItemsPerRowEnum.Three">
+    <wt:textbox field="Entity.SchoolCode" padding-text="单位aaa"/>
+    <wt:textbox field="Entity.SchoolName" padding-text="单位aaa"/>
+    <wt:combobox field="Entity.SchoolType" padding-text="单位aaa"/>
     <wt:multiupload field="Entity.Photos" upload-type="ImageFile"  upload-group-name="test" upload-subdir="aaa" />
     <wt:datetime field="Entity.Duration" format="HH:mm:ss" type="Time" />
     <wt:ueditor field="Entity.Remark" height="300" />
