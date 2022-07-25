@@ -302,8 +302,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                     {
                         linkto = LinkId;
                     }
+                    output.Attributes.Add("wtm-linkto", $"{linkto}");
                     Filter.Add("_DONOT_USE_LINK_FIELD", linkto);
                     Filter.Add("_DONOT_USE_TRIGGER_URL", TriggerUrl);
+                }
+                if (TriggerUrl != null)
+                {
+                    output.Attributes.Add("wtm-turl", TriggerUrl);
                 }
                 if (listVM.Searcher != null)
                 {
