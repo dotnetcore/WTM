@@ -46,6 +46,7 @@ using WalkingTec.Mvvm.TagHelpers.LayUI;
 using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.Extensions.FileProviders;
 using WalkingTec.Mvvm.Core.Support.Quartz;
+using System.Text.RegularExpressions;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -798,6 +799,18 @@ namespace WalkingTec.Mvvm.Mvc
                         using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                         {
                             tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
+                            foreach (var item in tenants)
+                            {
+                                if (string.IsNullOrEmpty(item.TDomain)==false)
+                                {
+                                    Regex r = new Regex("(http://|https://)?(.+)(/)?");
+                                    var m = r.Match(item.TDomain);
+                                    if (m.Success)
+                                    {
+                                        item.TDomain = m.Groups[2].Value;
+                                    }
+                                }
+                            }
                         }
                     }
                     if(tenants == null)
