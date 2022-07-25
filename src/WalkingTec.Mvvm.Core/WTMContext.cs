@@ -1408,7 +1408,7 @@ params string[] groupcode)
 
         public void Dispose()
         {
-            this.DC?.Dispose();
+            this._dc?.Dispose();
         }
 
         #endregion

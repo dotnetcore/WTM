@@ -276,13 +276,22 @@ namespace WalkingTec.Mvvm.Core
 
                 var pp = ModelType.GetAllProperties();
                 List<MemberBinding> bindExps = new List<MemberBinding>();
+                List<string> existname = new List<string>();
                 foreach (var pro in pp)
                 {
+                    if (existname.Contains(pro.Name))
+                    {
+                        continue;
+                    }
                     if (pro.GetCustomAttribute<NotMappedAttribute>() == null)
                     {
-                        var right = Expression.MakeMemberAccess(pe, pro);
-                        MemberBinding bind = Expression.Bind(pro, right);
-                        bindExps.Add(bind);
+                        if (pro.PropertyType.IsList() == false && typeof(TopBasePoco).IsAssignableFrom(pro.PropertyType) == false)
+                        {
+                            var right = Expression.MakeMemberAccess(pe, pro);
+                            MemberBinding bind = Expression.Bind(pro, right);
+                            bindExps.Add(bind);
+                            existname.Add(pro.Name);
+                        }
                     }
                     else
                     {
@@ -300,7 +309,7 @@ namespace WalkingTec.Mvvm.Core
                 query = query.Select(lambda);
             }
             //获取数据
-            rv = query.CheckID(Id).AsNoTracking().SingleOrDefault();
+            rv = query.CheckID(Id).AsNoTracking().FirstOrDefault();
             if (rv == null)
             {
                 throw new Exception("数据不存在");
@@ -1222,12 +1231,12 @@ namespace WalkingTec.Mvvm.Core
                         conditions.Add(exp);
                     }
                     //如果要求判断id不重复，则去掉id不相等的判断，加入id相等的判断
-                    if (props.Any(x => x.Name.ToLower() == "id"))
-                    {
-                        conditions.RemoveAt(0);
-                        BinaryExpression idEqual = Expression.Equal(idLeft, idRight);
-                        conditions.Insert(0, idEqual);
-                    }
+                    //if (props.Any(x => x.Name.ToLower() == "id"))
+                    //{
+                    //    conditions.RemoveAt(0);
+                    //    BinaryExpression idEqual = Expression.Equal(idLeft, idRight);
+                    //    conditions.Insert(0, idEqual);
+                    //}
                     //int count = 0;
                     if (conditions.Count > 1)
                     {

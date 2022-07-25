@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
-
+using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTestVMs
 {
@@ -18,6 +18,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTestVMs
 
         public List<int?> SelectedSchool { get; set; }
         public List<Guid> SelectedMajor { get; set; }
+        public SchoolListVM listVM { get; set; }
         public LinkTestVM()
         {
             SetInclude(x => x.Student);
