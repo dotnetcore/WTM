@@ -6,7 +6,7 @@
     <a-date-picker
       v-model:value="value"
       style="width:100%;"
-      format="YYYY-MM-DD HH:mm:ss"
+      format="YYYY-MM-DD"
       :placeholder="_placeholder"
       :disabled="disabled"
       v-bind="_fieldProps"
@@ -18,6 +18,7 @@ import { $System, globalProperties } from "@/client";
 import { Vue, Options, Watch, mixins, Inject } from "vue-property-decorator";
 import dayjs, { Dayjs } from 'dayjs';
 import { defineComponent, ref } from 'vue';
+import moment from 'moment';
 import { FieldBasics } from "../script";
 @Options({ components: {} })
 export default class extends mixins(FieldBasics) {
@@ -28,23 +29,15 @@ export default class extends mixins(FieldBasics) {
   // 实体
   @Inject() readonly PageEntity;
   @Inject({ default: "" }) readonly formType;
-/*  get value(){
+  /*get value(){
      return ref<Dayjs>(dayjs('2015-06-06', 'YYYY-MM-DD'))
   }*/
   get value() {
-      return this.lodash.get(this.formState, this._name)
+       let data = this.lodash.get(this.formState, this._name)
+       return dayjs(data, 'YYYY-MM-DD')
   }
   set value(value) {
       this.lodash.set(this.formState, this._name, value);
-  }
-  async mounted() {
-    this.onValueChange(this.value, undefined);
-  }
-  @Watch("value")
-  onValueChange(val, old) {
-      if(val){
-        this.value = ref<Dayjs>(dayjs(val, 'YYYY-MM-DD'))
-      }
   }
 }
 </script>

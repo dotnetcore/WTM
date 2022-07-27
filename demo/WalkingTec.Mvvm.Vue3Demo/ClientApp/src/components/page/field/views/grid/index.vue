@@ -65,10 +65,14 @@ export default class extends mixins(FieldBasics) {
     return this._readonly || this.disabled;
   }
   get rowData() {
-    return this.value.map((item,index)=>{
-      item._rowKey = index+1
-      return item
-    }) || [];
+    if(this.value){
+       return this.value.map((item,index)=>{
+        item._rowKey = index+1
+        return item
+      }) || [];
+     }else{
+        return []
+     }
   }
   get columnDefs(): (ColDef | ColGroupDef)[] {
     let columnDefs = this.lodash.concat<ColDef | ColGroupDef>(
