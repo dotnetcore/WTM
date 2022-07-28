@@ -18,7 +18,6 @@ import { $System, globalProperties } from "@/client";
 import { Vue, Options, Watch, mixins, Inject } from "vue-property-decorator";
 import dayjs, { Dayjs } from 'dayjs';
 import { defineComponent, ref } from 'vue';
-import moment from 'moment';
 import { FieldBasics } from "../script";
 @Options({ components: {} })
 export default class extends mixins(FieldBasics) {
@@ -29,12 +28,9 @@ export default class extends mixins(FieldBasics) {
   // 实体
   @Inject() readonly PageEntity;
   @Inject({ default: "" }) readonly formType;
-  /*get value(){
-     return ref<Dayjs>(dayjs('2015-06-06', 'YYYY-MM-DD'))
-  }*/
   get value() {
        let data = this.lodash.get(this.formState, this._name)
-       return dayjs(data, 'YYYY-MM-DD')
+       return data ? dayjs(data, 'YYYY-MM-DD') : ''
   }
   set value(value) {
       this.lodash.set(this.formState, this._name, value);
