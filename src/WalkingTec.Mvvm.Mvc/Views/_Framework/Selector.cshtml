@@ -47,7 +47,7 @@
             for (var i = 0; i < selected.length; i++) {{
               url += '&id=' +selected[i]['{ViewBag.ValName}'];
               }}
-          ff.ChainChange(url, $('#Selector_{ViewBag.FieldName}'));
+          ff.ChainChange(url, $('#{ViewBag.SelId}_Display')[0]);
   ";
           }
       @Html.Raw(linkscript);
