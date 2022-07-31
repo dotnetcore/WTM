@@ -170,12 +170,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 listVM.Ids = list;
                 listVM.NeedPage = false;
                 listVM.IsSearched = false;
+                listVM.SelectorValueField = ValBind == null ? "ID" : ValBind?.Metadata.PropertyName;
                 listVM.ClearEntityList();
-                //listVM.SearcherMode = ListVMSearchModeEnum.Batch;
-                var para = Expression.Parameter(listVM.ModelType);
-                var idproperty = listVM.ModelType.GetSingleProperty(ValBind == null ? "ID" : ValBind?.Metadata.PropertyName);
-                var pro = Expression.Property(para, idproperty);
-                listVM.ReplaceWhere = listVM.Ids.GetContainIdExpression(listVM.ModelType, Expression.Parameter(listVM.ModelType), pro);
+                listVM.SearcherMode = ListVMSearchModeEnum.Batch;
+                //var para = Expression.Parameter(listVM.ModelType);
+                //var idproperty = listVM.ModelType.GetSingleProperty(ValBind == null ? "ID" : ValBind?.Metadata.PropertyName);
+                //var pro = Expression.Property(para, idproperty);
+                //listVM.ReplaceWhere = listVM.Ids.GetContainIdExpression(listVM.ModelType, Expression.Parameter(listVM.ModelType), pro);
 
                 if (!string.IsNullOrEmpty(Paras))
                 {
