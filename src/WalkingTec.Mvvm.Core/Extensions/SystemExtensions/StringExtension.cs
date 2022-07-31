@@ -234,8 +234,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 return "";
             }
-            Regex r = new Regex("[x00-x1f|x7f]");
-            return r.Replace(self,"");
+            return self.Replace(Environment.NewLine, "").Replace("\t", string.Empty).Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\v", string.Empty).Replace("\b", string.Empty);
         }
     }
 }
