@@ -59,9 +59,9 @@ namespace WtmBlazorUtils
         }
 
 
-        public async Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.ExtraExtraLarge, LoginUserInfo userinfo = null, bool isMax = false)
+        public Task<DialogResult> OpenDialog<T>(string Title, Expression<Func<T, object>> Values = null, Size size = Size.ExtraExtraLarge, LoginUserInfo userinfo = null, bool isMax = false)
         {
-            return await WtmBlazor.OpenDialog(Title, Values, size, userinfo??this.UserInfo, isMax);
+            return WtmBlazor.OpenDialog(Title, Values, size, userinfo??this.UserInfo, isMax);
         }
 
         public async Task<bool> PostsData(object data, string url, Func<string, string> Msg = null, Action<ErrorObj> ErrorHandler = null, HttpMethodEnum method = HttpMethodEnum.POST)
@@ -126,7 +126,7 @@ namespace WtmBlazorUtils
                 }
                 else
                 {
-                    SetError(form, rv.Errors);
+                    await SetError(form, rv.Errors);
                     ErrorHandler?.Invoke(rv.Errors);
                 }
                 return false;
@@ -183,7 +183,7 @@ namespace WtmBlazorUtils
         }
 
 
-        public async void SetError(ValidateForm form, ErrorObj errors)
+        public async Task SetError(ValidateForm form, ErrorObj errors)
         {
             if (errors != null)
             {
@@ -228,14 +228,14 @@ namespace WtmBlazorUtils
         }
 
 
-        public async Task<string> GetToken()
+        public Task<string> GetToken()
         {
-            return await GetLocalStorage<string>("wtmtoken");
+            return GetLocalStorage<string>("wtmtoken");
         }
 
-        public async Task<string> GetRefreshToken()
+        public Task<string> GetRefreshToken()
         {
-            return await GetLocalStorage<string>("wtmrefreshtoken");
+            return GetLocalStorage<string>("wtmrefreshtoken");
         }
 
         public async Task SetToken(string token, string refreshtoken)
