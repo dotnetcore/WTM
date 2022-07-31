@@ -308,7 +308,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     if (inner == false)
                     {
-                        html = "\"" + html.Replace(Environment.NewLine, "").Replace("\t", string.Empty).Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+                        html = "\"" + html.RemoveSpecialChar().Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     }
                     sb.Append($"\"{col.Field}\":");
                     sb.Append(html);
