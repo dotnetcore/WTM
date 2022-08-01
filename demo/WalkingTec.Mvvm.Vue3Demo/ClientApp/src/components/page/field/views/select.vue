@@ -29,12 +29,14 @@ export default class extends mixins(FieldBasics) {
   // 表单类型
   @Inject({ default: '' }) readonly formType;
   get readonlyText() {
-    // if (this.lodash.isArray(this.value)) {
-    //   const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, String(item.value)));
-    //   return this.lodash.map(filters, 'label').join(' / ')
-    // }
-    const filters = this.lodash.filter(this.dataSource, item => this.value === item.value);
-    return this.lodash.map(filters, 'label').join(' / ')
+     if (this.lodash.isArray(this.value)) {
+       const filters = this.lodash.filter(this.dataSource, item => this.lodash.includes(this.value, String(item.value)));
+       return this.lodash.map(filters, 'label').join(' / ')
+     }else{
+      const filters = this.lodash.filter(this.dataSource, item => this.value === item.value);
+      return this.lodash.map(filters, 'label').join(' / ')
+     }
+   
   }
   async mounted() {
     this.onRequest();
