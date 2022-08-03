@@ -7,7 +7,7 @@
         <TabItem Text="@WtmBlazor.Localizer["_Admin.BasicInfo"]">
             <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
                 <BootstrapInput @bind-Value="@Model.Entity.ITCode" />
-                <div></div>
+                <Switch @bind-Value="@Model.Entity.IsValid" />
                 <BootstrapInput @bind-Value="@Model.Entity.Name" />
                 <Select @bind-Value="@Model.Entity.Gender" />
                 <WTUploadImage @bind-Value="@Model.Entity.PhotoId" />

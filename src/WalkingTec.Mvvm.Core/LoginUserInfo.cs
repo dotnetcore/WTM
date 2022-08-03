@@ -184,31 +184,59 @@ namespace WalkingTec.Mvvm.Core
         {
             var ms = new List<SimpleMenuApi>();
             List<string> urls = new List<string>();
+            List<SimpleMenu> menudata = null;
+
             if (context.ConfigInfo.IsQuickDebug == false)
             {
-                var topdata = context.GlobaInfo.AllMenus.Where(x => x.ShowOnMenu && (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName))).ToList();
-                var allowedids = context.LoginUserInfo.FunctionPrivileges.Select(x => x.MenuItemId).ToList();
-                foreach (var item in topdata)
-                {
-                    if (allowedids.Contains(item.ID) && item.IsParentShowOnMenu(topdata))
-                    {
-                        ms.Add(new SimpleMenuApi
-                        {
-                            Id = item.ID.ToString().ToLower(),
-                            ParentId = item.ParentId?.ToString()?.ToLower(),
-                            Text = item.PageName,
-                            Url = item.Url,
-                            Icon = item.Icon
-                        });
-                    }
-                }
-
-                LocalizeMenu(ms);
-
-                urls.AddRange(context.GlobaInfo.AllMenus.Where(x => allowedids.Contains(x.ID) && x.Url != null).Select(x => x.Url).Distinct());
-                urls.AddRange(context.GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
+                menudata = context.GlobaInfo.AllMenus;
             }
-            if(this.Attributes == null)
+            else
+            {
+                using (var dc = context.CreateDC(false,"default"))
+                {
+                    menudata = dc?.Set<FrameworkMenu>()
+                            .OrderBy(x => x.DisplayOrder)
+                            .Select(x => new SimpleMenu
+                            {
+                                ID = x.ID,
+                                ParentId = x.ParentId,
+                                PageName = x.PageName,
+                                Url = x.Url,
+                                DisplayOrder = x.DisplayOrder,
+                                ShowOnMenu = x.ShowOnMenu,
+                                Icon = x.Icon,
+                                IsPublic = x.IsPublic,
+                                FolderOnly = x.FolderOnly,
+                                MethodName = x.MethodName,
+                                IsInside = x.IsInside,
+                                TenantAllowed = x.TenantAllowed
+                            })
+                            .ToList();
+                }
+            }
+            var topdata = context.GlobaInfo.AllMenus.Where(x => x.ShowOnMenu && (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName))).ToList();
+            var allowedids = context.LoginUserInfo.FunctionPrivileges.Select(x => x.MenuItemId).ToList();
+            foreach (var item in topdata)
+            {
+                if (allowedids.Contains(item.ID) && item.IsParentShowOnMenu(topdata))
+                {
+                    ms.Add(new SimpleMenuApi
+                    {
+                        Id = item.ID.ToString().ToLower(),
+                        ParentId = item.ParentId?.ToString()?.ToLower(),
+                        Text = item.PageName,
+                        Url = item.Url,
+                        Icon = item.Icon
+                    });
+                }
+            }
+
+            LocalizeMenu(ms);
+
+            urls.AddRange(context.GlobaInfo.AllMenus.Where(x => allowedids.Contains(x.ID) && x.Url != null).Select(x => x.Url).Distinct());
+            urls.AddRange(context.GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
+
+            if (this.Attributes == null)
             {
                 this.Attributes = new Dictionary<string, object>();
             }

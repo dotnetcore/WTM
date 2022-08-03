@@ -46,7 +46,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                         FrameworkUserRole r = new FrameworkUserRole
                         {
                             RoleCode = rolecode,
-                            UserCode = Entity.ITCode
+                            UserCode = Entity.ITCode,
+                            TenantCode = LoginUserInfo.CurrentTenant
                         };
                         DC.AddEntity(r);
                     }
@@ -58,7 +59,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                         FrameworkUserGroup g = new FrameworkUserGroup
                         {
                             GroupCode = groupcode,
-                            UserCode = Entity.ITCode
+                            UserCode = Entity.ITCode,
+                            TenantCode = LoginUserInfo.CurrentTenant
                         };
                         DC.AddEntity(g);
                     }
@@ -106,7 +108,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                         FrameworkUserRole r = new FrameworkUserRole
                         {
                             RoleCode = rolecode,
-                            UserCode = Entity.ITCode
+                            UserCode = Entity.ITCode,
+                            TenantCode = LoginUserInfo.CurrentTenant
                         };
                         DC.AddEntity(r);
                     }
@@ -118,7 +121,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                         FrameworkUserGroup g = new FrameworkUserGroup
                         {
                             GroupCode = groupcode,
-                            UserCode = Entity.ITCode
+                            UserCode = Entity.ITCode,
+                            TenantCode = LoginUserInfo.CurrentTenant
                         };
                         DC.AddEntity(g);
                     }

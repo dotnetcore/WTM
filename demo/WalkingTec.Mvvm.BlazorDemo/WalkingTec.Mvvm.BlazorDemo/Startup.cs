@@ -178,10 +178,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
         /// <returns>subdir name</returns>
         public string SubDirSelector(IWtmFileHandler fh)
         {
-            if (fh is WtmLocalFileHandler)
-            {
-                return DateTime.Now.ToString("yyyy-MM-dd");
-            }
+            //if (fh is WtmLocalFileHandler)
+            //{
+            //    return DateTime.Now.ToString("yyyy-MM-dd");
+            //}
             return null;
         }
 

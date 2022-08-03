@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
 
         public SchoolVM()
         {
-            SetInclude(x => x.Majors);
+            SetInclude(x => x.Majors, x=>x.Photos);
         }
 
         protected override void InitVM()

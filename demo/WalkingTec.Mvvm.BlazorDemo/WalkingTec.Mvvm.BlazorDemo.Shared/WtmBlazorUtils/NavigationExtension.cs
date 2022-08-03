@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace WtmBlazorUtils
 {
-    public static class ServiceExtension
+    public static class NavigationExtension
     {
         public static string QueryString(this NavigationManager nav, string paramName)
         {

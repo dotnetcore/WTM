@@ -96,6 +96,7 @@ var {Id} = xmSelect.render({{
     el: '#{Id}',
     name:'{Field.Name}',
     tips:'{EmptyText}',
+    disabled: {Disabled.ToString().ToLower()},
     {(THProgram._localizer["Sys.LayuiDateLan"] == "CN" ? "language:'zn'," : "language:'en',")}
 	autoRow: {AutoRow.ToString().ToLower()},
 	filterable: {EnableSearch.ToString().ToLower()},

@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using System.Linq.Expressions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 {
@@ -169,8 +170,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 listVM.Ids = list;
                 listVM.NeedPage = false;
                 listVM.IsSearched = false;
+                listVM.SelectorValueField = ValBind == null ? "ID" : ValBind?.Metadata.PropertyName;
                 listVM.ClearEntityList();
                 listVM.SearcherMode = ListVMSearchModeEnum.Batch;
+                //var para = Expression.Parameter(listVM.ModelType);
+                //var idproperty = listVM.ModelType.GetSingleProperty(ValBind == null ? "ID" : ValBind?.Metadata.PropertyName);
+                //var pro = Expression.Property(para, idproperty);
+                //listVM.ReplaceWhere = listVM.Ids.GetContainIdExpression(listVM.ModelType, Expression.Parameter(listVM.ModelType), pro);
+
                 if (!string.IsNullOrEmpty(Paras))
                 {
                     var p = Paras.Split(',');
@@ -296,8 +303,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                     {
                         linkto = LinkId;
                     }
+                    output.Attributes.Add("wtm-linkto", $"{linkto}");
                     Filter.Add("_DONOT_USE_LINK_FIELD", linkto);
                     Filter.Add("_DONOT_USE_TRIGGER_URL", TriggerUrl);
+                }
+                if (TriggerUrl != null)
+                {
+                    output.Attributes.Add("wtm-turl", TriggerUrl);
                 }
                 if (listVM.Searcher != null)
                 {

@@ -33,11 +33,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             context.SetWtmContext();
             _ =controller.Wtm.LoginUserInfo;
-            if (controller.Wtm.ConfigInfo.IsQuickDebug && controller is BaseApiController)
-            {
-                base.OnActionExecuting(context);
-                return;
-            }
+            //if (controller.Wtm.ConfigInfo.IsQuickDebug && controller is BaseApiController)
+            //{
+            //    base.OnActionExecuting(context);
+            //    return;
+            //}
             ControllerActionDescriptor ad = context.ActionDescriptor as ControllerActionDescriptor;
 
             var lg = context.HttpContext.RequestServices.GetRequiredService<LinkGenerator>();

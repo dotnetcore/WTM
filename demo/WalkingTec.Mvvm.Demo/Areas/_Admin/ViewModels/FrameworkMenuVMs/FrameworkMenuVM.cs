@@ -76,24 +76,41 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             var modules = Wtm.GlobaInfo.AllModule;
             var m = Utils.ResetModule(modules);
-            m = m.GroupBy(x => new { x.Area?.AreaName, x.IsApi }).SelectMany(x => x).ToList();
+            var ms = m.Select(x => new {
+                x.Area,
+                x.IsApi,
+                x.NameSpace,
+                x.ModuleName,
+                x.FullName,
+                IsFront = x.NameSpace.Contains("._Front.") || x.ClassName.EndsWith("_Uni")
+            }).GroupBy(x => new { x.Area?.AreaName, x.IsApi, x.IsFront }).SelectMany(x => x).OrderBy(x=>x.IsApi).ToList();
             string area = "";
             bool? isapi = null;
-            for(int i = 0; i < m.Count; i++)
+            bool? isfront = null;
+            for (int i = 0; i < ms.Count; i++)
             {
-                if(area != m[i].Area?.AreaName || isapi != m[i].IsApi)
+                if (area != ms[i].Area?.AreaName || isapi != ms[i].IsApi || isfront != ms[i].IsFront)
                 {
-                    area = m[i].Area?.AreaName;
-                    isapi = m[i].IsApi;
-                    var mm = "-----" + (m[i].Area?.AreaName ?? "Default") +(m[i].IsApi == true?"(api)":"")+ "-----";
-                    m.Insert(i, new SimpleModule { ModuleName = mm, NameSpace = "", ClassName = "" });
+                    area = ms[i].Area?.AreaName;
+                    isapi = ms[i].IsApi;
+                    isfront = ms[i].IsFront;
+                    var mm = "-----" + (ms[i].Area?.AreaName ?? "Default") + (ms[i].IsFront ? "UniApp" : "") + (ms[i].IsApi == true ? "(api)" : "") + "-----";
+                    ms.Insert(i, new
+                    {
+                        Area = new SimpleArea(),
+                        IsApi = false,
+                        NameSpace = "",
+                        ModuleName = mm,
+                        FullName = "",
+                        IsFront = false
+                    });
                     i++;
                 }
             }
-            AllModules = m.ToListItems(y => y.ModuleName, y => y.FullName);
+            AllModules = ms.ToListItems(y => y.ModuleName, y => y.FullName);
             foreach (var item in AllModules)
             {
-                if(item.Value.ToString() == ",")
+                if (item.Value.ToString() == ",")
                 {
                     item.Disabled = true;
                 }

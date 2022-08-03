@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Audience,
                 claims: cls,
-                expires: DateTime.Now.AddSeconds(_jwtOptions.Expires),
+                expires: DateTime.UtcNow.AddSeconds(_jwtOptions.Expires),
                 signingCredentials: signinCredentials
             );
 

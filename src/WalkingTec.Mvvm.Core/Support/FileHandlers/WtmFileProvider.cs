@@ -60,10 +60,10 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         public IWtmFileHandler CreateFileHandler(string saveMode = null, IDataContext dc = null)
         {
             ConstructorInfo ci = null;
-            if(dc != null)
-            {
-                _wtm.DC = dc;
-            }
+            //if(dc != null)
+            //{
+            //    _wtm.DC = dc;
+            //}
             if (string.IsNullOrEmpty(saveMode))
             {
                 ci = _defaultHandler;

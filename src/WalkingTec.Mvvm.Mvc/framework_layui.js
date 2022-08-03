@@ -566,7 +566,7 @@ window.ff = {
     },
 
     ResizeChart: function (id) {
-        if (layui == undefined ) {
+        if (layui == undefined || layui.admin == undefined) {
             return;
         }
         if (id === undefined || id === null || id === '') {

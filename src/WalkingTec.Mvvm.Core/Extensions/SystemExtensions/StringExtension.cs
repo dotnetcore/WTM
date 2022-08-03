@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -225,6 +226,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 rv = rv[0..^1];
             }
             return rv;
+        }
+
+        public static string RemoveSpecialChar(this string self)
+        {
+            if(self == null)
+            {
+                return "";
+            }
+            return self.Replace(Environment.NewLine, "").Replace("\t", string.Empty).Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\v", string.Empty).Replace("\b", string.Empty);
         }
     }
 }

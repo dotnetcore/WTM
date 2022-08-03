@@ -607,7 +607,13 @@ namespace WalkingTec.Mvvm.Core
             var baseQuery = GetSearchQuery();
             if (ReplaceWhere == null)
             {
-                var mod = new WhereReplaceModifier<TModel>(Ids.GetContainIdExpression<TModel>());
+                Expression peid = null;
+                if (string.IsNullOrEmpty(SelectorValueField) == false && SelectorValueField.ToLower() != "id")
+                {
+                    var pe = Expression.Parameter(typeof(TModel));
+                    peid = Expression.Property(pe, typeof(TModel).GetSingleProperty(SelectorValueField));
+                }
+                var mod = new WhereReplaceModifier<TModel>(Ids.GetContainIdExpression<TModel>(peid));
                 var newExp = mod.Modify(baseQuery.Expression);
                 var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 return newQuery;
