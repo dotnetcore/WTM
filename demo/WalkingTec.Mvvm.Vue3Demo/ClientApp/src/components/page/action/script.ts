@@ -89,6 +89,9 @@ export class ActionBasics extends mixins(PageActionBasics, RowActionBasics) {
     get isUpdate() {
         return this.onAuthority(EnumActionType.Update)
     }
+    get isRef() {
+        return this.onAuthority(EnumActionType.Reful)
+    }
     get isDelete() {
         return this.onAuthority(EnumActionType.Delete)
     }

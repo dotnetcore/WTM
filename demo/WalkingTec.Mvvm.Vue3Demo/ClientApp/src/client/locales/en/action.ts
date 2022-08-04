@@ -9,6 +9,7 @@ export default {
     'action_delete': ' Delete',
     'action_info': ' Info',
     'action_import': ' Import',
+    'action_ref': ' Refresh Menu',
     'action_export': ' Export',
     'action_exportAll': ' Export All',
     'action_exportSelect': ' Export Select',

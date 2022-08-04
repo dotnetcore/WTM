@@ -3,6 +3,7 @@ import WtmAction from './page/action/index.vue';
 import WtmActionDelete from './page/action/action_delete.vue';
 import WtmActionExport from './page/action/action_export.vue';
 import WtmActionImport from './page/action/action_import.vue';
+import WtmActionRef from './page/action/action_ref.vue';
 import WtmActionInfo from './page/action/action_info.vue';
 import WtmShortCut from './page/shortcut/index.vue';
 import WtmActionInsert from './page/action/action_insert.vue';
@@ -34,6 +35,7 @@ export default {
         app.component('WtmView', WtmView)
         app.component('WtmDetails', WtmDetails)
         app.component('WtmAction', WtmAction)
+        app.component('WtmActionRef', WtmActionRef)
         app.component('WtmActionDelete', WtmActionDelete)
         app.component('WtmActionExport', WtmActionExport)
         app.component('WtmActionImport', WtmActionImport)

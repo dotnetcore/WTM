@@ -243,7 +243,8 @@ export class ControllerBasics<T = any> {
     const res: any = await this.$ajax.request(lodash.assign({ body }, this.getAjaxRequest('export'))).toPromise()
     const disposition = res.xhr.getResponseHeader('content-disposition');
     Regulars.filename.test(disposition);
-    saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
+    //saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
+    saveAs(res.response, disposition.split(";")[1].split("=")[1] || `${Date.now()}.xls`);
   }
   /**
    * 导出选择
@@ -253,7 +254,14 @@ export class ControllerBasics<T = any> {
     console.log("🚀 ~ file: controller.ts ~ line 215 ~ ControllerBasics<T ~ onExportIds ~ res", res)
     const disposition = res.xhr.getResponseHeader('content-disposition');
     Regulars.filename.test(disposition);
-    saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
+    saveAs(res.response, disposition.split(";")[1].split("=")[1] || `${Date.now()}.xls`);
+    //saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
+  }
+  /**
+   * 刷新
+   */
+  async onRef(body = lodash.map(this.Pagination.selectionDataSource, 'ID')) {
+    await this.$ajax.request(lodash.assign({  }, this.getAjaxRequest('reful'))).toPromise()
   }
   /**
    * 导入
@@ -270,7 +278,8 @@ export class ControllerBasics<T = any> {
     const res: any = await this.$ajax.request(lodash.assign({}, this.getAjaxRequest('template'))).toPromise()
     const disposition = res.xhr.getResponseHeader('content-disposition');
     Regulars.filename.test(disposition);
-    saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
+    saveAs(res.response, disposition.split(";")[1].split("=")[1] || `${Date.now()}.xls`);
+    //saveAs(res.response, encodeURIComponent(RegExp.$1) || `${Date.now()}.xls`);
   }
   /**
     * 获取 lodash Predicate 参数

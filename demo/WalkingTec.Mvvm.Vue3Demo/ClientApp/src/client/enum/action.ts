@@ -18,4 +18,6 @@ export enum EnumActionType {
     Export = 'export',
     /** 选择导出 */
     ExportIds = 'exportIds',
+    /** 刷新 */
+    Reful = 'reful',
 }

@@ -27,6 +27,10 @@
       <slot name="export" v-if="onShow(EnumActionType.Export)">
         <ActionExport v-bind="$props" />
       </slot>
+      <!-- 导出 -->
+      <slot name="reful" v-if="onShow(EnumActionType.Reful)">
+        <ActionReful v-bind="$props" />
+      </slot>
     </a-config-provider>
     <!-- 追加内容 -->
   </a-space>
@@ -42,6 +46,7 @@ import ActionImport from "./action_import.vue";
 import ActionInsert from "./action_insert.vue";
 import ActionUpdate from "./action_update.vue";
 import ActionInfo from "./action_info.vue";
+import ActionReful from "./action_ref.vue";
 import { ActionBasics } from "./script";
 @Options({
   components: {
@@ -50,7 +55,8 @@ import { ActionBasics } from "./script";
     ActionDelete,
     ActionExport,
     ActionImport,
-    ActionInfo
+    ActionInfo,
+    ActionReful
   }
 })
 export default class extends mixins(ActionBasics) {
@@ -64,6 +70,7 @@ export default class extends mixins(ActionBasics) {
       EnumActionType.Update,
       EnumActionType.Delete,
       EnumActionType.Import,
+      EnumActionType.Reful,
       EnumActionType.Export
     ]
   })

@@ -8,6 +8,7 @@ export default {
     'action_update_batch_null': ' 请选择需要修改的数据',
     'action_delete': ' 删除',
     'action_info': ' 详情',
+    'action_ref': ' 刷新菜单',
     'action_import': ' 导入',
     'action_export': ' 导出',
     'action_exportAll': ' 导出全部',
