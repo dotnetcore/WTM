@@ -1,6 +1,6 @@
 <template>
   <a-button
-    v-if="isPageAction"
+    v-if="isPageAction && isRef"
     v-bind="ButtonProps"
     @click="onToReful"
   >

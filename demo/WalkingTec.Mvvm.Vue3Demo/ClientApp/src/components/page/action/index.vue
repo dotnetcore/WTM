@@ -27,7 +27,7 @@
       <slot name="export" v-if="onShow(EnumActionType.Export)">
         <ActionExport v-bind="$props" />
       </slot>
-      <!-- 导出 -->
+      <!-- 刷新 -->
       <slot name="reful" v-if="onShow(EnumActionType.Reful)">
         <ActionReful v-bind="$props" />
       </slot>
@@ -70,7 +70,7 @@ export default class extends mixins(ActionBasics) {
       EnumActionType.Update,
       EnumActionType.Delete,
       EnumActionType.Import,
-      EnumActionType.Reful,
+      //EnumActionType.Reful,
       EnumActionType.Export
     ]
   })

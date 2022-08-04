@@ -28,7 +28,9 @@ export class PageController extends WTM.ControllerBasics {
             // 数据模板
             template: '/api/_frameworkmenu/GetExcelTemplate',
             // 分页数据配置
-            PaginationOptions: { onMapValues: this.onMapValues }
+            PaginationOptions: { onMapValues: this.onMapValues },
+            //刷新
+            reful:'/api/_frameworkmenu/RefreshMenu'
         })
     }
     /**

@@ -23,9 +23,7 @@ export class PageController extends WTM.ControllerBasics {
             // 筛选导出
             exportIds: '/api/_actionlog/ExportExcelByIds',
             // 数据模板
-            template: '/api/_actionlog/GetExcelTemplate',
-            //刷新
-            reful:'/api/_frameworkmenu/RefreshMenu'
+            template: '/api/_actionlog/GetExcelTemplate'
         })
     }
 }

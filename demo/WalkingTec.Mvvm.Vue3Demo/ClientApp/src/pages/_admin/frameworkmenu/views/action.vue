@@ -1,5 +1,5 @@
 <template>
-  <WtmAction :PageController="PageController" :params="params" />
+  <WtmAction :PageController="PageController" :params="params" :include="include" />
 </template>
 <script lang="ts">
 import { Inject,Options,Vue } from "vue-property-decorator";
@@ -15,6 +15,16 @@ export default class extends Vue {
    */
   readonly params = {};
   mounted() {}
+  get include() {
+    return [this.EnumActionType.Info,
+            this.EnumActionType.Insert,
+            this.EnumActionType.Update,
+            this.EnumActionType.Delete,
+            this.EnumActionType.Import,
+            this.EnumActionType.Reful,
+            this.EnumActionType.Export
+     ]
+  }
 }
 </script>
 <style lang="less">
