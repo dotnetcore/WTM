@@ -63,6 +63,7 @@ namespace WalkingTec.Mvvm.Demo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             IconFontsHelper.GenerateIconFont();
             app.UseForwardedHeaders();
            app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
