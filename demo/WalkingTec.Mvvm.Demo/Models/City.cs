@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models
@@ -22,6 +23,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Display(Name = "名称")]
         [Required(ErrorMessage = "名称是必填项")]
         [StringLength(3,ErrorMessage = "{0}abc{1}")]
+        [Comment("Blogs managed on the website")]
         public string Name { get; set; }
 
         [Display(Name = "test")]
