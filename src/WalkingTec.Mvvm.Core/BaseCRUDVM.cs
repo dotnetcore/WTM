@@ -285,7 +285,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                     if (pro.GetCustomAttribute<NotMappedAttribute>() == null)
                     {
-                        if (pro.PropertyType.IsList() == false && typeof(TopBasePoco).IsAssignableFrom(pro.PropertyType) == false)
+                        if ((pro.PropertyType.IsList() == false && typeof(TopBasePoco).IsAssignableFrom(pro.PropertyType) == false) || includeInfo.Any(x=>x.t == pro.PropertyType))
                         {
                             var right = Expression.MakeMemberAccess(pe, pro);
                             MemberBinding bind = Expression.Bind(pro, right);
