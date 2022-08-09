@@ -30,6 +30,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         protected override void InitVM()
         {
             SelectedRolesCodes.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToList());
+            SelectedRolesCodes = SelectedRolesCodes.Distinct().ToList();
 
             var data = DC.Set<FrameworkMenu>().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
@@ -250,6 +251,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 SelectedRolesCodes.Add(admin.RoleCode);
             }
+            var toremove = DC.Set<FunctionPrivilege>().Where(x => SelectedRolesCodes.Contains(x.RoleCode) && menuids.Contains(x.MenuItemId)).ToList();
+            toremove.ForEach(x => DC.DeleteEntity(x));
             foreach (var menuid in menuids)
             {
 
