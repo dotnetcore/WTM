@@ -33,12 +33,23 @@ const options: ComponentOptions = {
                 }
             })
             queryCache.set(this.$route.path, query)
+            let url = this.$route.path+'/views/details/?'+JSON.stringify(query).replaceAll(':','=').replaceAll(',','&&').replaceAll('{','').replaceAll('}','').replaceAll('"','')
             query = lodash.assign({}, this.$route.query, query)
-            this.$router.replace({ query })
+            switch(query.type){
+                case 'Self':
+                    window.location.href=url
+                break;    
+                case 'Target':
+                    window.open(url)
+                break;
+                default:
+                    this.$router.replace({ query })
+                break;
+            }
         },
         /**
          * 详情返回
-         * 去除当前页面的 query 中 detailsVisible 触发隐藏
+         * 去除当前页面的  query 中 detailsVisible 触发隐藏
          */
         __wtmBackDetails(queryKey?) {
             const cache = queryCache.get(this.$route.path)
@@ -47,6 +58,7 @@ const options: ComponentOptions = {
                 lodash.keys(cache),
                 [
                     $WtmConfig.detailsVisible,
+                    'type',
                     '_readonly',
                     '_batch',
                     queryKey,

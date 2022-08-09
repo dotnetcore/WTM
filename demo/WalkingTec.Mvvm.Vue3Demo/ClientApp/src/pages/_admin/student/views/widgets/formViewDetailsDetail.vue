@@ -1,5 +1,4 @@
-﻿
-<template>
+﻿<template>
   <WtmDetails :queryKey="queryKey" :loading="Entities.loading" :onFinish="onFinish">
     <a-row :gutter="6">
       <a-col :span="12">
@@ -53,11 +52,9 @@
     </a-row>
 
       <div style="text-align:right;">
-
       </div>
 
-  <template #button>
-  
+  <template #button v-if="JumpType =='' || JumpType=='Dialog'">
    <a-divider type="vertical" />
    <a-button type="primary" @click.stop.prevent="__wtmBackDetails()">
        <template v-slot:icon>
@@ -68,8 +65,6 @@
   </template>
   </WtmDetails>
 </template>
-
-
 
 <script lang="ts">
 import { PageDetailsBasics } from "@/components";
@@ -84,6 +79,10 @@ export default class extends mixins(PageDetailsBasics) {
   
   get queryKey() {
     return "modelsstudentdetails";
+  }
+
+  get JumpType() {
+    return this.lodash.get(this.$route.query, 'type') || null
   }
   @Provide({ reactive: true }) formState = {
       Entity: {
@@ -106,12 +105,10 @@ export default class extends mixins(PageDetailsBasics) {
     SelectedMajorStudent_MT_WtmsIDs: [],
   };
   
-  
   async onLoading() {
       await this.Entities.onLoading({ ID: this.lodash.get(this.$route.query, this.queryKey) });
       this.formState = this.lodash.assign({}, this.formState, this.Entities.dataSource)
   }
-  
   
   created() {}
   mounted() {

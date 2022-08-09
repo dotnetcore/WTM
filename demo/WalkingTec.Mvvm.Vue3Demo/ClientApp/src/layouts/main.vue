@@ -1,5 +1,6 @@
 <template>
   <pro-layout
+    v-if="!jumpType"
     v-bind="provider"
     :menuData="getMenuData()"
     @select="onSelect"
@@ -21,6 +22,7 @@
     <!-- 修改密码 -->
     <ChangePassword />
   </pro-layout>
+  <Container v-else />
 </template>
 <script lang="ts">
 import { SystemController } from "@/client";
@@ -65,6 +67,9 @@ export default class extends Vue {
       this.provider.hasFooterToolbar = has;
     }
   };
+  get jumpType (){
+    return this.lodash.get(this.$route.query, 'jumptype') || null 
+  }
   getMenuData() {
     const production = this.System.UserController.UserMenus.getMenus();
     if (this.$WtmConfig.production) {

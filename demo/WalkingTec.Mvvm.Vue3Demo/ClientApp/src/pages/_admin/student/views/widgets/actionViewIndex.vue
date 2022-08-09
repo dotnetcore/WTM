@@ -1,8 +1,5 @@
-﻿
-
-<template>
+﻿<template>
 <div v-if="isRowAction">
-
     <a-button v-if="__wtmAuthority('update', PageController)" type='link' @click="toModels_Student_Edit()">
       <span><i18n-t keypath="修改" /></span>
     </a-button>
@@ -14,8 +11,8 @@
         <span><i18n-t keypath="删除" /></span>
     </WtmActionDelete>
 </div>
-<div v-else>
 
+<div v-else class="textr">
     <a-button v-if="__wtmAuthority('insert', PageController)" @click="toModels_Student_Create()">
       <template #icon><span class="fa fa-plus" style='margin-right:5px'></span></template>
       <span><i18n-t keypath="新建" /></span>
@@ -38,9 +35,6 @@
     </WtmActionExport>
 </div>
 </template>
-
-
-
 <script lang="ts">
 import { Inject, Options, Provide, Vue } from "vue-property-decorator";
 import {$locales} from "@/client";
@@ -74,19 +68,23 @@ export default class extends Vue {
       this.lodash.head(this.Pagination.selectionDataSource)
     );
   }
-  
   toModels_Student_Create() {
     this.__wtmToDetails({
       modelsstudentcreate:''
     });
   }
   toModels_Student_Edit() {
-    this.__wtmToDetails({
-      modelsstudentedit: this.lodash.get(
-        this.getRowData(),
-        this.PageController.key
-      )
-    });
+    this.__wtmToDetails(
+       this.lodash.assign(
+         {
+             modelsstudentdetails: this.lodash.get(
+                 this.getRowData(),
+                 this.PageController.key
+             )
+         },
+         { type: 'Self' }
+        )
+    );
   }
   toModels_Student_Details() {
     this.__wtmToDetails(
@@ -97,9 +95,10 @@ export default class extends Vue {
                  this.PageController.key
              )
          },
-         { _readonly: '' }
+         { _readonly: '' },
+         { type: 'Self' }
         )
-  );
+    );
   }
   toModels_Student_BatchEdit() {
     this.__wtmToDetails({

@@ -111,8 +111,22 @@ export default class extends Vue {
   // 成功
   onComplete() {
     this.spinning = false;
-    this.__wtmBackDetails(this.queryKey);
-    this.$message.success(this.successMsg);
+    switch(this.lodash.get(this.$route.query, 'type')){
+      case 'Target':
+        this.$message.success(this.successMsg);
+      break;
+      case 'Self':
+        this.$message.success(this.successMsg);
+      break;
+      case 'Dialog':
+        this.$message.success(this.successMsg);
+        this.__wtmBackDetails(this.queryKey);
+      break;
+      default:
+        this.$message.success(this.successMsg);
+        this.__wtmBackDetails(this.queryKey);
+      break;
+    }
   }
   // 失败
   onFail(error) {
