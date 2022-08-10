@@ -487,9 +487,9 @@ namespace WalkingTec.Mvvm.Core
                                         ent.CreateBy = LoginUserInfo?.ITCode;
                                     }
                                 }
-                                if (typeof(ITenant).IsAssignableFrom(typeof(TModel)))
+                                if (typeof(ITenant).IsAssignableFrom(subtype))
                                 {
-                                    ITenant ent = Entity as ITenant;
+                                    ITenant ent = newitem as ITenant;
                                     ent.TenantCode = LoginUserInfo?.CurrentTenant;
                                 }
                             }
@@ -761,9 +761,9 @@ namespace WalkingTec.Mvvm.Core
                                         ent.CreateBy = LoginUserInfo?.ITCode;
                                     }
                                 }
-                                if (typeof(ITenant).IsAssignableFrom(typeof(TModel)))
+                                if (typeof(ITenant).IsAssignableFrom(item.GetType()))
                                 {
-                                    ITenant ent = Entity as ITenant;
+                                    ITenant ent = item as ITenant;
                                     ent.TenantCode = LoginUserInfo?.CurrentTenant;
                                 }
                                 DC.AddEntity(item);
