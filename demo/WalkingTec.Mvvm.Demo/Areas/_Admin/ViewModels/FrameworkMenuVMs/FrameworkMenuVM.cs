@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
 
             SelectedRolesIds.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToList());
-
+            SelectedRolesIds = SelectedRolesIds.Distinct().ToList();
             var data = DC.Set<FrameworkMenu>().AsNoTracking().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
             var pids = Entity.GetAllChildrenIDs(DC);
@@ -372,6 +372,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 SelectedRolesIds.Add(admin.RoleCode);
             }
+            var toremove = DC.Set<FunctionPrivilege>().Where(x => SelectedRolesIds.Contains(x.RoleCode) && menuids.Contains(x.MenuItemId)).ToList();
+            toremove.ForEach(x => DC.DeleteEntity(x));
+
             foreach (var menuid in menuids)
             {
 
@@ -389,7 +392,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
             }
             DC.SaveChanges();
-            Wtm.RemoveUserCacheByRole(SelectedRolesIds.ToArray());
+            Wtm.RemoveUserCacheByRole(SelectedRolesIds.ToArray()).Wait();
         }
 
 

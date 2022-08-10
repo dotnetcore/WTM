@@ -893,6 +893,20 @@ where S : struct
             }
         }
 
+        public static IQueryable<T> CheckContain<T, S>(this IQueryable<T> baseQuery, List<string> val, Expression<Func<T, object>> field)
+        {
+            if (val == null || val.Count == 0 || (val.Count == 1 && val[0] == null))
+            {
+                return baseQuery;
+            }
+            else
+            {
+                ParameterExpression pe = Expression.Parameter(typeof(T));
+                var rv = val.GetContainIdExpression<T>(field);
+                return baseQuery.Where(rv);
+            }
+        }
+
         public static IQueryable<string> DynamicSelect<T>(this IQueryable<T> baseQuery, string fieldName)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));

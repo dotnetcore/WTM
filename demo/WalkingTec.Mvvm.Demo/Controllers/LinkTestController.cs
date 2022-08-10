@@ -246,7 +246,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public IActionResult GetStudentById(List<string> id)
         {
 
-            var rv = DC.Set<Student>().CheckIDs(id).GetSelectListItems(Wtm, x => x.Name);
+            var rv = DC.Set<Student>().CheckContain(id,x=>x.ID).GetSelectListItems(Wtm, x => x.Name);
             return JsonMore(rv);
         }
     }

@@ -42,6 +42,7 @@ namespace WalkingTec.Mvvm.Core
         public string TDomain { get; set; }
 
         [Display(Name = "_Admin.Tenant")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string TenantCode { get; set; }
 
         [Display(Name = "_Admin.TenantEnableSub")]

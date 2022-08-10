@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.GroupCode")]
         [Required(ErrorMessage = "Validate.{0}required")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Validate.{0}number")]
-        [StringLength(100, ErrorMessage = "Validate.{0}stringmax{1}")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         [CanNotEdit]
         public string GroupCode { get; set; }
 
@@ -33,6 +33,7 @@ namespace WalkingTec.Mvvm.Core
         public int UsersCount { get; set; }
 
         [Display(Name = "_Admin.Tenant")]
+        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
         public string TenantCode { get; set; }
 
     }

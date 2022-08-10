@@ -121,11 +121,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
                 {
                     MenuItemId = item.MenuItemId,
                     Allowed = item.Allowed,
-                    RoleCode = item.RoleCode,
+                    RoleCode = "001",
                     TenantCode = Entity.TCode
                 });
             }
             dc.SaveChanges();
+            var key = $"{GlobalConstants.CacheKey.UserInfo}:{"admin" + "$`$" + Entity.TCode}";
+            Cache.DeleteAsync(key).Wait();
         }
         public override void DoDelete()
         {

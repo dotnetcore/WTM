@@ -85,7 +85,7 @@
                         Size = rv.Data.Length,
                         PrevUrl = $"/api/_file/DownloadFile/{Value}"
                     });
-                    files.Add(Value.ToString(), $"/api/_file/GetFile/{Value}");
+                    files.Add(Value.ToString(), $"/api/_file/DownloadFile/{Value}");
 
                 }
                 else
@@ -109,7 +109,7 @@
                         Size = rv.Data.Length,
                          PrevUrl = $"/api/_file/DownloadFile/{item.FileId}"
                        });
-                        files.Add(item.FileId.ToString(), $"/api/_file/GetFile/{item.FileId}");
+                        files.Add(item.FileId.ToString(), $"/api/_file/DownloadFile/{item.FileId}");
                     }
                 }
                 dlist = temp;
@@ -135,7 +135,7 @@
             var rv = await WtmBlazor.Api.CallAPI<DynamicData>("/api/_file/Upload", HttpMethodEnum.POST, new Dictionary<string, string>(), filedata, file.File.Name);
             if (rv.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                files.Add(rv.Data.Fields["Id"].ToString(), $"/api/_file/GetFile/{rv.Data.Fields["Id"]}");
+                files.Add(rv.Data.Fields["Id"].ToString(), $"/api/_file/DownloadFile/{rv.Data.Fields["Id"]}");
                 file.PrevUrl = $"/api/_file/DownloadFile/{rv.Data.Fields["Id"]}";
                 if (IsMultiple)
                 {

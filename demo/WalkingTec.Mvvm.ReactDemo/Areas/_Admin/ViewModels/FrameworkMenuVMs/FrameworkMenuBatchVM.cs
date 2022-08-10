@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public bool ShowOnMenu { get; set; }
 
         [Display(Name = "_Admin.ParentFolder")]
-        public Guid? ParentId { get; set; }
+        public Guid? ParentID { get; set; }
         public List<ComboSelectListItem> AllParents { get; set; }
         [Display(Name = "_Admin.Icon")]
         public string Icon { get; set; }
