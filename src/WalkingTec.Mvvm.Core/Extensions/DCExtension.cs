@@ -652,6 +652,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             Expression peid = Expression.Property(pe, idproperty);
             var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
+            if (idproperty.PropertyType.IsNullable())
+            {
+                peid = Expression.Property(peid, "Value");
+            }
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
         }
 
