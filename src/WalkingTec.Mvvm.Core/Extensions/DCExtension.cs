@@ -897,7 +897,7 @@ where S : struct
             }
         }
 
-        public static IQueryable<T> CheckContain<T, S>(this IQueryable<T> baseQuery, List<string> val, Expression<Func<T, object>> field)
+        public static IQueryable<T> CheckContain<T, S>(this IQueryable<T> baseQuery, List<string> val, Expression<Func<T, S>> field)
         {
             if (val == null || val.Count == 0 || (val.Count == 1 && val[0] == null))
             {
@@ -1084,20 +1084,22 @@ where S : struct
             {
                 ChangePara cp = new ChangePara();
                 peid = cp.Change(peid, pe);
+                if (peid is LambdaExpression)
+                {
+                    peid = (peid as LambdaExpression).Body;
+                }
             }
-            List<object> newids = new List<object>();
+            var propertype = peid.GetPropertyInfo().PropertyType;
+            var listtype = typeof(List<>).MakeGenericType(propertype);
+            var list = listtype.GetConstructor(Type.EmptyTypes).Invoke(null);
+            var add = listtype.GetMethod("Add");
             foreach (var item in Ids)
             {
                 object vv = PropertyHelper.ConvertValue(item, peid.Type);
-                if (vv != null)
-                {
-                    newids.Add(vv);
-                }
+                add.Invoke(list,new object[] { vv });              
             }
-            Expression dpleft = Expression.Constant(newids, typeof(IEnumerable<object>));
-            Expression dpleft2 = Expression.Call(typeof(Enumerable), "Cast", new Type[] { peid.Type }, dpleft);
-            Expression dpleft3 = Expression.Call(typeof(Enumerable), "ToList", new Type[] { peid.Type }, dpleft2);
-            Expression dpcondition = Expression.Call(typeof(Enumerable), "Contains", new Type[] { peid.Type }, dpleft3, peid);
+            Expression dpleft = Expression.Constant(list);
+            Expression dpcondition = Expression.Call(dpleft, listtype.GetMethod("Contains"), peid);
             var rv = Expression.Lambda(typeof(Func<,>).MakeGenericType(modeltype, typeof(bool)), dpcondition, pe);
             return rv;
         }
