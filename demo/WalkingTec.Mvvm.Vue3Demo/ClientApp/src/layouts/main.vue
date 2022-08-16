@@ -68,7 +68,17 @@ export default class extends Vue {
     }
   };
   get jumpType (){
-    return this.lodash.get(this.$route.query, 'jumptype') || null 
+    if(this.lodash.get(this.$route.query, 'type') === 'Blank'){
+      return true
+    }
+
+    else if(this.lodash.get(this.$route.query, 'jumptype')){
+      return true
+    }
+    
+    else{
+      return false
+    }
   }
   getMenuData() {
     const production = this.System.UserController.UserMenus.getMenus();
@@ -143,7 +153,6 @@ export default class extends Vue {
         children: production
       });
     }
-
     return menus;
   }
   created() {}
@@ -172,6 +181,7 @@ export default class extends Vue {
   }
   onOpenKeys(event) {
     // console.log("LENG ~ extends ~ onOpenKeys ~ event", event)
+    console.log(event)
     this.provider.openKeys = event;
   }
 }

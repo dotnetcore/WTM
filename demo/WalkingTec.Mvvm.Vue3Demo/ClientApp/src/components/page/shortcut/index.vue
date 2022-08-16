@@ -10,7 +10,7 @@
         <a
             :href="hrefEnd"
             target="_target"
-            v-if="type == 'Target'"
+            v-if="type == 'Blank'" 
             
         >
             <div><span :class="icon"></span></div>
@@ -55,10 +55,6 @@
 				type:String,
 				default:''
 			},
-			target: {
-				type: String,
-				default:'self'
-            },
 			font:{
 				type:String,
 				default:''
@@ -71,9 +67,13 @@
 		methods: {
 		},
 		mounted() {
-			this.hrefEnd = this.href.indexOf("https://") > -1 || this.href.indexOf("http://") > -1 ? this.href :this.href+"?jumptype=Dixlog"
+			if(this.type == 'Self'){
+				this.hrefEnd = this.href
+			}else{
+				this.hrefEnd = this.href.indexOf("https://") > -1 || this.href.indexOf("http://") > -1 ? this.href :this.href+"?jumptype=Blank"
+			}
+			
 		}
-
 	}
 </script>
 <style lang="less" scoped>

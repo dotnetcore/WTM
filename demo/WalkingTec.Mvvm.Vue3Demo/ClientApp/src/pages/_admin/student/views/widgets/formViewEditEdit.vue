@@ -1,5 +1,4 @@
-﻿
-<template>
+﻿<template>
   <WtmDetails :queryKey="queryKey" :loading="Entities.loading" :onFinish="onFinish">
     <a-row :gutter="6">
       <a-col :span="12">
@@ -42,29 +41,23 @@
         <WtmField entityKey="SelectedMajorStudent_MT_WtmsIDsEdit"/>
         </a-col>
       </a-row>
-
-        <div style="text-align:right;">
-
-
-        </div>
-
-  <template #button>
-  
-   <a-divider type="vertical" />
-   <a-button type="primary" html-type="submit">
-       <template v-slot:icon>
-           <SaveOutlined style='margin-right:5px'/>
-       </template>
-       <i18n-t keypath="提交" />
-   </a-button>
-   <a-divider type="vertical" />
-   <a-button type="primary" @click.stop.prevent="__wtmBackDetails()">
-       <template v-slot:icon>
-           <RedoOutlined style='margin-right:5px'/>
-       </template>
-       <i18n-t keypath="关闭" />
-   </a-button>
-  </template>
+      <div style="text-align:right;"></div>
+      <template #button>
+         <a-divider type="vertical" />
+         <a-button type="primary" html-type="submit">
+             <template v-slot:icon>
+                 <SaveOutlined style='margin-right:5px;' />
+             </template>
+             <i18n-t keypath="提交" />
+         </a-button>
+         <a-divider type="vertical" />
+         <a-button type="primary" @click.stop.prevent="__wtmBackDetails()">
+             <template v-slot:icon>
+                 <RedoOutlined style='margin-right:5px'/>
+             </template>
+             <i18n-t keypath="关闭" />
+         </a-button>
+      </template>
   </WtmDetails>
 </template>
 

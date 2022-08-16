@@ -2,9 +2,9 @@
     <div v-if="locale === 'zh'">
         <a-row :gutter="20">
             <a-col :md="12">
-              <WtmShortCut icon='fa-music fa' font="音乐" href = "/_admin/student" type="Dialog"></WtmShortCut>
-              <WtmShortCut icon='fa fa-external-link-square' font="Target" href="/_admin/student" type="Target"></WtmShortCut> 
-              <WtmShortCut icon='fa fa-area-chart' font="$i18n.t($locales.Page页面22222)" href="/detail/school/index"></WtmShortCut> 
+              <WtmShortCut icon='fa-music fa' font="音乐" href = "/_admin/student"></WtmShortCut>
+              <WtmShortCut icon='fa fa-external-link-square' font="Target" href="/_admin/student" type="Blank"></WtmShortCut> 
+              <WtmShortCut icon='fa fa-area-chart' font="$i18n.t($locales.Page页面22222)" href="/_admin/dataprivilege" type='Dialog'></WtmShortCut> 
               <WtmShortCut icon='fa fa-angellist' font="$i18n.t($locales.Page页面3333)" href="/detail/school/views/create"></WtmShortCut> 
             </a-col>
             <a-col :md="12">

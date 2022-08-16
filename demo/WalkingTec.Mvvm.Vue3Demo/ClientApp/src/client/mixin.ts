@@ -33,13 +33,26 @@ const options: ComponentOptions = {
                 }
             })
             queryCache.set(this.$route.path, query)
-            let url = this.$route.path+'/views/details/?'+JSON.stringify(query).replaceAll(':','=').replaceAll(',','&&').replaceAll('{','').replaceAll('}','').replaceAll('"','')
+            let url = ''
+            if(query._readonly){
+                url = this.$route.path+'/views/details/?'+JSON.stringify(query).replaceAll(':','=').replaceAll(',','&&').replaceAll('{','').replaceAll('}','').replaceAll('"','')
+            }else{
+                if(this.lodash.get(query,'editType') == 'edit'){
+                    url = this.$route.path+'/views/edit/?'+JSON.stringify(query).replaceAll(':','=').replaceAll(',','&&').replaceAll('{','').replaceAll('}','').replaceAll('"','')
+                }
+                if(this.lodash.get(query,'editType') == 'BatchEdit'){
+                    url = this.$route.path+'/views/batchEdit/?'+JSON.stringify(query).replaceAll(':','=').replaceAll(',','&&').replaceAll('{','').replaceAll('}','').replaceAll('"','')
+                }
+                if(this.lodash.get(query,'editType') == 'create'){
+                    url = this.$route.path+'/views/create/?'+JSON.stringify(query).replaceAll(':','=').replaceAll(',','&&').replaceAll('{','').replaceAll('}','').replaceAll('"','')
+                }
+            }
             query = lodash.assign({}, this.$route.query, query)
             switch(query.type){
                 case 'Self':
                     window.location.href=url
                 break;    
-                case 'Target':
+                case 'Blank':
                     window.open(url)
                 break;
                 default:
@@ -62,9 +75,22 @@ const options: ComponentOptions = {
                     '_readonly',
                     '_batch',
                     queryKey,
+                    'modelsstudentbatchedit',
+                    'editType',
+                    'ids'
                 ]
             ))
-            this.$router.replace({ query })
+            switch(this.$route.query.type){
+                case 'Self':
+                    this.$router.go(-1)
+                break;    
+                case 'Blank':
+                    window.close()
+                break;
+                default:
+                    this.$router.replace({ query })
+                break;
+            }
         },
         /**
          * 将组件转换为 row 组件

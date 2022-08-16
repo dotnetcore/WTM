@@ -69,20 +69,27 @@ export default class extends Vue {
     );
   }
   toModels_Student_Create() {
-    this.__wtmToDetails({
-      modelsstudentcreate:''
-    });
+    this.__wtmToDetails(
+       this.lodash.assign(
+         {
+             modelsstudentcreate:''
+         },
+         { type: 'Dialog' },
+         { editType:'create'}
+        )
+    );
   }
   toModels_Student_Edit() {
     this.__wtmToDetails(
        this.lodash.assign(
          {
-             modelsstudentdetails: this.lodash.get(
+             modelsstudentedit: this.lodash.get(
                  this.getRowData(),
                  this.PageController.key
              )
          },
-         { type: 'Self' }
+         { type: 'Self' },
+         { editType:'edit'}
         )
     );
   }
@@ -95,18 +102,25 @@ export default class extends Vue {
                  this.PageController.key
              )
          },
-         { _readonly: '' },
-         { type: 'Self' }
+         { _readonly: '' }
         )
     );
   }
   toModels_Student_BatchEdit() {
-    this.__wtmToDetails({
-      modelsstudentbatchedit: this.lodash.get(
-        this.getRowData(),
-        this.PageController.key
-      )
-    });
+    let ids = this.lodash.map(this.PageController.Pagination.selectionDataSource, this.PageController.key).join("|")
+    this.__wtmToDetails(
+       this.lodash.assign(
+         {
+             modelsstudentbatchedit: this.lodash.get(
+                 this.getRowData(),
+                 this.PageController.key
+             )
+         },
+         { ids:ids},
+         { type: 'Blank'},
+         { editType:'BatchEdit'}
+        )
+    );
   }
   mounted() {}
 }
