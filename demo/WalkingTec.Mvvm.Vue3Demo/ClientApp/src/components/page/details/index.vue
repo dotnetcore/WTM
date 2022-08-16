@@ -93,6 +93,7 @@ export default class extends Vue {
   wrapperCol = { span: 24 };
   async onSubmit(values) {
     try {
+      console.log(values)
       this.spinning = true;
       await this.onFinish(this.lodash.cloneDeep(values));
       this.onComplete();
@@ -111,12 +112,16 @@ export default class extends Vue {
   // 成功
   onComplete() {
     this.spinning = false;
+    let that = this
     switch(this.lodash.get(this.$route.query, 'type')){
-      case 'Target':
+      case 'Blank':
         this.$message.success(this.successMsg);
       break;
       case 'Self':
         this.$message.success(this.successMsg);
+        setTimeout(()=>{
+          that.$router.go(-1)
+        },500)
       break;
       case 'Dialog':
         this.$message.success(this.successMsg);
