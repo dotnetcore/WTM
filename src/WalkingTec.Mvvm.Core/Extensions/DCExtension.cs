@@ -679,7 +679,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         public static IQueryable<T> CheckIDs<T>(this IQueryable<T> baseQuery, List<string> val, Expression<Func<T, object>> member = null)
         {
-            if (val == null)
+            if (val == null || val.Count == 0)
             {
                 return baseQuery;
             }
