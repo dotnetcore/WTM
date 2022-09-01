@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Core
     {
 
         [Display(Name = "_Admin.PageName")]
-        [StringLength(50, ErrorMessage = "Validate.{0}stringmax{1}")]
+        [StringLength(100, ErrorMessage = "Validate.{0}stringmax{1}")]
         [Required(ErrorMessage = "Validate.{0}required")]
         public string PageName { get; set; }
 
