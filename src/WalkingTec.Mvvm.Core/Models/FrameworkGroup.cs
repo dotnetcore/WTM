@@ -8,6 +8,7 @@ namespace WalkingTec.Mvvm.Core
 {
 
     [Table("FrameworkGroups")]
+    [SoftKey(nameof(FrameworkGroup.GroupCode))]
     public class FrameworkGroup : TreePoco<FrameworkGroup>,ITenant
     {
         [Display(Name = "_Admin.GroupCode")]
