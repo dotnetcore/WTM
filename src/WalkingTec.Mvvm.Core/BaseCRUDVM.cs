@@ -288,9 +288,12 @@ namespace WalkingTec.Mvvm.Core
                         if ((pro.PropertyType.IsList() == false && typeof(TopBasePoco).IsAssignableFrom(pro.PropertyType) == false) || includeInfo.Any(x=>x.t == pro.PropertyType))
                         {
                             var right = Expression.MakeMemberAccess(pe, pro);
-                            MemberBinding bind = Expression.Bind(pro, right);
-                            bindExps.Add(bind);
-                            existname.Add(pro.Name);
+                            if (right != null)
+                            {
+                                MemberBinding bind = Expression.Bind(pro, right);
+                                bindExps.Add(bind);
+                                existname.Add(pro.Name);
+                            }
                         }
                     }
                     else
@@ -299,8 +302,11 @@ namespace WalkingTec.Mvvm.Core
                         if (soft != null)
                         {
                             var right = soft.SoftSelect(pe, DC);
-                            MemberBinding bind = Expression.Bind(pro, right);
-                            bindExps.Add(bind);
+                            if (right != null)
+                            {
+                                MemberBinding bind = Expression.Bind(pro, right);
+                                bindExps.Add(bind);
+                            }
                         }
                     }
                 }
@@ -1388,7 +1394,7 @@ namespace WalkingTec.Mvvm.Core
 
         public Expression SoftSelect(ParameterExpression parentpe, IDataContext DC)
         {
-            Expression rv = Expression.Constant(null);
+            Expression rv = null;
 
             if (this.IsNotMapped == false)
             {
