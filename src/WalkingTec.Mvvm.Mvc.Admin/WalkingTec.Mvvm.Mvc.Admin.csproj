@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc.Admin</AssemblyName>
     <Title>$(AssemblyName)</Title>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <Import Project="..\..\common.props" />
+  <Import Project="..\..\common.props"></Import>
 
   <ItemGroup>
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\BatchDelete.cshtml" />
@@ -45,13 +45,12 @@
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\Index.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\PageFunction.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\_ViewImports.cshtml" />
-  </ItemGroup>
+  
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App">
-      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
-      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
-    </PackageReference>
+    
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />

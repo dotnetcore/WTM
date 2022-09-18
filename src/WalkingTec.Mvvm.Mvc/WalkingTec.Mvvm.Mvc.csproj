@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc</AssemblyName>
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
@@ -8,7 +8,7 @@
     <Title>$(AssemblyName)</Title>
   </PropertyGroup>
 
-  <Import Project="..\..\common.props" />
+  <Import Project="..\..\common.props"></Import>
 
   <ItemGroup>
     <None Remove="GeneratorFiles\Spa\Vue\config.txt" />
@@ -16,7 +16,9 @@
     <None Remove="GeneratorFiles\Spa\Vue\store\api.txt" />
     <None Remove="GeneratorFiles\Spa\Vue\store\index.txt" />
     <None Remove="GeneratorFiles\Spa\Vue\views\dialog-form.txt" />
-  </ItemGroup>
+  
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
@@ -68,10 +70,7 @@
 
   <ItemGroup>
     <!-- <PackageReference Include="IdentityModel" Version="4.0.0" /> -->
-    <PackageReference Include="Microsoft.AspNetCore.App">
-      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
-      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
-    </PackageReference>
+    
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
   </ItemGroup>
 
