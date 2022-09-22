@@ -471,6 +471,7 @@ namespace WtmBlazorUtils
                 ShowMaximizeButton = !isMax,
                 FullScreenSize = isMax==true?FullScreenSize.Always:FullScreenSize.Medium,
                 Size =  size.Value,
+                IsScrolling = true,
                 BodyContext = userinfo,
                 Title = Title
             };
