@@ -398,16 +398,16 @@ namespace WalkingTec.Mvvm.Core
                 }
                 if (rv != null)
                 {
-                    var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{rv.ITCode + "$`$" + rv.TenantCode}";
-                    var cacheuser = Cache.Get<LoginUserInfo>(cacheKey);
-                    if (cacheuser != null && cacheuser.TimeTick >= rv.TimeTick)
-                    {
-                        rv = cacheuser;
-                    }
-                    else
-                    {
+                    //var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{rv.ITCode + "$`$" + rv.TenantCode}";
+                    //var cacheuser = Cache.Get<LoginUserInfo>(cacheKey);
+                    //if (cacheuser != null && cacheuser.TimeTick >= rv.TimeTick)
+                    //{
+                    //    rv = cacheuser;
+                    //}
+                    //else
+                    //{
                         rv.LoadBasicInfoAsync(this).Wait();
-                    }
+                    //}
                 }
                 return rv;
             }
@@ -443,16 +443,16 @@ namespace WalkingTec.Mvvm.Core
                     ITCode = username,
                     TenantCode = tenant
                 };
-                var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{username + "$`$" + tenant}";
-                var cacheuser = Cache.Get<LoginUserInfo>(cacheKey);
-                if (cacheuser != null)
-                {
-                    user = cacheuser;
-                }
-                else
-                {
+                //var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{username + "$`$" + tenant}";
+                //var cacheuser = Cache.Get<LoginUserInfo>(cacheKey);
+                //if (cacheuser != null)
+                //{
+                //    user = cacheuser;
+                //}
+                //else
+                //{
                     user.LoadBasicInfoAsync(this).Wait();
-                }
+                //}
                 user.RemoteToken = null;
                 var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
                 var token = authService.IssueTokenAsync(user).Result;
