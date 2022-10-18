@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="6.8.20" />
+    <PackageReference Include="BootstrapBlazor" Version="6.11.16" />
     <PackageReference Include="BootstrapBlazor.Chart" Version="6.0.0" />
-    <PackageReference Include="BootstrapBlazor.SummerNote" Version="6.0.2" />
+    <PackageReference Include="BootstrapBlazor.SummerNote" Version="6.1.0" />
   </ItemGroup>
 
   <ItemGroup>

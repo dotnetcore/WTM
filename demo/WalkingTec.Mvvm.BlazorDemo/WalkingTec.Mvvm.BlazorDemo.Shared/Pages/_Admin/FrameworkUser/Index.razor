@@ -16,7 +16,7 @@
     </WTSearchPanel>
 
     <Table @ref="dataTable" TItem="FrameworkUser_View" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" AllowResizing="true">
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowExtendEditButton="false" ShowExtendDeleteButton="false" ShowDefaultButtons="false" style="margin-top:10px;" AllowResizing="true">
         <TableColumns>
             <TableColumn @bind-Field="@context.ITCode" Width="180" />
             <TableColumn @bind-Field="@context.Name" />
@@ -39,7 +39,7 @@
             @if (IsAccessable("/api/_frameworkuser/BatchDelete"))
             {
                 <TableToolbarPopconfirmButton TItem="FrameworkUser_View" Color="Color.Primary"
-                                          Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
+                                          Icon="fa fa-fw fa-trash" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
             }
@@ -64,7 +64,7 @@
             }
             @if (IsAccessable("/api/_frameworkuser/BatchDelete"))
             {
-                <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+                <PopConfirmButton Icon="fa fa-trash" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                                   Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
             }
             @if (IsAccessable("/api/_frameworkuser/password"))
