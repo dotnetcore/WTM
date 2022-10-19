@@ -5,7 +5,7 @@
 
 
 <Table @ref="dataTable" TItem="FrameworkMenu_ListView" OnQueryAsync="OnSearch" IsPagination="true" IsStriped="true" IsBordered="true" ShowRefresh="false"
-       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowDefaultButtons="false" style="margin-top:10px;" TreeNodeConverter="(x)=>WtmBlazor.DefaultTreeConverter(x)" IsTree="true" AllowResizing="true">
+       ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowExtendEditButton="false" ShowExtendDeleteButton="false" ShowDefaultButtons="false" style="margin-top:10px;" TreeNodeConverter="(x)=>WtmBlazor.DefaultTreeConverter(x)" IsTree="true" AllowResizing="true">
     <TableColumns>
         <TableColumn @bind-Field="@context.PageName" Width="180" />
         <TableColumn @bind-Field="@context.ModuleName" />
@@ -28,7 +28,7 @@
         @if (IsAccessable("/api/_frameworkmenu/BatchDelete"))
         {
             <TableToolbarPopconfirmButton TItem="FrameworkMenu_ListView" Color="Color.Primary"
-                                          Icon="fa fa-fw fa-trash-o" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
+                                          Icon="fa fa-fw fa-trash" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }
@@ -50,7 +50,7 @@
             }
             @if (IsAccessable("/api/_frameworkmenu/BatchDelete"))
             {
-                <PopConfirmButton Icon="fa fa-trash-o" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
+                <PopConfirmButton Icon="fa fa-trash" Text="@WtmBlazor.Localizer["Sys.Delete"]" OnConfirm="() => OnDeleteClick(context)" Color="Color.Danger" Size="Size.ExtraSmall"
                                   Content="@WtmBlazor.Localizer["Sys.DeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]" ConfirmButtonText="@WtmBlazor.Localizer["Sys.Delete"]" ConfirmButtonColor="Color.Danger" />
             }
     </RowButtonTemplate>
