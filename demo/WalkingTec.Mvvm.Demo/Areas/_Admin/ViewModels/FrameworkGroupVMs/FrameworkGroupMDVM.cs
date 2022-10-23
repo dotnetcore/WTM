@@ -69,6 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                     dp.RelateId = null;
                     dp.GroupCode = GroupCode;
                     dp.TableName = item.List.Searcher.TableName;
+                    dp.TenantCode = LoginUserInfo.CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
                 if (item.IsAll == false && item.SelectedIds != null)
@@ -79,6 +80,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                         dp.RelateId = id;
                         dp.GroupCode = GroupCode;
                         dp.TableName = item.List.Searcher.TableName;
+                        dp.TenantCode = LoginUserInfo.CurrentTenant;
                         DC.Set<DataPrivilege>().Add(dp);
                     }
 
