@@ -137,7 +137,7 @@
             <GroupBox Title="@wtmblazor.Localizer["Sys.MoreSettings"]">
                 <div class="row">
                     <div class="col-6 d-flex align-items-center">
-                        <Switch @bind-Value="@UseTabSet" OnColor="@Color.Success" OffColor="@Color.Primary"></Switch>
+                        <Switch OnValueChanged="TabChanged" @bind-Value="@UseTabSet" OnColor="@Color.Success" OffColor="@Color.Primary"></Switch>
                     </div>
                     <div class="col-6 text-right">
                         <span>@(UseTabSet ? @wtmblazor.Localizer["Sys.Tabs"] : @wtmblazor.Localizer["Sys.SinglePage"])</span>
@@ -241,12 +241,19 @@
             var usermenu = UserInfo.Attributes["Menus"] as WalkingTec.Mvvm.Core.Support.Json.SimpleMenuApi[];
 
             var formatedmenu = new List<FrameworkMenu>();
-			formatedmenu.AddRange(toMenuTree(usermenu.AsQueryable()));
+            formatedmenu.AddRange(toMenuTree(usermenu.AsQueryable()));
             GetMenuFromFrameworkMenu(formatedmenu).ForEach(x => menus.Add(x));
         }
         Menus = menus;
 
         tenants = await wtmblazor.Api.CallItemsApi($"/api/_frameworktenant/GetFrameworkTenants?parent={UserInfo.TenantCode}");
+        bool tab=false;
+        var test = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmtab");
+        bool suc = bool.TryParse(test, out tab);
+        if(suc == false){
+            tab = wtmblazor.ConfigInfo.PageMode == PageModeEnum.Tab ? true : false;
+        }
+        UseTabSet = tab;
         await base.OnInitializedAsync();
     }
 	
@@ -324,5 +331,10 @@
     {
         _ = await wtmblazor.Api.CallAPI("/api/_account/SetTenant?tenant=" + Value);
         _ = await JSRuntime.InvokeAsync<string>("urlFuncs.refresh");
+    }
+
+    private async Task TabChanged(bool v)
+    {
+        await JSRuntime.InvokeAsync<bool>("localStorageFuncs.set", "wtmtab",v);
     }
 }
