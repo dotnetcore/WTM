@@ -1026,11 +1026,12 @@ window.ff = {
         layui.table.render(option);
     },
 
-    SetGridCellDate: function (id) {
+    SetGridCellDate: function (id,dt) {
         layui.use('laydate', function () {
             var laydate = layui.laydate;
             laydate.render({
                 elem: '#' + id
+                , type: dt
                 , show: true
                 , closeStop: '#' + id
                 , done: function (value, date, endDate) {
