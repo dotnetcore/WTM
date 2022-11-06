@@ -16,12 +16,6 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SixLabors.Fonts;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
@@ -332,39 +326,6 @@ namespace WalkingTec.Mvvm.Mvc
             return JsonMore(new { Id = file.GetID(), Name = file.FileName });
         }
 
-        [HttpPost]
-        [ActionDescription("UploadFileRoute")]
-        public IActionResult UploadImage([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, bool IsTemprory = true, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
-        {
-            if (width == null && height == null)
-            {
-                return Upload(fp, sm, groupName, subdir, extra, IsTemprory, _DONOT_USE_CS);
-            }
-            var FileData = Request.Form.Files[0];
-
-            Image oimage = Image.Load(FileData.OpenReadStream());
-            if (oimage == null)
-            {
-                return JsonMore(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
-            }
-            if (width == null)
-            {
-                width = height * oimage.Width / oimage.Height;
-            }
-            if (height == null)
-            {
-                height = width * oimage.Height / oimage.Width;
-            }
-            MemoryStream ms = new MemoryStream();
-            oimage.Mutate(x => x.Resize(width.Value, height.Value));
-            oimage.SaveAsJpeg(ms);
-            ms.Position = 0;
-
-            var file = fp.Upload(FileData.FileName, ms.Length, ms, groupName, subdir, extra, sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
-            oimage.Dispose();
-            ms.Dispose();
-            return JsonMore(new { Id = file.GetID(), Name = file.FileName });
-        }
 
         [HttpPost]
         [ActionDescription("UploadForLayUIRichTextBox")]
@@ -392,75 +353,6 @@ namespace WalkingTec.Mvvm.Mvc
             return Ok(fp.GetFileName(id.ToString(), Wtm.CreateDC(cskey: _DONOT_USE_CS)));
         }
 
-        [ActionDescription("GetFile")]
-        public async Task<IActionResult> GetFile([FromServices] WtmFileProvider fp, string id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
-        {
-            var file = fp.GetFile(id, true, Wtm.CreateDC(cskey: _DONOT_USE_CS));
-            if (file == null)
-            {
-                return new EmptyResult();
-            }
-            Stream rv = null;
-            try
-            {
-                rv = file.DataStream;
-                Image oimage = Image.Load(rv);
-                if (oimage != null && (width != null || height != null))
-                {
-                    if (width == null)
-                    {
-                        width = oimage.Width * height / oimage.Height;
-                    }
-                    if (height == null)
-                    {
-                        height = oimage.Height * width / oimage.Width;
-                    }
-                    var ms = new MemoryStream();
-                    oimage.Mutate(x => x.Resize(width.Value, height.Value));
-                    oimage.SaveAsJpeg(ms);
-                    rv.Dispose();
-                    rv = ms;
-                }
-                else
-                {
-
-                }
-            }
-            catch { }
-            var ext = file.FileExt.ToLower();
-            var contenttype = "application/octet-stream";
-            if (ext == "pdf")
-            {
-                contenttype = "application/pdf";
-            }
-            if (ext == "png" || ext == "bmp" || ext == "gif" || ext == "tif" || ext == "jpg" || ext == "jpeg")
-            {
-                contenttype = $"image/{ext}";
-            }
-            if (ext == "mp4")
-            {
-                contenttype = $"video/mpeg4";
-            }
-            rv.Position = 0;
-            if (stream == false)
-            {
-                return File(rv, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
-            }
-            else
-            {
-                if (ext == "mp4")
-                {
-                    return File(rv, contenttype, enableRangeProcessing: true);
-                }
-                else
-                {
-                    Response.Headers.TryAdd("Content-Disposition", $"inline; filename=\"{HttpUtility.UrlEncode(file.FileName)}\"");
-                    await rv.CopyToAsync(Response.Body);
-                    rv.Dispose();
-                    return new EmptyResult();
-                }
-            }
-        }
 
         [ActionDescription("ViewFile")]
         public IActionResult ViewFile([FromServices] WtmFileProvider fp, string id, string width, string _DONOT_USE_CS = "default")
@@ -593,62 +485,6 @@ namespace WalkingTec.Mvvm.Mvc
             public int open_issues_count { get; set; }
         }
 
-        [AllowAnonymous]
-        public ActionResult GetVerifyCode()
-        {
-            int codeW = 80;
-            int codeH = 30;
-            int fontSize = 16;
-            string chkCode = string.Empty;
-            Color[] color = { Color.Black, Color.Red, Color.Blue, Color.Green, Color.Orange, Color.Brown, Color.DarkBlue, Color.PaleGreen };
-            string[] font = { "Times New Roman" };
-            char[] character = { '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'd', 'e', 'f', 'h', 'k', 'm', 'n', 'r', 'x', 'y', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'W', 'X', 'Y' };
-            //生成验证码字符串
-            Random rnd = new Random();
-            for (int i = 0; i < 4; i++)
-            {
-                chkCode += character[rnd.Next(character.Length)];
-            }
-            //写入Session用于验证码校验，可以对校验码进行加密，提高安全性
-            HttpContext.Session.Set<string>("verify_code", chkCode);
-
-            //创建画布
-            Image bmp = new Image<Rgba32>(codeW, codeH);
-
-            //画噪线
-            for (int i = 0; i < 3; i++)
-            {
-                float x1 = rnd.Next(codeW);
-                float y1 = rnd.Next(codeH);
-                float x2 = rnd.Next(codeW);
-                float y2 = rnd.Next(codeH);
-
-                Color clr = color[rnd.Next(color.Length)];
-                bmp.Mutate(x => x.DrawLines(clr, 1.0f, new PointF(x1,y1), new PointF(x2,y2)));
-            }
-            //画验证码
-            for (int i = 0; i < chkCode.Length; i++)
-            {
-                Font ft = new Font(SystemFonts.Get("Arial"), fontSize);
-                Color clr = color[rnd.Next(color.Length)];
-                bmp.Mutate(x => x.DrawText(chkCode[i].ToString(),ft,clr,new PointF((float)i * 18, (float)0)));
-            }
-            //将验证码写入图片内存流中，以image/png格式输出
-            MemoryStream ms = new MemoryStream();
-            try
-            {
-                bmp.SaveAsPng(ms);
-                return File(ms.ToArray(), "image/jpeg");
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            finally
-            {
-                bmp.Dispose();
-            }
-        }
 
         [Public]
         public Dictionary<string, string> GetScriptLanguage()
