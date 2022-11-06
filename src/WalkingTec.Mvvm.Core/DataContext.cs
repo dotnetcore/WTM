@@ -33,10 +33,9 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<FunctionPrivilege> BaseFunctionPrivileges { get; set; }
         public DbSet<DataPrivilege> BaseDataPrivileges { get; set; }
         public DbSet<FileAttachment> BaseFileAttachments { get; set; }
-        public DbSet<FrameworkRole> BaseFrameworkRoles { get; set; }
         public DbSet<FrameworkUserRole> BaseFrameworkUserRoles { get; set; }
         public DbSet<FrameworkUserGroup> BaseFrameworkUserGroups { get; set; }
-        public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
+        //public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
         public DbSet<ActionLog> BaseActionLogs { get; set; }
         public DbSet<FrameworkTenant> FrameworkTenants { get; set; }
 
@@ -108,6 +107,14 @@ namespace WalkingTec.Mvvm.Core
             }
 
             // 获取类型 T 下 List<S> 类型的属性对应的类型 S，且S 必须是 TopBasePoco 的子类，只有这些类会生成库
+            if (allTypes.Any(x => x.IsSubclassOf(typeof(FrameworkGroup))) == false)
+            {
+                modelBuilder.Entity<FrameworkGroup>();
+            }
+            if (allTypes.Any(x => x.IsSubclassOf(typeof(FrameworkRole))) == false)
+            {
+                modelBuilder.Entity<FrameworkRole>();
+            }
             for (int i = 0; i < allTypes.Count; i++) // 
             {
                 var item = allTypes[i];
