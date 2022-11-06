@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
-using Fare;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -417,15 +416,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         var length = pro.GetCustomAttribute<StringLengthAttribute>();
 
                         if (reg != null) {
-                            Xeger x = new Xeger(reg.Pattern);
-                            val = x.Generate();
-                            if(length != null)
-                            {
-                                if(length.MaximumLength > 0 && val.Length > length.MaximumLength)
-                                {
-                                    val = val.Substring(0, length.MaximumLength-1);
-                                }
-                            }
+                            //Xeger x = new Xeger(reg.Pattern);
+                            //val = x.Generate();
+                            //if(length != null)
+                            //{
+                            //    if(length.MaximumLength > 0 && val.Length > length.MaximumLength)
+                            //    {
+                            //        val = val.Substring(0, length.MaximumLength-1);
+                            //    }
+                            //}
                         }
                         else
                         {
