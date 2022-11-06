@@ -19,8 +19,8 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-using Microsoft.AspNetCore.SpaServices.StaticFiles;
+//using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+//using Microsoft.AspNetCore.SpaServices.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -33,7 +33,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -43,7 +42,7 @@ using WalkingTec.Mvvm.Mvc.Auth;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Helper;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
-using Microsoft.AspNetCore.SpaServices.Extensions;
+//using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.Extensions.FileProviders;
 using WalkingTec.Mvvm.Core.Support.Quartz;
 using System.Text.RegularExpressions;
@@ -654,34 +653,34 @@ namespace WalkingTec.Mvvm.Mvc
 
         public static IServiceCollection AddWtmSwagger(this IServiceCollection services, bool useFullName = false)
         {
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-                var bearer = new OpenApiSecurityScheme()
-                {
-                    Description = "JWT Bearer",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            //    var bearer = new OpenApiSecurityScheme()
+            //    {
+            //        Description = "JWT Bearer",
+            //        Name = "Authorization",
+            //        In = ParameterLocation.Header,
+            //        Type = SecuritySchemeType.ApiKey
 
-                };
-                c.AddSecurityDefinition("Bearer", bearer);
-                var sr = new OpenApiSecurityRequirement();
-                sr.Add(new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                }, new string[] { });
-                c.AddSecurityRequirement(sr);
-                c.SchemaFilter<SwaggerFilter>();
-                if (useFullName == true)
-                {
-                    c.CustomSchemaIds(i => i.FullName);
-                }
-            });
+            //    };
+            //    c.AddSecurityDefinition("Bearer", bearer);
+            //    var sr = new OpenApiSecurityRequirement();
+            //    sr.Add(new OpenApiSecurityScheme
+            //    {
+            //        Reference = new OpenApiReference
+            //        {
+            //            Type = ReferenceType.SecurityScheme,
+            //            Id = "Bearer"
+            //        }
+            //    }, new string[] { });
+            //    c.AddSecurityRequirement(sr);
+            //    c.SchemaFilter<SwaggerFilter>();
+            //    if (useFullName == true)
+            //    {
+            //        c.CustomSchemaIds(i => i.FullName);
+            //    }
+            //});
             return services;
         }
 
@@ -763,8 +762,8 @@ namespace WalkingTec.Mvvm.Mvc
             Core.CoreProgram._localizer = programLocalizer;
 
             var controllers = gd.GetTypesAssignableFrom<IBaseController>();
-            var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-            gd.IsSpa = isspa == true || test != null;
+            //var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
+            //gd.IsSpa = isspa == true || test != null;
             gd.AllModule = GetAllModules(controllers);
             var modules = Utils.ResetModule(gd.AllModule, false);
             gd.CustomUserType = gd.GetTypesAssignableFrom<FrameworkUserBase>().Where(x => x.Name.ToLower() == "frameworkuser").FirstOrDefault();
@@ -874,12 +873,12 @@ namespace WalkingTec.Mvvm.Mvc
                     foreach (var item in cs)
                     {
                         var dc = item.CreateDC();
-                        dc.DataInit(gd.AllModule, isspa == true || test != null).Wait();
+                        //dc.DataInit(gd.AllModule, isspa == true || test != null).Wait();
                     }
                 }
                 else
                 {
-                    fixdc.DataInit(gd.AllModule, isspa == true || test != null).Wait();
+                    //fixdc.DataInit(gd.AllModule, isspa == true || test != null).Wait();
                 }
 
             }
@@ -936,11 +935,11 @@ namespace WalkingTec.Mvvm.Mvc
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
             if (configs.IsQuickDebug == true || showInDebugOnly == false)
             {
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                });
+                //app.UseSwagger();
+                //app.UseSwaggerUI(c =>
+                //{
+                //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                //});
             }
             return app;
         }
@@ -948,15 +947,15 @@ namespace WalkingTec.Mvvm.Mvc
         public static IApplicationBuilder UseReact(this IApplicationBuilder app)
         {
             var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
-            app.UseSpaStaticFiles();
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+            //app.UseSpaStaticFiles();
+            //app.UseSpa(spa =>
+            //{
+            //    spa.Options.SourcePath = "ClientApp";
+            //    if (env.IsDevelopment())
+            //    {
+            //        spa.UseReactDevelopmentServer(npmScript: "start");
+            //    }
+            //});
 
             return app;
         }
