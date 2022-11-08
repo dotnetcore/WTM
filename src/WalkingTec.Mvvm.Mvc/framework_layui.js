@@ -823,7 +823,7 @@ window.ff = {
                 return;
             }
             var itemname = item.name;
-            if (/_DONOTUSE_(.*?)\[(\d?)\]\.(.*?)$/.test(itemname)) {
+            if (/_DONOTUSE_(.*?)\[(.*?)\]\.(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
                 var number = RegExp.$2;
                 var name2 = RegExp.$3;
@@ -840,7 +840,7 @@ window.ff = {
                 return;
             }
             var issub = false;
-            if (/(.*?)\[(\-?\d?)\]\.(.*?)$/.test(itemname)) {
+            if (/(.*?)\[(.*?)\]\.(.*?)$/.test(itemname)) {
                 var name1 = RegExp.$1;
                 var number = RegExp.$2;
                 var name2 = RegExp.$3;
@@ -1012,8 +1012,8 @@ window.ff = {
         var re3 = /(.*?)<input hidden name='(.*?)\.id' .*?\/>(.*?)/ig;
         for (val in data) {
             if (typeof (data[val]) == 'string') {
-                data[val] = data[val].replace(/\[\d?\]/ig, "[" + loaddata.length + "]");
-                data[val] = data[val].replace(/_\d?_/ig, "_" + loaddata.length + "_");
+                data[val] = data[val].replace(/\[\d+\]/ig, "[" + loaddata.length + "]");
+                data[val] = data[val].replace(/_\d+_/ig, "_" + loaddata.length + "_");
                 data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />$2");
                 data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >$2");
                 data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value='" + data["ID"] + "'/> $3");
@@ -1068,8 +1068,8 @@ window.ff = {
         for (var i = 0; i < loaddata.length; i++) {
             for (val in loaddata[i]) {
                 if (typeof (loaddata[i][val]) == 'string') {
-                    loaddata[i][val] = loaddata[i][val].replace(/\[\d?\]/ig, "[" + i + "]");
-                    loaddata[i][val] = loaddata[i][val].replace(/_\d?_/ig, "_" + i + "_");
+                    loaddata[i][val] = loaddata[i][val].replace(/\[\d+\]/ig, "[" + i + "]");
+                    loaddata[i][val] = loaddata[i][val].replace(/_\d+_/ig, "_" + i + "_");
                     loaddata[i][val] = loaddata[i][val].replace("/onchange=\".*?\"/", "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "')\"");
                 }
             }
