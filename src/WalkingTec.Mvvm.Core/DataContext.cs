@@ -672,9 +672,9 @@ namespace WalkingTec.Mvvm.Core
                 case DBTypeEnum.SQLite:
                     optionsBuilder.UseSqlite(CSName);
                     break;
-                case DBTypeEnum.DaMeng:
-                    optionsBuilder.UseDm(CSName);
-                    break;
+                //case DBTypeEnum.DaMeng:
+                //    optionsBuilder.UseDm(CSName);
+                //    break;
                 case DBTypeEnum.Oracle:
                     optionsBuilder.UseOracle(CSName, option =>
                     {

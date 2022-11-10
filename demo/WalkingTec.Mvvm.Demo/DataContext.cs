@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Demo
 
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {
-            var state = await base.DataInit(allModules, IsSpa);
+            var state = false;// await base.DataInit(allModules, IsSpa);
             bool emptydb = false;
 
             try
