@@ -43,6 +43,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
 
+        [AllRights]
         public IActionResult GetActionChart()
         {
             var areas = GlobaInfo.AllModule.Select(x => x.Area).Distinct();
@@ -68,6 +69,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return Json(rv);
         }
 
+        [AllRights]
         public IActionResult GetModelChart()
         {
             var models = new List<Type>();
@@ -99,6 +101,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return Json(rv);
         }
 
+        [AllRights]
         public IActionResult GetSampleChart()
         {
             var data = new List<ChartData>();
