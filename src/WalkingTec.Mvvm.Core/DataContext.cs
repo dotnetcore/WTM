@@ -17,6 +17,7 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -33,9 +34,10 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<FunctionPrivilege> BaseFunctionPrivileges { get; set; }
         public DbSet<DataPrivilege> BaseDataPrivileges { get; set; }
         public DbSet<FileAttachment> BaseFileAttachments { get; set; }
+        public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
+        public DbSet<FrameworkRole> BaseFrameworkRoles { get; set; }
         public DbSet<FrameworkUserRole> BaseFrameworkUserRoles { get; set; }
         public DbSet<FrameworkUserGroup> BaseFrameworkUserGroups { get; set; }
-        //public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
         public DbSet<ActionLog> BaseActionLogs { get; set; }
         public DbSet<FrameworkTenant> FrameworkTenants { get; set; }
 
@@ -74,78 +76,8 @@ namespace WalkingTec.Mvvm.Core
             //wtmtodo: 删除菜单同步删除页面权限
             //modelBuilder.Entity<FunctionPrivilege>().HasOne(x => x.MenuItem).WithMany(x => x.Privileges).HasForeignKey(x => x.MenuItemId).OnDelete(DeleteBehavior.Cascade);
 
-            var modelAsms = Utils.GetAllAssembly();
+            var allTypes = Utils.GetAllModels();
 
-            var allTypes = new List<Type>();// 所有 DbSet<> 的泛型类型
-
-            #region 获取所有 DbSet<T> 的泛型类型 T 及其 List<T> 类型属性对应的类型 T
-
-            // 获取所有 DbSet<T> 的泛型类型 T
-            foreach (var asm in modelAsms)
-            {
-                try
-                {
-                    var dcModule = asm.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x)).ToList();
-                    if (dcModule != null && dcModule.Count > 0)
-                    {
-                        foreach (var module in dcModule)
-                        {
-                            foreach (var pro in module.GetProperties())
-                            {
-                                if (pro.PropertyType.IsGeneric(typeof(DbSet<>)))
-                                {
-                                    if (!allTypes.Contains(pro.PropertyType.GenericTypeArguments[0], new TypeComparer()))
-                                    {
-                                        allTypes.Add(pro.PropertyType.GenericTypeArguments[0]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                catch { }
-            }
-
-            // 获取类型 T 下 List<S> 类型的属性对应的类型 S，且S 必须是 TopBasePoco 的子类，只有这些类会生成库
-            if (allTypes.Any(x => x.IsSubclassOf(typeof(FrameworkGroup))) == false)
-            {
-                modelBuilder.Entity<FrameworkGroup>();
-            }
-            if (allTypes.Any(x => x.IsSubclassOf(typeof(FrameworkRole))) == false)
-            {
-                modelBuilder.Entity<FrameworkRole>();
-            }
-            for (int i = 0; i < allTypes.Count; i++) // 
-            {
-                var item = allTypes[i];
-                var pros = item.GetProperties();
-                foreach (var pro in pros)
-                {
-                    if (typeof(TopBasePoco).IsAssignableFrom(pro.PropertyType))
-                    {
-                        if (allTypes.Contains(pro.PropertyType) == false)
-                        {
-                            allTypes.Add(pro.PropertyType);
-                        }
-                    }
-                    else
-                    {
-                        if (pro.PropertyType.IsGenericType && pro.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
-                        {
-                            var inner = pro.PropertyType.GetGenericArguments()[0];
-                            if (typeof(TopBasePoco).IsAssignableFrom(inner))
-                            {
-                                if (allTypes.Contains(inner) == false)
-                                {
-                                    allTypes.Add(inner);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            #endregion
             foreach (var item in allTypes)
             {
                 if (typeof(TopBasePoco).IsAssignableFrom(item) && typeof(ISubFile).IsAssignableFrom(item) == false)
@@ -160,25 +92,28 @@ namespace WalkingTec.Mvvm.Core
                 }
                 List<Expression> list = new List<Expression>();
                 ParameterExpression pe = Expression.Parameter(item);
-                if (typeof(IPersistPoco).IsAssignableFrom(item))
+                if (item.BaseType == null || item.BaseType.IsAbstract == true || (item.BaseType == typeof(TopBasePoco) || item.BaseType == typeof(BasePoco) || item.BaseType?.BaseType == typeof(TreePoco)))
                 {
-                    var exp = Expression.Equal(Expression.Property(pe, "IsValid"), Expression.Constant(true));
-                    list.Add(exp);
-                }
-                if (typeof(ITenant).IsAssignableFrom(item))
-                {
-                    var exp= Expression.Equal(Expression.Property(pe, "TenantCode"), Expression.PropertyOrField(Expression.Constant(this),"TenantCode"));
-                    list.Add(exp);
-                }
-                if(list.Count > 0)
-                {
-                    var finalexp = list[0];
-                    for (int i = 1; i < list.Count; i++)
+                    if (typeof(IPersistPoco).IsAssignableFrom(item))
                     {
-                        finalexp = Expression.AndAlso(finalexp, list[i]);
+                        var exp = Expression.Equal(Expression.Property(pe, "IsValid"), Expression.Constant(true));
+                        list.Add(exp);
                     }
-                    var builder = typeof(ModelBuilder).GetMethod("Entity", Type.EmptyTypes).MakeGenericMethod(item).Invoke(modelBuilder, null) as EntityTypeBuilder;
-                    builder.HasQueryFilter(Expression.Lambda(finalexp,pe));
+                    if (typeof(ITenant).IsAssignableFrom(item))
+                    {
+                        var exp = Expression.Equal(Expression.Property(pe, "TenantCode"), Expression.PropertyOrField(Expression.Constant(this), "TenantCode"));
+                        list.Add(exp);
+                    }
+                    if (list.Count > 0)
+                    {
+                        var finalexp = list[0];
+                        for (int i = 1; i < list.Count; i++)
+                        {
+                            finalexp = Expression.AndAlso(finalexp, list[i]);
+                        }
+                        var builder = typeof(ModelBuilder).GetMethod("Entity", Type.EmptyTypes).MakeGenericMethod(item).Invoke(modelBuilder, null) as EntityTypeBuilder;
+                        builder.HasQueryFilter(Expression.Lambda(finalexp, pe));
+                    }
                 }
             }
         }
@@ -214,12 +149,12 @@ namespace WalkingTec.Mvvm.Core
                 if (Set<FrameworkMenu>().Any() == false && TenantCode == null)
                 {
                     var systemManagement = GetFolderMenu("SystemManagement");
-                    var logList = IsSpa ? GetMenu2(AllModules, "ActionLog", "MenuKey.ActionLog",  1) : GetMenu(AllModules, "_Admin", "ActionLog", "Index", "MenuKey.ActionLog", 1);
-                    var userList = IsSpa ? GetMenu2(AllModules, "FrameworkUser", "MenuKey.UserManagement",  2) : GetMenu(AllModules, "_Admin", "FrameworkUser", "Index", "MenuKey.UserManagement",  2);
-                    var roleList = IsSpa ? GetMenu2(AllModules, "FrameworkRole", "MenuKey.RoleManagement",  3) : GetMenu(AllModules, "_Admin", "FrameworkRole", "Index", "MenuKey.RoleManagement",  3);
-                    var groupList = IsSpa ? GetMenu2(AllModules, "FrameworkGroup", "MenuKey.GroupManagement",  4) : GetMenu(AllModules, "_Admin", "FrameworkGroup", "Index", "MenuKey.GroupManagement",  4);
-                    var menuList = IsSpa ? GetMenu2(AllModules, "FrameworkMenu", "MenuKey.MenuMangement", 5) : GetMenu(AllModules, "_Admin", "FrameworkMenu", "Index", "MenuKey.MenuMangement",  5);
-                    var dpList = IsSpa ? GetMenu2(AllModules, "DataPrivilege", "MenuKey.DataPrivilege",  6) : GetMenu(AllModules, "_Admin", "DataPrivilege", "Index", "MenuKey.DataPrivilege",  6);
+                    var logList = IsSpa ? GetMenu2(AllModules, "ActionLog", "MenuKey.ActionLog", 1) : GetMenu(AllModules, "_Admin", "ActionLog", "Index", "MenuKey.ActionLog", 1);
+                    var userList = IsSpa ? GetMenu2(AllModules, "FrameworkUser", "MenuKey.UserManagement", 2) : GetMenu(AllModules, "_Admin", "FrameworkUser", "Index", "MenuKey.UserManagement", 2);
+                    var roleList = IsSpa ? GetMenu2(AllModules, "FrameworkRole", "MenuKey.RoleManagement", 3) : GetMenu(AllModules, "_Admin", "FrameworkRole", "Index", "MenuKey.RoleManagement", 3);
+                    var groupList = IsSpa ? GetMenu2(AllModules, "FrameworkGroup", "MenuKey.GroupManagement", 4) : GetMenu(AllModules, "_Admin", "FrameworkGroup", "Index", "MenuKey.GroupManagement", 4);
+                    var menuList = IsSpa ? GetMenu2(AllModules, "FrameworkMenu", "MenuKey.MenuMangement", 5) : GetMenu(AllModules, "_Admin", "FrameworkMenu", "Index", "MenuKey.MenuMangement", 5);
+                    var dpList = IsSpa ? GetMenu2(AllModules, "DataPrivilege", "MenuKey.DataPrivilege", 6) : GetMenu(AllModules, "_Admin", "DataPrivilege", "Index", "MenuKey.DataPrivilege", 6);
                     var tenantList = IsSpa ? GetMenu2(AllModules, "FrameworkTenant", "MenuKey.FrameworkTenant", 6) : GetMenu(AllModules, "_Admin", "FrameworkTenant", "Index", "MenuKey.FrameworkTenant", 7);
                     if (logList != null)
                     {
@@ -248,10 +183,10 @@ namespace WalkingTec.Mvvm.Core
                             var apifolder = GetFolderMenu("Api");
                             apifolder.ShowOnMenu = false;
                             apifolder.DisplayOrder = 100;
-                            var logList2 = GetMenu2(AllModules, "ActionLog", "MenuKey.ActionLog",  1);
-                            var userList2 = GetMenu2(AllModules, "FrameworkUser", "MenuKey.UserManagement",  2);
-                            var roleList2 = GetMenu2(AllModules, "FrameworkRole", "MenuKey.RoleManagement",  3);
-                            var groupList2 = GetMenu2(AllModules, "FrameworkGroup", "MenuKey.GroupManagement",  4);
+                            var logList2 = GetMenu2(AllModules, "ActionLog", "MenuKey.ActionLog", 1);
+                            var userList2 = GetMenu2(AllModules, "FrameworkUser", "MenuKey.UserManagement", 2);
+                            var roleList2 = GetMenu2(AllModules, "FrameworkRole", "MenuKey.RoleManagement", 3);
+                            var groupList2 = GetMenu2(AllModules, "FrameworkGroup", "MenuKey.GroupManagement", 4);
                             var menuList2 = GetMenu2(AllModules, "FrameworkMenu", "MenuKey.MenuMangement", 5);
                             var dpList2 = GetMenu2(AllModules, "DataPrivilege", "MenuKey.DataPrivilege", 6);
                             var tenantList2 = GetMenu2(AllModules, "FrameworkTenant", "MenuKey.FrameworkTenant", 7);
@@ -283,14 +218,13 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }
                 Set<FrameworkRole>().AddRange(roles);
-
                 await SaveChangesAsync();
             }
             return rv;
         }
 
 
-        private FrameworkMenu GetFolderMenu(string FolderText,bool isShowOnMenu = true, bool isInherite = false)
+        private FrameworkMenu GetFolderMenu(string FolderText, bool isShowOnMenu = true, bool isInherite = false)
         {
             FrameworkMenu menu = new FrameworkMenu
             {
@@ -306,14 +240,14 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
-        private FrameworkMenu GetMenu(List<SimpleModule> allModules, string areaName, string controllerName, string actionName, string pageKey,int displayOrder)
+        private FrameworkMenu GetMenu(List<SimpleModule> allModules, string areaName, string controllerName, string actionName, string pageKey, int displayOrder)
         {
             var acts = allModules.Where(x => x.ClassName == controllerName && (areaName == null || x.Area?.Prefix?.ToLower() == areaName.ToLower())).SelectMany(x => x.Actions).ToList();
             var act = acts.Where(x => x.MethodName == actionName).SingleOrDefault();
             var rest = acts.Where(x => x.MethodName != actionName && x.IgnorePrivillege == false).ToList();
             bool allowtenant = controllerName != "FrameworkMenu";
             FrameworkMenu menu = GetMenuFromAction(act, true, displayOrder, allowtenant);
-            if(act?.Module?.IsApi == true)
+            if (act?.Module?.IsApi == true)
             {
                 menu.ModuleName += "Api";
             }
@@ -340,7 +274,7 @@ namespace WalkingTec.Mvvm.Core
         private FrameworkMenu GetMenu2(List<SimpleModule> allModules, string controllerName, string pageKey, int displayOrder)
         {
             bool allowtenant = controllerName != "FrameworkMenu";
-            var acts = allModules.Where(x => (x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}")&& x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            var acts = allModules.Where(x => (x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}") && x.IsApi == true).SelectMany(x => x.Actions).ToList();
             var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
             SimpleAction act = null;
             if (acts.Count > 0)
@@ -359,7 +293,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (rest[i] != null)
                     {
-                        var sub = GetMenuFromAction(rest[i], false,  (i + 1), allowtenant);
+                        var sub = GetMenuFromAction(rest[i], false, (i + 1), allowtenant);
                         sub.PageName = pageKey;
                         menu.Children.Add(sub);
                     }
@@ -368,7 +302,7 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
-        private FrameworkMenu GetMenuFromAction(SimpleAction act, bool isMainLink,  int displayOrder = 1, bool allowtenant = true)
+        private FrameworkMenu GetMenuFromAction(SimpleAction act, bool isMainLink, int displayOrder = 1, bool allowtenant = true)
         {
             if (act == null)
             {

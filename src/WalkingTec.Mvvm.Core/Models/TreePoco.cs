@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Core
 {
-    public abstract class TreePoco : TopBasePoco
+    public  class TreePoco : TopBasePoco
     {
         [Display(Name = "_Admin.Parent")]
         public Guid? ParentId { get; set; }

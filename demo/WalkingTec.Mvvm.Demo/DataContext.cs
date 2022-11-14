@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Demo.Models._Admin;
 using WalkingTec.Mvvm.Demo.Models.Virus;
 
 namespace WalkingTec.Mvvm.Demo
@@ -48,10 +49,10 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<LinkTest> LinkTests { get; set; }
         public DbSet<LinkTest2> LinkTest2 { get; set; }
         public DbSet<TreeTest> TreeTests { get; set; }
-
+        public DbSet<MyGroup> MyGroups { get; set; }
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {
-            var state = false;// await base.DataInit(allModules, IsSpa);
+            var state = await base.DataInit(allModules, IsSpa);
             bool emptydb = false;
 
             try

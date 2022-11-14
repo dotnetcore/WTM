@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// Model层的基类，所有的model都应该继承这个类。这会使所有的model层对应的数据库表都有一个自增主键
     /// </summary>
-    public class BasePoco : TopBasePoco, IBasePoco
+    public abstract class BasePoco : TopBasePoco, IBasePoco
     {
         /// <summary>
         /// CreateTime
