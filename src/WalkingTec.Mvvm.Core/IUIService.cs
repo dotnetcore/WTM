@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Core
         string MakeCombo(string name = null, List<ComboSelectListItem> value = null, string selectedValue = null, string emptyText = null, bool isReadOnly = false);
 
         string MakeTextBox(string name = null, string value = null, string emptyText = null, bool isReadOnly = false);
-        string MakeDateTime(string name = null, string value = null, string emptyText = null, bool isReadOnly = false);
+        string MakeDateTime(string name = null, string value = null, string emptyText = null, bool isReadOnly = false, DateTimeTypeEnum? dateType = DateTimeTypeEnum.DateTime);
         
     }
 }

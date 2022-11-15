@@ -431,7 +431,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else
                 {
-                    exist = BaseUserQuery.IgnoreQueryFilters().Any(x => x.ITCode.ToLower() == username && x.Password == Utils.GetMD5String(password) && x.TenantCode == tenant && x.IsValid==true);
+                    exist = BaseUserQuery.IgnoreQueryFilters().Any(x => x.ITCode.ToLower() == username.ToLower() && x.Password == Utils.GetMD5String(password) && x.TenantCode == tenant && x.IsValid==true);
                 }
                 if (exist == false)
                 {

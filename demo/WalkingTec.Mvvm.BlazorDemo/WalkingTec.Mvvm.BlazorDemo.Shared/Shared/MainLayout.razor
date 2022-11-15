@@ -22,7 +22,6 @@
                                     <span class="mx-1" style="">@SelectedCulture</span>
                                 </a>
                                 <div class="dropdown-menu">
-                                    <div class="dropdown-menu-arrow"></div>
                                     <a @onclick="@(x=>SetCulture("zh"))" class="dropdown-item"><span class="nav-link-text">简体中文</span></a>
                                     <a @onclick="@(x=>SetCulture("en"))" class="dropdown-item"><span class="nav-link-text">English</span></a>
                                 </div>
@@ -42,7 +41,6 @@
                                         <span class="mx-1" style="">@(UserInfo.CurrentTenant==UserInfo.TenantCode?wtmblazor.Localizer["_Admin.TenantHost"]:tenants.Where(x=>x.Value == UserInfo.CurrentTenant).Select(x=>x.Text).FirstOrDefault())</span>
                                     </a>
                                     <div class="dropdown-menu">
-                                        <div class="dropdown-menu-arrow"></div>
                                         <a @onclick="@(x=>SetTenant(UserInfo.TenantCode))" class="dropdown-item"><span class="nav-link-text">@wtmblazor.Localizer["_Admin.TenantHost"]</span></a>
                                         @foreach (var t in tenants)
                                         {
@@ -68,7 +66,6 @@
                                     <span class="mx-1" style="">@UserInfo.Name</span>
                                 </a>
                                 <div class="dropdown-menu">
-                                    <div class="dropdown-menu-arrow"></div>
                                     <a @onclick="@Show" class="dropdown-item"><i class="fa fa-user fa-fw"></i><span class="nav-link-text">@wtmblazor.Localizer["Login.ChangePassword"]</span></a><!--!--><!--!-->
                                     <a target="_self" href="/" class="dropdown-item"><i class="fa fa-house fa-fw"></i><span class="nav-link-text">@wtmblazor.Localizer["Sys.BackHome"]</span></a><!--!--><!--!-->
                                     @if (wtmblazor.ConfigInfo.IsQuickDebug == true)
@@ -140,7 +137,7 @@
             <GroupBox Title="@wtmblazor.Localizer["Sys.MoreSettings"]">
                 <div class="row">
                     <div class="col-6 d-flex align-items-center">
-                        <Switch @bind-Value="@UseTabSet" OnColor="@Color.Success" OffColor="@Color.Primary"></Switch>
+                        <Switch OnValueChanged="TabChanged" @bind-Value="@UseTabSet" OnColor="@Color.Success" OffColor="@Color.Primary"></Switch>
                     </div>
                     <div class="col-6 text-right">
                         <span>@(UseTabSet ? @wtmblazor.Localizer["Sys.Tabs"] : @wtmblazor.Localizer["Sys.SinglePage"])</span>
@@ -244,12 +241,19 @@
             var usermenu = UserInfo.Attributes["Menus"] as WalkingTec.Mvvm.Core.Support.Json.SimpleMenuApi[];
 
             var formatedmenu = new List<FrameworkMenu>();
-			formatedmenu.AddRange(toMenuTree(usermenu.AsQueryable()));
+            formatedmenu.AddRange(toMenuTree(usermenu.AsQueryable()));
             GetMenuFromFrameworkMenu(formatedmenu).ForEach(x => menus.Add(x));
         }
         Menus = menus;
 
         tenants = await wtmblazor.Api.CallItemsApi($"/api/_frameworktenant/GetFrameworkTenants?parent={UserInfo.TenantCode}");
+        bool tab=false;
+        var test = await JSRuntime.InvokeAsync<string>("localStorageFuncs.get", "wtmtab");
+        bool suc = bool.TryParse(test, out tab);
+        if(suc == false){
+            tab = wtmblazor.ConfigInfo.PageMode == PageModeEnum.Tab ? true : false;
+        }
+        UseTabSet = tab;
         await base.OnInitializedAsync();
     }
 	
@@ -327,5 +331,10 @@
     {
         _ = await wtmblazor.Api.CallAPI("/api/_account/SetTenant?tenant=" + Value);
         _ = await JSRuntime.InvokeAsync<string>("urlFuncs.refresh");
+    }
+
+    private async Task TabChanged(bool v)
+    {
+        await JSRuntime.InvokeAsync<bool>("localStorageFuncs.set", "wtmtab",v);
     }
 }

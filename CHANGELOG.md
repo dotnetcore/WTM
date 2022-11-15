@@ -2,6 +2,14 @@
 
 ## v6.x.x
 
+##6.3.8(2022-11-15)
+* **修改：**  更新版本以适应新版的Bootstrap Blazor 7
+* **修改：**  Blazor现在可以通过appsettings中的PageMode来设置默认是单一页还是多Tab页
+* **修改：**  修复了LayUI子表控件超过10行删除数据的bug
+* **修改：**  LayUI模式子表现在可以通过SetEditType方法设置子表控件是否只读
+* **修改：**  LayUI模式子表现在可以通过SetEditType方法设置子表中日期控件的格式
+* **修改：**  修复内置Login方法大小写判断的bug
+
 ##6.3.7(2022-10-19)
 * **修改：**  更新版本以适应新版的Bootstrap Blazor控件库
 * **修改：**  修复了SoftKey属性引发的bug
@@ -122,6 +130,15 @@
 * **修改：**  修改了layui多选控件设置必填的bug
 
 ## v5.x.x
+
+##5.10.8(2022-11-15)
+* **修改：**  更新版本以适应新版的Bootstrap Blazor 7
+* **修改：**  Blazor现在可以通过appsettings中的PageMode来设置默认是单一页还是多Tab页
+* **修改：**  修复了LayUI子表控件超过10行删除数据的bug
+* **修改：**  LayUI模式子表现在可以通过SetEditType方法设置子表控件是否只读
+* **修改：**  LayUI模式子表现在可以通过SetEditType方法设置子表中日期控件的格式
+* **修改：**  修复内置Login方法大小写判断的bug
+
 
 ##5.10.7(2022-10-19)
 * **修改：**  更新版本以适应新版的Bootstrap Blazor控件库

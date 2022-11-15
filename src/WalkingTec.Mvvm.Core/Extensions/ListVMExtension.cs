@@ -285,17 +285,17 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         switch (col.EditType)
                         {
                             case EditTypeEnum.TextBox:
-                                html = (self as BaseVM).UIService.MakeTextBox(name, val);
+                                html = (self as BaseVM).UIService.MakeTextBox(name, val,null,col.IsReadOnly);
                                 break;
                             case EditTypeEnum.CheckBox:
                                 _ = bool.TryParse(val, out bool nb);
-                                html = (self as BaseVM).UIService.MakeCheckBox(nb, null, name, "true");
+                                html = (self as BaseVM).UIService.MakeCheckBox(nb, null, name, "true",col.IsReadOnly);
                                 break;
                             case EditTypeEnum.ComboBox:
-                                html = (self as BaseVM).UIService.MakeCombo(name, col.ListItems, val);
+                                html = (self as BaseVM).UIService.MakeCombo(name, col.ListItems, val,null,col.IsReadOnly);
                                 break;
                             case EditTypeEnum.Datetime:
-                                html = (self as BaseVM).UIService.MakeDateTime(name, val);
+                                html = (self as BaseVM).UIService.MakeDateTime(name, val,null, col.IsReadOnly,col.DateType);
                                 break;
                             default:
                                 break;

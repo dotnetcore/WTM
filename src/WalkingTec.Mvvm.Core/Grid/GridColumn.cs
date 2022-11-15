@@ -141,6 +141,10 @@ namespace WalkingTec.Mvvm.Core
 
         public List<ComboSelectListItem> ListItems { get; set; }
 
+        public DateTimeTypeEnum? DateType { get; set; }
+
+        public bool IsReadOnly { get; set; }
+
         #region 只读属性 生成 Excel 及其 表头用
 
         /// <summary>

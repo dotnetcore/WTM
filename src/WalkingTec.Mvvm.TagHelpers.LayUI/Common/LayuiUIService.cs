@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
         public string MakeCombo(string name = null, List<ComboSelectListItem> value = null, string selectedValue = null, string emptyText = null, bool isReadOnly = false)
         {
             var disable = isReadOnly ? " disabled='' class='layui-disabled'" : " ";
-            string rv = $"<select name='{name}' id='{(name == null ? "" : Utils.GetIdByName(name))}' class='layui-input' style='height:28px'   lay-ignore>";
+            string rv = $"<select name='{name}' id='{(name == null ? "" : Utils.GetIdByName(name))}' class='layui-input' style='height:28px'   {disable} lay-ignore>";
             if (string.IsNullOrEmpty(emptyText) == false)
             {
                 rv += $@"
@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             return $@"<input class='layui-input' style='height:28px'  name='{name ?? ""}' id='{(name == null ? "" : Utils.GetIdByName(name))}' value='{value ?? ""}' {disable} />";
         }
 
-        public string MakeDateTime(string name = null, string value = null, string emptyText = null, bool isReadOnly = false)
+        public string MakeDateTime(string name = null, string value = null, string emptyText = null, bool isReadOnly = false, DateTimeTypeEnum? dateType = DateTimeTypeEnum.DateTime)
         {
             var id = (name == null ? "" : Utils.GetIdByName(name));
             var disable = isReadOnly ? " disabled='' class='layui-disabled'" : " ";
@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
                     value = "";
                 }
             }
-            return $@"<input class='layui-input' style='height:28px'  name='{name ?? ""}' id='{id}' value='{value ?? ""}' {disable}  onclick='ff.SetGridCellDate(""{id}"")'/>";
+            return $@"<input class='layui-input' style='height:28px'  name='{name ?? ""}' id='{id}' value='{value ?? ""}' {disable}  onclick='ff.SetGridCellDate(""{id}"",""{dateType.ToString().ToLower()}"")'/>";
         }
 
 

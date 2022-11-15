@@ -30,8 +30,8 @@
         }
         @if (IsAccessable("/api/_FrameworkGroup/BatchDelete")&& UserInfo.Attributes["IsMainHost"].ToString() == "False")
         {
-            <TableToolbarPopconfirmButton TItem="FrameworkGroup_View" Color="Color.Primary"
-                                          Icon="fa fa-fw fa-trash" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
+            <TableToolbarPopconfirmButton TItem="FrameworkGroup_View" Color="Color.Danger"
+                                      Icon="fa fa-fw fa-trash" Text="@WtmBlazor.Localizer["Sys.Delete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
         }

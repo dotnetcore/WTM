@@ -18,34 +18,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         EN
     }
-    public enum DateTimeTypeEnum
-    {
-        /// <summary>
-        /// 日期选择器
-        /// 可选择：年、月、日
-        /// </summary>
-        Date,
-        /// <summary>
-        /// 日期时间选择器
-        /// 可选择：年、月、日、时、分、秒
-        /// </summary>
-        DateTime,
-        /// <summary>
-        /// 年选择器
-        /// 只提供年列表选择
-        /// </summary>
-        Year,
-        /// <summary>
-        /// 年月选择器
-        /// 只提供年、月选择
-        /// </summary>
-        Month,
-        /// <summary>
-        /// 时间选择器
-        /// 只提供时、分、秒选择
-        /// </summary>
-        Time
-    }
 
     [HtmlTargetElement("wt:datetime", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
     public class DateTimeTagHelper : BaseFieldTag

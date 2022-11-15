@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// TopBasePoco
     /// </summary>
-    public class TopBasePoco
+    public  class TopBasePoco
     {
         /// <summary>
         /// Id

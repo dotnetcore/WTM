@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// 数据库类型
     /// </summary>
-    public enum DBTypeEnum { SqlServer, MySql, PgSql, Memory, SQLite, Oracle }
+    public enum DBTypeEnum { SqlServer, MySql, PgSql, Memory, SQLite, Oracle,DaMeng }
 
     /// <summary>
     /// 页面显示方式
