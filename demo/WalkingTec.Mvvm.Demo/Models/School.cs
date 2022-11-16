@@ -49,8 +49,23 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Display(Name = "专业")]
         public List<Major> Majors { get; set; }
 
-        [Display(Name = "照片")]
+        [Display(Name = "多照片")]
         public List<SchoolPhoto> Photos { get; set; }
+
+        [Display(Name = "多附件")]
+        public List<SchoolFiles> Files { get; set; }
+
+        [Display(Name = "照片")]
+        public Guid? PhotoId { get; set; }
+
+        [Display(Name = "照片")]
+        public FileAttachment Photo { get; set; }
+
+        [Display(Name = "附件")]
+        public Guid? FileId { get; set; }
+
+        [Display(Name = "附件")]
+        public FileAttachment File { get; set; }
 
         public City Location { get; set; }
 
@@ -58,6 +73,16 @@ namespace WalkingTec.Mvvm.Demo.Models
     }
 
     public class SchoolPhoto : TopBasePoco, ISubFile
+    {
+        public int SchoolId { get; set; }
+        public School School { get; set; }
+
+        public Guid FileId { get; set; }
+        public FileAttachment File { get; set; }
+        public int Order { get; set; }
+    }
+
+    public class SchoolFiles : TopBasePoco, ISubFile
     {
         public int SchoolId { get; set; }
         public School School { get; set; }

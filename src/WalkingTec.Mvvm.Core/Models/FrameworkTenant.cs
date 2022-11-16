@@ -67,6 +67,10 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        [NotMapped]
+        public Dictionary<string, object> Attributes { get; set; }
+
+
         public IDataContext CreateDC(WTMContext wtm)
         {
             if (IsUsingDB == false)
