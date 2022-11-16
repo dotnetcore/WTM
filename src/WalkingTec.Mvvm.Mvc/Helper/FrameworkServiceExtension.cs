@@ -795,6 +795,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var tenantsCacheKey = nameof(GlobalData.AllTenant);
                 if (cache.TryGetValue(tenantsCacheKey, out tenants) == false)
                 {
+                    tenants = new List<FrameworkTenant>();
                     if (configs?.EnableTenant == true)
                     {
                         using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
