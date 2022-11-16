@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         public SchoolVM()
         {
             MajorList = new MajorDetailListVM();
-            SetInclude(x => x.Photos);
+            SetInclude(x => x.Photos, x=>x.Files);
         }
 
 

@@ -6,8 +6,11 @@
     <wt:display field="Entity.SchoolName" label-width="60" />
     <wt:display field="Entity.SchoolType" padding-text="km/l"/>
     <wt:display field="Entity.Remark" padding-text="km/l"/>
-    <wt:multiupload field="Entity.Photos" disabled="true" upload-type="ImageFile"/>
-  </wt:row>
+        <wt:upload field="Entity.PhotoId" upload-type="ImageFile" preview-width="128" disabled/>
+        <wt:upload field="Entity.FileId" disabled />
+        <wt:multiupload field="Entity.Photos" upload-type="ImageFile" preview-width="128" disabled/>
+        <wt:multiupload field="Entity.Files" upload-type="AllFiles" disabled />
+    </wt:row>
     <wt:row align=" AlignEnum.Right">
         <wt:closebutton />
     </wt:row>
