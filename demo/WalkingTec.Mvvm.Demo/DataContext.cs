@@ -50,6 +50,7 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<LinkTest2> LinkTest2 { get; set; }
         public DbSet<TreeTest> TreeTests { get; set; }
         public DbSet<MyGroup> MyGroups { get; set; }
+        public DbSet<MyTenant> MyTenants { get; set; }
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {
             var state = await base.DataInit(allModules, IsSpa);

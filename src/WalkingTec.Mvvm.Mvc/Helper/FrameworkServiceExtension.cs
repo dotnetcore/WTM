@@ -47,6 +47,7 @@ using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.Extensions.FileProviders;
 using WalkingTec.Mvvm.Core.Support.Quartz;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -602,7 +603,7 @@ namespace WalkingTec.Mvvm.Mvc
                              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey)),
                              LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
                              {
-                                 if(expires == null)
+                                 if (expires == null)
                                  {
                                      return true;
                                  }
@@ -610,7 +611,7 @@ namespace WalkingTec.Mvvm.Mvc
                                  {
                                      return expires.Value > DateTime.UtcNow;
                                  }
-                             },                            
+                             },
                              ValidateLifetime = true
                          };
                      })
@@ -767,7 +768,7 @@ namespace WalkingTec.Mvvm.Mvc
             gd.IsSpa = isspa == true || test != null;
             gd.AllModule = GetAllModules(controllers);
             var modules = Utils.ResetModule(gd.AllModule, false);
-            gd.CustomUserType = gd.GetTypesAssignableFrom<FrameworkUserBase>().Where(x => x.Name.ToLower() == "frameworkuser").FirstOrDefault();
+            gd.CustomUserType = gd.GetPocoTypesAssignableFrom<FrameworkUserBase>().Where(x => x.Name.ToLower() == "frameworkuser").FirstOrDefault();
             gd.SetMenuGetFunc(() =>
             {
                 var menus = new List<SimpleMenu>();
@@ -798,10 +799,25 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                         {
-                            tenants = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
+                            var cusTenantType = gd.GetPocoTypesAssignableFrom<FrameworkTenant>().FirstOrDefault();
+                            if (cusTenantType != null)
+                            {
+                                var set = dc.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(cusTenantType);
+                                var q = set.Invoke(dc, null) as IQueryable<FrameworkTenant>;
+                                tenants = q.IgnoreQueryFilters().Where(x => x.Enabled).ToList();
+                            }
+                            var _all = dc.Set<FrameworkTenant>().IgnoreQueryFilters().Where(x => x.Enabled).ToList();
+                            foreach (var item in _all)
+                            {
+                                if(tenants.Any(x=>x.ID == item.ID) == false)
+                                {
+                                    tenants.Add(item);
+                                }
+                            }
+                            tenants = tenants.OrderBy(x => x.CreateTime).ToList();
                             foreach (var item in tenants)
                             {
-                                if (string.IsNullOrEmpty(item.TDomain)==false)
+                                if (string.IsNullOrEmpty(item.TDomain) == false)
                                 {
                                     Regex r = new Regex("(http://|https://)?(.+)(/)?");
                                     var m = r.Match(item.TDomain);
@@ -810,10 +826,28 @@ namespace WalkingTec.Mvvm.Mvc
                                         item.TDomain = m.Groups[2].Value;
                                     }
                                 }
+                                item.Attributes = new Dictionary<string, object>();
+                                if (cusTenantType != null)
+                                {
+                                    var cuspros = cusTenantType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(x => x.PropertyType.IsListOf<TopBasePoco>() == false && typeof(TopBasePoco).IsAssignableFrom(x.PropertyType) == false).ToList();
+                                    foreach (var pro in cuspros)
+                                    {
+                                        if (item.Attributes.ContainsKey(pro.Name) == false)
+                                        {
+                                            try
+                                            {
+                                                item.Attributes.Add(pro.Name, pro.GetValue(item));
+                                            }
+                                            catch { }
+                                        }
+                                    }
+
+                                }
+
                             }
                         }
                     }
-                    if(tenants == null)
+                    if (tenants == null)
                     {
                         tenants = new List<FrameworkTenant>();
                     }

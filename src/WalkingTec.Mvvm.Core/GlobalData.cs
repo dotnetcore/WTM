@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
@@ -34,7 +35,7 @@ namespace WalkingTec.Mvvm.Core
                     _customUserProperties = new List<PropertyInfo>();
                     if(CustomUserType != null)
                     {
-                        _customUserProperties = CustomUserType.GetProperties( BindingFlags.Public| BindingFlags.Instance | BindingFlags.DeclaredOnly).ToList();
+                        _customUserProperties = CustomUserType.GetProperties( BindingFlags.Public| BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(x=>x.PropertyType.IsListOf<TopBasePoco>() == false && typeof(TopBasePoco).IsAssignableFrom(x.PropertyType) == false).ToList();
                     }
                 }
                 return _customUserProperties;
@@ -57,6 +58,13 @@ namespace WalkingTec.Mvvm.Core
         public void SetMenuGetFunc(Func<List<SimpleMenu>> func) => MenuGetFunc = func;
         public void SetTenantGetFunc(Func<List<FrameworkTenant>> func) => TenantGetFunc = func;
 
+        public List<Type> GetPocoTypesAssignableFrom<T>()
+        {
+            var rv = new List<Type>();
+            var allType = Utils.GetAllModels();
+            rv.AddRange(allType.Where(x => typeof(T).IsAssignableFrom(x) && x != typeof(T) && x.IsAbstract == false).ToList());
+            return rv;
+        }
         public List<Type> GetTypesAssignableFrom<T>()
         {
             var rv = new List<Type>();
