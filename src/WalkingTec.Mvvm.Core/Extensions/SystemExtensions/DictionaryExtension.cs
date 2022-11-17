@@ -14,9 +14,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
         {
             if (self.ContainsKey(key))
             {
-                T rv;
                 object v = self[key];
-                if(v is JsonDocument j)
+                if(v is JsonElement j)
                 {
                     v = j.ToString();
                 }
