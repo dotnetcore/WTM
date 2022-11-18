@@ -233,7 +233,7 @@ namespace WalkingTec.Mvvm.Core
             #endregion
 
             #region 添加模版数据
-            if (TemplateDataTable.Rows.Count > 0)
+            if (TemplateDataTable?.Rows.Count > 0)
             {
                 for (int i = 0; i < TemplateDataTable.Rows.Count; i++)
                 {
