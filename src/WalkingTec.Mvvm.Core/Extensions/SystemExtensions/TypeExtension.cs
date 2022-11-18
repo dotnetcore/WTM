@@ -516,7 +516,17 @@ namespace WalkingTec.Mvvm.Core.Extensions
             if (_propertyCache.ContainsKey(self.FullName) == false)
             {
                 var properties = self.GetProperties().ToList();
-                _propertyCache = _propertyCache.Add(self.FullName, properties);
+                try
+                {
+                    _propertyCache = _propertyCache.Add(self.FullName, properties);
+                }
+                catch
+                {
+                    if (_propertyCache.ContainsKey(self.FullName) == true)
+                    {
+                        return _propertyCache[self.FullName];
+                    }
+                }
                 return properties;
             }
             else
