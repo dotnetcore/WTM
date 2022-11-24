@@ -1,0 +1,8 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.PatientVMs.PatientListVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" url="/Patient/Search"/>

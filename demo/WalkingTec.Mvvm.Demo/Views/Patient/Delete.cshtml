@@ -1,0 +1,22 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.PatientVMs.PatientVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+	<wt:quote>@Localizer["Sys.DeleteConfirm"]</wt:quote>
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:display field="Entity.PatientName" />
+<wt:display field="Entity.IdNumber" />
+<wt:display field="Entity.Gender" />
+<wt:display field="Entity.Status" />
+<wt:display field="Entity.Birthday" />
+<wt:display field="Entity.Location.Name" />
+<wt:display field="Entity.Hospital.Name" />
+<wt:display field="Entity.PhotoId" />
+
+</wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@Localizer["Sys.Delete"]"/>
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

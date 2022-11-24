@@ -212,7 +212,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
                    // var tempdc = Wtm.DC;
-                    file = fp.GetFile(UploadFileId, true,Wtm.CreateDC(false,"default"));
+                    file = fp.GetFile(UploadFileId, true,Wtm.CreateDC(false));
                     //Wtm.DC = tempdc;
                 }
                 if (file == null)
@@ -908,7 +908,7 @@ namespace WalkingTec.Mvvm.Core
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fp.DeleteFile(item.ToString(), Wtm.CreateDC(false, "default"));
+                    fp.DeleteFile(item.ToString(), Wtm.CreateDC(false));
                 }
             }
 
