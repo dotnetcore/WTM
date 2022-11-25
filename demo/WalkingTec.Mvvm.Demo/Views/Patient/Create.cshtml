@@ -1,4 +1,4 @@
-@model WalkingTec.Mvvm.Demo.ViewModels.PatientVMs.PatientVM
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.PatientVMs.PatientVM
 @inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">
@@ -12,9 +12,7 @@
 <wt:combobox field="Entity.HospitalId" items="AllHospitals"/>
 <wt:upload field="Entity.PhotoId" />
 <wt:checkbox field="SelectedVirusesIDs" items="AllVirusess"/>
-        <wt:selector list-vm="HList" field="Entity.HospitalId" text-bind="HList.EntityList[0].Name" >
-        </wt:selector>
-    </wt:row>
+</wt:row>
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />

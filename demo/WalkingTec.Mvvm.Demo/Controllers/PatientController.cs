@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Demo.ViewModels.PatientVMs;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("病例管理")]
+    [ActionDescription("租户管理")]
     public partial class PatientController : BaseController
     {
         #region Search

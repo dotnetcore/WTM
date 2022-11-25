@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models.Virus;
 using WalkingTec.Mvvm.Demo.Models;
-using WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs;
+
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
 {
@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
         public List<ComboSelectListItem> AllVirusess { get; set; }
         [Display(Name = "病毒")]
         public List<string> SelectedVirusesIDs { get; set; }
-        public HospitalListVM HList { get; set; }
+
         public PatientVM()
         {
             SetInclude(x => x.Location);

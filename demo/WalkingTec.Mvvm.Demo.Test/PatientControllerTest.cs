@@ -44,12 +44,12 @@ namespace WalkingTec.Mvvm.Demo.Test
             PatientVM vm = rv.Model as PatientVM;
             Patient v = new Patient();
 			
-            v.ID = 75;
-            v.PatientName = "4GtOcbv3ghWU6";
-            v.IdNumber = "morcUK94tdplDjUmcOi";
+            v.ID = 35;
+            v.PatientName = "pn";
+            v.IdNumber = "xJU3MwxLEGFqaDfG";
             v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
-            v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.SiWang;
-            v.Birthday = DateTime.Parse("2024-02-19 20:55:01");
+            v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+            v.Birthday = DateTime.Parse("2023-09-29 10:14:20");
             v.LocationId = AddCity();
             v.HospitalId = AddHospital();
             v.PhotoId = AddFileAttachment();
@@ -60,12 +60,12 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data = context.Set<Patient>().Find(v.ID);
 				
-                Assert.AreEqual(data.ID, 75);
-                Assert.AreEqual(data.PatientName, "4GtOcbv3ghWU6");
-                Assert.AreEqual(data.IdNumber, "morcUK94tdplDjUmcOi");
+                Assert.AreEqual(data.ID, 35);
+                Assert.AreEqual(data.PatientName, "pn");
+                Assert.AreEqual(data.IdNumber, "xJU3MwxLEGFqaDfG");
                 Assert.AreEqual(data.Gender, WalkingTec.Mvvm.Core.GenderEnum.Female);
-                Assert.AreEqual(data.Status, WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.SiWang);
-                Assert.AreEqual(data.Birthday, DateTime.Parse("2024-02-19 20:55:01"));
+                Assert.AreEqual(data.Status, WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang);
+                Assert.AreEqual(data.Birthday, DateTime.Parse("2023-09-29 10:14:20"));
                 Assert.AreEqual(data.CreateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
             }
@@ -79,12 +79,12 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.ID = 75;
-                v.PatientName = "4GtOcbv3ghWU6";
-                v.IdNumber = "morcUK94tdplDjUmcOi";
+                v.ID = 35;
+                v.PatientName = "pn";
+                v.IdNumber = "xJU3MwxLEGFqaDfG";
                 v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
-                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.SiWang;
-                v.Birthday = DateTime.Parse("2024-02-19 20:55:01");
+                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+                v.Birthday = DateTime.Parse("2023-09-29 10:14:20");
                 v.LocationId = AddCity();
                 v.HospitalId = AddHospital();
                 v.PhotoId = AddFileAttachment();
@@ -100,11 +100,11 @@ namespace WalkingTec.Mvvm.Demo.Test
             v = new Patient();
             v.ID = vm.Entity.ID;
        		
-            v.PatientName = "yKq";
-            v.IdNumber = "yAydGvLBL";
-            v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Male;
-            v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
-            v.Birthday = DateTime.Parse("2022-05-26 20:55:01");
+            v.PatientName = "hKrpA";
+            v.IdNumber = "wstyOrRXel6Kd9yS9d";
+            v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
+            v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.ZhiYu;
+            v.Birthday = DateTime.Parse("2021-11-18 10:14:20");
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
 			
@@ -123,11 +123,11 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data = context.Set<Patient>().Find(v.ID);
  				
-                Assert.AreEqual(data.PatientName, "yKq");
-                Assert.AreEqual(data.IdNumber, "yAydGvLBL");
-                Assert.AreEqual(data.Gender, WalkingTec.Mvvm.Core.GenderEnum.Male);
-                Assert.AreEqual(data.Status, WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang);
-                Assert.AreEqual(data.Birthday, DateTime.Parse("2022-05-26 20:55:01"));
+                Assert.AreEqual(data.PatientName, "hKrpA");
+                Assert.AreEqual(data.IdNumber, "wstyOrRXel6Kd9yS9d");
+                Assert.AreEqual(data.Gender, WalkingTec.Mvvm.Core.GenderEnum.Female);
+                Assert.AreEqual(data.Status, WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.ZhiYu);
+                Assert.AreEqual(data.Birthday, DateTime.Parse("2021-11-18 10:14:20"));
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
             }
@@ -142,12 +142,12 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.ID = 75;
-                v.PatientName = "4GtOcbv3ghWU6";
-                v.IdNumber = "morcUK94tdplDjUmcOi";
+                v.ID = 35;
+                v.PatientName = "pn";
+                v.IdNumber = "xJU3MwxLEGFqaDfG";
                 v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
-                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.SiWang;
-                v.Birthday = DateTime.Parse("2024-02-19 20:55:01");
+                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+                v.Birthday = DateTime.Parse("2023-09-29 10:14:20");
                 v.LocationId = AddCity();
                 v.HospitalId = AddHospital();
                 v.PhotoId = AddFileAttachment();
@@ -167,7 +167,7 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 var data = context.Set<Patient>().Find(v.ID);
-                Assert.AreEqual(data.IsValid, false);
+                Assert.AreEqual(data, null);
           }
 
         }
@@ -180,12 +180,12 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v.ID = 75;
-                v.PatientName = "4GtOcbv3ghWU6";
-                v.IdNumber = "morcUK94tdplDjUmcOi";
+                v.ID = 35;
+                v.PatientName = "pn";
+                v.IdNumber = "xJU3MwxLEGFqaDfG";
                 v.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
-                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.SiWang;
-                v.Birthday = DateTime.Parse("2024-02-19 20:55:01");
+                v.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+                v.Birthday = DateTime.Parse("2023-09-29 10:14:20");
                 v.LocationId = AddCity();
                 v.HospitalId = AddHospital();
                 v.PhotoId = AddFileAttachment();
@@ -205,21 +205,21 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.ID = 75;
-                v1.PatientName = "4GtOcbv3ghWU6";
-                v1.IdNumber = "morcUK94tdplDjUmcOi";
+                v1.ID = 35;
+                v1.PatientName = "pn";
+                v1.IdNumber = "xJU3MwxLEGFqaDfG";
                 v1.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
-                v1.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.SiWang;
-                v1.Birthday = DateTime.Parse("2024-02-19 20:55:01");
+                v1.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+                v1.Birthday = DateTime.Parse("2023-09-29 10:14:20");
                 v1.LocationId = AddCity();
                 v1.HospitalId = AddHospital();
                 v1.PhotoId = AddFileAttachment();
-                v2.ID = 12;
-                v2.PatientName = "yKq";
-                v2.IdNumber = "yAydGvLBL";
-                v2.Gender = WalkingTec.Mvvm.Core.GenderEnum.Male;
-                v2.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
-                v2.Birthday = DateTime.Parse("2022-05-26 20:55:01");
+                v2.ID = 52;
+                v2.PatientName = "hKrpA";
+                v2.IdNumber = "wstyOrRXel6Kd9yS9d";
+                v2.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
+                v2.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.ZhiYu;
+                v2.Birthday = DateTime.Parse("2021-11-18 10:14:20");
                 v2.LocationId = v1.LocationId; 
                 v2.HospitalId = v1.HospitalId; 
                 v2.PhotoId = v1.PhotoId; 
@@ -259,21 +259,21 @@ namespace WalkingTec.Mvvm.Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.ID = 75;
-                v1.PatientName = "4GtOcbv3ghWU6";
-                v1.IdNumber = "morcUK94tdplDjUmcOi";
+                v1.ID = 35;
+                v1.PatientName = "pn";
+                v1.IdNumber = "xJU3MwxLEGFqaDfG";
                 v1.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
-                v1.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.SiWang;
-                v1.Birthday = DateTime.Parse("2024-02-19 20:55:01");
+                v1.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
+                v1.Birthday = DateTime.Parse("2023-09-29 10:14:20");
                 v1.LocationId = AddCity();
                 v1.HospitalId = AddHospital();
                 v1.PhotoId = AddFileAttachment();
-                v2.ID = 12;
-                v2.PatientName = "yKq";
-                v2.IdNumber = "yAydGvLBL";
-                v2.Gender = WalkingTec.Mvvm.Core.GenderEnum.Male;
-                v2.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.WuZhengZhuang;
-                v2.Birthday = DateTime.Parse("2022-05-26 20:55:01");
+                v2.ID = 52;
+                v2.PatientName = "hKrpA";
+                v2.IdNumber = "wstyOrRXel6Kd9yS9d";
+                v2.Gender = WalkingTec.Mvvm.Core.GenderEnum.Female;
+                v2.Status = WalkingTec.Mvvm.Demo.Models.Virus.PatientStatusEnum.ZhiYu;
+                v2.Birthday = DateTime.Parse("2021-11-18 10:14:20");
                 v2.LocationId = v1.LocationId; 
                 v2.HospitalId = v1.HospitalId; 
                 v2.PhotoId = v1.PhotoId; 
@@ -293,8 +293,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 var data1 = context.Set<Patient>().Find(v1.ID);
                 var data2 = context.Set<Patient>().Find(v2.ID);
-                Assert.AreEqual(data1.IsValid, false);
-            Assert.AreEqual(data2.IsValid, false);
+                Assert.AreEqual(data1, null);
+            Assert.AreEqual(data2, null);
             }
         }
 
@@ -314,8 +314,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 try{
 
-                v.Name = "9q";
-                v.Test = "DKkPVW4Jlx5yA5bxA";
+                v.Name = "o";
+                v.Test = "WMRsTJO";
                 context.Set<City>().Add(v);
                 context.SaveChanges();
                 }
@@ -331,8 +331,8 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 try{
 
-                v.Name = "gx";
-                v.Level = WalkingTec.Mvvm.Demo.Models.Virus.HospitalLevel.Class1;
+                v.Name = "C3";
+                v.Level = WalkingTec.Mvvm.Demo.Models.Virus.HospitalLevel.Class2;
                 v.LocationId = AddCity();
                 context.Set<Hospital>().Add(v);
                 context.SaveChanges();
@@ -349,14 +349,14 @@ namespace WalkingTec.Mvvm.Demo.Test
             {
                 try{
 
-                v.FileName = "skzYm699ul8WDB";
-                v.FileExt = "s2Ry";
-                v.Path = "59X11CSbU2KmIsFq";
-                v.Length = 82;
-                v.UploadTime = DateTime.Parse("2021-11-05 20:55:01");
-                v.SaveMode = "KIZWVfAwO";
-                v.ExtraInfo = "WAubmIp7DI2W";
-                v.HandlerInfo = "RQXuVoSTV7ix";
+                v.FileName = "qXEm12wb0y";
+                v.FileExt = "iDD";
+                v.Path = "bmCERxW42T";
+                v.Length = 56;
+                v.UploadTime = DateTime.Parse("2024-03-23 10:14:20");
+                v.SaveMode = "IMbqvwWiZCf";
+                v.ExtraInfo = "ns8Q9OKNg8zg7r";
+                v.HandlerInfo = "0S9Hh";
                 context.Set<FileAttachment>().Add(v);
                 context.SaveChanges();
                 }
