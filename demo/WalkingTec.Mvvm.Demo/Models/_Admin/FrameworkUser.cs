@@ -1,5 +1,7 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WalkingTec.Mvvm.Core.Models;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -34,5 +36,12 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.ZipCode")]
         [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "Validate.{0}formaterror")]
         public string ZipCode { get; set; }
+        [Display(Name = "_Admin.Department")]
+        public Guid? DepartmentId { get; set; }
+        [Display(Name = "_Admin.Department")]
+        public Department Department { get; set; }
+        [Display(Name = "_Admin.Sign")]
+        public string Sign { get; set; }
+
     }
 }

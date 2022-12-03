@@ -1,0 +1,13 @@
+@model WalkingTec.Mvvm.Demo.ViewModels.DepartmentVMs.DepartmentVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+    <wt:row items-per-row="ItemsPerRowEnum.Two">
+        <wt:display field="Entity.DepName" />
+        <wt:display field="Entity.Parent.DepName" />
+    </wt:row>
+    <wt:row align="AlignEnum.Right">
+        <wt:closebutton />
+    </wt:row>
+</wt:form>
+

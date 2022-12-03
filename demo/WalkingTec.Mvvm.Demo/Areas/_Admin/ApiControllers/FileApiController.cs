@@ -31,6 +31,44 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpPost("[action]")]
+        [ActionDescription("UploadIm")]
+        public IActionResult UploadIm([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
+        {
+            var FileData = Request.Form.Files[0];
+            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, extra, sm, Wtm.CreateDC(cskey: csName));
+
+            string src = string.Empty;
+
+            if (FileData.FileName.Contains("jpg") || FileData.FileName.Contains("jpeg") || FileData.FileName.Contains("png") || FileData.FileName.Contains("GIF") || FileData.FileName.Contains("JPG") || FileData.FileName.Contains("PNG"))
+            {
+                src = "/api/_file/GetFile/" + file.GetID();
+            }
+            else
+            {
+                src = "/api/_file/DownloadFile/" + file.GetID();
+            }
+
+
+            var data = new
+            {
+                src
+            };
+
+            var temp = new
+            {
+                code = 0,
+                msg = "",
+                data
+            };
+
+            return Ok(temp);
+
+
+
+        }
+
+
+        [HttpPost("[action]")]
         [ActionDescription("UploadPic")]
         public IActionResult UploadImage([FromServices] WtmFileProvider fp, int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string extra = null, string csName = null)
         {

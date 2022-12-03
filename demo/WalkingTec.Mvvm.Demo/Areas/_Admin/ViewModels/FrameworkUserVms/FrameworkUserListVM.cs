@@ -1,5 +1,6 @@
 // WTM默认页面 Wtm buidin page
 using Microsoft.EntityFrameworkCore;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,6 +33,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             return new List<GridColumn<FrameworkUser_View>>{
                 this.MakeGridHeader(x => x.ITCode),
                 this.MakeGridHeader(x => x.Name),
+                this.MakeGridHeader(x => x.Department_view),
                 this.MakeGridHeader(x => x.Gender,80),
                 this.MakeGridHeader(x => x.CellPhone,120),
                 this.MakeGridHeader(x => x.RoleName_view),
@@ -62,6 +64,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     ID = x.ID,
                     ITCode = x.ITCode,
                     Name = x.Name,
+                    Department_view = x.Department.DepName,
                     PhotoId = x.PhotoId,
                     CellPhone = x.CellPhone,
                     IsValid = x.IsValid,
@@ -84,5 +87,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         [Display(Name = "_Admin.Group")]
         public string GroupName_view { get; set; }
+
+        [Display(Name = "_Admin.Department")]
+        public string Department_view { get; set; }
     }
 }

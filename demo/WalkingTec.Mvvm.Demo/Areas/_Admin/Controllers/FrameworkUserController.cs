@@ -9,6 +9,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+using WalkingTec.Mvvm.Core.Models;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
@@ -400,6 +401,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 users = c;
             }
             return JsonMore(users);
+        }
+
+        [AllRights]
+        public IActionResult GetFrameworkUnitWorks()
+        {
+            var data = DC.Set<Department>().GetSelectListItems(Wtm, x => x.DepName);
+            return JsonMore(data);
         }
 
 

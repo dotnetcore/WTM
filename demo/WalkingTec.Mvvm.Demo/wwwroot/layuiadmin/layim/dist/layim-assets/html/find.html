@@ -1,0 +1,43 @@
+ 
+ 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>发现</title>
+
+<link rel="stylesheet" href="//unpkg.com/layui/dist/css/layui.css">
+<style>
+
+</style>
+</head>
+<body>
+
+<div style="margin: 15px;">
+  <blockquote class="layui-elem-quote">此为自定义的【查找】页面，因需求不一，所以官方暂不提供该模版结构与样式，实际使用时，可移至该文件到你的项目中，对页面自行把控。
+  <br>文件所在目录（相对于layui.js）：/layim-assets/html/find.html</blockquote>
+</div>
+
+
+
+<script src="//unpkg.com/layui/dist/layui.js"></script>
+<script>
+layui.config({
+  layimPath: '../../' //配置 layim.js 所在目录
+  ,layimAssetsPath: '../../layim-assets/' //layim 资源文件所在目录
+}).extend({
+  layim: layui.cache.layimPath + 'layim' //配置 layim 组件所在的路径
+}).use(['layim', 'laypage'], function(){
+  var layim = layui.layim
+  ,layer = layui.layer
+  ,laytpl = layui.laytpl
+  ,$ = layui.jquery
+  ,laypage = layui.laypage;
+  
+  //一些添加好友请求之类的交互参见文档
+  
+});
+</script>
+</body>
+</html>

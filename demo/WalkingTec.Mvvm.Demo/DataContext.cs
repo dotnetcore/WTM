@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Demo.Models._Admin;
 using WalkingTec.Mvvm.Demo.Models.Virus;
@@ -51,6 +52,8 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<TreeTest> TreeTests { get; set; }
         public DbSet<MyGroup> MyGroups { get; set; }
         public DbSet<MyTenant> MyTenants { get; set; }
+
+        public DbSet<Department> Departments { get; set; }
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {
             var state = await base.DataInit(allModules, IsSpa);

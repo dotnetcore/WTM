@@ -5,12 +5,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
-using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Demo.Hubs;
 using WalkingTec.Mvvm.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +26,7 @@ builder.Services.AddWtmAuthentication(builder.Configuration);
 builder.Services.AddWtmHttpClient(builder.Configuration);
 builder.Services.AddWtmSwagger();
 builder.Services.AddWtmMultiLanguages(builder.Configuration);
+
 builder.Services.AddMvc(options =>
 {
     options.UseWtmMvcOptions();
@@ -47,7 +47,7 @@ builder.Services.AddWtmContext(builder.Configuration, (options) => {
     options.FileSubDirSelector = SubDirSelector;
     options.ReloadUserFunc = ReloadUser;
 });
-
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 IOptionsMonitor<Configs> config = app.Services.GetRequiredService<IOptionsMonitor<Configs>>();
@@ -65,6 +65,7 @@ app.UseAuthorization();
 app.UseSession();
 app.UseWtmSwagger(false);
 app.UseWtm();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
@@ -73,6 +74,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapHub<ChatHub>("/chatHub");
 });
 
 app.UseWtmContext();

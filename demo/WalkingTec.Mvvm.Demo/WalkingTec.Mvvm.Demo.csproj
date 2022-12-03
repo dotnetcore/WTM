@@ -25,5 +25,17 @@
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Workspace\WTM\demo\WalkingTec.Mvvm.Demo\ViewModels\ImVMs\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\Workspace\WTM\demo\WalkingTec.Mvvm.Demo\ViewModels\ImVMs\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
+  </ItemGroup>
+
 </Project>
 

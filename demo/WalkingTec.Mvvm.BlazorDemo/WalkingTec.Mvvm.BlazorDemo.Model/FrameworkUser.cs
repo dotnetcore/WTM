@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using WalkingTec.Mvvm.Core.Models;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -38,5 +39,10 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.ZipCode")]
         [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "Validate.{0}formaterror")]
         public string ZipCode { get; set; }
+
+        public Guid? DepartmentId { get; set; }
+
+        public Department Department { get; set; }
+
     }
 }

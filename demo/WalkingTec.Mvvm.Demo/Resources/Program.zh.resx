@@ -771,6 +771,9 @@
   <data name="_Admin.Debug" xml:space="preserve">
     <value>调试</value>
   </data>
+  <data name="_Admin.Department" xml:space="preserve">
+    <value>部门</value>
+  </data>
   <data name="_Admin.DisplayOrder" xml:space="preserve">
     <value>顺序</value>
   </data>
@@ -947,6 +950,9 @@
   </data>
   <data name="_Admin.ShowOnMenu" xml:space="preserve">
     <value>菜单显示</value>
+  </data>
+  <data name="_Admin.Sign" xml:space="preserve">
+    <value>签名</value>
   </data>
   <data name="_Admin.TableName" xml:space="preserve">
     <value>权限名称</value>
