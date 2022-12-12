@@ -1262,9 +1262,9 @@ namespace WalkingTec.Mvvm.Mvc
             Assert.AreEqual(data2, null);";
                 if (typeof(IPersistPoco).IsAssignableFrom( modelType))
                 {
-                    del = $"Assert.AreEqual(data.IsValid, false);";
-                    mdel = @"Assert.AreEqual(data1.IsValid, false);
-            Assert.AreEqual(data2.IsValid, false);";
+                    del = $"Assert.AreEqual(data, null);";
+                    mdel = @"Assert.AreEqual(data1, null);
+            Assert.AreEqual(data2, null);";
                 }
 
                 rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros)

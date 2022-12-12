@@ -2,7 +2,7 @@
 @inherits WTComponent
 @inject IStringLocalizer local
 <div @attributes="@AdditionalAttributes" class="@ClassName">
-    <div class="card-header " style="padding:0.5rem"   @onclick="Toggle"  >
+    <div class="card-header " style="padding:0.5rem; display:initial"   @onclick="Toggle"  >
         <div class="row">
             <div class="col-6 " style="margin-top:auto; margin-bottom:auto;">
                 @local["Sys.SearchCondition"]

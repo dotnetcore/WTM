@@ -747,6 +747,10 @@ namespace WalkingTec.Mvvm.Core
             if (propertyType.IsGeneric(typeof(Nullable<>)) == true)
             {
                 var gs = propertyType.GenericTypeArguments;
+                if(value == null)
+                {
+                    return null;
+                }
                 try
                 {
                     val = ConvertValue(value, gs[0]);

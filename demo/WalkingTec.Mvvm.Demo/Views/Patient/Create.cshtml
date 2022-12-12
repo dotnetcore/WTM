@@ -1,0 +1,20 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.PatientVMs.PatientVM
+@inject IStringLocalizer<Program> Localizer;
+
+<wt:form vm="@Model">
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:textbox field="Entity.PatientName" />
+<wt:textbox field="Entity.IdNumber" />
+<wt:combobox field="Entity.Gender" />
+<wt:combobox field="Entity.Status" />
+<wt:datetime field="Entity.Birthday" />
+<wt:combobox field="Entity.LocationId" items="AllLocations"/>
+<wt:combobox field="Entity.HospitalId" items="AllHospitals"/>
+<wt:upload field="Entity.PhotoId" />
+<wt:checkbox field="SelectedVirusesIDs" items="AllVirusess"/>
+</wt:row>
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

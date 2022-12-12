@@ -145,7 +145,7 @@ var {Id} = xmSelect.render({{
 		}}
 	}},
 ")}	tree: {{
-        strict: false,
+        strict: true,
 		show: true,
 		showFolderIcon: true,
 		showLine: true,
