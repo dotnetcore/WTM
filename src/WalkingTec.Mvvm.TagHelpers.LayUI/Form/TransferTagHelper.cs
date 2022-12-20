@@ -156,6 +156,29 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     DefaultValue = $"[{string.Join(",", DefaultValue.Split(",").Select(x => "'" + x + "'"))}]";
                 }
             }
+            if (string.IsNullOrEmpty(ItemUrl) == false)
+            {
+                foreach (var item in selectVal)
+                {
+                    listItems.Add(new ComboSelectListItem
+                    {
+                        Text = "",
+                        Value = item?.ToString(),
+                        Selected = true
+                    });
+
+                }
+
+                data = listItems.Select(x => new
+                {
+                    x.Value,
+                    Title = x.Text,
+                    x.Disabled,
+                    Checked = x.Selected
+                }).ToArray();
+                output.PostElement.AppendHtml($"<script>ff.LoadComboItems('transfer','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(selectVal)})</script>");
+            }
+
             var title = $"['{(string.IsNullOrEmpty(LeftTitle) ? THProgram._localizer["Sys.ForSelect"] : LeftTitle)}','{(string.IsNullOrEmpty(RightTitle) ? THProgram._localizer["Sys.Selected"] : RightTitle)}']";
             var content = $@"
 <script>
@@ -210,10 +233,6 @@ layui.use(['transfer'],function(){{
             output.PostElement.AppendHtml(content);
             output.PostElement.AppendHtml($"<div id=\"{Id}div\"></div>");
             output.PostElement.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
-            if (string.IsNullOrEmpty(ItemUrl) == false)
-            {
-                output.PostElement.AppendHtml($"<script>ff.LoadComboItems('transfer','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(selectVal)})</script>");
-            }
 
             base.Process(context, output);
         }

@@ -82,6 +82,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (string.IsNullOrEmpty(ItemUrl) == false)
             {
+                foreach (var item in values)
+                {
+                    listItems.Add(new ComboSelectListItem
+                    {
+                        Text = "",
+                        Value = item?.ToString(),
+                        Selected = true
+                    });
+
+                }
                 output.PostElement.AppendHtml($"<script>ff.LoadComboItems('checkbox','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(values)})</script>");
             }
             else

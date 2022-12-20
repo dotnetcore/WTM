@@ -727,6 +727,7 @@ window.ff = {
                     window[controlid].update({ data: da });
                }
                if (controltype === "checkbox") {
+                   target[0].innerHTML = "";
                    for (i = 0; i < data.Data.length; i++) {
                        item = data.Data[i];
                        if (item.Selected === true || svals.indexOf(item.Value) > -1) {

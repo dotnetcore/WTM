@@ -165,6 +165,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 //{
                 //    ItemUrl = _wtm.HttpContext.Request.IsHttps ? "https://" : "http://" + _wtm.HttpContext?.Request?.Host.ToString() + ItemUrl;
                 //}
+                foreach (var item in selectVal)
+                {
+                    listItems.Add(new ComboSelectListItem
+                    {
+                        Text = "",
+                        Value = item?.ToString(),
+                        Selected = true
+                    });
+
+                }
                 output.PostElement.AppendHtml($"<script>ff.LoadComboItems('combo','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(selectVal)})</script>");
             }
 

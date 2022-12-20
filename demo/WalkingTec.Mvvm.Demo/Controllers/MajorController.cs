@@ -6,6 +6,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.ViewModels.MajorVMs;
 using WalkingTec.Mvvm.Demo.Models;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -18,6 +19,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<MajorListVM>();
+            vm.Searcher.SchoolId = 27;
+            return PartialView(vm);
+        }
+
+        [ActionDescription("Sys.Search")]
+        [HttpPost]
+        public ActionResult Index(MajorListVM vm)
+        {
+
             return PartialView(vm);
         }
 
@@ -219,6 +229,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             return JsonMore(DC.Set<Student>().GetSelectListItems(Wtm, x => x.Name));
         }
-
+        public async Task<ActionResult> GetAllSchools()
+        {
+            await Task.Delay(500);
+            return JsonMore(DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName));
+        }
     }
 }
