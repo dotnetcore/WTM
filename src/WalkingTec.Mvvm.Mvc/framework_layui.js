@@ -788,10 +788,13 @@ window.ff = {
             var tableid = tables[i].id;
             var loaddata = layui.table.cache[tableid];
             if (loaddata == undefined || loaddata.length == 0) {
-                var subpro = tables[i].attributes["subpro"].value;
-                if (subpro != undefined && subpro != "") {
-                    filter[subpro + ".length"] = "0";
+                try {
+                    var subpro = tables[i].attributes["subpro"].value;
+                    if (subpro != undefined && subpro != "") {
+                        filter[subpro + ".length"] = "0";
+                    }
                 }
+                catch { }
             }
         }
 
