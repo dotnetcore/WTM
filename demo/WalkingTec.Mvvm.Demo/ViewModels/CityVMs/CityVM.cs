@@ -36,6 +36,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             CityChildrenList1.CopyContext(this);
             list.CopyContext(this);
             se.CopyContext(this);
+            se.DoInit();
         }
 
         public override void DoAdd()

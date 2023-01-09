@@ -108,8 +108,9 @@ ff.LoadComboItems('tree','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Seria
 }})
 
 </script>");
+            }
 
-                var script = $@"
+            var script = $@"
 <script>
 var {Id} = xmSelect.render({{
     el: '#{Id}',
@@ -189,7 +190,6 @@ var {Id} = xmSelect.render({{
 </script>
 ";
                 output.PostElement.AppendHtml(script);
-                }
                 string hidden = $"<p id='tree{Id}hidden'>";
                 if (Field?.Model != null)
                 {
