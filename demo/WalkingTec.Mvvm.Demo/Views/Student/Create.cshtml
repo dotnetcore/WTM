@@ -17,7 +17,7 @@
       <wt:selector list-vm="MajorList" field="Entity.StudentMajor[-1].MajorId" text-bind="MajorList.EntityList[-1].MajorName" val-bind="MajorList.EntityList[-1].ID" multi-select="true">
     <wt:searchpanel vm="MajorList">
       <wt:row items-per-row=" ItemsPerRowEnum.Two">
-        <wt:combobox field="MajorList.Searcher.SchoolId" items="MajorList.Searcher.AllSchools" />
+                    <wt:combobox field="MajorList.Searcher.SchoolId" item-url="/Major/GetAllSchools" />
       </wt:row>
     </wt:searchpanel>
   </wt:selector>

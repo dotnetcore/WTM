@@ -90,6 +90,25 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     treeitems = GetLayuiTree(mm, vals);
                 }
+
+            if (string.IsNullOrEmpty(ItemUrl) == false)
+            {
+                foreach (var item in vals)
+                {
+                    treeitems.Add(new  LayuiTreeItem
+                    {
+                        Title = "",
+                        Id = item?.ToString(),
+                        Checked = true
+                    });
+
+                }
+                output.PostElement.AppendHtml($@"<script>
+ff.LoadComboItems('tree','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(vals)},function(){{
+}})
+
+</script>");
+
                 var script = $@"
 <script>
 var {Id} = xmSelect.render({{
@@ -170,13 +189,6 @@ var {Id} = xmSelect.render({{
 </script>
 ";
                 output.PostElement.AppendHtml(script);
-                if (string.IsNullOrEmpty(ItemUrl) == false)
-                {
-                    output.PostElement.AppendHtml($@"<script>
-ff.LoadComboItems('tree','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(vals)},function(){{
-}})
-
-</script>");
                 }
                 string hidden = $"<p id='tree{Id}hidden'>";
                 if (Field?.Model != null)
