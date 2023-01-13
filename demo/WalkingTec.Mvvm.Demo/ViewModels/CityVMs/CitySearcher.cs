@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,9 +14,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
     {
         [Display(Name = "名称")]
         public String Name { get; set; }
-
+        public Guid selectedparent { get; set; }
+        public List<TreeSelectListItem> Items { get; set; }
         protected override void InitVM()
         {
+            Items = DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name);
         }
 
     }

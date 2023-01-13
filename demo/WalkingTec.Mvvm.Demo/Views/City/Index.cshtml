@@ -4,6 +4,7 @@
 <wt:searchpanel vm="se" reset-btn="true" grid-id="g1" old-post="true" id="s1">
   <wt:row items-per-row="ItemsPerRowEnum.Three">
     <wt:textbox field="se.Name" />
+        <wt:tree field="se.selectedparent" items="se.Items"/>
   </wt:row>
 </wt:searchpanel>
 <wt:grid vm="list" url="/City/Search" id="g1" search-panel-id="s1"/>

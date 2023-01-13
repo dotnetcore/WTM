@@ -312,7 +312,21 @@ var {Id} = xmSelect.render({{
         }}" : FormatFuncName(ChangeFunc))}
    }},
 	data:  {JsonSerializer.Serialize(GetLayuiTree(listItems,selectVal))}
-}})
+}});
+        {((LinkField != null || string.IsNullOrEmpty(LinkId) == false) ? @$"
+            if (eval(""{(string.IsNullOrEmpty(ChangeFunc) ? "1==1" : FormatFuncName(ChangeFunc))}"") != false) {{
+                var {Id}u = ""{(TriggerUrl ?? "")}"";
+                if ({Id}u.indexOf(""?"") == -1) {{
+                    {Id}u += ""?t="" + new Date().getTime();
+                }}
+                var idata = {JsonSerializer.Serialize(selectVal)};
+                for (var i = 0; i < idata.length; i++) {{
+                    {Id}u += ""&id="" + idata[i];
+                }};
+                setTimeout(function(){{
+                    ff.ChainChange({Id}u, $('#{Id}')[0]);
+                }},100);
+        }}" : FormatFuncName(ChangeFunc))}
 </script>
 ";
             output.PostElement.AppendHtml(script);
