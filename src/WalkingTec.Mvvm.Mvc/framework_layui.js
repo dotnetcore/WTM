@@ -599,7 +599,7 @@ window.ff = {
         }
     },
 
-    ChainChange: function (url, self) {
+    ChainChange: function (url, self, usedefaultvalue) {
         var form = layui.form;
         var linkto = self.attributes["wtm-linkto"];
         if (linkto == undefined) {
@@ -662,7 +662,12 @@ window.ff = {
                     }
 
                     if (controltype === "combo") {
-                        window[comboid].update({ data: ff.getComboItems(data.Data) });
+                        var df = [];
+                        if (usedefaultvalue == true) {
+                            df = eval(comboid + "defaultvalues"); 
+                            debugger;
+                      }
+                        window[comboid].update({ data: ff.getComboItems(data.Data,df) });
                     }
                     if (controltype === "checkbox") {
                         for (i = 0; i < data.Data.length; i++) {
