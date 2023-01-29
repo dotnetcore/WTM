@@ -215,10 +215,10 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
             var topdata = context.GlobaInfo.AllMenus.Where(x => x.ShowOnMenu && (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName))).ToList();
-            var allowedids = context.LoginUserInfo.FunctionPrivileges.Select(x => x.MenuItemId).ToList();
+            var allowedids = context.LoginUserInfo?.FunctionPrivileges?.Select(x => x.MenuItemId).ToList();
             foreach (var item in topdata)
             {
-                if (allowedids.Contains(item.ID) && item.IsParentShowOnMenu(topdata))
+                if (allowedids?.Contains(item.ID) == true && item.IsParentShowOnMenu(topdata))
                 {
                     ms.Add(new SimpleMenuApi
                     {
