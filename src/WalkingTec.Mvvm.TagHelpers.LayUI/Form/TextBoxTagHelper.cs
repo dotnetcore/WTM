@@ -17,15 +17,19 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
 
         /// <summary>
-        /// 改变选择时触发的js函数，func(data)格式;
+        /// 文本时触发的js函数，func(data)格式;
         /// <para>
-        /// data.Text得到选中文本;
-        /// </para>
-        /// <para>
-        /// data.Value得到被选中的值;
+        /// data得到文本;
         /// </para>
         /// </summary>
         public string ChangeFunc { get; set; }
+        /// <summary>
+        /// 文本修改后焦点离开时触发的js函数，func(data)格式;
+        /// <para>
+        /// data得到文本;
+        /// </para>
+        /// </summary>
+        public string DoneFunc { get; set; }
 
 
         public bool IsPassword { get; set; }
@@ -38,6 +42,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("type", type);
             output.Attributes.Add("name", Field.Name);
             output.Attributes.Add("wtm-name", Field.Name);
+            if(string.IsNullOrEmpty(ChangeFunc) == false)
+            {
+                output.Attributes.Add("oninput", $"{FormatFuncName(ChangeFunc, false)}(this.value)");
+            }
+            if (string.IsNullOrEmpty(DoneFunc) == false)
+            {
+                output.Attributes.Add("onchange", $"{FormatFuncName(DoneFunc, false)}(this.value)");
+            }
+
             if (string.IsNullOrEmpty(Field?.Model?.ToString()) == false)
             {
                 DefaultValue = null;
