@@ -314,8 +314,7 @@ var {Id} = xmSelect.render({{
 	data:  {JsonSerializer.Serialize(GetLayuiTree(listItems,selectVal))}
 }});
      {Id}defaultvalues = {JsonSerializer.Serialize(selectVal)};
-        {((LinkField != null || string.IsNullOrEmpty(LinkId) == false) ? @$"
-            if (eval(""{(string.IsNullOrEmpty(ChangeFunc) ? "1==1" : FormatFuncName(ChangeFunc))}"") != false) {{
+        {(selectVal?.Count>0 && (LinkField != null || string.IsNullOrEmpty(LinkId) == false) ? @$"
                 var {Id}u = ""{(TriggerUrl ?? "")}"";
                 if ({Id}u.indexOf(""?"") == -1) {{
                     {Id}u += ""?t="" + new Date().getTime();
@@ -327,7 +326,7 @@ var {Id} = xmSelect.render({{
                 setTimeout(function(){{
                     ff.ChainChange({Id}u, $('#{Id}')[0], true);
                 }},100);
-        }}" : FormatFuncName(ChangeFunc))}
+        " : "")}
 </script>
 ";
             output.PostElement.AppendHtml(script);

@@ -68,8 +68,21 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("wtm-name", Field.Name);
             output.Attributes.Add("wtm-multi", MultiSelect.ToString().ToLower());
             Id = string.IsNullOrEmpty(Id) ? Guid.NewGuid().ToNoSplitString() : Id;
+            if (LinkField != null || string.IsNullOrEmpty(LinkId) == false)
+            {
+                var linkto = "";
+                if (string.IsNullOrEmpty(LinkId))
+                {
+                    linkto = Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name);
+                }
+                else
+                {
+                    linkto = LinkId;
+                }
+                output.Attributes.Add("wtm-linkto", $"{linkto}");
+            }
 
-                List<object> vals = new List<object>();
+            List<object> vals = new List<object>();
                 if (Field?.Model != null)
                 {
                     if (MultiSelect == true)
@@ -84,7 +97,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         vals.Add(Field.Model.ToString());
                     }
                 }
-                List<LayuiTreeItem> treeitems = new List<LayuiTreeItem>();
+            if (vals.Count == 0)
+            {
+                if (string.IsNullOrEmpty(DefaultValue) == false)
+                {
+                    vals.AddRange(DefaultValue.Split(','));
+                }
+            }
+
+            List<LayuiTreeItem> treeitems = new List<LayuiTreeItem>();
 
                 if (string.IsNullOrEmpty(ItemUrl) == true && Items?.Model is List<TreeSelectListItem> mm)
                 {
@@ -186,7 +207,22 @@ var {Id} = xmSelect.render({{
         }}" : FormatFuncName(ChangeFunc))}
    }},
 	data:  {JsonSerializer.Serialize(treeitems)}
-}})
+}});
+     {Id}defaultvalues = {JsonSerializer.Serialize(vals)};
+        {(vals?.Count > 0 && (LinkField != null || string.IsNullOrEmpty(LinkId) == false) ? @$"
+                var {Id}u = ""{(TriggerUrl ?? "")}"";
+                if ({Id}u.indexOf(""?"") == -1) {{
+                    {Id}u += ""?t="" + new Date().getTime();
+                }}
+                var {Id}data = {JsonSerializer.Serialize(vals)};
+                for (var i = 0; i < {Id}data.length; i++) {{
+                    {Id}u += ""&id="" + {Id}data[i];
+                }};
+                setTimeout(function(){{
+                    ff.ChainChange({Id}u, $('#{Id}')[0], true);
+                }},100);
+        " : "")}
+
 </script>
 ";
                 output.PostElement.AppendHtml(script);

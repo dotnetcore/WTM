@@ -665,7 +665,6 @@ window.ff = {
                         var df = [];
                         if (usedefaultvalue == true) {
                             df = eval(comboid + "defaultvalues"); 
-                            debugger;
                       }
                         window[comboid].update({ data: ff.getComboItems(data.Data,df) });
                     }
