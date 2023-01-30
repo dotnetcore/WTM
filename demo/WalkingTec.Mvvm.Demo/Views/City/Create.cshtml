@@ -3,7 +3,7 @@
 
 <wt:form vm="@Model">
   <wt:row items-per-row="ItemsPerRowEnum.Two">
-    <wt:textbox field="Entity.Name" />
+    <wt:textbox field="Entity.Name" change-func="abc" done-func="abc2"/>
     <wt:textbox field="Entity.Test" />
     <wt:tree field="Entity.ParentId" item-url="/City/GetAllCities" show-toolbar="false"/>
   </wt:row>
@@ -13,3 +13,12 @@
     <wt:closebutton />
   </wt:row>
 </wt:form>
+<script>
+  function abc(data){
+    console.log("change"+data);
+  }
+    function abc2(data) {
+        console.log("done" + data);
+      }
+
+</script>

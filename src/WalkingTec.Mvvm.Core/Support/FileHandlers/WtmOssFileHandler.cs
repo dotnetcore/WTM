@@ -100,7 +100,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             ext = ext.ToLower();
             if (imagetypes.Contains(ext))
             {
-                md.ContentType = "image/" + ext;
+                md.ContentType = "image/jpg";
             }
             OssClient client = new OssClient(groupInfo.ServerUrl, groupInfo.Key, groupInfo.Secret);
             var result = client.PutObject(groupInfo.GroupLocation, fullPath, data,md);
