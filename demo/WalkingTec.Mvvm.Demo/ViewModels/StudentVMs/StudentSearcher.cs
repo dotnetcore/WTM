@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         public List<ComboSelectListItem> AllStudentMajors { get; set; }
         [Display(Name = "专业")]
         public List<Guid> SelectedStudentMajorIDs { get; set; }
-
+        public int? Enroll { get; set; }
         protected override void InitVM()
         {
             AllStudentMajors = DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);

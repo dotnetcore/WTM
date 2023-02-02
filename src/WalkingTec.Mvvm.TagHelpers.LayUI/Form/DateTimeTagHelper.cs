@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -159,7 +160,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 RangeSplit = "~";
             }
 
-            if (Field.ModelExplorer.ModelType == typeof(string))
+            if (Field.ModelExplorer.ModelType == typeof(string) || Field.ModelExplorer.ModelType.IsNumber())
             {
                 Value = Field.Model?.ToString() ?? Value;
             }
