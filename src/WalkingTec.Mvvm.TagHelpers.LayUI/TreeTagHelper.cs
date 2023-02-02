@@ -184,8 +184,7 @@ var {Id} = xmSelect.render({{
 				}},
 			}},
 		}}
-	}},
-,")}
+	}},")}
     tree: {{
         strict: {MultiSelect.ToString().ToLower()},
 		show: true,
