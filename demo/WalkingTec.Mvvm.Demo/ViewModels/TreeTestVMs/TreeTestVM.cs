@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
 
         protected override void InitVM()
         {
-            //AllParents = DC.Set<TreeTest>().GetSelectListItems(Wtm, y => y.Name);
+            AllParents = DC.Set<TreeTest>().GetSelectListItems(Wtm, y => y.Name);
             ListVM = Wtm.CreateVM<TreeTestListVM>();
         }
 
