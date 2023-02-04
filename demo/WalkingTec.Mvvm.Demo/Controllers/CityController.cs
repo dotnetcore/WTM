@@ -25,6 +25,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             var vm = Wtm.CreateVM<CityVM>();
             searcher.CopyContext(vm);
+            searcher.DoInit();
             vm.se = searcher;
             vm.list.Searcher = searcher;
             return PartialView(vm);

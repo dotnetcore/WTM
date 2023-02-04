@@ -1256,11 +1256,11 @@ window.ff = {
 
         var hidAreas = [' input[wtm-tag=wtmselector]'];
         // 多选下拉框
-        var multiCombos = $('#' + formId + ' select[wtm-combo=MULTI_COMBO]');
+        var multiCombos = $('#' + formId + ' div[wtm-ctype=combo]').add($('#' + formId + ' div[wtm-ctype=tree]'));
         if (multiCombos && multiCombos.length > 0) {
             for (i = 0; i < multiCombos.length; i++) {
-                var name = multiCombos.attr('lay-filter');
-                hidAreas.push(" input[name='" + name + "']");
+                var name = multiCombos.attr('id');
+                window[name].setValue([]);
             }
         }
         for (var i = 0; i < hidAreas.length; i++) {
