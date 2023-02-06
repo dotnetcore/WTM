@@ -1043,6 +1043,7 @@ window.ff = {
                 , show: true
                 , closeStop: '#' + id
                 , done: function (value, date, endDate) {
+                    document.getElementById(id).value = value;
                     document.getElementById(id).onchange();
                 }
             });
