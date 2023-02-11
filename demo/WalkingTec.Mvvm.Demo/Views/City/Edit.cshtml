@@ -5,7 +5,7 @@
   <wt:row items-per-row="ItemsPerRowEnum.Two">
     <wt:textbox field="Entity.Name" />
     <wt:textbox field="Entity.Test" />
-    <wt:tree field="Entity.ParentId" item-url="/City/GetAllCities" />
+    <wt:tree field="Entity.ParentId" items="AllParents" />
   </wt:row>
   <wt:grid use-local-data="true" hidden-panel="true" hidden-checkbox="true" height="-400" vm="CityChildrenList1" id="CityChildrenList1" />
   <wt:hidden field="Entity.ID" />
