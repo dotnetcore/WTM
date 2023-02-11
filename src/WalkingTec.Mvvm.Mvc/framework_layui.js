@@ -653,7 +653,11 @@ window.ff = {
                     var item = null;
 
                     if (controltype === "tree") {
-                        window[comboid].update({ data: ff.getTreeItems(data.Data) });
+                        var df = [];
+                        if (usedefaultvalue == true) {
+                            df = eval(comboid + "defaultvalues");
+                        }
+                       window[comboid].update({ data: ff.getTreeItems(data.Data,df) });
                     }
                     if (controltype === "transfer") {
                         layui.transfer.reload(targetid, {
