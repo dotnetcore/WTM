@@ -22,6 +22,7 @@ namespace WalkingTec.Mvvm.Core
         }
     }
 
+    [ProviderAlias("WTM")]
     public class WTMLoggerProvider : ILoggerProvider
     {
         private IServiceProvider sp = null;
