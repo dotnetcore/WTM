@@ -4,7 +4,7 @@
 <wt:searchpanel vm="@Model" reset-btn="true" old-post="true">
 <wt:row items-per-row="ItemsPerRowEnum.Three">
 <wt:textbox field="Searcher.Remark" />
-<wt:transfer field="Searcher.SchoolId" item-url="/Major/GetAllSchools"  empty-text="@Localizer["Sys.All"]" />
+        <wt:combobox field="Searcher.SchoolId" item-url="/Major/GetAllSchools" empty-text="@Localizer["Sys.All"]" />
 <wt:combobox field="Searcher.SelectedStudentMajorsIDs" items="Searcher.AllStudentMajorss" empty-text="@Localizer["Sys.All"]" />
 </wt:row>
 </wt:searchpanel>

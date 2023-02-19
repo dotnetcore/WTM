@@ -912,9 +912,15 @@ window.ff = {
     },
 
     DownloadExcelOrPdf: function (url, formId, defaultcondition, ids) {
+        debugger;
         var formData = ff.GetSearchFormData(formId);
         if (defaultcondition == null) {
             defaultcondition = {};
+        }
+        for (let item in defaultcondition) {
+            if (item.startsWith("Searcher.") == false) {
+                defaultcondition["Searcher." + item] = defaultcondition[item];
+            }
         }
         var tempwhere = {};
         $.extend(tempwhere, defaultcondition);
@@ -1083,7 +1089,12 @@ window.ff = {
                 if (typeof (loaddata[i][val]) == 'string') {
                     loaddata[i][val] = loaddata[i][val].replace(/\[\d+\]/ig, "[" + i + "]");
                     loaddata[i][val] = loaddata[i][val].replace(/_\d+_/ig, "_" + i + "_");
-                    loaddata[i][val] = loaddata[i][val].replace("/onchange=\".*?\"/", "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "')\"");
+                    if (/<input .*?\s*\/>.*?/.test(loaddata[i][val])) {
+                        loaddata[i][val] = loaddata[i][val].replace(/onchange=\".*?\"/ig, "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',0)\"");
+                    }
+                    if (/<select .*?\s*>.*?<\/select>/.test(loaddata[i][val])) {
+                        loaddata[i][val] = loaddata[i][val].replace(/onchange=\".*?\"/ig, "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',1)\"");
+                    }
                 }
             }
         }
@@ -1263,10 +1274,11 @@ window.ff = {
         // 多选下拉框
         var multiCombos = $('#' + formId + ' div[wtm-ctype=combo]').add($('#' + formId + ' div[wtm-ctype=tree]'));
         if (multiCombos && multiCombos.length > 0) {
-            for (i = 0; i < multiCombos.length; i++) {
-                var name = multiCombos.attr('id');
+            multiCombos.each(function () {
+                let name = $(this).attr('id');
                 window[name].setValue([]);
             }
+            );
         }
         for (var i = 0; i < hidAreas.length; i++) {
             var hiddenAreas = $('#' + formId + hidAreas[i]);
