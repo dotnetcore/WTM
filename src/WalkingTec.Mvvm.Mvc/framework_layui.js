@@ -1263,10 +1263,11 @@ window.ff = {
         // 多选下拉框
         var multiCombos = $('#' + formId + ' div[wtm-ctype=combo]').add($('#' + formId + ' div[wtm-ctype=tree]'));
         if (multiCombos && multiCombos.length > 0) {
-            for (i = 0; i < multiCombos.length; i++) {
-                var name = multiCombos.attr('id');
+            multiCombos.each(function () {
+                let name = $(this).attr('id');
                 window[name].setValue([]);
             }
+            );
         }
         for (var i = 0; i < hidAreas.length; i++) {
             var hiddenAreas = $('#' + formId + hidAreas[i]);
