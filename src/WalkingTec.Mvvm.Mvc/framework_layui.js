@@ -1083,7 +1083,12 @@ window.ff = {
                 if (typeof (loaddata[i][val]) == 'string') {
                     loaddata[i][val] = loaddata[i][val].replace(/\[\d+\]/ig, "[" + i + "]");
                     loaddata[i][val] = loaddata[i][val].replace(/_\d+_/ig, "_" + i + "_");
-                    loaddata[i][val] = loaddata[i][val].replace("/onchange=\".*?\"/", "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "')\"");
+                    if (/<input .*?\s*\/>.*?/.test(loaddata[i][val])) {
+                        loaddata[i][val] = loaddata[i][val].replace(/onchange=\".*?\"/ig, "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',0)\"");
+                    }
+                    if (/<select .*?\s*>.*?<\/select>/.test(loaddata[i][val])) {
+                        loaddata[i][val] = loaddata[i][val].replace(/onchange=\".*?\"/ig, "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',1)\"");
+                    }
                 }
             }
         }
