@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
@@ -17,6 +17,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult Index()
         {
             var vm = Wtm.CreateVM<StudentListVM>();
+            vm.Searcher.Sex = GenderEnum.Male;
             return PartialView(vm);
         }
 
