@@ -440,7 +440,7 @@ namespace WalkingTec.Mvvm.Core
                                 if (pro.GetCustomAttribute<NotMappedAttribute>() != null)
                                 {
                                     fkname = pro.GetCustomAttribute<SoftFKAttribute>()?.PropertyName;
-                                    softkey = typeof(TModel).GetCustomAttribute<SoftKeyAttribute>().PropertyName;
+                                    softkey = typeof(TModel).GetCustomAttribute<SoftKeyAttribute>()?.PropertyName;
                                 }
                             }
                             var itemPros = ftype.GetAllProperties();
