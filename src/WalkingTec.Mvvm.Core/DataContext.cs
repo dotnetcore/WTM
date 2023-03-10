@@ -426,14 +426,17 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
+                IDataContext rv = null;
                 if (ConnectionString != null)
                 {
-                    return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS) }).Invoke(new object[] { ConnectionString }); ;
+                    rv = (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS) }).Invoke(new object[] { ConnectionString }); ;
                 }
                 else
                 {
-                    return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+                   rv =(IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
                 }
+                rv.SetTenantCode(this.TenantCode);
+                return rv;
             }
         }
         /// <summary>
