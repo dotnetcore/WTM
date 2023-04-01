@@ -1236,6 +1236,15 @@ namespace WalkingTec.Mvvm.Core
                         Expression exp = f.GetExpression(Entity, para);
                         conditions.Add(exp);
                     }
+                    if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)) && props.Any(x => x.Name.ToLower() == "isvalid") == false)
+                    {
+                        IPersistPoco ent = Entity as IPersistPoco;
+                        ent.IsValid = true;
+                        var f = new DuplicatedField<TModel>(x => (x as IPersistPoco).IsValid);
+                        Expression exp = f.GetExpression(Entity, para);
+                        conditions.Add(exp);
+                    }
+
                     //如果要求判断id不重复，则去掉id不相等的判断，加入id相等的判断
                     //if (props.Any(x => x.Name.ToLower() == "id"))
                     //{
