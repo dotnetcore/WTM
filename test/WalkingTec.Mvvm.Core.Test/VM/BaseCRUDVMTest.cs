@@ -925,15 +925,15 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                context.Set<Student>().Add(new Student { LoginName = "111", IsValid = false }) ;
-                context.Set<Student>().Add(new Student { LoginName = "222", IsValid = true });
+                context.Set<Student>().Add(new Student { LoginName = "111", Password="1", Name = "a", IsValid = false }) ;
+                context.Set<Student>().Add(new Student { LoginName = "222", Password = "2", Name = "a", IsValid = true });
                 context.SaveChanges();
             }
 
             _studentvm = new StudentVM
             {
                 Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
-                Entity = new Student { LoginName = "111"}
+                Entity = new Student { LoginName = "111",Password = "1" , Name = "a", }
             };
             _studentvm.Validate();
             Assert.IsTrue(_studentvm.MSD["Entity.LoginName"].Count == 0);
@@ -941,7 +941,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _studentvm = new StudentVM
             {
                 Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
-                Entity = new Student { LoginName = "222" }
+                Entity = new Student { LoginName = "222" , Password = "2", Name = "a", }
             };
             _studentvm.Validate();
             Assert.IsTrue(_studentvm.MSD["Entity.LoginName"].Count == 1);
