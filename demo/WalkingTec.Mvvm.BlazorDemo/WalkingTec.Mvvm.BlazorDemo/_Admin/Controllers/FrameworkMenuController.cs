@@ -198,7 +198,14 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetIconItems")]
         public List<MenuItem> GetIconItems(string key)
         {
-            return IconFontsHelper.IconFontDicItems[key];
+            if (string.IsNullOrEmpty(key))
+            {
+                return new List<MenuItem>();
+            }
+            else
+            {
+                return IconFontsHelper.IconFontDicItems[key];
+            }
         }
 
     }

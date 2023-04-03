@@ -154,8 +154,14 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }).FirstOrDefault();
             if (rv != null && withData == true)
             {
-                var fh = CreateFileHandler(rv.SaveMode, dc);
-                rv.DataStream = fh.GetFileData(rv);
+                try
+                {
+                    var fh = CreateFileHandler(rv.SaveMode, dc);
+                    rv.DataStream = fh.GetFileData(rv);
+                }
+                catch {
+                    rv = null;
+                }
             }
             return rv;
 

@@ -918,6 +918,43 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
         }
 
+        [TestMethod]
+        [Description("设置Persist模型单一不可重复字段")]
+        public void DuplicateTest4()
+        {
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                context.Set<Student>().Add(new Student { LoginName = "111", IsValid = false }) ;
+                context.Set<Student>().Add(new Student { LoginName = "222", IsValid = true });
+                context.SaveChanges();
+            }
+
+            _studentvm = new StudentVM
+            {
+                Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
+                Entity = new Student { LoginName = "111"}
+            };
+            _studentvm.Validate();
+            Assert.IsTrue(_studentvm.MSD["Entity.LoginName"].Count == 0);
+
+            _studentvm = new StudentVM
+            {
+                Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
+                Entity = new Student { LoginName = "222" }
+            };
+            _studentvm.Validate();
+            Assert.IsTrue(_studentvm.MSD["Entity.LoginName"].Count == 1);
+        }
+
+        class StudentVM : BaseCRUDVM<Student>
+        {
+            public override DuplicatedInfo<Student> SetDuplicatedCheck()
+            {
+                return CreateFieldsInfo(SimpleField(x => x.LoginName));
+            }
+        }
+
         class MajorVM1 : BaseCRUDVM<Major>
         {
             public override DuplicatedInfo<Major> SetDuplicatedCheck()
