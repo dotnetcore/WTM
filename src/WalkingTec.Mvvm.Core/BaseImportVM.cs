@@ -1275,7 +1275,14 @@ namespace WalkingTec.Mvvm.Core
                         //将字段名保存，为后面生成错误信息作准备
                         props.AddRange(field.GetProperties());
                     }
-
+                    if (typeof(ITenant).IsAssignableFrom(modelType) && props.Any(x => x.Name.ToLower() == "tenantcode") == false && Wtm?.ConfigInfo.EnableTenant == true && group.UseTenant == true)
+                    {
+                        ITenant ent = Entity as ITenant;
+                        ent.TenantCode = LoginUserInfo.CurrentTenant;
+                        var f = new DuplicatedField<P>(x => (x as ITenant).TenantCode);
+                        Expression exp = f.GetExpression(Entity, para);
+                        conditions.Add(exp);
+                    }
                     if (conditions.Count > 0)
                     {
                         //循环添加条件并生成Where语句
