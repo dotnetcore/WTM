@@ -269,13 +269,13 @@ namespace WalkingTec.Mvvm.Core
 
         public IDataContext GetUserDC(WTMContext context)
         {
-            if (context?.LoginUserInfo?.TenantCode == null)
+            if (context?.LoginUserInfo?.CurrentTenant == null)
             {
                 return context.CreateDC(cskey: "default");
             }
             else
             {
-                var item = context.GlobaInfo.AllTenant.Where(x => x.TCode == context?.LoginUserInfo?.TenantCode).FirstOrDefault();
+                var item = context.GlobaInfo.AllTenant.Where(x => x.TCode == context?.LoginUserInfo?.CurrentTenant).FirstOrDefault();
                 if (item != null)
                 {
                     return item.CreateDC(context);
