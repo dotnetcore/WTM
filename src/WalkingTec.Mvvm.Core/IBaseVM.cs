@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace WalkingTec.Mvvm.Core
@@ -54,7 +55,6 @@ namespace WalkingTec.Mvvm.Core
 
         IDistributedCache Cache { get;  }
 
-        LoginUserInfo LoginUserInfo { get; }
         #endregion
 
         #region Event
@@ -62,24 +62,26 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// InitVM 完成后触发的事件
         /// </summary>
-        event Action<IBaseVM> OnAfterInit;
+        event Func<IBaseVM, Task> OnAfterInit;
         /// <summary>
         /// ReInitVM 完成后触发的事件
         /// </summary>
-        event Action<IBaseVM> OnAfterReInit;
+        event Func<IBaseVM, Task> OnAfterReInit;
 
         #endregion
 
         #region Method
+        Task<LoginUserInfo> GetLoginUserInfo ();
+
         /// <summary>
         /// 调用 InitVM 并触发 OnAfterInit 事件
         /// </summary>
-        void DoInit();
+        Task DoInit();
 
         /// <summary>
         /// 调用 ReInitVM 并触发 OnAfterReInit 事件
         /// </summary>
-        void DoReInit();
+        Task DoReInit();
         #endregion
     }
 }

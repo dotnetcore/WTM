@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             MemoryStream ms = new MemoryStream();
             oimage.Mutate(x => x.Resize(width.Value, height.Value));
-            oimage.SaveAsJpeg(ms);
+            await oimage.SaveAsJpegAsync (ms);
             ms.Position = 0;
             var file = fp.Upload(FileData.FileName, FileData.Length, ms, groupName, subdir, extra, sm, Wtm.CreateDC(cskey: csName));
             oimage.Dispose();
@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                         }
                         var ms = new MemoryStream();
                         oimage.Mutate(x => x.Resize(width.Value, height.Value));
-                        oimage.SaveAsJpeg(ms);
+                        await oimage.SaveAsJpegAsync (ms);
                         ms.Position = 0;
                         await ms?.CopyToAsync(Response.Body);
                         file.DataStream.Dispose();
@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [Public]
         public async Task<IActionResult> GetUserPhoto([FromServices] WtmFileProvider fp, string id, string csName = null, int? width = null, int? height = null)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Redirect(Wtm.ConfigInfo.MainHost+ Request.Path);
             }

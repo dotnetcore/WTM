@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpPost]
         [Public]
-        public IActionResult Selector(string _DONOT_USE_VMNAME
+        public async Task<IActionResult> Selector(string _DONOT_USE_VMNAME
             , string _DONOT_USE_KFIELD
             , string _DONOT_USE_VFIELD
             , string _DONOT_USE_FIELD
@@ -85,7 +85,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var pro = Expression.Property(para, idproperty);
                 listVM.ReplaceWhere = listVM.Ids.GetContainIdExpression(modelType, Expression.Parameter(modelType), pro);
                 Regex r = new Regex("<script>.*?</script>");
-                string selectData = r.Replace((listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");
+                string selectData = r.Replace(await (listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");
                 ViewBag.SelectData = selectData;
                 listVM.IsSearched = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Selector;
@@ -97,10 +97,10 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [ActionDescription("GetEmptyData")]
-        public IActionResult GetEmptyData(string _DONOT_USE_VMNAME)
+        public async Task<IActionResult> GetEmptyData(string _DONOT_USE_VMNAME)
         {
             var listVM = Wtm.CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
-            string data = listVM.GetSingleDataJson(null, false);
+            string data = await listVM.GetSingleDataJson(null, false);
             var rv = new ContentResult
             {
                 ContentType = "application/json",
@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <returns></returns>
         [HttpPost]
         [ActionDescription("GetPagingData")]
-        public IActionResult GetPagingData(string _DONOT_USE_VMNAME, string _DONOT_USE_CS)
+        public async Task<IActionResult> GetPagingData(string _DONOT_USE_VMNAME, string _DONOT_USE_CS)
         {
             var qs = new Dictionary<string, object>();
             foreach (var item in Request.Form.Keys)
@@ -136,7 +136,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 RedoUpdateModel(listVM);
                 string url = "";
-                if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+                if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
                 {
                     Type[] checktypes = new Type[3] { typeof(FrameworkUserBase), typeof(FrameworkGroup), typeof(FrameworkRole) };
                     if (typeof(FrameworkUserBase).IsAssignableFrom(listVM.ModelType))
@@ -188,7 +188,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="value">属性值</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult UpdateModelProperty(string _DONOT_USE_VMNAME, Guid id, string field, string value)
+        public async Task<IActionResult> UpdateModelProperty(string _DONOT_USE_VMNAME, Guid id, string field, string value)
         {
             if (value == null && Microsoft.Extensions.Primitives.StringValues.IsNullOrEmpty(Request.Form[nameof(value)]))
             {
@@ -196,7 +196,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var vm = Wtm.CreateVM(_DONOT_USE_VMNAME, id, null, true) as IBaseCRUDVM<TopBasePoco>;
             vm.Entity.SetPropertyValue(field, value);
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
             return JsonMore("Success");
         }
 
@@ -210,7 +210,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <returns></returns>
         [HttpPost]
         [ActionDescription("Export")]
-        public IActionResult GetExportExcel(string _DONOT_USE_VMNAME, string _DONOT_USE_CS)
+        public async Task<IActionResult> GetExportExcel(string _DONOT_USE_VMNAME, string _DONOT_USE_CS)
         {
             var qs = new Dictionary<string, object>();
             foreach (var item in Request.Query.Keys)
@@ -236,7 +236,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                 listVM.SearcherMode = listVM.Ids != null && listVM.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
 
-                var data = listVM.GenerateExcel();
+                var data = await listVM.GenerateExcel();
                 HttpContext.Response.Cookies.Append("DONOTUSEDOWNLOADING", "0", new Microsoft.AspNetCore.Http.CookieOptions() { Path = "/", Expires = DateTime.Now.AddDays(2) });
 
                 return File(data, "application/vnd.ms-excel", $"Export_{instanceType.Name}_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
@@ -272,13 +272,13 @@ namespace WalkingTec.Mvvm.Mvc
 
         [AllowAnonymous]
         [ActionDescription("Sys.ErrorHandle")]
-        public IActionResult Error()
+        public async Task<IActionResult> Error()
         {
             var ex = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             ActionLog log = new ActionLog();
             log.LogType = ActionLogTypesEnum.Exception;
             log.ActionTime = DateTime.Now;
-            log.ITCode = Wtm.LoginUserInfo?.ITCode ?? string.Empty;
+            log.ITCode = (await Wtm.GetLoginUserInfo ())?.ITCode ?? string.Empty;
 
             var controllerDes = ex.Error.TargetSite.DeclaringType.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
             var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
@@ -325,20 +325,20 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, bool IsTemprory = true, string _DONOT_USE_CS=null)
+        public async Task<IActionResult> Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, bool IsTemprory = true, string _DONOT_USE_CS=null)
         {
             var FileData = Request.Form.Files[0];
-            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, extra, sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
+            var file = await fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, extra, sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
             return JsonMore(new { Id = file.GetID(), Name = file.FileName });
         }
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult UploadImage([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, bool IsTemprory = true, string _DONOT_USE_CS = null, int? width = null, int? height = null)
+        public async Task<IActionResult> UploadImage([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, string extra = null, bool IsTemprory = true, string _DONOT_USE_CS = null, int? width = null, int? height = null)
         {
             if (width == null && height == null)
             {
-                return Upload(fp, sm, groupName, subdir, extra, IsTemprory, _DONOT_USE_CS);
+                return await Upload(fp, sm, groupName, subdir, extra, IsTemprory, _DONOT_USE_CS);
             }
             var FileData = Request.Form.Files[0];
 
@@ -357,10 +357,10 @@ namespace WalkingTec.Mvvm.Mvc
             }
             MemoryStream ms = new MemoryStream();
             oimage.Mutate(x => x.Resize(width.Value, height.Value));
-            oimage.SaveAsJpeg(ms);
+            await oimage.SaveAsJpegAsync (ms);
             ms.Position = 0;
 
-            var file = fp.Upload(FileData.FileName, ms.Length, ms, groupName, subdir, extra, sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
+            var file = await fp.Upload(FileData.FileName, ms.Length, ms, groupName, subdir, extra, sm, Wtm.CreateDC(cskey: _DONOT_USE_CS));
             oimage.Dispose();
             ms.Dispose();
             return JsonMore(new { Id = file.GetID(), Name = file.FileName });
@@ -368,10 +368,10 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpPost]
         [ActionDescription("UploadForLayUIRichTextBox")]
-        public IActionResult UploadForLayUIRichTextBox([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = null, string groupName = null, string subdir = null)
+        public async Task<IActionResult> UploadForLayUIRichTextBox([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = null, string groupName = null, string subdir = null)
         {
             var FileData = Request.Form.Files[0];
-            var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
+            var file = await fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
             if (file != null)
             {
                 string url = $"/_Framework/GetFile?id={file.GetID()}&stream=true&_DONOT_USE_CS={CurrentCS}";
@@ -417,7 +417,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     var ms = new MemoryStream();
                     oimage.Mutate(x => x.Resize(width.Value, height.Value));
-                    oimage.SaveAsJpeg(ms);
+                    await oimage.SaveAsJpegAsync (ms);
                     rv.Dispose();
                     rv = ms;
                 }
@@ -487,7 +487,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [Public]
-        public IActionResult OutSide(string url)
+        public async Task<IActionResult> OutSide(string url)
         {
             url = HttpUtility.UrlDecode(url);
             string pagetitle = string.Empty;
@@ -511,7 +511,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                 pagetitle += menu.PageName;
             }
-            if (Wtm.IsUrlPublic(url) || Wtm.IsAccessable(url))
+            if (Wtm.IsUrlPublic(url) || await Wtm.IsAccessable(url))
             {
                 return Content($@"<title>{pagetitle}</title>
 <iframe src='{url}' frameborder='0' class='layadmin-iframe'></iframe>");
@@ -534,10 +534,10 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [AllowAnonymous]
-        public IActionResult IsAccessable(string url)
+        public async Task<IActionResult> IsAccessable(string url)
         {
             url = HttpUtility.UrlDecode(url);
-            if (Wtm.LoginUserInfo == null)
+            if (await Wtm.GetLoginUserInfo () == null)
             {
                 if (Wtm.IsUrlPublic(url))
                 {
@@ -550,7 +550,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                bool canAccess = Wtm.IsAccessable(url);
+                bool canAccess = await Wtm.IsAccessable(url);
                 return Ok(canAccess);
             }
         }
@@ -664,21 +664,21 @@ namespace WalkingTec.Mvvm.Mvc
         [AllRights]
         [HttpPost]
         [ActionDescription("UploadForLayUIUEditor")]
-        public IActionResult UploadForLayUIUEditor([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = "default", string groupName = null, string subdir = null)
+        public async Task<IActionResult> UploadForLayUIUEditor([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = "default", string groupName = null, string subdir = null)
         {
             IWtmFile file = null;
             if (Request.Form.Files != null && Request.Form.Files.Count() > 0)
             {
                 //通过文件流方式上传附件
                 var FileData = Request.Form.Files[0];
-                file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
+                file = await fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
             }
             else if (Request.Form.Keys != null && Request.Form.ContainsKey("FileID"))
             {
                 //通过Base64方式上传附件
                 var FileData = Convert.FromBase64String(Request.Form["FileID"]);
                 MemoryStream MS = new MemoryStream(FileData);
-                file = fp.Upload("SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg", FileData.Length, MS, groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
+                file = await fp.Upload("SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg", FileData.Length, MS, groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
                 MS.Dispose();
             }
 
@@ -723,11 +723,11 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [Public]
-        public IActionResult SetTenant(string tenant)
+        public async Task<IActionResult> SetTenant(string tenant)
         {
-            Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
-            var principal = Wtm.LoginUserInfo.CreatePrincipal();
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
+            await Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
+            var principal = (await Wtm.GetLoginUserInfo ()).CreatePrincipal();
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
             return FFResult().AddCustomScript("location.reload();");
         }
 
@@ -759,9 +759,9 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 redirect = "/";
             }
-            if (Wtm?.LoginUserInfo != null)
+            if (await Wtm?.GetLoginUserInfo () != null)
             {
-                var principal = Wtm.LoginUserInfo.CreatePrincipal();
+                var principal = (await Wtm?.GetLoginUserInfo ()).CreatePrincipal();
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
             }
             return Content($"<script>window.location.href='{HttpUtility.UrlDecode(redirect)}'</script>", "text/html");

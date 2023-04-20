@@ -7,6 +7,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 {
@@ -29,7 +30,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             IsAll = false;
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             TableNames = new List<ComboSelectListItem>();
             if (ControllerName.Contains("/api") == false)
@@ -57,14 +58,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         }
 
-        protected override void ReInitVM()
+        protected override Task ReInitVM()
         {
             TableNames = new List<ComboSelectListItem>();
             AllItems = new List<ComboSelectListItem>();
             TableNames = Wtm.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            return Task.CompletedTask;
         }
 
-        public override void Validate()
+        public override async Task Validate()
         {
             if (DpType == DpTypeEnum.User)
             {
@@ -75,9 +77,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 else
                 {
                     string user = null;
-                    if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+                    if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
                     {
-                        var check = Wtm.CallAPI<List<ComboSelectListItem>>("mainhost", "/api/_account/GetUserById").Result;
+                        var check = await Wtm.CallAPI<List<ComboSelectListItem>>("mainhost", "/api/_account/GetUserById");
                         if (check.Data != null)
                         {
                             user = check.Data.Where(x => x.Value.ToString() == Entity.UserCode).Select(x => x.Value.ToString()).FirstOrDefault();
@@ -85,7 +87,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     }
                     else
                     {
-                        user = DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.UserCode).Select(x=>x.ITCode).FirstOrDefault();
+                        user = await DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.UserCode).Select(x=>x.ITCode).FirstOrDefaultAsync();
                     }
                     if (user == null)
                     {
@@ -101,10 +103,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 }
             }
 
-            base.Validate();
+            await base.Validate();
         }
 
-        public override async Task DoAddAsync()
+        public override async Task DoAdd()
         {
             if (SelectedItemsID == null && IsAll == false)
             {
@@ -114,11 +116,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
             if (DpType == DpTypeEnum.User)
             {
-                oldIDs = DC.Set<DataPrivilege>().Where(x => x.UserCode == Entity.UserCode && x.TableName == this.Entity.TableName).Select(x => x.ID).ToList();
+                oldIDs = await DC.Set<DataPrivilege>().Where(x => x.UserCode == Entity.UserCode && x.TableName == this.Entity.TableName).Select(x => x.ID).ToListAsync();
             }
             else
             {
-                oldIDs = DC.Set<DataPrivilege>().Where(x => x.GroupCode == Entity.GroupCode && x.TableName == this.Entity.TableName).Select(x => x.ID).ToList();
+                oldIDs = await DC.Set<DataPrivilege>().Where(x => x.GroupCode == Entity.GroupCode && x.TableName == this.Entity.TableName).Select(x => x.ID).ToListAsync();
             }
             foreach (var oldid in oldIDs)
             {
@@ -134,7 +136,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.UserCode = Entity.UserCode;
                     dp.TableName = this.Entity.TableName;
-                    dp.TenantCode = LoginUserInfo.CurrentTenant;
+                    dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
 
                 }
@@ -146,7 +148,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                         dp.RelateId = id;
                         dp.UserCode = Entity.UserCode;
                         dp.TableName = this.Entity.TableName;
-                        dp.TenantCode = LoginUserInfo.CurrentTenant;
+                        dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                         DC.Set<DataPrivilege>().Add(dp);
                     }
                 }
@@ -159,7 +161,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.GroupCode = Entity.GroupCode;
                     dp.TableName = this.Entity.TableName;
-                    dp.TenantCode = LoginUserInfo.CurrentTenant;
+                    dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
                 else
@@ -170,7 +172,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                         dp.RelateId = id;
                         dp.GroupCode = Entity.GroupCode;
                         dp.TableName = this.Entity.TableName;
-                        dp.TenantCode = LoginUserInfo.CurrentTenant;
+                        dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                         DC.Set<DataPrivilege>().Add(dp);
                     }
                 }
@@ -187,17 +189,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         }
 
-        public override async Task DoEditAsync(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
             List<Guid> oldIDs = null;
 
             if (DpType == DpTypeEnum.User)
             {
-                oldIDs = DC.Set<DataPrivilege>().Where(x => x.UserCode == Entity.UserCode && x.TableName == this.Entity.TableName).Select(x => x.ID).ToList();
+                oldIDs = await DC.Set<DataPrivilege>().Where(x => x.UserCode == Entity.UserCode && x.TableName == this.Entity.TableName).Select(x => x.ID).ToListAsync();
             }
             else
             {
-                oldIDs = DC.Set<DataPrivilege>().Where(x => x.GroupCode == Entity.GroupCode && x.TableName == this.Entity.TableName).Select(x => x.ID).ToList();
+                oldIDs = await DC.Set<DataPrivilege>().Where(x => x.GroupCode == Entity.GroupCode && x.TableName == this.Entity.TableName).Select(x => x.ID).ToListAsync();
             }
             foreach (var oldid in oldIDs)
             {
@@ -213,7 +215,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.UserCode = Entity.UserCode;
                     dp.TableName = this.Entity.TableName;
-                    dp.TenantCode = LoginUserInfo.CurrentTenant;
+                    dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
 
                 }
@@ -223,7 +225,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.GroupCode = Entity.GroupCode;
                     dp.TableName = this.Entity.TableName;
-                    dp.TenantCode = LoginUserInfo.CurrentTenant;
+                    dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
             }
@@ -238,8 +240,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                             dp.RelateId = id;
                             dp.UserCode = Entity.UserCode;
                             dp.TableName = this.Entity.TableName;
-                            dp.TenantCode = LoginUserInfo.CurrentTenant;
-                            DC.Set<DataPrivilege>().Add(dp);
+                            dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
+                            await DC.Set<DataPrivilege>().AddAsync(dp);
                         }
 
                     }
@@ -251,8 +253,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                             dp.RelateId = id;
                             dp.GroupCode = Entity.GroupCode;
                             dp.TableName = this.Entity.TableName;
-                            dp.TenantCode = LoginUserInfo.CurrentTenant;
-                            DC.Set<DataPrivilege>().Add(dp);
+                            dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
+                            await DC.Set<DataPrivilege>().AddAsync(dp);
                         }
                     }
                 }
@@ -268,7 +270,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
         }
 
-        public override async Task  DoDeleteAsync()
+        public override async Task  DoDelete()
         {
             List<Guid> oldIDs = null;
 

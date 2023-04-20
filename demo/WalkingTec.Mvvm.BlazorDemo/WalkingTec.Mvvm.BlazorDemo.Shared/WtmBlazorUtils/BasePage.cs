@@ -183,7 +183,7 @@ namespace WtmBlazorUtils
         }
 
 
-        public async void SetError(ValidateForm form, ErrorObj errors)
+        public async Task SetError(ValidateForm form, ErrorObj errors)
         {
             if (errors != null)
             {

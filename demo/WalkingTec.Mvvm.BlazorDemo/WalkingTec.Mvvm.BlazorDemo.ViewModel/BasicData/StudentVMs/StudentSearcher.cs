@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -35,8 +35,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs
         [Display(Name = "专业")]
         public List<Guid> SelectedStudentMajorIDs { get; set; }
 
-        protected override void InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
     }

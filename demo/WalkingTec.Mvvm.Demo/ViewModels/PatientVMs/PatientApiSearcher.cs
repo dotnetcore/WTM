@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
     public partial class PatientApiSearcher : BaseSearcher
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

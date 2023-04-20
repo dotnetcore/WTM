@@ -13,9 +13,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 {
     public partial class MajorListVM : BasePagedListVM<Major_View, MajorSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
@@ -25,13 +25,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], ""),
-            };
+            });
         }
 
 
-        protected override IEnumerable<IGridColumn<Major_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<Major_View>>> InitGridHeader()
         {
-            return new List<GridColumn<Major_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<Major_View>>> (new List<GridColumn<Major_View>>{
                 this.MakeGridHeader(x => x.MajorCode),
                 this.MakeGridHeader(x => x.MajorName),
                 this.MakeGridHeader(x => x.MajorType),
@@ -39,16 +39,16 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
                 this.MakeGridHeader(x => x.SchoolName_view),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
-        public override IOrderedQueryable<Major_View> GetSearchQuery()
+        public override async Task<IOrderedQueryable<Major_View>> GetSearchQuery()
         {
-            var query = DC.Set<Major>()
+            var query = (await DC.Set<Major>()
                 .CheckContain(Searcher.Remark, x=>x.Remark)
                 .CheckEqual(Searcher.SchoolId, x=>x.SchoolId)
                 .CheckWhere(Searcher.SelectedStudentMajorsIDs,x=>DC.Set<StudentMajor>().Where(y=>Searcher.SelectedStudentMajorsIDs.Contains(y.StudentId)).Select(z=>z.MajorId).Contains(x.ID))
-                .DPWhere(Wtm, x=>x.SchoolId)
+                .DPWhere(Wtm, x=>x.SchoolId))
                 .Select(x => new Major_View
                 {
 				    ID = x.ID,

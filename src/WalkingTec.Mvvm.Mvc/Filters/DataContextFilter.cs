@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
@@ -13,17 +14,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
     {
         public static Func<ActionExecutingContext, string> _csfunc;
 
-        public DataContextFilter()
-        {
-
-        }
-
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override async Task OnActionExecutionAsync (ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var controller = context.Controller as IBaseController;
             if (controller == null)
             {
-                base.OnActionExecuting(context);
+                await next ();
                 return;
             }
             context.SetWtmContext();
@@ -72,7 +68,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             controller.Wtm.CurrentCS = cs;
             controller.Wtm.CurrentDbType = dbtype;
-            base.OnActionExecuting(context);
+            await next ();
         }
     }
 }

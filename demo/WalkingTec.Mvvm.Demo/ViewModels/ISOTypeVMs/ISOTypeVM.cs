@@ -21,13 +21,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
             SetInclude(x => x.iSOTypes);
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             AlliSOTypess = DC.Set<SoftFacInfo>().GetSelectListItems(Wtm, y => y.IsoName);
             SelectediSOTypesIDs = Entity.iSOTypes?.Select(x => x.softFacInfoID).ToList();
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {
             Entity.iSOTypes = new List<ISOEXE>();
             if (SelectediSOTypesIDs != null)
@@ -38,10 +38,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
                 }
             }
            
-            base.DoAdd();
+            await base.DoAdd();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
             Entity.iSOTypes = new List<ISOEXE>();
             if(SelectediSOTypesIDs != null )
@@ -49,10 +49,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
                 SelectediSOTypesIDs.ForEach(x => Entity.iSOTypes.Add(new ISOEXE { ID = Guid.NewGuid(), softFacInfoID = x }));
             }
 
-            base.DoEdit(updateAllFields);
+            await base.DoEdit(updateAllFields);
         }
 
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
             base.DoDelete();
         }

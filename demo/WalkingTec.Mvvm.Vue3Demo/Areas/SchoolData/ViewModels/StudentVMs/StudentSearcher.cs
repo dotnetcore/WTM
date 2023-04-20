@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.StudentVMs
         [Display(Name = "专业")]
         public List<Guid> SelectedStudentMajorIDs { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

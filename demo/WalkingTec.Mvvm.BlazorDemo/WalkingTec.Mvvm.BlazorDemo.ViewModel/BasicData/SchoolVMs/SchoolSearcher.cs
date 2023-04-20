@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
         [Display(Name = "备注")]
         public String Remark { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

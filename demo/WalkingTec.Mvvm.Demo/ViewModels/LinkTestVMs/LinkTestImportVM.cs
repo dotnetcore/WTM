@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTestVMs
         public ExcelPropety name_Excel = ExcelPropety.CreateProperty<LinkTest>(x => x.name);
         public ExcelPropety Student_Excel = ExcelPropety.CreateProperty<LinkTest>(x => x.StudentId);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
             Student_Excel.DataType = ColumnDataType.ComboBox;
             Student_Excel.ListItems = DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);

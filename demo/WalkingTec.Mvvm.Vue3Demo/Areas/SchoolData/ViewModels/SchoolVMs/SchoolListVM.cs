@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
     public partial class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<School_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<School_View>>> InitGridHeader()
         {
             return new List<GridColumn<School_View>>{
                 this.MakeGridHeader(x => x.SchoolCode),
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
             };
         }
 
-        public override IOrderedQueryable<School_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<School_View>> GetSearchQuery()
         {
             var query = DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x=>x.SchoolCode)

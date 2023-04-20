@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
     public partial class StudentApiListVM : BasePagedListVM<StudentApi_View, StudentApiSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<StudentApi_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<StudentApi_View>>> InitGridHeader()
         {
             return new List<GridColumn<StudentApi_View>>{
                 this.MakeGridHeader(x => x.ID),
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         }
 
 
-        public override IOrderedQueryable<StudentApi_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<StudentApi_View>> GetSearchQuery()
         {
             var query = DC.Set<Student>()
                 .CheckContain(Searcher.ID, x=>x.ID)

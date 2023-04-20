@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Create")]
         [HttpPost("[action]")]
-        public IActionResult Add(FrameworkMenuVM2 vm)
+        public async Task<IActionResult> Add (FrameworkMenuVM2 vm)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -90,7 +90,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete (string[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkMenuBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Ok();
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
@@ -113,17 +113,17 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcel(BaseSearcher searcher)
+        public async Task<IActionResult> ExportExcel (BaseSearcher searcher)
         {
             var vm = Wtm.CreateVM<FrameworkMenuListVM2>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds (string[] ids)
         {
             var vm = Wtm.CreateVM<FrameworkMenuListVM2>();
             if (ids != null && ids.Count() > 0)
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("_Admin.UnsetPages")]
@@ -173,9 +173,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("GetFolders")]
         [HttpGet("GetFolders")]
         [AllRights]
-        public ActionResult GetFolders()
+        public async Task<IActionResult> GetFolders ()
         {
-            var AllParents = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(Wtm, x => x.PageName);
+            var AllParents = await DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(Wtm, x => x.PageName);
             foreach (var p in AllParents)
             {
                 if (p.Text.StartsWith("MenuKey."))

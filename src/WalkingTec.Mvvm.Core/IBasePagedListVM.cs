@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -10,7 +11,7 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     /// <typeparam name="T">ListVM中的Model类</typeparam>
     /// <typeparam name="S">ListVM使用的Searcher类</typeparam>
-    public interface IBasePagedListVM<out T, out S> : IBaseVM
+    public interface IBasePagedListVM<T, out S> : IBaseVM
         where T : TopBasePoco
         where S : ISearcher
     {
@@ -19,25 +20,25 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>
-        int GetChildrenDepth();
+        Task<int> GetChildrenDepth();
 
         /// <summary>
         /// GetHeaders
         /// </summary>
         /// <returns></returns>
 
-        IEnumerable<IGridColumn<T>> GetHeaders();
+        Task<IEnumerable<IGridColumn<T>>> GetHeaders();
 
         /// <summary>
         /// 页面动作
         /// </summary>
-        List<GridAction> GetGridActions();
+        Task<List<GridAction>> GetGridActions();
 
         /// <summary>
         /// 查询并生成Excel
         /// </summary>
         /// <returns>Excel文件</returns>
-        byte[] GenerateExcel();
+        Task<byte []> GenerateExcel();
 
         string TotalText { get; set; }
         #region Old
@@ -52,7 +53,7 @@ namespace WalkingTec.Mvvm.Core
         /// 获取Model集合
         /// </summary>
         /// <returns>Model集合</returns>
-        IEnumerable<T> GetEntityList();
+        Task<IEnumerable<T>> GetEntityList();
 
         void ClearEntityList();
         /// <summary>
@@ -99,14 +100,14 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 移除操作列
         /// </summary>
-        void RemoveActionColumn(object root = null);
+        Task RemoveActionColumn (object root = null);
 
         void RemoveAction();
 
         /// <summary>
         /// 填加错误信息列，用于批量操作的列表
         /// </summary>
-        void AddErrorColumn();
+        Task AddErrorColumn ();
 
         /// <summary>
         /// 搜索条件Panel的Id
@@ -117,11 +118,11 @@ namespace WalkingTec.Mvvm.Core
         /// GetSearchQuery
         /// </summary>
         /// <returns></returns>
-        IOrderedQueryable<T> GetSearchQuery();
+        Task<IOrderedQueryable<T>> GetSearchQuery();
         /// <summary>
         /// DoSearch
         /// </summary>
-        void DoSearch();
+        Task DoSearch ();
         /// <summary>
         /// CopyContext
         /// </summary>

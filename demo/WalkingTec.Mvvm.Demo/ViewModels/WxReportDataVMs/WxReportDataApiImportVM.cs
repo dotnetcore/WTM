@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
         [Display(Name = "扩展字段")]
         public ExcelPropety Extend10_Excel = ExcelPropety.CreateProperty<WxReportData>(x => x.Extend10);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
             FrameworkUser_Excel.DataType = ColumnDataType.ComboBox;
             FrameworkUser_Excel.ListItems = DC.Set<FrameworkUser>().GetSelectListItems(Wtm, y => y.Name);

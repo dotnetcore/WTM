@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +13,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTest2VMs
 {
     public partial class LinkTest2ListVM : BasePagedListVM<LinkTest2_View, LinkTest2Searcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("LinkTest2", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
                 this.MakeStandardAction("LinkTest2", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
@@ -25,20 +25,20 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTest2VMs
                 this.MakeStandardAction("LinkTest2", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
                 this.MakeStandardAction("LinkTest2", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
                 this.MakeStandardAction("LinkTest2", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], ""),
-            };
+            });
         }
 
 
-        protected override IEnumerable<IGridColumn<LinkTest2_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<LinkTest2_View>>> InitGridHeader()
         {
-            return new List<GridColumn<LinkTest2_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<LinkTest2_View>>> (new List<GridColumn<LinkTest2_View>>{
                 this.MakeGridHeader(x => x.name),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
-        public override IOrderedQueryable<LinkTest2_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<LinkTest2_View>> GetSearchQuery()
         {
             var query = DC.Set<LinkTest2>()
                 .CheckContain(Searcher.name, x=>x.name)
@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTest2VMs
                     Name_view = x.LinkStudent.Select(y=>y.Student.Name).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

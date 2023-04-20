@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
             InValidList = new StudentListVM();
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             ValidList.CopyContext(this);
             InValidList.CopyContext(this);

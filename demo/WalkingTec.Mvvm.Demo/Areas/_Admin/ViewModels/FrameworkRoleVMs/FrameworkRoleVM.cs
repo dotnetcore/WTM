@@ -18,31 +18,31 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             return rv;
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {
-            base.DoAdd();
-            Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
+            await base.DoAdd();
+            Wtm.RemoveRoleCache((await Wtm.GetLoginUserInfo ()).CurrentTenant).Wait();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
-            base.DoEdit(updateAllFields);
-            Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
+            await base.DoEdit(updateAllFields);
+            Wtm.RemoveRoleCache((await Wtm.GetLoginUserInfo ()).CurrentTenant).Wait();
         }
 
-        public override async Task DoDeleteAsync()
+        public override async Task DoDelete()
         {
             using (var tran = DC.BeginTransaction())
             {
                 try
                 {
-                    await base.DoDeleteAsync();
+                    await base.DoDelete();
                     var ur = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == Entity.RoleCode);
                     DC.Set<FrameworkUserRole>().RemoveRange(ur);
-                    DC.SaveChanges();
+                    await DC.SaveChangesAsync();
                     tran.Commit();
                     await Wtm.RemoveUserCacheByRole(Entity.RoleCode);
-                    await Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant);
+                    await Wtm.RemoveRoleCache((await Wtm.GetLoginUserInfo ()).CurrentTenant);
                 }
                 catch
                 {

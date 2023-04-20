@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
         public ExcelPropety 中文_Excel = ExcelPropety.CreateProperty<不要用中文模型名>(x => x.中文);
         public ExcelPropety 模型名_Excel = ExcelPropety.CreateProperty<不要用中文模型名>(x => x.模型名);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
         }
 

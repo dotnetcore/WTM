@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
@@ -29,9 +30,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             }
         }
 
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetHideOnToolBar(false).SetPromptMessage("你确定要修改么？").SetButtonClass("layui-btn-normal"),
@@ -52,12 +53,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
                  })
-            };
+            });
         }
 
-        protected override IEnumerable<IGridColumn<School_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<School_View>>> InitGridHeader()
         {
-            return new List<GridColumn<School_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<School_View>>> (new List<GridColumn<School_View>>{
                 this.MakeGridHeader(x => x.SchoolCode),
                 this.MakeGridHeader(x => x.SchoolName),
                 this.MakeGridHeader(x => x.SchoolType),
@@ -66,16 +67,16 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 }).SetHeader("测试").SetDisableExport(),
                 this.MakeGridHeader(x => x.Remark),
                 this.MakeGridHeaderAction(width: 500)
-            };
+            });
         }
 
-        public override IOrderedQueryable<School_View> GetSearchQuery()
+        public override async Task<IOrderedQueryable<School_View>> GetSearchQuery()
         {
-            var query = DC.Set<School>()
+            var query = (await DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x => x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x => x.SchoolType)
-                .DPWhere(Wtm, x=>x.ID)
+                .DPWhere(Wtm, x=>x.ID))
                 .Select(x => new School_View
                 {
                     ID = x.ID,

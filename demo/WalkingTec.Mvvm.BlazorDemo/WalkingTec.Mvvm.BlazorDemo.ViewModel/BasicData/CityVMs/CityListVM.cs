@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,17 +14,17 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs
     public partial class CityListVM : BasePagedListVM<City_View, CitySearcher>
     {
 
-        protected override IEnumerable<IGridColumn<City_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<City_View>>> InitGridHeader()
         {
-            return new List<GridColumn<City_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<City_View>>> (new List<GridColumn<City_View>>{
                 this.MakeGridHeader(x => x.Name),
                 this.MakeGridHeader(x => x.Test),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
-        public override IOrderedQueryable<City_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<City_View>> GetSearchQuery()
         {
             var query = DC.Set<City>()
                 .CheckContain(Searcher.Name, x=>x.Name)
@@ -38,7 +38,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs
                     Name_view = x.Parent.Name,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Test.Mock
             {
                 wtmcontext.DC = dataContext;
             }
-            wtmcontext.LoginUserInfo = new LoginUserInfo { ITCode = usercode ?? "user" };
+            wtmcontext.SetLoginUserInfo (new LoginUserInfo { ITCode = usercode ?? "user" });
             wtmcontext.GlobaInfo.AllAccessUrls = new List<string>();
             wtmcontext.GlobaInfo.AllAssembly = new List<System.Reflection.Assembly>();
             wtmcontext.GlobaInfo.AllModule = new List<Core.Support.Json.SimpleModule>();

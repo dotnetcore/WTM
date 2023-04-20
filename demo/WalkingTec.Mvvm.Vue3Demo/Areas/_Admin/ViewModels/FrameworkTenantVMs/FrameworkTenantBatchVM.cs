@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
     public class FrameworkTenant_BatchEdit : BaseVM
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
@@ -19,9 +20,9 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(FrameworkRoleSearcher searcher)
+        public async Task<IActionResult> Search (FrameworkRoleSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm).Result;
             }
@@ -78,9 +79,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Create")]
         [HttpPost("[action]")]
-        public IActionResult Add(FrameworkRoleVM vm)
+        public async Task<IActionResult> Add (FrameworkRoleVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -90,7 +91,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -105,9 +106,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("[action]")]
-        public IActionResult Edit(FrameworkRoleVM vm)
+        public async Task<IActionResult> Edit (FrameworkRoleVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -117,7 +118,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoEdit(false);
+                await vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -133,7 +134,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -141,48 +142,48 @@ namespace WalkingTec.Mvvm.Admin.Api
             List<string> RoleCode = new List<string>();
             if (ids != null && ids.Count() > 0)
             {
-                RoleCode = DC.Set<FrameworkRole>().CheckIDs(new List<string>(ids)).Select(x => x.RoleCode).ToList();
+                RoleCode = await DC.Set<FrameworkRole>().CheckIDs(new List<string>(ids)).Select(x => x.RoleCode).ToListAsync();
                 vm.Ids = ids;
             }
             else
             {
                 return Ok();
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
-                var ur = DC.Set<FrameworkUserRole>().Where(x => RoleCode.Contains(x.RoleCode)).ToList();
+                var ur = await DC.Set<FrameworkUserRole>().Where(x => RoleCode.Contains(x.RoleCode)).ToListAsync();
                 var itcodes = ur.Select(x => x.UserCode).ToArray();
                 DC.Set<FrameworkUserRole>().RemoveRange(ur);
-                DC.SaveChanges();
+                await DC.SaveChangesAsync();
                 await Wtm.RemoveUserCacheByRole(itcodes);
-                await Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant);
+                await Wtm.RemoveRoleCache((await Wtm.GetLoginUserInfo ()).CurrentTenant);
                 return Ok(ids.Count());
             }
         }
 
         [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
+        public async Task<IActionResult> ExportExcel (FrameworkRoleSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
             var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds (string[] ids)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -192,14 +193,14 @@ namespace WalkingTec.Mvvm.Admin.Api
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("[action]")]
-        public IActionResult GetExcelTemplate()
+        public async Task<IActionResult> GetExcelTemplate()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -216,20 +217,20 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Import")]
         [HttpPost("[action]")]
-        public ActionResult Import(FrameworkRoleImportVM vm)
+        public async Task<ActionResult> Import(FrameworkRoleImportVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
 
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());
             }
             else
             {
-                Wtm.RemoveRoleCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
+                await Wtm.RemoveRoleCache((await Wtm.GetLoginUserInfo ()).CurrentTenant);
                 return Ok(vm.EntityList.Count);
             }
         }

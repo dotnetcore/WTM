@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -18,7 +19,7 @@ namespace WalkingTec.Mvvm.Core
 
         Type ModelType { get; set; }
         //获取数据权限的下拉菜单
-        List<ComboSelectListItem> GetItemList (WTMContext wtmcontext, string filter = null, List<string> ids = null);
+        Task<List<ComboSelectListItem>> GetItemList (WTMContext wtmcontext, string filter = null, List<string> ids = null);
         List<string> GetTreeParentIds(WTMContext wtmcontext, List<DataPrivilege> dps);
         List<string> GetTreeSubIds(WTMContext wtmcontext, List<string> pids);
     }
@@ -55,9 +56,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="filter">filter</param>
         /// <param name="ids">ids</param>
         /// <returns>数据权限关联表的下拉菜单</returns>
-        public List<ComboSelectListItem> GetItemList(WTMContext wtmcontext, string filter = null,List<string> ids= null)
+        public async Task<List<ComboSelectListItem>> GetItemList(WTMContext wtmcontext, string filter = null,List<string> ids= null)
         {
-            var user = wtmcontext?.LoginUserInfo;
+            var user = await wtmcontext?.GetLoginUserInfo ();
             Expression<Func<T, bool>> where = null;
 
             if (ids != null)
@@ -93,11 +94,11 @@ namespace WalkingTec.Mvvm.Core
             List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
             if (user.Roles?.Where(x => x.RoleCode == "001").FirstOrDefault() == null && user.DataPrivileges?.Where(x => x.RelateId == null).FirstOrDefault() == null)
             {
-                rv = wtmcontext.DC.Set<T>().CheckIDs(user.DataPrivileges.Select(y => y.RelateId).ToList()).Where(where).GetSelectListItems(wtmcontext, _displayField, null, ignorDataPrivilege: true);
+                rv = await wtmcontext.DC.Set<T>().CheckIDs(user.DataPrivileges.Select(y => y.RelateId).ToList()).Where(where).GetSelectListItems(wtmcontext, _displayField, null, ignorDataPrivilege: true);
             }
             else
             {
-                rv = wtmcontext.DC.Set<T>().Where(where).GetSelectListItems(wtmcontext, _displayField, null, ignorDataPrivilege: true);
+                rv = await wtmcontext.DC.Set<T>().Where(where).GetSelectListItems(wtmcontext, _displayField, null, ignorDataPrivilege: true);
             }
             return rv;
         }

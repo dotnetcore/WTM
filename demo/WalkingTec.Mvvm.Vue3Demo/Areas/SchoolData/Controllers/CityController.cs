@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
-                vm.DoEdit(false);
+                await vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -99,7 +99,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             {
                 return Ok();
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             var vm = Wtm.CreateVM<CityListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.CheckExport")]
@@ -130,7 +130,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.DownloadTemplate")]
@@ -153,7 +153,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         public ActionResult Import(CityImportVM vm)
         {
 
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());
             }
@@ -167,13 +167,13 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpGet("GetCitys")]
         public ActionResult GetCitys()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+            return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
         [HttpGet("GetCitysTree")]
         public ActionResult GetCitysTree()
         {
-            return Ok(DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name));
+            return Ok(await DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name));
         }
 
     }

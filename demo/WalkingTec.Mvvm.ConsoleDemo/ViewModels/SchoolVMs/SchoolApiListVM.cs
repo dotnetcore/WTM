@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +13,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public partial class SchoolApiListVM : BasePagedListVM<SchoolApi_View, SchoolApiSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
@@ -25,21 +25,21 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.ExportExcel, "导出",""),
-            };
+            });
         }
 
-        protected override IEnumerable<IGridColumn<SchoolApi_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<SchoolApi_View>>> InitGridHeader()
         {
-            return new List<GridColumn<SchoolApi_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<SchoolApi_View>>> (new List<GridColumn<SchoolApi_View>>{
                 this.MakeGridHeader(x => x.SchoolCode),
                 this.MakeGridHeader(x => x.SchoolName),
                 this.MakeGridHeader(x => x.SchoolType),
                 this.MakeGridHeader(x => x.Remark),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
-        public override IOrderedQueryable<SchoolApi_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<SchoolApi_View>> GetSearchQuery()
         {
             var query = DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x=>x.SchoolCode)
@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                     Remark = x.Remark,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

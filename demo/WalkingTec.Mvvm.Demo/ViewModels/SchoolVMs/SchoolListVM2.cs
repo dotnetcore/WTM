@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             DetailGridPrix = "EntityList";
         }
 
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             };
         }
 
-        protected override IEnumerable<IGridColumn<School>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<School>>> InitGridHeader()
         {
             return new List<GridColumn<School>>{
                 this.MakeGridHeader(x => x.SchoolCode).SetEditType(EditTypeEnum.TextBox),
@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             };
         }
 
-        public override IOrderedQueryable<School> GetSearchQuery()
+        public override Task<IOrderedQueryable<School>> GetSearchQuery()
         {
             var query = DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)

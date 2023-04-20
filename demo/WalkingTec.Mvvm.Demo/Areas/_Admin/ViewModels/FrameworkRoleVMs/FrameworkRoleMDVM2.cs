@@ -20,9 +20,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         }
 
-        protected override FrameworkRole GetById(object Id)
+        protected override async Task<FrameworkRole> GetById(object Id)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}").Result.Data.Entity;
             }
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             }
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             var allowedids = DC.Set<FunctionPrivilege>()
                                         .Where(x => x.RoleCode == Entity.RoleCode && x.Allowed == true).Select(x => x.MenuItemId)
@@ -44,7 +44,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
 
-            if (Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.CurrentTenant != null)
+            if (Wtm.ConfigInfo.EnableTenant == true && (await GetLoginUserInfo ()).CurrentTenant != null)
             {
                 var hostonly = Wtm.GlobaInfo.AllMainTenantOnlyUrls;
                 for (int i = 0; i < topdata.Count; i++)
@@ -124,7 +124,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 FunctionPrivilege fp = new FunctionPrivilege();
                 fp.MenuItemId = menuid;
                 fp.RoleCode = Entity.RoleCode;
-                fp.TenantCode = LoginUserInfo.CurrentTenant;
+                fp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                 fp.Allowed = true;
                 DC.Set<FunctionPrivilege>().Add(fp);
             }

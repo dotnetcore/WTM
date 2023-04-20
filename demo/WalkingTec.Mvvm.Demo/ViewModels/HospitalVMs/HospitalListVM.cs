@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +14,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
 {
     public partial class HospitalListVM : BasePagedListVM<Hospital_View, HospitalSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("Hospital", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
                 this.MakeStandardAction("Hospital", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
@@ -26,11 +26,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
                 this.MakeStandardAction("Hospital", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
                 this.MakeStandardAction("Hospital", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
                 this.MakeStandardAction("Hospital", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], ""),
-            };
+            });
         }
 
 
-        protected override IEnumerable<IGridColumn<Hospital_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<Hospital_View>>> InitGridHeader()
         {
             return new List<GridColumn<Hospital_View>>{
                 this.MakeGridHeader(x => x.Name),
@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
             };
         }
 
-        public override IOrderedQueryable<Hospital_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<Hospital_View>> GetSearchQuery()
         {
             var query = DC.Set<Hospital>()
                 .Select(x => new Hospital_View
@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
                     Name_view = x.Location.Name,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

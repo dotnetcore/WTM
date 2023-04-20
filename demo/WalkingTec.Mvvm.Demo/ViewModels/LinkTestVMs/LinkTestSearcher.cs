@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTestVMs
         public List<ComboSelectListItem> AllStudents { get; set; }
         public string StudentId { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             AllStudents = DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
         }

@@ -18,18 +18,18 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             DetailGridPrix = "EntityList";
         }
 
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.AddRow, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.RemoveRow, "删除","", dialogWidth: 800),
-            };
+            });
         }
 
-        protected override IEnumerable<IGridColumn<School>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<School>>> InitGridHeader()
         {
-            return new List<GridColumn<School>>{
+            return Task.FromResult<IEnumerable<IGridColumn<School>>> (new List<GridColumn<School>>{
                 this.MakeGridHeader(x => x.SchoolCode).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.SchoolName).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.SchoolType).SetEditType(EditTypeEnum.ComboBox,typeof(SchoolTypeEnum).ToListItems(null,true)),
@@ -38,10 +38,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 }).SetHeader("测试"),
                 this.MakeGridHeader(x => x.Remark).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeaderAction(width: 500)
-            };
+            });
         }
 
-        public override IOrderedQueryable<School> GetSearchQuery()
+        public override Task<IOrderedQueryable<School>> GetSearchQuery()
         {
             var query = DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)
@@ -56,7 +56,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                     Remark = x.Remark,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

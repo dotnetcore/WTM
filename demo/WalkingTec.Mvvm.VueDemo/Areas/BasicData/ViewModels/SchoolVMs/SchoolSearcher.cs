@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.VueDemo.BasicData.ViewModels.SchoolVMs
     public partial class SchoolSearcher : BaseSearcher
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

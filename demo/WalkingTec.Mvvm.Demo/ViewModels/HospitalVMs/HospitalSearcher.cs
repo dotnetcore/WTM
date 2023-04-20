@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
     public partial class HospitalSearcher : BaseSearcher
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

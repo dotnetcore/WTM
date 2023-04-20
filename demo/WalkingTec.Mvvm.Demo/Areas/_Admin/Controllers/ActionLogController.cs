@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public IActionResult ExportExcel(ActionLogListVM vm)
         {
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [HttpPost]
@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult DoBatchDelete(ActionLogBatchVM vm, IFormCollection nouse)
         {
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return PartialView("BatchDelete", vm);
             }

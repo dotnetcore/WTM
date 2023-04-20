@@ -77,7 +77,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
         }
 
-        private static void RemoveUnAccessableMenu(List<LayUIMenu> menus, WTMContext wtm)
+        private static async Task RemoveUnAccessableMenu(List<LayUIMenu> menus, WTMContext wtm)
         {
             if (menus == null)
             {
@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
             List<LayUIMenu> toRemove = new List<LayUIMenu>();
             //如果没有指定用户信息，则用当前用户的登录信息
-            var info = wtm.LoginUserInfo;
+            var info = await wtm.GetLoginUserInfo ();
             //循环所有菜单项
             foreach (var menu in menus)
             {
@@ -96,7 +96,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     url = url.Replace("/_framework/outside?url=", "");
                 }
-                if (!string.IsNullOrEmpty(url) && wtm.IsAccessable(url) == false)
+                if (!string.IsNullOrEmpty(url) && !await wtm.IsAccessable(url))
                 {
                     toRemove.Add(menu);
                 }

@@ -16,9 +16,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         [Display(Name = "父级")]
         public int? ParentId { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
-            AllParents = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
+            AllParents = await DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

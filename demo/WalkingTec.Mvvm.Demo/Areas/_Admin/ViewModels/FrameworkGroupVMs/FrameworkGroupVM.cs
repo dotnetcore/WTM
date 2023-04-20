@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             return rv;
         }
 
-        public override void Validate()
+        public override async Task Validate()
         {
             if (string.IsNullOrEmpty(Entity.Manager) == false)
             {
@@ -31,31 +31,31 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             base.Validate();
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {
-            base.DoAdd();
-            Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant).Wait();
+            await base.DoAdd ();
+            Wtm.RemoveGroupCache((await GetLoginUserInfo ()).CurrentTenant).Wait();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
-            base.DoEdit(updateAllFields);
-            Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant).Wait();
+            await base.DoEdit (updateAllFields);
+            Wtm.RemoveGroupCache((await GetLoginUserInfo ()).CurrentTenant).Wait();
         }
 
-        public override async Task DoDeleteAsync()
+        public override async Task DoDelete()
         {
             using (var tran = DC.BeginTransaction())
             {
                 try
                 {
-                    await base.DoDeleteAsync();
+                    await base.DoDelete();
                     var ur = DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == Entity.GroupCode);
                     DC.Set<FrameworkUserGroup>().RemoveRange(ur);
-                    DC.SaveChanges();
+                    await DC.SaveChangesAsync();
                     tran.Commit();
                     await Wtm.RemoveUserCacheByGroup(Entity.GroupCode);
-                    await Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant);
+                    await Wtm.RemoveGroupCache((await GetLoginUserInfo ()).CurrentTenant);
                 }
                 catch
                 {

@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
         public DateTime? 中文 { get; set; }
         public Boolean? 模型名 { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

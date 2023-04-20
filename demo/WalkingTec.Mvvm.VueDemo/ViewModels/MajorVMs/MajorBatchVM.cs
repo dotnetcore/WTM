@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.VueDemo.ViewModels.MajorVMs
     public class Major_BatchEdit : BaseVM
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

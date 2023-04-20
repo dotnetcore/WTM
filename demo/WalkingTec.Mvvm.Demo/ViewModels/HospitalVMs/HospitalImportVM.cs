@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
         [Display(Name = "医院地点")]
         public ExcelPropety Location_Excel = ExcelPropety.CreateProperty<Hospital>(x => x.LocationId);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
             Location_Excel.DataType = ColumnDataType.ComboBox;
             Location_Excel.ListItems = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);

@@ -18,9 +18,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
             SetInclude(x => x.School);
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
-            AllSchools = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
+            AllSchools = await DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
         }
 
     }

@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs
 {
     public partial class SoftFacInfoListVM : BasePagedListVM<SoftFacInfo_View, SoftFacInfoSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs
         }
 
 
-        protected override IEnumerable<IGridColumn<SoftFacInfo_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<SoftFacInfo_View>>> InitGridHeader()
         {
             return new List<GridColumn<SoftFacInfo_View>>{
                 this.MakeGridHeader(x => x.IsoName),
@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs
         }
 
 
-        public override IOrderedQueryable<SoftFacInfo_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<SoftFacInfo_View>> GetSearchQuery()
         {
             var query = DC.Set<SoftFacInfo>()
                 .CheckContain(Searcher.IsoName, x=>x.IsoName)

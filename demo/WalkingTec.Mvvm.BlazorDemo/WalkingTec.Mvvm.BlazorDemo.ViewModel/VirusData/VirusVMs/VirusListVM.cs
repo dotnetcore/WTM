@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,19 +14,19 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs
     public partial class VirusListVM : BasePagedListVM<Virus_View, VirusSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<Virus_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<Virus_View>>> InitGridHeader()
         {
-            return new List<GridColumn<Virus_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<Virus_View>>> (new List<GridColumn<Virus_View>>{
                 this.MakeGridHeader(x => x.VirtusName),
                 this.MakeGridHeader(x => x.VirtusCode),
                 this.MakeGridHeader(x => x.Remark),
                 this.MakeGridHeader(x => x.VirtusType),
                 this.MakeGridHeader(x => x.PatientName_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
-        public override IOrderedQueryable<Virus_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<Virus_View>> GetSearchQuery()
         {
             var query = DC.Set<Virus>()
                 .CheckContain(Searcher.VirtusName, x=>x.VirtusName)
@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs
                     PatientName_view = x.Patients.Where(y=>y.Patient.IsValid==true).Select(y=>y.Patient.PatientName).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

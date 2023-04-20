@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
@@ -21,7 +22,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
         {
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             DpLists = new List<GroupDp>();
             foreach (var item in Wtm.DataPrivilegeSettings)
@@ -51,9 +52,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             }
         }
 
-        public bool DoChange()
+        public async Task<bool> DoChange()
         {
-            List<Guid> oldIDs =  DC.Set<DataPrivilege>().Where(x => x.GroupCode == GroupCode).Select(x => x.ID).ToList();
+            List<Guid> oldIDs = await DC.Set<DataPrivilege>().Where(x => x.GroupCode == GroupCode).Select(x => x.ID).ToListAsync();
             
             foreach (var oldid in oldIDs)
             {
@@ -84,7 +85,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
                 }
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
             return true;
         }
 

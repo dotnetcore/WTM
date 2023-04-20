@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
         [Display(Name = "扩展字段")]
         public Double? Extend10 { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

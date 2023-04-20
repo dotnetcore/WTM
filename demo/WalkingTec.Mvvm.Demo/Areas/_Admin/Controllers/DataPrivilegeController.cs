@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                await vm.DoAddAsync();
+                await vm.DoAdd();
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
@@ -93,7 +93,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                await vm.DoEditAsync();
+                await vm.DoEdit();
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
@@ -110,7 +110,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             {
                 vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupCode == Id && x.DpType == Type);
             }
-            await vm.DoDeleteAsync();
+            await vm.DoDelete();
             return FFResult().RefreshGrid();
         }
 
@@ -130,7 +130,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public IActionResult ExportExcel(DataPrivilegeListVM vm)
         {
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
         [AllRights]
         public IActionResult GetUserGroups()

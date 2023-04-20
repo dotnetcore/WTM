@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                await vm.DoAddAsync();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -82,7 +82,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                await vm.DoEditAsync(false);
+                await vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.GroupCode == dp.Id && x.DpType == dp.Type);
             }
-            await vm.DoDeleteAsync();
+            await vm.DoDelete();
             return Ok(1);
         }
 
@@ -139,22 +139,22 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetUserGroups()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_DataPrivilege/GetUserGroups").Result;
             }
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+            return Ok(await DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
 
         [AllRights]
         [HttpGet("[action]")]
         public IActionResult GetUserGroupsTree()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_DataPrivilege/GetUserGroupsTree").Result;
             }
-            return Ok(DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+            return Ok(await DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
     }
 

@@ -19,24 +19,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             SetInclude(x => x.Parent);
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
-            AllParents = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
-        }
-
-        public override void DoAdd()
-        {           
-            base.DoAdd();
-        }
-
-        public override void DoEdit(bool updateAllFields = false)
-        {
-            base.DoEdit(updateAllFields);
-        }
-
-        public override void DoDelete()
-        {
-            base.DoDelete();
+            AllParents = await DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
         }
     }
 }

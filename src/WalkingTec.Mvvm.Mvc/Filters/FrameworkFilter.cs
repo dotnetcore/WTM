@@ -19,17 +19,19 @@ using WalkingTec.Mvvm.Core.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using WalkingTec.Mvvm.Core.Extensions;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
     public class FrameworkFilter : ActionFilterAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override async Task OnActionExecutionAsync (ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var ctrl = context.Controller as IBaseController;
             if (ctrl == null)
             {
-                base.OnActionExecuting(context);
+                await next ();
+                _OnActionExecuted (context);
                 return;
             }
             context.SetWtmContext();
@@ -145,7 +147,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         var template = tvm.Template;
                         template.CopyContext(model);
-                        template.DoReInit();
+                        await template.DoReInit();
                         var errorlist = tvm.ErrorListVM;
                         errorlist.CopyContext(model);
                     }
@@ -155,10 +157,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         searcher.CopyContext(lvm);
                         if (ctrl is BaseController)
                         {
-                            searcher.DoInit();
+                            await searcher.DoInit();
                         }
                     }
-                    model.Validate();
+                    await model.Validate();
                     //如果是子表外键验证错误，例如Entity.Majors[0].SchoolId为空这种错误，则忽略。因为框架会在添加修改的时候自动给外键赋值
                     var toremove = ctrl.ModelState.Select(x => x.Key).Where(x => Regex.IsMatch(x, ".*?\\[.*?\\]\\..*?id", RegexOptions.IgnoreCase));
                     foreach (var r in toremove)
@@ -193,14 +195,14 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         {
                             if (reinit != null && (reinit.ReInitMode == ReInitModes.SUCCESSONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
                             {
-                                model.DoReInit();
+                                await model.DoReInit();
                             }
                         }
                         else
                         {
                             if (reinit == null || (reinit.ReInitMode == ReInitModes.FAILEDONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
                             {
-                                model.DoReInit();
+                                await model.DoReInit();
                             }
                         }
                     }
@@ -214,8 +216,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
             }
 
-            //忽略绑定List<xxx>由于前台传递空字符串造成的错误
-            base.OnActionExecuting(context);
+            await next ();
+            _OnActionExecuted (context);
         }
 
         private void SetSubVm(BaseVM vm)
@@ -244,12 +246,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
         }
 
-        public override void OnActionExecuted(ActionExecutedContext context)
+        public void _OnActionExecuted(ActionExecutingContext context)
         {
             var ctrl = context.Controller as BaseController;
             if (ctrl == null)
             {
-                base.OnActionExecuted(context);
                 return;
             }
             ctrl.ViewData["DONOTUSE_COOKIEPRE"] = ctrl.Wtm.ConfigInfo.CookiePre;
@@ -339,15 +340,19 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     context.HttpContext.Response.Cookies.Append("divid", model?.ViewDivId);
                 }
             }
-            base.OnActionExecuted(context);
         }
 
-        public override void OnResultExecuted(ResultExecutedContext context)
+        public override async Task OnResultExecutionAsync (ResultExecutingContext context, ResultExecutionDelegate next)
         {
+            Exception _ex = null;
+            try {
+                await next ();
+            } catch (Exception ex) {
+                _ex = ex;
+            }
             var ctrl = context.Controller as IBaseController;
             if (ctrl == null)
             {
-                base.OnResultExecuted(context);
                 return;
             }
             var ctrlActDesc = context.ActionDescriptor as ControllerActionDescriptor;
@@ -361,7 +366,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (context.Result is PartialViewResult pvr)
             {
                 model = pvr.Model as BaseVM;
-                context.HttpContext.Response.WriteAsync($"<script>try{{ff.ResizeChart('{model?.ViewDivId}')}}catch{{}}</script>");
+                await context.HttpContext.Response.WriteAsync($"<script>try{{ff.ResizeChart('{model?.ViewDivId}')}}catch{{}}</script>");
             }
 
             //如果是来自Error，则已经记录过日志，跳过
@@ -376,15 +381,15 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 var actDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
                 var postDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
 
-                log.LogType = context.Exception == null ? ActionLogTypesEnum.Normal : ActionLogTypesEnum.Exception;
+                log.LogType = _ex == null ? ActionLogTypesEnum.Normal : ActionLogTypesEnum.Exception;
                 log.ActionTime = DateTime.Now;
-                log.ITCode = ctrl.Wtm?.LoginUserInfo?.ITCode ?? string.Empty;
+                log.ITCode = (await ctrl.Wtm?.GetLoginUserInfo ())?.ITCode ?? string.Empty;
                 // 给日志的多语言属性赋值
                 log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
                 log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
                 log.ActionUrl = context.HttpContext.Request.Path;
                 log.IP = context.HttpContext.GetRemoteIpAddress();
-                log.Remark = context.Exception?.ToString() ?? string.Empty;
+                log.Remark = _ex?.ToString() ?? string.Empty;
                 if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 2000)
                 {
                     log.Remark = log.Remark.Substring(0, 2000);
@@ -407,19 +412,17 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
                 catch { }
             }
-            if (context.Exception != null)
+            if (_ex != null)
             {
-                context.ExceptionHandled = true;
                 if (ctrl.Wtm.ConfigInfo.IsQuickDebug == true)
                 {
-                    context.HttpContext.Response.WriteAsync(context.Exception.ToString());
+                    await context.HttpContext.Response.WriteAsync(_ex.ToString());
                 }
                 else
                 {
-                    context.HttpContext.Response.WriteAsync(MvcProgram._localizer["Sys.PageError"]);
+                    await context.HttpContext.Response.WriteAsync(MvcProgram._localizer["Sys.PageError"]);
                 }
             }
-            base.OnResultExecuted(context);
         }
 
     }

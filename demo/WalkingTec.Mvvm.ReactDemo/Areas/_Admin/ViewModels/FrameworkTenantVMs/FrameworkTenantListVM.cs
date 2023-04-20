@@ -12,9 +12,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
 {
     public partial class FrameworkTenantListVM : BasePagedListVM<FrameworkTenant_View, FrameworkTenantSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("FrameworkTenant", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkTenant", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "_Admin", dialogWidth: 800),
@@ -24,13 +24,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
                 this.MakeStandardAction("FrameworkTenant", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkTenant", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkTenant", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], "_Admin"),
-            };
+            });
         }
 
 
-        protected override IEnumerable<IGridColumn<FrameworkTenant_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<FrameworkTenant_View>>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkTenant_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkTenant_View>>> (new List<GridColumn<FrameworkTenant_View>>{
                 this.MakeGridHeader(x => x.TCode),
                 this.MakeGridHeader(x => x.TName),
                 this.MakeGridHeader(x => x.TDb),
@@ -40,10 +40,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
                 this.MakeGridHeader(x => x.Enabled),
                 this.MakeGridHeader(x => x.EnableSub),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
-        public override IOrderedQueryable<FrameworkTenant_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<FrameworkTenant_View>> GetSearchQuery()
         {
             var query = DC.Set<FrameworkTenant>()
                 .CheckContain(Searcher.TCode, x=>x.TCode)
@@ -62,7 +62,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
                     EnableSub = x.EnableSub
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

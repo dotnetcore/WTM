@@ -2,13 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
 {
     public class DatatableListVM : BasePagedListVM<CustomView, BaseSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             var actions = new List<GridAction>
             {
@@ -18,10 +19,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
                 this.MakeAction("ActionLog","Details","详情(本窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(false).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=3"),
                 this.MakeStandardAction("DataTable", GridActionStandardTypesEnum.ExportExcel, "导出","")
             };
-            return actions;
+            return Task.FromResult (actions);
         }
 
-        protected override IEnumerable<IGridColumn<CustomView>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<CustomView>>> InitGridHeader()
         {
             var header = new List<GridColumn<CustomView>>();
             var topheader = this.MakeGridHeaderParent("父表头");
@@ -53,7 +54,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
 
             header.Add(this.MakeGridHeaderAction(width: 320));
 
-            return header;
+            return Task.FromResult<IEnumerable<IGridColumn<CustomView>>> (header);
         }
 
         public override DbCommand GetSearchCommand()

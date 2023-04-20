@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         [Display(Name = "学校类型")]
         public SchoolTypeEnum? SchoolType { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

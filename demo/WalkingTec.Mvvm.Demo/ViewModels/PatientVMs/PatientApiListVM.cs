@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,9 +15,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
     public partial class PatientApiListVM : BasePagedListVM<PatientApi_View, PatientApiSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<PatientApi_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<PatientApi_View>>> InitGridHeader()
         {
-            return new List<GridColumn<PatientApi_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<PatientApi_View>>> (new List<GridColumn<PatientApi_View>>{
                 this.MakeGridHeader(x => x.PatientName),
                 this.MakeGridHeader(x => x.IdNumber),
                 this.MakeGridHeader(x => x.Gender),
@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
                 this.MakeGridHeader(x => x.PhotoId).SetFormat(PhotoIdFormat),
                 this.MakeGridHeader(x => x.VirtusName_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
         private List<ColumnFormatInfo> PhotoIdFormat(PatientApi_View entity, object val)
         {
@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
         }
 
 
-        public override IOrderedQueryable<PatientApi_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<PatientApi_View>> GetSearchQuery()
         {
             var query = DC.Set<Patient>()
                 .Select(x => new PatientApi_View
@@ -57,7 +57,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
                     VirtusName_view = x.Viruses.Select(y=>y.Virus.VirtusName).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

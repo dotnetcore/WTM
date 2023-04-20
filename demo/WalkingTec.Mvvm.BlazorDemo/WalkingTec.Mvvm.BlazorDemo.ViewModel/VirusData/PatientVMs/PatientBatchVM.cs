@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.PatientVMs
     public class Patient_BatchEdit : BaseVM
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

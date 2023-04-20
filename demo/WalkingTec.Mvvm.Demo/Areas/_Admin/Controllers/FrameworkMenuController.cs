@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();

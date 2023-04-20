@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Test.Mock;
 
 namespace WalkingTec.Mvvm.Core.Test.VM
@@ -15,8 +16,11 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         private GoodsSpecificationTestListVM _goodsListVM ;
         private string _seed;
 
-        public BasePaedListVMTest()
-        {
+        public BasePaedListVMTest() {
+            _ = Task.Run (Init);
+        }
+
+        public async Task Init () {
             _seed = Guid.NewGuid().ToString();
             _studentListVM = new BasePagedListVM<Student, BaseSearcher>();
             _studentListVM.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
@@ -30,7 +34,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                     IsValid = true
                 });
             }
-            _studentListVM.DC.SaveChanges();
+            await _studentListVM.DC.SaveChangesAsync();
 
             _goodsListVM = new GoodsSpecificationTestListVM();
             _goodsListVM.DC = new DataContext(_seed, DBTypeEnum.Memory);
@@ -42,47 +46,47 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                     IsValid = i <= 10 ? true : false
                 });
             }
-            _goodsListVM.DC.SaveChanges();
+            await _goodsListVM.DC.SaveChangesAsync();
 
         }
 
         [TestMethod]
-        public void SearchTest()
+        public async Task SearchTest()
         {
             _studentListVM.Searcher.Limit = 10;
-            _studentListVM.DoSearch();
+            await _studentListVM.DoSearch();
             Assert.AreEqual(_studentListVM.Searcher.Count, 20);
             Assert.AreEqual(_studentListVM.Searcher.PageCount, 2);
             Assert.AreEqual(_studentListVM.EntityList.Count, 10);
         }
 
         [TestMethod]
-        public void PersistSearchTest()
+        public async Task PersistSearchTest()
         {
             _goodsListVM.Searcher.Limit = 20;
-            _goodsListVM.DoSearch();
+            await _goodsListVM.DoSearch();
             Assert.AreEqual(_goodsListVM.Searcher.Count, 10);
             Assert.AreEqual(_goodsListVM.Searcher.PageCount, 1);
             Assert.AreEqual(_goodsListVM.EntityList.Count, 10);            
         }
 
         [TestMethod]
-        public void PersistSearchTest2()
+        public async Task PersistSearchTest2()
         {
             _goodsListVM.Searcher.Limit = 20;
             _goodsListVM.SearcherMode = ListVMSearchModeEnum.Export;
-            _goodsListVM.DoSearch();
+            await _goodsListVM.DoSearch();
             Assert.AreEqual(_goodsListVM.Searcher.Count, 0);
             Assert.AreEqual(_goodsListVM.Searcher.PageCount, 0);
             Assert.AreEqual(_goodsListVM.EntityList.Count, 0);
         }
 
         [TestMethod]
-        public void SearchTest2()
+        public async Task SearchTest2()
         {
             _studentListVM.Searcher.Limit = 5;
             _studentListVM.Searcher.Page = 2;
-            _studentListVM.DoSearch();
+            await _studentListVM.DoSearch();
             Assert.AreEqual(_studentListVM.Searcher.Count, 20);
             Assert.AreEqual(_studentListVM.Searcher.PageCount, 4);
             Assert.AreEqual(_studentListVM.EntityList.Count, 5);
@@ -93,11 +97,11 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [DataRow(-100)]
         [DataRow(-20)]
         [DataRow(0)]
-        public void SearchTest3(int page)
+        public async Task SearchTest3(int page)
         {
             _studentListVM.Searcher.Limit = 3;
             _studentListVM.Searcher.Page = page;
-            _studentListVM.DoSearch();
+            await _studentListVM.DoSearch();
             Assert.AreEqual(_studentListVM.Searcher.Count, 20);
             Assert.AreEqual(_studentListVM.Searcher.PageCount, 7);
             Assert.AreEqual(_studentListVM.EntityList.Count, 3);
@@ -106,36 +110,36 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
 
         [TestMethod]
-        public void SearchWithoutPagingTest()
+        public async Task SearchWithoutPagingTest()
         {
             _studentListVM.NeedPage = false;
-            _studentListVM.DoSearch();
+            await _studentListVM.DoSearch();
             Assert.AreEqual(_studentListVM.Searcher.Count, 20);
             Assert.AreEqual(_studentListVM.Searcher.PageCount, 1);
             Assert.AreEqual(_studentListVM.EntityList.Count, 20);
         }
 
         [TestMethod]
-        public void SortTest()
+        public async Task SortTest()
         {
             _studentListVM.Searcher.SortInfo = new SortInfo() { Direction = SortDir.Desc, Property = "LoginName" };
-            _studentListVM.DoSearch();
+            await _studentListVM.DoSearch();
             Assert.AreEqual(_studentListVM.EntityList[0].LoginName, "s20");
         }
     }
 
     public class GoodsSpecificationTestListVM : BasePagedListVM<GoodsSpecification, BaseSearcher>
     {
-        public override IOrderedQueryable<GoodsSpecification> GetSearchQuery()
+        public override Task<IOrderedQueryable<GoodsSpecification>> GetSearchQuery()
         {
             var query = DC.Set<GoodsSpecification>().OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
-        public override IOrderedQueryable<GoodsSpecification> GetExportQuery()
+        public override Task<IOrderedQueryable<GoodsSpecification>> GetExportQuery()
         {
             var query = DC.Set<Major>().Select(x=>new GoodsSpecification { Name = x.MajorName }).OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -32,7 +33,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] string tenant = null, [FromForm] bool rememberLogin = false)
         {
 
-            var user = Wtm.DoLogin(account, password, tenant);
+            var user = await Wtm.DoLogin(account, password, tenant);
             if (user == null)
             {
                 return BadRequest(Localizer["Sys.LoginFailed"].Value);
@@ -40,7 +41,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
 
-            Wtm.LoginUserInfo = user;
+            Wtm.SetLoginUserInfo (user);
 
             AuthenticationProperties properties = null;
             if (rememberLogin)
@@ -52,9 +53,9 @@ namespace WalkingTec.Mvvm.Admin.Api
                 };
             }
 
-            var principal = Wtm.LoginUserInfo.CreatePrincipal();
+            var principal = user.CreatePrincipal();
             await Wtm.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
-            return CheckUserInfo();
+            return await CheckUserInfo();
         }
 
 
@@ -62,7 +63,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
-            var user = Wtm.DoLogin(loginInfo.Account, loginInfo.Password, loginInfo.Tenant);
+            var user = await Wtm.DoLogin(loginInfo.Account, loginInfo.Password, loginInfo.Tenant);
             if (user == null)
             {
                 ModelState.AddModelError(" ", Localizer["Sys.LoginFailed"]);
@@ -71,9 +72,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
 
-            Wtm.LoginUserInfo = user;
+            Wtm.SetLoginUserInfo (user);
             var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
-            var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
+            var token = await authService.IssueTokenAsync(user);
             return Content(JsonSerializer.Serialize(token), "application/json");
         }
 
@@ -81,28 +82,29 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public async Task<IActionResult> LoginRemote([FromQuery] string _remotetoken)
         {
-            if (Wtm?.LoginUserInfo != null)
+            var _user = await Wtm?.GetLoginUserInfo ();
+            if (_user != null)
             {
-                var principal = Wtm.LoginUserInfo.CreatePrincipal();
+                var principal = _user.CreatePrincipal();
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, null);
             }
-            return CheckUserInfo();
+            return await CheckUserInfo();
         }
 
 
         [AllRights]
         [HttpGet("[action]")]
-        public IActionResult SetTenant([FromQuery] string tenant)
+        public async Task<IActionResult> SetTenant([FromQuery] string tenant)
         {
-            bool rv = Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
+            bool rv = await Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
             return Ok(rv);
         }
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public IActionResult Reg(SimpleReg regInfo)
+        public async Task<IActionResult> Reg(SimpleReg regInfo)
         {
-            var exist = DC.Set<FrameworkUser>().Any(x => x.ITCode.ToLower() == regInfo.ITCode.ToLower());
+            var exist = await DC.Set<FrameworkUser>().AnyAsync(x => x.ITCode.ToLower() == regInfo.ITCode.ToLower());
 
             if (exist == true)
             {
@@ -110,7 +112,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return BadRequest(ModelState.GetErrorJson());
             }
 
-            var hasuserrole = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "002").FirstOrDefault();
+            var hasuserrole = await DC.Set<FrameworkRole>().Where(x => x.RoleCode == "002").FirstOrDefaultAsync();
             FrameworkUser user = new FrameworkUser
             {
                 ITCode = regInfo.ITCode,
@@ -129,7 +131,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 DC.Set<FrameworkUserRole>().Add(userrole);
             }
             DC.Set<FrameworkUser>().Add(user);
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
             return Ok();
         }
 
@@ -152,15 +154,15 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public IActionResult CheckUserInfo(bool IsApi = true)
+        public async Task<IActionResult> CheckUserInfo(bool IsApi = true)
         {
-            if (Wtm.LoginUserInfo == null)
+            if ((await Wtm.GetLoginUserInfo ()) == null)
             {
                 return BadRequest();
             }
             else
             {
-                var forapi = Wtm.LoginUserInfo;
+                var forapi = (await Wtm.GetLoginUserInfo ());
                 if (IsApi)
                 {
                     forapi.SetAttributesForApi(Wtm);
@@ -175,7 +177,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 {
                     forapi.Attributes.Remove("IsMainHost");
                 }
-                if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(Wtm.LoginUserInfo.TenantCode) == true)
+                if (ConfigInfo.HasMainHost && string.IsNullOrEmpty((await Wtm.GetLoginUserInfo ()).TenantCode) == true)
                 {
                     forapi.Attributes.Add("IsMainHost", true);
                 }
@@ -190,9 +192,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpPost("[action]")]
-        public IActionResult ChangePassword(ChangePasswordVM vm)
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm).Result;
             }
@@ -219,7 +221,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public async Task<IActionResult> Logout()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 await Wtm.CallAPI<string>("mainhost", "/api/_account/logout", HttpMethodEnum.GET, new { }, 10);
                 return Ok(ConfigInfo.MainHost);
@@ -235,73 +237,73 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFrameworkRoles")]
         [ActionDescription("GetRoles")]
         [AllRights]
-        public IActionResult GetFrameworkRoles()
+        public async Task<IActionResult> GetFrameworkRoles()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_account/GetFrameworkRoles").Result;
             }
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x => x.RoleCode));
+            return Ok(await DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x => x.RoleCode));
         }
 
         [HttpGet("GetFrameworkGroups")]
         [ActionDescription("GetGroups")]
         [AllRights]
-        public IActionResult GetFrameworkGroups()
+        public async Task<IActionResult> GetFrameworkGroups ()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_account/GetFrameworkGroups").Result;
             }
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+            return Ok(await DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
 
         [HttpGet("GetFrameworkGroupsTree")]
         [ActionDescription("GetGroupsTree")]
         [AllRights]
-        public IActionResult GetFrameworkGroupsTree()
+        public async Task<IActionResult> GetFrameworkGroupsTree ()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_account/GetFrameworkGroupsTree").Result;
             }
-            return Ok(DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+            return Ok(await DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
 
 
         [HttpGet("GetUserById")]
         [AllRights]
-        public IActionResult GetUserById(string keywords)
+        public async Task<IActionResult> GetUserById (string keywords)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_account/GetUserById").Result;
             }
-            var users = DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
+            var users = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
             return Ok(users);
         }
 
         [HttpGet("GetUserByGroup")]
         [AllRights]
-        public IActionResult GetUserByGroup(string keywords)
+        public async Task<IActionResult> GetUserByGroup (string keywords)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_account/GetUserByGroup").Result;
             }
-            var users = DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == keywords).Select(x => x.UserCode).ToList();
+            var users = await DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == keywords).Select(x => x.UserCode).ToListAsync();
             return Ok(users);
         }
 
         [HttpGet("GetUserByRole")]
         [AllRights]
-        public IActionResult GetUserByRole(string keywords)
+        public async Task<IActionResult> GetUserByRole (string keywords)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_account/GetUserByRole").Result;
             }
-            var users = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == keywords).Select(x => x.UserCode).ToList();
+            var users = await DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == keywords).Select(x => x.UserCode).ToListAsync();
             return Ok(users);
         }
 

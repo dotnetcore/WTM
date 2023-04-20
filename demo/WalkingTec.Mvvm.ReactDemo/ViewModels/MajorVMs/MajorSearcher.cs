@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.MajorVMs
         [Display(Name = "所属学校")]
         public int? SchoolId { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

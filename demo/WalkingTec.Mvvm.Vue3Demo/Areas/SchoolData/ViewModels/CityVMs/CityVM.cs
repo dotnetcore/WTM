@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,23 +18,9 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
             SetInclude(x => x.Parent);
         }
 
-        protected override void InitVM()
+        protected override Task InitVM()
         {
-        }
-
-        public override void DoAdd()
-        {           
-            base.DoAdd();
-        }
-
-        public override void DoEdit(bool updateAllFields = false)
-        {
-            base.DoEdit(updateAllFields);
-        }
-
-        public override void DoDelete()
-        {
-            base.DoDelete();
+            return Task.CompletedTask;
         }
     }
 }

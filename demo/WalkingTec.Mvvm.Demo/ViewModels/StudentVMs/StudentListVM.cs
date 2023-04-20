@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
     public partial class StudentListVM : BasePagedListVM<Student_View, StudentSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         }
 
 
-        protected override IEnumerable<IGridColumn<Student_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<Student_View>>> InitGridHeader()
         {
             return new List<GridColumn<Student_View>>{
                 this.MakeGridHeader(x => x.ID),
@@ -57,7 +57,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         }
 
 
-        public override IOrderedQueryable<Student_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<Student_View>> GetSearchQuery()
         {
             var query = DC.Set<Student>()
                 .CheckContain(Searcher.Password, x=>x.Password)

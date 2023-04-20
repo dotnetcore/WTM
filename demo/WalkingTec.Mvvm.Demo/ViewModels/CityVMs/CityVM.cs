@@ -29,29 +29,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             se = new CitySearcher();
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
-            AllParents = DC.Set<City>().GetTreeSelectListItems(Wtm, y => y.Name);
+            AllParents = await DC.Set<City>().GetTreeSelectListItems(Wtm, y => y.Name);
             CityChildrenList.CopyContext(this);
             CityChildrenList1.CopyContext(this);
             list.CopyContext(this);
             se.CopyContext(this);
-            se.DoInit();
-        }
-
-        public override void DoAdd()
-        {           
-            base.DoAdd();
-        }
-
-        public override void DoEdit(bool updateAllFields = false)
-        {
-            base.DoEdit(updateAllFields);
-        }
-
-        public override void DoDelete()
-        {
-            base.DoDelete();
+            await se.DoInit();
         }
     }
 }

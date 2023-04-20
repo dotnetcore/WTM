@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         [Display(Name = "学校名称")]
         public String SchoolName { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

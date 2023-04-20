@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
         [HttpGet("GetCitys")]
         public ActionResult GetCitys()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+            return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
         [HttpGet("GetCharts")]

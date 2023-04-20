@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
     public class ISOType_BatchEdit : BaseVM
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

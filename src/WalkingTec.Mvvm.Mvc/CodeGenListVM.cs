@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Attributes;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -19,9 +20,9 @@ namespace WalkingTec.Mvvm.Mvc
             NeedPage = false;
         }
 
-        protected override IEnumerable<IGridColumn<CodeGenListView>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<CodeGenListView>>> InitGridHeader()
         {
-            return new List<IGridColumn<CodeGenListView>>
+            return Task.FromResult<IEnumerable<IGridColumn<CodeGenListView>>> (new List<IGridColumn<CodeGenListView>>
             {
                 this.MakeGridHeader(x=>x.FieldName,200).SetFormat((entity,val)=>{return withHidden($"FieldInfos[{entity.Index}].FieldName",entity.FieldName); }),
                 this.MakeGridHeader(x=>x.FieldDes,200),
@@ -31,7 +32,7 @@ namespace WalkingTec.Mvvm.Mvc
                 this.MakeGridHeader(x=>x.IsFormField,150).SetFormat((entity,val)=>{return getCheckBox($"FieldInfos[{entity.Index}].IsFormField",entity.IsFormField); }),
                 this.MakeGridHeader(x=>x.IsImportField,150).SetFormat((entity,val)=>{return getCheckBox($"FieldInfos[{entity.Index}].IsImportField",entity.IsImportField); }),
                 this.MakeGridHeader(x=>x.IsBatchField,150).SetFormat((entity,val)=>{return getCheckBox($"FieldInfos[{entity.Index}].IsBatchField",entity.IsBatchField); })
-          };
+            });
         }
 
         private string getCheckBox(string fieldname, bool val)
@@ -73,7 +74,7 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
-        public override IOrderedQueryable<CodeGenListView> GetSearchQuery()
+        public override Task<IOrderedQueryable<CodeGenListView>> GetSearchQuery()
         {
             Type modeltype =  Type.GetType(ModelFullName);
             var pros = modeltype.GetAllProperties();
@@ -229,7 +230,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
 
-            return lv.AsQueryable().OrderBy(x => x.FieldName);
+            return Task.FromResult (lv.AsQueryable ().OrderBy (x => x.FieldName));
         }
     }
 

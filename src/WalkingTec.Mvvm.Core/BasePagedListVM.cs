@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
@@ -63,11 +64,11 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>
-        public int GetChildrenDepth()
+        public async Task<int> GetChildrenDepth()
         {
             if (_childrenDepth == null)
             {
-                _childrenDepth = _getHeaderDepth();
+                _childrenDepth = await _getHeaderDepth();
             }
             return _childrenDepth.Value;
         }
@@ -82,11 +83,11 @@ namespace WalkingTec.Mvvm.Core
         /// GetHeaders
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IGridColumn<TModel>> GetHeaders()
+        public async Task<IEnumerable<IGridColumn<TModel>>> GetHeaders()
         {
             if (GridHeaders == null)
             {
-                GridHeaders = InitGridHeader();
+                GridHeaders = await InitGridHeader();
             }
             return GridHeaders;
         }
@@ -95,9 +96,9 @@ namespace WalkingTec.Mvvm.Core
         /// 计算多级表头深度
         /// </summary>
         /// <returns></returns>
-        private int _getHeaderDepth()
+        private async Task<int> _getHeaderDepth()
         {
-            IEnumerable<IGridColumn<TModel>> headers = GetHeaders();
+            IEnumerable<IGridColumn<TModel>> headers = await GetHeaders();
             return headers.Max(x => x.MaxDepth);
         }
 
@@ -106,11 +107,11 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 页面动作
         /// </summary>
-        public List<GridAction> GetGridActions()
+        public async Task<List<GridAction>> GetGridActions()
         {
             if (_gridActions == null)
             {
-                _gridActions = InitGridAction();
+                _gridActions = await InitGridAction();
             }
             return _gridActions;
         }
@@ -118,14 +119,14 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 初始化 InitGridHeader，继承的类应该重载这个函数来设定数据的列和动作
         /// </summary>
-        protected virtual IEnumerable<IGridColumn<TModel>> InitGridHeader()
+        protected virtual Task<IEnumerable<IGridColumn<TModel>>> InitGridHeader()
         {
-            return new List<GridColumn<TModel>>();
+            return Task.FromResult<IEnumerable<IGridColumn<TModel>>> (new List<GridColumn<TModel>> ());
         }
 
-        protected virtual List<GridAction> InitGridAction()
+        protected virtual Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>();
+            return Task.FromResult (new List<GridAction> ());
         }
 
         #region GenerateExcel
@@ -134,20 +135,20 @@ namespace WalkingTec.Mvvm.Core
         /// 生成Excel
         /// </summary>
         /// <returns>生成的Excel文件</returns>
-        public virtual byte[] GenerateExcel()
+        public virtual async Task<byte []> GenerateExcel ()
         {
             NeedPage = false;
 
             //获取导出的表头
             if (GridHeaders == null)
             {
-                GetHeaders();
+                await GetHeaders();
             }
 
             //去掉ID列和Action列
-            RemoveActionAndIdColumn();
+            await RemoveActionAndIdColumn();
 
-            var query = SearcherMode== ListVMSearchModeEnum.CheckExport? GetCheckedExportQuery() : GetExportQuery();
+            var query = SearcherMode == ListVMSearchModeEnum.CheckExport ? await GetCheckedExportQuery () : await GetExportQuery ();
             int listcount = query.Count();
 
             //获取分成Excel的个数
@@ -503,11 +504,11 @@ namespace WalkingTec.Mvvm.Core
         /// 获取数据列表
         /// </summary>
         /// <returns>数据列表</returns>
-        public IEnumerable<TModel> GetEntityList()
+        public async Task<IEnumerable<TModel>> GetEntityList()
         {
             if (IsSearched == false && (EntityList == null || EntityList.Count == 0))
             {
-                DoSearch();
+                await DoSearch();
             }
             return EntityList?.AsEnumerable();
         }
@@ -535,10 +536,10 @@ namespace WalkingTec.Mvvm.Core
             return false;
         }
 
-        public override void Validate()
+        public override async Task Validate()
         {
             Searcher?.Validate();
-            base.Validate();
+            await base.Validate();
         }
 
         /// <summary>
@@ -565,46 +566,45 @@ namespace WalkingTec.Mvvm.Core
         /// 设定搜索语句，继承的类应该重载这个函数来指定自己的搜索语句
         /// </summary>
         /// <returns>搜索语句</returns>
-        public virtual IOrderedQueryable<TModel> GetSearchQuery()
+        public virtual Task<IOrderedQueryable<TModel>> GetSearchQuery()
         {
-            return DC.Set<TModel>().OrderByDescending(x => x.ID);
+            return Task.FromResult (DC.Set<TModel> ().OrderByDescending (x => x.ID));
         }
 
         /// <summary>
         /// 设定导出时搜索语句，继承的类应该重载这个函数来指定自己导出时的搜索语句，如不指定则默认和搜索用的搜索语句相同
         /// </summary>
         /// <returns>搜索语句</returns>
-        public virtual IOrderedQueryable<TModel> GetExportQuery()
+        public virtual async Task<IOrderedQueryable<TModel>> GetExportQuery()
         {
-            return GetSearchQuery();
+            return await GetSearchQuery();
         }
 
         /// <summary>
         /// 设定搜索语句，继承的类应该重载这个函数来指定自己导出时的搜索语句，如不指定则默认和搜索用的搜索语句相同
         /// </summary>
         /// <returns>搜索语句</returns>
-        public virtual IOrderedQueryable<TModel> GetSelectorQuery()
+        public virtual async Task<IOrderedQueryable<TModel>> GetSelectorQuery()
         {
-            return GetSearchQuery();
+            return await GetSearchQuery();
         }
 
         /// <summary>
         /// 设定勾选后导出的搜索语句，继承的类应该重载这个函数来指定自己导出时的搜索语句，如不指定则默认和搜索用的搜索语句相同
         /// </summary>
         /// <returns>搜索语句</returns>
-        public virtual IOrderedQueryable<TModel> GetCheckedExportQuery()
+        public virtual async Task<IOrderedQueryable<TModel>> GetCheckedExportQuery()
         {
-            var baseQuery = GetBatchQuery();
-            return baseQuery;
+            return await GetBatchQuery ();
         }
 
         /// <summary>
         /// 设定批量模式下的搜索语句，继承的类应重载这个函数来指定自己批量模式的搜索语句，如果不指定则默认使用Ids.Contains(x.Id)来代替搜索语句中的Where条件
         /// </summary>
         /// <returns>搜索语句</returns>
-        public virtual IOrderedQueryable<TModel> GetBatchQuery()
+        public virtual async Task<IOrderedQueryable<TModel>> GetBatchQuery()
         {
-            var baseQuery = GetSearchQuery();
+            var baseQuery = await GetSearchQuery();
             if (ReplaceWhere == null)
             {
                 Expression peid = null;
@@ -628,15 +628,15 @@ namespace WalkingTec.Mvvm.Core
         /// 设定主从模式的搜索语句，继承的类应该重载这个函数来指定自己主从模式的搜索语句，如不指定则默认和搜索用的搜索语句相同
         /// </summary>
         /// <returns>搜索语句</returns>
-        public virtual IOrderedQueryable<TModel> GetMasterDetailsQuery()
+        public virtual async Task<IOrderedQueryable<TModel>> GetMasterDetailsQuery()
         {
-            return GetSearchQuery();
+            return await GetSearchQuery();
         }
 
         /// <summary>
         /// 进行搜索
         /// </summary>
-        public virtual void DoSearch()
+        public virtual async Task DoSearch()
         {
             var cmd = GetSearchCommand();
             if (cmd == null)
@@ -646,25 +646,25 @@ namespace WalkingTec.Mvvm.Core
                 switch (SearcherMode)
                 {
                     case ListVMSearchModeEnum.Search:
-                        query = GetSearchQuery();
+                        query = await GetSearchQuery();
                         break;
                     case ListVMSearchModeEnum.Export:
-                        query = GetExportQuery();
+                        query = await GetExportQuery ();
                         break;
                     case ListVMSearchModeEnum.Batch:
-                        query = GetBatchQuery();
+                        query = await GetBatchQuery ();
                         break;
                     case ListVMSearchModeEnum.MasterDetail:
-                        query = GetMasterDetailsQuery();
+                        query = await GetMasterDetailsQuery ();
                         break;
                     case ListVMSearchModeEnum.CheckExport:
-                        query = GetCheckedExportQuery();
+                        query = await GetCheckedExportQuery();
                         break;
                     case ListVMSearchModeEnum.Selector:
-                        query = GetSelectorQuery();
+                        query = await GetSelectorQuery ();
                         break;
                     default:
-                        query = GetSearchQuery();
+                        query = await GetSearchQuery ();
                         break;
                 }
                 if (query != null)
@@ -737,7 +737,7 @@ namespace WalkingTec.Mvvm.Core
             }
             IsSearched = true;
             //调用AfterDoSearch函数来处理自定义的后续操作
-            AfterDoSearcher();
+            await AfterDoSearcher();
         }
 
 
@@ -902,7 +902,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 搜索后运行的函数，继承的类如果需要在搜索结束后进行其他操作，可重载这个函数
         /// </summary>
-        public virtual void AfterDoSearcher()
+        public virtual Task AfterDoSearcher()
         {
             if (SearcherMode == ListVMSearchModeEnum.Selector && Ids != null && Ids.Count > 0 && EntityList != null && EntityList.Count > 0)
             {
@@ -926,18 +926,19 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }
             }
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// 删除所有ActionGridColumn的列
         /// </summary>
-        public void RemoveActionColumn(object root = null)
+        public async Task RemoveActionColumn(object root = null)
         {
             if (root == null)
             {
                 if (GridHeaders == null)
                 {
-                    GetHeaders();
+                    await GetHeaders();
                 }
                 root = GridHeaders;
             }
@@ -951,7 +952,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (child.Children != null && child.Children.Count() > 0)
                     {
-                        RemoveActionColumn(child.Children);
+                        await RemoveActionColumn(child.Children);
                     }
                 }
             }
@@ -962,13 +963,13 @@ namespace WalkingTec.Mvvm.Core
             _gridActions = new List<GridAction>();
         }
 
-        public void RemoveActionAndIdColumn(IEnumerable<IGridColumn<TModel>> root = null)
+        public async Task RemoveActionAndIdColumn(IEnumerable<IGridColumn<TModel>> root = null)
         {
             if (root == null)
             {
                 if (GridHeaders == null)
                 {
-                    GetHeaders();
+                    await GetHeaders();
                 }
                 root = GridHeaders;
             }
@@ -993,7 +994,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (child.Children != null && child.Children.Count() > 0)
                     {
-                        RemoveActionAndIdColumn(child.Children);
+                        await RemoveActionAndIdColumn(child.Children);
                     }
                 }
             }
@@ -1003,9 +1004,9 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 添加Error列，主要为批量模式使用
         /// </summary>
-        public void AddErrorColumn()
+        public async Task AddErrorColumn()
         {
-            GetHeaders();
+            await GetHeaders();
             //寻找所有Header为错误信息的列，如果没有则添加
             if (GridHeaders.Where(x => x.Field == "BatchError").FirstOrDefault() == null)
             {
@@ -1021,7 +1022,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public void ProcessListError(List<TModel> Entities)
+        public async Task ProcessListError(List<TModel> Entities)
         {
             if(Entities == null)
             {
@@ -1067,7 +1068,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 if (haserror)
                 {
-                    AddErrorColumn();
+                    await AddErrorColumn();
                 }
             }
         }
@@ -1088,7 +1089,7 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        public virtual void UpdateEntityList(bool updateAllFields = false)
+        public virtual async Task UpdateEntityList(bool updateAllFields = false)
         {
             if (EntityList != null)
             {
@@ -1107,7 +1108,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         if (string.IsNullOrEmpty(ent.UpdateBy))
                         {
-                            ent.UpdateBy = LoginUserInfo?.ITCode;
+                            ent.UpdateBy = (await GetLoginUserInfo ())?.ITCode;
                         }
                     }
                     //循环页面传过来的子表数据,将关联到TopBasePoco的字段设为null,并且把外键字段的值设定为主表ID
@@ -1182,7 +1183,7 @@ namespace WalkingTec.Mvvm.Core
                         if (typeof(IBasePoco).IsAssignableFrom(ftype))
                         {
                             (item as IBasePoco).UpdateTime = DateTime.Now;
-                            (item as IBasePoco).UpdateBy = LoginUserInfo?.ITCode;
+                            (item as IBasePoco).UpdateBy = (await GetLoginUserInfo ())?.ITCode;
                         }
                         dynamic i = item;
                         DC.UpdateEntity(i);
@@ -1212,7 +1213,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         if (string.IsNullOrEmpty(ent.CreateBy))
                         {
-                            ent.CreateBy = LoginUserInfo?.ITCode;
+                            ent.CreateBy = (await GetLoginUserInfo ())?.ITCode;
                         }
                     }
                     DC.AddEntity(item);
@@ -1220,7 +1221,7 @@ namespace WalkingTec.Mvvm.Core
 
                 }
 
-                DC.SaveChanges();
+                await DC.SaveChangesAsync();
             }
         }
     }

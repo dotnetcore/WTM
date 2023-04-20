@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -14,15 +15,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="returnColumnObject">不在后台进行ColumnFormatInfo的转化，而是直接输出ColumnFormatInfo的json结构到前端，由前端处理，默认False</param>
         /// <param name="enumToString"></param>
         /// <returns>Json格式的数据</returns>
-        public static string GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool returnColumnObject = false, bool enumToString = true) where T : TopBasePoco, new()
+        public static async Task<string> GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool returnColumnObject = false, bool enumToString = true) where T : TopBasePoco, new()
         {
             var sb = new StringBuilder();
             self.GetHeaders();
             if (self.IsSearched == false)
             {
-                self.DoSearch();
+                await self.DoSearch();
             }
-            var el = self.GetEntityList().ToList();
+            var el = (await self.GetEntityList()).ToList();
             //如果列表主键都为0，则生成自增主键，避免主键重复
             if (el.All(x => {
                 var id = x.GetID();
@@ -104,7 +105,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="index">index</param>
         /// <param name="enumToString"></param>
         /// <returns>Json格式的数据</returns>
-        public static string GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, object obj, bool returnColumnObject, int index = 0, bool enumToString = true) where T : TopBasePoco
+        public static async Task<string> GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, object obj, bool returnColumnObject, int index = 0, bool enumToString = true) where T : TopBasePoco
         {
             bool inner = false;
             var sb = new StringBuilder();
@@ -122,7 +123,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             bool containsID = false;
             bool addHiddenID = false;
             Dictionary<string, (string, string)> colorcolumns = new Dictionary<string, (string, string)>();
-            foreach (var baseCol in self.GetHeaders())
+            foreach (var baseCol in await self.GetHeaders())
             {
                 foreach (var col in baseCol.BottomChildren)
                 {

@@ -65,14 +65,14 @@
             </li>
             @if (tenants.Count() > 0)
             {
-                var current = Model?.Wtm?.LoginUserInfo?.CurrentTenant ==Model?.Wtm?.LoginUserInfo?.TenantCode ? Model.Localizer["_Admin.TenantHost"] : tenants.Where(x=>x.Value.ToString() == Model?.Wtm?.LoginUserInfo?.CurrentTenant).Select(x=>x.Text).SingleOrDefault();
+                var current = Model?.(await Wtm?.GetLoginUserInfo ())?.CurrentTenant ==Model?.(await Wtm?.GetLoginUserInfo ())?.TenantCode ? Model.Localizer["_Admin.TenantHost"] : tenants.Where(x=>x.Value.ToString() == Model?.(await Wtm?.GetLoginUserInfo ())?.CurrentTenant).Select(x=>x.Text).SingleOrDefault();
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;">
                         <cite>@current</cite>
                     </a>
                     <dl class="layui-nav-child">
                         <dd>
-                            <wt:linkbutton url="/_Framework/SetTenant?tenant=@Model?.Wtm?.LoginUserInfo?.TenantCode" target=" ButtonTargetEnum.self" window-width="400" text="@Model.Localizer["_Admin.TenantHost"]" is-link="true" />
+                            <wt:linkbutton url="/_Framework/SetTenant?tenant=@Model?.(await Wtm?.GetLoginUserInfo ())?.TenantCode" target=" ButtonTargetEnum.self" window-width="400" text="@Model.Localizer["_Admin.TenantHost"]" is-link="true" />
                         </dd>
                         @foreach (var item in tenants)
                         {

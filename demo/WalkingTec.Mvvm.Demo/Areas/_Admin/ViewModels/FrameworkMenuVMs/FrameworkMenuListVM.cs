@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -17,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             this.NeedPage = false;
         }
 
-        protected override IEnumerable<IGridColumn<FrameworkMenu_ListView>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<FrameworkMenu_ListView>>> InitGridHeader()
         {
             List<GridColumn<FrameworkMenu_ListView>> rv = new List<GridColumn<FrameworkMenu_ListView>>();
             switch (SearcherMode)
@@ -90,22 +91,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         }
 
 
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             if (SearcherMode == ListVMSearchModeEnum.Search)
             {
-                return new List<GridAction>{
+                return Task.FromResult (new List<GridAction>{
                 this.MakeAction("FrameworkMenu", "Create",Localizer["Sys.Create"], Localizer["Sys.Create"],  GridActionParameterTypesEnum.SingleIdWithNull,"_Admin").SetIconCls("layui-icon layui-icon-add-1"),
                 this.MakeStandardAction("FrameworkMenu", GridActionStandardTypesEnum.Edit, "", "_Admin"),
                 this.MakeStandardAction("FrameworkMenu", GridActionStandardTypesEnum.Delete, "", "_Admin"),
                 this.MakeStandardAction("FrameworkMenu", GridActionStandardTypesEnum.Details, "", "_Admin"),
                 this.MakeAction( "FrameworkMenu", "UnsetPages", Localizer["_Admin.CheckPage"], Localizer["_Admin.UnsetPages"],GridActionParameterTypesEnum.NoId, "_Admin").SetIconCls("layui-icon layui-icon-ok"),
                 this.MakeAction("FrameworkMenu", "RefreshMenu", Localizer["_Admin.RefreshMenu"], Localizer["_Admin.RefreshMenu"],  GridActionParameterTypesEnum.NoId,"_Admin").SetShowDialog(false).SetIconCls("layui-icon layui-icon-refresh"),
-                };
+                });
             }
             else
             {
-                return new List<GridAction>();
+                return Task.FromResult (new List<GridAction>());
             }
         }
 
@@ -122,7 +123,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
         }
 
-        public override IOrderedQueryable<FrameworkMenu_ListView> GetSearchQuery()
+        public override async Task<IOrderedQueryable<FrameworkMenu_ListView>> GetSearchQuery()
         {
             List<FrameworkMenu> data = new List<FrameworkMenu>();
             using (var maindc = Wtm.CreateDC(false, "default"))
@@ -141,9 +142,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     item.ModuleName = Localizer[item.ModuleName];
                 }
             }
-           if(Wtm.ConfigInfo.EnableTenant == true && LoginUserInfo.CurrentTenant != null)
+            var _current_tenant = (await GetLoginUserInfo ()).CurrentTenant;
+            if (Wtm.ConfigInfo.EnableTenant == true && _current_tenant != null)
             {
-                var ct = Wtm.GlobaInfo.AllTenant.Where(x => x.TCode == LoginUserInfo.CurrentTenant).FirstOrDefault();
+                var ct = Wtm.GlobaInfo.AllTenant.Where(x => x.TCode == _current_tenant).FirstOrDefault();
                 for(int i = 0; i < topdata.Count; i++)
                 {
                     if (topdata[i].TenantAllowed == false || (topdata[i].Url != null && ct.EnableSub == false && topdata[i].Url.ToLower().Contains("frameworktenant")))

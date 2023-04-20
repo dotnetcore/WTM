@@ -61,7 +61,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -129,7 +129,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
             }
             else
             {
-                vm.DoEdit(false);
+                await vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -222,7 +222,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
         [HttpGet("GetCitys")]
         public ActionResult GetCitys()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+            return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
     }

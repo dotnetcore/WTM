@@ -1,6 +1,7 @@
 // WTM默认页面 Wtm buidin page
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -8,7 +9,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
 {
     public class ActionLogListVM : BasePagedListVM<ActionLog, ActionLogSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             var actions = new List<GridAction>
             {
@@ -16,10 +17,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
                 this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
             };
-            return actions;
+            return Task.FromResult (actions);
         }
 
-        protected override IEnumerable<IGridColumn<ActionLog>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<ActionLog>>> InitGridHeader()
         {
             var header = new List<GridColumn<ActionLog>>();
 
@@ -65,7 +66,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
             return header;
         }
         
-        public override IOrderedQueryable<ActionLog> GetSearchQuery()
+        public override Task<IOrderedQueryable<ActionLog>> GetSearchQuery()
         {
             var query = DC.Set<ActionLog>()
                 .CheckContain(Searcher.ITCode, x=>x.ITCode)
@@ -76,7 +77,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 .CheckWhere(Searcher.Duration,x=>x.Duration >= Searcher.Duration)
                 .OrderByDescending(x=>x.ActionTime);
 
-            return query;
+            return Task.FromResult (query);
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 {
@@ -121,7 +122,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             typeof(IEnumerable<ComboSelectListItem>)
         };
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context.Items.ContainsKey("inselector") == false)
             {
@@ -192,7 +193,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                     }
                 }
 
-                var entityList = listVM.GetEntityList().ToList();
+                var entityList = (await listVM.GetEntityList()).ToList();
                 foreach (var item in entityList)
                 {
                     value.Add(item.GetType().GetSingleProperty(TextBind?.Metadata.PropertyName)?.GetValue(item).ToString());
@@ -252,7 +253,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 {
                     var searcher = listVM.Searcher;
                     searcher.CopyContext(listVM);
-                    searcher.DoInit();
+                    await searcher.DoInit();
                 }
                 var content = output.GetChildContentAsync().Result.GetContent().Trim();
 

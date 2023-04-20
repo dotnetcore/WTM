@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             IsAll = false;
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             TableNames = new List<ComboSelectListItem>();
             if (ControllerName.Contains("/api") == false)
@@ -57,14 +57,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         }
 
-        protected override void ReInitVM()
+        protected override async Task ReInitVM()
         {
             TableNames = new List<ComboSelectListItem>();
             AllItems = new List<ComboSelectListItem>();
             TableNames = Wtm.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
         }
 
-        public override void Validate()
+        public override async Task Validate()
         {
             if (DpType == DpTypeEnum.User)
             {
@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 else
                 {
                     string user = null;
-                    if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+                    if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
                     {
                         var check = Wtm.CallAPI<List<ComboSelectListItem>>("mainhost", "/api/_account/GetUserById").Result;
                         if (check.Data != null)
@@ -104,7 +104,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             base.Validate();
         }
 
-        public override async Task DoAddAsync()
+        public override async Task DoAdd()
         {
             if (SelectedItemsID == null && IsAll == false)
             {
@@ -134,7 +134,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.UserCode = Entity.UserCode;
                     dp.TableName = this.Entity.TableName;
-                    dp.TenantCode = LoginUserInfo.CurrentTenant;
+                    dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
 
                 }
@@ -146,7 +146,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                         dp.RelateId = id;
                         dp.UserCode = Entity.UserCode;
                         dp.TableName = this.Entity.TableName;
-                        dp.TenantCode = LoginUserInfo.CurrentTenant;
+                        dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                         DC.Set<DataPrivilege>().Add(dp);
                     }
                 }
@@ -159,7 +159,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.GroupCode = Entity.GroupCode;
                     dp.TableName = this.Entity.TableName;
-                    dp.TenantCode = LoginUserInfo.CurrentTenant;
+                    dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
                 else
@@ -170,7 +170,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                         dp.RelateId = id;
                         dp.GroupCode = Entity.GroupCode;
                         dp.TableName = this.Entity.TableName;
-                        dp.TenantCode = LoginUserInfo.CurrentTenant;
+                        dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                         DC.Set<DataPrivilege>().Add(dp);
                     }
                 }
@@ -187,7 +187,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         }
 
-        public override async Task DoEditAsync(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
             List<Guid> oldIDs = null;
 
@@ -213,7 +213,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.UserCode = Entity.UserCode;
                     dp.TableName = this.Entity.TableName;
-                    dp.TenantCode = LoginUserInfo.CurrentTenant;
+                    dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
 
                 }
@@ -223,7 +223,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     dp.RelateId = null;
                     dp.GroupCode = Entity.GroupCode;
                     dp.TableName = this.Entity.TableName;
-                    dp.TenantCode = LoginUserInfo.CurrentTenant;
+                    dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
             }
@@ -238,7 +238,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                             dp.RelateId = id;
                             dp.UserCode = Entity.UserCode;
                             dp.TableName = this.Entity.TableName;
-                            dp.TenantCode = LoginUserInfo.CurrentTenant;
+                            dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                             DC.Set<DataPrivilege>().Add(dp);
                         }
 
@@ -251,7 +251,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                             dp.RelateId = id;
                             dp.GroupCode = Entity.GroupCode;
                             dp.TableName = this.Entity.TableName;
-                            dp.TenantCode = LoginUserInfo.CurrentTenant;
+                            dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                             DC.Set<DataPrivilege>().Add(dp);
                         }
                     }
@@ -268,7 +268,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
         }
 
-        public override async Task  DoDeleteAsync()
+        public override async Task  DoDelete()
         {
             List<Guid> oldIDs = null;
 

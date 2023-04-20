@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         
         public DateTime? EnRollDate { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             AllStudentMajors = DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
         }

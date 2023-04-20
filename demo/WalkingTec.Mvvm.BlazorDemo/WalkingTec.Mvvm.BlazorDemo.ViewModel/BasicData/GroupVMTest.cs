@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData
 
         public CityVM vm2 { get; set; } = new CityVM();
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             if(EntityId != null)
             {

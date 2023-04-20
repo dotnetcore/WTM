@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
 {
     public partial class TreeTestListVM : BasePagedListVM<TreeTest_View, TreeTestSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
         }
 
 
-        protected override IEnumerable<IGridColumn<TreeTest_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<TreeTest_View>>> InitGridHeader()
         {
             return new List<GridColumn<TreeTest_View>>{
                 this.MakeGridHeader(x => x.Name),
@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
             };
         }
 
-        public override IOrderedQueryable<TreeTest_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<TreeTest_View>> GetSearchQuery()
         {
             var query = DC.Set<TreeTest>()
                 .CheckContain(Searcher.Name, x=>x.Name)

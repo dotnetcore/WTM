@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +14,9 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
     public partial class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<School_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<School_View>>> InitGridHeader()
         {
-            return new List<GridColumn<School_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<School_View>>> (new List<GridColumn<School_View>>{
                 this.MakeGridHeader(x => x.SchoolCode),
                 this.MakeGridHeader(x => x.SchoolName),
                 this.MakeGridHeader(x => x.SchoolType),
@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
                 this.MakeGridHeader(x => x.PhotoId).SetFormat(PhotoIdFormat),
                 this.MakeGridHeader(x => x.FileId).SetFormat(FileIdFormat),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
         private List<ColumnFormatInfo> PhotoIdFormat(School_View entity, object val)
         {
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
         }
 
 
-        public override IOrderedQueryable<School_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<School_View>> GetSearchQuery()
         {
             var query = DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x=>x.SchoolCode)
@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
                     FileId = x.FileId,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

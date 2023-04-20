@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
@@ -19,9 +20,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
         [Display(Name = "所属学校")]
         public long? SchoolId { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
-            AllSchools = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
+            AllSchools = await DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
         }
 
     }

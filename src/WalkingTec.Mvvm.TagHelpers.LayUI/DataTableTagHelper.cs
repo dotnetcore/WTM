@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
@@ -332,7 +333,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
         }
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (Loading == null)
             {
@@ -450,8 +451,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var page = ListVM.NeedPage;
 
             #region 生成 Layui 所需的表头
-            var rawCols = ListVM?.GetHeaders();
-            var maxDepth = (ListVM?.GetChildrenDepth()) ?? 1;
+            var rawCols = await ListVM?.GetHeaders();
+            var maxDepth = ListVM != null ? (await ListVM.GetChildrenDepth()) : 1;
             var layuiCols = new List<List<LayuiColumn>>();
 
             var tempCols = new List<LayuiColumn>();
@@ -509,7 +510,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             #region 处理 DataTable 操作按钮
 
-            var actionCol = ListVM?.GetGridActions();
+            var actionCol = await ListVM?.GetGridActions();
 
             var rowBtnStrBuilder = new StringBuilder();// Grid 行内按钮
             var toolBarBtnStrBuilder = new StringBuilder();// Grid 工具条按钮
@@ -520,7 +521,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 var vm = Vm.Model as BaseVM;
                 foreach (var item in actionCol)
                 {
-                    AddSubButton(vmQualifiedName, rowBtnStrBuilder, toolBarBtnStrBuilder, gridBtnEventStrBuilder, vm, item);
+                    await AddSubButton(vmQualifiedName, rowBtnStrBuilder, toolBarBtnStrBuilder, gridBtnEventStrBuilder, vm, item);
                 }
             }
             if (hasButtonGroup == true)
@@ -591,7 +592,7 @@ layui.use(['table'], function(){{
         pagetext:'{THProgram._localizer["Sys.Page"]}',
         oktext:'{THProgram._localizer["Sys.GotoButtonText"]}',
     }}":",page:false")}
-    {(page ? $",limit:{Limit}" : $",limit:{(UseLocalData ? ListVM.GetEntityList().Count().ToString() : "0")}")}
+    {(page ? $",limit:{Limit}" : $",limit:{(UseLocalData ? (await ListVM.GetEntityList ()).Count().ToString() : "0")}")}
     {(page
         ? (Limits == null || Limits.Length == 0
             ? string.Empty
@@ -622,7 +623,7 @@ layui.use(['table'], function(){{
 {Id}url = '{Url}';
 $.extend(true,{Id}defaultfilter ,{Id}option);
     {TableJSVar} = table.render({Id}option);
-    {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : $@"
+    {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{(await ListVM.GetDataJson ()).Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : $@"
     {(page ? $"if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}} " : "")}
 {(AutoSearch ? $@"
 setTimeout(function(){{
@@ -758,7 +759,7 @@ setTimeout(function(){{
         /// <param name="vm"></param>
         /// <param name="item"></param>
         /// <param name="isSub"></param>
-        private void AddSubButton(
+        private async Task AddSubButton(
             string vmQualifiedName,
             StringBuilder rowBtnStrBuilder,
             StringBuilder toolBarBtnStrBuilder,
@@ -768,10 +769,8 @@ setTimeout(function(){{
             bool isSub = false
         )
         {
-            if (string.IsNullOrEmpty(item.Url) || vm.Wtm?.IsUrlPublic(item.Url)==true || vm.Wtm?.IsAccessable(item.Url) == true ||
-                item.ParameterType == GridActionParameterTypesEnum.AddRow ||
-                item.ParameterType == GridActionParameterTypesEnum.RemoveRow                 
-            )
+            if (string.IsNullOrEmpty(item.Url) || vm.Wtm?.IsUrlPublic(item.Url)==true || vm.Wtm?.IsAccessableSync(item.Url) == true ||
+                item.ParameterType == GridActionParameterTypesEnum.AddRow || item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
             {
                 // Grid 行内按钮
                 if (item.ShowInRow)
@@ -925,7 +924,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                 if (item.ParameterType == GridActionParameterTypesEnum.AddRow)
                 {
                     Regex r = new Regex("<script>.*?</script>");
-                    gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{r.Replace(ListVM.GetSingleDataJson(null, false), "")});
+                    gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{r.Replace(await ListVM.GetSingleDataJson(null, false), "")});
 ");
                 }
                 else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow) { }

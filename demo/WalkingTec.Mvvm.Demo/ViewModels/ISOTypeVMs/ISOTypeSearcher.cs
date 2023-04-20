@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
         [Display(Name = "EXE版本")]
         public List<Guid> SelectediSOTypesIDs { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             AlliSOTypess = DC.Set<SoftFacInfo>().GetSelectListItems(Wtm, y => y.IsoName);
         }

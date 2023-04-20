@@ -20,12 +20,12 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs
             SetInclude(x => x.StudentMajor);
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             SelectedStudentMajorIDs = Entity.StudentMajor?.Select(x => x.MajorId.ToString()).ToList();
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {
             Entity.StudentMajor = new List<StudentMajor>();
             if (SelectedStudentMajorIDs != null)
@@ -38,10 +38,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs
                 }
             }
            
-            base.DoAdd();
+            await base.DoAdd();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
             Entity.StudentMajor = new List<StudentMajor>();
             if(SelectedStudentMajorIDs != null )
@@ -54,10 +54,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs
                 }
             }
 
-            base.DoEdit(updateAllFields);
+            await base.DoEdit(updateAllFields);
         }
 
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
             base.DoDelete();
         }

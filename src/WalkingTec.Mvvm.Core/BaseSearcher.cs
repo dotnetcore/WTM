@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -89,12 +90,6 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public ISessionService Session { get => Wtm?.Session; }
 
-        /// <summary>
-        /// 当前登录人信息
-        /// </summary>
-        [JsonIgnore]
-        public LoginUserInfo LoginUserInfo { get => Wtm?.LoginUserInfo; }
-
         [JsonIgnore]
         public string ViewDivId { get; set; }
         #region 未使用
@@ -134,47 +129,55 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// InitVM 完成后触发的事件
         /// </summary>
-        public event Action<ISearcher> OnAfterInit;
+        public event Func<ISearcher, Task> OnAfterInit;
         /// <summary>
         /// ReInitVM 完成后触发的事件
         /// </summary>
-        public event Action<ISearcher> OnAfterReInit;
+        public event Func<ISearcher, Task> OnAfterReInit;
 
         #endregion
 
         #region Method
 
         /// <summary>
+        /// 当前登录人信息
+        /// </summary>
+        public async Task<LoginUserInfo> GetLoginUserInfo () {
+            return await Wtm?.GetLoginUserInfo ();
+        }
+
+        /// <summary>
         /// 调用 InitVM 并触发 OnAfterInit 事件
         /// </summary>
-        public void DoInit()
+        public async Task DoInit()
         {
-            InitVM();
+            await InitVM();
             OnAfterInit?.Invoke(this);
         }
 
         /// <summary>
         /// 调用 ReInitVM 并触发 OnAfterReInit 事件
         /// </summary>
-        public void DoReInit()
+        public async Task DoReInit()
         {
-            ReInitVM();
+            await ReInitVM();
             OnAfterReInit?.Invoke(this);
         }
 
         /// <summary>
         /// 初始化ViewModel，框架会在创建VM实例之后自动调用本函数
         /// </summary>
-        protected virtual void InitVM()
+        protected virtual Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// 从新初始化ViewModel，框架会在验证失败时自动调用本函数
         /// </summary>
-        protected virtual void ReInitVM()
+        protected virtual async Task ReInitVM()
         {
-            InitVM();
+            await InitVM();
         }
 
         public virtual void Validate()

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -161,12 +162,6 @@ namespace WalkingTec.Mvvm.Core
         public IDistributedCache Cache { get => Wtm?.Cache; }
 
         /// <summary>
-        /// 当前登录人信息
-        /// </summary>
-        [JsonIgnore]
-        public LoginUserInfo LoginUserInfo { get => Wtm?.LoginUserInfo; }
-
-        /// <summary>
         /// 当前Url
         /// </summary>
         [JsonIgnore]
@@ -219,36 +214,43 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// InitVM完成后触发的事件
         /// </summary>
-        public event Action<IBaseVM> OnAfterInit;
+        public event Func<IBaseVM, Task> OnAfterInit;
         /// <summary>
         /// ReInitVM完成后触发的事件
         /// </summary>
-        public event Action<IBaseVM> OnAfterReInit;
+        public event Func<IBaseVM, Task> OnAfterReInit;
 
         #endregion
 
         #region Method
 
         /// <summary>
+        /// 当前登录人信息
+        /// </summary>
+        public async Task<LoginUserInfo> GetLoginUserInfo () {
+            return await Wtm?.GetLoginUserInfo ();
+        }
+
+        /// <summary>
         /// 调用 InitVM 并触发 OnAfterInit 事件
         /// </summary>
-        public void DoInit()
+        public async Task DoInit ()
         {
-            InitVM();
-            OnAfterInit?.Invoke(this);
+            await InitVM();
+            await OnAfterInit?.Invoke(this);
         }
 
         /// <summary>
         /// 调用 ReInitVM 并触发 OnAfterReInit 事件
         /// </summary>
-        public void DoReInit()
+        public async Task DoReInit()
         {
-            ReInitVM();
-            ReInitSubVM(this);
+            await ReInitVM();
+            await ReInitSubVM(this);
             OnAfterReInit?.Invoke(this);
         }
 
-        private void InitSubVM(BaseVM vm)
+        private async Task InitSubVM(BaseVM vm)
         {
             var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
             foreach (var prop in sub)
@@ -256,13 +258,13 @@ namespace WalkingTec.Mvvm.Core
                 var subins = prop.GetValue(vm) as BaseVM;
                 if (subins != null)
                 {
-                    subins.DoInit();
+                    await subins.DoInit();
                 }
-                InitSubVM(subins);
+                await InitSubVM(subins);
             }
         }
 
-        private void ReInitSubVM(BaseVM vm)
+        private async Task ReInitSubVM (BaseVM vm)
         {
             var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
             foreach (var prop in sub)
@@ -270,34 +272,34 @@ namespace WalkingTec.Mvvm.Core
                 var subins = prop.GetValue(vm) as BaseVM;
                 if (subins != null)
                 {
-                    subins.DoReInit();
+                    await subins.DoReInit();
                 }
-                ReInitSubVM(subins);
+                await ReInitSubVM(subins);
             }
         }
         /// <summary>
         /// 初始化ViewModel，框架会在创建VM实例之后自动调用本函数
         /// </summary>
-        protected virtual void InitVM()
+        protected virtual async Task InitVM()
         {
-            InitSubVM(this);
+            await InitSubVM(this);
         }
 
         /// <summary>
         /// 从新初始化ViewModel，框架会在验证失败时自动调用本函数
         /// </summary>
-        protected virtual void ReInitVM()
+        protected virtual async Task ReInitVM ()
         {
-            InitVM();
+            await InitVM();
         }
 
         /// <summary>
         /// 验证函数，MVC会在提交数据的时候自动调用本函数
         /// </summary>
         /// <returns></returns>
-        public virtual void Validate()
+        public virtual Task Validate()
         {
-            return;
+            return Task.CompletedTask;
         }
 
         /// <summary>

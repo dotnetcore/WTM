@@ -96,7 +96,7 @@ namespace WalkingTec.Mvvm.ConsoleDemo
             vm.Validate();
             if(vm.MSD.IsValid == true)
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 vm.Wtm.DoLog("lalala");
                 Console.WriteLine($"添加成功");
                 return vm.Entity.ID;

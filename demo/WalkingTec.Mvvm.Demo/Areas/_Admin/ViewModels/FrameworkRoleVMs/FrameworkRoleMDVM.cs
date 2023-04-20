@@ -17,9 +17,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
         {
             ListVM = new FrameworkMenuListVM();
         }
-        protected override FrameworkRole GetById(object Id)
+        protected override async Task<FrameworkRole> GetById(object Id)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}").Result.Data.Entity;
             }
@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             }
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             ListVM.CopyContext(this);
             ListVM.Searcher.RoleCode = Entity.RoleCode;
@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 FunctionPrivilege fp = new FunctionPrivilege();
                 fp.MenuItemId = menuid;
                 fp.RoleCode = Entity.RoleCode;
-                fp.TenantCode = LoginUserInfo.CurrentTenant;
+                fp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                 fp.Allowed = true;
                 DC.Set<FunctionPrivilege>().Add(fp);
             }

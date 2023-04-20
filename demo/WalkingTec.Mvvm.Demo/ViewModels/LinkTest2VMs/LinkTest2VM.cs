@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTest2VMs
             SetInclude(x => x.LinkStudent);
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             //AllStudents = DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
             AllSchools = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTest2VMs
         }
 
 
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
             base.DoDelete();
         }

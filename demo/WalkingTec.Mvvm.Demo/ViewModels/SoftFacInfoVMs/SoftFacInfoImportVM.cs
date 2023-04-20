@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs
         [Display(Name = " 附加信息")]
         public ExcelPropety Description_Excel = ExcelPropety.CreateProperty<SoftFacInfo>(x => x.Description);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
         }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NPOI.SS.Formula.Functions;
@@ -180,7 +181,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public void SetAttributesForApi(WTMContext context)
+        public async Task SetAttributesForApi(WTMContext context)
         {
             var ms = new List<SimpleMenuApi>();
             List<string> urls = new List<string>();
@@ -215,7 +216,7 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
             var topdata = context.GlobaInfo.AllMenus.Where(x => x.ShowOnMenu && (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName))).ToList();
-            var allowedids = context.LoginUserInfo?.FunctionPrivileges?.Select(x => x.MenuItemId).ToList();
+            var allowedids = (await context.GetLoginUserInfo ())?.FunctionPrivileges?.Select(x => x.MenuItemId).ToList();
             foreach (var item in topdata)
             {
                 if (allowedids?.Contains(item.ID) == true && item.IsParentShowOnMenu(topdata))
@@ -267,15 +268,16 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public IDataContext GetUserDC(WTMContext context)
+        public async Task<IDataContext> GetUserDC(WTMContext context)
         {
-            if (context?.LoginUserInfo?.TenantCode == null)
+            string tenant_code = (await context?.GetLoginUserInfo ())?.TenantCode;
+            if (tenant_code == null)
             {
                 return context.CreateDC(cskey: "default");
             }
             else
             {
-                var item = context.GlobaInfo.AllTenant.Where(x => x.TCode == context?.LoginUserInfo?.TenantCode).FirstOrDefault();
+                var item = context.GlobaInfo.AllTenant.Where(x => x.TCode == tenant_code).FirstOrDefault();
                 if (item != null)
                 {
                     return item.CreateDC(context);

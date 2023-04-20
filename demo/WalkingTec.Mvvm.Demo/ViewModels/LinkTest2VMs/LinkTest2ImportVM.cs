@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTest2VMs
     {
         public ExcelPropety name_Excel = ExcelPropety.CreateProperty<LinkTest2>(x => x.name);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
         }
 

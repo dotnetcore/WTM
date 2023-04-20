@@ -26,13 +26,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             return rv;
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {
-            base.DoAdd();
+            await base.DoAdd();
             if (MSD.IsValid)
             {
                 TenantOperation();
@@ -40,29 +40,29 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             }
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
-            base.DoEdit(updateAllFields);
+            await base.DoEdit(updateAllFields);
             if (MSD.IsValid)
             {
                 if (MSD.IsValid)
                 {
-                    TenantOperation();
+                    await TenantOperation();
                     Cache.Delete(nameof(GlobalData.AllTenant));
                 }
             }
         }
 
-        private void TenantOperation()
+        private async Task TenantOperation()
         {
             List<FunctionPrivilege> fps = new List<FunctionPrivilege>();
-            using (var userdc = LoginUserInfo.GetUserDC(Wtm))
+            using (var userdc = await (await GetLoginUserInfo ()).GetUserDC(Wtm))
             {
-                fps = userdc.Set<FunctionPrivilege>().AsNoTracking().Where(x => x.RoleCode == AdminRoleCode).ToList();
+                fps = await userdc.Set<FunctionPrivilege>().AsNoTracking().Where(x => x.RoleCode == AdminRoleCode).ToListAsync();
                 List<Guid> tenantmenus = new List<Guid>();
                 using (var defaultdc = Wtm.CreateDC(false, "default", false))
                 {
-                    tenantmenus = defaultdc.Set<FrameworkMenu>().Where(x => x.TenantAllowed == false || (x.Url.ToLower().Contains("frameworktenant") && Entity.EnableSub == false) || x.Url.ToLower().Contains("frameworkmenu")).Select(x => x.ID).ToList();
+                    tenantmenus = await defaultdc.Set<FrameworkMenu>().Where(x => x.TenantAllowed == false || (x.Url.ToLower().Contains("frameworktenant") && Entity.EnableSub == false) || x.Url.ToLower().Contains("frameworkmenu")).Select(x => x.ID).ToListAsync();
                 }
                 fps = fps.Where(x => tenantmenus.Contains(x.MenuItemId) == false).ToList();
 
@@ -129,7 +129,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             var key = $"{GlobalConstants.CacheKey.UserInfo}:{"admin" + "$`$" + Entity.TCode}";
             Cache.DeleteAsync(key).Wait();
         }
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
             base.DoDelete();
             Cache.Delete(nameof(GlobalData.AllTenant));

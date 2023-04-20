@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
         [Display(Name = "_Admin.Parent")]
         public ExcelPropety Parent_Excel = ExcelPropety.CreateProperty<TreeTest>(x => x.ParentId);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
             Parent_Excel.DataType = ColumnDataType.ComboBox;
             Parent_Excel.ListItems = DC.Set<TreeTest>().GetSelectListItems(Wtm, y => y.Name);

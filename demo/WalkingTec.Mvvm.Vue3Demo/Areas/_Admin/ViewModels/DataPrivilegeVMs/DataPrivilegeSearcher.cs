@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
@@ -26,7 +27,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public DpTypeEnum DpType { get; set; }
         public Guid? DomainID { get; set; }
         public List<ComboSelectListItem> AllDomains { get; set; }
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             TableNames = new List<ComboSelectListItem>();
         }

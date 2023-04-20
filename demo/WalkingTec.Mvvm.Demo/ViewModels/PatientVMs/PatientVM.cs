@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
             SetInclude(x => x.Viruses);
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             AllLocations = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
             AllHospitals = DC.Set<Hospital>().GetSelectListItems(Wtm, y => y.Name);
@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
             SelectedVirusesIDs = Entity.Viruses?.Select(x => x.VirusId.ToString()).ToList();
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {
             Entity.Viruses = new List<PatientVirus>();
             if (SelectedVirusesIDs != null)
@@ -47,10 +47,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
                 }
             }
            
-            base.DoAdd();
+            await base.DoAdd();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
             Entity.Viruses = new List<PatientVirus>();
             if(SelectedVirusesIDs != null )
@@ -63,10 +63,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
                 }
             }
 
-            base.DoEdit(updateAllFields);
+            await base.DoEdit(updateAllFields);
         }
 
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
             base.DoDelete();
         }

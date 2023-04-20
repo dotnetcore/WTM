@@ -149,100 +149,74 @@ namespace WalkingTec.Mvvm.Core
 
         #region Current User
 
-        private LoginUserInfo _loginUserInfo;
-        public LoginUserInfo LoginUserInfo
-        {
-            get
-            {
-                if (_loginUserInfo == null && HttpContext?.User?.Identity?.IsAuthenticated == true) // 用户认证通过后，当前上下文不包含用户数据
+        private LoginUserInfo _loginUserInfo = null;
+
+        public async Task<LoginUserInfo> GetLoginUserInfo () {
+            if (_loginUserInfo == null && HttpContext?.User?.Identity?.IsAuthenticated == true) // 用户认证通过后，当前上下文不包含用户数据
                 {
-                    var userIdStr = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault();
-                    var tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault();
+                var userIdStr = HttpContext.User.Claims.Where (x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select (x => x.Value).FirstOrDefault ();
+                var tenant = HttpContext.User.Claims.Where (x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select (x => x.Value).FirstOrDefault ();
+                string usercode = userIdStr;
+                var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr + "$`$" + tenant}";
+                _loginUserInfo = Cache.Get<LoginUserInfo> (cacheKey);
+                if (_loginUserInfo == null) {
+                    try {
+                        _loginUserInfo = await ReloadUser (usercode);
+                    } catch { }
+                    if (_loginUserInfo != null) {
+                        Cache.Add (cacheKey, _loginUserInfo);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+            if (_loginUserInfo == null && HttpContext?.Request.Query.Any (x => x.Key == "_remotetoken") == true) {
+                var remoteToken = HttpContext?.Request.Query ["_remotetoken"] [0];
+                if (ConfigInfo.HasMainHost == false) {
+                    JwtSecurityToken token = new JwtSecurityToken ();
+                    try {
+                        token = new JwtSecurityToken (remoteToken);
+                    } catch { }
+                    var userIdStr = token.Claims.Where (x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select (x => x.Value).FirstOrDefault ();
+                    var tenant = token.Claims.Where (x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select (x => x.Value).FirstOrDefault ();
                     string usercode = userIdStr;
                     var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr + "$`$" + tenant}";
-                    _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                    if (_loginUserInfo == null)
-                    {
-                        try
-                        {
-                            _loginUserInfo = ReloadUser(usercode);
-                        }
-                        catch { }
-                        if (_loginUserInfo != null)
-                        {
-                            Cache.Add(cacheKey, _loginUserInfo);
-                        }
-                        else
-                        {
+                    _loginUserInfo = Cache.Get<LoginUserInfo> (cacheKey);
+                    if (_loginUserInfo == null) {
+                        try {
+                            _loginUserInfo = await ReloadUser (usercode);
+                        } catch { }
+                        if (_loginUserInfo != null) {
+                            Cache.Add (cacheKey, _loginUserInfo);
+                        } else {
                             return null;
                         }
                     }
-                }
-                if (_loginUserInfo == null && HttpContext?.Request.Query.Any(x => x.Key == "_remotetoken") == true)
-                {
-                    var remoteToken = HttpContext?.Request.Query["_remotetoken"][0];
-                    if (ConfigInfo.HasMainHost == false)
-                    {
-                        JwtSecurityToken token = new JwtSecurityToken();
-                        try
-                        {
-                            token = new JwtSecurityToken(remoteToken);
-                        }
-                        catch { }
-                        var userIdStr = token.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault();
-                        var tenant = token.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault();
-                        string usercode = userIdStr;
-                        var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr + "$`$" + tenant}";
-                        _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                        if (_loginUserInfo == null)
-                        {
-                            try
-                            {
-                                _loginUserInfo = ReloadUser(usercode);
-                            }
-                            catch { }
-                            if (_loginUserInfo != null)
-                            {
-                                Cache.Add(cacheKey, _loginUserInfo);
-                            }
-                            else
-                            {
-                                return null;
-                            }
-                        }
-                    }
-                    else if (string.IsNullOrEmpty(remoteToken) == false)
-                    {
-                        try
-                        {
-                            _loginUserInfo = ReloadUser("null");
-                        }
-                        catch { }
-                        if (_loginUserInfo != null)
-                        {
-                            var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.ITCode + "$`$" + _loginUserInfo.TenantCode}";
-                            Cache.Add(cacheKey, _loginUserInfo);
-                        }
-                        else
-                        {
-                            return null;
-                        }
+                } else if (string.IsNullOrEmpty (remoteToken) == false) {
+                    try {
+                        _loginUserInfo = await ReloadUser ("null");
+                    } catch { }
+                    if (_loginUserInfo != null) {
+                        var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.ITCode + "$`$" + _loginUserInfo.TenantCode}";
+                        Cache.Add (cacheKey, _loginUserInfo);
+                    } else {
+                        return null;
                     }
                 }
-                return _loginUserInfo;
             }
-            set
+            return _loginUserInfo;
+        }
+        public void SetLoginUserInfo (LoginUserInfo loginUserInfo)
+        {
+            if (loginUserInfo == null)
             {
-                if (value == null)
-                {
-                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo?.ITCode + "$`$" + _loginUserInfo?.TenantCode}");
-                    _loginUserInfo = value;
-                }
-                else
-                {
-                    _loginUserInfo = value;
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.ITCode + "$`$" + _loginUserInfo?.TenantCode}", value);
-                }
+                Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo?.ITCode + "$`$" + _loginUserInfo?.TenantCode}");
+                _loginUserInfo = loginUserInfo;
+            }
+            else
+            {
+                _loginUserInfo = loginUserInfo;
+                Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.ITCode + "$`$" + _loginUserInfo?.TenantCode}", loginUserInfo);
             }
         }
 
@@ -272,12 +246,11 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="itcode">用户名</param>
         /// <returns>用户信息</returns>
-        public virtual LoginUserInfo
-            ReloadUser(string itcode)
+        public virtual async Task<LoginUserInfo> ReloadUser(string itcode)
         {
             if (ReloadUserFunc != null)
             {
-                var reload = ReloadUserFunc.Invoke(this, itcode);
+                var reload = ReloadUserFunc.Invoke (this, itcode);
                 if (reload != null)
                 {
                     return reload;
@@ -287,7 +260,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 return null;
             }
-            var user = DoLogin(itcode, null, null);
+            var user = await DoLogin(itcode, null, null);
             return user;
         }
 
@@ -351,7 +324,7 @@ namespace WalkingTec.Mvvm.Core
             this._serviceProvider = sp;
         }
 
-        public LoginUserInfo DoLogin(string username, string password, string tenant)
+        public async Task<LoginUserInfo> DoLogin(string username, string password, string tenant)
         {
             if(tenant == "")
             {
@@ -373,7 +346,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     Dictionary<string, string> headers = new Dictionary<string, string>();
                     headers.Add("Authorization", "Bearer " + remoteToken);
-                    var user = CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers).Result;
+                    var user = await CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers);
                     rv = user.Data;
                     if (rv != null)
                     {
@@ -382,13 +355,13 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else if(string.IsNullOrEmpty(password)==false)
                 {
-                    var loginjwt = CallAPI<Token>("mainhost", "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = username, Password = password }, 10).Result;
+                    var loginjwt = await CallAPI<Token>("mainhost", "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = username, Password = password }, 10);
                     if (string.IsNullOrEmpty(loginjwt?.Data?.AccessToken) == false)
                     {
                         remoteToken = loginjwt?.Data?.AccessToken;
                         Dictionary<string, string> headers = new Dictionary<string, string>();
                         headers.Add("Authorization", "Bearer " + remoteToken);
-                        var user = CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers).Result;
+                        var user = await CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers);
                         rv = user.Data;
                         if (rv != null)
                         {
@@ -455,35 +428,35 @@ namespace WalkingTec.Mvvm.Core
                 //}
                 user.RemoteToken = null;
                 var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
-                var token = authService.IssueTokenAsync(user).Result;
+                var token = await authService.IssueTokenAsync(user);
                 user.RemoteToken = token.AccessToken;
                 return user;
             }
         }
 
-        public Token RefreshToken()
+        public async Task<Token> RefreshToken()
         {
-            if(LoginUserInfo == null)
+            if(await GetLoginUserInfo() == null)
             {
                 return null;
             }
             string rt = null;
-            if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && _loginUserInfo?.CurrentTenant == null)
             {
-                var r = CallAPI<Token>("mainhost", $"/api/_account/RefreshToken", HttpMethodEnum.POST, new { }).Result;
+                var r = await CallAPI<Token>("mainhost", $"/api/_account/RefreshToken", HttpMethodEnum.POST, new { });
                 rt = r?.Data?.AccessToken;
             }
             else
             {
-                rt = LoginUserInfo.RemoteToken;
+                rt = _loginUserInfo.RemoteToken;
            }
             var _authService = ServiceProvider.GetRequiredService<ITokenService>();
-            var rv = _authService.IssueTokenAsync(new LoginUserInfo
+            var rv = await _authService.IssueTokenAsync(new LoginUserInfo
             {
-                ITCode = LoginUserInfo.ITCode,
-                TenantCode = LoginUserInfo.TenantCode,
+                ITCode = _loginUserInfo.ITCode,
+                TenantCode = _loginUserInfo.TenantCode,
                 RemoteToken = rt
-            }).Result;
+            });
             return rv;
         }
 
@@ -511,21 +484,21 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public async Task RemoveUserCache(
-            params string[] userIds)
+        public async Task RemoveUserCache(params string[] userIds)
         {
+            await GetLoginUserInfo ();
             foreach (var userId in userIds)
             {
-                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
+                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + _loginUserInfo?.CurrentTenant}";
                 await Cache.DeleteAsync(key);
             }
         }
 
-        public async Task RemoveUserCacheByRole(
-    params string[] rolecode)
+        public async Task RemoveUserCacheByRole(params string[] rolecode)
         {
+            await GetLoginUserInfo ();
             List<string> userids = new List<string>();
-            if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(LoginUserInfo?.CurrentTenant) == true)
+            if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(_loginUserInfo?.CurrentTenant) == true)
             {
                 foreach (var item in rolecode)
                 {
@@ -542,16 +515,16 @@ namespace WalkingTec.Mvvm.Core
             }
             foreach (var userId in userids)
             {
-                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
+                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + _loginUserInfo?.CurrentTenant}";
                 await Cache.DeleteAsync(key);
             }
         }
 
-        public async Task RemoveUserCacheByGroup(
-params string[] groupcode)
+        public async Task RemoveUserCacheByGroup(params string[] groupcode)
         {
+            await GetLoginUserInfo ();
             List<string> userids = new List<string>();
-            if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(LoginUserInfo?.CurrentTenant) == true)
+            if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(_loginUserInfo?.CurrentTenant) == true)
             {
                 foreach (var item in groupcode)
                 {
@@ -568,7 +541,7 @@ params string[] groupcode)
             }
             foreach (var userId in userids)
             {
-                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
+                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + _loginUserInfo?.CurrentTenant}";
                 await Cache.DeleteAsync(key);
             }
         }
@@ -650,14 +623,14 @@ params string[] groupcode)
         }
 
 
-        public bool SetCurrentTenant(string tenant)
+        public async Task<bool> SetCurrentTenant(string tenant)
         {
-            if (LoginUserInfo != null)
+            if (await GetLoginUserInfo () != null)
             {
-                if (LoginUserInfo.TenantCode == null || LoginUserInfo.TenantCode == tenant || GlobaInfo.AllTenant.Any(x => x.TCode == tenant && x.TenantCode == LoginUserInfo.TenantCode))
+                if (_loginUserInfo.TenantCode == null || _loginUserInfo.TenantCode == tenant || GlobaInfo.AllTenant.Any(x => x.TCode == tenant && x.TenantCode == _loginUserInfo.TenantCode))
                 {
-                    LoginUserInfo.CurrentTenant = tenant;
-                    LoginUserInfo = LoginUserInfo;
+                    _loginUserInfo.CurrentTenant = tenant;
+                    SetLoginUserInfo (_loginUserInfo);
                     return true;
                 }
             }
@@ -715,8 +688,18 @@ params string[] groupcode)
         /// </summary>
         /// <param name="url">url地址</param>
         /// <returns>true代表可以访问，false代表不能访问</returns>
-        public bool IsAccessable(string url)
+        public async Task<bool> IsAccessable(string url)
         {
+            await GetLoginUserInfo ();
+            return IsAccessableSync (url);
+        }
+
+        /// <summary>
+        /// 判断某URL是否有权限访问
+        /// </summary>
+        /// <param name="url">url地址</param>
+        /// <returns>true代表可以访问，false代表不能访问</returns>
+        public bool IsAccessableSync (string url) {
             // 如果是调试 或者 url 为 null or 空字符串
             if (_configInfo.IsQuickDebug || string.IsNullOrEmpty(url) || IsUrlPublic(url))
             {
@@ -725,7 +708,7 @@ params string[] groupcode)
             //租户用户不能访问标记[HostOnly]的方法
             if (_configInfo.EnableTenant == true)
             {
-                if (LoginUserInfo?.TenantCode != null)
+                if (_loginUserInfo?.TenantCode != null)
                 {
                     var hostonly = _globaInfo.AllMainTenantOnlyUrls;
                     foreach (var au in hostonly)
@@ -747,7 +730,7 @@ params string[] groupcode)
                 }
             }
             //如果没有任何页面权限，则直接返回false
-            if (LoginUserInfo?.FunctionPrivileges == null)
+            if (_loginUserInfo?.FunctionPrivileges == null)
             {
                 return false;
             }
@@ -782,14 +765,14 @@ params string[] groupcode)
         /// <param name="menu">菜单项</param>
         /// <param name="menus">所有系统菜单</param>
         /// <returns>true代表可以访问，false代表不能访问</returns>
-        protected bool IsAccessable(SimpleMenu menu, List<SimpleMenu> menus)
+        protected bool IsAccessable (SimpleMenu menu, List<SimpleMenu> menus)
         {
-            if (LoginUserInfo.CurrentTenant != null && menu.TenantAllowed == false)
+            if (_loginUserInfo.CurrentTenant != null && menu.TenantAllowed == false)
             {
                 return false;
             }
             //寻找当前菜单的页面权限
-            var find = LoginUserInfo?.FunctionPrivileges.Where(x => x.MenuItemId == menu.ID && x.Allowed == true).FirstOrDefault();
+            var find = _loginUserInfo?.FunctionPrivileges.Where(x => x.MenuItemId == menu.ID && x.Allowed == true).FirstOrDefault();
             //如果能找到直接对应的页面权限
             if (find != null)
             {
@@ -880,7 +863,7 @@ params string[] groupcode)
         /// <param name="values">properties of the viewmodel that you want to assign values</param>
         /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
         /// <returns>ViewModel</returns>
-        private BaseVM CreateVM(Type VMType, object Id = null, object[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
+        private async Task<BaseVM> CreateVM(Type VMType, object Id = null, object[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
         {
             //Use reflection to create viewmodel
             var ctor = VMType.GetConstructor(Type.EmptyTypes);
@@ -931,7 +914,7 @@ params string[] groupcode)
             {
                 cvm.SetEntityById(Id);
             }
-            SetSubVm(rv, passInit);
+            await SetSubVm(rv, passInit);
             //if viewmodel is derrived from IBaseBatchVM<>，set ViewMode's Ids property,and init it's ListVM and EditModel properties
             if (rv is IBaseBatchVM<BaseVM> temp)
             {
@@ -975,7 +958,7 @@ params string[] groupcode)
                         searcher.CopyContext(rv);
                         if (passInit == false)
                         {
-                            searcher.DoInit();
+                            await searcher.DoInit();
                         }
                     }
                 }
@@ -989,7 +972,7 @@ params string[] groupcode)
                 searcher.CopyContext(rv);
                 if (passInit == false)
                 {
-                    searcher.DoInit();
+                    await searcher.DoInit();
                 }
                 lvm.DoInitListVM();
 
@@ -998,7 +981,7 @@ params string[] groupcode)
             {
                 var template = tvm.Template;
                 template.CopyContext(rv);
-                template.DoInit();
+                await template.DoInit();
                 var errorlist = tvm.ErrorListVM;
                 errorlist.CopyContext(rv);
             }
@@ -1006,12 +989,12 @@ params string[] groupcode)
             //if passinit is not set, call the viewmodel's DoInit method
             if (passInit == false)
             {
-                rv.DoInit();
+                await rv.DoInit();
             }
             return rv;
         }
 
-        private void SetSubVm(BaseVM vm, bool passInit)
+        private async Task SetSubVm(BaseVM vm, bool passInit)
         {
             var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
             foreach (var prop in sub)
@@ -1029,13 +1012,13 @@ params string[] groupcode)
                     subins.PropertyNameInParent = prop.Name;
                    if (passInit == false)
                     {
-                        subins.DoInit();
+                        await subins.DoInit();
                     }
                     if (exist == false)
                     {
                         vm.SetPropertyValue(prop.Name, subins);
                     }
-                    SetSubVm(subins,passInit);
+                    await SetSubVm(subins,passInit);
                 }
             }
 
@@ -1154,9 +1137,9 @@ params string[] groupcode)
         /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
         /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
         /// <returns>ViewModel</returns>
-        public BaseVM CreateVM(string VmFullName, object Id = null, object[] Ids = null, bool passInit = false)
+        public async Task<BaseVM> CreateVM(string VmFullName, object Id = null, object[] Ids = null, bool passInit = false)
         {
-            return CreateVM(Type.GetType(VmFullName), Id, Ids, null, passInit);
+            return await CreateVM(Type.GetType(VmFullName), Id, Ids, null, passInit);
         }
         #endregion
 

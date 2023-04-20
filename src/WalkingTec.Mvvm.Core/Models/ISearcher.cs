@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Core
@@ -43,7 +44,6 @@ namespace WalkingTec.Mvvm.Core
 
         ISessionService Session { get;  }
 
-        LoginUserInfo LoginUserInfo { get; }
         /// <summary>
         /// 排序信息
         /// </summary>
@@ -59,11 +59,11 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// InitVM 完成后触发的事件
         /// </summary>
-        event Action<ISearcher> OnAfterInit;
+        event Func<ISearcher, Task> OnAfterInit;
         /// <summary>
         /// ReInitVM 完成后触发的事件
         /// </summary>
-        event Action<ISearcher> OnAfterReInit;
+        event Func<ISearcher, Task> OnAfterReInit;
 
         #endregion
 
@@ -77,12 +77,17 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 调用 InitVM 并触发 OnAfterInit 事件
         /// </summary>
-        void DoInit();
+        Task DoInit();
 
         /// <summary>
         /// 调用 ReInitVM 并触发 OnAfterReInit 事件
         /// </summary>
-        void DoReInit();
+        Task DoReInit();
+
+        /// <summary>
+        /// 当前登录人信息
+        /// </summary>
+        Task<LoginUserInfo> GetLoginUserInfo ();
 
         #endregion
 

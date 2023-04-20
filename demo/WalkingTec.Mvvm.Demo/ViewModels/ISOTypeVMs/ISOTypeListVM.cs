@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +13,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
 {
     public partial class ISOTypeListVM : BasePagedListVM<ISOType_View, ISOTypeSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("ISOType", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
                 this.MakeStandardAction("ISOType", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
@@ -25,20 +25,20 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
                 this.MakeStandardAction("ISOType", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
                 this.MakeStandardAction("ISOType", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
                 this.MakeStandardAction("ISOType", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], ""),
-            };
+            });
         }
 
 
-        protected override IEnumerable<IGridColumn<ISOType_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<ISOType_View>>> InitGridHeader()
         {
-            return new List<GridColumn<ISOType_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<ISOType_View>>> (new List<GridColumn<ISOType_View>>{
                 this.MakeGridHeader(x => x.IsoName),
                 this.MakeGridHeader(x => x.ISOVerSion),
                 this.MakeGridHeader(x => x.Description),
                 this.MakeGridHeader(x => x.ISOFileID).SetFormat(ISOFileIDFormat),
                 this.MakeGridHeader(x => x.IsoName_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
         private List<ColumnFormatInfo> ISOFileIDFormat(ISOType_View entity, object val)
         {
@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
         }
 
 
-        public override IOrderedQueryable<ISOType_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<ISOType_View>> GetSearchQuery()
         {
             var query = DC.Set<ISOType>()
                 .CheckContain(Searcher.IsoName, x=>x.IsoName)
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
                     IsoName_view = x.iSOTypes.Select(y=>y.softFacInfo.IsoName).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

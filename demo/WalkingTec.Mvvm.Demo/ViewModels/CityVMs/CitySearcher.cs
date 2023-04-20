@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         public String Name { get; set; }
         public Guid selectedparent { get; set; }
         public List<TreeSelectListItem> Items { get; set; }
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             Items = DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name);
         }

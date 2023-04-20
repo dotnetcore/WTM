@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.Json;
@@ -50,7 +51,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             SelectedRolesIds = new List<string>();
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             if (!string.IsNullOrEmpty(Entity.Icon))
             {
@@ -59,9 +60,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 IconFontItem = res[1];
             }
 
-            SelectedRolesIds.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToList());
+            SelectedRolesIds.AddRange(await DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToListAsync());
             SelectedRolesIds = SelectedRolesIds.Distinct().ToList();
-            var data = DC.Set<FrameworkMenu>().AsNoTracking().ToList();
+            var data = await DC.Set<FrameworkMenu>().AsNoTracking().ToListAsync();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
             var pids = Entity.GetAllChildrenIDs(DC);
             AllParents = data.Where(x => x.ID != Entity.ID && !pids.Contains(x.ID) && x.FolderOnly == true).ToList().ToListItems(y => y.PageName, x => x.ID);
@@ -125,14 +126,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 AllActions = mm.ToListItems(y => y.ActionName, y => y.Url);
                 if (SelectedActionIDs == null)
                 {
-                    SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => AllActions.Select(y => y.Value).Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.Url).ToList();
+                    SelectedActionIDs = await DC.Set<FrameworkMenu>().Where(x => AllActions.Select(y => y.Value).Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.Url).ToListAsync();
                 }
             }
         }
 
 
 
-        public override void Validate()
+        public override async Task Validate()
         {
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
@@ -141,17 +142,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     MSD.AddModelError("SelectedModule", Localizer["Validate.{0}required", Localizer["_Admin.Module"]]);
                 }
                 var modules = Wtm.GlobaInfo.AllModule;
-                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (string.IsNullOrEmpty(x.MethodName) || x.MethodName == "Index") && x.ID != Entity.ID).FirstOrDefault();
+                var test = await DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (string.IsNullOrEmpty(x.MethodName) || x.MethodName == "Index") && x.ID != Entity.ID).FirstOrDefaultAsync();
                 if (test != null)
                 {
                     MSD.AddModelError(" error", Localizer["_Admin.ModuleHasSet"]);
                 }
 
             }
-            base.Validate();
+            await base.Validate();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
             Entity.Icon = $"{IconFont} {IconFontItem}";
             FC.Add("Entity.Icon", " ");
@@ -260,17 +261,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
             }
             FC.Add("Entity.ModuleName", 0);
-            base.DoEdit();
+            await base.DoEdit();
             List<Guid> guids = new List<Guid>();
             guids.Add(Entity.ID);
             if (Entity.Children != null)
             {
                 guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
             }
-            AddPrivilege(guids);
+            await AddPrivilege(guids);
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {
             Entity.Icon = $"{IconFont} {IconFontItem}";
             if (Entity.IsInside == false)
@@ -355,17 +356,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
 
             }
-            base.DoAdd();
+            await base.DoAdd();
             List<Guid> guids = new List<Guid>();
             guids.Add(Entity.ID);
             if (Entity.Children != null)
             {
                 guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
             }
-            AddPrivilege(guids);
+            await AddPrivilege(guids);
         }
 
-        public void AddPrivilege(List<Guid> menuids)
+        public async Task AddPrivilege(List<Guid> menuids)
         {
             var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").SingleOrDefault();
             if (admin != null && SelectedRolesIds.Contains(admin.RoleCode) == false)
@@ -391,17 +392,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                 }
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
             Wtm.RemoveUserCacheByRole(SelectedRolesIds.ToArray()).Wait();
         }
 
 
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
             try
             {
                 DC.CascadeDelete(Entity);
-                DC.SaveChanges();
+                await DC.SaveChangesAsync();
             }
             catch
             { }

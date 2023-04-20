@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs
         [Display(Name = "患者")]
         public List<int> SelectedPatientsIDs { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

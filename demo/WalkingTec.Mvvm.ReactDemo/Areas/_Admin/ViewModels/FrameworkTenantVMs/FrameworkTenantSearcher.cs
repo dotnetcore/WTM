@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
         [Display(Name = "_Admin.TenantDomain")]
         public String TDomain { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

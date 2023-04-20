@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             //NeedPage = false;
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             CityTree = DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name + "15.0.1-/1");
         }
@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             }
         }
 
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             };
         }
 
-        protected override IEnumerable<IGridColumn<School_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<School_View>>> InitGridHeader()
         {
             return new List<GridColumn<School_View>>{
                 this.MakeGridHeader(x => x.SchoolCode),
@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             };
         }
 
-        public override IOrderedQueryable<School_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<School_View>> GetSearchQuery()
         {
             var query = DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)

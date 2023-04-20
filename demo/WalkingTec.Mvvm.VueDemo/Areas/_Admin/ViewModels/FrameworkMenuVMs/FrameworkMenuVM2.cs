@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -27,12 +28,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             SelectedRolesCodes = new List<string>();
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
-            SelectedRolesCodes.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToList());
+            SelectedRolesCodes.AddRange(await DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToListAsync ());
             SelectedRolesCodes = SelectedRolesCodes.Distinct().ToList();
 
-            var data = DC.Set<FrameworkMenu>().ToList();
+            var data = await DC.Set<FrameworkMenu>().ToListAsync();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
             var modules = Wtm.GlobaInfo.AllModule;
 
@@ -42,7 +43,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 if (SelectedModule != null)
                 {
                     var urls = modules.Where(x => x.FullName == SelectedModule && x.IsApi == true).SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == false).Select(x => x.Url).ToList();
-                    SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => urls.Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.MethodName).ToList();
+                    SelectedActionIDs = await DC.Set<FrameworkMenu>().Where(x => urls.Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.MethodName).ToListAsync();
                 }
                 else
                 {
@@ -51,7 +52,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
         }
 
-        public override void Validate()
+        public override async Task Validate()
         {
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
@@ -62,17 +63,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 else
                 {
                     var modules = Wtm.GlobaInfo.AllModule;
-                    var test = DC.Set<FrameworkMenu>().Where(x => x.Url != null && x.Url.ToLower() == this.Entity.Url.ToLower() && x.ID != Entity.ID).FirstOrDefault();
+                    var test = await DC.Set<FrameworkMenu>().Where(x => x.Url != null && x.Url.ToLower() == this.Entity.Url.ToLower() && x.ID != Entity.ID).FirstOrDefaultAsync();
                     if (test != null)
                     {
                         MSD.AddModelError(" error", Localizer["_Admin.ModuleHasSet"]);
                     }
                 }
             }
-            base.Validate();
+            await base.Validate();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
             if (Entity.IsInside == false)
             {
@@ -160,17 +161,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 FC.Add("Entity.Children[0].MethodName", 0);
                 FC.Add("Entity.Children[0].Url", 0);
             }
-            base.DoEdit(updateAllFields);
+            await base.DoEdit(updateAllFields);
             List<Guid> guids = new List<Guid>();
             guids.Add(Entity.ID);
             if (Entity.Children != null)
             {
                 guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
             }
-            AddPrivilege(guids);
+            await AddPrivilege(guids);
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {
             if (Entity.IsInside == false)
             {
@@ -234,24 +235,24 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
 
             }
-            base.DoAdd();
+            await base.DoAdd();
             List<Guid> guids = new List<Guid>();
             guids.Add(Entity.ID);
             if (Entity.Children != null)
             {
                 guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
             }
-            AddPrivilege(guids);
+            await AddPrivilege(guids);
         }
 
-        public void AddPrivilege(List<Guid> menuids)
+        public async Task AddPrivilege(List<Guid> menuids)
         {
-            var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").SingleOrDefault();
+            var admin = await DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").SingleOrDefaultAsync();
             if (admin != null && SelectedRolesCodes.Contains(admin.RoleCode) == false)
             {
                 SelectedRolesCodes.Add(admin.RoleCode);
             }
-            var toremove = DC.Set<FunctionPrivilege>().Where(x => SelectedRolesCodes.Contains(x.RoleCode) && menuids.Contains(x.MenuItemId)).ToList();
+            var toremove = await DC.Set<FunctionPrivilege>().Where(x => SelectedRolesCodes.Contains(x.RoleCode) && menuids.Contains(x.MenuItemId)).ToListAsync();
             toremove.ForEach(x => DC.DeleteEntity(x));
             foreach (var menuid in menuids)
             {
@@ -264,21 +265,21 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         fp.MenuItemId = menuid;
                         fp.RoleCode = code;
                         fp.Allowed = true;
-                        DC.Set<FunctionPrivilege>().Add(fp);
+                        await DC.Set<FunctionPrivilege>().AddAsync(fp);
                     }
                 }
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
             Wtm.RemoveUserCacheByRole(SelectedRolesCodes.ToArray()).Wait();
         }
 
 
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
             try
             {
                 DC.CascadeDelete(Entity);
-                DC.SaveChanges();
+                await DC.SaveChangesAsync();
             }
             catch
             { }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
     public partial class CityApiListVM : BasePagedListVM<CityApi_View, CityApiSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<CityApi_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<CityApi_View>>> InitGridHeader()
         {
             return new List<GridColumn<CityApi_View>>{
                 this.MakeGridHeader(x => x.Name),
@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             };
         }
 
-        public override IOrderedQueryable<CityApi_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<CityApi_View>> GetSearchQuery()
         {
             var query = DC.Set<City>()
                 .CheckContain(Searcher.Name, x=>x.Name)
@@ -38,7 +38,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
                     Name_view = x.Parent.Name,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

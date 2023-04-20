@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="ignorDataPrivilege">忽略数据权限判断</param>
         /// <param name="SortByName">是否根据Text字段排序，默认为是</param>
         /// <returns>SelectListItem列表</returns>
-        public static List<TreeSelectListItem> GetTreeSelectListItems<T>(this IQueryable<T> baseQuery
+        public static async Task<List<TreeSelectListItem>> GetTreeSelectListItems<T>(this IQueryable<T> baseQuery
             , WTMContext wtmcontext
             , Expression<Func<T, string>> textField
             , Expression<Func<T, string>> valueField = null
@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             , bool SortByName = true)
             where T : TreePoco
         {
-            var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
+            var dps = (await wtmcontext?.GetLoginUserInfo ())?.DataPrivileges;
             var query = baseQuery.AsNoTracking();
 
             //如果没有指定忽略权限，则拼接权限过滤的where条件
@@ -187,7 +187,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="ignorDataPrivilege">忽略数据权限判断</param>
         /// <param name="SortByName">是否根据Text字段排序，默认为是</param>
         /// <returns>SelectListItem列表</returns>
-        public static List<ComboSelectListItem> GetSelectListItems<T>(this IQueryable<T> baseQuery
+        public static async Task<List<ComboSelectListItem>> GetSelectListItems<T>(this IQueryable<T> baseQuery
             , WTMContext wtmcontext
             , Expression<Func<T, string>> textField
             , Expression<Func<T, object>> valueField = null
@@ -195,7 +195,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             , bool SortByName = true)
             where T : TopBasePoco
         {
-            var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
+            var dps = (await wtmcontext?.GetLoginUserInfo ())?.DataPrivileges;
             var query = baseQuery.AsNoTracking();
 
             //如果value字段为空，则默认使用Id字段作为value值
@@ -377,9 +377,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="wtmcontext">wtm context</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, params Expression<Func<T, object>>[] IdFields) where T : TopBasePoco
+        public static async Task<IQueryable<T>> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, params Expression<Func<T, object>>[] IdFields) where T : TopBasePoco
         {
-            var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
+            var dps = (await wtmcontext?.GetLoginUserInfo ())?.DataPrivileges;
 
             // var dpsSetting = BaseVM.AllDPS;
             ParameterExpression pe = Expression.Parameter(typeof(T));

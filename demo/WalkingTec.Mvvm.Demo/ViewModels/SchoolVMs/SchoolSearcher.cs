@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 
         public List<Guid> test { get; set; } = new List<Guid>();
         public Guid? CityId { get; set; }
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             //var test = DC.Set<School>().ToList();
         }

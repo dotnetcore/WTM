@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs;
 using WalkingTec.Mvvm.ReactDemo.Models;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.ReactDemo.Controllers
 {
@@ -43,7 +44,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(SchoolVM vm)
+        public async Task<IActionResult> Add (SchoolVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -51,7 +52,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -66,7 +67,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(SchoolVM vm)
+        public async Task<IActionResult> Edit (SchoolVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -74,7 +75,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
-                vm.DoEdit(false);
+                await vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete (string[] ids)
         {
             var vm = Wtm.CreateVM<SchoolBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -99,7 +100,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             {
                 return Ok();
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
@@ -112,17 +113,17 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(SchoolSearcher searcher)
+        public async Task<IActionResult> ExportExcel (SchoolSearcher searcher)
         {
             var vm = Wtm.CreateVM<SchoolListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds (string[] ids)
         {
             var vm = Wtm.CreateVM<SchoolListVM>();
             if (ids != null && ids.Count() > 0)
@@ -130,14 +131,14 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [HttpPost("BatchEdit")]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult DoBatchEdit(SchoolBatchVM vm)
+        public async Task<IActionResult> DoBatchEdit (SchoolBatchVM vm)
         {
-            if (!ModelState.IsValid || !vm.DoBatchEdit())
+            if (!ModelState.IsValid || !await vm.DoBatchEdit())
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
@@ -165,10 +166,10 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(SchoolImportVM vm)
+        public async Task<IActionResult> Import (SchoolImportVM vm)
         {
 
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());
             }
@@ -180,9 +181,9 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
 
         [HttpGet("GetCitys")]
-        public ActionResult GetCitys()
+        public async Task<IActionResult> GetCitys ()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+            return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
     }

@@ -19,23 +19,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs
             SetInclude(x => x.Children);
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
-        }
-
-        public override void DoAdd()
-        {           
-            base.DoAdd();
-        }
-
-        public override void DoEdit(bool updateAllFields = false)
-        {
-            base.DoEdit(updateAllFields);
-        }
-
-        public override void DoDelete()
-        {
-            base.DoDelete();
         }
     }
 }

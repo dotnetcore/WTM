@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTest2VMs
     public class LinkTest2_BatchEdit : BaseVM
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

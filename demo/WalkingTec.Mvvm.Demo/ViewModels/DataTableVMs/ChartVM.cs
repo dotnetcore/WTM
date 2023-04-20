@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
     {
         public ActionLogSearcher Searcher { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             Searcher = new ActionLogSearcher();
             Searcher.CopyContext(this);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.Json;
@@ -15,9 +16,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             NeedPage = false;
         }
 
-        protected override List<GridAction> InitGridAction()
+        protected override async Task<List<GridAction>> InitGridAction()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return new List<GridAction>
                 {
@@ -39,9 +40,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             }
         }
 
-        protected override IEnumerable<IGridColumn<FrameworkGroup_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<FrameworkGroup_View>>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkGroup_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkGroup_View>>> (new List<GridColumn<FrameworkGroup_View>>{
                 this.MakeGridHeader(x => x.GroupName, 220),
                 this.MakeGridHeader(x => x.GroupCode, 120),
                 this.MakeGridHeader(x => x.ManagerName,220).SetFormat((a,b)=>{
@@ -59,12 +60,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
               this.MakeGridHeader(x => x.GroupRemark),
                  this.MakeGridHeader(x => x.ParentId).SetHide(),
              this.MakeGridHeaderAction(width: 300)
-            };
+            });
         }
 
-        public override IOrderedQueryable<FrameworkGroup_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<FrameworkGroup_View>> GetSearchQuery()
         {
-            return  DC.Set<FrameworkGroup>()
+            return Task.FromResult (DC.Set<FrameworkGroup>()
                 .CheckContain(Searcher.GroupCode, x => x.GroupCode)
                 .CheckContain(Searcher.GroupName, x => x.GroupName)
                  .GroupJoin(DC.Set<FrameworkUser>(), ok => ok.Manager, ik => ik.ITCode, (group, user) => new { user = user, group = group })
@@ -77,9 +78,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                      Manager = a.group.Manager,
                      ManagerName = b.Name,
                  })
-                .OrderBy(x => x.GroupCode);
+                .OrderBy(x => x.GroupCode));
         }
-        public override void AfterDoSearcher()
+        public override Task AfterDoSearcher()
         {
             var topdata = EntityList.MakeTree(x => x.GroupCode).FlatTree(x => x.GroupCode);
             if (ControllerName.Contains("/api") == false)
@@ -87,7 +88,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                 topdata.ForEach((x) => { int l = x.GetLevel(); for (int i = 0; i < l; i++) { x.GroupName = "&nbsp;&nbsp;&nbsp;&nbsp;" + x.GroupName; } });
             }
             EntityList = topdata;
-
+            return Task.CompletedTask;
         }
     }
     public class FrameworkGroup_View : TreePoco<FrameworkGroup_View>

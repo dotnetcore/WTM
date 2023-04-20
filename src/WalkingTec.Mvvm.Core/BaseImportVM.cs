@@ -10,6 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NPOI.HSSF.Util;
@@ -163,7 +164,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取上传的结果值
         /// </summary>
-        public virtual void SetEntityList()
+        public virtual async Task SetEntityList()
         {
             if (!isEntityListSet)
             {
@@ -179,7 +180,7 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 //对EntityList赋值
-                SetEntityData();
+                await SetEntityData();
 
                 //设置标识为初始化
                 isEntityListSet = true;
@@ -385,7 +386,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 根据模板中的数据，填写导入类的集合中
         /// </summary>
-        public virtual void SetEntityData()
+        public virtual async Task SetEntityData()
         {
             //反射出类中所有属性字段 P是Model层定义的类
             var pros = typeof(P).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
@@ -465,7 +466,7 @@ namespace WalkingTec.Mvvm.Core
                     if (typeof(ITenant).IsAssignableFrom(entity.GetType()))
                     {
                         ITenant ent = entity as ITenant;
-                        ent.TenantCode = LoginUserInfo?.CurrentTenant;
+                        ent.TenantCode = (await GetLoginUserInfo ())?.CurrentTenant;
                     }
 
                 }
@@ -517,12 +518,12 @@ namespace WalkingTec.Mvvm.Core
                                     if (typeof(IBasePoco).IsAssignableFrom(SubTypeEntity.GetType()))
                                     {
                                         (SubTypeEntity as IBasePoco).CreateTime = DateTime.Now;
-                                        (SubTypeEntity as IBasePoco).CreateBy = LoginUserInfo?.ITCode;
+                                        (SubTypeEntity as IBasePoco).CreateBy = (await GetLoginUserInfo ())?.ITCode;
                                     }
                                     if (typeof(ITenant).IsAssignableFrom(SubTypeEntity.GetType()))
                                     {
                                         ITenant ent = SubTypeEntity as ITenant;
-                                        ent.TenantCode = LoginUserInfo?.CurrentTenant;
+                                        ent.TenantCode = (await GetLoginUserInfo ())?.CurrentTenant;
                                     }
 
                                     //var context = new ValidationContext(SubTypeEntity);
@@ -899,7 +900,7 @@ namespace WalkingTec.Mvvm.Core
         /// 保存指定表中的数据
         /// </summary>
         /// <returns>成功返回True，失败返回False</returns>
-        public virtual bool BatchSaveData()
+        public virtual async Task<bool> BatchSaveData()
         {
             //删除不必要的附件
             if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
@@ -913,7 +914,7 @@ namespace WalkingTec.Mvvm.Core
             }
 
             //进行赋值
-            SetEntityList();
+            await SetEntityList();
             foreach (var entity in EntityList)
             {
                 var context = new ValidationContext(entity);
@@ -926,7 +927,7 @@ namespace WalkingTec.Mvvm.Core
             }
             if (ErrorListVM.EntityList.Count > 0)
             {
-                DoReInit();
+                await DoReInit();
                 return false;
             }
 
@@ -934,7 +935,7 @@ namespace WalkingTec.Mvvm.Core
             SetValidateCheck();
             if (ErrorListVM.EntityList.Count > 0)
             {
-                DoReInit();
+                await DoReInit();
                 return false;
             }
             var ModelType = typeof(P);
@@ -943,7 +944,7 @@ namespace WalkingTec.Mvvm.Core
             foreach (var item in EntityList)
             {
                 //根据唯一性的设定查找数据库中是否有同样的数据
-                P exist = IsDuplicateData(item, finalInfo);
+                P exist = await IsDuplicateData(item, finalInfo);
                 //如果设置了覆盖功能
                 if (IsOverWriteExistData)
                 {
@@ -980,7 +981,7 @@ namespace WalkingTec.Mvvm.Core
                         {
                             if (typeof(IBasePoco).IsAssignableFrom(exist.GetType()))
                             {
-                                (exist as IBasePoco).UpdateBy = LoginUserInfo.ITCode;
+                                (exist as IBasePoco).UpdateBy = (await GetLoginUserInfo ()).ITCode;
                                 DC.UpdateProperty(exist, "UpdateBy");
                             }
                         }
@@ -1011,12 +1012,12 @@ namespace WalkingTec.Mvvm.Core
                 if (typeof(IBasePoco).IsAssignableFrom(item.GetType()))
                 {
                     (item as IBasePoco).CreateTime = DateTime.Now;
-                    (item as IBasePoco).CreateBy = LoginUserInfo?.ITCode;
+                    (item as IBasePoco).CreateBy = (await GetLoginUserInfo ())?.ITCode;
                 }
                 if (typeof(ITenant).IsAssignableFrom(ModelType))
                 {
                     ITenant ent = item as ITenant;
-                    ent.TenantCode = LoginUserInfo?.CurrentTenant;
+                    ent.TenantCode = (await GetLoginUserInfo ())?.CurrentTenant;
                 }
 
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
@@ -1026,13 +1027,13 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else
                 {
-                    DC.Set<P>().Add(item);
+                    await DC.Set<P>().AddAsync(item);
                 }
             }
 
             if (ErrorListVM.EntityList.Count > 0)
             {
-                DoReInit();
+                await DoReInit();
                 return false;
             }
 
@@ -1041,7 +1042,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 try
                 {
-                    DC.SaveChanges();
+                    await DC.SaveChangesAsync();
 
                     if (ListAdd.Count > 0)
                     {
@@ -1051,7 +1052,7 @@ namespace WalkingTec.Mvvm.Core
                 catch (Exception e)
                 {
                     SetExceptionMessage(e, null);
-                    DoReInit();
+                    await DoReInit();
                     return false;
                 }
             }
@@ -1248,7 +1249,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="Entity">要验证的数据</param>
         /// <param name="checkCondition">验证表达式</param>
         /// <returns>null代表没有重复</returns>
-        protected P IsDuplicateData(P Entity, DuplicatedInfo<P> checkCondition)
+        protected async Task<P> IsDuplicateData(P Entity, DuplicatedInfo<P> checkCondition)
         {
             //获取设定的重复字段信息
             if (checkCondition != null && checkCondition.Groups.Count > 0)
@@ -1278,7 +1279,7 @@ namespace WalkingTec.Mvvm.Core
                     if (typeof(ITenant).IsAssignableFrom(modelType) && props.Any(x => x.Name.ToLower() == "tenantcode") == false && Wtm?.ConfigInfo.EnableTenant == true && group.UseTenant == true)
                     {
                         ITenant ent = Entity as ITenant;
-                        ent.TenantCode = LoginUserInfo.CurrentTenant;
+                        ent.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                         var f = new DuplicatedField<P>(x => (x as ITenant).TenantCode);
                         Expression exp = f.GetExpression(Entity, para);
                         conditions.Add(exp);
@@ -1364,7 +1365,7 @@ namespace WalkingTec.Mvvm.Core
             return new ComplexDuplicatedField<P, V>(MiddleExp, FieldExps);
         }
 
-        public ErrorObj GetErrorJson()
+        public async Task<ErrorObj> GetErrorJson()
         {
             var mse = new ErrorObj();
             mse.Form = new Dictionary<string, string>();
@@ -1412,7 +1413,7 @@ namespace WalkingTec.Mvvm.Core
                 xssfworkbook.Write(ms);
                 ms.Position = 0;
 
-                var newfile = fp.Upload("Error-" + fa.FileName, ms.Length, ms);
+                var newfile = await fp.Upload("Error-" + fa.FileName, ms.Length, ms);
                 ms.Close();
                 ms.Dispose();
                 err = CoreProgram._localizer?["Sys.ImportError"];
@@ -1451,17 +1452,17 @@ namespace WalkingTec.Mvvm.Core
             NeedPage = false;
         }
 
-        protected override IEnumerable<IGridColumn<ErrorMessage>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<ErrorMessage>>> InitGridHeader()
         {
-            return new List<GridColumn<ErrorMessage>>{
+            return Task.FromResult<IEnumerable<IGridColumn<ErrorMessage>>> (new List<GridColumn<ErrorMessage>>{
                 this.MakeGridHeader(x => x.Index, 60),
                 this.MakeGridHeader(x => x.Message)
-            };
+            });
         }
 
-        public override IOrderedQueryable<ErrorMessage> GetSearchQuery()
+        public override Task<IOrderedQueryable<ErrorMessage>> GetSearchQuery()
         {
-            return EntityList.AsQueryable().OrderBy(x => x.Index);
+            return Task.FromResult (EntityList.AsQueryable ().OrderBy (x => x.Index));
         }
     }
 

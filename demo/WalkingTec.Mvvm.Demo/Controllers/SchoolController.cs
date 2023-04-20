@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.HSSF.Util;
@@ -57,7 +58,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("搜索并修改某字段")]
-        public ActionResult EditIndex(SchoolListVM2 vm)
+        public async Task<ActionResult> EditIndex(SchoolListVM2 vm)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +67,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                vm.UpdateEntityList();
+                await vm.UpdateEntityList();
             }
             return PartialView(vm);
         }
@@ -91,7 +92,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();
@@ -183,9 +184,9 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult DoBatchEdit(SchoolBatchVM vm, IFormCollection nouse)
+        public async Task<ActionResult> DoBatchEdit(SchoolBatchVM vm, IFormCollection nouse)
         {
-            if (!ModelState.IsValid || !vm.DoBatchEdit())
+            if (!ModelState.IsValid || !await vm.DoBatchEdit())
             {
                 return PartialView("BatchEdit", vm);
             }
@@ -199,7 +200,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(string[] ids)
+        public async Task<ActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<SchoolBatchVM>();
             if (ids != null && ids.Length > 0)
@@ -210,7 +211,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             {
                 return Ok();
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return FFResult().Alert(ModelState.GetErrorJson().GetFirstError());
             }
@@ -232,9 +233,9 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("导入")]
-        public ActionResult Import(SchoolImportVM vm, IFormCollection nouse)
+        public async Task<ActionResult> Import(SchoolImportVM vm, IFormCollection nouse)
         {
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return PartialView(vm);
             }
@@ -270,7 +271,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 {
                     vm.Entity.Majors = new System.Collections.Generic.List<Major>();
                 }
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     vm.MajorList.ProcessListError(vm.Entity.Majors);
@@ -333,7 +334,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             vm.ExportMaxCount = 5; //自定义每个Excel最多数据行数，默认是100万
             vm.ExportTitleBackColor = HSSFColor.Black.Index;
             vm.ExportTitleFontColor = HSSFColor.White.Index;
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [HttpPost]

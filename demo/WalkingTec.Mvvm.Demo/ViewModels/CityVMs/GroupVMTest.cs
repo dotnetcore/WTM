@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 
         public CityVM vm2 { get; set; } = new CityVM();
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             if(EntityId != null)
             {

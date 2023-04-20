@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
 {
     public partial class FrameworkTenantListVM : BasePagedListVM<FrameworkTenant_View, FrameworkTenantSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
         }
 
 
-        protected override IEnumerable<IGridColumn<FrameworkTenant_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<FrameworkTenant_View>>> InitGridHeader()
         {
             return new List<GridColumn<FrameworkTenant_View>>{
                 this.MakeGridHeader(x => x.TCode),
@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             };
         }
 
-        public override IOrderedQueryable<FrameworkTenant_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<FrameworkTenant_View>> GetSearchQuery()
         {
             var query = DC.Set<FrameworkTenant>()
                 .CheckContain(Searcher.TCode, x=>x.TCode)
@@ -62,7 +62,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
                     EnableSub = x.EnableSub
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

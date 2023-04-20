@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();
@@ -141,7 +141,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量修改")]
         public ActionResult DoBatchEdit(不要用中文模型名BatchVM vm, IFormCollection nouse)
         {
-            if (!ModelState.IsValid || !vm.DoBatchEdit())
+            if (!ModelState.IsValid || !await vm.DoBatchEdit())
             {
                 return PartialView("BatchEdit",vm);
             }
@@ -165,7 +165,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量删除")]
         public ActionResult DoBatchDelete(不要用中文模型名BatchVM vm, IFormCollection nouse)
         {
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return PartialView("BatchDelete",vm);
             }
@@ -188,7 +188,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("导入")]
         public ActionResult Import(不要用中文模型名ImportVM vm, IFormCollection nouse)
         {
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return PartialView(vm);
             }

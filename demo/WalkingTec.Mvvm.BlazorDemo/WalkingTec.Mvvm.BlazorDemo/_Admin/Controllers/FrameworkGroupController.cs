@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult Search(FrameworkGroupSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm).Result;
             }
@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult Add(FrameworkGroupVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPut("[action]")]
         public IActionResult Edit(FrameworkGroupVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoEdit(false);
+                await vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -102,7 +102,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Ok();
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
@@ -126,9 +126,9 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var gr = DC.Set<FrameworkUserGroup>().Where(x => GroupCode.Contains(x.GroupCode)).ToList();
                 var itcodes = gr.Select(x => x.UserCode).ToArray();
                 DC.Set<FrameworkUserGroup>().RemoveRange(gr);
-                DC.SaveChanges();
+                await DC.SaveChangesAsync();
                 await Wtm.RemoveUserCacheByGroup(GroupCode.ToArray());
-                Wtm.RemoveGroupCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
+                Wtm.RemoveGroupCache((await Wtm.GetLoginUserInfo ()).CurrentTenant).Wait();
                 return Ok(ids.Count());
             }
         }
@@ -137,21 +137,21 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
             var vm = Wtm.CreateVM<FrameworkGroupListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -161,14 +161,14 @@ namespace WalkingTec.Mvvm.Admin.Api
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -188,17 +188,17 @@ namespace WalkingTec.Mvvm.Admin.Api
         public ActionResult Import(FrameworkGroupImportVM vm)
         {
 
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());
             }
             else
             {
-                Wtm.RemoveGroupCache(Wtm.LoginUserInfo.CurrentTenant).Wait();
+                Wtm.RemoveGroupCache((await Wtm.GetLoginUserInfo ()).CurrentTenant).Wait();
                 return Ok(vm.EntityList.Count);
             }
         }
@@ -207,7 +207,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetParents()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_frameworkgroup/GetParents").Result;
             }
@@ -219,7 +219,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetParentsTree()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm, "/api/_frameworkgroup/GetParentsTree").Result;
             }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
 
@@ -29,7 +30,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         }
 
 
-        public  IWtmFile UploadToDB(string fileName, long fileLength, Stream data, string groupName = null, string subdir = null, string extra = null)
+        public async Task<IWtmFile> UploadToDB(string fileName, long fileLength, Stream data, string groupName = null, string subdir = null, string extra = null)
         {
             FileAttachment file = new FileAttachment();
             file.FileName = fileName;
@@ -37,7 +38,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             file.UploadTime = DateTime.Now;
             file.SaveMode = _modeName;
             file.ExtraInfo = extra;
-            file.TenantCode = wtm.LoginUserInfo?.CurrentTenant;
+            file.TenantCode = (await wtm.GetLoginUserInfo ())?.CurrentTenant;
             var ext = string.Empty;
             if (string.IsNullOrEmpty(fileName) == false)
             {
@@ -51,7 +52,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 file.FileData = dataStream.ToArray();
             }
             wtm.DC.AddEntity(file);
-            wtm.DC.SaveChanges();
+            await wtm.DC.SaveChangesAsync();
             return file;
         }
     }

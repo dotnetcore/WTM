@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
     public partial class CityChildrenDetailListVM : BasePagedListVM<City, CityDetailSearcher>
     {
         
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             };
         }
  
-        protected override IEnumerable<IGridColumn<City>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<City>>> InitGridHeader()
         {
             return new List<GridColumn<City>>{
                 
@@ -33,16 +33,16 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         }
 
         
-        public override IOrderedQueryable<City> GetSearchQuery()
+        public override Task<IOrderedQueryable<City>> GetSearchQuery()
         {
                 
             var id = (Guid?)Searcher.ParentId.ConvertValue(typeof(Guid?));
             if (id == null)
-                return new List<City>().AsQueryable().OrderBy(x => x.ID);
+                return Task.FromResult (new List<City> ().AsQueryable ().OrderBy (x => x.ID));
             var query = DC.Set<City>()
                 .Where(x => id == x.ParentId)
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -13,11 +14,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public FrameworkMenuBatchVM()
         {
         }
-        protected override void InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
-        public override bool DoBatchDelete()
+        public override async Task<bool> DoBatchDelete()
         {
             if (Ids != null)
             {
@@ -27,7 +29,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     DC.CascadeDelete(f);
                 }
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
             return true;
         }
     }

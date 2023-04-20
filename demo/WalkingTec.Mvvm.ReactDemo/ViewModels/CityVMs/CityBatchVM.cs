@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
     public class City_BatchEdit : BaseVM
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

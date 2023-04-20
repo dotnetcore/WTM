@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             };
 
             DC.Set<FrameworkUser>().Add(user);
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
             return true;
         }
     }

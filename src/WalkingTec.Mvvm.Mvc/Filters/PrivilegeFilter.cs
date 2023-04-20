@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -23,8 +24,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 {
     public class PrivilegeFilter : ActionFilterAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
+        public override async Task OnActionExecutionAsync (ActionExecutingContext context, ActionExecutionDelegate next) {
             var controller = context.Controller as IBaseController;
             if (controller == null)
             {
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
             context.SetWtmContext();
-            _ =controller.Wtm.LoginUserInfo;
+            var _loginUserInfo = await controller.Wtm.GetLoginUserInfo ();
             //if (controller.Wtm.ConfigInfo.IsQuickDebug && controller is BaseApiController)
             //{
             //    base.OnActionExecuting(context);
@@ -123,7 +123,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
 
-            if (controller.Wtm.LoginUserInfo == null)
+            if (_loginUserInfo == null)
             {
                 if (controller is ControllerBase ctrl)
                 {
@@ -186,7 +186,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             else if (isHostOnly)
             {
-                if(controller.Wtm.LoginUserInfo.CurrentTenant != null)
+                if(_loginUserInfo.CurrentTenant != null)
                 {
                     if (controller is ControllerBase ctrl)
                     {
@@ -212,7 +212,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
                 if (isAllRights == false)
                 {
-                    bool canAccess = controller.Wtm.IsAccessable(controller.BaseUrl);
+                    bool canAccess = await controller.Wtm.IsAccessable(controller.BaseUrl);
                     if (canAccess == false && controller.ConfigInfo.IsQuickDebug == false)
                     {
                         if (controller is ControllerBase ctrl)

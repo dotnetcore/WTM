@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +14,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
     public partial class MajorApiListVM : BasePagedListVM<MajorApi_View, MajorApiSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<MajorApi_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<MajorApi_View>>> InitGridHeader()
         {
-            return new List<GridColumn<MajorApi_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<MajorApi_View>>> (new List<GridColumn<MajorApi_View>>{
                 this.MakeGridHeader(x => x.MajorCode),
                 this.MakeGridHeader(x => x.MajorName),
                 this.MakeGridHeader(x => x.MajorType),
@@ -24,10 +24,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
                 this.MakeGridHeader(x => x.SchoolName_view),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
-        public override IOrderedQueryable<MajorApi_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<MajorApi_View>> GetSearchQuery()
         {
             var query = DC.Set<Major>()
                 .CheckEqual(Searcher.MajorType, x=>x.MajorType)
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
                     Name_view = x.StudentMajors.Select(y=>y.Student.Name).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

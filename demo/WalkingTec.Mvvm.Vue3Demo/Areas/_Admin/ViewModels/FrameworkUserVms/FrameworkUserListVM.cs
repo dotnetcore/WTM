@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -11,7 +12,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 {
     public class FrameworkUserListVM : BasePagedListVM<FrameworkUser_View, FrameworkUserSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -26,7 +27,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             };
         }
 
-        protected override IEnumerable<IGridColumn<FrameworkUser_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<FrameworkUser_View>>> InitGridHeader()
         {
             return new List<GridColumn<FrameworkUser_View>>{
                 this.MakeGridHeader(x => x.ITCode),
@@ -50,7 +51,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             };
         }
 
-        public override IOrderedQueryable<FrameworkUser_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<FrameworkUser_View>> GetSearchQuery()
         {
             var query = DC.Set<FrameworkUser>()
                 .CheckContain(Searcher.ITCode,x=>x.ITCode)

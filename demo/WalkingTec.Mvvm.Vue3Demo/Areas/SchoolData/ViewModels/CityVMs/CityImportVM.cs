@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
         [Display(Name = "_Admin.Parent")]
         public ExcelPropety Parent_Excel = ExcelPropety.CreateProperty<City>(x => x.ParentId);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
             Parent_Excel.DataType = ColumnDataType.ComboBox;
             Parent_Excel.ListItems = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);

@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 {
     public partial class CityListVM : BasePagedListVM<City_View, CitySearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         }
 
 
-        protected override IEnumerable<IGridColumn<City_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<City_View>>> InitGridHeader()
         {
             return new List<GridColumn<City_View>>{
                 this.MakeGridHeader(x => x.Name),
@@ -41,11 +41,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             };
         }
 
-        public override IOrderedQueryable<City_View> GetSearchQuery()
+        public override async Task<IOrderedQueryable<City_View>> GetSearchQuery()
         {
-            var query = DC.Set<City>()
+            var query = (await DC.Set<City>()
                 .CheckContain(Searcher.Name, x=>x.Name)
-                .DPWhere(Wtm, x=>x.ID)
+                .DPWhere(Wtm, x=>x.ID))
                 //.DPWhere(Wtm, x=>x.ParentId)
                 //.DPWhere(Wtm, x => x.Parent.Children[0].Children[0].ID)
                 .Select(x => new City_View

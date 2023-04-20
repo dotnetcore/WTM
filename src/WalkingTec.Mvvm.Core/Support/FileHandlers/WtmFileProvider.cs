@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
@@ -86,7 +87,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
         }
 
-        public  IWtmFile Upload(string fileName, long fileLength, Stream data, string group = null, string subdir = null, string extra = null, string saveMode = null, IDataContext dc =null)
+        public async Task<IWtmFile> Upload(string fileName, long fileLength, Stream data, string group = null, string subdir = null, string extra = null, string saveMode = null, IDataContext dc =null)
         {
             if (dc == null)
             {
@@ -100,7 +101,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             fileName = fileName.Replace("<", "").Replace(">","").Replace(" ", "");
             if (fh is WtmDataBaseFileHandler lfh)
             {
-                return lfh.UploadToDB(fileName, fileLength, data, group, subdir, extra);
+                return await lfh.UploadToDB(fileName, fileLength, data, group, subdir, extra);
             }
             else
             {
@@ -122,7 +123,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                     file.FileExt = ext;
                     file.Path = rv.path;
                     file.HandlerInfo = rv.handlerInfo;
-                    file.TenantCode = _wtm.LoginUserInfo?.CurrentTenant;
+                    file.TenantCode = (await _wtm.GetLoginUserInfo ())?.CurrentTenant;
                     dc.AddEntity(file);
                     dc.SaveChanges();
                     return file;

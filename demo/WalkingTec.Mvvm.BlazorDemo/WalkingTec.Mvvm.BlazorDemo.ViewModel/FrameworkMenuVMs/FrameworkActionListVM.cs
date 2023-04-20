@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
@@ -15,15 +16,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             NeedPage = false;
         }
 
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            var actions = new List<GridAction>
-            {
-            };
-            return actions;
+            return Task.FromResult (new List<GridAction> { });
         }
 
-        protected override IEnumerable<IGridColumn<FrameworkAction_ListView>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<FrameworkAction_ListView>>> InitGridHeader()
         {
             var header = new List<GridColumn<FrameworkAction_ListView>>();
 
@@ -32,10 +30,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             header.Add(this.MakeGridHeader(x => x.ClassName, 150));
             header.Add(this.MakeGridHeader(x => x.MethodName, 150));
 
-            return header;
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkAction_ListView>>> (header);
         }
 
-        public override IOrderedQueryable<FrameworkAction_ListView> GetSearchQuery()
+        public override Task<IOrderedQueryable<FrameworkAction_ListView>> GetSearchQuery()
         {
             var newdc = DC as FrameworkContext;
             List<FrameworkAction_ListView> actions = new List<FrameworkAction_ListView>();
@@ -84,7 +82,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
             }
             toremove.ForEach(x => actions.Remove(x));
-            return actions.AsQueryable().OrderBy(x=>x.AreaName).ThenBy(x=>x.ModuleName).ThenBy(x=>x.MethodName);
+            return Task.FromResult (actions.AsQueryable ().OrderBy (x => x.AreaName).ThenBy (x => x.ModuleName).ThenBy (x => x.MethodName));
         }
 
     }

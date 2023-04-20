@@ -1,6 +1,7 @@
 // WTM默认页面 Wtm buidin page
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.Json;
@@ -9,9 +10,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 {
     public class FrameworkRoleListVM : BasePagedListVM<FrameworkRole, FrameworkRoleSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override async Task<List<GridAction>> InitGridAction()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return new List<GridAction>
                 {
@@ -34,23 +35,23 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             }
         }
 
-        protected override IEnumerable<IGridColumn<FrameworkRole>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<FrameworkRole>>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkRole>>{
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkRole>>> (new List<GridColumn<FrameworkRole>>{
                 this.MakeGridHeader(x => x.RoleCode, 120),
                 this.MakeGridHeader(x => x.RoleName, 120),
                 this.MakeGridHeader(x => x.RoleRemark),
                 this.MakeGridHeaderAction(width: 300)
-            };
+            });
         }
 
-        public override IOrderedQueryable<FrameworkRole> GetSearchQuery()
+        public override Task<IOrderedQueryable<FrameworkRole>> GetSearchQuery()
         {
             var query = DC.Set<FrameworkRole>()
                 .CheckContain(Searcher.RoleCode, x => x.RoleCode)
                 .CheckContain(Searcher.RoleName, x => x.RoleName)
                 .OrderBy(x => x.RoleCode);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

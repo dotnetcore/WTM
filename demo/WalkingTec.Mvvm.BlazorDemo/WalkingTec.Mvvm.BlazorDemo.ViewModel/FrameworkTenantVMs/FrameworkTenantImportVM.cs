@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
         [Display(Name = "Sys.Enable")]
         public ExcelPropety Enabled_Excel = ExcelPropety.CreateProperty<FrameworkTenant>(x => x.Enabled);
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

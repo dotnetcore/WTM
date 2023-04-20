@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -18,44 +19,44 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             return rv;
         }
 
-        public override void Validate()
+        public override async Task Validate()
         {
             if (string.IsNullOrEmpty(Entity.Manager) == false)
             {
-                var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.Manager).FirstOrDefault();
+                var user = await DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.Manager).FirstOrDefaultAsync();
                 if (user == null)
                 {
                     MSD.AddModelError("Entity.Manager", Localizer["Sys.CannotFindUser", Entity.Manager]);
                 }
             }
-            base.Validate();
+            await base.Validate();
         }
 
-        public override void DoAdd()
-        {
-            base.DoAdd();
-            Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant).Wait();
-        }
+        //public override async Task DoAddAsync()
+        //{
+        //    await await base.DoAddAsync();
+        //    Wtm.RemoveGroupCache((await GetLoginUserInfo ()).CurrentTenant).Wait();
+        //}
 
-        public override void DoEdit(bool updateAllFields = false)
-        {
-            base.DoEdit(updateAllFields);
-            Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant).Wait();
-        }
+        //public override async Task DoEdit(bool updateAllFields = false)
+        //{
+        //    await await base.DoEditAsync(updateAllFields);
+        //    Wtm.RemoveGroupCache((await GetLoginUserInfo ()).CurrentTenant).Wait();
+        //}
 
-        public override async Task DoDeleteAsync()
+        public override async Task DoDelete()
         {
             using (var tran = DC.BeginTransaction())
             {
                 try
                 {
-                    await base.DoDeleteAsync();
+                    await base.DoDelete();
                     var ur = DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == Entity.GroupCode);
                     DC.Set<FrameworkUserGroup>().RemoveRange(ur);
-                    DC.SaveChanges();
+                    await DC.SaveChangesAsync();
                     tran.Commit();
                     await Wtm.RemoveUserCacheByGroup(Entity.GroupCode);
-                    await Wtm.RemoveGroupCache(LoginUserInfo.CurrentTenant);
+                    await Wtm.RemoveGroupCache((await GetLoginUserInfo ()).CurrentTenant);
                 }
                 catch
                 {

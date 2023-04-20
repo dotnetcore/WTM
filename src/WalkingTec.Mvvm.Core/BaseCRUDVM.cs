@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Core
         /// 根据主键Id获取Entity
         /// </summary>
         /// <param name="id">主键Id</param>
-        void SetEntityById(object id);
+        Task SetEntityById(object id);
 
         /// <summary>
         /// 设置Entity
@@ -38,27 +38,22 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 添加
         /// </summary>
-        void DoAdd();
-
-        Task DoAddAsync();
+        Task DoAdd();
 
         /// <summary>
         /// 修改
         /// </summary>
-        void DoEdit(bool updateAllFields);
-        Task DoEditAsync(bool updateAllFields);
+        Task DoEdit(bool updateAllFields);
 
         /// <summary>
         /// 删除，对于TopBasePoco进行物理删除，对于PersistPoco把IsValid修改为false
         /// </summary>
-        void DoDelete();
-        Task DoDeleteAsync();
+        Task DoDelete();
 
         /// <summary>
         /// 彻底删除，对PersistPoco进行物理删除
         /// </summary>
-        void DoRealDelete();
-        Task DoRealDeleteAsync();
+        Task DoRealDelete();
 
         /// <summary>
         /// 将源VM的上数据库上下文，Session，登录用户信息，模型状态信息，缓存信息等内容复制到本VM中
@@ -71,7 +66,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         bool ByPassBaseValidation { get; set; }
 
-        void Validate();
+        Task Validate();
         IModelStateService MSD { get; }
     }
 
@@ -143,9 +138,9 @@ namespace WalkingTec.Mvvm.Core
         /// 根据主键Id设定Entity
         /// </summary>
         /// <param name="id">主键Id</param>
-        public void SetEntityById(object id)
+        public async Task SetEntityById(object id)
         {
-            this.Entity = GetById(id);
+            this.Entity = await GetById(id);
         }
 
         /// <summary>
@@ -162,7 +157,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="Id">主键Id</param>
         /// <returns>Entity</returns>
-        protected virtual TModel GetById(object Id)
+        protected virtual Task<TModel> GetById(object Id)
         {
             TModel rv = null;
             var ModelType = typeof(TModel);
@@ -334,31 +329,15 @@ namespace WalkingTec.Mvvm.Core
                     rv.SetPropertyValue(f.Name, file);
                 }
             }
-            return rv;
+            return Task.FromResult (rv);
         }
 
         /// <summary>
         /// 添加，进行默认的添加操作。子类如有自定义操作应重载本函数
         /// </summary>
-        public virtual void DoAdd()
+        public virtual async Task DoAdd()
         {
-            DoAddPrepare();
-            //删除不需要的附件
-            if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
-            {
-                var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
-
-                foreach (var item in DeletedFileIds)
-                {
-                    fp.DeleteFile(item.ToString(), DC);
-                }
-            }
-            DC.SaveChanges();
-        }
-
-        public virtual async Task DoAddAsync()
-        {
-            DoAddPrepare();
+            await DoAddPrepare();
             //删除不需要的附件
             if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
             {
@@ -372,7 +351,7 @@ namespace WalkingTec.Mvvm.Core
             await DC.SaveChangesAsync();
         }
 
-        private void DoAddPrepare()
+        private async Task DoAddPrepare()
         {
             var pros = typeof(TModel).GetAllProperties();
             //将所有TopBasePoco的属性赋空值，防止添加关联的重复内容
@@ -405,13 +384,13 @@ namespace WalkingTec.Mvvm.Core
                 }
                 if (string.IsNullOrEmpty(ent.CreateBy))
                 {
-                    ent.CreateBy = LoginUserInfo?.ITCode;
+                    ent.CreateBy = (await GetLoginUserInfo ())?.ITCode;
                 }
             }
             if (typeof(ITenant).IsAssignableFrom(typeof(TModel)))
             {
                 ITenant ent = Entity as ITenant;
-                ent.TenantCode = LoginUserInfo?.CurrentTenant;
+                ent.TenantCode = (await GetLoginUserInfo ())?.CurrentTenant;
             }
             if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
             {
@@ -490,13 +469,13 @@ namespace WalkingTec.Mvvm.Core
                                     }
                                     if (string.IsNullOrEmpty(ent.CreateBy))
                                     {
-                                        ent.CreateBy = LoginUserInfo?.ITCode;
+                                        ent.CreateBy = (await GetLoginUserInfo ())?.ITCode;
                                     }
                                 }
                                 if (typeof(ITenant).IsAssignableFrom(subtype))
                                 {
                                     ITenant ent = newitem as ITenant;
-                                    ent.TenantCode = LoginUserInfo?.CurrentTenant;
+                                    ent.TenantCode = (await GetLoginUserInfo ())?.CurrentTenant;
                                 }
                             }
                         }
@@ -515,34 +494,9 @@ namespace WalkingTec.Mvvm.Core
         /// 修改，进行默认的修改操作。子类如有自定义操作应重载本函数
         /// </summary>
         /// <param name="updateAllFields">为true时，框架会更新当前Entity的全部值，为false时，框架会检查Request.Form里的key，只更新表单提交的字段</param>
-        public virtual void DoEdit(bool updateAllFields = false)
+        public virtual async Task DoEdit(bool updateAllFields = false)
         {
-            DoEditPrepare(updateAllFields);
-
-            try
-            {
-                DC.SaveChanges();
-            }
-            catch
-            {
-                MSD.AddModelError(" ", Localizer["Sys.EditFailed"]);
-            }
-            //删除不需要的附件
-            if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
-            {
-                var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
-
-                foreach (var item in DeletedFileIds)
-                {
-                    fp.DeleteFile(item.ToString(), DC.ReCreate());
-                }
-            }
-
-        }
-
-        public virtual async Task DoEditAsync(bool updateAllFields = false)
-        {
-            DoEditPrepare(updateAllFields);
+            await DoEditPrepare(updateAllFields);
 
             await DC.SaveChangesAsync();
             //删除不需要的附件
@@ -557,7 +511,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        private void DoEditPrepare(bool updateAllFields)
+        private async Task DoEditPrepare(bool updateAllFields)
         {
             if (typeof(IBasePoco).IsAssignableFrom(typeof(TModel)))
             {
@@ -568,7 +522,7 @@ namespace WalkingTec.Mvvm.Core
                 //}
                 //if (string.IsNullOrEmpty(ent.UpdateBy))
                 //{
-                ent.UpdateBy = LoginUserInfo?.ITCode;
+                ent.UpdateBy = (await GetLoginUserInfo ())?.ITCode;
                 //}
             }
             var pros = typeof(TModel).GetAllProperties();
@@ -631,7 +585,7 @@ namespace WalkingTec.Mvvm.Core
                                     }
                                     if (string.IsNullOrEmpty(ent.UpdateBy))
                                     {
-                                        ent.UpdateBy = LoginUserInfo?.ITCode;
+                                        ent.UpdateBy = (await GetLoginUserInfo ())?.ITCode;
                                     }
                                 }
                                 //循环页面传过来的子表数据,将关联到TopBasePoco的字段设为null,并且把外键字段的值设定为主表ID
@@ -734,7 +688,7 @@ namespace WalkingTec.Mvvm.Core
                                     if (typeof(IBasePoco).IsAssignableFrom(ftype))
                                     {
                                         (item as IBasePoco).UpdateTime = DateTime.Now;
-                                        (item as IBasePoco).UpdateBy = LoginUserInfo?.ITCode;
+                                        (item as IBasePoco).UpdateBy = (await GetLoginUserInfo ())?.ITCode;
                                     }
                                     dynamic i = item;
                                     DC.UpdateEntity(i);
@@ -764,13 +718,13 @@ namespace WalkingTec.Mvvm.Core
                                     }
                                     if (string.IsNullOrEmpty(ent.CreateBy))
                                     {
-                                        ent.CreateBy = LoginUserInfo?.ITCode;
+                                        ent.CreateBy = (await GetLoginUserInfo ())?.ITCode;
                                     }
                                 }
                                 if (typeof(ITenant).IsAssignableFrom(item.GetType()))
                                 {
                                     ITenant ent = item as ITenant;
-                                    ent.TenantCode = LoginUserInfo?.CurrentTenant;
+                                    ent.TenantCode = (await GetLoginUserInfo ())?.CurrentTenant;
                                 }
                                 DC.AddEntity(item);
                             }
@@ -807,7 +761,7 @@ namespace WalkingTec.Mvvm.Core
                                     if (typeof(IBasePoco).IsAssignableFrom(ftype))
                                     {
                                         (item as IBasePoco).UpdateTime = DateTime.Now;
-                                        (item as IBasePoco).UpdateBy = LoginUserInfo?.ITCode;
+                                        (item as IBasePoco).UpdateBy = (await GetLoginUserInfo ())?.ITCode;
                                     }
                                     dynamic i = item;
                                     DC.UpdateEntity(i);
@@ -903,36 +857,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        /// <summary>
-        /// 删除，进行默认的删除操作。子类如有自定义操作应重载本函数
-        /// </summary>
-        public virtual void DoDelete()
-        {
-            //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
-            if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
-            {
-                FC.Add("Entity.IsValid", 0);
-                (Entity as IPersistPoco).IsValid = false;
-
-                var pros = typeof(TModel).GetAllProperties();
-                //如果包含List<PersistPoco>，将子表IsValid也设置为false
-                var fas = pros.Where(x => typeof(IEnumerable<IPersistPoco>).IsAssignableFrom(x.PropertyType)).ToList();
-                foreach (var f in fas)
-                {
-                    f.SetValue(Entity, f.PropertyType.GetConstructor(Type.EmptyTypes).Invoke(null));
-                }
-
-                DoEditPrepare(false);
-                DC.SaveChanges();
-            }
-            //如果是普通的TopBasePoco，则进行物理删除
-            else if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
-            {
-                DoRealDelete();
-            }
-        }
-
-        public virtual async Task DoDeleteAsync()
+        public virtual async Task DoDelete()
         {
             //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
             if (typeof(IPersistPoco).IsAssignableFrom(typeof(TModel)))
@@ -951,7 +876,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     f.SetValue(Entity, null);
                 }
-                DoEditPrepare(false);
+                await DoEditPrepare(false);
                 try
                 {
                     await DC.SaveChangesAsync();
@@ -964,78 +889,12 @@ namespace WalkingTec.Mvvm.Core
             //如果是普通的TopBasePoco，则进行物理删除
             else if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
             {
-                DoRealDelete();
-            }
-        }
-
-        /// <summary>
-        /// 物理删除，对于普通的TopBasePoco和Delete操作相同，对于PersistPoco则进行真正的删除。子类如有自定义操作应重载本函数
-        /// </summary>
-        public virtual void DoRealDelete()
-        {
-            try
-            {
-                List<Guid> fileids = new List<Guid>();
-                var pros = typeof(TModel).GetAllProperties();
-
-                //如果包含附件，则先删除附件
-                var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
-                foreach (var f in fa)
-                {
-                    if (f.GetValue(Entity) is FileAttachment file)
-                    {
-                        fileids.Add(file.ID);
-                    }
-                    f.SetValue(Entity, null);
-                }
-
-                var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
-                foreach (var f in fas)
-                {
-                    var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
-                    if (subs == null)
-                    {
-                        var fullEntity = DC.Set<TModel>().AsQueryable().Include(f.Name).AsNoTracking().CheckID(Entity.ID).FirstOrDefault();
-                        subs = f.GetValue(fullEntity) as IEnumerable<ISubFile>;
-                    }
-                    if (subs != null)
-                    {
-                        foreach (var sub in subs)
-                        {
-                            fileids.Add(sub.FileId);
-                        }
-                        f.SetValue(Entity, null);
-                    }
-                }
-                if (typeof(TModel) != typeof(FileAttachment))
-                {
-                    foreach (var pro in pros)
-                    {
-                        if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
-                        {
-                            pro.SetValue(Entity, null);
-                        }
-                    }
-                }
-                DC.DeleteEntity(Entity);
-                DC.SaveChanges();
-                if (Wtm.ServiceProvider != null)
-                {
-                    var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
-                    foreach (var item in fileids)
-                    {
-                        fp.DeleteFile(item.ToString(), DC.ReCreate());
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                MSD.AddModelError("", CoreProgram._localizer?["Sys.DeleteFailed"]);
+                await DoRealDelete();
             }
         }
 
 
-        public virtual async Task DoRealDeleteAsync()
+        public virtual async Task DoRealDelete()
         {
             try
             {
@@ -1128,11 +987,11 @@ namespace WalkingTec.Mvvm.Core
         /// 验证数据，默认验证重复数据。子类如需要其他自定义验证，则重载这个函数
         /// </summary>
         /// <returns>验证结果</returns>
-        public override void Validate()
+        public override async Task Validate()
         {
             if (ByPassBaseValidation == false)
             {
-                base.Validate();
+                await base.Validate();
                 ////如果msd是BasicMSD，则认为他是手动创建的，也就是说并没有走asp.net core默认的模型验证
                 ////那么手动验证模型
                 //if (Wtm?.MSD is BasicMSD)
@@ -1184,7 +1043,7 @@ namespace WalkingTec.Mvvm.Core
                 //}
 
                 //验证重复数据
-                ValidateDuplicateData();
+                await ValidateDuplicateData();
             }
         }
 
@@ -1193,7 +1052,7 @@ namespace WalkingTec.Mvvm.Core
         /// 如果存在重复的数据，则返回已存在数据的id列表
         /// 如果不存在重复数据，则返回一个空列表
         /// </summary>
-        protected List<object> ValidateDuplicateData()
+        protected async Task<List<object>> ValidateDuplicateData()
         {
             //定义一个对象列表用于存放重复数据的id
             var count = new List<object>();
@@ -1231,7 +1090,7 @@ namespace WalkingTec.Mvvm.Core
                     if (typeof(ITenant).IsAssignableFrom(typeof(TModel)) && props.Any(x => x.Name.ToLower() == "tenantcode") == false && Wtm?.ConfigInfo.EnableTenant == true && group.UseTenant == true)
                     {
                         ITenant ent = Entity as ITenant;
-                        ent.TenantCode = LoginUserInfo.CurrentTenant;
+                        ent.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                         var f = new DuplicatedField<TModel>(x => (x as ITenant).TenantCode);
                         Expression exp = f.GetExpression(Entity, para);
                         conditions.Add(exp);
@@ -1383,7 +1242,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        private Type? _innerType;
+        private Type _innerType = null;
         public Type InnerType
         {
             get

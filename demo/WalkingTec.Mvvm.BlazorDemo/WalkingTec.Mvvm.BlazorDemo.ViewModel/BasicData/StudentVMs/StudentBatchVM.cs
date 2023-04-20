@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.StudentVMs
     public class Student_BatchEdit : BaseVM
     {
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

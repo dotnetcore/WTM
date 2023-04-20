@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
         [Display(Name = "名称")]
         public String Name { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
         [Display(Name = "学生")]
         public List<string> SelectedStudentMajorsIDs { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             AllStudentMajorss = DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
         }

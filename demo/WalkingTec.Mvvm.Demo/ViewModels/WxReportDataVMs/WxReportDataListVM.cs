@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
 {
     public partial class WxReportDataListVM : BasePagedListVM<WxReportData_View, WxReportDataSearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
         }
 
 
-        protected override IEnumerable<IGridColumn<WxReportData_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<WxReportData_View>>> InitGridHeader()
         {
             return new List<GridColumn<WxReportData_View>>{
                 this.MakeGridHeader(x => x.ToWxUser),
@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
             };
         }
 
-        public override IOrderedQueryable<WxReportData_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<WxReportData_View>> GetSearchQuery()
         {
             var query = DC.Set<WxReportData>()
                 .CheckEqual(Searcher.FrameworkUserId, x=>x.FrameworkUserId)

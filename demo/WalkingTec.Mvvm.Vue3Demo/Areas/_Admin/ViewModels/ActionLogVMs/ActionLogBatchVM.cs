@@ -1,5 +1,6 @@
 // WTM默认页面 Wtm buidin page
 using System;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
@@ -17,8 +18,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
     public class ActionLog_BatchEdit : BaseVM
     {
 
-        protected override void InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
     }

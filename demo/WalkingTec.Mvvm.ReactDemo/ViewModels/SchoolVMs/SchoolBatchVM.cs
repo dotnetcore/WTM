@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
         [Display(Name = "地点")]
         public Guid? PlaceId { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

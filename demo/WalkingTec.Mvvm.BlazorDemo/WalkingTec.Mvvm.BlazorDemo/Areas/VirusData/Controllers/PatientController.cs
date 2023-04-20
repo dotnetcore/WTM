@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
             }
             else
             {
-                vm.DoEdit(false);
+                await vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
             {
                 return Ok();
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
@@ -119,7 +119,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
             var vm = Wtm.CreateVM<PatientListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.CheckExport")]
@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.DownloadTemplate")]
@@ -155,7 +155,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
         public ActionResult Import(PatientImportVM vm)
         {
 
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());
             }
@@ -169,19 +169,19 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
         [HttpGet("GetCitys")]
         public ActionResult GetCitys()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+            return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
         [HttpGet("GetHospitals")]
         public ActionResult GetHospitals()
         {
-            return Ok(DC.Set<Hospital>().GetSelectListItems(Wtm, x => x.Name));
+            return Ok(await DC.Set<Hospital>().GetSelectListItems(Wtm, x => x.Name));
         }
 
         [HttpGet("GetViruss")]
         public ActionResult GetViruss()
         {
-            return Ok(DC.Set<Virus>().GetSelectListItems(Wtm, x => x.VirtusName));
+            return Ok(await DC.Set<Virus>().GetSelectListItems(Wtm, x => x.VirtusName));
         }
 
     }

@@ -1,5 +1,6 @@
 // WTM默认页面 Wtm buidin page
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
@@ -15,7 +16,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         public ExcelPropety c8 = ExcelPropety.CreateProperty<FrameworkUser>(x => x.Address);
         public ExcelPropety c9 = ExcelPropety.CreateProperty<FrameworkUser>(x => x.ZipCode);
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 
@@ -23,15 +24,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
     public class FrameworkUserImportVM : BaseImportVM<FrameworkUserTemplateVM, FrameworkUser>
     {
-        public override bool BatchSaveData()
+        public override async Task<bool> BatchSaveData()
         {
-            SetEntityList();
+            await SetEntityList();
             foreach (var item in EntityList)
             {
                 item.IsValid = true;
                 item.Password = Utils.GetMD5String(item.Password);
             }
-            return base.BatchSaveData();
+            return await base.BatchSaveData();
         }
     }
 

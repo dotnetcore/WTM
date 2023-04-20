@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.CityVMs
         [Display(Name = "_Admin.Parent")]
         public int? ParentId { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

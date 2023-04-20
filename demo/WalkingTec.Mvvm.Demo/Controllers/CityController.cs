@@ -91,7 +91,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();
@@ -250,7 +250,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchEdit")]
         public ActionResult DoBatchEdit(CityBatchVM vm, IFormCollection nouse)
         {
-            if (!ModelState.IsValid || !vm.DoBatchEdit())
+            if (!ModelState.IsValid || !await vm.DoBatchEdit())
             {
                 return PartialView("BatchEdit", vm);
             }
@@ -274,7 +274,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.BatchDelete")]
         public ActionResult DoBatchDelete(CityBatchVM vm, IFormCollection nouse)
         {
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return PartialView("BatchDelete", vm);
             }
@@ -297,7 +297,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Import")]
         public ActionResult Import(CityImportVM vm, IFormCollection nouse)
         {
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return PartialView(vm);
             }
@@ -312,7 +312,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public IActionResult ExportExcel(CityListVM vm)
         {
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
         public IActionResult GetAllCities()
         {

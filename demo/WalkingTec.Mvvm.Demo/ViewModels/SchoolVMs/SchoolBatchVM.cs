@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 
         public string SchoolCode { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
 {
     public partial class 不要用中文模型名ListVM : BasePagedListVM<不要用中文模型名_View, 不要用中文模型名Searcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             return new List<GridAction>
             {
@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
             };
         }
 
-        protected override IEnumerable<IGridColumn<不要用中文模型名_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<不要用中文模型名_View>>> InitGridHeader()
         {
             return new List<GridColumn<不要用中文模型名_View>>{
                 this.MakeGridHeader(x => x.不要),
@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
             };
         }
 
-        public override IOrderedQueryable<不要用中文模型名_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<不要用中文模型名_View>> GetSearchQuery()
         {
             var query = DC.Set<不要用中文模型名>()
                 .CheckContain(Searcher.不要, x=>x.不要)

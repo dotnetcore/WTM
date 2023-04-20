@@ -29,13 +29,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             return rv;
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             SelectedRolesCodes = DC.Set<FrameworkUserRole>().Where(x => x.UserCode == Entity.ITCode).Select(x => x.RoleCode).ToList();
             SelectedGroupCodes = DC.Set<FrameworkUserGroup>().Where(x => x.UserCode == Entity.ITCode).Select(x => x.GroupCode).ToList();
         }
 
-        public override async Task DoAddAsync()
+        public override async Task DoAdd()
         {
             using (var trans = DC.BeginTransaction())
             {
@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                         {
                             RoleCode = rolecode,
                             UserCode = Entity.ITCode,
-                            TenantCode = LoginUserInfo.CurrentTenant
+                            TenantCode = (await GetLoginUserInfo ()).CurrentTenant
                         };
                         DC.AddEntity(r);
                     }
@@ -60,14 +60,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                         {
                             GroupCode = groupcode,
                             UserCode = Entity.ITCode,
-                            TenantCode = LoginUserInfo.CurrentTenant
+                            TenantCode = (await GetLoginUserInfo ()).CurrentTenant
                         };
                         DC.AddEntity(g);
                     }
                 }
                 Entity.IsValid = true;
                 Entity.Password = Utils.GetMD5String(Entity.Password);
-                await base.DoAddAsync();
+                await base.DoAdd();
                 if (MSD.IsValid)
                 {
                     trans.Commit();
@@ -79,7 +79,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             }
         }
 
-        public override async Task DoEditAsync(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
             using (var trans = DC.BeginTransaction())
             {
@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                         {
                             RoleCode = rolecode,
                             UserCode = Entity.ITCode,
-                            TenantCode = LoginUserInfo.CurrentTenant
+                            TenantCode = (await GetLoginUserInfo ()).CurrentTenant
                         };
                         DC.AddEntity(r);
                     }
@@ -122,12 +122,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                         {
                             GroupCode = groupcode,
                             UserCode = Entity.ITCode,
-                            TenantCode = LoginUserInfo.CurrentTenant
+                            TenantCode = (await GetLoginUserInfo ()).CurrentTenant
                         };
                         DC.AddEntity(g);
                     }
                 }
-                await base.DoEditAsync(updateAllFields);
+                await base.DoEdit(updateAllFields);
                 if (MSD.IsValid)
                 {
                     trans.Commit();
@@ -140,18 +140,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             }
         }
 
-        public override async Task DoDeleteAsync()
+        public override async Task DoDelete()
         {
             using (var tran = DC.BeginTransaction())
             {
                 try
                 {
-                    await base.DoDeleteAsync();
+                    await base.DoDelete();
                     var ur = DC.Set<FrameworkUserRole>().Where(x => x.UserCode == Entity.ITCode);
                     DC.Set<FrameworkUserRole>().RemoveRange(ur);
                     var ug = DC.Set<FrameworkUserGroup>().Where(x => x.UserCode == Entity.ITCode);
                     DC.Set<FrameworkUserGroup>().RemoveRange(ug);
-                    DC.SaveChanges();
+                    await DC.SaveChangesAsync();
                     tran.Commit();
                 }
                 catch
@@ -162,11 +162,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             await Wtm.RemoveUserCache(Entity.ITCode);
         }
 
-        public void ChangePassword()
+        public async Task ChangePassword()
         {
             Entity.Password = Utils.GetMD5String(Entity.Password);
             DC.UpdateProperty(Entity, x => x.Password);
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
         }
     }
 }

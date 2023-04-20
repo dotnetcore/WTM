@@ -20,9 +20,9 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(FrameworkUserSearcher searcher)
+        public async Task<IActionResult> Search (FrameworkUserSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Request.RedirectCall(Wtm).Result;
             }
@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public async Task<IActionResult> Add(FrameworkUserVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                await vm.DoAddAsync();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -77,7 +77,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPut("[action]")]
         public async Task<IActionResult> Edit(FrameworkUserVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -88,7 +88,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                await vm.DoEditAsync(false);
+                await vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -104,7 +104,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Sys.Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -119,7 +119,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Ok();
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
@@ -133,7 +133,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                         DC.Set<FrameworkUserRole>().RemoveRange(ur);
                         var ug = DC.Set<FrameworkUserGroup>().Where(x => itcode.Contains(x.UserCode));
                         DC.Set<FrameworkUserGroup>().RemoveRange(ug);
-                        DC.SaveChanges();
+                        await DC.SaveChangesAsync();
                         tran.Commit();
                     }
                     catch
@@ -149,23 +149,23 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcel(FrameworkUserSearcher searcher)
+        public async Task<IActionResult> ExportExcel (FrameworkUserSearcher searcher)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
             var vm = Wtm.CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds (string[] ids)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -175,14 +175,14 @@ namespace WalkingTec.Mvvm.Admin.Api
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("[action]")]
-        public IActionResult GetExcelTemplate()
+        public async Task<IActionResult> GetExcelTemplate ()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
@@ -202,14 +202,14 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Import")]
         [HttpPost("[action]")]
-        public ActionResult Import(FrameworkUserImportVM vm)
+        public async Task<ActionResult> Import(FrameworkUserImportVM vm)
         {
 
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 return Content(Localizer["_Admin.HasMainHost"]);
             }
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());
             }
@@ -222,73 +222,73 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFrameworkRoles")]
         [ActionDescription("GetRoles")]
         [AllRights]
-        public IActionResult GetFrameworkRoles()
+        public async Task<IActionResult> GetFrameworkRoles ()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
-                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkRoles").Result;
+                return await Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkRoles");
             }
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x => x.RoleCode));
+            return Ok(await DC.Set<FrameworkRole>().GetSelectListItems(Wtm, x => x.RoleName, x => x.RoleCode));
         }
 
         [HttpGet("GetFrameworkGroups")]
         [ActionDescription("GetGroups")]
         [AllRights]
-        public IActionResult GetFrameworkGroups()
+        public async Task<IActionResult> GetFrameworkGroups()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
-                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkGroups").Result;
+                return await Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkGroups");
             }
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+            return Ok(await DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
 
         [HttpGet("GetFrameworkGroupsTree")]
         [ActionDescription("GetGroupsTree")]
         [AllRights]
-        public IActionResult GetFrameworkGroupsTree()
+        public async Task<IActionResult> GetFrameworkGroupsTree()
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
-                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkGroupsTree").Result;
+                return await Request.RedirectCall(Wtm, "/api/_frameworkuser/GetFrameworkGroupsTree");
             }
-            return Ok(DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
+            return Ok(await DC.Set<FrameworkGroup>().GetTreeSelectListItems(Wtm, x => x.GroupName, x => x.GroupCode));
         }
 
 
         [HttpGet("GetUserById")]
         [AllRights]
-        public IActionResult GetUserById(string keywords)
+        public async Task<IActionResult> GetUserById (string keywords)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
-                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserById").Result;
+                return await Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserById");
             }
-            var users = DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
+            var users = await DC.Set<FrameworkUser>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(Wtm, x => x.Name + "(" + x.ITCode + ")", x => x.ITCode);
             return Ok(users);
         }
 
         [HttpGet("GetUserByGroup")]
         [AllRights]
-        public IActionResult GetUserByGroup(string keywords)
+        public async Task<IActionResult> GetUserByGroup (string keywords)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
-                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserByGroup").Result;
+                return await Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserByGroup");
             }
-            var users = DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == keywords).Select(x=>x.UserCode).ToList();
+            var users = await DC.Set<FrameworkUserGroup>().Where(x => x.GroupCode == keywords).Select(x=>x.UserCode).ToListAsync();
             return Ok(users);
         }
 
         [HttpGet("GetUserByRole")]
         [AllRights]
-        public IActionResult GetUserByRole(string keywords)
+        public async Task<IActionResult> GetUserByRole (string keywords)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
-                return Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserByRole").Result;
+                return await Request.RedirectCall(Wtm, "/api/_frameworkuser/GetUserByRole");
             }
-            var users = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == keywords).Select(x => x.UserCode).ToList();
+            var users = await DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == keywords).Select(x => x.UserCode).ToListAsync();
             return Ok(users);
         }
 

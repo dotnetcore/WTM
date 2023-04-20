@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
         [Display(Name = "_Admin.Parent")]
         public Guid? ParentId { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

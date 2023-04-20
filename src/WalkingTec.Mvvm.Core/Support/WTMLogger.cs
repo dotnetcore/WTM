@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -135,13 +136,15 @@ namespace WalkingTec.Mvvm.Core
                         {
                             if (dc != null)
                             {
-                                try
-                                {
-                                    log.TenantCode = wtm.LoginUserInfo?.CurrentTenant;
-                                    dc.AddEntity<ActionLog>(log);
-                                    dc.SaveChanges();
-                                }
-                                catch { }
+                                _ = Task.Run (async () => {
+                                    try
+                                    {
+                                        log.TenantCode = (await wtm.GetLoginUserInfo ())?.CurrentTenant;
+                                        dc.AddEntity<ActionLog>(log);
+                                        dc.SaveChanges();
+                                    }
+                                    catch { }
+                                });
                             }
                         }
                     }

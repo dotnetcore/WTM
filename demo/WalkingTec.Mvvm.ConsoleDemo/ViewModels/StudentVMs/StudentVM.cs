@@ -21,14 +21,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
             MajorList = new MajorListVM();
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
-            AllStudentMajors = DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
+            AllStudentMajors = await DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
         }
 
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

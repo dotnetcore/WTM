@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         [Display(Name = "日期")]
         public DateRange EnRollDate { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
         }
 

@@ -20,22 +20,22 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
             SetInclude(x => x.Location);
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             AllLocations = DC.Set<City>().GetTreeSelectListItems(Wtm, y => y.Name);
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {           
-            base.DoAdd();
+            await base.DoAdd();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
-            base.DoEdit(updateAllFields);
+            await base.DoEdit(updateAllFields);
         }
 
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
             base.DoDelete();
         }

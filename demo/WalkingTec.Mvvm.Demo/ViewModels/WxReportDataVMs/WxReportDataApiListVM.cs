@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
     public partial class WxReportDataApiListVM : BasePagedListVM<WxReportDataApi_View, WxReportDataApiSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<WxReportDataApi_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<WxReportDataApi_View>>> InitGridHeader()
         {
             return new List<GridColumn<WxReportDataApi_View>>{
                 this.MakeGridHeader(x => x.ToWxUser),
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
             };
         }
 
-        public override IOrderedQueryable<WxReportDataApi_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<WxReportDataApi_View>> GetSearchQuery()
         {
             var query = DC.Set<WxReportData>()
                 .CheckEqual(Searcher.FrameworkUserId, x=>x.FrameworkUserId)

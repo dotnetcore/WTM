@@ -56,7 +56,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 //其他属性可以通过user.Attributes["aaa"] = "bbb"方式赋值
-                Wtm.LoginUserInfo = user;
+                Wtm.SetLoginUserInfo (user);
                 string url = string.Empty;
                 if (!string.IsNullOrEmpty(vm.Redirect))
                 {
@@ -122,7 +122,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (ConfigInfo.HasMainHost == false || Wtm.LoginUserInfo?.CurrentTenant != null)
+            if (ConfigInfo.HasMainHost == false || (await Wtm.GetLoginUserInfo ())?.CurrentTenant != null)
             {
                 HttpContext.Response.Redirect("/");
             }
@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult ChangePassword()
         {
             var vm = Wtm.CreateVM<ChangePasswordVM>();
-            vm.ITCode = Wtm.LoginUserInfo.ITCode;
+            vm.ITCode = (await Wtm.GetLoginUserInfo ()).ITCode;
             return PartialView(vm);
         }
 
@@ -147,7 +147,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("ChangePassword")]
         public ActionResult ChangePassword(ChangePasswordVM vm)
         {
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 var result = Wtm.CallAPI<string>("mainhost", "/api/_account/ChangePassword", HttpMethodEnum.POST, vm, 10).Result;
                 if (result.StatusCode == System.Net.HttpStatusCode.OK)

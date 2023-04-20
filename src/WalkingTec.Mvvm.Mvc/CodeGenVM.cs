@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -355,7 +356,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        protected override void InitVM()
+        protected override Task InitVM()
         {
             if (string.IsNullOrEmpty(SelectedModel) == false)
             {
@@ -374,6 +375,7 @@ namespace WalkingTec.Mvvm.Mvc
 
             FieldList = new CodeGenListVM();
             FieldList.CopyContext(this);
+            return Task.CompletedTask;
         }
         public void DoGen()
         {
@@ -587,7 +589,7 @@ namespace WalkingTec.Mvvm.Mvc
         [HttpGet(""Get{subtype.Name}s"")]
         public ActionResult Get{subtype.Name}s()
         {{
-            return Ok(DC.Set<{subtype.Name}>().GetSelectListItems(Wtm, x => x.{item.SubField}));
+            return Ok(await DC.Set<{subtype.Name}>().GetSelectListItems(Wtm, x => x.{item.SubField}));
         }}");
                         }
                     }
@@ -694,7 +696,7 @@ namespace WalkingTec.Mvvm.Mvc
                 if (UI == UIEnum.LayUI && IsApi == false)
                 {
                     actionstring = $@"
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {{
             return new List<GridAction>
             {{

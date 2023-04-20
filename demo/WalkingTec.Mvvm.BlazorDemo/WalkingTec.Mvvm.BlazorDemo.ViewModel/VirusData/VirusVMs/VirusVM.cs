@@ -20,12 +20,12 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs
             SetInclude(x => x.Patients);
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             SelectedPatientsIDs = Entity.Patients?.Select(x => x.PatientId.ToString()).ToList();
         }
 
-        public override void DoAdd()
+        public override async Task DoAdd()
         {
             Entity.Patients = new List<PatientVirus>();
             if (SelectedPatientsIDs != null)
@@ -38,10 +38,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs
                 }
             }
            
-            base.DoAdd();
+            await base.DoAdd();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEdit(bool updateAllFields = false)
         {
             Entity.Patients = new List<PatientVirus>();
             if(SelectedPatientsIDs != null )
@@ -54,10 +54,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs
                 }
             }
 
-            base.DoEdit(updateAllFields);
+            await base.DoEdit(updateAllFields);
         }
 
-        public override void DoDelete()
+        public override async Task DoDelete()
         {
             base.DoDelete();
         }

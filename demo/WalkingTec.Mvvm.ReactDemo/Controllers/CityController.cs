@@ -7,6 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs;
 using WalkingTec.Mvvm.ReactDemo.Models;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.ReactDemo.Controllers
 {
@@ -43,7 +44,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(CityVM vm)
+        public async Task<IActionResult> Add (CityVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -51,7 +52,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -66,7 +67,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(CityVM vm)
+        public async Task<IActionResult> Edit (CityVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -74,7 +75,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
-                vm.DoEdit(false);
+                await vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete (string[] ids)
         {
             var vm = Wtm.CreateVM<CityBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -99,7 +100,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             {
                 return Ok();
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
@@ -112,17 +113,17 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(CitySearcher searcher)
+        public async Task<IActionResult> ExportExcel (CitySearcher searcher)
         {
             var vm = Wtm.CreateVM<CityListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds (string[] ids)
         {
             var vm = Wtm.CreateVM<CityListVM>();
             if (ids != null && ids.Count() > 0)
@@ -130,7 +131,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            return vm.GetExportData();
+            return await vm.GetExportData();
         }
 
         [ActionDescription("Sys.DownloadTemplate")]
@@ -150,10 +151,10 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(CityImportVM vm)
+        public async Task<IActionResult> Import (CityImportVM vm)
         {
 
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
                 return BadRequest(vm.GetErrorJson());
             }
@@ -165,15 +166,15 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
 
         [HttpGet("GetCitys")]
-        public ActionResult GetCitys()
+        public async Task<IActionResult> GetCitys ()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+            return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
         [HttpGet("GetCitysTree")]
-        public ActionResult GetCitysTree()
+        public async Task<IActionResult> GetCitysTree ()
         {
-            return Ok(DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name));
+            return Ok(await DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name));
         }
 
     }

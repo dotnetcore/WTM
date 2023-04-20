@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
@@ -109,7 +110,7 @@ namespace WalkingTec.Mvvm.Core
         /// 批量删除，默认对Ids中包含的主键的数据进行删除。子类如果有特殊判断应重载本函数
         /// </summary>
         /// <returns>true代表成功，false代表失败</returns>
-        public virtual bool DoBatchDelete()
+        public virtual async Task<bool> DoBatchDelete()
         {
             bool rv = true;
             //循环所有数据Id
@@ -150,7 +151,7 @@ namespace WalkingTec.Mvvm.Core
                         if (isBasePoco)
                         {
                             (Entity as IBasePoco).UpdateTime = DateTime.Now;
-                            (Entity as IBasePoco).UpdateBy = LoginUserInfo.ITCode;
+                            (Entity as IBasePoco).UpdateBy = (await GetLoginUserInfo ()).ITCode;
                             DC.UpdateProperty(Entity, "UpdateTime");
                             DC.UpdateProperty(Entity, "UpdateBy");
                         }
@@ -217,7 +218,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 try
                 {
-                    DC.SaveChanges();
+                    await DC.SaveChangesAsync();
                     var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
                     foreach (var item in fileids)
                     {
@@ -246,7 +247,7 @@ namespace WalkingTec.Mvvm.Core
                 ListVM?.DoSearch();
                 if (ListVM != null)
                 {
-                    foreach (var item in ListVM?.GetEntityList())
+                    foreach (var item in await ListVM?.GetEntityList())
                     {
                         item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
                     }
@@ -261,7 +262,7 @@ namespace WalkingTec.Mvvm.Core
         /// 批量修改，默认对Ids中包含的数据进行修改，子类如果有特殊判断应重载本函数
         /// </summary>
         /// <returns>true代表成功，false代表失败</returns>
-        public virtual bool DoBatchEdit()
+        public virtual async Task<bool> DoBatchEdit()
         {
             //获取批量修改VM的所有属性
             var pros = LinkedVM.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly);
@@ -326,7 +327,7 @@ namespace WalkingTec.Mvvm.Core
                     //如果有对应的BaseCRUDVM则使用其进行数据验证
                     if (vm != null)
                     {
-                        vm.Validate();
+                        await vm.Validate();
                         var errors = vm.MSD;
                         if (errors != null && errors.Count > 0)
                         {
@@ -356,7 +357,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         if (string.IsNullOrEmpty(ent.UpdateBy))
                         {
-                            ent.UpdateBy = LoginUserInfo?.ITCode;
+                            ent.UpdateBy = (await GetLoginUserInfo ())?.ITCode;
                             DC.UpdateProperty(entity, nameof(ent.UpdateBy));
                         }
                     }
@@ -372,7 +373,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 try
                 {
-                    DC.SaveChanges();
+                    await DC.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -394,15 +395,15 @@ namespace WalkingTec.Mvvm.Core
                         }
                     }
                 }
-                RefreshErrorList();
+                await RefreshErrorList();
             }
             return rv;
         }
 
-        protected void RefreshErrorList()
+        protected async Task RefreshErrorList()
         {
-            ListVM.DoSearch();
-            foreach (var item in ListVM.GetEntityList())
+            await ListVM.DoSearch();
+            foreach (var item in await ListVM.GetEntityList())
             {
                 item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
             }

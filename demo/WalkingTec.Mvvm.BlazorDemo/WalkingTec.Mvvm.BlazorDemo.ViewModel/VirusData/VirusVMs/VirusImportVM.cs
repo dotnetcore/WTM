@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.VirusVMs
         [Display(Name = "病毒种类")]
         public ExcelPropety VirtusType_Excel = ExcelPropety.CreateProperty<Virus>(x => x.VirtusType);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
         }
 

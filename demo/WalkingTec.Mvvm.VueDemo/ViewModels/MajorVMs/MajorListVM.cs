@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +14,9 @@ namespace WalkingTec.Mvvm.VueDemo.ViewModels.MajorVMs
     public partial class MajorListVM : BasePagedListVM<Major_View, MajorSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<Major_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<Major_View>>> InitGridHeader()
         {
-            return new List<GridColumn<Major_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<Major_View>>> (new List<GridColumn<Major_View>>{
                 this.MakeGridHeader(x => x.MajorCode),
                 this.MakeGridHeader(x => x.MajorName),
                 this.MakeGridHeader(x => x.MajorType),
@@ -24,10 +24,10 @@ namespace WalkingTec.Mvvm.VueDemo.ViewModels.MajorVMs
                 this.MakeGridHeader(x => x.SchoolName_view),
                 this.MakeGridHeader(x => x.LoginName_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
-        public override IOrderedQueryable<Major_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<Major_View>> GetSearchQuery()
         {
             var query = DC.Set<Major>()
                 .Select(x => new Major_View
@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.VueDemo.ViewModels.MajorVMs
                     LoginName_view = x.StudentMajors.Select(y=>y.Student.LoginName).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

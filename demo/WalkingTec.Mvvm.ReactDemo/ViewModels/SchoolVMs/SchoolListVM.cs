@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +14,9 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
     public partial class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
     {
 
-        protected override IEnumerable<IGridColumn<School_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<School_View>>> InitGridHeader()
         {
-            return new List<GridColumn<School_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<School_View>>> (new List<GridColumn<School_View>>{
                 this.MakeGridHeader(x => x.SchoolCode),
                 this.MakeGridHeader(x => x.SchoolName),
                 this.MakeGridHeader(x => x.SchoolType),
@@ -24,10 +24,10 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
                 this.MakeGridHeader(x => x.Level),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
-        public override IOrderedQueryable<School_View> GetSearchQuery()
+        public override Task<IOrderedQueryable<School_View>> GetSearchQuery()
         {
             var query = DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x=>x.SchoolCode)
@@ -44,7 +44,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
                     Name_view = x.Place.Name,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

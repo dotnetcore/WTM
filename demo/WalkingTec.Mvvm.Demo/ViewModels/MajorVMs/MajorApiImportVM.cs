@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
         [Display(Name = "所属学校")]
         public ExcelPropety School_Excel = ExcelPropety.CreateProperty<Major>(x => x.SchoolId);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
             School_Excel.DataType = ColumnDataType.ComboBox;
             School_Excel.ListItems = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);

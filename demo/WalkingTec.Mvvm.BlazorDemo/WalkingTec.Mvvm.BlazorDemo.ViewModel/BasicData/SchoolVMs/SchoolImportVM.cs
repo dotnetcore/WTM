@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.SchoolVMs
         [Display(Name = "备注")]
         public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty<School>(x => x.Remark);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
         }
 

@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
         {
         }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
             DpLists = new List<GroupDp>();
             foreach (var item in Wtm.DataPrivilegeSettings)
@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                     dp.RelateId = null;
                     dp.GroupCode = GroupCode;
                     dp.TableName = item.List.Searcher.TableName;
-                    dp.TenantCode = LoginUserInfo.CurrentTenant;
+                    dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
                 if (item.IsAll == false && item.SelectedIds != null)
@@ -80,13 +80,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                         dp.RelateId = id;
                         dp.GroupCode = GroupCode;
                         dp.TableName = item.List.Searcher.TableName;
-                        dp.TenantCode = LoginUserInfo.CurrentTenant;
+                        dp.TenantCode = (await GetLoginUserInfo ()).CurrentTenant;
                         DC.Set<DataPrivilege>().Add(dp);
                     }
 
                 }
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
             Wtm.RemoveUserCacheByGroup(GroupCode).Wait();
             return true;
         }

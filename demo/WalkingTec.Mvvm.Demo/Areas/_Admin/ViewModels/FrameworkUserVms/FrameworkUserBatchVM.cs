@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -22,18 +23,19 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             LinkedVM = new FrameworkUser_BatchEdit();
         }
 
-        protected override void InitVM()
+        protected override Task InitVM()
         {
             RoleListVM = Wtm.CreateVM<FrameworkRoleListVM>();
+            return Task.CompletedTask;
         }
 
-        public override bool DoBatchEdit()
+        public override async Task<bool> DoBatchEdit()
         {
-            var entityList = DC.Set<FrameworkUser>().AsNoTracking().CheckIDs(Ids.ToList()).ToList();
+            var entityList = await DC.Set<FrameworkUser>().AsNoTracking().CheckIDs(Ids.ToList()).ToListAsync();
             foreach (var entity in entityList)
             {
                 List<Guid> todelete = new List<Guid>();
-                todelete.AddRange(DC.Set<FrameworkUserRole>().AsNoTracking().Where(x => x.UserCode == entity.ITCode).Select(x => x.ID));
+                todelete.AddRange(await DC.Set<FrameworkUserRole>().AsNoTracking().Where(x => x.UserCode == entity.ITCode).Select(x => x.ID).ToListAsync ());
                 foreach (var item in todelete)
                 {
                     DC.DeleteEntity(new FrameworkUserRole { ID = item });
@@ -52,7 +54,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     }
                 }
             }
-            return base.DoBatchEdit();
+            return await base.DoBatchEdit();
         }
     }
 
@@ -62,9 +64,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         public List<string> SelectedRolesCodes { get; set; }
         public List<ComboSelectListItem> AllRoles { get; set; }
 
-        protected override void InitVM()
+        protected override async Task InitVM()
         {
-            AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, y => y.RoleName, y => y.RoleCode);
+            AllRoles = await DC.Set<FrameworkRole>().GetSelectListItems(Wtm, y => y.RoleName, y => y.RoleCode);
         }
     }
 

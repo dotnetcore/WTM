@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
@@ -20,9 +21,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         }
 
 
-        protected override void InitVM()
+        protected override Task InitVM()
         {
             MajorList.CopyContext(this);
+            return Task.CompletedTask;
         }
 
     }

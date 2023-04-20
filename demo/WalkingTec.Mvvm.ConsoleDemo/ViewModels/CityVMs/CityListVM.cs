@@ -13,9 +13,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 {
     public partial class CityListVM : BasePagedListVM<City_View, CitySearcher>
     {
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"],"", dialogWidth: 800),
@@ -25,10 +25,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"],"", dialogWidth: 800),
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"],"", dialogWidth: 800),
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"],""),
-            };
+            });
         }
 
-        protected override IEnumerable<IGridColumn<City_View>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<City_View>>> InitGridHeader()
         {
             var rv = new List<GridColumn<City_View>>();
             rv.Add(this.MakeGridHeader(x => x.Name));
@@ -41,14 +41,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
             }
 
             rv.Add(this.MakeGridHeaderAction(width: 200));
-            return rv;
+            return Task.FromResult<IEnumerable<IGridColumn<City_View>>> (rv);
         }
 
-        public override IOrderedQueryable<City_View> GetSearchQuery()
+        public override async Task<IOrderedQueryable<City_View>> GetSearchQuery()
         {
-            var query = DC.Set<City>()
+            var query = (await DC.Set<City>()
                 .CheckEqual(Searcher.ParentId, x=>x.ParentId)
-                .DPWhere(Wtm, x=>x.ID)
+                .DPWhere(Wtm, x=>x.ID))
                 .Select(x => new City_View
                 {
 				    ID = x.ID,

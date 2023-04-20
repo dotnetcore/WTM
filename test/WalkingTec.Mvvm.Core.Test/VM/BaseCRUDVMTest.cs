@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Implement;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Test.Mock;
@@ -222,7 +223,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
         [TestMethod]
         [Description("Persist外键删除")]
-        public void One2ManyTablePersistDelete()
+        public async Task One2ManyTablePersistDelete()
         {
             GoodsCatalog gc = new GoodsCatalog
             {
@@ -231,7 +232,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 OrderNum = 2
             };
             _goodsvm.DC.AddEntity(gc);
-            _goodsvm.DC.SaveChanges();
+            await _goodsvm.DC.SaveChangesAsync();
 
             GoodsSpecification g = new GoodsSpecification
             {
@@ -241,7 +242,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 CatalogId = gc.ID
             };
             _goodsvm.Entity = g;
-            _goodsvm.DoAdd();
+            await _goodsvm.DoAdd();
 
             //删除子表数据，主表应该无变化
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
@@ -249,7 +250,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 Assert.AreEqual(1, context.Set<GoodsSpecification>().IgnoreQueryFilters().Count());
                 _goodsvm.DC = context;
                 _goodsvm.Entity = context.Set<GoodsSpecification>().IgnoreQueryFilters().Include(x=>x.Catalog).Where(x => x.ID == g.ID).FirstOrDefault();
-                _goodsvm.DoDelete();
+                await _goodsvm.DoDelete();
             }
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
@@ -269,7 +270,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
         [TestMethod]
         [Description("Persist外键删除2")]
-        public void One2ManyTablePersistDelete2()
+        public async Task One2ManyTablePersistDelete2()
         {
             GoodsCatalog gc = new GoodsCatalog
             {
@@ -278,7 +279,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 OrderNum = 2
             };
             _goodsvm.DC.AddEntity(gc);
-            _goodsvm.DC.SaveChanges();
+            await _goodsvm.DC.SaveChangesAsync();
 
             GoodsSpecification g = new GoodsSpecification
             {
@@ -288,7 +289,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 CatalogId = gc.ID
             };
             _goodsvm.Entity = g;
-            _goodsvm.DoAdd();
+            await _goodsvm.DoAdd();
 
             //删除主表数据，子表IsValid也应该设置为False
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
@@ -296,7 +297,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 Assert.AreEqual(1, context.Set<GoodsCatalog>().Count());
                 _goodsCatalogvm.DC = context;
                 _goodsCatalogvm.Entity = context.Set<GoodsCatalog>().Where(x => x.ID == g.ID).FirstOrDefault();
-                _goodsCatalogvm.DoDelete();
+                await _goodsCatalogvm.DoDelete();
             }
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
@@ -319,7 +320,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
         [TestMethod]
         [Description("一对多主表删除")]
-        public void One2ManyTableDelete()
+        public async Task One2ManyTableDelete()
         {
             One2ManyDoAdd();
 
@@ -328,7 +329,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 var id = context.Set<School>().AsNoTracking().First().ID;
                 _schoolvm.DC = context;
                 _schoolvm.Entity = context.Set<School>().Include(x=>x.Majors).Where(x => x.ID == id).FirstOrDefault();
-                _schoolvm.DoDelete();
+                await _schoolvm.DoDelete();
             }
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))

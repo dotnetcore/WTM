@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -11,7 +12,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     public class DataPrivilegeListVM : BasePagedListVM<DataPrivilege_ListView, DataPrivilegeSearcher>
     {
 
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
             string tp = "";
             if (Searcher.DpType == DpTypeEnum.User)
@@ -23,14 +24,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 tp = "UserGroup";
             }
 
-                return new List<GridAction>
+                return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800).SetQueryString($"Type={tp}"),
                 this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
-            };
+            });
         }
 
-        protected override IEnumerable<IGridColumn<DataPrivilege_ListView>> InitGridHeader()
+        protected override Task<IEnumerable<IGridColumn<DataPrivilege_ListView>>> InitGridHeader()
         {
             return new List<GridColumn<DataPrivilege_ListView>>{
                 this.MakeGridHeader(x => x.Name, 200),
@@ -81,7 +82,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         /// <summary>
         /// 查询结果
         /// </summary>
-        public override IOrderedQueryable<DataPrivilege_ListView> GetSearchQuery()
+        public override Task<IOrderedQueryable<DataPrivilege_ListView>> GetSearchQuery()
         {
             IOrderedQueryable<DataPrivilege_ListView> query = null;
             if (Searcher.DpType == DpTypeEnum.User)
@@ -117,10 +118,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     .OrderByDescending(x => x.Name).OrderByDescending(x => x.TableName);
 
             }
-            return query;
+            return Task.FromResult (query);
         }
 
-        public override void AfterDoSearcher()
+        public override async Task AfterDoSearcher()
         {
             if (Searcher.DpType == DpTypeEnum.User)
             {
@@ -128,7 +129,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             var groupIDs = EntityList.Select(x=>x.TargetId).ToList();
             Dictionary<string, string> groupdata = new Dictionary<string, string>();
-            if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
+            if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
                 var dd = Wtm.CallAPI<List<ComboSelectListItem>>("mainhost", "/api/_account/GetFrameworkGroups").Result;
                 if(dd.Data != null)
@@ -141,7 +142,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             else
             {
-                var ag = Wtm.GetTenantGroups(Wtm.LoginUserInfo?.CurrentTenant);
+                var ag = Wtm.GetTenantGroups((await Wtm.GetLoginUserInfo ())?.CurrentTenant);
                 foreach (var item in ag)
                 {
                     groupdata.TryAdd(item.GroupCode, item.GroupName);
@@ -151,7 +152,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             {
                 item.Name = groupdata.ContainsKey(item.TargetId) ? groupdata[item.TargetId] : "";
             }
-            base.AfterDoSearcher();
+            await base.AfterDoSearcher();
         }
     }
 

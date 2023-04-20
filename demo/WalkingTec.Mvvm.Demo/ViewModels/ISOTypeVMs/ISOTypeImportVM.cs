@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
         [Display(Name = " 附加信息")]
         public ExcelPropety Description_Excel = ExcelPropety.CreateProperty<ISOType>(x => x.Description);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
         }
 

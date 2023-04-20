@@ -18,21 +18,21 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
             NeedPage = false;
         }
 
-        protected override List<GridAction> InitGridAction()
+        protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.AddRow, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.RemoveRow, "删除","", dialogWidth: 800),
-            };
+            });
         }
 
-        protected override IEnumerable<IGridColumn<Major>> InitGridHeader()
+        protected override async Task<IEnumerable<IGridColumn<Major>>> InitGridHeader()
         {          
             return new List<GridColumn<Major>>{
                 this.MakeGridHeader(x => x.MajorCode).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.MajorType).SetEditType(EditTypeEnum.ComboBox,typeof(MajorTypeEnum).ToListItems(null,true)),
-                this.MakeGridHeader(x=> x.CityId).SetEditType( EditTypeEnum.ComboBox,DC.Set<City>().GetSelectListItems(Wtm, x=>x.Name)),
+                this.MakeGridHeader(x=> x.CityId).SetEditType( EditTypeEnum.ComboBox,await DC.Set<City>().GetSelectListItems(Wtm, x=>x.Name)),
                 this.MakeGridHeader(x => x.MajorName).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.TestDate).SetEditType(EditTypeEnum.Datetime, dateType:DateTimeTypeEnum.Time).SetFormat((a,b)=>a.TestDate.ToString("HH:mm:ss")),
                 this.MakeGridHeader(x => x.IsTrue).SetEditType(EditTypeEnum.ComboBox,Utils.GetBoolCombo(BoolComboTypes.YesNo, selectText:Wtm.Localizer?["Sys.PleaseSelect"])),
@@ -41,12 +41,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
             };
         }
 
-        public override IOrderedQueryable<Major> GetSearchQuery()
+        public override Task<IOrderedQueryable<Major>> GetSearchQuery()
         {
             var query = DC.Set<Major>()
                 .Where(x=>Searcher.SchoolId == x.SchoolId)
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

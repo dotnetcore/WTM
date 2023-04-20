@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -28,12 +28,12 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.PatientVMs
         [Display(Name = "所属医院")]
         public ExcelPropety Hospital_Excel = ExcelPropety.CreateProperty<Patient>(x => x.HospitalId);
 
-	    protected override void InitVM()
+	    protected override async Task InitVM()
         {
             Location_Excel.DataType = ColumnDataType.ComboBox;
-            Location_Excel.ListItems = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
+            Location_Excel.ListItems = await DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
             Hospital_Excel.DataType = ColumnDataType.ComboBox;
-            Hospital_Excel.ListItems = DC.Set<Hospital>().GetSelectListItems(Wtm, y => y.Name);
+            Hospital_Excel.ListItems = await DC.Set<Hospital>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }
