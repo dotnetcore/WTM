@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     /// <typeparam name="T">ListVM中的Model类</typeparam>
     /// <typeparam name="S">ListVM使用的Searcher类</typeparam>
-    public interface IBasePagedListVM<T, out S> : IBaseVM
+    public interface IBasePagedListVM<out T, out S> : IBaseVM
         where T : TopBasePoco
         where S : ISearcher
     {

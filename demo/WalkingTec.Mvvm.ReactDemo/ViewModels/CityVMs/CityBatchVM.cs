@@ -15,8 +15,6 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
         public CityBatchVM()
         {
             ListVM = new CityListVM();
-            //IBasePagedListVM<TopBasePoco, ISearcher>    <-    BaseBatchVM<City, City_BatchEdit>
-            //
             LinkedVM = new City_BatchEdit();
         }
 
