@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(StudentSearcher searcher)
+		public async Task<IActionResult> Search(StudentSearcher searcher)
         {
             if (ModelState.IsValid)
             {

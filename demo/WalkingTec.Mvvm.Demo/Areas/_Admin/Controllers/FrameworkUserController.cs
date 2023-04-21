@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     public class FrameworkUserController : BaseController
     {
         [ActionDescription("Sys.Search", IsPage = true)]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public string Search(FrameworkUserSearcher searcher)
+        public async Task<string> Search(FrameworkUserSearcher searcher)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
 
         [ActionDescription("Sys.Create")]
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -77,7 +77,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -88,7 +88,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Edit")]
-        public ActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 await vm.DoEdit();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -129,7 +129,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Login.ChangePassword")]
-        public ActionResult Password(Guid id)
+        public async Task<IActionResult> Password (Guid id)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -142,7 +142,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Login.ChangePassword")]
         [HttpPost]
-        public ActionResult Password(FrameworkUserVM vm)
+        public async Task<IActionResult> Password (FrameworkUserVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -165,7 +165,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 vm.ChangePassword();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -176,7 +176,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Delete")]
-        public ActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -215,7 +215,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult BatchEdit(string[] IDs)
+        public async Task<IActionResult> BatchEdit(string[] IDs)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -227,7 +227,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult DoBatchEdit(FrameworkUserBatchVM vm, IFormCollection nouse)
+        public async Task<IActionResult> DoBatchEdit(FrameworkUserBatchVM vm, IFormCollection nouse)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -245,7 +245,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult BatchDelete(string[] IDs)
+        public async Task<IActionResult> BatchDelete(string[] IDs)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -294,7 +294,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Import")]
-        public ActionResult Import()
+        public async Task<IActionResult> Import()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -306,7 +306,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.Import")]
-        public ActionResult Import(FrameworkUserImportVM vm, IFormCollection nouse)
+        public async Task<IActionResult> Import(FrameworkUserImportVM vm, IFormCollection nouse)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -323,7 +323,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Enable")]
-        public ActionResult Enable(Guid id, bool enable)
+        public async Task<IActionResult> Enable (Guid id, bool enable)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -337,11 +337,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [AllRights]
-        public ActionResult GetUserById(string keywords)
+        public async Task<IActionResult> GetUserById (string keywords)
         {
             WalkingTec.Mvvm.Admin.Api.AccountController userapi = new WalkingTec.Mvvm.Admin.Api.AccountController();
             userapi.Wtm = Wtm;
-            var rv = userapi.GetUserById(keywords) as OkObjectResult;
+            var rv = await userapi.GetUserById(keywords) as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
             if (rv != null && rv.Value is string && rv.Value != null)
             {
@@ -357,7 +357,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost]
-        public IActionResult ExportExcel(FrameworkUserListVM vm)
+        public async Task<IActionResult> ExportExcel(FrameworkUserListVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -367,11 +367,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [AllRights]
-        public IActionResult GetFrameworkRoles()
+        public async Task<IActionResult> GetFrameworkRoles ()
         {
             WalkingTec.Mvvm.Admin.Api.AccountController userapi = new WalkingTec.Mvvm.Admin.Api.AccountController();
             userapi.Wtm = Wtm;
-            var rv = userapi.GetFrameworkRoles() as OkObjectResult;
+            var rv = await userapi.GetFrameworkRoles() as OkObjectResult;
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
             if (rv != null && rv.Value is string && rv.Value != null)
             {
@@ -385,11 +385,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [AllRights]
-        public IActionResult GetFrameworkGroups()
+        public async Task<IActionResult> GetFrameworkGroups ()
         {
             WalkingTec.Mvvm.Admin.Api.AccountController userapi = new WalkingTec.Mvvm.Admin.Api.AccountController();
             userapi.Wtm = Wtm;
-            var rv = userapi.GetFrameworkGroupsTree() as OkObjectResult;
+            var rv = await userapi.GetFrameworkGroupsTree() as OkObjectResult;
             List<TreeSelectListItem> users = new List<TreeSelectListItem>();
             if (rv != null && rv.Value is string && rv.Value != null)
             {

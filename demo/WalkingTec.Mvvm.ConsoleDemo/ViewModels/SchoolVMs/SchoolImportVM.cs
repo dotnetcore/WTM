@@ -36,8 +36,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         [Display(Name = "专业类型")]
         public ExcelPropety MajorType_Excel = ExcelPropety.CreateProperty<School>(x => x.Majors[0].MajorType);
 
-        protected override async Task InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
     }

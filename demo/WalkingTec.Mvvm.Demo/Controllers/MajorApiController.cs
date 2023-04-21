@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.MajorVMs;
 using WalkingTec.Mvvm.Demo.Models;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -19,7 +20,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(MajorApiSearcher searcher)
+		public async Task<IActionResult> Search(MajorApiSearcher searcher)
         {
             if (ModelState.IsValid)
             {
@@ -43,7 +44,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(MajorApiVM vm)
+        public async Task<IActionResult> Add(MajorApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +67,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(MajorApiVM vm)
+        public async Task<IActionResult> Edit(MajorApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<MajorApiBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -112,7 +113,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(MajorApiSearcher searcher)
+        public async Task<IActionResult> ExportExcel(MajorApiSearcher searcher)
         {
             var vm = Wtm.CreateVM<MajorApiListVM>();
             vm.Searcher = searcher;
@@ -122,7 +123,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             var vm = Wtm.CreateVM<MajorApiListVM>();
             if (ids != null && ids.Count() > 0)
@@ -150,7 +151,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(MajorApiImportVM vm)
+        public async Task<IActionResult> Import(MajorApiImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
@@ -165,13 +166,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 
         [HttpGet("GetSchools")]
-        public ActionResult GetSchools()
+        public async Task<IActionResult> GetSchools ()
         {
             return Ok(await DC.Set<School>().GetSelectListItems(Wtm, x => x.SchoolName));
         }
 
         [HttpGet("GetStudents")]
-        public ActionResult GetStudents()
+        public async Task<IActionResult> GetStudents ()
         {
             return Ok(await DC.Set<Student>().GetSelectListItems(Wtm, x => x.Name));
         }

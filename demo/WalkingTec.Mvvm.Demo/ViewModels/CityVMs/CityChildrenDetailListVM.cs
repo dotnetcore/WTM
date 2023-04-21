@@ -15,21 +15,19 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         
         protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.AddRow, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.RemoveRow, "删除","", dialogWidth: 800),
-            };
+            });
         }
  
         protected override Task<IEnumerable<IGridColumn<City>>> InitGridHeader()
         {
-            return new List<GridColumn<City>>{
-                
+            return Task.FromResult<IEnumerable<IGridColumn<City>>> (new List<GridColumn<City>>{
                 this.MakeGridHeader(x => x.Name).SetEditType(EditTypeEnum.TextBox),
-
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
         

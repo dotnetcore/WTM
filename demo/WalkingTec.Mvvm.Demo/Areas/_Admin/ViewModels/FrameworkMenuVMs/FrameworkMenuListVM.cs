@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     });
                     break;
             }
-            return rv;
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkMenu_ListView>>> (rv);
         }
 
         private object GenerateCheckBox(FrameworkMenu_ListView item)

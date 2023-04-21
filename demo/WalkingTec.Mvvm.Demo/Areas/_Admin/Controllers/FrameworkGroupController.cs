@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     {
         #region 查询
         [ActionDescription("Sys.Search")]
-        public ActionResult Index()
+        public IActionResult Index ()
         {
             var vm = Wtm.CreateVM<FrameworkGroupListVM>();
             return PartialView(vm);
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public IActionResult Search(FrameworkGroupSearcher searcher)
+        public async Task<IActionResult> Search(FrameworkGroupSearcher searcher)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         [ActionDescription("Sys.Create")]
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.Create")]
-        public ActionResult Create(FrameworkGroupVM vm)
+        public async Task<IActionResult> Create(FrameworkGroupVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -77,7 +77,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Edit")]
-        public ActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -90,7 +90,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         [ActionDescription("Sys.Edit")]
         [ValidateFormItemOnly]
-        public ActionResult Edit(FrameworkGroupVM vm)
+        public async Task<IActionResult> Edit(FrameworkGroupVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -102,13 +102,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                vm.DoEdit();
+                await vm.DoEdit();
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
 
         [ActionDescription("Sys.Delete")]
-        public ActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -140,7 +140,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult BatchDelete(Guid[] ids)
+        public async Task<IActionResult> BatchDelete(Guid[] ids)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -176,7 +176,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Import")]
-        public ActionResult Import()
+        public async Task<IActionResult> Import()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -188,7 +188,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.Import")]
-        public ActionResult Import(FrameworkGroupImportVM vm, IFormCollection nouse)
+        public async Task<IActionResult> Import(FrameworkGroupImportVM vm, IFormCollection nouse)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -222,7 +222,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost]
-        public IActionResult ExportExcel(FrameworkGroupListVM vm)
+        public async Task<IActionResult> ExportExcel(FrameworkGroupListVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -232,11 +232,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [AllRights]
-        public IActionResult GetParents()
+        public async Task<IActionResult> GetParents ()
         {
             WalkingTec.Mvvm.Admin.Api.FrameworkGroupController userapi = new Mvvm.Admin.Api.FrameworkGroupController();
             userapi.Wtm = Wtm;
-            var rv = userapi.GetParentsTree() as OkObjectResult;
+            var rv = await userapi.GetParentsTree() as OkObjectResult;
             List<TreeSelectListItem> users = new List<TreeSelectListItem>();
             if (rv != null && rv.Value is string && rv.Value != null)
             {

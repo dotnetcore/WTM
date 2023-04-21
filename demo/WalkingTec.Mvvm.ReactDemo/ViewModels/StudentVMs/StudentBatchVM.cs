@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -30,8 +30,9 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.StudentVMs
         [Display(Name = "日期")]
         public DateRange EnRollDate { get; set; }
 
-        protected override async Task InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
     }

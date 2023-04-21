@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.StudentVMs
 
         protected override Task<IEnumerable<IGridColumn<Student_View>>> InitGridHeader()
         {
-            return new List<GridColumn<Student_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<Student_View>>> (new List<GridColumn<Student_View>>{
                 this.MakeGridHeader(x => x.ID),
                 this.MakeGridHeader(x => x.Password),
                 this.MakeGridHeader(x => x.Email),
@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.StudentVMs
                 this.MakeGridHeader(x => x.EnRollDate),
                 this.MakeGridHeader(x => x.MajorName_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
         private List<ColumnFormatInfo> PhotoIdFormat(Student_View entity, object val)
         {
@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.StudentVMs
                     MajorName_view = x.StudentMajor.Select(y=>y.Major.MajorName).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

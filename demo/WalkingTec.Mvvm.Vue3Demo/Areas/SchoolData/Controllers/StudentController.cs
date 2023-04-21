@@ -7,6 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.ReactDemo.ViewModels.StudentVMs;
 using WalkingTec.Mvvm.ReactDemo.Models;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.ReactDemo.Controllers
 {
@@ -19,7 +20,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(StudentSearcher searcher)
+		public async Task<IActionResult> Search(StudentSearcher searcher)
         {
             if (ModelState.IsValid)
             {
@@ -43,7 +44,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(StudentVM vm)
+        public async Task<IActionResult> Add(StudentVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +67,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(StudentVM vm)
+        public async Task<IActionResult> Edit(StudentVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete (string[] ids)
         {
             var vm = Wtm.CreateVM<StudentBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -112,7 +113,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(StudentSearcher searcher)
+        public async Task<IActionResult> ExportExcel(StudentSearcher searcher)
         {
             var vm = Wtm.CreateVM<StudentListVM>();
             vm.Searcher = searcher;
@@ -122,7 +123,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             var vm = Wtm.CreateVM<StudentListVM>();
             if (ids != null && ids.Count() > 0)
@@ -150,7 +151,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(StudentImportVM vm)
+        public async Task<IActionResult> Import(StudentImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
@@ -165,25 +166,25 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
 
         [HttpGet("GetMajors")]
-        public ActionResult GetMajors()
+        public async Task<IActionResult> GetMajors()
         {
             return Ok(await DC.Set<Major>().GetSelectListItems(Wtm, x => x.MajorName));
         }
 
         [HttpGet("GetCitys")]
-        public ActionResult GetCitys()
+        public async Task<IActionResult> GetCitys()
         {
             return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
         [HttpGet("GetSchoolsByCity/{id}")]
-        public ActionResult GetSchoolsByCity(Guid id)
+        public async Task<IActionResult> GetSchoolsByCity(Guid id)
         {
             return Ok(await DC.Set<School>().Where(x=>x.PlaceId == id).GetSelectListItems(Wtm, x => x.SchoolName));
         }
 
         [HttpGet("GetMajorsBySchool/{id}")]
-        public ActionResult GetMajorsBySchool(int id)
+        public async Task<IActionResult> GetMajorsBySchool(int id)
         {
             return Ok(await DC.Set<Major>().Where(x => x.SchoolId == id).GetSelectListItems(Wtm, x => x.MajorName));
         }

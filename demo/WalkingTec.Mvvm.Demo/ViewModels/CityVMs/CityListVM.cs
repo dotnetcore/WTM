@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
     {
         protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
                 this.MakeAction("City","CreateGroup","groupadd","groupadd", GridActionParameterTypesEnum.NoId).SetShowInRow(false),
@@ -27,18 +27,18 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
                 this.MakeStandardAction("City", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], "")
-            };
+            });
         }
 
 
         protected override Task<IEnumerable<IGridColumn<City_View>>> InitGridHeader()
         {
-            return new List<GridColumn<City_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<City_View>>> (new List<GridColumn<City_View>>{
                 this.MakeGridHeader(x => x.Name),
                 this.MakeGridHeader(x => x.Test),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
         public override async Task<IOrderedQueryable<City_View>> GetSearchQuery()

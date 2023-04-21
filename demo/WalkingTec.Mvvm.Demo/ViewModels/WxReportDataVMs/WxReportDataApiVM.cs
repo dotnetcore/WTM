@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

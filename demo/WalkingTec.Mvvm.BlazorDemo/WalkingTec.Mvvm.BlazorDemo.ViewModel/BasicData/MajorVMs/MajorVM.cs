@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.BasicData.MajorVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

@@ -5,6 +5,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -14,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     {
         #region 搜索
         [ActionDescription("搜索")]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var vm = Wtm.CreateVM<不要用中文模型名ListVM>();
             return PartialView(vm);
@@ -31,7 +32,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 新建
         [ActionDescription("新建")]
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = Wtm.CreateVM<不要用中文模型名VM>();
             return PartialView(vm);
@@ -39,7 +40,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("新建")]
-        public ActionResult Create(不要用中文模型名VM vm)
+        public async Task<IActionResult> Create(不要用中文模型名VM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -50,7 +51,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -63,7 +64,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 修改
         [ActionDescription("修改")]
-        public ActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
             var vm = Wtm.CreateVM<不要用中文模型名VM>(id);
             return PartialView(vm);
@@ -72,7 +73,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("修改")]
         [HttpPost]
         [ValidateFormItemOnly]
-        public ActionResult Edit(不要用中文模型名VM vm)
+        public async Task<IActionResult> Edit(不要用中文模型名VM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -80,10 +81,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                vm.DoEdit();
+                await vm.DoEdit();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -96,7 +97,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 删除
         [ActionDescription("删除")]
-        public ActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             var vm = Wtm.CreateVM<不要用中文模型名VM>(id);
             return PartialView(vm);
@@ -104,10 +105,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("删除")]
         [HttpPost]
-        public ActionResult Delete(string id, IFormCollection nouse)
+        public async Task<IActionResult> Delete(string id, IFormCollection nouse)
         {
             var vm = Wtm.CreateVM<不要用中文模型名VM>(id);
-            vm.DoDelete();
+            await vm.DoDelete();
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -121,7 +122,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 详细
         [ActionDescription("详细")]
-        public ActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             var vm = Wtm.CreateVM<不要用中文模型名VM>(id);
             return PartialView(vm);
@@ -131,7 +132,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量修改
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult BatchEdit(string[] IDs)
+        public async Task<IActionResult> BatchEdit(string[] IDs)
         {
             var vm = Wtm.CreateVM<不要用中文模型名BatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -139,7 +140,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult DoBatchEdit(不要用中文模型名BatchVM vm, IFormCollection nouse)
+        public async Task<IActionResult> DoBatchEdit(不要用中文模型名BatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !await vm.DoBatchEdit())
             {
@@ -155,7 +156,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(string[] IDs)
+        public async Task<IActionResult> BatchDelete(string[] IDs)
         {
             var vm = Wtm.CreateVM<不要用中文模型名BatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -163,7 +164,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult DoBatchDelete(不要用中文模型名BatchVM vm, IFormCollection nouse)
+        public async Task<IActionResult> DoBatchDelete(不要用中文模型名BatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
@@ -178,7 +179,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 导入
 		[ActionDescription("导入")]
-        public ActionResult Import()
+        public async Task<IActionResult> Import()
         {
             var vm = Wtm.CreateVM<不要用中文模型名ImportVM>();
             return PartialView(vm);
@@ -186,7 +187,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("导入")]
-        public ActionResult Import(不要用中文模型名ImportVM vm, IFormCollection nouse)
+        public async Task<IActionResult> Import(不要用中文模型名ImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
@@ -201,10 +202,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("导出")]
         [HttpPost]
-        public IActionResult ExportExcel(不要用中文模型名ListVM vm)
+        public async Task<IActionResult> ExportExcel(不要用中文模型名ListVM vm)
         {
             vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
+            var data = await vm.GenerateExcel();
             return File(data, "application/vnd.ms-excel", $"Export_不要用中文模型名_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 

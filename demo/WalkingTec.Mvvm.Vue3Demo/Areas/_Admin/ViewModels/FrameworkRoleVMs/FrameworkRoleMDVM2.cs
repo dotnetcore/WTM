@@ -24,11 +24,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
-                return Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}").Result.Data.Entity;
+                return (await Wtm.CallAPI<FrameworkRoleVM>("mainhost", $"/api/_frameworkrole/{Id}")).Data.Entity;
             }
             else
             {
-                return base.GetById(Id);
+                return await base.GetById(Id);
             }
         }
 
@@ -44,9 +44,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
 
-            if (Wtm.ConfigInfo.EnableTenant == true && (await GetLoginUserInfo ()).CurrentTenant != null)
+            var _loginUserInfo = await GetLoginUserInfo ();
+            if (Wtm.ConfigInfo.EnableTenant == true && _loginUserInfo.CurrentTenant != null)
             {
-                var ct = Wtm.GlobaInfo.AllTenant.Where(x => x.TCode == (await GetLoginUserInfo ()).CurrentTenant).FirstOrDefault();
+                var ct = Wtm.GlobaInfo.AllTenant.Where(x => x.TCode == _loginUserInfo.CurrentTenant).FirstOrDefault();
                 for (int i = 0; i < topdata.Count; i++)
                 {
                     if (topdata[i].TenantAllowed == false || (topdata[i].Url != null && ct.EnableSub == false && topdata[i].Url.ToLower().Contains("frameworktenant")))

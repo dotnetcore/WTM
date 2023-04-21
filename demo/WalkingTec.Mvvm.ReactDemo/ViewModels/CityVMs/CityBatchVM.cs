@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,6 +15,8 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
         public CityBatchVM()
         {
             ListVM = new CityListVM();
+            //IBasePagedListVM<TopBasePoco, ISearcher>    <-    BaseBatchVM<City, City_BatchEdit>
+            //
             LinkedVM = new City_BatchEdit();
         }
 
@@ -26,8 +28,9 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
     public class City_BatchEdit : BaseVM
     {
 
-        protected override async Task InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
     }

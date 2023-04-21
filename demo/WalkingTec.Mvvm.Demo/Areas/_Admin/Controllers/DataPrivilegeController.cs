@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     public class DataPrivilegeController : BaseController
     {
         [ActionDescription("Sys.Search")]
-        public ActionResult Index()
+        public IActionResult Index ()
         {
             var vm = Wtm.CreateVM<DataPrivilegeListVM>();
             vm.Searcher.TableNames = Wtm.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(DataPrivilegeListVM vm)
+        public IActionResult Index (DataPrivilegeListVM vm)
         {
             vm.Searcher.TableNames = Wtm.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return PartialView(vm);
@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Create")]
-        public ActionResult Create(DpTypeEnum Type)
+        public IActionResult Create (DpTypeEnum Type)
         {
             var vm = Wtm.CreateVM<DataPrivilegeVM>(values:x=>x.DpType == Type);
             return PartialView(vm);
@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Edit")]
-        public ActionResult Edit(string ModelName, string Id, DpTypeEnum Type)
+        public IActionResult Edit (string ModelName, string Id, DpTypeEnum Type)
         {
             DataPrivilegeVM vm = null;
             if (Type == DpTypeEnum.User)
@@ -115,29 +115,29 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [AllRights]
-        public ActionResult GetPrivilegeByTableName(string table)
+        public async Task<IActionResult> GetPrivilegeByTableName (string table)
         {
             var AllItems = new List<ComboSelectListItem>();
             var dps = Wtm.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
-                AllItems = dps.GetItemList(Wtm);
+                AllItems = await dps.GetItemList(Wtm);
             }
             return JsonMore(AllItems);
         }
 
         [ActionDescription("Sys.Export")]
         [HttpPost]
-        public IActionResult ExportExcel(DataPrivilegeListVM vm)
+        public async Task<IActionResult> ExportExcel(DataPrivilegeListVM vm)
         {
             return await vm.GetExportData();
         }
         [AllRights]
-        public IActionResult GetUserGroups()
+        public async Task<IActionResult> GetUserGroups ()
         {
             WalkingTec.Mvvm.Admin.Api.DataPrivilegeController userapi = new Mvvm.Admin.Api.DataPrivilegeController();
             userapi.Wtm = Wtm;
-            var rv = userapi.GetUserGroupsTree() as OkObjectResult;
+            var rv = await userapi.GetUserGroupsTree() as OkObjectResult;
             List<TreeSelectListItem> users = new List<TreeSelectListItem>();
             if (rv != null && rv.Value is string && rv.Value != null)
             {

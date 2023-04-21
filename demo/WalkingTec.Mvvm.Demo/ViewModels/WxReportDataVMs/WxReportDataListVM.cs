@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
     {
         protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("WxReportData", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
                 this.MakeStandardAction("WxReportData", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
@@ -25,13 +25,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
                 this.MakeStandardAction("WxReportData", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
                 this.MakeStandardAction("WxReportData", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
                 this.MakeStandardAction("WxReportData", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], ""),
-            };
+            });
         }
 
 
         protected override Task<IEnumerable<IGridColumn<WxReportData_View>>> InitGridHeader()
         {
-            return new List<GridColumn<WxReportData_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<WxReportData_View>>> (new List<GridColumn<WxReportData_View>>{
                 this.MakeGridHeader(x => x.ToWxUser),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeader(x => x.Date),
@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
                 this.MakeGridHeader(x => x.Extend09),
                 this.MakeGridHeader(x => x.Extend10),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
         public override Task<IOrderedQueryable<WxReportData_View>> GetSearchQuery()
@@ -125,7 +125,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
                     Extend10 = x.Extend10,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

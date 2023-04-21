@@ -6,6 +6,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
@@ -16,7 +17,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     {
         #region Search
         [ActionDescription("Sys.Search")]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if(await CanUseTenant() == false)
             {
@@ -28,7 +29,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public IActionResult Search(FrameworkTenantSearcher searcher)
+        public async Task<IActionResult> Search(FrameworkTenantSearcher searcher)
         {
             if (await CanUseTenant() == false)
             {
@@ -50,7 +51,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region Create
         [ActionDescription("Sys.Create")]
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
             if (await CanUseTenant() == false)
             {
@@ -62,7 +63,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.Create")]
-        public ActionResult Create(FrameworkTenantVM vm)
+        public async Task<IActionResult> Create(FrameworkTenantVM vm)
         {
             if (await CanUseTenant() == false)
             {
@@ -77,7 +78,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -90,7 +91,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region Edit
         [ActionDescription("Sys.Edit")]
-        public ActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (await CanUseTenant() == false)
             {
@@ -103,7 +104,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Sys.Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
-        public ActionResult Edit(FrameworkTenantVM vm)
+        public async Task<IActionResult> Edit(FrameworkTenantVM vm)
         {
             if (await CanUseTenant() == false)
             {
@@ -115,10 +116,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                vm.DoEdit();
+                await vm.DoEdit();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -131,7 +132,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region Delete
         [ActionDescription("Sys.Delete")]
-        public ActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (await CanUseTenant() == false)
             {
@@ -143,14 +144,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Delete")]
         [HttpPost]
-        public ActionResult Delete(string id, IFormCollection nouse)
+        public async Task<IActionResult> Delete(string id, IFormCollection nouse)
         {
             if (await CanUseTenant() == false)
             {
                 return Content(Localizer["_Admin.TenantNotAllowed"]);
             }
             var vm = Wtm.CreateVM<FrameworkTenantVM>(id);
-            vm.DoDelete();
+            await vm.DoDelete();
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -164,7 +165,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region Details
         [ActionDescription("Sys.Details")]
-        public ActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             if (await CanUseTenant() == false)
             {
@@ -178,7 +179,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #region BatchEdit
         [HttpPost]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult BatchEdit(string[] IDs)
+        public async Task<IActionResult> BatchEdit(string[] IDs)
         {
             if (await CanUseTenant() == false)
             {
@@ -190,7 +191,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult DoBatchEdit(FrameworkTenantBatchVM vm, IFormCollection nouse)
+        public async Task<IActionResult> DoBatchEdit(FrameworkTenantBatchVM vm, IFormCollection nouse)
         {
             if (await CanUseTenant() == false)
             {
@@ -210,7 +211,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #region BatchDelete
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult BatchDelete(string[] IDs)
+        public async Task<IActionResult> BatchDelete(string[] IDs)
         {
             if (await CanUseTenant() == false)
             {
@@ -222,7 +223,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult DoBatchDelete(FrameworkTenantBatchVM vm, IFormCollection nouse)
+        public async Task<IActionResult> DoBatchDelete(FrameworkTenantBatchVM vm, IFormCollection nouse)
         {
             if (await CanUseTenant() == false)
             {
@@ -242,7 +243,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region Import
 		[ActionDescription("Sys.Import")]
-        public ActionResult Import()
+        public async Task<IActionResult> Import()
         {
             if (await CanUseTenant() == false)
             {
@@ -254,7 +255,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.Import")]
-        public ActionResult Import(FrameworkTenantImportVM vm, IFormCollection nouse)
+        public async Task<IActionResult> Import(FrameworkTenantImportVM vm, IFormCollection nouse)
         {
             if (await CanUseTenant() == false)
             {
@@ -273,7 +274,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost]
-        public IActionResult ExportExcel(FrameworkTenantListVM vm)
+        public async Task<IActionResult> ExportExcel(FrameworkTenantListVM vm)
         {
             if (await CanUseTenant() == false)
             {
@@ -284,7 +285,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         private async Task<bool> CanUseTenant()
         {
-            if((await Wtm.GetLoginUserInfo ()) != null && ((await Wtm.GetLoginUserInfo ()).CurrentTenant == null || Wtm.GlobaInfo.AllTenant.Any(x=>x.TCode == (await Wtm.GetLoginUserInfo ()).CurrentTenant && x.Enabled==true && x.EnableSub == true)))
+            var _loginUserInfo = await Wtm.GetLoginUserInfo ();
+            if (_loginUserInfo != null && (_loginUserInfo.CurrentTenant == null || Wtm.GlobaInfo.AllTenant.Any(x=>x.TCode == _loginUserInfo.CurrentTenant && x.Enabled==true && x.EnableSub == true)))
             {
                 return true;
             }

@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTestVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

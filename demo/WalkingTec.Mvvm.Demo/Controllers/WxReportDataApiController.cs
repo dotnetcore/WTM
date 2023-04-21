@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs;
 using WalkingTec.Mvvm.Demo.Models;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -19,7 +20,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(WxReportDataApiSearcher searcher)
+		public async Task<IActionResult> Search(WxReportDataApiSearcher searcher)
         {
             if (ModelState.IsValid)
             {
@@ -43,7 +44,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(WxReportDataApiVM vm)
+        public async Task<IActionResult> Add(WxReportDataApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +67,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(WxReportDataApiVM vm)
+        public async Task<IActionResult> Edit(WxReportDataApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<WxReportDataApiBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -112,7 +113,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(WxReportDataApiSearcher searcher)
+        public async Task<IActionResult> ExportExcel(WxReportDataApiSearcher searcher)
         {
             var vm = Wtm.CreateVM<WxReportDataApiListVM>();
             vm.Searcher = searcher;
@@ -122,7 +123,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             var vm = Wtm.CreateVM<WxReportDataApiListVM>();
             if (ids != null && ids.Count() > 0)
@@ -150,7 +151,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(WxReportDataApiImportVM vm)
+        public async Task<IActionResult> Import(WxReportDataApiImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
@@ -165,7 +166,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 
         [HttpGet("GetFrameworkUsers")]
-        public ActionResult GetFrameworkUsers()
+        public async Task<IActionResult> GetFrameworkUsers()
         {
             return Ok(await DC.Set<FrameworkUser>().GetSelectListItems(Wtm, x => x.Name));
         }

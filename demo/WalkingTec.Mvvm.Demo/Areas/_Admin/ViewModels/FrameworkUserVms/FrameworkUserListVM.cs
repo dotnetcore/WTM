@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         protected override Task<IEnumerable<IGridColumn<FrameworkUser_View>>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkUser_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkUser_View>>> (new List<GridColumn<FrameworkUser_View>>{
                 this.MakeGridHeader(x => x.ITCode),
                 this.MakeGridHeader(x => x.Name),
                 this.MakeGridHeader(x => x.Gender,80),
@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 this.MakeGridHeader(x=> x.PhotoId,170).SetFormat(PhotoIdFormat),
                 this.MakeGridHeader(x => x.IsValid).SetHeader(Localizer["Sys.Enable"]).SetWidth(80),
                 this.MakeGridHeaderAction(width: 280)
-            };
+            });
         }
 
         private List<ColumnFormatInfo> PhotoIdFormat(FrameworkUser_View entity, object val)

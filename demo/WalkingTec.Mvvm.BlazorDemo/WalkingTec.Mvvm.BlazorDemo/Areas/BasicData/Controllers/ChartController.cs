@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
     public partial class ChartController : BaseApiController
     {
         [HttpGet("GetCitys")]
-        public ActionResult GetCitys()
+        public async Task<IActionResult> GetCitys()
         {
             return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }

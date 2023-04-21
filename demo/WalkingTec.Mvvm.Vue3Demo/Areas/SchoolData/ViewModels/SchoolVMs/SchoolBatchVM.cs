@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -32,8 +32,9 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
         [Display(Name = "地点")]
         public Guid? PlaceId { get; set; }
 
-        protected override async Task InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
     }

@@ -116,13 +116,13 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public ActionResult GetPrivilegeByTableName(string table)
+        public async Task<IActionResult> GetPrivilegeByTableName(string table)
         {
             var AllItems = new List<ComboSelectListItem>();
-            var dps =Wtm.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
+            var dps = Wtm.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
-                AllItems = dps.GetItemList(Wtm);
+                AllItems = await dps.GetItemList(Wtm);
             }
             return Ok(AllItems);
         }
@@ -137,7 +137,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public IActionResult GetUserGroups()
+        public async Task<IActionResult> GetUserGroups ()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -148,7 +148,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public IActionResult GetUserGroupsTree()
+        public async Task<IActionResult> GetUserGroupsTree ()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {

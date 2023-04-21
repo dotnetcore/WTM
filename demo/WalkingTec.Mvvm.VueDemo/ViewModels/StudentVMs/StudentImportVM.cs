@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -33,8 +33,9 @@ namespace WalkingTec.Mvvm.VueDemo.ViewModels.StudentVMs
         [Display(Name = "日期")]
         public ExcelPropety EnRollDate_Excel = ExcelPropety.CreateProperty<Student>(x => x.EnRollDate);
 
-	    protected override async Task InitVM()
+	    protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
     }

@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(FrameworkGroupSearcher searcher)
+        public async Task<IActionResult> Search (FrameworkGroupSearcher searcher)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Create")]
         [HttpPost("[action]")]
-        public IActionResult Add(FrameworkGroupVM vm)
+        public async Task<IActionResult> Add (FrameworkGroupVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("[action]")]
-        public IActionResult Edit(FrameworkGroupVM vm)
+        public async Task<IActionResult> Edit (FrameworkGroupVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -135,7 +135,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
+        public async Task<IActionResult> ExportExcel (FrameworkGroupSearcher searcher)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds (string[] ids)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -166,7 +166,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("[action]")]
-        public IActionResult GetExcelTemplate()
+        public async Task<IActionResult> GetExcelTemplate ()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -185,7 +185,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Import")]
         [HttpPost("[action]")]
-        public ActionResult Import(FrameworkGroupImportVM vm)
+        public async Task<IActionResult> Import (FrameworkGroupImportVM vm)
         {
 
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
@@ -205,7 +205,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public IActionResult GetParents()
+        public async Task<IActionResult> GetParents ()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -217,7 +217,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        public IActionResult GetParentsTree()
+        public async Task<IActionResult> GetParentsTree ()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {

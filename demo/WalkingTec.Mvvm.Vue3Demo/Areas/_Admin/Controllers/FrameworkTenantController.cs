@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(FrameworkTenantSearcher searcher)
+        public async Task<IActionResult> Search (FrameworkTenantSearcher searcher)
         {
             if (await CanUseTenant() == false)
             {
@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Create")]
         [HttpPost("[action]")]
-        public IActionResult Add(FrameworkTenantVM vm)
+        public async Task<IActionResult> Add (FrameworkTenantVM vm)
         {
             if (await CanUseTenant() == false)
             {
@@ -79,7 +79,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("[action]")]
-        public IActionResult Edit(FrameworkTenantVM vm)
+        public async Task<IActionResult> Edit (FrameworkTenantVM vm)
         {
             if (await CanUseTenant() == false)
             {
@@ -107,7 +107,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete (string[] ids)
         {
             if (await CanUseTenant() == false)
             {
@@ -137,7 +137,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcel(FrameworkTenantSearcher searcher)
+        public async Task<IActionResult> ExportExcel (FrameworkTenantSearcher searcher)
         {
             if (await CanUseTenant() == false)
             {
@@ -153,7 +153,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds (string[] ids)
         {
             if (await CanUseTenant() == false)
             {
@@ -172,7 +172,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("[action]")]
-        public IActionResult GetExcelTemplate()
+        public async Task<IActionResult> GetExcelTemplate ()
         {
             if (await CanUseTenant() == false)
             {
@@ -193,7 +193,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Import")]
         [HttpPost("[action]")]
-        public ActionResult Import(FrameworkTenantImportVM vm)
+        public async Task<IActionResult> Import (FrameworkTenantImportVM vm)
         {
 
             if (await CanUseTenant() == false)
@@ -228,7 +228,8 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         private async Task<bool> CanUseTenant()
         {
-            if ((await Wtm.GetLoginUserInfo ()) != null && ((await Wtm.GetLoginUserInfo ()).CurrentTenant == null || Wtm.GlobaInfo.AllTenant.Any(x => x.TCode == (await Wtm.GetLoginUserInfo ()).CurrentTenant && x.Enabled == true && x.EnableSub == true)))
+            var _loginUserInfo = await Wtm.GetLoginUserInfo ();
+            if (_loginUserInfo != null && (_loginUserInfo.CurrentTenant == null || Wtm.GlobaInfo.AllTenant.Any(x => x.TCode == _loginUserInfo.CurrentTenant && x.Enabled == true && x.EnableSub == true)))
             {
                 return true;
             }

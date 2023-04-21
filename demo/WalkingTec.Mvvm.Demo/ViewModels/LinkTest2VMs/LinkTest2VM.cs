@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTest2VMs
 {
@@ -26,22 +26,22 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTest2VMs
 
         protected override async Task InitVM()
         {
-            //AllStudents = DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
-            AllSchools = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
-            //AllMajors = DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
+            //AllStudents = await DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
+            AllSchools = await DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
+            //AllMajors = await DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
             if (Entity.HasID())
             {
-                SelectedMajor = DC.Set<StudentMajor>().Where(x => Entity.LinkStudent.Select(y=>y.StudentId).Contains(x.StudentId)).Select(x => x.MajorId).ToList();
-                SelectedSchool = DC.Set<Major>().Where(y => SelectedMajor.Contains(y.ID)).Select(z => z.SchoolId).ToList();
-                AllMajors = DC.Set<Major>().Where(x => SelectedSchool.Contains(x.SchoolId)).GetSelectListItems(Wtm, x => x.MajorName);
-                AllStudents = DC.Set<Student>().Where(x => DC.Set<StudentMajor>().Where(y => SelectedMajor.Contains(y.MajorId)).Select(z => z.StudentId).Contains(x.ID)).GetSelectListItems(Wtm, x => x.Name);
+                SelectedMajor = await DC.Set<StudentMajor>().Where(x => Entity.LinkStudent.Select(y=>y.StudentId).Contains(x.StudentId)).Select(x => x.MajorId).ToListAsync();
+                SelectedSchool = await DC.Set<Major>().Where(y => SelectedMajor.Contains(y.ID)).Select(z => z.SchoolId).ToListAsync();
+                AllMajors = await DC.Set<Major>().Where(x => SelectedSchool.Contains(x.SchoolId)).GetSelectListItems(Wtm, x => x.MajorName);
+                AllStudents = await DC.Set<Student>().Where(x => DC.Set<StudentMajor>().Where(y => SelectedMajor.Contains(y.MajorId)).Select(z => z.StudentId).Contains(x.ID)).GetSelectListItems(Wtm, x => x.Name);
             }
         }
 
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

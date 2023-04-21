@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,8 +19,9 @@ namespace WalkingTec.Mvvm.VueDemo.ViewModels.MajorVMs
             SetInclude(x => x.StudentMajors);
         }
 
-        protected override async Task InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
         public override async Task DoAdd()
@@ -35,7 +36,7 @@ namespace WalkingTec.Mvvm.VueDemo.ViewModels.MajorVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

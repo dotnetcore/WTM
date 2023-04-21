@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 
         protected override async Task InitVM()
         {
-            AllStudentMajors = DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
+            AllStudentMajors = await DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
             //SelectedStudentMajorIDs = Entity.StudentMajor?.Select(x => x.MajorId).ToList();
         }
 
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

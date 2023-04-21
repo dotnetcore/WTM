@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                     return View(vm);
                 }
             }
-            var user = Wtm.DoLogin(vm.ITCode, vm.Password, vm.Tenant);
+            var user = await Wtm.DoLogin(vm.ITCode, vm.Password, vm.Tenant);
             if (user == null)
             {
                 vm.MSD.AddModelError("", Localizer["Sys.LoginFailed"]);
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [Public]
-        public IActionResult Reg()
+        public async Task<IActionResult> Reg()
         {
             if (ConfigInfo.HasMainHost)
             {
@@ -96,7 +96,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [Public]
         [HttpPost]
-        public IActionResult Reg(RegVM vm)
+        public async Task<IActionResult> Reg(RegVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -104,7 +104,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                var rv = vm.DoReg();
+                var rv = await vm.DoReg();
                 if (rv == true)
                 {
                     return FFResult().CloseDialog().Message(Localizer["Reg.Success"]);
@@ -135,7 +135,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [AllRights]
         [ActionDescription("ChangePassword")]
-        public ActionResult ChangePassword()
+        public async Task<IActionResult> ChangePassword ()
         {
             var vm = Wtm.CreateVM<ChangePasswordVM>();
             vm.ITCode = (await Wtm.GetLoginUserInfo ()).ITCode;
@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [AllRights]
         [HttpPost]
         [ActionDescription("ChangePassword")]
-        public ActionResult ChangePassword(ChangePasswordVM vm)
+        public async Task<IActionResult> ChangePassword (ChangePasswordVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {

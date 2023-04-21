@@ -7,6 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
 using WalkingTec.Mvvm.Demo.Models;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -19,7 +20,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(CityApiSearcher searcher)
+		public async Task<IActionResult> Search(CityApiSearcher searcher)
         {
             if (ModelState.IsValid)
             {
@@ -43,7 +44,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(CityApiVM vm)
+        public async Task<IActionResult> Add(CityApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +67,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(CityApiVM vm)
+        public async Task<IActionResult> Edit(CityApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<CityApiBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -112,7 +113,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(CityApiSearcher searcher)
+        public async Task<IActionResult> ExportExcel(CityApiSearcher searcher)
         {
             var vm = Wtm.CreateVM<CityApiListVM>();
             vm.Searcher = searcher;
@@ -122,7 +123,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             var vm = Wtm.CreateVM<CityApiListVM>();
             if (ids != null && ids.Count() > 0)
@@ -151,7 +152,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(CityApiImportVM vm)
+        public async Task<IActionResult> Import(CityApiImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
@@ -166,7 +167,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 
         [HttpGet("GetCitys")]
-        public ActionResult GetCitys()
+        public async Task<IActionResult> GetCitys()
         {
             return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
@@ -39,7 +40,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         /// 进行登录
         /// </summary>
         /// <returns>登录用户的信息</returns>
-        public bool DoReg()
+        public async Task<bool> DoReg()
         {
             //检查两次新密码是否输入一致，如不一致则输出错误
             if (Password != NewPasswordComfirm)

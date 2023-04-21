@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(SchoolSearcher searcher)
+		public async Task<IActionResult> Search(SchoolSearcher searcher)
         {
             if (ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(SchoolVM vm)
+        public async Task<IActionResult> Add(SchoolVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(SchoolVM vm)
+        public async Task<IActionResult> Edit(SchoolVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<SchoolBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(SchoolSearcher searcher)
+        public async Task<IActionResult> ExportExcel(SchoolSearcher searcher)
         {
             var vm = Wtm.CreateVM<SchoolListVM>();
             vm.Searcher = searcher;
@@ -123,7 +123,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             var vm = Wtm.CreateVM<SchoolListVM>();
             if (ids != null && ids.Count() > 0)
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(SchoolImportVM vm)
+        public async Task<IActionResult> Import(SchoolImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())

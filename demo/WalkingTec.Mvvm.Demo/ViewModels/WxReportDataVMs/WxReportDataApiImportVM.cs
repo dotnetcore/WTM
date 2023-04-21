@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -92,7 +92,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
 	    protected override async Task InitVM()
         {
             FrameworkUser_Excel.DataType = ColumnDataType.ComboBox;
-            FrameworkUser_Excel.ListItems = DC.Set<FrameworkUser>().GetSelectListItems(Wtm, y => y.Name);
+            FrameworkUser_Excel.ListItems = await DC.Set<FrameworkUser>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

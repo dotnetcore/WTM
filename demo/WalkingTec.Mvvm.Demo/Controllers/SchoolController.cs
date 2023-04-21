@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     {
         #region 搜索
         [ActionDescription("Search")]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var vm = Wtm.CreateVM<SchoolListVM>();
             return PartialView(vm);
@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Search")]
         [HttpPost]
-        public ActionResult Index(SchoolListVM vm)
+        public async Task<IActionResult> Index(SchoolListVM vm)
         {
             vm.DoInit();
             return PartialView(vm);
@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 新建
         [ActionDescription("新建")]
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = Wtm.CreateVM<SchoolVM>();
             return PartialView(vm);
@@ -84,7 +84,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         [ActionDescription("新建")]
         [StringNeedLTGT]
-        public ActionResult Create(SchoolVM vm)
+        public async Task<IActionResult> Create(SchoolVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 修改
         [ActionDescription("修改")]
-        public ActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
             var vm = Wtm.CreateVM<SchoolVM>(id);
             return PartialView(vm);
@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("修改")]
         [HttpPost]
         [StringNeedLTGT]
-        public ActionResult Edit(SchoolVM vm)
+        public async Task<IActionResult> Edit(SchoolVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -125,10 +125,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                vm.DoEdit();
+                await vm.DoEdit();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -141,7 +141,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 删除
         [ActionDescription("删除")]
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var vm = Wtm.CreateVM<SchoolVM>(id);
             return PartialView(vm);
@@ -149,10 +149,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("删除")]
         [HttpPost]
-        public ActionResult Delete(int id, IFormCollection nouse)
+        public async Task<IActionResult> Delete(int id, IFormCollection nouse)
         {
             var vm = Wtm.CreateVM<SchoolVM>(id);
-            vm.DoDelete();
+            await vm.DoDelete();
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -166,7 +166,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 详细
         [ActionDescription("详细")]
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             var vm = Wtm.CreateVM<SchoolVM>(id);
             return PartialView(vm);
@@ -176,7 +176,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量修改
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult BatchEdit(string[] IDs)
+        public async Task<IActionResult> BatchEdit(string[] IDs)
         {
             var vm = Wtm.CreateVM<SchoolBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -225,7 +225,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 导入
         [ActionDescription("导入")]
-        public ActionResult Import()
+        public async Task<IActionResult> Import()
         {
             var vm = Wtm.CreateVM<SchoolImportVM>();
             return PartialView(vm);
@@ -258,7 +258,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("主子表新建")]
-        public ActionResult Create2(SchoolVM vm)
+        public async Task<IActionResult> Create2 (SchoolVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -275,7 +275,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 if (!ModelState.IsValid)
                 {
                     vm.MajorList.ProcessListError(vm.Entity.Majors);
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -299,7 +299,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("主子表修改")]
         [HttpPost]
-        public ActionResult Edit2(SchoolVM vm)
+        public async Task<IActionResult> Edit2 (SchoolVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -312,10 +312,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 {
                     vm.Entity.Majors = new System.Collections.Generic.List<Major>();
                 }
-                vm.DoEdit();
+                await vm.DoEdit();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     vm.MajorList.ProcessListError(vm.Entity.Majors);
                     return PartialView(vm);
                 }
@@ -329,7 +329,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Export")]
         [HttpPost]
-        public ActionResult ExportExcel(SchoolListVM vm)
+        public async Task<IActionResult> ExportExcel (SchoolListVM vm)
         {
             vm.ExportMaxCount = 5; //自定义每个Excel最多数据行数，默认是100万
             vm.ExportTitleBackColor = HSSFColor.Black.Index;

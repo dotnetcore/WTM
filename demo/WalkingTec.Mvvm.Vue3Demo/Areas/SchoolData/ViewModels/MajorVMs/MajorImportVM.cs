@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.MajorVMs
 	    protected override async Task InitVM()
         {
             School_Excel.DataType = ColumnDataType.ComboBox;
-            School_Excel.ListItems = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
+            School_Excel.ListItems = await DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
         }
 
     }

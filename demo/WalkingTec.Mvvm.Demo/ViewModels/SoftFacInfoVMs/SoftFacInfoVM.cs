@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs
 
         protected override async Task InitVM()
         {
-            AlliSOTypess = DC.Set<ISOType>().GetSelectListItems(Wtm, y => y.IsoName);
+            AlliSOTypess = await DC.Set<ISOType>().GetSelectListItems(Wtm, y => y.IsoName);
             SelectediSOTypesIDs = Entity.iSOTypes?.Select(x => x.isoTypeID).ToList();
         }
 
@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

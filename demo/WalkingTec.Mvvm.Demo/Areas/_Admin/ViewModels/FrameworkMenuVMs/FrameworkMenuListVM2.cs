@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -33,7 +34,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x=>x.ParentId).SetHide(),
                         this.MakeGridHeaderAction(width: 290)
                     });
-            return rv;
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkMenu_ListView>>> (rv);
         }
 
         public override async Task<IOrderedQueryable<FrameworkMenu_ListView>> GetSearchQuery()
@@ -41,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             List<FrameworkMenu> data = new List<FrameworkMenu>();
             using (var maindc = Wtm.CreateDC(false, "default"))
             {
-                data = maindc.Set<FrameworkMenu>().ToList();
+                data = await maindc.Set<FrameworkMenu>().ToListAsync();
             }
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || x.Url.EndsWith("/Index") || string.IsNullOrEmpty(x.MethodName)).ToList();
             foreach (var item in topdata)

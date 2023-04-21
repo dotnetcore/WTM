@@ -16,12 +16,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 
         protected override Task<IEnumerable<IGridColumn<CityApi_View>>> InitGridHeader()
         {
-            return new List<GridColumn<CityApi_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<CityApi_View>>> (new List<GridColumn<CityApi_View>>{
                 this.MakeGridHeader(x => x.Name),
                 this.MakeGridHeader(x => x.Test),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
         public override Task<IOrderedQueryable<CityApi_View>> GetSearchQuery()

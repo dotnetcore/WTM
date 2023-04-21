@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
     {
         protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Create, "", "_Admin",dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Edit, "", "_Admin",dialogWidth: 800),
@@ -24,12 +24,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
-            };
+            });
         }
 
         protected override Task<IEnumerable<IGridColumn<FrameworkUser_View>>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkUser_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkUser_View>>> (new List<GridColumn<FrameworkUser_View>>{
                 this.MakeGridHeader(x => x.ITCode),
                 this.MakeGridHeader(x => x.Name),
                 this.MakeGridHeader(x => x.Gender,80),
@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 this.MakeGridHeader(x=> x.PhotoId,170).SetFormat(PhotoIdFormat),
                 this.MakeGridHeader(x => x.IsValid).SetHeader(Localizer["Sys.Enable"]).SetWidth(80),
                 this.MakeGridHeaderAction(width: 280)
-            };
+            });
         }
 
         private List<ColumnFormatInfo> PhotoIdFormat(FrameworkUser_View entity, object val)
@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                    Gender = x.Gender
                 })
                 .OrderBy(x => x.ITCode);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

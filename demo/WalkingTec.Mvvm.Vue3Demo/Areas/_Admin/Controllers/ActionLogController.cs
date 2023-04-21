@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -18,7 +19,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(ActionLogSearcher searcher)
+        public async Task<IActionResult> Search(ActionLogSearcher searcher)
         {
             if (ModelState.IsValid)
             {
@@ -42,7 +43,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("[action]")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<ActionLogBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -66,7 +67,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcel(ActionLogSearcher searcher)
+        public async Task<IActionResult> ExportExcel(ActionLogSearcher searcher)
         {
             var vm = Wtm.CreateVM<ActionLogListVM>();
             vm.Searcher = searcher;
@@ -76,7 +77,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             var vm = Wtm.CreateVM<ActionLogListVM>();
             if (ids != null && ids.Count() > 0)

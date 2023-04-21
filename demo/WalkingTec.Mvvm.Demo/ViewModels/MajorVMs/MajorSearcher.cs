@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 
         protected override async Task InitVM()
         {
-            AllStudentMajorss = DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
+            AllStudentMajorss = await DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

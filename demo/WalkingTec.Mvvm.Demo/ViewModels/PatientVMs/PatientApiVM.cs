@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

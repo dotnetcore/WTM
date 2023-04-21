@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,9 +28,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
 
         protected override async Task InitVM()
         {
-            AllLocations = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
-            AllHospitals = DC.Set<Hospital>().GetSelectListItems(Wtm, y => y.Name);
-            AllVirusess = DC.Set<Virus>().GetSelectListItems(Wtm, y => y.VirtusName);
+            AllLocations = await DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
+            AllHospitals = await DC.Set<Hospital>().GetSelectListItems(Wtm, y => y.Name);
+            AllVirusess = await DC.Set<Virus>().GetSelectListItems(Wtm, y => y.VirtusName);
             SelectedVirusesIDs = Entity.Viruses?.Select(x => x.VirusId.ToString()).ToList();
         }
 
@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.PatientVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

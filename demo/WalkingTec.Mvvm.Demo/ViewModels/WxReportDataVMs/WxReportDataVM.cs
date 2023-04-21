@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
 
         protected override async Task InitVM()
         {
-            AllFrameworkUsers = DC.Set<FrameworkUser>().GetSelectListItems(Wtm, y => y.Name);
+            AllFrameworkUsers = await DC.Set<FrameworkUser>().GetSelectListItems(Wtm, y => y.Name);
         }
 
         public override async Task DoAdd()
@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

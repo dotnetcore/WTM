@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
@@ -198,10 +199,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
         [ActionDescription("Export")]
         [HttpPost]
-        public IActionResult ExportExcel(DatatableListVM vm)
+        public async Task<IActionResult> ExportExcel(DatatableListVM vm)
         {
             vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
+            var data = await vm.GenerateExcel();
             return File(data, "application/vnd.ms-excel", $"Export_City_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 

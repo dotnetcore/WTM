@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,8 +17,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
         {
         }
 
-        protected override async Task InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
         public override async Task DoAdd()
@@ -33,7 +34,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

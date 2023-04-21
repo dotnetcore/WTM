@@ -7,6 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
 using WalkingTec.Mvvm.Demo.Models;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -36,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("新建")]
         [HttpPost("Add")]
-        public IActionResult Add(SchoolApiVM vm)
+        public async Task<IActionResult> Add(SchoolApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +60,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("修改")]
         [HttpPut("Edit")]
-        public IActionResult Edit(SchoolApiVM vm)
+        public async Task<IActionResult> Edit(SchoolApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -81,7 +82,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("删除")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<SchoolApiBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -105,18 +106,18 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("导出")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(SchoolApiSearcher searcher)
+        public async Task<IActionResult> ExportExcel(SchoolApiSearcher searcher)
         {
             var vm = Wtm.CreateVM<SchoolApiListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
+            var data = await vm.GenerateExcel();
             return File(data, "application/vnd.ms-excel", $"Export_School_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
         [ActionDescription("勾选导出")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             var vm = Wtm.CreateVM<SchoolApiListVM>();
             if (ids != null && ids.Count() > 0)
@@ -124,7 +125,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            var data = vm.GenerateExcel();
+            var data = await vm.GenerateExcel();
             return File(data, "application/vnd.ms-excel", $"Export_School_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
@@ -145,7 +146,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("导入")]
         [HttpPost("Import")]
-        public ActionResult Import(SchoolApiImportVM vm)
+        public async Task<IActionResult> Import(SchoolApiImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())

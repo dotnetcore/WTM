@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -22,13 +23,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
         {
             if (string.IsNullOrEmpty(Entity.Manager) == false)
             {
-                var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.Manager).FirstOrDefault();
+                var user = await DC.Set<FrameworkUser>().Where(x => x.ITCode == Entity.Manager).FirstOrDefaultAsync();
                 if (user == null)
                 {
                     MSD.AddModelError("Entity.Manager", Localizer["Sys.CannotFindUser", Entity.Manager]);
                 }
             }
-            base.Validate();
+            await base.Validate();
         }
 
         public override async Task DoAdd()

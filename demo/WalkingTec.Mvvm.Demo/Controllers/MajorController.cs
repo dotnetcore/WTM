@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     {
         #region Search
         [ActionDescription("Sys.Search")]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var vm = Wtm.CreateVM<MajorListVM>();
             vm.Searcher.SchoolId = 27;
@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public ActionResult Index(MajorListVM vm)
+        public async Task<IActionResult> Index(MajorListVM vm)
         {
 
             return PartialView(vm);
@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region Create
         [ActionDescription("Sys.Create")]
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = Wtm.CreateVM<MajorVM>();
             return PartialView(vm);
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.Create")]
-        public ActionResult Create(MajorVM vm)
+        public async Task<IActionResult> Create(MajorVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region Edit
         [ActionDescription("Sys.Edit")]
-        public ActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
             var vm = Wtm.CreateVM<MajorVM>(id);
             return PartialView(vm);
@@ -92,7 +92,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Sys.Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
-        public ActionResult Edit(MajorVM vm)
+        public async Task<IActionResult> Edit(MajorVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -100,10 +100,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                vm.DoEdit();
+                await vm.DoEdit();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -116,7 +116,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region Delete
         [ActionDescription("Sys.Delete")]
-        public ActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             var vm = Wtm.CreateVM<MajorVM>(id);
             return PartialView(vm);
@@ -124,10 +124,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Delete")]
         [HttpPost]
-        public ActionResult Delete(string id, IFormCollection nouse)
+        public async Task<IActionResult> Delete(string id, IFormCollection nouse)
         {
             var vm = Wtm.CreateVM<MajorVM>(id);
-            vm.DoDelete();
+            await vm.DoDelete();
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -141,7 +141,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region Details
         [ActionDescription("Sys.Details")]
-        public ActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             var vm = Wtm.CreateVM<MajorVM>(id);
             return PartialView(vm);
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region BatchEdit
         [HttpPost]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult BatchEdit(string[] IDs)
+        public async Task<IActionResult> BatchEdit(string[] IDs)
         {
             var vm = Wtm.CreateVM<MajorBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -159,7 +159,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult DoBatchEdit(MajorBatchVM vm, IFormCollection nouse)
+        public async Task<IActionResult> DoBatchEdit(MajorBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !await vm.DoBatchEdit())
             {
@@ -175,7 +175,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region BatchDelete
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult BatchDelete(string[] IDs)
+        public async Task<IActionResult> BatchDelete(string[] IDs)
         {
             var vm = Wtm.CreateVM<MajorBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -183,7 +183,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult DoBatchDelete(MajorBatchVM vm, IFormCollection nouse)
+        public async Task<IActionResult> DoBatchDelete(MajorBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {
@@ -198,7 +198,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region Import
 		[ActionDescription("Sys.Import")]
-        public ActionResult Import()
+        public async Task<IActionResult> Import()
         {
             var vm = Wtm.CreateVM<MajorImportVM>();
             return PartialView(vm);
@@ -206,7 +206,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.Import")]
-        public ActionResult Import(MajorImportVM vm, IFormCollection nouse)
+        public async Task<IActionResult> Import(MajorImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
             {
@@ -221,7 +221,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost]
-        public IActionResult ExportExcel(MajorListVM vm)
+        public async Task<IActionResult> ExportExcel(MajorListVM vm)
         {
             return await vm.GetExportData();
         }

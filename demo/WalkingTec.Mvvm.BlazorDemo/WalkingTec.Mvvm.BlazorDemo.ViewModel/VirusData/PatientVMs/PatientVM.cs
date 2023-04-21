@@ -62,7 +62,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModel.VirusData.PatientVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

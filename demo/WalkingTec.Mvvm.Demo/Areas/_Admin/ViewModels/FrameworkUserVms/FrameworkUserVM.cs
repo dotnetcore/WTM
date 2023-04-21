@@ -162,7 +162,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             await Wtm.RemoveUserCache(Entity.ITCode);
         }
 
-        public void ChangePassword()
+        public async Task ChangePassword()
         {
             Entity.Password = Utils.GetMD5String(Entity.Password);
             DC.UpdateProperty(Entity, x => x.Password);

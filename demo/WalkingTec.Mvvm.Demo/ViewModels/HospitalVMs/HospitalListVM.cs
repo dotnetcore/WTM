@@ -32,12 +32,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
 
         protected override Task<IEnumerable<IGridColumn<Hospital_View>>> InitGridHeader()
         {
-            return new List<GridColumn<Hospital_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<Hospital_View>>> (new List<GridColumn<Hospital_View>>{
                 this.MakeGridHeader(x => x.Name),
                 this.MakeGridHeader(x => x.Level),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
         public override Task<IOrderedQueryable<Hospital_View>> GetSearchQuery()

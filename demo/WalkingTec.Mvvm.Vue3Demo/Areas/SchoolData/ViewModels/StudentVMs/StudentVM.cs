@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.StudentVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

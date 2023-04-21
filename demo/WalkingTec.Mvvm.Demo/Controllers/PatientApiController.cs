@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.PatientVMs;
 using WalkingTec.Mvvm.Demo.Models.Virus;
 using WalkingTec.Mvvm.Demo.Models;
-
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(PatientApiSearcher searcher)
+		public async Task<IActionResult> Search(PatientApiSearcher searcher)
         {
             if (ModelState.IsValid)
             {
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(PatientApiVM vm)
+        public async Task<IActionResult> Add(PatientApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(PatientApiVM vm)
+        public async Task<IActionResult> Edit(PatientApiVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<PatientApiBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -114,7 +114,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(PatientApiSearcher searcher)
+        public async Task<IActionResult> ExportExcel(PatientApiSearcher searcher)
         {
             var vm = Wtm.CreateVM<PatientApiListVM>();
             vm.Searcher = searcher;
@@ -124,7 +124,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             var vm = Wtm.CreateVM<PatientApiListVM>();
             if (ids != null && ids.Count() > 0)
@@ -152,7 +152,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(PatientApiImportVM vm)
+        public async Task<IActionResult> Import(PatientApiImportVM vm)
         {
             if (vm!=null && (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData()))
             {
@@ -166,19 +166,19 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 
         [HttpGet("GetCitys")]
-        public ActionResult GetCitys()
+        public async Task<IActionResult> GetCitys()
         {
             return Ok(await DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
         [HttpGet("GetHospitals")]
-        public ActionResult GetHospitals()
+        public async Task<IActionResult> GetHospitals()
         {
             return Ok(await DC.Set<Hospital>().GetSelectListItems(Wtm, x => x.Name));
         }
 
         [HttpGet("GetViruss")]
-        public ActionResult GetViruss()
+        public async Task<IActionResult> GetViruss()
         {
             return Ok(await DC.Set<Virus>().GetSelectListItems(Wtm, x => x.VirtusName));
         }

@@ -18,9 +18,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         protected override Task<IEnumerable<IGridColumn<DpView>>> InitGridHeader()
         {
-            return new List<GridColumn<DpView>>{
+            return Task.FromResult<IEnumerable<IGridColumn<DpView>>> (new List<GridColumn<DpView>>{
                 this.MakeGridHeader(x => x.Name),
-            };
+            });
         }
 
         public override async Task<IOrderedQueryable<DpView>> GetSearchQuery()

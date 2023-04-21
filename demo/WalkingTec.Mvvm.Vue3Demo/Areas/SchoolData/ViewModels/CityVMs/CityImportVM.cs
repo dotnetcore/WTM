@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
 	    protected override async Task InitVM()
         {
             Parent_Excel.DataType = ColumnDataType.ComboBox;
-            Parent_Excel.ListItems = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
+            Parent_Excel.ListItems = await DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

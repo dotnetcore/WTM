@@ -387,8 +387,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         fp.MenuItemId = menuid;
                         fp.RoleCode = code;
                         fp.Allowed = true;
-                        fp.TenantCode = LoginUserInfo?.CurrentTenant;
-                        DC.Set<FunctionPrivilege>().Add(fp);
+                        fp.TenantCode = (await GetLoginUserInfo ())?.CurrentTenant;
+                        await DC.Set<FunctionPrivilege>().AddAsync(fp);
                     }
                 }
             }

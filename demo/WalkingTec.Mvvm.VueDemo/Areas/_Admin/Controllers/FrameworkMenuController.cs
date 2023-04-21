@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("[action]")]
-        public IActionResult Edit(FrameworkMenuVM2 vm)
+        public async Task<IActionResult> Edit(FrameworkMenuVM2 vm)
         {
             if (!ModelState.IsValid)
             {
@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoEdit(true);
+                await vm.DoEdit(true);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());

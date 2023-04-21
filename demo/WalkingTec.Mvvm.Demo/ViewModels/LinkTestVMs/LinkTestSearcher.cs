@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.LinkTestVMs
 
         protected override async Task InitVM()
         {
-            AllStudents = DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
+            AllStudents = await DC.Set<Student>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     public class FrameworkMenuController : BaseController
     {
         [ActionDescription("Sys.Search")]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var vm = Wtm.CreateVM<FrameworkMenuListVM>();
             return PartialView(vm);
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Create")]
-        public ActionResult Create(Guid? id)
+        public async Task<IActionResult> Create(Guid? id)
         {
             var vm = Wtm.CreateVM<FrameworkMenuVM>();
             if (id != null)
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         [Public]
         [ActionDescription("Sys.Create")]
-        public ActionResult Create(FrameworkMenuVM vm)
+        public async Task<IActionResult> Create(FrameworkMenuVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 await vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Edit")]
-        public ActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
             vm.IconSelectItems = !string.IsNullOrEmpty(vm.IconFont) && IconFontsHelper
@@ -102,7 +102,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPost]
-        public ActionResult Edit(FrameworkMenuVM vm)
+        public async Task<IActionResult> Edit(FrameworkMenuVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -122,10 +122,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                vm.DoEdit();
+                await vm.DoEdit();
                 if (!ModelState.IsValid)
                 {
-                    vm.DoReInit();
+                    await vm.DoReInit();
                     return PartialView(vm);
                 }
                 else
@@ -136,7 +136,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Delete")]
-        public ActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
             return PartialView(vm);
@@ -144,10 +144,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Delete")]
         [HttpPost]
-        public ActionResult Delete(Guid id, IFormCollection noUser)
+        public async Task<IActionResult> Delete(Guid id, IFormCollection noUser)
         {
             var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
-            vm.DoDelete();
+            await vm.DoDelete();
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs
     {
         protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("SoftFacInfo", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
                 this.MakeStandardAction("SoftFacInfo", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
@@ -25,20 +25,20 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs
                 this.MakeStandardAction("SoftFacInfo", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
                 this.MakeStandardAction("SoftFacInfo", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
                 this.MakeStandardAction("SoftFacInfo", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], ""),
-            };
+            });
         }
 
 
         protected override Task<IEnumerable<IGridColumn<SoftFacInfo_View>>> InitGridHeader()
         {
-            return new List<GridColumn<SoftFacInfo_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<SoftFacInfo_View>>> (new List<GridColumn<SoftFacInfo_View>>{
                 this.MakeGridHeader(x => x.IsoName),
                 this.MakeGridHeader(x => x.EXEVerSion),
                 this.MakeGridHeader(x => x.Description),
                 this.MakeGridHeader(x => x.EXEFileID).SetFormat(EXEFileIDFormat),
                 this.MakeGridHeader(x => x.IsoName_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
         private List<ColumnFormatInfo> EXEFileIDFormat(SoftFacInfo_View entity, object val)
         {
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SoftFacInfoVMs
                     IsoName_view = x.iSOTypes.Select(y=>y.isoType.IsoName).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

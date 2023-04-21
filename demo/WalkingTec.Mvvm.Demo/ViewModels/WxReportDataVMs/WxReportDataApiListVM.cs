@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
 
         protected override Task<IEnumerable<IGridColumn<WxReportDataApi_View>>> InitGridHeader()
         {
-            return new List<GridColumn<WxReportDataApi_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<WxReportDataApi_View>>> (new List<GridColumn<WxReportDataApi_View>>{
                 this.MakeGridHeader(x => x.ToWxUser),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeader(x => x.Date),
@@ -56,7 +56,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
                 this.MakeGridHeader(x => x.Extend09),
                 this.MakeGridHeader(x => x.Extend10),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
         public override Task<IOrderedQueryable<WxReportDataApi_View>> GetSearchQuery()
@@ -110,7 +110,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
                     Extend10 = x.Extend10,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

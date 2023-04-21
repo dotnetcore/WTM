@@ -37,12 +37,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         protected override Task<IEnumerable<IGridColumn<FrameworkRole>>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkRole>>{
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkRole>>> (new List<GridColumn<FrameworkRole>>{
                 this.MakeGridHeader(x => x.RoleCode, 120),
                 this.MakeGridHeader(x => x.RoleName, 120),
                 this.MakeGridHeader(x => x.RoleRemark),
                 this.MakeGridHeaderAction(width: 300)
-            };
+            });
         }
 
         public override Task<IOrderedQueryable<FrameworkRole>> GetSearchQuery()

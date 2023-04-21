@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
 
         protected override async Task InitVM()
         {
-            AllLocations = DC.Set<City>().GetTreeSelectListItems(Wtm, y => y.Name);
+            AllLocations = await DC.Set<City>().GetTreeSelectListItems(Wtm, y => y.Name);
         }
 
         public override async Task DoAdd()
@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

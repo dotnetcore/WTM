@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(ActionLogSearcher searcher)
+        public async Task<IActionResult> Search(ActionLogSearcher searcher)
         {
             if (ModelState.IsValid)
             {

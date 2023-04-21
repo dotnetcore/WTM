@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.WxReportDataVMs
 
         protected override async Task InitVM()
         {
-            AllFrameworkUsers = DC.Set<FrameworkUser>().GetSelectListItems(Wtm, y => y.Name);
+            AllFrameworkUsers = await DC.Set<FrameworkUser>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.ConsoleDemo
     {
         public static ServiceProvider Provider { get; set; }
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Start...");
             DateTime check = DateTime.Now;
@@ -31,8 +31,8 @@ namespace WalkingTec.Mvvm.ConsoleDemo
             //var context = GetWtmContext();
             //var test = context.CallAPI("baidu","/").Result;
             List<int> ids = new List<int>();
-            ids.Add( AddSchool("111","111","111"));
-            ids.Add(AddSchool("222", "222", "222"));
+            ids.Add(await AddSchool("111","111","111"));
+            ids.Add(await AddSchool("222", "222", "222"));
             BatchEditSchool(ids);
             //Upload();
             Console.ReadLine();
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.ConsoleDemo
             return rv;
         }
 
-        static int AddSchool(string name,string code,string remark)
+        static async Task<int> AddSchool(string name,string code,string remark)
         {
             SchoolVM vm = GetWtmContext().CreateVM<SchoolVM>();
 
@@ -93,7 +93,7 @@ namespace WalkingTec.Mvvm.ConsoleDemo
                     }
                 }
             };
-            vm.Validate();
+            await vm.Validate();
             if(vm.MSD.IsValid == true)
             {
                 await vm.DoAdd();

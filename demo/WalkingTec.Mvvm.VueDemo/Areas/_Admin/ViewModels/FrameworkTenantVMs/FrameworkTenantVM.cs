@@ -26,8 +26,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             return rv;
         }
 
-        protected override async Task InitVM()
+        protected override Task InitVM()
         {
+            return Task.CompletedTask;
         }
 
         public override async Task DoAdd()
@@ -35,7 +36,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             await base.DoAdd();
             if (MSD.IsValid)
             {
-                TenantOperation();
+                await TenantOperation();
                 Cache.Delete(nameof(GlobalData.AllTenant));
             }
         }
@@ -131,7 +132,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
         }
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
             Cache.Delete(nameof(GlobalData.AllTenant));
         }
     }

@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.VueDemo.BasicData.ViewModels.SchoolVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

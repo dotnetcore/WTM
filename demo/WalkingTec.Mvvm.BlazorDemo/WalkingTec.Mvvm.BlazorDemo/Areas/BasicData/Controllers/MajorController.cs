@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(MajorSearcher searcher)
+		public async Task<IActionResult> Search(MajorSearcher searcher)
         {
             if (ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(MajorVM vm)
+        public async Task<IActionResult> Add(MajorVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(MajorVM vm)
+        public async Task<IActionResult> Edit(MajorVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("Sys.Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = Wtm.CreateVM<MajorBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(MajorSearcher searcher)
+        public async Task<IActionResult> ExportExcel(MajorSearcher searcher)
         {
             var vm = Wtm.CreateVM<MajorListVM>();
             vm.Searcher = searcher;
@@ -123,7 +123,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.CheckExport")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             var vm = Wtm.CreateVM<MajorListVM>();
             if (ids != null && ids.Count() > 0)
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(MajorImportVM vm)
+        public async Task<IActionResult> Import(MajorImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !await vm.BatchSaveData())
@@ -166,7 +166,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
 
         [HttpPost("BatchEdit")]
         [ActionDescription("Sys.BatchEdit")]
-        public ActionResult DoBatchEdit(MajorBatchVM vm)
+        public async Task<IActionResult> DoBatchEdit(MajorBatchVM vm)
         {
             if (!ModelState.IsValid || !await vm.DoBatchEdit())
             {

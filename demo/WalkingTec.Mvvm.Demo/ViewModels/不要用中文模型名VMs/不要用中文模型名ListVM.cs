@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
     {
         protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("不要用中文模型名", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("不要用中文模型名", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
@@ -25,18 +25,18 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
                 this.MakeStandardAction("不要用中文模型名", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
                 this.MakeStandardAction("不要用中文模型名", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
                 this.MakeStandardAction("不要用中文模型名", GridActionStandardTypesEnum.ExportExcel, "导出",""),
-            };
+            });
         }
 
         protected override Task<IEnumerable<IGridColumn<不要用中文模型名_View>>> InitGridHeader()
         {
-            return new List<GridColumn<不要用中文模型名_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<不要用中文模型名_View>>> (new List<GridColumn<不要用中文模型名_View>>{
                 this.MakeGridHeader(x => x.不要),
                 this.MakeGridHeader(x => x.用),
                 this.MakeGridHeader(x => x.中文),
                 this.MakeGridHeader(x => x.模型名),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
         public override Task<IOrderedQueryable<不要用中文模型名_View>> GetSearchQuery()
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs
                     模型名 = x.模型名,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

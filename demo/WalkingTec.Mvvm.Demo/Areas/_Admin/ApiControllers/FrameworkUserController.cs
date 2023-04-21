@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("[action]")]
-        public IActionResult Search(FrameworkUserSearcher searcher)
+        public async Task<IActionResult> Search(FrameworkUserSearcher searcher)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Export")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcel(FrameworkUserSearcher searcher)
+        public async Task<IActionResult> ExportExcel(FrameworkUserSearcher searcher)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -163,7 +163,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.ExportByIds")]
         [HttpPost("[action]")]
-        public IActionResult ExportExcelByIds(string[] ids)
+        public async Task<IActionResult> ExportExcelByIds(string[] ids)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.DownloadTemplate")]
         [HttpGet("[action]")]
-        public IActionResult GetExcelTemplate()
+        public async Task<IActionResult> GetExcelTemplate ()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -202,7 +202,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Sys.Import")]
         [HttpPost("[action]")]
-        public ActionResult Import(FrameworkUserImportVM vm)
+        public async Task<IActionResult> Import(FrameworkUserImportVM vm)
         {
 
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
@@ -222,7 +222,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFrameworkRoles")]
         [ActionDescription("GetRoles")]
         [AllRights]
-        public IActionResult GetFrameworkRoles()
+        public async Task<IActionResult> GetFrameworkRoles ()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -234,7 +234,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFrameworkGroups")]
         [ActionDescription("GetGroups")]
         [AllRights]
-        public IActionResult GetFrameworkGroups()
+        public async Task<IActionResult> GetFrameworkGroups ()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -246,7 +246,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFrameworkGroupsTree")]
         [ActionDescription("GetGroupsTree")]
         [AllRights]
-        public IActionResult GetFrameworkGroupsTree()
+        public async Task<IActionResult> GetFrameworkGroupsTree ()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -258,7 +258,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("GetUserById")]
         [AllRights]
-        public IActionResult GetUserById(string keywords)
+        public async Task<IActionResult> GetUserById (string keywords)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -270,7 +270,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("GetUserByGroup")]
         [AllRights]
-        public IActionResult GetUserByGroup(string keywords)
+        public async Task<IActionResult> GetUserByGroup (string keywords)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -282,7 +282,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("GetUserByRole")]
         [AllRights]
-        public IActionResult GetUserByRole(string keywords)
+        public async Task<IActionResult> GetUserByRole (string keywords)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {

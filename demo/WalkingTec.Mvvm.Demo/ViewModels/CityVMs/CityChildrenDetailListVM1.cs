@@ -24,12 +24,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
  
         protected override Task<IEnumerable<IGridColumn<City>>> InitGridHeader()
         {
-            return new List<GridColumn<City>>{
-                
+            return Task.FromResult<IEnumerable<IGridColumn<City>>> (new List<GridColumn<City>>{
                 this.MakeGridHeader(x => x.Name).SetEditType(EditTypeEnum.TextBox),
-
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
         

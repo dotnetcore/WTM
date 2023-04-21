@@ -48,14 +48,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost]
-        public IActionResult ExportExcel(ActionLogListVM vm)
+        public async Task<IActionResult> ExportExcel(ActionLogListVM vm)
         {
             return await vm.GetExportData();
         }
 
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult BatchDelete(string[] IDs)
+        public async Task<IActionResult> BatchDelete(string[] IDs)
         {
             var vm = Wtm.CreateVM<ActionLogBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult DoBatchDelete(ActionLogBatchVM vm, IFormCollection nouse)
+        public async Task<IActionResult> DoBatchDelete(ActionLogBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !await vm.DoBatchDelete())
             {

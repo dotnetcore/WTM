@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.ISOTypeVMs
 
         protected override async Task InitVM()
         {
-            AlliSOTypess = DC.Set<SoftFacInfo>().GetSelectListItems(Wtm, y => y.IsoName);
+            AlliSOTypess = await DC.Set<SoftFacInfo>().GetSelectListItems(Wtm, y => y.IsoName);
         }
 
     }

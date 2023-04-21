@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(StudentSearcher searcher)
+		public IActionResult Search (StudentSearcher searcher)
         {
             if (ModelState.IsValid)
             {

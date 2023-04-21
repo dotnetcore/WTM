@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
@@ -30,7 +31,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         public override async Task Validate()
         {
             List<ValidationResult> rv = new List<ValidationResult>();
-            if (DC.Set<FrameworkUser>().Where(x => x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword)).SingleOrDefault() == null)
+            var _itcode = (await GetLoginUserInfo ()).ITCode;
+            if (DC.Set<FrameworkUser>().Where(x => x.ITCode == _itcode && x.Password == Utils.GetMD5String(OldPassword)).SingleOrDefault() == null)
             {
                 MSD.AddModelError("OldPassword", Localizer["Login.OldPasswrodWrong"]);
             }
@@ -40,9 +42,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             }
         }
 
-        public void DoChange()
+        public async Task DoChange ()
         {
-            var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == LoginUserInfo.ITCode).SingleOrDefault();
+            var _itcode = (await GetLoginUserInfo ()).ITCode;
+            var user = DC.Set<FrameworkUser>().Where(x => x.ITCode == _itcode).SingleOrDefault();
             if (user != null)
             {
                 user.Password = Utils.GetMD5String(NewPassword);

@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
             }));
             header.Add(this.MakeGridHeaderAction(width: 120));
 
-            return header;
+            return Task.FromResult<IEnumerable<IGridColumn<ActionLog>>> (header);
         }
         
         public override Task<IOrderedQueryable<ActionLog>> GetSearchQuery()

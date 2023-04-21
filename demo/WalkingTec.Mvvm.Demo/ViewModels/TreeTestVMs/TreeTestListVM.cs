@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
     {
         protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("TreeTest", GridActionStandardTypesEnum.Create, Localizer["Sys.Create"],"", dialogWidth: 800),
                 this.MakeStandardAction("TreeTest", GridActionStandardTypesEnum.Edit, Localizer["Sys.Edit"], "", dialogWidth: 800),
@@ -25,18 +25,18 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
                 this.MakeStandardAction("TreeTest", GridActionStandardTypesEnum.BatchDelete, Localizer["Sys.BatchDelete"], "", dialogWidth: 800),
                 this.MakeStandardAction("TreeTest", GridActionStandardTypesEnum.Import, Localizer["Sys.Import"], "", dialogWidth: 800),
                 this.MakeStandardAction("TreeTest", GridActionStandardTypesEnum.ExportExcel, Localizer["Sys.Export"], ""),
-            };
+            });
         }
 
 
         protected override Task<IEnumerable<IGridColumn<TreeTest_View>>> InitGridHeader()
         {
-            return new List<GridColumn<TreeTest_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<TreeTest_View>>> (new List<GridColumn<TreeTest_View>>{
                 this.MakeGridHeader(x => x.Name),
                 this.MakeGridHeader(x => x.Test),
                 this.MakeGridHeader(x => x.Name_view),
                 this.MakeGridHeaderAction(width: 200)
-            };
+            });
         }
 
         public override Task<IOrderedQueryable<TreeTest_View>> GetSearchQuery()
@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
                     Name_view = x.Parent.Name,
                 })
                 .OrderBy(x => x.ID);
-            return query;
+            return Task.FromResult (query);
         }
 
     }

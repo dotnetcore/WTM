@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
         protected override Task<IEnumerable<IGridColumn<FrameworkGroup_View>>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkGroup_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkGroup_View>>> (new List<GridColumn<FrameworkGroup_View>>{
                 this.MakeGridHeader(x => x.GroupName, 220),
                 this.MakeGridHeader(x => x.GroupCode, 120),
                 this.MakeGridHeader(x => x.ManagerName,220).SetFormat((a,b)=>{
@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
               this.MakeGridHeader(x => x.GroupRemark),
                  this.MakeGridHeader(x => x.ParentId).SetHide(),
              this.MakeGridHeaderAction(width: 300)
-            };
+            });
         }
 
         public override Task<IOrderedQueryable<FrameworkGroup_View>> GetSearchQuery()

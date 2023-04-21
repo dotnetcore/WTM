@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HospitalVMs
 	    protected override async Task InitVM()
         {
             Location_Excel.DataType = ColumnDataType.ComboBox;
-            Location_Excel.ListItems = DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
+            Location_Excel.ListItems = await DC.Set<City>().GetSelectListItems(Wtm, y => y.Name);
         }
 
     }

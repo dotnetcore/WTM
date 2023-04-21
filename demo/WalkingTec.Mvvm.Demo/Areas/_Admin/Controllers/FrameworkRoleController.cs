@@ -16,14 +16,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
     public class FrameworkRoleController : BaseController
     {
         [ActionDescription("Sys.Search")]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             return PartialView(vm);
         }
         [ActionDescription("Sys.Search")]
         [HttpPost]
-        public IActionResult Search(FrameworkRoleSearcher searcher)
+        public async Task<IActionResult> Search(FrameworkRoleSearcher searcher)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Create")]
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.Create")]
-        public ActionResult Create(FrameworkRoleVM vm)
+        public async Task<IActionResult> Create(FrameworkRoleVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Edit")]
-        public ActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         [ActionDescription("Sys.Edit")]
         [ValidateFormItemOnly]
-        public ActionResult Edit(FrameworkRoleVM vm)
+        public async Task<IActionResult> Edit(FrameworkRoleVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -98,13 +98,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                vm.DoEdit();
+                await vm.DoEdit();
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
 
         [ActionDescription("Sys.Delete")]
-        public ActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -136,7 +136,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.BatchDelete")]
-        public ActionResult BatchDelete(Guid[] ids)
+        public async Task<IActionResult> BatchDelete(Guid[] ids)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -172,7 +172,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Sys.Import")]
-        public ActionResult Import()
+        public async Task<IActionResult> Import()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -184,7 +184,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Sys.Import")]
-        public ActionResult Import(FrameworkRoleImportVM vm, IFormCollection nouse)
+        public async Task<IActionResult> Import(FrameworkRoleImportVM vm, IFormCollection nouse)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -231,7 +231,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost]
-        public IActionResult ExportExcel(FrameworkRoleListVM vm)
+        public async Task<IActionResult> ExportExcel(FrameworkRoleListVM vm)
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {

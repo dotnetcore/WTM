@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         protected override Task<IEnumerable<IGridColumn<DataPrivilege_ListView>>> InitGridHeader()
         {
-            return new List<GridColumn<DataPrivilege_ListView>>{
+            return Task.FromResult<IEnumerable<IGridColumn<DataPrivilege_ListView>>> (new List<GridColumn<DataPrivilege_ListView>>{
                 this.MakeGridHeader(x => x.Name, 200),
                 this.MakeGridHeader(x => x.PName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
                 this.MakeGridHeader(x => x.TableName),
@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Localizer["Sys.Operation"]).SetDisableExport(),
                 this.MakeGridHeader(x => x.DpType).SetHide(true),
                 this.MakeGridHeader(x => x.TargetId).SetHide(true)
-           };
+            });
         }
 
 

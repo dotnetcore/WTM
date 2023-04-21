@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
 {
@@ -53,12 +54,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
             }
         }
 
-        private void TenantOperation()
+        private async Task TenantOperation ()
         {
             List<FunctionPrivilege> fps = new List<FunctionPrivilege>();
-            using (var userdc = LoginUserInfo.GetUserDC(Wtm))
+            using (var userdc = await (await GetLoginUserInfo ()).GetUserDC(Wtm))
             {
-                fps = userdc.Set<FunctionPrivilege>().AsNoTracking().Where(x => x.RoleCode == AdminRoleCode).ToList();
+                fps = await userdc.Set<FunctionPrivilege>().AsNoTracking().Where(x => x.RoleCode == AdminRoleCode).ToListAsync();
                 List<Guid> tenantmenus = new List<Guid>();
                 using (var defaultdc = Wtm.CreateDC(false, "default", false))
                 {
@@ -131,7 +132,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
         }
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
             Cache.Delete(nameof(GlobalData.AllTenant));
         }
     }

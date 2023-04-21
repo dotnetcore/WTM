@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
 
         protected override async Task InitVM()
         {
-            AllParents = DC.Set<TreeTest>().GetSelectListItems(Wtm, y => y.Name);
+            AllParents = await DC.Set<TreeTest>().GetSelectListItems(Wtm, y => y.Name);
             ListVM = Wtm.CreateVM<TreeTestListVM>();
         }
 
@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TreeTestVMs
 
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
         }
     }
 }

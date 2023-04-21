@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkTenantVMs
         }
         public override async Task DoDelete()
         {
-            base.DoDelete();
+            await base.DoDelete();
             Cache.Delete(nameof(GlobalData.AllTenant));
         }
     }

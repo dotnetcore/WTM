@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             NeedPage = false;
         }
 
-        protected override Task<List<GridAction>> InitGridAction()
+        protected override async Task<List<GridAction>> InitGridAction()
         {
             if (ConfigInfo.HasMainHost && (await Wtm.GetLoginUserInfo ())?.CurrentTenant == null)
             {
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
         protected override Task<IEnumerable<IGridColumn<FrameworkGroup_View>>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkGroup_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkGroup_View>>> (new List<GridColumn<FrameworkGroup_View>>{
                 this.MakeGridHeader(x => x.GroupName, 220),
                 this.MakeGridHeader(x => x.GroupCode, 120),
                 this.MakeGridHeader(x => x.ManagerName,220).SetFormat((a,b)=>{
@@ -60,12 +60,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
               this.MakeGridHeader(x => x.GroupRemark),
                  this.MakeGridHeader(x => x.ParentId).SetHide(),
              this.MakeGridHeaderAction(width: 300)
-            };
+            });
         }
 
         public override Task<IOrderedQueryable<FrameworkGroup_View>> GetSearchQuery()
         {
-            return  DC.Set<FrameworkGroup>()
+            return Task.FromResult (DC.Set<FrameworkGroup>()
                 .CheckContain(Searcher.GroupCode, x => x.GroupCode)
                 .CheckContain(Searcher.GroupName, x => x.GroupName)
                  .GroupJoin(DC.Set<FrameworkUser>(), ok => ok.Manager, ik => ik.ITCode, (group, user) => new { user = user, group = group })
@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                      Manager = a.group.Manager,
                      ManagerName = b.Name,
                  })
-                .OrderBy(x => x.GroupCode);
+                .OrderBy(x => x.GroupCode));
         }
         public override Task AfterDoSearcher()
         {

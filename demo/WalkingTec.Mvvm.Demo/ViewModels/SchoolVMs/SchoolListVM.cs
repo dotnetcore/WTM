@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 
         protected override async Task InitVM()
         {
-            CityTree = DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name + "15.0.1-/1");
+            CityTree = await DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name + "15.0.1-/1");
         }
 
         public override string SetFullRowBgColor(object entity)
@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 
         protected override Task<List<GridAction>> InitGridAction()
         {
-            return new List<GridAction>
+            return Task.FromResult (new List<GridAction>
             {
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetHideOnToolBar(false).SetPromptMessage("你确定要修改么？").SetButtonClass("layui-btn-normal"),
@@ -56,12 +56,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.SimpleBatchDelete, "批量删除","", dialogWidth: 800),
                  })
-            };
+            });
         }
 
         protected override Task<IEnumerable<IGridColumn<School_View>>> InitGridHeader()
         {
-            return new List<GridColumn<School_View>>{
+            return Task.FromResult<IEnumerable<IGridColumn<School_View>>> (new List<GridColumn<School_View>>{
                 this.MakeGridHeader(x => x.SchoolCode),
                 this.MakeGridHeader(x => x.SchoolName),
                 this.MakeGridHeader(x => x.SchoolType),
@@ -70,19 +70,19 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 }).SetHeader("测试").SetDisableExport(),
                 this.MakeGridHeader(x => x.Remark),
                 this.MakeGridHeaderAction(width: 500)
-            };
+            });
         }
 
-        public override Task<IOrderedQueryable<School_View>> GetSearchQuery()
+        public override async Task<IOrderedQueryable<School_View>> GetSearchQuery()
         {
-            var query = DC.Set<School>()
+            var query = (await (await (await DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x => x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x => x.SchoolType)
                 .CheckEqual(Searcher.CityId, x=>x.CityId)
-                  .DPWhere(Wtm, x => x.ID)
-              .DPWhere(Wtm, x=>x.Majors[0].SchoolId)
-              .DPWhere(Wtm, x=>x.Majors[0].School.Majors[0].School.ID)
+                .DPWhere(Wtm, x => x.ID))
+                .DPWhere(Wtm, x=>x.Majors[0].SchoolId))
+                .DPWhere(Wtm, x=>x.Majors[0].School.Majors[0].School.ID))
                 .Select(x => new School_View
                 {
                     ID = x.ID,

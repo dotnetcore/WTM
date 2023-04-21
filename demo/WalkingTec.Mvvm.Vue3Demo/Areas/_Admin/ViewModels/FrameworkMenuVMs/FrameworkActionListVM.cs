@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             var actions = new List<GridAction>
             {
             };
-            return actions;
+            return Task.FromResult (actions);
         }
 
         protected override Task<IEnumerable<IGridColumn<FrameworkAction_ListView>>> InitGridHeader()
@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             header.Add(this.MakeGridHeader(x => x.ClassName, 150));
             header.Add(this.MakeGridHeader(x => x.MethodName, 150));
 
-            return header;
+            return Task.FromResult<IEnumerable<IGridColumn<FrameworkAction_ListView>>> (header);
         }
 
         public override Task<IOrderedQueryable<FrameworkAction_ListView>> GetSearchQuery()
