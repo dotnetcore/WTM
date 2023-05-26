@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             if (file != null)
             {
-                return Ok(new { Id = file.GetID(), Name = file.FileName });
+                return Ok(new { Id = file.GetID(), Name = file.FileName,errno=0,data=new { url = $"/api/_file/getfile/file.GetID()" } });
             }
             return BadRequest(Localizer["Sys.UploadFailed"]);
 

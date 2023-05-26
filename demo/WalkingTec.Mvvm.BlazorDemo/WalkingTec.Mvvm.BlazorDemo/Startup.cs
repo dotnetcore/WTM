@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             .AddJsonOptions(options =>
             {
                 options.UseWtmJsonOptions();
+                options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
