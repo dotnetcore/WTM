@@ -10,7 +10,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
     {
 
         [Display(Name = "_Admin.Account")]
-        [StringLength(3)]
         public string ITCode { get; set; }
 
         [Display(Name = "Url")]
