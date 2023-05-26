@@ -433,6 +433,7 @@ namespace WalkingTec.Mvvm.Mvc
                         File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store{Path.DirectorySeparatorChar}index.ts", GetResource("index.txt", "Spa.Vue.store").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
                         File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store{Path.DirectorySeparatorChar}api.ts", GenerateVUEView("store.api", apipneeded), Encoding.UTF8);
                     }
+                    #region 设置react和vue的默认页面和默认菜单，vue3不需要这部分
                     var index = File.ReadAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}index.ts");
                     if (index.Contains($"path: '/{ModelName.ToLower()}'") == false)
                     {
@@ -499,15 +500,20 @@ namespace WalkingTec.Mvvm.Mvc
 
                         }
                     }
+                    #endregion
                 }
 
-                if(UI == UIEnum.Blazor)
+                if (UI == UIEnum.Blazor)
                 {
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Index.razor", GenerateBlazorView("Index"), Encoding.UTF8);
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Create.razor", GenerateBlazorView("Create"), Encoding.UTF8);
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Edit.razor", GenerateBlazorView("Edit"), Encoding.UTF8);
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Details.razor", GenerateBlazorView("Details"), Encoding.UTF8);
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Import.razor", GenerateBlazorView("Import"), Encoding.UTF8);
+                }
+                if(UI == UIEnum.VUE3)
+                {
+                    //Todo
                 }
             }
             var test = GenerateTest();
