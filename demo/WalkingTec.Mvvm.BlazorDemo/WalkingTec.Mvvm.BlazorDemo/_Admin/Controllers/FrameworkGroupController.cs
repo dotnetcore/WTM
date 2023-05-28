@@ -114,7 +114,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 vm.Ids = ids;
             }
             else
-            {
+            {                
                 return Ok();
             }
             if (!ModelState.IsValid || !vm.DoBatchDelete())

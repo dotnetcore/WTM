@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             var FileData = Request.Form.Files[0];
             var file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, extra, sm, Wtm.CreateDC(cskey: csName));
-            return Ok(new { Id = file.GetID(), Name = file.FileName });
+            return Ok(new { Id = file.GetID(), Name = file.FileName, errno = 0, data = new { url = $"/api/_file/getfile/file.GetID()" } });
         }
 
         [HttpPost("[action]")]
