@@ -1,0 +1,75 @@
+
+<template>
+<div class="card-fill layout-padding">
+<el-card shadow="hover" class="layout-padding-auto" >
+  <el-form ref="formRef$modelname$" :model="state$modelname$.vmModel" label-width="100px">
+    <el-row>
+      $formfields$
+    </el-row>
+
+    <div style="text-align:right;">
+      <WtmButton @click="onClose$modelname$"  type="primary" :button-text="$t('message._system.common.vm.cancel')" style="margin-top:15px;"/>
+    </div>
+  </el-form>
+
+</el-card>
+</div>
+</template>
+
+
+<script setup lang="ts" name="$controllername$,false">
+import {  ElMessageBox, ElMessage } from 'element-plus';
+import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
+import { $modelname$Api } from '/@/api/$modelname$';
+import other from '/@/utils/other';
+import fileApi from '/@/api/file';
+import { useRouter } from "vue-router";
+const ci = getCurrentInstance() as any;
+
+// 定义变量内容
+const formRef$modelname$ = ref();
+const state$modelname$ = reactive({
+    vmModel: {
+	  Entity:{
+      $fieldinit$
+      },
+
+	},
+    
+    All$modelname$s: [] as any[],
+});
+
+// 取消
+const onClose$modelname$ = () => {
+    closeDialog();
+};
+
+
+// 页面加载时
+onMounted(() => {
+    $init$
+     if (ci.attrs["wtmdata"]) {
+		state$modelname$.vmModel.Entity.ID = ci.attrs["wtmdata"].ID;
+	}
+	else if (useRouter().currentRoute.value.query.id) {
+		state$modelname$.vmModel.Entity.ID = useRouter().currentRoute.value.query.id as any;
+	}
+	$modelname$Api().get(state$modelname$.vmModel.Entity.ID ?? "").then((data: any) => other.setValue(state$modelname$.vmModel, data));
+});
+
+// 定义子组件向父组件传值/事件
+const emit = defineEmits(['refresh','closeDialog']);
+// 关闭弹窗
+const closeDialog = () => {
+    emit('closeDialog');
+};
+// 暴露变量
+defineExpose({
+
+});
+</script>
+
+<style scoped lang="scss">
+
+</style>
+
