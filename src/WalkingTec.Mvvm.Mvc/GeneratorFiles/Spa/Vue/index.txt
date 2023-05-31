@@ -52,11 +52,11 @@ const DetailsDialog = defineAsyncComponent(() => import('./details.vue'));
 const ImportDialog = defineAsyncComponent(() => import('./import.vue'));
 
 const state$modelname$ = reactive({
-    
+    $fieldinit$
 });
 
 const searchData$modelname$ = ref({
-  $searchcolumns$
+    $searchcolumns$
 });
 
 // 定义变量内容

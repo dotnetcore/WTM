@@ -514,11 +514,11 @@ namespace WalkingTec.Mvvm.Mvc
                 if (UI == UIEnum.VUE3)
                 {
                     //Todo 生成vue3页面
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Index.razor", GenerateVueView("Index"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Create.razor", GenerateVueView("Create"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Edit.razor", GenerateVueView("Edit"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Details.razor", GenerateVueView("Details"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Import.razor", GenerateVueView("Import"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}index.vue", GenerateVueView("Index"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}create.vue", GenerateVueView("Create"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}edit.vue", GenerateVueView("Edit"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}details.vue", GenerateVueView("Details"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}import.vue", GenerateVueView("Import"), Encoding.UTF8);
                 }
             }
             var test = GenerateTest();
@@ -549,10 +549,6 @@ namespace WalkingTec.Mvvm.Mvc
                 if (UI == UIEnum.Blazor)
                 {
                     dir = "Spa.Blazor";
-                }
-                if (UI == UIEnum.VUE)
-                {
-                    dir = "Spa.Vue";
                 }
                 switch (AuthMode)
                 {
@@ -2632,7 +2628,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 pagepath += "/{id}";
             }
-            var rv = GetResource($"{name}.txt", "Spa.Blazor")
+            var rv = GetResource($"{name}.txt", "Spa.Vue")
                 .Replace("$modelname$", ModelName)
                 .Replace("$vmnamespace$", VMNs)
                 .Replace("$des$", ModuleName)
@@ -2653,24 +2649,17 @@ namespace WalkingTec.Mvvm.Mvc
                     var item = pros[i];
                     var mpro = modelType.GetSingleProperty(item.FieldName);
                     string render = "";
-                    string template = "";
+                    string template = "text";
                     string newname = item.FieldName;
                     if (mpro.PropertyType.IsBoolOrNullableBool())
                     {
-                        if (mpro.PropertyType.IsNullable())
-                        {
-                            render = "ComponentType=\"@typeof(NullSwitch)\"";
-                        }
-                        else
-                        {
-                            render = "ComponentType=\"@typeof(Switch)\"";
-                        }
+                        template = "switch";
                     }
-                    if (mpro.PropertyType == typeof(DateTime) || mpro.PropertyType == typeof(DateTime?))
-                    {
-                        render = "FormatString=\"yyyy-MM-dd HH: mm: ss\"";
+                    //if (mpro.PropertyType == typeof(DateTime) || mpro.PropertyType == typeof(DateTime?))
+                    //{
+                    //    render = "FormatString=\"yyyy-MM-dd HH: mm: ss\"";
 
-                    }
+                    //}
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
@@ -2679,19 +2668,11 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
                             {
-                                template = @"
-            <Template Context=""data"">
-                <Avatar @key=""data.Value"" Size=""Size.ExtraSmall"" GetUrlAsync=""()=>WtmBlazor.GetBase64Image(data.Value.ToString(),150,150)"" />
-            </Template>";
+                                template = "image";
                             }
                             else
                             {
-                                template = @"
-            <Template Context=""data"">
-                @if (data.Value.HasValue){
-                    <Button Size=""Size.ExtraSmall"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{data.Value}"",null, HttpMethodEnum.GET))"" />
-                }
-            </Template>";
+
                             }
                             var fk = DC.GetFKName2(modelType, item.FieldName);
                             newname = fk;
@@ -2708,23 +2689,15 @@ namespace WalkingTec.Mvvm.Mvc
                             newname = item.SubField + "_view" + prefix;
                         }
                     }
-                    if (template == "")
-                    {
-                        fieldstr.Append($@"
-        <TableColumn @bind-Field=""@context.{newname}"" {render} />");
-                    }
-                    else
-                    {
-                        fieldstr.Append($@"
-        <TableColumn @bind-Field=""@context.{newname}"" {render} >
-{template}
-        </TableColumn>");
-                    }
-                }
+                    fieldstr.Append($@"
+        {{title:'{item.FieldName}',key: '{newname}',type: '{template}',isCheck: true}},");
 
+                }
+                fieldstr2.Append($@"
+        <el-col :xs=""24"" :lg=""12"" class=""mb20"">");
                 for (int i = 0; i < pros2.Count; i++)
                 {
-                    string controltype = "BootstrapInput";
+                    string controltype = "input";
                     string sitems = "";
                     string bindfield = "";
                     string ph = "";
@@ -2755,7 +2728,7 @@ namespace WalkingTec.Mvvm.Mvc
                         var subtype = Type.GetType(item.RelatedField);
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
                         {
-                            controltype = "Select";
+                            controltype = "select";
                         }
                         else
                         {
@@ -2785,8 +2758,11 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool))
                         {
-                            controltype = "Select";
-                            sitems = "Items=\"@WtmBlazor.GlobalSelectItems.SearcherBoolItems\"";
+                            controltype = "select";
+                            sitems = $@"
+                <el-option :key=""1"" :value=true :label=""$t('message._system.common.vm.tips_bool_true')""></el-option>
+                <el-option :key=""0"" :value=false :label=""$t('message._system.common.vm.tips_bool_false')""></el-option>
+                ";
                         }
                         else if (checktype.IsEnum())
                         {
@@ -2808,30 +2784,34 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.All\"]\"";
                     }
+                    //<{controltype} @bind-Value=""@SearchModel.{bindfield}"" {sitems} {ph}/>
                     fieldstr2.Append($@"
-            <{controltype} @bind-Value=""@SearchModel.{bindfield}"" {sitems} {ph}/>");
+        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" :label=""{item.FieldName}"">
+            <el-{controltype} v-model=""searchData{ModelName}.{bindfield}"" clearable>{sitems}</el-{controltype}>
+        </el-form-item>");
                 }
-
+                fieldstr2.Append($@"
+        </el-col>");
                 StringBuilder apiinit = new StringBuilder();
                 StringBuilder fieldinit = new StringBuilder();
                 foreach (var item in apis)
                 {
                     apiinit.Append(@$"
-        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"", placeholder: WtmBlazor.Localizer[""Sys.All""]);
+    other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
 ");
                     fieldinit.Append($@"
-    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
-");
+    {item.Key}: [] as any[],;");
+
                 }
                 foreach (var item in multiapis)
                 {
                     apiinit.Append(@$"
-        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"");
+    other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
 ");
                     fieldinit.Append($@"
-    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
-");
+    {item.Key}: [] as any[],;");
                 }
+
 
                 return rv.Replace("$columns$", fieldstr.ToString()).Replace("$searchfields$", fieldstr2.ToString()).Replace("$init$", apiinit.ToString()).Replace("$fieldinit$", fieldinit.ToString());
             }
