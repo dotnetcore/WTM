@@ -32,12 +32,12 @@ const formRef$modelname$ = ref();
 const state$modelname$ = reactive({
     vmModel: {
 	  Entity:{
-      $fieldinit$
+      $fieldentityinit$
       },
 
 	},
     
-    All$modelname$s: [] as any[],
+     $fieldinit$
 });
 
 // 取消

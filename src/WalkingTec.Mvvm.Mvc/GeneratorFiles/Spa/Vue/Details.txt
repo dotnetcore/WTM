@@ -29,14 +29,14 @@ const ci = getCurrentInstance() as any;
 // 定义变量内容
 const formRef$modelname$ = ref();
 const state$modelname$ = reactive({
-    vmModel: {
+      vmModel: {
 	  Entity:{
-      $fieldinit$
+      $fieldentityinit$
       },
 
 	},
     
-    All$modelname$s: [] as any[],
+     $fieldinit$
 });
 
 // 取消

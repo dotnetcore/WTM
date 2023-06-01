@@ -2639,6 +2639,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 StringBuilder fieldstr = new StringBuilder();
                 StringBuilder fieldstr2 = new StringBuilder();
+                StringBuilder searchentity = new StringBuilder();
                 var pros = FieldInfos.Where(x => x.IsListField == true).ToList();
                 var pros2 = FieldInfos.Where(x => x.IsSearcherField == true).ToList();
                 List<PropertyInfo> existSubPro = new List<PropertyInfo>();
@@ -2651,6 +2652,8 @@ namespace WalkingTec.Mvvm.Mvc
                     string render = "";
                     string template = "text";
                     string newname = item.FieldName;
+                    var property = modelType.GetSingleProperty(item.FieldName);
+                    string label = property.GetPropertyDisplayName();
                     if (mpro.PropertyType.IsBoolOrNullableBool())
                     {
                         template = "switch";
@@ -2690,7 +2693,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                     }
                     fieldstr.Append($@"
-        {{title:'{item.FieldName}',key: '{newname}',type: '{template}',isCheck: true}},");
+        {{title:'{label}',key: '{newname}',type: '{template}',isCheck: true}},");
 
                 }
                 fieldstr2.Append($@"
@@ -2702,6 +2705,8 @@ namespace WalkingTec.Mvvm.Mvc
                     string bindfield = "";
                     string ph = "";
                     var item = pros2[i];
+                    var property = modelType.GetSingleProperty(item.FieldName);
+                    string label = property.GetPropertyDisplayName();
                     if (item.SubField == "`file")
                     {
                         continue;
@@ -2723,6 +2728,10 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         bindfield = item.FieldName;
                     }
+
+                    searchentity.AppendLine($@"			{bindfield}: null,");
+
+
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
@@ -2738,7 +2747,7 @@ namespace WalkingTec.Mvvm.Mvc
                         sitems = $"Items=\"@{tempname}\"";
                         if (apis.ContainsKey(tempname) == false && multiapis.ContainsKey(tempname) == false)
                         {
-                            if (controltype == "Select")
+                            if (controltype == "select")
                             {
                                 apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
                             }
@@ -2766,18 +2775,26 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else if (checktype.IsEnum())
                         {
-                            controltype = "Select";
+                            controltype = "select";
+                            var es = checktype.ToListItems();
+                            for (int a = 0; a < es.Count; a++)
+                            {
+                                var e = es[a];
+                                sitems = $@"
+                <el-option :key=""{e.Value}"" :value=""{e.Value}"" :label=""{e.Text}""></el-option>";
+                            }
+
                         }
                         else if (checktype.IsNumber())
                         {
-                            controltype = "BootstrapInputNumber";
+                            controltype = "input-number";
                         }
                         else if (checktype == typeof(string))
                         {
                         }
                         else if (checktype == typeof(DateTime))
                         {
-                            controltype = "WTDateRange";
+                            controltype = "date-picker";
                         }
                     }
                     if (controltype == "Select" || controltype == "MultiSelect")
@@ -2786,7 +2803,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     //<{controltype} @bind-Value=""@SearchModel.{bindfield}"" {sitems} {ph}/>
                     fieldstr2.Append($@"
-        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" :label=""{item.FieldName}"">
+        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" :label=""{label}"">
             <el-{controltype} v-model=""searchData{ModelName}.{bindfield}"" clearable>{sitems}</el-{controltype}>
         </el-form-item>");
                 }
@@ -2813,26 +2830,57 @@ namespace WalkingTec.Mvvm.Mvc
                 }
 
 
-                return rv.Replace("$columns$", fieldstr.ToString()).Replace("$searchfields$", fieldstr2.ToString()).Replace("$init$", apiinit.ToString()).Replace("$fieldinit$", fieldinit.ToString());
+                return rv.Replace("$columns$", fieldstr.ToString()).Replace("$searchentity$", searchentity.ToString()).Replace("$searchfields$", fieldstr2.ToString()).Replace("$init$", apiinit.ToString()).Replace("$fieldinit$", fieldinit.ToString());
             }
 
 
-            if (name == "Create" || name == "Edit")
+            if (name == "Create" || name == "Edit"|| name == "Details")
             {
                 StringBuilder fieldstr = new StringBuilder();
+                StringBuilder fieldentityinit = new StringBuilder();
                 var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
 
+                if (name != "Create")
+                {
+                    fieldentityinit.AppendLine($@"			D: null,");
+                }
                 //生成表单model
                 Dictionary<string, string> apis = new Dictionary<string, string>();
                 Dictionary<string, string> multiapis = new Dictionary<string, string>();
+                fieldstr.Append($@"
+        <el-col :xs=""24"" :lg=""12"" class=""mb20"">");
+                
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
-                    string controltype = "BootstrapInput";
+                    string controltype = "el-input";
                     string sitems = "";
                     string bindfield = "";
                     string ph = "";
                     var property = modelType.GetSingleProperty(item.FieldName);
+                    string label = property.GetPropertyDisplayName();
+                    bool isrequired = property.IsPropertyRequired();
+                    var fktest = DC.GetFKName2(modelType, item.FieldName);
+                    if (string.IsNullOrEmpty(fktest) == false)
+                    {
+                        isrequired = modelType.GetSingleProperty(fktest).IsPropertyRequired();
+                    }
+                    string rules = "";
+                    if (isrequired == true)
+                    {
+                        rules = $@" :rules: [{{ required: true, message: ""{label}为必填项"",trigger: ""blur"" }}]";
+                    }
+                    if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
+                    {
+                        var fk = DC.GetFKName2(modelType, item.FieldName);
+                        fieldentityinit.AppendLine($@"			{fk}: null,");
+                    }
+                    else
+                    {
+                        fieldentityinit.AppendLine($@"			{item.FieldName}: null,");
+                    }
+
+                   
 
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
@@ -2858,28 +2906,32 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
                             {
-                                controltype = "WTUploadImage";
+                                controltype = "wtm-upload-image";
                             }
                             else
                             {
-                                controltype = "WTUploadFile";
+                                controltype = "wtm-upload-file";
                             }
                         }
                         else
                         {
+                            var tempname = $"All{subtype.Name}s";
                             if (string.IsNullOrEmpty(item.SubIdField) == true)
                             {
-                                controltype = "Select";
+                                controltype = "el-select";
+                                sitems = $@"
+                       <el-option v-for=""item in state{ModelName}.{tempname}"" :key=""item.Value"" :value=""item.Value"" :label=""item.Text""></el-option>";
                             }
                             else
                             {
-                                controltype = "Transfer";
+                                controltype = "el-transfer";
+                                ph += $@" :data=""state{ModelName}.{tempname}""";
                             }
-                            var tempname = $"All{subtype.Name}s";
-                            sitems = $"Items=\"@{tempname}\"";
+                          
+                            //sitems = $"Items=\"@{tempname}\"";
                             if (apis.ContainsKey(tempname) == false && multiapis.ContainsKey(tempname) == false)
                             {
-                                if (controltype == "Select")
+                                if (controltype == "el-select")
                                 {
                                     apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
                                 }
@@ -2901,184 +2953,84 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool))
                         {
-                            if (proType.IsNullable())
-                            {
-                                controltype = "NullSwitch";
-                            }
-                            else
-                            {
-                                controltype = "Switch";
-                            }
+                            controltype = "el-select";
+                            sitems = $@"
+                <el-option :key=""1"" :value=true :label=""$t('message._system.common.vm.tips_bool_true')""></el-option>
+                <el-option :key=""0"" :value=false :label=""$t('message._system.common.vm.tips_bool_false')""></el-option>
+                ";
                         }
                         else if (checktype.IsEnum())
                         {
-                            controltype = "Select";
+                            controltype = "el-select";
+                            var es = checktype.ToListItems();
+                            for (int a = 0; a < es.Count; a++)
+                            {
+                                var e = es[a];
+                                sitems = $@"
+                <el-option :key=""{e.Value}"" :value=""{e.Value}"" :label=""{e.Text}""></el-option>";
+                            }
 
                         }
                         else if (checktype.IsNumber())
                         {
-                            controltype = "BootstrapInputNumber";
+                            controltype = "el-input-number";
                         }
                         else if (checktype == typeof(string))
                         {
                         }
                         else if (checktype == typeof(DateTime))
                         {
-                            controltype = "DateTimePicker";
+                            controltype = "el-date-picker";
                         }
                     }
-                    if (controltype == "Select" || controltype == "MultiSelect")
+
+
+                    if (name == "Details")
                     {
-                        ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.PleaseSelect\"]\"";
+                        ph += " disabled";
                     }
-                    if (controltype == "Transfer")
+                    if (controltype == "el-transfer")
                     {
                         fieldstr.Append($@"
-    <Row ColSpan=""2"">
-            <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {ph}/>
-    </Row>");
+    <el-col :xs=""24"" :lg=""24"" class=""mb20"">
+        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" :label=""{label}""{rules}>
+            <{controltype} v-model=""state{ModelName}.vmModel.{bindfield}""{ph} clearable>{sitems}</{controltype}>
+        </el-form-item>
+    </el-col>");
                     }
                     else
                     {
+                    
                         fieldstr.Append($@"
-            <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {ph}/>");
+        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" :label=""{label}""{rules}>
+            <{controltype} v-model=""state{ModelName}.vmModel.{bindfield}""{ph} clearable>{sitems}</{controltype}>
+        </el-form-item>");
                     }
                 }
-
+                fieldstr.Append($@"
+        </el-col>");
                 StringBuilder apiinit = new StringBuilder();
                 StringBuilder fieldinit = new StringBuilder();
                 foreach (var item in apis)
                 {
                     apiinit.Append(@$"
-        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"", placeholder: WtmBlazor.Localizer[""Sys.PleaseSelect""]);
+    other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
 ");
                     fieldinit.Append($@"
-    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
-");
+    {item.Key}: [] as any[],;");
+
                 }
                 foreach (var item in multiapis)
                 {
                     apiinit.Append(@$"
-        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"");
+    other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
 ");
                     fieldinit.Append($@"
-    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
-");
+    {item.Key}: [] as any[],;");
                 }
-                return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$init$", apiinit.ToString());
+
+                return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$fieldentityinit$", fieldentityinit.ToString()).Replace("$init$", apiinit.ToString());
             }
-            if (name == "Details")
-            {
-                StringBuilder fieldstr = new StringBuilder();
-                var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
-
-                //生成表单model
-                Dictionary<string, string> apis = new Dictionary<string, string>();
-                for (int i = 0; i < pros.Count; i++)
-                {
-                    var item = pros[i];
-                    string controltype = "Display";
-                    string sitems = "";
-                    string bindfield = "";
-                    string disabled = "";
-                    var property = modelType.GetSingleProperty(item.FieldName);
-
-                    if (string.IsNullOrEmpty(item.RelatedField) == false)
-                    {
-                        if (string.IsNullOrEmpty(item.SubIdField) == true)
-                        {
-                            var fk = DC.GetFKName2(modelType, item.FieldName);
-                            bindfield = "Entity." + fk;
-                        }
-                        else
-                        {
-                            bindfield = $"Selected{item.FieldName}IDs";
-                        }
-                    }
-                    else
-                    {
-                        bindfield = "Entity." + item.FieldName;
-                    }
-                    if (string.IsNullOrEmpty(item.RelatedField) == false)
-                    {
-                        var subtype = Type.GetType(item.RelatedField);
-                        if (item.SubField == "`file")
-                        {
-                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
-                            {
-                                controltype = "WTUploadImage";
-                            }
-                            else
-                            {
-                                controltype = "WTUploadFile";
-                            }
-                            disabled = "IsDisabled=\"true\"";
-                        }
-                        else
-                        {
-                            var tempname = $"All{subtype.Name}s";
-                            sitems = $"Lookup=\"@{tempname}\"";
-                            if (apis.ContainsKey(tempname) == false)
-                            {
-                                apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
-                        Type checktype = proType;
-                        if (proType.IsNullable())
-                        {
-                            checktype = proType.GetGenericArguments()[0];
-                        }
-                        if (checktype == typeof(bool))
-                        {
-                            if (proType.IsNullable())
-                            {
-                                controltype = "NullSwitch";
-                            }
-                            else
-                            {
-                                controltype = "Switch";
-                            }
-                            disabled = "IsDisabled=\"true\"";
-                        }
-                    }
-                    if (controltype == "WTUploadFile")
-                    {
-                        string label = property.GetPropertyDisplayName();
-                        fieldstr.Append($@"
-                @if (Model.{bindfield}.HasValue){{
-                    <div>
-                          <label class=""control-label is-display"">{label}</label>
-                          <div><Button Size=""Size.Small"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{{Model.{bindfield}}}"",null, HttpMethodEnum.GET))"" /></div>
-                    </div>
-                }}
-");
-                    }
-                    else
-                    {
-                        fieldstr.Append($@"
-            <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {disabled} ShowLabel=""true""/>");
-                    }
-                }
-
-                StringBuilder apiinit = new StringBuilder();
-                StringBuilder fieldinit = new StringBuilder();
-                foreach (var item in apis)
-                {
-                    apiinit.Append(@$"
-        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"", placeholder: WtmBlazor.Localizer[""Sys.All""]);
-");
-                    fieldinit.Append($@"
-    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
-");
-                }
-
-                return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$init$", apiinit.ToString());
-            }
-
 
             return rv;
         }

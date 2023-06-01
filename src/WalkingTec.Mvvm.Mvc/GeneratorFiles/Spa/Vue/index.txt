@@ -56,7 +56,7 @@ const state$modelname$ = reactive({
 });
 
 const searchData$modelname$ = ref({
-    $searchcolumns$
+    $searchentity$
 });
 
 // 定义变量内容
