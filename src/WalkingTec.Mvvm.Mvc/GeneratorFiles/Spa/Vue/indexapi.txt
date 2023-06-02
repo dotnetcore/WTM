@@ -1,0 +1,72 @@
+import request from '/@/utils/request';
+import other from '/@/utils/other';
+
+function $modelname$Api() {
+	return {
+		search: (data: object) => {
+			return request({
+				url: '/api/$modelname$/Search',
+				method: 'post',
+				data,
+			});
+		},
+		get: (data: number|string) => {
+			return request({
+				url: '/api/$modelname$/'+data,
+				method: 'get'
+			});
+		},
+		add:(data: object)=>{
+			return request({
+				url:'/api/$modelname$/Add',
+				method:'post',
+				data
+			});
+		},
+		edit:(data: object)=>{
+			return request({
+				url:'/api/$modelname$/edit',
+				method:'put',
+				data
+			});
+		},
+     	batchedit:(data: object)=>{
+			return request({
+				url:'/api/$modelname$/batchedit',
+				method:'post',
+				data
+			});
+		},    
+		delete:(data: Array<number>|Array<string>)=>{
+			return request({
+				url:'/api/$modelname$/BatchDelete',
+				method:'post',
+				data
+			});
+		},
+		export: (data: object) => {
+			return request<any,Blob>({
+				responseType: "blob",
+				url: '/api/$modelname$/ExportExcel',
+				method: 'post',
+				data,
+			}).then((data)=>{other.downloadFile(data)});;
+		},
+		exportById: (data: Array<number>|Array<string>) => {
+			return request<any,Blob>({
+				url: '/api/$modelname$/ExportExcelByIds',
+				method: 'post',
+				data,
+			}).then((data)=>{other.downloadFile(data)});
+		},
+		import: (data: object) => {
+			return request({
+				url: '/api/$modelname$/Import',
+				method: 'post',
+				data,
+			});
+		},
+	};
+}
+
+export {$modelname$Api}

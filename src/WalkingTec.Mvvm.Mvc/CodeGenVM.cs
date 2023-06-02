@@ -519,6 +519,8 @@ namespace WalkingTec.Mvvm.Mvc
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}edit.vue", GenerateVueView("Edit"), Encoding.UTF8);
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}details.vue", GenerateVueView("Details"), Encoding.UTF8);
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}import.vue", GenerateVueView("Import"), Encoding.UTF8);
+                    
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}api{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}index.ts", GenerateVueView("indexapi"), Encoding.UTF8);
                 }
             }
             var test = GenerateTest();
@@ -2833,7 +2835,6 @@ namespace WalkingTec.Mvvm.Mvc
                 return rv.Replace("$columns$", fieldstr.ToString()).Replace("$searchentity$", searchentity.ToString()).Replace("$searchfields$", fieldstr2.ToString()).Replace("$init$", apiinit.ToString()).Replace("$fieldinit$", fieldinit.ToString());
             }
 
-
             if (name == "Create" || name == "Edit"|| name == "Details")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -3030,6 +3031,12 @@ namespace WalkingTec.Mvvm.Mvc
                 }
 
                 return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$fieldentityinit$", fieldentityinit.ToString()).Replace("$init$", apiinit.ToString());
+            }
+
+            if (name == "indexapi")
+            {
+               
+                return rv;
             }
 
             return rv;
