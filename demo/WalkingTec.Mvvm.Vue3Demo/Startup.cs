@@ -94,16 +94,9 @@ namespace WalkingTec.Mvvm.Vue3Demo
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-                if (env.IsDevelopment())
-                {
-                    endpoints.MapToVueCliProxy(
-                        "{*path}",
-                        new SpaOptions { SourcePath = "ClientApp" },
-                        npmScript: "start",
-                        regex: "No issues found.");
-                }
+                endpoints.MapFallbackToFile(env.IsDevelopment() ? "index_dev.html" : "");
             });
+
 
             app.UseWtmContext();
             if (env.IsDevelopment())

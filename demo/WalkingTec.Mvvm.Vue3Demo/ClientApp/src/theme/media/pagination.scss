@@ -1,0 +1,15 @@
+@import './index.scss';
+
+/* 页面宽度小于576px
+------------------------------- */
+@media screen and (max-width: $xs) {
+	.el-pager,
+	.el-pagination__jump {
+		display: none !important;
+	}
+	// 默认居中对齐
+	.el-pagination,
+	.table-footer {
+		justify-content: center !important;
+	}
+}

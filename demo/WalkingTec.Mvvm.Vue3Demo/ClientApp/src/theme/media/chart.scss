@@ -1,0 +1,94 @@
+@import './index.scss';
+
+/* 页面宽度小于768px
+------------------------------- */
+@media screen and (max-width: $sm) {
+	.big-data-down-left {
+		width: 100% !important;
+		flex-direction: unset !important;
+		flex-wrap: wrap;
+		.flex-warp-item {
+			min-height: 196.24px;
+			padding: 0 7.5px 15px 15px !important;
+			.flex-warp-item-box {
+				border: none !important;
+				border-bottom: 1px solid #ebeef5 !important;
+			}
+		}
+	}
+	.big-data-down-center {
+		width: 100% !important;
+		.big-data-down-center-one,
+		.big-data-down-center-two {
+			min-height: 196.24px;
+			padding-left: 15px !important;
+			.big-data-down-center-one-content {
+				border: none !important;
+				border-bottom: 1px solid #ebeef5 !important;
+			}
+			.flex-warp-item-box {
+				@extend .big-data-down-center-one-content;
+			}
+		}
+	}
+	.big-data-down-right {
+		.flex-warp-item {
+			.flex-warp-item-box {
+				border: none !important;
+				border-bottom: 1px solid #ebeef5 !important;
+			}
+			&:nth-of-type(2) {
+				padding-left: 15px !important;
+			}
+			&:last-of-type {
+				.flex-warp-item-box {
+					border: none !important;
+				}
+			}
+		}
+	}
+}
+
+/* 页面宽度大于768px小于1200px
+------------------------------- */
+@media screen and (min-width: $sm) and (max-width: $lg) {
+	.chart-warp-bottom {
+		.big-data-down-left {
+			width: 50% !important;
+		}
+		.big-data-down-center {
+			width: 50% !important;
+		}
+		.big-data-down-right {
+			.flex-warp-item {
+				width: 50% !important;
+				&:nth-of-type(2) {
+					padding-left: 7.5px !important;
+				}
+			}
+		}
+	}
+}
+
+/* 页面宽度小于1200px
+------------------------------- */
+@media screen and (max-width: $lg) {
+	.chart-warp-top {
+		.up-left {
+			display: none;
+		}
+	}
+	.chart-warp-bottom {
+		overflow-y: auto !important;
+		flex-wrap: wrap;
+		.big-data-down-right {
+			width: 100% !important;
+			flex-direction: unset !important;
+			flex-wrap: wrap;
+			.flex-warp-item {
+				min-height: 196.24px;
+				padding: 0 7.5px 15px 15px !important;
+			}
+		}
+	}
+}

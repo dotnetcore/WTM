@@ -1,0 +1,36 @@
+/* wangeditor 富文本编辑器
+------------------------------- */
+.editor-container {
+	z-index: 10; // 用于 wangeditor 点击全屏时
+	.w-e-toolbar {
+		border: 1px solid var(--el-border-color-light, #ebeef5) !important;
+		border-bottom: 1px solid var(--el-border-color-light, #ebeef5) !important;
+		border-top-left-radius: 3px;
+		border-top-right-radius: 3px;
+		z-index: 2 !important;
+	}
+	.w-e-text-container {
+		border: 1px solid var(--el-border-color-light, #ebeef5) !important;
+		border-top: none !important;
+		border-bottom-left-radius: 3px;
+		border-bottom-right-radius: 3px;
+		z-index: 1 !important;
+	}
+}
+
+[data-theme='dark'] {
+	// textarea - css vars
+	--w-e-textarea-bg-color: var(--el-color-white) !important;
+	--w-e-textarea-color: var(--el-text-color-primary) !important;
+
+	// toolbar - css vars
+	--w-e-toolbar-color: var(--el-text-color-primary) !important;
+	--w-e-toolbar-bg-color: var(--el-color-white) !important;
+	--w-e-toolbar-active-color: var(--el-text-color-primary) !important;
+	--w-e-toolbar-active-bg-color: var(--next-color-menu-hover) !important;
+	--w-e-toolbar-border-color: var(--el-border-color-light, #ebeef5) !important;
+
+	// modal - css vars
+	--w-e-modal-button-bg-color: var(--el-color-primary) !important;
+	--w-e-modal-button-border-color: var(--el-color-primary) !important;
+}
