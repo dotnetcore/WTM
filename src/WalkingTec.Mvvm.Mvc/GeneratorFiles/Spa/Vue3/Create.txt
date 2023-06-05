@@ -1,0 +1,83 @@
+
+<template>
+<div class="card-fill layout-padding">
+<el-card shadow="hover" class="layout-padding-auto" >
+  <el-form ref="formRef$modelname$" :model="state$modelname$.vmModel" label-width="100px">
+    <el-row>
+      $formfields$
+    </el-row>
+
+    <div style="text-align:right;">
+      <WtmButton @click="onSubmit$modelname$"  type="primary" :button-text="$t('message._system.common.vm.submit')" style="margin-top:15px;"/>
+      <WtmButton @click="onClose$modelname$"  type="primary" :button-text="$t('message._system.common.vm.cancel')" style="margin-top:15px;"/>
+    </div>
+  </el-form>
+
+</el-card>
+</div>
+</template>
+
+
+<script setup lang="ts" name="$controllername$,false">
+import {  ElMessageBox, ElMessage } from 'element-plus';
+import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
+import { $modelname$Api } from '/@/api/$modelname$';
+import other from '/@/utils/other';
+import fileApi from '/@/api/file';
+import { useRouter } from "vue-router";
+const ci = getCurrentInstance() as any;
+
+// 定义变量内容
+const formRef$modelname$ = ref();
+const state$modelname$ = reactive({
+    vmModel: {
+	  Entity:{
+      $fieldentityinit$
+      },
+
+	},
+    
+     $fieldinit$
+});
+
+// 取消
+const onClose$modelname$ = () => {
+    closeDialog();
+};
+
+// 提交
+const onSubmit$modelname$ = () => {
+    formRef$modelname$.value?.validate((valid: boolean, fields: any) => {
+		if (valid) {
+            $modelname$Api().add(state$modelname$.vmModel).then(() => {
+                ElMessage.success(ci.proxy.$t('message._system.common.vm.submittip'));
+                emit('refresh');
+                closeDialog();
+            }).catch((error) => {
+                other.setFormError(ci, error);
+            })
+		}
+	})
+};
+
+// 页面加载时
+onMounted(() => {
+    $init$
+});
+
+// 定义子组件向父组件传值/事件
+const emit = defineEmits(['refresh','closeDialog']);
+// 关闭弹窗
+const closeDialog = () => {
+    emit('closeDialog');
+};
+// 暴露变量
+defineExpose({
+
+});
+</script>
+
+<style scoped lang="scss">
+
+</style>
+
