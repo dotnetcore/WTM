@@ -34,7 +34,7 @@ const state$modelname$ = reactive({
 	  Entity:{
       $fieldentityinit$
       },
-
+      $selectfieldinit$
 	},
     
      $fieldinit$

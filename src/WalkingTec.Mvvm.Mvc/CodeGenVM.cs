@@ -2630,7 +2630,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 pagepath += "/{id}";
             }
-            var rv = GetResource($"{name}.txt", "Spa.Vue")
+            var rv = GetResource($"{name}.txt", "Spa.Vue3")
                 .Replace("$modelname$", ModelName)
                 .Replace("$vmnamespace$", VMNs)
                 .Replace("$des$", ModuleName)
@@ -2839,11 +2839,12 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 StringBuilder fieldstr = new StringBuilder();
                 StringBuilder fieldentityinit = new StringBuilder();
+                StringBuilder selectfieldinit = new StringBuilder();
                 var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
 
                 if (name != "Create")
                 {
-                    fieldentityinit.AppendLine($@"			D: null,");
+                    fieldentityinit.AppendLine($@"			ID: null,");
                 }
                 //生成表单model
                 Dictionary<string, string> apis = new Dictionary<string, string>();
@@ -2893,6 +2894,7 @@ namespace WalkingTec.Mvvm.Mvc
                         else
                         {
                             bindfield = $"Selected{item.FieldName}IDs";
+                            selectfieldinit.AppendLine($@"			{bindfield}: [],");
                         }
                     }
                     else
@@ -2994,7 +2996,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         fieldstr.Append($@"
     <el-col :xs=""24"" :lg=""24"" class=""mb20"">
-        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" :label=""{label}""{rules}>
+        <el-form-item ref=""{bindfield.Replace(".", "_")}_FormItem"" prop=""{bindfield}"" :label=""{label}""{rules}>
             <{controltype} v-model=""state{ModelName}.vmModel.{bindfield}""{ph} clearable>{sitems}</{controltype}>
         </el-form-item>
     </el-col>");
@@ -3003,7 +3005,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
 
                         fieldstr.Append($@"
-        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" :label=""{label}""{rules}>
+        <el-form-item ref=""{bindfield.Replace(".", "_")}_FormItem"" prop=""{bindfield}"" :label=""{label}""{rules}>
             <{controltype} v-model=""state{ModelName}.vmModel.{bindfield}""{ph} clearable>{sitems}</{controltype}>
         </el-form-item>");
                     }
@@ -3030,7 +3032,8 @@ namespace WalkingTec.Mvvm.Mvc
     {item.Key}: [] as any[],;");
                 }
 
-                return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$fieldentityinit$", fieldentityinit.ToString()).Replace("$init$", apiinit.ToString());
+                return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$selectfieldinit$", selectfieldinit.ToString())
+                    .Replace("$fieldentityinit$", fieldentityinit.ToString()).Replace("$init$", apiinit.ToString());
             }
 
             if (name == "indexapi")
