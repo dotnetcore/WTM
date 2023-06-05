@@ -514,6 +514,11 @@ namespace WalkingTec.Mvvm.Mvc
                 if(UI == UIEnum.VUE3)
                 {
                     //Todo 生成vue3页面
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}index.vue", GenerateVueView("Index"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}create.vue", GenerateVueView("Create"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}edit.vue", GenerateVueView("Edit"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}details.vue", GenerateVueView("Details"), Encoding.UTF8);
+                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}import.vue", GenerateVueView("Import"), Encoding.UTF8);
                 }
             }
             var test = GenerateTest();
@@ -2377,7 +2382,488 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     else
                     {
-                        bindfield = "Entity."+ item.FieldName;
+                        bindfield = "Entity." + item.FieldName;
+                    }
+
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        var subtype = Type.GetType(item.RelatedField);
+                        if (item.SubField == "`file")
+                        {
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
+                            {
+                                controltype = "WTUploadImage";
+                            }
+                            else
+                            {
+                                controltype = "WTUploadFile";
+                            }
+                        }
+                        else
+                        {
+                            if (string.IsNullOrEmpty(item.SubIdField) == true)
+                            {
+                                controltype = "Select";
+                            }
+                            else
+                            {
+                                controltype = "Transfer";
+                            }
+                            var tempname = $"All{subtype.Name}s";
+                            sitems = $"Items=\"@{tempname}\"";
+                            if (apis.ContainsKey(tempname) == false && multiapis.ContainsKey(tempname) == false)
+                            {
+                                if (controltype == "Select")
+                                {
+                                    apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                                }
+                                else
+                                {
+                                    multiapis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                                }
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
+                        Type checktype = proType;
+                        if (proType.IsNullable())
+                        {
+                            checktype = proType.GetGenericArguments()[0];
+                        }
+                        if (checktype == typeof(bool))
+                        {
+                            if (proType.IsNullable())
+                            {
+                                controltype = "NullSwitch";
+                            }
+                            else
+                            {
+                                controltype = "Switch";
+                            }
+                        }
+                        else if (checktype.IsEnum())
+                        {
+                            controltype = "Select";
+
+                        }
+                        else if (checktype.IsNumber())
+                        {
+                            controltype = "BootstrapInputNumber";
+                        }
+                        else if (checktype == typeof(string))
+                        {
+                        }
+                        else if (checktype == typeof(DateTime))
+                        {
+                            controltype = "DateTimePicker";
+                        }
+                    }
+                    if (controltype == "Select" || controltype == "MultiSelect")
+                    {
+                        ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.PleaseSelect\"]\"";
+                    }
+                    if (controltype == "Transfer")
+                    {
+                        fieldstr.Append($@"
+    <Row ColSpan=""2"">
+            <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {ph}/>
+    </Row>");
+                    }
+                    else
+                    {
+                        fieldstr.Append($@"
+            <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {ph}/>");
+                    }
+                }
+
+                StringBuilder apiinit = new StringBuilder();
+                StringBuilder fieldinit = new StringBuilder();
+                foreach (var item in apis)
+                {
+                    apiinit.Append(@$"
+        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"", placeholder: WtmBlazor.Localizer[""Sys.PleaseSelect""]);
+");
+                    fieldinit.Append($@"
+    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
+");
+                }
+                foreach (var item in multiapis)
+                {
+                    apiinit.Append(@$"
+        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"");
+");
+                    fieldinit.Append($@"
+    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
+");
+                }
+                return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$init$", apiinit.ToString());
+            }
+            if (name == "Details")
+            {
+                StringBuilder fieldstr = new StringBuilder();
+                var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
+
+                //生成表单model
+                Dictionary<string, string> apis = new Dictionary<string, string>();
+                for (int i = 0; i < pros.Count; i++)
+                {
+                    var item = pros[i];
+                    string controltype = "Display";
+                    string sitems = "";
+                    string bindfield = "";
+                    string disabled = "";
+                    var property = modelType.GetSingleProperty(item.FieldName);
+
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        {
+                            var fk = DC.GetFKName2(modelType, item.FieldName);
+                            bindfield = "Entity." + fk;
+                        }
+                        else
+                        {
+                            bindfield = $"Selected{item.FieldName}IDs";
+                        }
+                    }
+                    else
+                    {
+                        bindfield = "Entity." + item.FieldName;
+                    }
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        var subtype = Type.GetType(item.RelatedField);
+                        if (item.SubField == "`file")
+                        {
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
+                            {
+                                controltype = "WTUploadImage";
+                            }
+                            else
+                            {
+                                controltype = "WTUploadFile";
+                            }
+                            disabled = "IsDisabled=\"true\"";
+                        }
+                        else
+                        {
+                            var tempname = $"All{subtype.Name}s";
+                            sitems = $"Lookup=\"@{tempname}\"";
+                            if (apis.ContainsKey(tempname) == false)
+                            {
+                                apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
+                        Type checktype = proType;
+                        if (proType.IsNullable())
+                        {
+                            checktype = proType.GetGenericArguments()[0];
+                        }
+                        if (checktype == typeof(bool))
+                        {
+                            if (proType.IsNullable())
+                            {
+                                controltype = "NullSwitch";
+                            }
+                            else
+                            {
+                                controltype = "Switch";
+                            }
+                            disabled = "IsDisabled=\"true\"";
+                        }
+                    }
+                    if (controltype == "WTUploadFile")
+                    {
+                        string label = property.GetPropertyDisplayName();
+                        fieldstr.Append($@"
+                @if (Model.{bindfield}.HasValue){{
+                    <div>
+                          <label class=""control-label is-display"">{label}</label>
+                          <div><Button Size=""Size.Small"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{{Model.{bindfield}}}"",null, HttpMethodEnum.GET))"" /></div>
+                    </div>
+                }}
+");
+                    }
+                    else
+                    {
+                        fieldstr.Append($@"
+            <{controltype} @bind-Value=""@Model.{bindfield}"" {sitems} {disabled} ShowLabel=""true""/>");
+                    }
+                }
+
+                StringBuilder apiinit = new StringBuilder();
+                StringBuilder fieldinit = new StringBuilder();
+                foreach (var item in apis)
+                {
+                    apiinit.Append(@$"
+        {item.Key} = await WtmBlazor.Api.CallItemsApi(""{item.Value}"", placeholder: WtmBlazor.Localizer[""Sys.All""]);
+");
+                    fieldinit.Append($@"
+    private List<SelectedItem> {item.Key} = new List<SelectedItem>();
+");
+                }
+
+                return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$init$", apiinit.ToString());
+            }
+
+
+            return rv;
+        }
+
+        public string GenerateVueView(string name)
+        {
+            string pagepath = string.IsNullOrEmpty(Area) ? $"/{ModelName}" : $"/{Area}/{ModelName}";
+            if (name != "Index")
+            {
+                pagepath += $"/{name}";
+            }
+            if (name == "Edit" || name == "Details")
+            {
+                pagepath += "/{id}";
+            }
+            var rv = GetResource($"{name}.txt", "Spa.Vue")
+                .Replace("$modelname$", ModelName)
+                .Replace("$vmnamespace$", VMNs)
+                .Replace("$des$", ModuleName)
+                .Replace("$controllername$", $"{ControllerNs},{ModelName}")
+                .Replace("$pagepath$", pagepath);
+            Type modelType = Type.GetType(SelectedModel);
+            if (name == "Index")
+            {
+                StringBuilder fieldstr = new StringBuilder();
+                StringBuilder fieldstr2 = new StringBuilder();
+                StringBuilder searchentity = new StringBuilder();
+                var pros = FieldInfos.Where(x => x.IsListField == true).ToList();
+                var pros2 = FieldInfos.Where(x => x.IsSearcherField == true).ToList();
+                List<PropertyInfo> existSubPro = new List<PropertyInfo>();
+                Dictionary<string, string> apis = new Dictionary<string, string>();
+                Dictionary<string, string> multiapis = new Dictionary<string, string>();
+                for (int i = 0; i < pros.Count; i++)
+                {
+                    var item = pros[i];
+                    var mpro = modelType.GetSingleProperty(item.FieldName);
+                    string render = "";
+                    string template = "text";
+                    string newname = item.FieldName;
+                    var property = modelType.GetSingleProperty(item.FieldName);
+                    string label = property.GetPropertyDisplayName();
+                    if (mpro.PropertyType.IsBoolOrNullableBool())
+                    {
+                        template = "switch";
+                    }
+                    //if (mpro.PropertyType == typeof(DateTime) || mpro.PropertyType == typeof(DateTime?))
+                    //{
+                    //    render = "FormatString=\"yyyy-MM-dd HH: mm: ss\"";
+
+                    //}
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        var subtype = Type.GetType(item.RelatedField);
+                        string prefix = "";
+                        if (subtype == typeof(FileAttachment))
+                        {
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon") || item.FieldName.ToLower().Contains("zhaopian") || item.FieldName.ToLower().Contains("tupian"))
+                            {
+                                template = "image";
+                            }
+                            else
+                            {
+
+                            }
+                            var fk = DC.GetFKName2(modelType, item.FieldName);
+                            newname = fk;
+                        }
+                        else
+                        {
+                            var subpro = subtype.GetSingleProperty(item.SubField);
+                            existSubPro.Add(subpro);
+                            int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
+                            if (count > 1)
+                            {
+                                prefix = count + "";
+                            }
+                            newname = item.SubField + "_view" + prefix;
+                        }
+                    }
+                    fieldstr.Append($@"
+        {{title:'{label}',key: '{newname}',type: '{template}',isCheck: true}},");
+
+                }
+                fieldstr2.Append($@"
+        <el-col :xs=""24"" :lg=""12"" class=""mb20"">");
+                for (int i = 0; i < pros2.Count; i++)
+                {
+                    string controltype = "input";
+                    string sitems = "";
+                    string bindfield = "";
+                    string ph = "";
+                    var item = pros2[i];
+                    var property = modelType.GetSingleProperty(item.FieldName);
+                    string label = property.GetPropertyDisplayName();
+                    if (item.SubField == "`file")
+                    {
+                        continue;
+                    }
+
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        {
+                            var fk = DC.GetFKName2(modelType, item.FieldName);
+                            bindfield = fk;
+                        }
+                        else
+                        {
+                            bindfield = $"Selected{item.FieldName}IDs";
+                        }
+                    }
+                    else
+                    {
+                        bindfield = item.FieldName;
+                    }
+
+                    searchentity.AppendLine($@"			{bindfield}: null,");
+
+
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        var subtype = Type.GetType(item.RelatedField);
+                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        {
+                            controltype = "select";
+                        }
+                        else
+                        {
+                            controltype = "MultiSelect";
+                        }
+                        var tempname = $"All{subtype.Name}s";
+                        sitems = $"Items=\"@{tempname}\"";
+                        if (apis.ContainsKey(tempname) == false && multiapis.ContainsKey(tempname) == false)
+                        {
+                            if (controltype == "select")
+                            {
+                                apis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                            }
+                            else
+                            {
+                                multiapis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
+                        Type checktype = proType;
+                        if (proType.IsNullable())
+                        {
+                            checktype = proType.GetGenericArguments()[0];
+                        }
+                        if (checktype == typeof(bool))
+                        {
+                            controltype = "select";
+                            sitems = $@"
+                <el-option :key=""1"" :value=true :label=""$t('message._system.common.vm.tips_bool_true')""></el-option>
+                <el-option :key=""0"" :value=false :label=""$t('message._system.common.vm.tips_bool_false')""></el-option>
+                ";
+                        }
+                        else if (checktype.IsEnum())
+                        {
+                            controltype = "select";
+                            var es = checktype.ToListItems();
+                            for (int a = 0; a < es.Count; a++)
+                            {
+                                var e = es[a];
+                                sitems = $@"
+                <el-option :key=""{e.Value}"" :value=""{e.Value}"" :label=""{e.Text}""></el-option>";
+                            }
+
+                        }
+                        else if (checktype.IsNumber())
+                        {
+                            controltype = "input-number";
+                        }
+                        else if (checktype == typeof(string))
+                        {
+                        }
+                        else if (checktype == typeof(DateTime))
+                        {
+                            controltype = "date-picker";
+                        }
+                    }
+                    if (controltype == "Select" || controltype == "MultiSelect")
+                    {
+                        ph = "PlaceHolder=\"@WtmBlazor.Localizer[\"Sys.All\"]\"";
+                    }
+                    //<{controltype} @bind-Value=""@SearchModel.{bindfield}"" {sitems} {ph}/>
+                    fieldstr2.Append($@"
+        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" :label=""{label}"">
+            <el-{controltype} v-model=""searchData{ModelName}.{bindfield}"" clearable>{sitems}</el-{controltype}>
+        </el-form-item>");
+                }
+                fieldstr2.Append($@"
+        </el-col>");
+                StringBuilder apiinit = new StringBuilder();
+                StringBuilder fieldinit = new StringBuilder();
+                foreach (var item in apis)
+                {
+                    apiinit.Append(@$"
+    other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
+");
+                    fieldinit.Append($@"
+    {item.Key}: [] as any[],;");
+
+                }
+                foreach (var item in multiapis)
+                {
+                    apiinit.Append(@$"
+    other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
+");
+                    fieldinit.Append($@"
+    {item.Key}: [] as any[],;");
+                }
+
+
+                return rv.Replace("$columns$", fieldstr.ToString()).Replace("$searchentity$", searchentity.ToString()).Replace("$searchfields$", fieldstr2.ToString()).Replace("$init$", apiinit.ToString()).Replace("$fieldinit$", fieldinit.ToString());
+            }
+
+
+            if (name == "Create" || name == "Edit"|| name == "Details")
+            {
+                StringBuilder fieldstr = new StringBuilder();
+                StringBuilder fieldentityinit = new StringBuilder();
+                var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
+
+                if (name != "Create")
+                {
+                    fieldentityinit.AppendLine($@"			D: null,");
+                }
+                //生成表单model
+                Dictionary<string, string> apis = new Dictionary<string, string>();
+                Dictionary<string, string> multiapis = new Dictionary<string, string>();
+                fieldstr.Append($@"
+        <el-col :xs=""24"" :lg=""12"" class=""mb20"">");
+                
+                for (int i = 0; i < pros.Count; i++)
+                {
+                    var item = pros[i];
+                    string controltype = "el-input";
+                    string sitems = "";
+                    string bindfield = "";
+                    string ph = "";
+                    var property = modelType.GetSingleProperty(item.FieldName);
+                    string label = property.GetPropertyDisplayName();
+                    bool isrequired = property.IsPropertyRequired();
+                    var fktest = DC.GetFKName2(modelType, item.FieldName);
+                    if (string.IsNullOrEmpty(fktest) == false)
+                    {
+                        isrequired = modelType.GetSingleProperty(fktest).IsPropertyRequired();
                     }
 
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
@@ -2529,12 +3015,6 @@ namespace WalkingTec.Mvvm.Mvc
                     var property = modelType.GetSingleProperty(item.FieldName);
 
                 return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$fieldentityinit$", fieldentityinit.ToString()).Replace("$init$", apiinit.ToString());
-            }
-
-            if (name == "indexapi")
-            {
-               
-                return rv;
             }
 
             return rv;

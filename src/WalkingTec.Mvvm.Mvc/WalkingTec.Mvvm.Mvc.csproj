@@ -21,6 +21,11 @@
     <None Remove="GeneratorFiles\Spa\Blazor\Edit.txt" />
     <None Remove="GeneratorFiles\Spa\Blazor\Import.txt" />
     <None Remove="GeneratorFiles\Spa\Blazor\Index.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue\Create.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue\Details.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue\Edit.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue\Import.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue\index.txt" />
     <EmbeddedResource Include="framework_layui.js" />
     <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
