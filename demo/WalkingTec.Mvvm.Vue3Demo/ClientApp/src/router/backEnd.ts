@@ -213,7 +213,7 @@ async function GetLocalFile() {
 			let cur = null;
 			if (dir.length == 0) {
 				cur = {
-					path: "/" + name,
+					path: "/" + name+"_folder",
 					name: name,
 					component: "layout/routerView/parent.vue",
 					meta: {
@@ -231,7 +231,7 @@ async function GetLocalFile() {
 			else {
 				cur = dir[0];
 			}
-			const p = k.replace(/\/index.vue/, '').replace(/.vue/, '')
+			const p = k.replace(/\/index.vue/, '').replace(/\.vue/, '')
 
 			const cmp = await viewsModules[key]();
 			let ishide = false;
