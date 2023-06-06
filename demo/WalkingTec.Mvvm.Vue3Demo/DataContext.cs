@@ -14,6 +14,8 @@ namespace WalkingTec.Mvvm.Vue3Demo
         public DbSet<FrameworkUser> FrameworkUsers { get; set; }
         public DbSet<Major> Majors { get; set; }
         public DbSet<School> Schools { get; set; }
+
+        public DbSet<SchoolVue3> SchoolVue3s { get; set; }
         public DbSet<Student> Students { get; set; }
 
         public DbSet<City> Cities { get; set; }

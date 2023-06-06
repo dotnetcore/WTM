@@ -514,13 +514,23 @@ namespace WalkingTec.Mvvm.Mvc
                 if (UI == UIEnum.VUE3)
                 {
                     //Todo 生成vue3页面
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}index.vue", GenerateVueView("Index"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}create.vue", GenerateVueView("Create"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}edit.vue", GenerateVueView("Edit"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}details.vue", GenerateVueView("Details"), Encoding.UTF8);
-                    File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}import.vue", GenerateVueView("Import"), Encoding.UTF8);
+                    var pathvue3 = $"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}";
+                    if (Directory.Exists(pathvue3) == false)
+                    {
+                        Directory.CreateDirectory(pathvue3);
+                    }
+                    var pathapi = $"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}api{Path.DirectorySeparatorChar}{ModelName}{Path.DirectorySeparatorChar}";
+                    if (Directory.Exists(pathapi) == false)
+                    {
+                        Directory.CreateDirectory(pathapi);
+                    }
+                    File.WriteAllText($"{pathvue3}index.vue", GenerateVueView("Index"), Encoding.UTF8);
+                    File.WriteAllText($"{pathvue3}create.vue", GenerateVueView("Create"), Encoding.UTF8);
+                    File.WriteAllText($"{pathvue3}edit.vue", GenerateVueView("Edit"), Encoding.UTF8);
+                    File.WriteAllText($"{pathvue3}details.vue", GenerateVueView("Details"), Encoding.UTF8);
+                    File.WriteAllText($"{pathvue3}import.vue", GenerateVueView("Import"), Encoding.UTF8);
 
-                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}api{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}index.ts", GenerateVueView("indexapi"), Encoding.UTF8);
+                    File.WriteAllText($"{pathapi}index.ts", GenerateVueView("indexapi"), Encoding.UTF8);
                 }
             }
             var test = GenerateTest();
@@ -2698,8 +2708,6 @@ namespace WalkingTec.Mvvm.Mvc
         {{title:'{label}',key: '{newname}',type: '{template}',isCheck: true}},");
 
                 }
-                fieldstr2.Append($@"
-        <el-col :xs=""24"" :lg=""12"" class=""mb20"">");
                 for (int i = 0; i < pros2.Count; i++)
                 {
                     string controltype = "input";
@@ -2743,10 +2751,10 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            controltype = "MultiSelect";
+                            ph += " multiple";
                         }
                         var tempname = $"All{subtype.Name}s";
-                        sitems = $"Items=\"@{tempname}\"";
+                        ph += $" :data=\"state{ModelName}.{tempname}\"";
                         if (apis.ContainsKey(tempname) == false && multiapis.ContainsKey(tempname) == false)
                         {
                             if (controltype == "select")
@@ -2782,8 +2790,8 @@ namespace WalkingTec.Mvvm.Mvc
                             for (int a = 0; a < es.Count; a++)
                             {
                                 var e = es[a];
-                                sitems = $@"
-                <el-option :key=""{e.Value}"" :value=""{e.Value}"" :label=""{e.Text}""></el-option>";
+                                sitems += $@"
+                <el-option key=""{e.Value}"" value=""{e.Value}"" label=""{e.Text}""></el-option>";
                             }
 
                         }
@@ -2805,12 +2813,12 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     //<{controltype} @bind-Value=""@SearchModel.{bindfield}"" {sitems} {ph}/>
                     fieldstr2.Append($@"
-        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" :label=""{label}"">
-            <el-{controltype} v-model=""searchData{ModelName}.{bindfield}"" clearable>{sitems}</el-{controltype}>
-        </el-form-item>");
+    <el-col :xs=""24"" :lg=""12"" class=""mb20"">
+        <el-form-item ref=""{bindfield}_FormItem"" prop=""{bindfield}"" label=""{label}"">
+            <el-{controltype} v-model=""searchData{ModelName}.{bindfield}""{ph} clearable>{sitems}</el-{controltype}>
+        </el-form-item>
+    </el-col>");
                 }
-                fieldstr2.Append($@"
-        </el-col>");
                 StringBuilder apiinit = new StringBuilder();
                 StringBuilder fieldinit = new StringBuilder();
                 foreach (var item in apis)
@@ -2819,7 +2827,7 @@ namespace WalkingTec.Mvvm.Mvc
     other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
 ");
                     fieldinit.Append($@"
-    {item.Key}: [] as any[],;");
+    {item.Key}: [] as any[],");
 
                 }
                 foreach (var item in multiapis)
@@ -2828,7 +2836,7 @@ namespace WalkingTec.Mvvm.Mvc
     other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
 ");
                     fieldinit.Append($@"
-    {item.Key}: [] as any[],;");
+    {item.Key}: [] as any[],");
                 }
 
 
@@ -2849,8 +2857,7 @@ namespace WalkingTec.Mvvm.Mvc
                 //生成表单model
                 Dictionary<string, string> apis = new Dictionary<string, string>();
                 Dictionary<string, string> multiapis = new Dictionary<string, string>();
-                fieldstr.Append($@"
-        <el-col :xs=""24"" :lg=""12"" class=""mb20"">");
+
 
                 for (int i = 0; i < pros.Count; i++)
                 {
@@ -2870,7 +2877,7 @@ namespace WalkingTec.Mvvm.Mvc
                     string rules = "";
                     if (isrequired == true)
                     {
-                        rules = $@" :rules: [{{ required: true, message: ""{label}为必填项"",trigger: ""blur"" }}]";
+                        rules = $@" :rules=""[{{ required: true, message:'{label}为必填项',trigger:'blur'}}]""";
                     }
                     if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
                     {
@@ -2923,7 +2930,7 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 controltype = "el-select";
                                 sitems = $@"
-                       <el-option v-for=""item in state{ModelName}.{tempname}"" :key=""item.Value"" :value=""item.Value"" :label=""item.Text""></el-option>";
+                       <el-option v-for=""item in state{ModelName}.{tempname}"" :key=""item.Value"" :value=""item.Value"" label=""item.Text""></el-option>";
                             }
                             else
                             {
@@ -2969,8 +2976,8 @@ namespace WalkingTec.Mvvm.Mvc
                             for (int a = 0; a < es.Count; a++)
                             {
                                 var e = es[a];
-                                sitems = $@"
-                <el-option :key=""{e.Value}"" :value=""{e.Value}"" :label=""{e.Text}""></el-option>";
+                                sitems += $@"
+                <el-option key=""{e.Value}"" value=""{e.Value}"" label=""{e.Text}""></el-option>";
                             }
 
                         }
@@ -2996,7 +3003,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         fieldstr.Append($@"
     <el-col :xs=""24"" :lg=""24"" class=""mb20"">
-        <el-form-item ref=""{bindfield.Replace(".", "_")}_FormItem"" prop=""{bindfield}"" :label=""{label}""{rules}>
+        <el-form-item ref=""{bindfield.Replace(".", "_")}_FormItem"" prop=""{bindfield}"" label=""{label}""{rules}>
             <{controltype} v-model=""state{ModelName}.vmModel.{bindfield}""{ph} clearable>{sitems}</{controltype}>
         </el-form-item>
     </el-col>");
@@ -3005,13 +3012,14 @@ namespace WalkingTec.Mvvm.Mvc
                     {
 
                         fieldstr.Append($@"
-        <el-form-item ref=""{bindfield.Replace(".", "_")}_FormItem"" prop=""{bindfield}"" :label=""{label}""{rules}>
+    <el-col :xs=""24"" :lg=""12"" class=""mb20"">
+        <el-form-item ref=""{bindfield.Replace(".", "_")}_FormItem"" prop=""{bindfield}"" label=""{label}""{rules}>
             <{controltype} v-model=""state{ModelName}.vmModel.{bindfield}""{ph} clearable>{sitems}</{controltype}>
-        </el-form-item>");
+        </el-form-item>
+    </el-col>");
                     }
                 }
-                fieldstr.Append($@"
-        </el-col>");
+
                 StringBuilder apiinit = new StringBuilder();
                 StringBuilder fieldinit = new StringBuilder();
                 foreach (var item in apis)
@@ -3020,7 +3028,7 @@ namespace WalkingTec.Mvvm.Mvc
     other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
 ");
                     fieldinit.Append($@"
-    {item.Key}: [] as any[],;");
+    {item.Key}: [] as any[],");
 
                 }
                 foreach (var item in multiapis)
@@ -3029,7 +3037,7 @@ namespace WalkingTec.Mvvm.Mvc
     other.getSelectList('{item.Value}',[],false).then(x=>{{state{ModelName}.{item.Key} = x}});
 ");
                     fieldinit.Append($@"
-    {item.Key}: [] as any[],;");
+    {item.Key}: [] as any[],");
                 }
 
                 return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$selectfieldinit$", selectfieldinit.ToString())

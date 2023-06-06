@@ -5,26 +5,26 @@ using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs;
+using WalkingTec.Mvvm.Vue3Demo.testvue.ViewModels.SchoolVue3VMs;
 using WalkingTec.Mvvm.ReactDemo.Models;
 
 
 namespace WalkingTec.Mvvm.Vue3Demo.Controllers
 {
-    [Area("SchoolData")]
+    [Area("testvue")]
     [AuthorizeJwtWithCookie]
-    [ActionDescription("城市")]
+    [ActionDescription("测试")]
     [ApiController]
-    [Route("api/City")]
-	public partial class CityController : BaseApiController
+    [Route("api/SchoolVue3")]
+	public partial class SchoolVue3Controller : BaseApiController
     {
         [ActionDescription("Sys.Search")]
         [HttpPost("Search")]
-		public IActionResult Search(CitySearcher searcher)
+		public IActionResult Search(SchoolVue3Searcher searcher)
         {
             if (ModelState.IsValid)
             {
-                var vm = Wtm.CreateVM<CityListVM>(passInit: true);
+                var vm = Wtm.CreateVM<SchoolVue3ListVM>(passInit: true);
                 vm.Searcher = searcher;
                 return Content(vm.GetJson());
             }
@@ -36,15 +36,15 @@ namespace WalkingTec.Mvvm.Vue3Demo.Controllers
 
         [ActionDescription("Sys.Get")]
         [HttpGet("{id}")]
-        public CityVM Get(string id)
+        public SchoolVue3VM Get(string id)
         {
-            var vm = Wtm.CreateVM<CityVM>(id);
+            var vm = Wtm.CreateVM<SchoolVue3VM>(id);
             return vm;
         }
 
         [ActionDescription("Sys.Create")]
         [HttpPost("Add")]
-        public IActionResult Add(CityVM vm)
+        public IActionResult Add(SchoolVue3VM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Vue3Demo.Controllers
 
         [ActionDescription("Sys.Edit")]
         [HttpPut("Edit")]
-        public IActionResult Edit(CityVM vm)
+        public IActionResult Edit(SchoolVue3VM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace WalkingTec.Mvvm.Vue3Demo.Controllers
         [ActionDescription("Sys.Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
-            var vm = Wtm.CreateVM<CityBatchVM>();
+            var vm = Wtm.CreateVM<SchoolVue3BatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -113,9 +113,9 @@ namespace WalkingTec.Mvvm.Vue3Demo.Controllers
 
         [ActionDescription("Sys.Export")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(CitySearcher searcher)
+        public IActionResult ExportExcel(SchoolVue3Searcher searcher)
         {
-            var vm = Wtm.CreateVM<CityListVM>();
+            var vm = Wtm.CreateVM<SchoolVue3ListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             return vm.GetExportData();
@@ -125,7 +125,7 @@ namespace WalkingTec.Mvvm.Vue3Demo.Controllers
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = Wtm.CreateVM<CityListVM>();
+            var vm = Wtm.CreateVM<SchoolVue3ListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.Vue3Demo.Controllers
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = Wtm.CreateVM<CityImportVM>();
+            var vm = Wtm.CreateVM<SchoolVue3ImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.Vue3Demo.Controllers
 
         [ActionDescription("Sys.Import")]
         [HttpPost("Import")]
-        public ActionResult Import(CityImportVM vm)
+        public ActionResult Import(SchoolVue3ImportVM vm)
         {
             if (vm!=null && (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData()))
             {

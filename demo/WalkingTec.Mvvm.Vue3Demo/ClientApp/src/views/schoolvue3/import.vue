@@ -1,10 +1,10 @@
-
+﻿
 <template>
 <div class="card-fill layout-padding">
 <el-card shadow="hover" class="layout-padding-auto" >
 
         <el-form ref="formRef" :model="state.vmModel"  label-width="90px" >
-			<WtmImportor  url="/api/$modelname$/GetExcelTemplate" v-model="state.vmModel.UploadFileId" :files="state.vmModel.files"/>
+			<WtmImportor  url="/api/SchoolVue3/GetExcelTemplate" v-model="state.vmModel.UploadFileId" :files="state.vmModel.files"/>
 			<div v-if="state.errorFileId" style="margin-top: 10px;vertical-align: bottom;">
 				<el-button @click="onErrorFile" size="small" type="danger">{{ $t('message._system.common.vm.importtip') }}</el-button>
 			</div>
@@ -23,7 +23,7 @@
 <script setup lang="ts" name="message._system.common.vm.import,false">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
-import { $modelname$Api } from '/@/api/$modelname$';
+import { SchoolVue3Api } from '/@/api/SchoolVue3';
 import other from '/@/utils/other';
 import fileApi from '/@/api/file';
 import { useRouter } from "vue-router";
@@ -45,7 +45,7 @@ const onCancel = () => {
 };
 
 const onSubmit = () => {
-	$modelname$Api().import(state.vmModel)
+	SchoolVue3Api().import(state.vmModel)
 		.then((res) => {
             ElMessage.success(ci.proxy.$t('message._system.common.vm.importsuc',{count:res}));
 			emit('refresh');
