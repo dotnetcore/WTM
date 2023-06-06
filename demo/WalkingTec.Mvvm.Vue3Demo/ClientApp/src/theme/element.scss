@@ -1,0 +1,321 @@
+@import 'mixins/index.scss';
+
+/* Button 按钮
+------------------------------- */
+// 第三方字体图标大小
+.el-button:not(.is-circle) i.el-icon,
+.el-button i.iconfont,
+.el-button i.fa,
+.el-button--default i.iconfont,
+.el-button--default i.fa {
+	font-size: 14px !important;
+	margin-right: 5px;
+}
+.el-button--small i.iconfont,
+.el-button--small i.fa {
+	font-size: 12px !important;
+	margin-right: 5px;
+}
+
+/* Input 输入框、InputNumber 计数器
+------------------------------- */
+// 菜单搜索
+.el-autocomplete-suggestion__wrap {
+	max-height: 280px !important;
+}
+
+/* Form 表单
+------------------------------- */
+.el-form {
+	// 用于修改弹窗时表单内容间隔太大问题，如系统设置的新增菜单弹窗里的表单内容
+	.el-form-item:last-of-type {
+		margin-bottom: 0 !important;
+	}
+	// 修复行内表单最后一个 el-form-item 位置下移问题
+	&.el-form--inline {
+		.el-form-item--large.el-form-item:last-of-type {
+			margin-bottom: 22px !important;
+		}
+		.el-form-item--default.el-form-item:last-of-type,
+		.el-form-item--small.el-form-item:last-of-type {
+			margin-bottom: 18px !important;
+		}
+	}
+	// https://gitee.com/lyt-top/vue-next-admin/issues/I5K1PM
+	.el-form-item .el-form-item__label .el-icon {
+		margin-right: 0px;
+	}
+}
+
+/* Alert 警告
+------------------------------- */
+.el-alert {
+	border: 1px solid;
+}
+.el-alert__title {
+	word-break: break-all;
+}
+
+/* Message 消息提示
+------------------------------- */
+.el-message {
+	min-width: unset !important;
+	padding: 15px !important;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.02);
+}
+
+/* NavMenu 导航菜单
+------------------------------- */
+// 鼠标 hover 时颜色
+.el-menu-hover-bg-color {
+	background-color: var(--next-bg-menuBarActiveColor) !important;
+}
+// 默认样式修改
+.el-menu {
+	border-right: none !important;
+	width: 220px;
+}
+.el-menu-item {
+	height: 56px !important;
+	line-height: 56px !important;
+}
+.el-menu-item,
+.el-sub-menu__title {
+	color: var(--next-bg-menuBarColor);
+}
+// 修复点击左侧菜单折叠再展开时，宽度不跟随问题
+.el-menu--collapse {
+	width: 64px !important;
+}
+// 外部链接时
+.el-menu-item a,
+.el-menu-item a:hover,
+.el-menu-item i,
+.el-sub-menu__title i {
+	color: inherit;
+	text-decoration: none;
+}
+// 第三方图标字体间距/大小设置
+.el-menu-item .iconfont,
+.el-sub-menu .iconfont,
+.el-menu-item .fa,
+.el-sub-menu .fa {
+	@include generalIcon;
+}
+// 水平菜单、横向菜单高亮 背景色，鼠标 hover 时，有子级菜单的背景色
+.el-menu-item.is-active,
+.el-sub-menu.is-active .el-sub-menu__title,
+.el-sub-menu:not(.is-opened):hover .el-sub-menu__title {
+	@extend .el-menu-hover-bg-color;
+}
+.el-menu-item:hover {
+	@extend .el-menu-hover-bg-color;
+}
+.el-sub-menu.is-active.is-opened .el-sub-menu__title {
+	background-color: unset !important;
+}
+// 子级菜单背景颜色
+// .el-menu--inline {
+// 	background: var(--next-bg-menuBar-light-1);
+// }
+// 水平菜单、横向菜单折叠 a 标签
+.el-popper.is-dark a {
+	color: var(--el-color-white) !important;
+	text-decoration: none;
+}
+// 水平菜单、横向菜单折叠背景色
+.el-popper.is-pure.is-light {
+	// 水平菜单
+	.el-menu--vertical {
+		background: var(--next-bg-menuBar);
+		.el-sub-menu.is-active .el-sub-menu__title {
+			color: var(--el-menu-active-color);
+		}
+		.el-popper.is-pure.is-light {
+			.el-menu--vertical {
+				.el-sub-menu .el-sub-menu__title {
+					background-color: unset !important;
+					color: var(--next-bg-menuBarColor);
+				}
+				.el-sub-menu.is-active .el-sub-menu__title {
+					color: var(--el-menu-active-color);
+				}
+			}
+		}
+	}
+	// 横向菜单
+	.el-menu--horizontal {
+		background: var(--next-bg-topBar);
+		.el-menu-item,
+		.el-sub-menu {
+			height: 50px !important;
+			line-height: 50px !important;
+			color: var(--next-bg-topBarColor);
+			.el-sub-menu__title {
+				height: 50px !important;
+				line-height: 50px !important;
+				color: var(--next-bg-topBarColor);
+			}
+			.el-popper.is-pure.is-light {
+				.el-menu--horizontal {
+					.el-sub-menu .el-sub-menu__title {
+						background-color: unset !important;
+						color: var(--next-bg-topBarColor);
+					}
+					.el-sub-menu.is-active .el-sub-menu__title {
+						color: var(--el-menu-active-color);
+					}
+				}
+			}
+		}
+		.el-menu-item.is-active,
+		.el-sub-menu.is-active .el-sub-menu__title {
+			color: var(--el-menu-active-color);
+		}
+	}
+}
+// 横向菜单（经典、横向）布局
+.el-menu.el-menu--horizontal {
+	border-bottom: none !important;
+	width: 100% !important;
+	.el-menu-item,
+	.el-sub-menu__title {
+		height: 50px !important;
+		color: var(--next-bg-topBarColor);
+	}
+	.el-menu-item:not(.is-active):hover,
+	.el-sub-menu:not(.is-active):hover .el-sub-menu__title {
+		color: var(--next-bg-topBarColor);
+	}
+}
+
+/* Tabs 标签页
+------------------------------- */
+.el-tabs__nav-wrap::after {
+	height: 1px !important;
+}
+
+/* Dropdown 下拉菜单
+------------------------------- */
+.el-dropdown-menu {
+	list-style: none !important; /*修复 Dropdown 下拉菜单样式问题 2022.03.04*/
+}
+.el-dropdown-menu .el-dropdown-menu__item {
+	white-space: nowrap;
+	&:not(.is-disabled):hover {
+		background-color: var(--el-dropdown-menuItem-hover-fill);
+		color: var(--el-dropdown-menuItem-hover-color);
+	}
+}
+
+/* Steps 步骤条
+------------------------------- */
+.el-step__icon-inner {
+	font-size: 30px !important;
+	font-weight: 400 !important;
+}
+.el-step__title {
+	font-size: 14px;
+}
+
+/* Dialog 对话框
+------------------------------- */
+.el-overlay {
+	overflow: hidden;
+	.el-overlay-dialog {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: unset !important;
+		width: 100%;
+		height: 100%;
+		.el-dialog {
+			margin: 0 auto !important;
+			position: absolute;
+			.el-dialog__body {
+				padding: 20px !important;
+			}
+		}
+	}
+}
+.el-dialog__body {
+	max-height: calc(90vh - 111px) !important;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+/* Card 卡片
+------------------------------- */
+.el-card__header {
+	padding: 15px 20px;
+}
+
+/* Table 表格 element plus 2.2.0 版本
+------------------------------- */
+.el-table {
+	.el-button.is-text {
+		padding: 0;
+	}
+}
+
+/* scrollbar
+------------------------------- */
+.el-scrollbar__bar {
+	z-index: 4;
+}
+/*防止页面切换时，滚动条高度不变的问题（滚动条高度非滚动条滚动高度）*/
+.el-scrollbar__wrap {
+	max-height: 100%;
+}
+.el-select-dropdown .el-scrollbar__wrap {
+	overflow-x: scroll !important;
+}
+/*修复Select 选择器高度问题*/
+.el-select-dropdown__wrap {
+	max-height: 274px !important;
+}
+/*修复Cascader 级联选择器高度问题*/
+.el-cascader-menu__wrap.el-scrollbar__wrap {
+	height: 204px !important;
+}
+/*用于界面高度自适应（main.vue），区分 scrollbar__view，防止其它使用 scrollbar 的地方出现滚动条消失*/
+.layout-container-view .el-scrollbar__view {
+	height: 100%;
+}
+/*防止分栏布局二级菜单很多时，滚动条消失问题*/
+.layout-columns-warp .layout-aside .el-scrollbar__view {
+	height: unset !important;
+}
+
+/* Pagination 分页
+------------------------------- */
+.el-pagination__editor {
+	margin-right: 8px;
+}
+/*深色模式时分页高亮问题*/
+.el-pagination.is-background .btn-next.is-active,
+.el-pagination.is-background .btn-prev.is-active,
+.el-pagination.is-background .el-pager li.is-active {
+	background-color: var(--el-color-primary) !important;
+	color: var(--el-color-white) !important;
+}
+
+/* Drawer 抽屉
+------------------------------- */
+.el-drawer {
+	--el-drawer-padding-primary: unset !important;
+	.el-drawer__header {
+		padding: 0 15px !important;
+		height: 50px;
+		display: flex;
+		align-items: center;
+		margin-bottom: 0 !important;
+		border-bottom: 1px solid var(--el-border-color);
+		color: var(--el-text-color-primary);
+	}
+	.el-drawer__body {
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+	}
+}

@@ -1,62 +1,98 @@
 <template>
-  <a-config-provider :locale="locale">
-    <keep-alive>
-    <div
-      class="w-user-spin"
-      v-if="System.UserController.loading && System.UserController.LoginStatus"
-    >
-      <!-- System.UserController.LoginStatus && System.UserController.loading -->
-      <div>
-        <img :src="logo" />
-        <h1>WTM</h1>
-        <a-spin size="large" />
-      </div>
-    </div>
-    <!-- 主界面 -->
-    <Main key="Main" v-else-if="!System.UserController.loading && System.UserController.LoginStatus" />
-    <!-- 登录界面 -->
-    <Login key="Login" v-else/>
-  </keep-alive>
-  </a-config-provider>
+	<el-config-provider :size="getGlobalComponentSize" :locale="getGlobalI18n">
+		<router-view v-show="setLockScreen" />
+		<LockScreen v-if="themeConfig.isLockScreen" />
+		<Setings ref="setingsRef" v-show="setLockScreen" />
+		<CloseFull v-if="!themeConfig.isLockScreen" />
+	</el-config-provider>
 </template>
-<script lang="ts">
-import { SystemController, $System } from "@/client";
-import en from "ant-design-vue/es/locale/en_US";
-import zh from "ant-design-vue/es/locale/zh_CN";
-import { Options, Provide, Vue } from "vue-property-decorator";
-import Main from "./layouts/main.vue";
-import Login from "./layouts/login.vue";
-import router from "./router";
-@Options({ components: { Main, Login } })
-export default class extends Vue {
-  // 系统管理
-  @Provide({ to: SystemController.Symbol, reactive: true }) System = $System;
-  get locale() {
-    return { en, zh }[this.$i18n.locale];
-  }
-  get logo() {
-    return require("@/assets/img/logo.png");
-  }
-  async created() {
-    await this.System.onInit();
-    // router.onInit();
-    // console.error("LENG ~ extends ~ created ~ this.System",this);
-  }
-  mounted() {}
-}
+
+<script setup lang="ts" name="app">
+import { defineAsyncComponent, computed, ref, onBeforeMount, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
+import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
+import { useThemeConfig } from '/@/stores/themeConfig';
+import other from '/@/utils/other';
+import { Local, Session } from '/@/utils/storage';
+import mittBus from '/@/utils/mitt';
+import setIntroduction from '/@/utils/setIconfont';
+
+// 引入组件
+const LockScreen = defineAsyncComponent(() => import('/@/layout/lockScreen/index.vue'));
+const Setings = defineAsyncComponent(() => import('/@/layout/navBars/breadcrumb/setings.vue'));
+const CloseFull = defineAsyncComponent(() => import('/@/layout/navBars/breadcrumb/closeFull.vue'));
+
+// 定义变量内容
+const { messages, locale } = useI18n();
+const setingsRef = ref();
+const route = useRoute();
+const stores = useTagsViewRoutes();
+const storesThemeConfig = useThemeConfig();
+const { themeConfig } = storeToRefs(storesThemeConfig);
+
+// 设置锁屏时组件显示隐藏
+const setLockScreen = computed(() => {
+	// 防止锁屏后，刷新出现不相关界面
+	// https://gitee.com/lyt-top/vue-next-admin/issues/I6AF8P
+	return themeConfig.value.isLockScreen ? themeConfig.value.lockScreenTime > 1 : themeConfig.value.lockScreenTime >= 0;
+});
+// 获取版本号
+const getVersion = computed(() => {
+	let isVersion = false;
+	if (route.path !== '/login') {
+		// @ts-ignore
+		if ((Local.get('version') && Local.get('version') !== __NEXT_VERSION__) || !Local.get('version')) isVersion = true;
+	}
+	return isVersion;
+});
+// 获取全局组件大小
+const getGlobalComponentSize = computed(() => {
+	return other.globalComponentSize();
+});
+// 获取全局 i18n
+const getGlobalI18n = computed(() => {
+	return messages.value[locale.value];
+});
+// 设置初始化，防止刷新时恢复默认
+onBeforeMount(() => {
+	// 设置批量第三方 icon 图标
+	setIntroduction.cssCdn();
+	// 设置批量第三方 js
+	setIntroduction.jsCdn();
+});
+// 页面加载时
+onMounted(() => {
+	nextTick(() => {
+		// 监听布局配'置弹窗点击打开
+		mittBus.on('openSetingsDrawer', () => {
+			setingsRef.value.openDrawer();
+		});
+		// 获取缓存中的布局配置
+		if (Local.get('themeConfig')) {
+			storesThemeConfig.setThemeConfig({ themeConfig: Local.get('themeConfig') });
+			document.documentElement.style.cssText = Local.get('themeConfigStyle');
+		}
+		// 获取缓存中的全屏配置
+		if (Session.get('isTagsViewCurrenFull')) {
+			stores.setCurrenFullscreen(Session.get('isTagsViewCurrenFull'));
+		}
+		Session.remove('userInfo')
+	});
+});
+// 页面销毁时，关闭监听布局配置/i18n监听
+onUnmounted(() => {
+	mittBus.off('openSetingsDrawer', () => {});
+});
+// 监听路由的变化，设置网站标题
+watch(
+	() => route.path,
+	() => {
+		other.useTitle();
+	},
+	{
+		deep: true,
+	}
+);
 </script>
-<style lang="less">
-.w-app {
-  height: 100%;
-}
-.w-user-spin {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  img {
-    width: 100px;
-  }
-}
-</style>
