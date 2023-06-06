@@ -8,10 +8,12 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.ReactDemo.Models;
 
 
-namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
+namespace WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs
 {
     public partial class CitySearcher : BaseSearcher
     {
+        [Display(Name = "名称")]
+        public String Name { get; set; }
         [Display(Name = "_Admin.Parent")]
         public Guid? ParentId { get; set; }
 

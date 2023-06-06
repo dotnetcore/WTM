@@ -18,7 +18,7 @@
 </template>
 
 
-<script setup lang="ts" name="$controllername$,false">
+<script setup lang="ts" name="message._system.common.vm.edit,false">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
 import { $modelname$Api } from '/@/api/$modelname$';
@@ -34,7 +34,7 @@ const state$modelname$ = reactive({
 	  Entity:{
       $fieldentityinit$
       },
-
+      $selectfieldinit$
 	},
     
      $fieldinit$
@@ -49,7 +49,7 @@ const onClose$modelname$ = () => {
 const onSubmit$modelname$ = () => {
     formRef$modelname$.value?.validate((valid: boolean, fields: any) => {
 		if (valid) {
-            $modelname$Api().add(state$modelname$.vmModel).then(() => {
+            $modelname$Api().edit(state$modelname$.vmModel).then(() => {
                 ElMessage.success(ci.proxy.$t('message._system.common.vm.submittip'));
                 emit('refresh');
                 closeDialog();

@@ -8,14 +8,14 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.ReactDemo.Models;
 
 
-namespace WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs
+namespace WalkingTec.Mvvm.Vue3Demo.testvue.ViewModels.SchoolVue3VMs
 {
-    public partial class CityVM : BaseCRUDVM<City>
+    public partial class SchoolVue3VM : BaseCRUDVM<SchoolVue3>
     {
 
-        public CityVM()
+        public SchoolVue3VM()
         {
-            SetInclude(x => x.Parent);
+            SetInclude(x => x.Place);
         }
 
         protected override void InitVM()

@@ -8,14 +8,14 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.ReactDemo.Models;
 
 
-namespace WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs
+namespace WalkingTec.Mvvm.Vue3Demo.testvue.ViewModels.SchoolVue3VMs
 {
-    public partial class CityBatchVM : BaseBatchVM<City, City_BatchEdit>
+    public partial class SchoolVue3BatchVM : BaseBatchVM<SchoolVue3, SchoolVue3_BatchEdit>
     {
-        public CityBatchVM()
+        public SchoolVue3BatchVM()
         {
-            ListVM = new CityListVM();
-            LinkedVM = new City_BatchEdit();
+            ListVM = new SchoolVue3ListVM();
+            LinkedVM = new SchoolVue3_BatchEdit();
         }
 
     }
@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs
 	/// <summary>
     /// Class to define batch edit fields
     /// </summary>
-    public class City_BatchEdit : BaseVM
+    public class SchoolVue3_BatchEdit : BaseVM
     {
 
         protected override void InitVM()

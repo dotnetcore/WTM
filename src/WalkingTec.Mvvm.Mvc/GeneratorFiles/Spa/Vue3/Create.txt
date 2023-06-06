@@ -18,7 +18,7 @@
 </template>
 
 
-<script setup lang="ts" name="$controllername$,false">
+<script setup lang="ts" name="message._system.common.vm.add,false">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
 import { $modelname$Api } from '/@/api/$modelname$';
@@ -34,7 +34,7 @@ const state$modelname$ = reactive({
 	  Entity:{
       $fieldentityinit$
       },
-
+      $selectfieldinit$
 	},
     
      $fieldinit$

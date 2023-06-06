@@ -21,6 +21,12 @@
     <None Remove="GeneratorFiles\Spa\Blazor\Edit.txt" />
     <None Remove="GeneratorFiles\Spa\Blazor\Import.txt" />
     <None Remove="GeneratorFiles\Spa\Blazor\Index.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue3\Create.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue3\Details.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue3\Edit.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue3\Import.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue3\Index.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue3\indexapi.txt" />
     <None Remove="GeneratorFiles\Spa\Vue\Create.txt" />
     <None Remove="GeneratorFiles\Spa\Vue\Details.txt" />
     <None Remove="GeneratorFiles\Spa\Vue\Edit.txt" />
@@ -62,6 +68,12 @@
     <EmbeddedResource Include="GeneratorFiles\Mvc\CreateView.txt" />
     <EmbeddedResource Include="GeneratorFiles\Mvc\DeleteView.txt" />
     <EmbeddedResource Include="GeneratorFiles\Mvc\DetailsView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue3\Create.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue3\Details.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue3\Edit.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue3\Import.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue3\Index.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue3\indexapi.txt" />
   </ItemGroup>
 
   <ItemGroup>
