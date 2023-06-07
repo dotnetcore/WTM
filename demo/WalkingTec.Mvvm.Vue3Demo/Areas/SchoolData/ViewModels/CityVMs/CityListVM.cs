@@ -28,6 +28,7 @@ namespace WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs
         {
             var query = DC.Set<City>()
                 .CheckContain(Searcher.Name, x=>x.Name)
+                .CheckContain(Searcher.Code, x=>x.Code)
                 .CheckEqual(Searcher.ParentId, x=>x.ParentId)
                 .Select(x => new City_View
                 {

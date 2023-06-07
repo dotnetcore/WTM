@@ -514,12 +514,12 @@ namespace WalkingTec.Mvvm.Mvc
                 if (UI == UIEnum.VUE3)
                 {
                     //Todo 生成vue3页面
-                    var pathvue3 = $"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}";
+                    var pathvue3 = $"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}{Area.ToLower()}{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}";
                     if (Directory.Exists(pathvue3) == false)
                     {
                         Directory.CreateDirectory(pathvue3);
                     }
-                    var pathapi = $"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}api{Path.DirectorySeparatorChar}{ModelName}{Path.DirectorySeparatorChar}";
+                    var pathapi = $"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}api{Path.DirectorySeparatorChar}{Area.ToLower()}{Path.DirectorySeparatorChar}{ModelName}{Path.DirectorySeparatorChar}";
                     if (Directory.Exists(pathapi) == false)
                     {
                         Directory.CreateDirectory(pathapi);
@@ -2631,15 +2631,8 @@ namespace WalkingTec.Mvvm.Mvc
 
         public string GenerateVueView(string name)
         {
-            string pagepath = string.IsNullOrEmpty(Area) ? $"/{ModelName}" : $"/{Area}/{ModelName}";
-            if (name != "Index")
-            {
-                pagepath += $"/{name}";
-            }
-            if (name == "Edit" || name == "Details")
-            {
-                pagepath += "/{id}";
-            }
+            string pagepath = string.IsNullOrEmpty(Area) ? $"/{ModelName}" : $"/{Area.ToLower()}/{ModelName}";
+          
             var rv = GetResource($"{name}.txt", "Spa.Vue3")
                 .Replace("$modelname$", ModelName)
                 .Replace("$vmnamespace$", VMNs)
@@ -2930,7 +2923,7 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 controltype = "el-select";
                                 sitems = $@"
-                       <el-option v-for=""item in state{ModelName}.{tempname}"" :key=""item.Value"" :value=""item.Value"" label=""item.Text""></el-option>";
+                       <el-option v-for=""item in state{ModelName}.{tempname}"" :key=""item.Value"" :value=""item.Value"" :label=""item.Text""></el-option>";
                             }
                             else
                             {

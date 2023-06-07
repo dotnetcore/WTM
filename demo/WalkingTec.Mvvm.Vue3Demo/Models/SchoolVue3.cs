@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System.Text.Json.Serialization;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.ReactDemo.Models
@@ -44,7 +44,20 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
         [Display(Name = "地点")]
         public Guid? PlaceId { get; set; }
 
+        [Display(Name = "是学校")]
+        public bool IsSchool { get; set; }
 
+        [Display(Name = "照片")]
+        public Guid? PhotoId { get; set; }
+
+        [Display(Name = "照片")]
+        public FileAttachment Photo { get; set; }
+
+        [Display(Name = "附件")]
+        public Guid? FileId { get; set; }
+
+        [Display(Name = "附件")]
+        public FileAttachment File { get; set; }
         [Display(Name = "多照片")]
         public List<SchoolPhoto> Photos { get; set; }
 
@@ -53,6 +66,6 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
 
     }
 
-    
+
 
 }

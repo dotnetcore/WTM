@@ -55,7 +55,7 @@
 <script setup lang="ts" name="测试,true,WalkingTec.Mvvm.Vue3Demo.Controllers,SchoolVue3">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
-import { SchoolVue3Api } from '/@/api/SchoolVue3';
+import { SchoolVue3Api } from '/@/api/testvue/SchoolVue3';
 import other from '/@/utils/other';
 import fileApi from '/@/api/file';
 import { useRouter } from "vue-router";
@@ -91,6 +91,9 @@ const tableDataSchoolVue3 = ref({
         {title:'备注',key: 'Remark',type: 'text',isCheck: true},
         {title:'级别',key: 'Level',type: 'text',isCheck: true},
         {title:'地点',key: 'Name_view',type: 'text',isCheck: true},
+        {title:'是学校',key: 'IsSchool',type: 'switch',isCheck: true},
+        {title:'照片',key: 'PhotoId',type: 'image',isCheck: true},
+        {title:'附件',key: 'FileId',type: 'text',isCheck: true},
 	],
 	// 配置项（必传）
 	config: {

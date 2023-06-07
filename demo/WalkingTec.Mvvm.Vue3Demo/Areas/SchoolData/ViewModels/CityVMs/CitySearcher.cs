@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs
     {
         [Display(Name = "名称")]
         public String Name { get; set; }
+        public String Code { get; set; }
         [Display(Name = "_Admin.Parent")]
         public Guid? ParentId { get; set; }
 
