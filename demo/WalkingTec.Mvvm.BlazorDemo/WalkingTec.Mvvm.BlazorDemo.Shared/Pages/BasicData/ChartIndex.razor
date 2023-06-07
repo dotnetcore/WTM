@@ -11,7 +11,7 @@
         </ValidateForm>
     </WTSearchPanel>*@
 <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Inline">
-    <Chart ChartType="ChartType.Line" OnInitAsync="() =>OnInit(title1)"></Chart>
+    <Chart ChartType="ChartType.Line" OnInitAsync="() =>OnInit(title1)" Width="400px"></Chart>
     <Chart ChartType="ChartType.Bubble" OnInitAsync="@OnInit2" />
 </Row>
 <Row ItemsPerRow="ItemsPerRow.Three" RowType="RowType.Inline">
@@ -30,7 +30,7 @@
     private string title4 = "pie 圆环";
     private async Task<ChartDataSource> OnInit(string title)
     {
-        var data = await WtmBlazor.Api.CallAPI<List<ChartData>>("/api/Chart/GetCharts", HttpMethodEnum.GET, SearchModel);
+        var data = await WtmBlazor.Api.CallAPI<List<ChartData>>("/api/Chart/GetCharts", HttpMethodEnum.POST, SearchModel);
 
         var ds = new ChartDataSource();
         ds.Options.Title = title;

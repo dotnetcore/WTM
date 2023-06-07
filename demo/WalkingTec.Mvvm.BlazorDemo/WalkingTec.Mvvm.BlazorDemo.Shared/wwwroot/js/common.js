@@ -1,19 +1,3 @@
-(function ($) {
-    $.extend({
-        loading: function () {
-            var $loader = $("#loading");
-            if ($loader.length > 0) {
-                $loader.addClass("is-done");
-                var handler = window.setTimeout(function () {
-                    window.clearTimeout(handler);
-                    $loader.remove();
-                    $('body').removeClass('overflow-hidden');
-                }, 600);
-            }
-        },
-    });
-})(jQuery);
-
 window.localStorageFuncs = {
     set: function (key, value) {
         localStorage.setItem(key, value);
@@ -83,5 +67,19 @@ window.urlFuncs = {
         };
         // 发送ajax请求
         xhr.send(data)
+    }
+}
+
+window.commonFuncs = {
+    loadFinish: function () {
+        var wasm = document.getElementById('loading')
+        if (wasm) {
+            wasm.classList.add("is-done")
+            var handler = window.setTimeout(function () {
+                window.clearTimeout(handler)
+                wasm.remove()
+                document.body.classList.remove('overflow-hidden')
+            }, 600);
+        }
     }
 }
