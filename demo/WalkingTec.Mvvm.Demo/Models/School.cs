@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System.Text.Json.Serialization;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models
@@ -38,6 +38,7 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "备注")]
         [Required(ErrorMessage = "Validate.{0}required")]
+        [JsonConverter(typeof(JsonStringConverter))]
         public string Remark { get; set; }
 
         [Display(Name = "时间")]
