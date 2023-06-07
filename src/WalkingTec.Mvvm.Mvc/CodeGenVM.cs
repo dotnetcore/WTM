@@ -524,13 +524,13 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         Directory.CreateDirectory(pathapi);
                     }
-                    File.WriteAllText($"{pathvue3}index.vue", GenerateVueView("Index"), Encoding.UTF8);
-                    File.WriteAllText($"{pathvue3}create.vue", GenerateVueView("Create"), Encoding.UTF8);
-                    File.WriteAllText($"{pathvue3}edit.vue", GenerateVueView("Edit"), Encoding.UTF8);
-                    File.WriteAllText($"{pathvue3}details.vue", GenerateVueView("Details"), Encoding.UTF8);
-                    File.WriteAllText($"{pathvue3}import.vue", GenerateVueView("Import"), Encoding.UTF8);
+                    File.WriteAllText($"{pathvue3}index.vue", GenerateVue3View("Index"), Encoding.UTF8);
+                    File.WriteAllText($"{pathvue3}create.vue", GenerateVue3View("Create"), Encoding.UTF8);
+                    File.WriteAllText($"{pathvue3}edit.vue", GenerateVue3View("Edit"), Encoding.UTF8);
+                    File.WriteAllText($"{pathvue3}details.vue", GenerateVue3View("Details"), Encoding.UTF8);
+                    File.WriteAllText($"{pathvue3}import.vue", GenerateVue3View("Import"), Encoding.UTF8);
 
-                    File.WriteAllText($"{pathapi}index.ts", GenerateVueView("indexapi"), Encoding.UTF8);
+                    File.WriteAllText($"{pathapi}index.ts", GenerateVue3View("indexapi"), Encoding.UTF8);
                 }
             }
             var test = GenerateTest();
@@ -2629,7 +2629,7 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
-        public string GenerateVueView(string name)
+        public string GenerateVue3View(string name)
         {
             string pagepath = string.IsNullOrEmpty(Area) ? $"/{ModelName}" : $"/{Area.ToLower()}/{ModelName}";
           
