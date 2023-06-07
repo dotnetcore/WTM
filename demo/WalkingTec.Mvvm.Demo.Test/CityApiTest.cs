@@ -38,8 +38,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             CityVM vm = _controller.Wtm.CreateVM<CityVM>();
             City v = new City();
             
-            v.Name = "T3DvxRSItVLx63PZnS";
-            v.Level = 57;
+            v.Name = "xwRQf";
+            v.Level = 81;
             v.ParentId = AddCity();
             vm.Entity = v;
             var rv = _controller.Add(vm);
@@ -49,8 +49,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             {
                 var data = context.Set<City>().Find(v.ID);
                 
-                Assert.AreEqual(data.Name, "T3DvxRSItVLx63PZnS");
-                Assert.AreEqual(data.Level, 57);
+                Assert.AreEqual(data.Name, "xwRQf");
+                Assert.AreEqual(data.Level, 81);
             }
         }
 
@@ -61,8 +61,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.Name = "T3DvxRSItVLx63PZnS";
-                v.Level = 57;
+                v.Name = "xwRQf";
+                v.Level = 81;
                 v.ParentId = AddCity();
                 context.Set<City>().Add(v);
                 context.SaveChanges();
@@ -73,8 +73,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             v = new City();
             v.ID = oldID;
        		
-            v.Name = "DqlE9W1uTfR";
-            v.Level = 69;
+            v.Name = "5Pf9YRc2NuQbg";
+            v.Level = 66;
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
 			
@@ -88,8 +88,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             {
                 var data = context.Set<City>().Find(v.ID);
  				
-                Assert.AreEqual(data.Name, "DqlE9W1uTfR");
-                Assert.AreEqual(data.Level, 69);
+                Assert.AreEqual(data.Name, "5Pf9YRc2NuQbg");
+                Assert.AreEqual(data.Level, 66);
             }
 
         }
@@ -101,8 +101,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.Name = "T3DvxRSItVLx63PZnS";
-                v.Level = 57;
+                v.Name = "xwRQf";
+                v.Level = 81;
                 v.ParentId = AddCity();
                 context.Set<City>().Add(v);
                 context.SaveChanges();
@@ -119,11 +119,11 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.Name = "T3DvxRSItVLx63PZnS";
-                v1.Level = 57;
+                v1.Name = "xwRQf";
+                v1.Level = 81;
                 v1.ParentId = AddCity();
-                v2.Name = "DqlE9W1uTfR";
-                v2.Level = 69;
+                v2.Name = "5Pf9YRc2NuQbg";
+                v2.Level = 66;
                 v2.ParentId = v1.ParentId; 
                 context.Set<City>().Add(v1);
                 context.Set<City>().Add(v2);
@@ -153,8 +153,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             {
                 try{
 
-                v.Name = "IOYxFn";
-                v.Level = 73;
+                v.Name = "3BKAq";
+                v.Level = 70;
                 context.Set<City>().Add(v);
                 context.SaveChanges();
                 }

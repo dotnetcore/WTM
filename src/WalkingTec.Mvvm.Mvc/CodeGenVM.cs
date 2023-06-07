@@ -2738,15 +2738,17 @@ namespace WalkingTec.Mvvm.Mvc
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
+                        var tempname = $"All{subtype.Name}s";
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
                         {
                             controltype = "select";
+                            sitems += $@"
+                       <el-option v-for=""item in state{ModelName}.{tempname}"" :key=""item.Value"" :value=""item.Value"" :label=""item.Text""></el-option>";
                         }
                         else
                         {
                             ph += " multiple";
                         }
-                        var tempname = $"All{subtype.Name}s";
                         ph += $" :data=\"state{ModelName}.{tempname}\"";
                         if (apis.ContainsKey(tempname) == false && multiapis.ContainsKey(tempname) == false)
                         {
@@ -2759,6 +2761,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 multiapis.Add(tempname, $"/api/{ModelName}/Get{subtype.Name}s");
                             }
                         }
+
                     }
                     else
                     {

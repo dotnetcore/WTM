@@ -35,7 +35,7 @@
     <el-col :xs="24" :lg="12" class="mb20">
         <el-form-item ref="Entity_PlaceId_FormItem" prop="Entity.PlaceId" label="地点">
             <el-select v-model="stateSchoolVue3.vmModel.Entity.PlaceId" disabled clearable>
-                       <el-option v-for="item in stateSchoolVue3.AllCitys" :key="item.Value" :value="item.Value" label="item.Text"></el-option></el-select>
+                       <el-option v-for="item in stateSchoolVue3.AllCitys" :key="item.Value" :value="item.Value" :label="item.Text"></el-option></el-select>
         </el-form-item>
     </el-col>
     <el-col :xs="24" :lg="12" class="mb20">

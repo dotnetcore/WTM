@@ -11,13 +11,9 @@
         </el-form-item>
     </el-col>
     <el-col :xs="24" :lg="12" class="mb20">
-        <el-form-item ref="Code_FormItem" prop="Code" label="Code">
-            <el-input v-model="searchDataCity.Code" clearable></el-input>
-        </el-form-item>
-    </el-col>
-    <el-col :xs="24" :lg="12" class="mb20">
         <el-form-item ref="ParentId_FormItem" prop="ParentId" label="父级">
-            <el-select v-model="searchDataCity.ParentId" :data="stateCity.AllCitys" clearable></el-select>
+            <el-select v-model="searchDataCity.ParentId" :data="stateCity.AllCitys" clearable>
+                       <el-option v-for="item in stateCity.AllCitys" :key="item.Value" :value="item.Value" :label="item.Text"></el-option></el-select>
         </el-form-item>
     </el-col>
       </el-row>
@@ -73,7 +69,6 @@ const stateCity = reactive({
 
 const searchDataCity = ref({
     			Name: null,
-			Code: null,
 			ParentId: null,
 
 });

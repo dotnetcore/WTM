@@ -53,7 +53,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.testvue.ViewModels.SchoolVue3VMs
             var query = DC.Set<SchoolVue3>()
                 .CheckContain(Searcher.SchoolCode, x=>x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x=>x.SchoolName)
-                .CheckEqual(Searcher.Level, x=>x.Level)
+                .CheckEqual(Searcher.SchoolType, x=>x.SchoolType)
+                .CheckEqual(Searcher.IsSchool, x=>x.IsSchool)
                 .Select(x => new SchoolVue3_View
                 {
 				    ID = x.ID,

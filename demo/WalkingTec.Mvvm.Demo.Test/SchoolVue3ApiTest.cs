@@ -38,13 +38,13 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             SchoolVue3VM vm = _controller.Wtm.CreateVM<SchoolVue3VM>();
             SchoolVue3 v = new SchoolVue3();
             
-            v.SchoolCode = "B3GdSl9piEMoRWDZkA";
-            v.SchoolName = "bF2O8VZnXITBEcXDhgn6oPFQKATmjXj30JD3gH";
+            v.SchoolCode = "Jn8sy";
+            v.SchoolName = "7UOr6be3LAhtUnSql9SZ4zVOAguL";
             v.SchoolType = WalkingTec.Mvvm.ReactDemo.Models.SchoolTypeEnum.PUB;
-            v.Remark = "r9LGL4cVyAQgv6i3O";
-            v.Level = 71;
+            v.Remark = "XBaLZOFxyhXMYhip9u";
+            v.Level = 9;
             v.PlaceId = AddCity();
-            v.IsSchool = false;
+            v.IsSchool = true;
             v.PhotoId = AddFileAttachment();
             v.FileId = AddFileAttachment();
             vm.Entity = v;
@@ -55,12 +55,12 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             {
                 var data = context.Set<SchoolVue3>().Find(v.ID);
                 
-                Assert.AreEqual(data.SchoolCode, "B3GdSl9piEMoRWDZkA");
-                Assert.AreEqual(data.SchoolName, "bF2O8VZnXITBEcXDhgn6oPFQKATmjXj30JD3gH");
+                Assert.AreEqual(data.SchoolCode, "Jn8sy");
+                Assert.AreEqual(data.SchoolName, "7UOr6be3LAhtUnSql9SZ4zVOAguL");
                 Assert.AreEqual(data.SchoolType, WalkingTec.Mvvm.ReactDemo.Models.SchoolTypeEnum.PUB);
-                Assert.AreEqual(data.Remark, "r9LGL4cVyAQgv6i3O");
-                Assert.AreEqual(data.Level, 71);
-                Assert.AreEqual(data.IsSchool, false);
+                Assert.AreEqual(data.Remark, "XBaLZOFxyhXMYhip9u");
+                Assert.AreEqual(data.Level, 9);
+                Assert.AreEqual(data.IsSchool, true);
                 Assert.AreEqual(data.CreateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
             }
@@ -73,13 +73,13 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
        			
-                v.SchoolCode = "B3GdSl9piEMoRWDZkA";
-                v.SchoolName = "bF2O8VZnXITBEcXDhgn6oPFQKATmjXj30JD3gH";
+                v.SchoolCode = "Jn8sy";
+                v.SchoolName = "7UOr6be3LAhtUnSql9SZ4zVOAguL";
                 v.SchoolType = WalkingTec.Mvvm.ReactDemo.Models.SchoolTypeEnum.PUB;
-                v.Remark = "r9LGL4cVyAQgv6i3O";
-                v.Level = 71;
+                v.Remark = "XBaLZOFxyhXMYhip9u";
+                v.Level = 9;
                 v.PlaceId = AddCity();
-                v.IsSchool = false;
+                v.IsSchool = true;
                 v.PhotoId = AddFileAttachment();
                 v.FileId = AddFileAttachment();
                 context.Set<SchoolVue3>().Add(v);
@@ -91,11 +91,11 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             v = new SchoolVue3();
             v.ID = oldID;
        		
-            v.SchoolCode = "3p3mNBAx9PlhPm";
-            v.SchoolName = "QyhADkFKfvxqlgZ0oi3kuN0KN";
+            v.SchoolCode = "fQfL535tt";
+            v.SchoolName = "p6ExjfwiqCeV870OcUYJQcdZ";
             v.SchoolType = WalkingTec.Mvvm.ReactDemo.Models.SchoolTypeEnum.PRI;
-            v.Remark = "xct92M8PY";
-            v.Level = 42;
+            v.Remark = "7LwH0n";
+            v.Level = 10;
             v.IsSchool = false;
             vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
@@ -116,11 +116,11 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             {
                 var data = context.Set<SchoolVue3>().Find(v.ID);
  				
-                Assert.AreEqual(data.SchoolCode, "3p3mNBAx9PlhPm");
-                Assert.AreEqual(data.SchoolName, "QyhADkFKfvxqlgZ0oi3kuN0KN");
+                Assert.AreEqual(data.SchoolCode, "fQfL535tt");
+                Assert.AreEqual(data.SchoolName, "p6ExjfwiqCeV870OcUYJQcdZ");
                 Assert.AreEqual(data.SchoolType, WalkingTec.Mvvm.ReactDemo.Models.SchoolTypeEnum.PRI);
-                Assert.AreEqual(data.Remark, "xct92M8PY");
-                Assert.AreEqual(data.Level, 42);
+                Assert.AreEqual(data.Remark, "7LwH0n");
+                Assert.AreEqual(data.Level, 10);
                 Assert.AreEqual(data.IsSchool, false);
                 Assert.AreEqual(data.UpdateBy, "user");
                 Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
@@ -135,13 +135,13 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
         		
-                v.SchoolCode = "B3GdSl9piEMoRWDZkA";
-                v.SchoolName = "bF2O8VZnXITBEcXDhgn6oPFQKATmjXj30JD3gH";
+                v.SchoolCode = "Jn8sy";
+                v.SchoolName = "7UOr6be3LAhtUnSql9SZ4zVOAguL";
                 v.SchoolType = WalkingTec.Mvvm.ReactDemo.Models.SchoolTypeEnum.PUB;
-                v.Remark = "r9LGL4cVyAQgv6i3O";
-                v.Level = 71;
+                v.Remark = "XBaLZOFxyhXMYhip9u";
+                v.Level = 9;
                 v.PlaceId = AddCity();
-                v.IsSchool = false;
+                v.IsSchool = true;
                 v.PhotoId = AddFileAttachment();
                 v.FileId = AddFileAttachment();
                 context.Set<SchoolVue3>().Add(v);
@@ -159,20 +159,20 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
 				
-                v1.SchoolCode = "B3GdSl9piEMoRWDZkA";
-                v1.SchoolName = "bF2O8VZnXITBEcXDhgn6oPFQKATmjXj30JD3gH";
+                v1.SchoolCode = "Jn8sy";
+                v1.SchoolName = "7UOr6be3LAhtUnSql9SZ4zVOAguL";
                 v1.SchoolType = WalkingTec.Mvvm.ReactDemo.Models.SchoolTypeEnum.PUB;
-                v1.Remark = "r9LGL4cVyAQgv6i3O";
-                v1.Level = 71;
+                v1.Remark = "XBaLZOFxyhXMYhip9u";
+                v1.Level = 9;
                 v1.PlaceId = AddCity();
-                v1.IsSchool = false;
+                v1.IsSchool = true;
                 v1.PhotoId = AddFileAttachment();
                 v1.FileId = AddFileAttachment();
-                v2.SchoolCode = "3p3mNBAx9PlhPm";
-                v2.SchoolName = "QyhADkFKfvxqlgZ0oi3kuN0KN";
+                v2.SchoolCode = "fQfL535tt";
+                v2.SchoolName = "p6ExjfwiqCeV870OcUYJQcdZ";
                 v2.SchoolType = WalkingTec.Mvvm.ReactDemo.Models.SchoolTypeEnum.PRI;
-                v2.Remark = "xct92M8PY";
-                v2.Level = 42;
+                v2.Remark = "7LwH0n";
+                v2.Level = 10;
                 v2.PlaceId = v1.PlaceId; 
                 v2.IsSchool = false;
                 v2.PhotoId = v1.PhotoId; 
@@ -205,8 +205,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             {
                 try{
 
-                v.Name = "ZfA";
-                v.Level = 62;
+                v.Name = "KJb9EEfba35qV61D7X";
+                v.Level = 78;
                 context.Set<City>().Add(v);
                 context.SaveChanges();
                 }
@@ -222,14 +222,14 @@ namespace WalkingTec.Mvvm.Vue3Demo.Test
             {
                 try{
 
-                v.FileName = "L8xaKFDJuHrRATz";
-                v.FileExt = "r";
-                v.Path = "RNia";
-                v.Length = 82;
-                v.UploadTime = DateTime.Parse("2023-10-24 22:31:48");
-                v.SaveMode = "ku7O5";
-                v.ExtraInfo = "OE2JTaMkfrWjv9oV";
-                v.HandlerInfo = "lnr8JY7IQKVf8QdDO";
+                v.FileName = "VjVmYppy8KC9sQW5hhW";
+                v.FileExt = "Ua5hJjF1U";
+                v.Path = "Faq3wNeHFtcDWx5wuj";
+                v.Length = 99;
+                v.UploadTime = DateTime.Parse("2023-08-14 22:48:12");
+                v.SaveMode = "V6y";
+                v.ExtraInfo = "0y0HW4M2CnLQWXIF";
+                v.HandlerInfo = "5wYdeDVnW7I7K1Q";
                 context.Set<FileAttachment>().Add(v);
                 context.SaveChanges();
                 }
