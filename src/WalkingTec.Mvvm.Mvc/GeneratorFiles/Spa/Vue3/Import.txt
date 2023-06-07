@@ -23,7 +23,7 @@
 <script setup lang="ts" name="message._system.common.vm.import,false">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
-import { $modelname$Api } from '/@/api/$modelname$';
+import { $modelname$Api } from '/@/api$pagepath$';
 import other from '/@/utils/other';
 import fileApi from '/@/api/file';
 import { useRouter } from "vue-router";

@@ -12,7 +12,8 @@
     </el-col>
     <el-col :xs="24" :lg="12" class="mb20">
         <el-form-item ref="ParentId_FormItem" prop="ParentId" label="父级">
-            <el-select v-model="searchDataCity.ParentId" :data="stateCity.AllCitys" clearable></el-select>
+            <el-select v-model="searchDataCity.ParentId" :data="stateCity.AllCitys" clearable>
+                       <el-option v-for="item in stateCity.AllCitys" :key="item.Value" :value="item.Value" :label="item.Text"></el-option></el-select>
         </el-form-item>
     </el-col>
       </el-row>
@@ -50,7 +51,7 @@
 <script setup lang="ts" name="城市,true,WalkingTec.Mvvm.Vue3Demo.Controllers,City">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
-import { CityApi } from '/@/api/City';
+import { CityApi } from '/@/api/schooldata/City';
 import other from '/@/utils/other';
 import fileApi from '/@/api/file';
 import { useRouter } from "vue-router";

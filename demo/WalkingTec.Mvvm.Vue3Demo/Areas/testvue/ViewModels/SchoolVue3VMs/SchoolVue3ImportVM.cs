@@ -24,6 +24,8 @@ namespace WalkingTec.Mvvm.Vue3Demo.testvue.ViewModels.SchoolVue3VMs
         public ExcelPropety Level_Excel = ExcelPropety.CreateProperty<SchoolVue3>(x => x.Level);
         [Display(Name = "地点")]
         public ExcelPropety Place_Excel = ExcelPropety.CreateProperty<SchoolVue3>(x => x.PlaceId);
+        [Display(Name = "是学校")]
+        public ExcelPropety IsSchool_Excel = ExcelPropety.CreateProperty<SchoolVue3>(x => x.IsSchool);
 
 	    protected override void InitVM()
         {

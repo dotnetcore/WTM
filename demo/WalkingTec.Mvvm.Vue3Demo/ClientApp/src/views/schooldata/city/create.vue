@@ -18,7 +18,7 @@
     <el-col :xs="24" :lg="12" class="mb20">
         <el-form-item ref="Entity_ParentId_FormItem" prop="Entity.ParentId" label="父级">
             <el-select v-model="stateCity.vmModel.Entity.ParentId" clearable>
-                       <el-option v-for="item in stateCity.AllCitys" :key="item.Value" :value="item.Value" label="item.Text"></el-option></el-select>
+                       <el-option v-for="item in stateCity.AllCitys" :key="item.Value" :value="item.Value" :label="item.Text"></el-option></el-select>
         </el-form-item>
     </el-col>
     </el-row>
@@ -34,10 +34,10 @@
 </template>
 
 
-<script setup lang="ts" name="message._system.common.vm.edit,false">
+<script setup lang="ts" name="message._system.common.vm.add,false">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
-import { CityApi } from '/@/api/City';
+import { CityApi } from '/@/api/schooldata/City';
 import other from '/@/utils/other';
 import fileApi from '/@/api/file';
 import { useRouter } from "vue-router";
@@ -46,10 +46,9 @@ const ci = getCurrentInstance() as any;
 // 定义变量内容
 const formRefCity = ref();
 const stateCity = reactive({
-     vmModel: {
+    vmModel: {
 	  Entity:{
-      			ID: null,
-			Name: null,
+      			Name: null,
 			Level: null,
 			ParentId: null,
 
@@ -86,13 +85,6 @@ onMounted(() => {
     
     other.getSelectList('/api/City/GetCitys',[],false).then(x=>{stateCity.AllCitys = x});
 
-     if (ci.attrs["wtmdata"]) {
-		stateCity.vmModel.Entity.ID = ci.attrs["wtmdata"].ID;
-	}
-	else if (useRouter().currentRoute.value.query.id) {
-		stateCity.vmModel.Entity.ID = useRouter().currentRoute.value.query.id as any;
-	}
-	CityApi().get(stateCity.vmModel.Entity.ID ?? "").then((data: any) => other.setValue(stateCity.vmModel, data));
 });
 
 // 定义子组件向父组件传值/事件

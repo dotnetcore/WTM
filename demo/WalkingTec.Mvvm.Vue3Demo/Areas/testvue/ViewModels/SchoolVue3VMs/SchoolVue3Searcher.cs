@@ -16,8 +16,10 @@ namespace WalkingTec.Mvvm.Vue3Demo.testvue.ViewModels.SchoolVue3VMs
         public String SchoolCode { get; set; }
         [Display(Name = "学校名称")]
         public String SchoolName { get; set; }
-        [Display(Name = "级别")]
-        public Int32? Level { get; set; }
+        [Display(Name = "学校类型")]
+        public SchoolTypeEnum? SchoolType { get; set; }
+        [Display(Name = "是学校")]
+        public Boolean? IsSchool { get; set; }
 
         protected override void InitVM()
         {

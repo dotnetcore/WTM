@@ -16,8 +16,18 @@
         </el-form-item>
     </el-col>
     <el-col :xs="24" :lg="12" class="mb20">
-        <el-form-item ref="Level_FormItem" prop="Level" label="级别">
-            <el-input-number v-model="searchDataSchoolVue3.Level" clearable></el-input-number>
+        <el-form-item ref="SchoolType_FormItem" prop="SchoolType" label="学校类型">
+            <el-select v-model="searchDataSchoolVue3.SchoolType" clearable>
+                <el-option key="PUB" value="PUB" label="公立学校"></el-option>
+                <el-option key="PRI" value="PRI" label="私立学校"></el-option></el-select>
+        </el-form-item>
+    </el-col>
+    <el-col :xs="24" :lg="12" class="mb20">
+        <el-form-item ref="IsSchool_FormItem" prop="IsSchool" label="是学校">
+            <el-select v-model="searchDataSchoolVue3.IsSchool" clearable>
+                <el-option :key="1" :value=true :label="$t('message._system.common.vm.tips_bool_true')"></el-option>
+                <el-option :key="0" :value=false :label="$t('message._system.common.vm.tips_bool_false')"></el-option>
+                </el-select>
         </el-form-item>
     </el-col>
       </el-row>
@@ -55,7 +65,7 @@
 <script setup lang="ts" name="测试,true,WalkingTec.Mvvm.Vue3Demo.Controllers,SchoolVue3">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
-import { SchoolVue3Api } from '/@/api/SchoolVue3';
+import { SchoolVue3Api } from '/@/api/testvue/SchoolVue3';
 import other from '/@/utils/other';
 import fileApi from '/@/api/file';
 import { useRouter } from "vue-router";
@@ -73,7 +83,8 @@ const stateSchoolVue3 = reactive({
 const searchDataSchoolVue3 = ref({
     			SchoolCode: null,
 			SchoolName: null,
-			Level: null,
+			SchoolType: null,
+			IsSchool: null,
 
 });
 
@@ -91,6 +102,9 @@ const tableDataSchoolVue3 = ref({
         {title:'备注',key: 'Remark',type: 'text',isCheck: true},
         {title:'级别',key: 'Level',type: 'text',isCheck: true},
         {title:'地点',key: 'Name_view',type: 'text',isCheck: true},
+        {title:'是学校',key: 'IsSchool',type: 'switch',isCheck: true},
+        {title:'照片',key: 'PhotoId',type: 'image',isCheck: true},
+        {title:'附件',key: 'FileId',type: 'text',isCheck: true},
 	],
 	// 配置项（必传）
 	config: {
