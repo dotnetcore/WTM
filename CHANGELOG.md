@@ -2,6 +2,14 @@
 
 ## v6.x.x
 
+##6.3.25(2023-6-8)
+* **新增：**  新增针对WtmPlus中生成的vue3的项目的简易代码生成器
+* **修改：**  修复了多租户模式下GetUserDC方法
+* **修改：**  修复了多租户模式下Excel导入的问题
+* **修改：**  修复了LayUI模式下TreeContainer和Searcher组合查询的问题
+* **修改：**  修改了默认的Json序列化，数字类型不再被序列化为字符串
+* **修改：**  修改FileHandler，现在FileHandler中可以使用Wtm进行数据库操作
+
 ##6.3.22(2023-4-4)
 * **修改：**  FileProvider加入异常判断
 * **修改：**  修复LayUI模式中TreeTagHelper多选的问题
@@ -171,6 +179,14 @@
 * **修改：**  修改了layui多选控件设置必填的bug
 
 ## v5.x.x
+
+##5.10.25(2023-6-8)
+* **新增：**  新增针对WtmPlus中生成的vue3的项目的简易代码生成器
+* **修改：**  修复了多租户模式下GetUserDC方法
+* **修改：**  修复了多租户模式下Excel导入的问题
+* **修改：**  修复了LayUI模式下TreeContainer和Searcher组合查询的问题
+* **修改：**  修改了默认的Json序列化，数字类型不再被序列化为字符串
+* **修改：**  修改FileHandler，现在FileHandler中可以使用Wtm进行数据库操作
 
 ##5.10.22(2023-4-4)
 * **修改：**  FileProvider加入异常判断
