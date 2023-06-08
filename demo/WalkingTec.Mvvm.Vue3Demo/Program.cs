@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VueCliMiddleware;
@@ -80,17 +81,19 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
-    if (app.Environment.EnvironmentName == "Development")
-    {
-        endpoints.MapToVueCliProxy(
-            "{*path}",
-            new SpaOptions { SourcePath = "ClientApp" },
-            npmScript: "start",
-            regex: "No issues found.");
-    }
+    endpoints.MapFallbackToFile(app.Environment.IsDevelopment() ? "index_dev.html" : "");
 });
 
+
 app.UseWtmContext();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSpa(spa =>
+    {
+        spa.Options.SourcePath = "ClientApp";
+    });
+}
+
 app.Run();
 
 public partial class Program
