@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.ReactDemo.Models;
 
 
-namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
+namespace WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs
 {
     public partial class CityListVM : BasePagedListVM<City_View, CitySearcher>
     {
@@ -27,6 +27,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
         public override IOrderedQueryable<City_View> GetSearchQuery()
         {
             var query = DC.Set<City>()
+                .CheckContain(Searcher.Name, x=>x.Name)
                 .CheckEqual(Searcher.ParentId, x=>x.ParentId)
                 .Select(x => new City_View
                 {

@@ -8,7 +8,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.ReactDemo.Models;
 
 
-namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
+namespace WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs
 {
     public partial class CityVM : BaseCRUDVM<City>
     {

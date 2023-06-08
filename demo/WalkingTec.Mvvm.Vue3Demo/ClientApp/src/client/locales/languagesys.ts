@@ -1,9 +1,0 @@
-
-export default {
-    en: {
-
-    },
-    zh: {
-
-    }
-}

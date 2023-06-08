@@ -1,18 +1,19 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs;
+using WalkingTec.Mvvm.Vue3Demo.SchoolData.ViewModels.CityVMs;
 using WalkingTec.Mvvm.ReactDemo.Models;
 
-namespace WalkingTec.Mvvm.ReactDemo.Controllers
+
+namespace WalkingTec.Mvvm.Vue3Demo.Controllers
 {
-    
+    [Area("SchoolData")]
     [AuthorizeJwtWithCookie]
-    [ActionDescription("城市管理")]
+    [ActionDescription("城市")]
     [ApiController]
     [Route("api/City")]
 	public partial class CityController : BaseApiController
@@ -23,7 +24,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         {
             if (ModelState.IsValid)
             {
-                var vm = Wtm.CreateVM<CityListVM>();
+                var vm = Wtm.CreateVM<CityListVM>(passInit: true);
                 vm.Searcher = searcher;
                 return Content(vm.GetJson());
             }
@@ -152,14 +153,13 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpPost("Import")]
         public ActionResult Import(CityImportVM vm)
         {
-
-            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            if (vm!=null && (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData()))
             {
                 return BadRequest(vm.GetErrorJson());
             }
             else
             {
-                return Ok(vm.EntityList.Count);
+                return Ok(vm?.EntityList?.Count ?? 0);
             }
         }
 
@@ -168,12 +168,6 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         public ActionResult GetCitys()
         {
             return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
-        }
-
-        [HttpGet("GetCitysTree")]
-        public ActionResult GetCitysTree()
-        {
-            return Ok(DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name));
         }
 
     }

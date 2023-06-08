@@ -183,6 +183,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 {
                     forapi.Attributes.Add("IsMainHost", false);
                 }
+                forapi.Attributes.Add("IsDebug", Wtm.ConfigInfo.IsQuickDebug);
                 return Ok(forapi);
             }
         }

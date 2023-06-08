@@ -33,11 +33,11 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
         public string SchoolName { get; set; }
 
         [Display(Name = "学校类型")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        //[Required(ErrorMessage = "{0}是必填项")]
         public SchoolTypeEnum? SchoolType { get; set; }
 
         [Display(Name = "备注")]
-        [Required(ErrorMessage = "Validate.{0}required")]
+        //[Required(ErrorMessage = "Validate.{0}required")]
         public string Remark { get; set; }
 
         [Display(Name = "时间")]

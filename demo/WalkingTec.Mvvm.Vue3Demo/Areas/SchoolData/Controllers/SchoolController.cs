@@ -185,7 +185,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
-        [HttpGet("GetCharts")]
+        [HttpPost("GetCharts")]
         public IActionResult GetChartsFour()
         {
             var data = new List<ChartData>();

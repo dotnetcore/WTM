@@ -1,0 +1,74 @@
+@import './index.scss';
+
+/* 页面宽度小于1200px
+------------------------------- */
+@media screen and (max-width: $lg) and (min-width: $xs) {
+	.login-container {
+		.login-left {
+			.login-left-img {
+				top: 90% !important;
+				left: 12% !important;
+				width: 30% !important;
+				height: 18% !important;
+			}
+		}
+		.login-right {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+}
+
+/* 页面宽度小于576px
+------------------------------- */
+@media screen and (max-width: $xs) {
+	.login-container {
+		.login-left {
+			display: none;
+		}
+		.login-right {
+			width: 100% !important;
+			.login-right-warp {
+				width: 100% !important;
+				height: 100% !important;
+				border: none !important;
+				.login-right-warp-mian {
+					.el-form-item {
+						display: flex !important;
+					}
+					.login-right-warp-main-title {
+						font-size: 20px !important;
+					}
+				}
+				.login-right-warp-one {
+					&::after {
+						right: 0 !important;
+					}
+				}
+				.login-right-warp-two {
+					&::before {
+						bottom: 1px !important;
+					}
+				}
+			}
+		}
+	}
+}
+
+/* 页面宽度小于375px
+------------------------------- */
+@media screen and (max-width: $us) {
+	.login-container {
+		.login-right {
+			.login-right-warp {
+				.login-right-warp-mian {
+					.login-right-warp-main-title {
+						font-size: 18px !important;
+					}
+				}
+			}
+		}
+	}
+}

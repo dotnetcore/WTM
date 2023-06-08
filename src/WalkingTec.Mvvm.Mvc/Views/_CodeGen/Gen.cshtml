@@ -145,6 +145,32 @@ Layout = null;
                             </wt:fieldset>
 
                           }
+                        else if (Model.UI == WalkingTec.Mvvm.Core.UIEnum.VUE3)
+                        {
+                            var viewdir = Model.MainDir + $"\\ClientApp\\src\\views\\{(string.IsNullOrEmpty(Model.Area)?"":$"{Model.Area}\\")}" + Model.ModelName.ToLower();
+                            var apidir = Model.MainDir + $"\\ClientApp\\src\\api\\{(string.IsNullOrEmpty(Model.Area) ? "" : $"{Model.Area}\\")}" + Model.ModelName.ToLower();
+                            <wt:fieldset title="VUE Views">
+                                <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                                       target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=Index&ui=vue3" />
+                                @viewdir\index.vue<br />
+                                <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                                       target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=Create&ui=vue3" />
+                                @viewdir\create.vue<br />
+                                <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                                       target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=Edit&ui=vue3" />
+                                @viewdir\edit.vue<br />
+                                <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                                       target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=Details&ui=vue3" />
+                                @viewdir\details.vue<br />
+                                <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                                       target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=Import&ui=vue3" />
+                                @viewdir\import.vue <br />
+                                <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                                       target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=indexapi&ui=vue3" />
+                                @apidir\index.vue <br />
+                            </wt:fieldset>
+
+                        }
                           else if (Model.UI == WalkingTec.Mvvm.Core.UIEnum.Blazor)
                           {
                             var viewdir = Model.ShareDir;

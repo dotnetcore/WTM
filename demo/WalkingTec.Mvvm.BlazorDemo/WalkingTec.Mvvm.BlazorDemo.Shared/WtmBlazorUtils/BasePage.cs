@@ -485,7 +485,7 @@ namespace WtmBlazorUtils
                     {
                         option.OnCloseAsync = null;
                         ReturnTask.TrySetResult(r);
-                        option.Dialog!.Close();
+                        option.CloseDialogAsync();
                     }));
                 }
                 catch { };
@@ -496,7 +496,7 @@ namespace WtmBlazorUtils
             option.OnCloseAsync = async () =>
             {
                 option.OnCloseAsync = null;
-                await option.Dialog.Close();
+                await option.CloseDialogAsync();
                 ReturnTask.TrySetResult(DialogResult.Close);
             };
             await Dialog.Show(option);

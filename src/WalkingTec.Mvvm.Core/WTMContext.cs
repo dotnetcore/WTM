@@ -835,6 +835,7 @@ params string[] groupcode)
             log.Duration = duration;
             log.ModuleName = moduleName;
             log.ActionName = actionName;
+            log.ITCode = LoginUserInfo?.ITCode;
             log.IP = ip;
             if (string.IsNullOrEmpty(url) && this.HttpContext?.Request != null)
             {

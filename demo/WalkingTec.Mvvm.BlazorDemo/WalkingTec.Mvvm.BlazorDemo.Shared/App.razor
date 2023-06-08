@@ -53,7 +53,7 @@
 
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("$.loading");
+            await JSRuntime.InvokeAsync<string>("commonFuncs.loadFinish");
             var token = await GetToken();
             if (string.IsNullOrEmpty(token))
             {

@@ -96,6 +96,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                             levelfieldname = Regex.Replace(levelfieldname, ".*?Searcher\\.", "");
                             cusmtomclick = $@"
     $.extend({gridid}defaultfilter.where,{{'{idfieldname}':data.data.id, '{levelfieldname}':data.data.level }});
+";
+                        }
+                        Regex r3 = new Regex("id=\"(.*?)\" IsSearchButton");
+                        var m3 = r3.Match(insideContent);
+                        if(m3.Success)
+                        {
+                            cusmtomclick += $@"
+    $('#{m3.Groups[1].Value.Trim()}').click();
+";
+
+                        }
+                        else
+                        {
+                            cusmtomclick += $@"
     layui.table.reload('{gridid}',{{url:{gridid}url, where: {gridid}defaultfilter.where}});
 ";
                         }
