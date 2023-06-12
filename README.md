@@ -57,19 +57,18 @@ WTM provides 4 types of ViewModel, covering all of the common functionalities of
 |--------- |------------- |---------|
 |Server-side   |LayUI |Stable|
 |Client-side   |React |Stable|
-|Client-side   |VUE |RTM|
-|Server/Client |Blazor |RTM|
+|Client-side   |VUE |Stable|
+|Server/Client |Blazor |Stable|
 
 
 Under WTM framework's client-side mode, you can also use code generator to generate server-side and client-side code at the same time, greatly reducing the communication cost of front-end and back-end developers, essentially improving the development efficiency, so that "separation" is no longer complex and expensive.
 
 Framework document address: http://wtmdoc.walkingtec.cn
 
-Framework Q&A community: https://community.walkingtec.cn
-
 Frame QQ communication group: 694148336(full), 892848149 (group2)
 
-current version 5.0x is in VNext branch
+current version 5.x is in VNext branch
+current version 6.x is in Dotnet6 branch
 
 ## Click <a href="http://wtmdoc.walkingtec.cn/setup">here</a>  to generate a WTM project online and experience the beauty of WTM immediately~~~
 
