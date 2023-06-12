@@ -54,8 +54,8 @@ Package name                              | Version                     | Downlo
 |--------- |------------- |---------|
 |不分离 |LayUI |稳定|
 |前后端分离 |React |稳定|
-|前后端分离 |VUE |RTM|
-|新 |Blazor |RTM|
+|前后端分离 |VUE |稳定|
+|新 |Blazor |稳定|
 
 WTM框架的前后端分离模式同样可以使用代码生成器同时生成前台和后台的代码，极大的降低了前后端人员的沟通成本，从本质上提升了开发效率，让“分离”不再复杂和昂贵。
 
@@ -67,11 +67,9 @@ WTM框架的前后端分离模式同样可以使用代码生成器同时生成�
 
 框架文档地址：http://wtmdoc.walkingtec.cn
 
-框架问答社区：https://community.walkingtec.cn
-
 框架QQ交流群：694148336（已满），892848149 (2群）
 
-5.0版本的最新代码在VNext分支
+5.0版本代码在VNext分支
 
 ## 点<a href="http://wtmdoc.walkingtec.cn/setup">这里</a>在线一键生成WTM的项目，立刻开始体验WTM之美~~~
 
