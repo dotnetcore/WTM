@@ -921,18 +921,17 @@ window.ff = {
     },
 
     DownloadExcelOrPdf: function (url, formId, defaultcondition, ids) {
-        debugger;
         var formData = ff.GetSearchFormData(formId);
         if (defaultcondition == null) {
             defaultcondition = {};
         }
-        for (let item in defaultcondition) {
-            if (item.startsWith("Searcher.") == false) {
-                defaultcondition["Searcher." + item] = defaultcondition[item];
-            }
-        }
         var tempwhere = {};
         $.extend(tempwhere, defaultcondition);
+        for (let item in tempwhere) {
+            if (item.startsWith("Searcher.") == false) {
+                tempwhere["Searcher." + item] = tempwhere[item];
+            }
+        }
 
         $.extend(tempwhere, formData);
         var form = $('<form method="POST" action="' + url + '">');
