@@ -908,6 +908,15 @@ window.ff = {
                 delete data[attr];
             }
         }
+        var tc = $("#" + formId).closest("div[wtm-ctype='tc']")
+        if (tc.length > 0) {
+            var obj = eval(tc[0].id + "selected");
+            if (obj !== undefined && obj !== null) {
+                for (var item in obj) {
+                    data[item] = obj[item];
+                }
+            }
+        }
         return data;
     },
 
@@ -966,7 +975,7 @@ window.ff = {
 
         var searcher = $('form[chartlink*="' + chartid + '"]');
         if (searcher !== undefined && searcher.length > 0) {
-            postdata = ff.GetFormData(searcher[0].id);
+            postdata = ff.GetSearchFormData(searcher[0].id,"Searcher");
         }
             $.ajax({
                 cache: false,

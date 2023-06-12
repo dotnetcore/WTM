@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (string.IsNullOrEmpty(_gridId))
                 {
-                    if (string.IsNullOrEmpty(_gridIdUserSet))
+                    if (_gridIdUserSet==null)
                     {
                         if (ListVM != null)
                         {
