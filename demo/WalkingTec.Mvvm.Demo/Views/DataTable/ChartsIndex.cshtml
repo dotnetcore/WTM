@@ -4,7 +4,7 @@
 
 @*<wt:chart field="@Model.charts" type="Bar" title="abcd" height="400"/>
   <wt:chart field="@Model.charts" type="Pie" title="abcd" height="400" />*@
-<wt:searchpanel vm="@Model.Searcher" reset-btn="true" chart-id="c1,c2,c3,c4,c5">
+<wt:searchpanel vm="@Model" reset-btn="true" chart-id="c1,c2,c3,c4,c5" grid-id="">
   <wt:row items-per-row="ItemsPerRowEnum.Three">
     <wt:row items-per-row=" ItemsPerRowEnum.Three">
       <wt:combobox field="Searcher.LogType" empty-text="@Localizer["Sys.All"]" />
