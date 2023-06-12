@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (string.IsNullOrEmpty(_gridId))
                 {
-                    if (string.IsNullOrEmpty(_gridIdUserSet))
+                    if (_gridIdUserSet==null)
                     {
                         if (ListVM != null)
                         {
@@ -112,7 +112,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <summary>
         /// Reset button Id
         /// </summary>
-        private string ResetBtnId => $"{RESET_BTN_ID_PREFIX}{SearcherVM.UniqueId}";
+        private string ResetBtnId => $"{RESET_BTN_ID_PREFIX}{SearcherVM?.UniqueId}";
 
         /// <summary>
         /// 重置按钮
