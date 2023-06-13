@@ -177,19 +177,18 @@ layui.use(['form'],function(){{
             //如果是 SearchPanel，并且指定了 OldPost，则提交整个表单，而不是只刷新 Grid 数据
             if (OldPost == true && this is SearchPanelTagHelper search)
             {
-                string addhidden = $"var form = $('#{search.Id}');";
-                foreach (var item in search.GridId.Split(','))
-                {
-                    addhidden += $@"
-    for(let f in {item}defaultfilter.where){{
-        form.append(""<input type='hidden' name='Searcher.""+f+""' value='""+{item}defaultfilter.where[f]+""'/>"");
-    }}
-";
-                }
+//                string addhidden = $"var form = $('#{search.Id}');";
+//                foreach (var item in search.GridId.Split(','))
+//                {
+//                    addhidden += $@"
+//    for(let f in {item}defaultfilter.where){{
+//        form.append(""<input type='hidden' name='Searcher.""+f+""' value='""+{item}defaultfilter.where[f]+""'/>"");
+//    }}
+//";
+//                }
                 output.PostElement.AppendHtml($@"
 $('#{search.SearchBtnId}').on('click', function () {{
     if({BeforeSubmit ?? "true"} == false){{return false;}}
-    {addhidden}
     ff.PostForm('', '{Id}', '{baseVM?.ViewDivId ?? baseSearcher?.ViewDivId}','{Vm?.Name}')
     return false;
   }});

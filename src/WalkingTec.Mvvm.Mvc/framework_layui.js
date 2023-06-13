@@ -264,7 +264,7 @@ window.ff = {
             url = $("#" + formId).attr("action");
         }
         var d = null;
-        if (searchervm !== undefined && searchervm !== null && searchervm !== "") {
+        if ($("#" + formId).find("a[IsSearchButton]").length>0) {
             d = ff.GetSearchFormData(formId, searchervm);
         }
         else {
@@ -901,7 +901,7 @@ window.ff = {
     },
 
     GetSearchFormData: function (formId, listvm) {
-        var data = ff.GetFormData(formId);
+        var data = ff.GetFormData(formId, listvm);
         for (var attr in data) {
             if (attr.startsWith(listvm + ".")) {
                 data[attr.replace(listvm + ".", "")] = data[attr];
@@ -913,7 +913,12 @@ window.ff = {
             var obj = eval(tc[0].id + "selected");
             if (obj !== undefined && obj !== null) {
                 for (var item in obj) {
-                    data[item] = obj[item];
+                    if (listvm == "") {
+                        data["Searcher."+item] = obj[item];
+                    }
+                    else {
+                        data[item] = obj[item];
+                    }
                 }
             }
         }
@@ -921,18 +926,17 @@ window.ff = {
     },
 
     DownloadExcelOrPdf: function (url, formId, defaultcondition, ids) {
-        debugger;
         var formData = ff.GetSearchFormData(formId);
         if (defaultcondition == null) {
             defaultcondition = {};
         }
-        for (let item in defaultcondition) {
-            if (item.startsWith("Searcher.") == false) {
-                defaultcondition["Searcher." + item] = defaultcondition[item];
-            }
-        }
         var tempwhere = {};
         $.extend(tempwhere, defaultcondition);
+        for (let item in tempwhere) {
+            if (item.startsWith("Searcher.") == false) {
+                tempwhere["Searcher." + item] = tempwhere[item];
+            }
+        }
 
         $.extend(tempwhere, formData);
         var form = $('<form method="POST" action="' + url + '">');
