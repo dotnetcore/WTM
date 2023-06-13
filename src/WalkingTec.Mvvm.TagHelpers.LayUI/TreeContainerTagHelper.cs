@@ -148,6 +148,27 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         last{Id} = ele;
                     }}
                     {cusmtomclick}
+                  }}
+                ,setSelected: function(data){{
+                    var ele = null;
+                    if(data.elem != undefined){{
+                        ele = data.elem.find('.layui-tree-main:first');
+                    }}
+                    else{{
+                        ele = $('#div{Id}').find(""div[data-id='""+data.data.id+""']"").find('.layui-tree-main:first');
+                    }}
+                    if(last{Id} != null){{
+                        last{Id}.css('background-color','');
+                        last{Id}.find('.layui-tree-txt').css('color','');
+                    }}
+                    if(last{Id} === ele){{
+                        last{Id} = null;
+                    }}
+                    else{{
+                        ele.css('background-color','#5fb878');
+                        ele.find('.layui-tree-txt').css('color','#fff');
+                        last{Id} = ele;
+                    }}
                   }}";
 
                 var selecteditem = GetSelectedItem(treeitems);
@@ -161,6 +182,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 <div id=""div_{Id}"" style=""box-sizing:border-box"" class=""layui-col-md10 donotuse_pdiv"">{insideContent}</div>
 <script>
 var top{Id}selected = {{}};
+{
+    (selecteditem==null?"": @$"
+    top{Id}selected.{idfieldname} = '{selecteditem.Id}';
+    top{Id}selected.{levelfieldname} = {selecteditem.Level};
+")
+}
 layui.use(['tree'],function(){{
   var last{Id} = null;
   var treecontainer{Id} = layui.tree.render({{
@@ -168,7 +195,7 @@ layui.use(['tree'],function(){{
     {onclick}
     ,data: {JsonSerializer.Serialize(treeitems)}
   }});
-  {(selecteditem == null ? string.Empty : $@"treecontainer{Id}.config.click({{
+  {(selecteditem == null ? string.Empty : $@"treecontainer{Id}.config.setSelected({{
      data: {JsonSerializer.Serialize(selecteditem)}
     }});")}
   {(string.IsNullOrEmpty(AutoLoadUrl) || selecteditem != null ? string.Empty : $"ff.LoadPage1('{AutoLoadUrl}','div_{Id}');")}
@@ -216,7 +243,7 @@ layui.use(['tree'],function(){{
         {
             foreach (var item in tree)
             {
-                if (item.Checked == true)
+                if (item.Id == IdField.Model?.ToString())
                 {
                     return item;
                 }

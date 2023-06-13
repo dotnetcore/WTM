@@ -264,7 +264,7 @@ window.ff = {
             url = $("#" + formId).attr("action");
         }
         var d = null;
-        if (searchervm !== undefined && searchervm !== null && searchervm !== "") {
+        if ($("#" + formId).find("a[IsSearchButton]").length>0) {
             d = ff.GetSearchFormData(formId, searchervm);
         }
         else {
@@ -901,7 +901,7 @@ window.ff = {
     },
 
     GetSearchFormData: function (formId, listvm) {
-        var data = ff.GetFormData(formId);
+        var data = ff.GetFormData(formId, listvm);
         for (var attr in data) {
             if (attr.startsWith(listvm + ".")) {
                 data[attr.replace(listvm + ".", "")] = data[attr];
@@ -913,7 +913,12 @@ window.ff = {
             var obj = eval(tc[0].id + "selected");
             if (obj !== undefined && obj !== null) {
                 for (var item in obj) {
-                    data[item] = obj[item];
+                    if (listvm == "") {
+                        data["Searcher."+item] = obj[item];
+                    }
+                    else {
+                        data[item] = obj[item];
+                    }
                 }
             }
         }
