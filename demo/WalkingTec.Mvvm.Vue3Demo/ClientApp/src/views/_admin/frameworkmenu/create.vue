@@ -172,7 +172,7 @@ const state = reactive({
 			IsPublic: null,
 			IsInside: true,
 		},
-		SelectedModule: [],
+		SelectedModule: null,
 		SelectedActionIDs: [] as any[],
 		SelectedRolesIds: []
 	},

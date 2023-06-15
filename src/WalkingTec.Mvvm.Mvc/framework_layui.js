@@ -932,13 +932,13 @@ window.ff = {
         }
         var tempwhere = {};
         $.extend(tempwhere, defaultcondition);
-        for (let item in tempwhere) {
+        $.extend(tempwhere, formData);
+       for (let item in tempwhere) {
             if (item.startsWith("Searcher.") == false) {
                 tempwhere["Searcher." + item] = tempwhere[item];
             }
         }
 
-        $.extend(tempwhere, formData);
         var form = $('<form method="POST" action="' + url + '">');
         for (var attr in tempwhere) {
             if (tempwhere[attr] != null) {
