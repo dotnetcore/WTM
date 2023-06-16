@@ -99,7 +99,7 @@ const searchData = ref({
 
 // 初始化表格数据
 const getTableData = () => {
-	tableRef.value.doSearch(frameworkgroupApi().search, searchData.value)
+	tableRef.value.doSearch(frameworkgroupApi().search, searchData.value,true)
 		.catch((error: any) => {
 			other.setFormError(ci, error);
 		});

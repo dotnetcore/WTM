@@ -13,7 +13,7 @@
 			<el-table-column type="index" :label="$t('message._system.table.no')" width="60" v-if="config.isSerialNo" />
 			<el-table-column v-for="(item, index) in setHeader" :key="index"
 				:show-overflow-tooltip="item.type !== 'combobox' && item.type !== 'switch' && item.type !== 'date' && item.type !== 'textbox'"
-				:prop="item.key" :width="item.colWidth" :label="item.title" :sortable="item.sortable">
+				:prop="item.key" :width="item.colWidth" :label="item.title" :sortable="item.sortable" :align="item.align">
 				<template v-slot="scope">
 					<template v-if="item.type === 'image'">
 						<el-image :preview-teleported="true" v-if="scope.row[item.key + '__localurl__'] !== ''"
@@ -143,6 +143,7 @@ const props = defineProps({
 	 * colWidth:字符串类型，列宽，
 	 * title：字符串类型，列头文字，
 	 * type：字符串类型，可填'text','switch','image','textbox,'combobox','date','icon'
+	 * align: 字符串，可填'left','right','center'，默认是left
 	 * isChecked:是否默认展示
 	 * isDisabled:列中控件是否显示为禁用状态
 	 * comboData:当type='combobox'时，指定下拉菜单的数据，可以为{value1:label1,value2:label2}这种格式，也可以为某个后台url
@@ -294,6 +295,7 @@ const doSearch = (api: any = null, para: any = null, isTree: any = null, parentK
 	if (isTree !== null) {
 		isTreeState = isTree
 	}
+	
 	let pro: Promise<AxiosResponse<any, any>> = searchApi(state.searcher);
 	return pro.then(res => {
 		const datatemp: any[] = [];
