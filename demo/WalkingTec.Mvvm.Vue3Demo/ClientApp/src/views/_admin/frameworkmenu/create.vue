@@ -50,7 +50,7 @@
 					</el-col>
 				</el-row>
 
-				<el-row v-if="state.vmModel.Entity.IsInside">
+				<el-row >
 					<el-col :xs="24" :lg="12" class="mb20">
 						<el-form-item ref="Entity_PageName_FormItem" prop="Entity.PageName"
 							:label="$t('message._admin.menu.vm.PageName')"
@@ -243,7 +243,9 @@ const modelChange = (value: any) => {
 	}
 	else {
 		state.allActions = [];
-		state.vmModel.Entity.Url = '';
+		if(state.vmModel.Entity.IsInside == true){
+			state.vmModel.Entity.Url = '';
+		}
 	}
 }
 

@@ -50,8 +50,9 @@ export async function initBackEndControlRoutes() {
 	}
 	else {
 		localMenu = formatFlatteningRoutes(localMenu);
-		menu = await getBackEndControlRoutes(useUserInfo().userInfos.menu.filter(x => !x.ParentId || x.ParentId == ''),useUserInfo().userInfos.menu,localMenu);
-		menu.push(...localMenu.filter(x=>x.meta.isHide == true));
+		menu = await getBackEndControlRoutes(useUserInfo().userInfos.menu.filter(x => !x.ParentId || x.ParentId == ''), useUserInfo().userInfos.menu, localMenu);
+		console.log(menu);
+		menu.push(...localMenu.filter(x => x.meta.isHide == true));
 	}
 	// 无登录权限时，添加判断
 	// https://gitee.com/lyt-top/vue-next-admin/issues/I64HVO
@@ -132,29 +133,40 @@ export async function setAddRoute() {
  * @description isRequestRoutes 为 true，则开启后端控制路由
  * @returns 返回后端路由菜单数据
  */
-export function getBackEndControlRoutes(menus: any[],allMenus: any[],localMenu: any[]) {
+export function getBackEndControlRoutes(menus: any[], allMenus: any[], localMenu: any[]) {
 	let rv: any[] = [];
 	menus.forEach(element => {
 		const newdata = {
 			path: element.Url && element.Url != '' ? element.Url : '/' + element.Id,
 			name: element.Id,
-			component:'',
+			component: '',
 			meta: {
 				title: element.Text,
 				isHide: false,
 				isKeepAlive: true,
+				isLink: '',
 				isAffix: false,
 				isIframe: false,
+				className: null,
 				icon: element.Icon
-			},			
-			children:getBackEndControlRoutes(allMenus.filter(x=>x.ParentId == element.Id),allMenus,localMenu)
+			},
+			children: getBackEndControlRoutes(allMenus.filter(x => x.ParentId == element.Id), allMenus, localMenu)
 		}
-		let comp = localMenu.filter(x=>x.path == newdata.path);
-		if(comp.length>0){
-			newdata.component = comp[0].component;
+		if (newdata.path && (newdata.path.toLowerCase().indexOf("http://") !== -1 || newdata.path.toLowerCase().indexOf("https://") !== -1)) {
+			newdata.meta.isIframe = true;
+			newdata.meta.isLink = newdata.path;
+			newdata.component = "layout/routerView/iframes.vue";
+			newdata.path = '/' + element.Id
 		}
-		else{
-			newdata.component = "layout/routerView/parent.vue";
+		else {
+			let comp = localMenu.filter(x => x.path == newdata.path);
+			if (comp.length > 0) {
+				newdata.component = comp[0].component;
+				newdata.meta.className = comp[0].meta.className;
+			}
+			else {
+				newdata.component = "layout/routerView/parent.vue";
+			}
 		}
 		rv.push(newdata);
 	});
@@ -213,7 +225,7 @@ async function GetLocalFile() {
 			let cur = null;
 			if (dir.length == 0) {
 				cur = {
-					path: "/" + name+"_folder",
+					path: "/" + name + "_folder",
 					name: name,
 					component: "layout/routerView/parent.vue",
 					meta: {

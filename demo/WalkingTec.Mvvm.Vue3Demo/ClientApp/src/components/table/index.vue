@@ -71,13 +71,13 @@
 			</template>
 		</el-table>
 		<div class="table-footer mt15" v-if="props.config.isSub !== true">
-			<el-pagination v-if="config.total > 0" v-model:current-page="state.searcher.Page"
+			<el-pagination v-if="config.total > 0 && config.hidePagination!=true" v-model:current-page="state.searcher.Page"
 				v-model:page-size="state.searcher.Limit" :pager-count="5" :page-sizes="[20, 50, 100, 200]"
 				:total="config.total" layout="total, sizes, prev, pager, next, jumper" background
 				@size-change="onHandleSizeChange" @current-change="onHandleCurrentChange">
 			</el-pagination>
 			<div class="table-footer-tool">
-				<el-popover placement="top-end" trigger="click" transition="el-zoom-in-top" popper-class="table-tool-popper"
+				<el-popover v-if="config.hideSetting!=true" placement="top-end" trigger="click" transition="el-zoom-in-top" popper-class="table-tool-popper"
 					:width="300" :persistent="false" @show="onSetTable">
 					<template #reference>
 						<i class="fa fa-gear">{{ $t('message._system.table.setting') }}</i>
@@ -105,8 +105,8 @@
 						</el-scrollbar>
 					</template>
 				</el-popover>
-				<i class="fa fa-print" @click="doPrint">{{ $t('message._system.table.print') }}</i>
-				<i class="fa fa-refresh" @click="doSearch(null, null, isTreeState)">{{ $t('message._system.table.refresh')
+				<i v-if="config.hidePrint!=true" class="fa fa-print" @click="doPrint">{{ $t('message._system.table.print') }}</i>
+				<i v-if="config.hideRefresh!=true" class="fa fa-refresh" @click="doSearch(null, null, isTreeState)">{{ $t('message._system.table.refresh')
 				}}</i>
 			</div>
 		</div>
@@ -165,6 +165,10 @@ const props = defineProps({
 	 * isOperate: 布尔值，是否显示表格操作栏
 	 * isDisabled:布尔值，是否禁用
 	 * isSub:是否为子表控件
+	 * hidePagination:是否显示分页
+	 * hideSetting:是否显示设置按钮
+	 * hidePrint:是否显示打印按钮
+	 * hideRefresh:是否显示刷新按钮
 	 */
 	config: {
 		type: Object,

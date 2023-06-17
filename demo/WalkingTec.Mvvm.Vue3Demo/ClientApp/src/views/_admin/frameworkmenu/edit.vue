@@ -49,7 +49,7 @@
 						</el-form-item> </el-col>
 				</el-row>
 
-				<el-row v-if="state.vmModel.Entity.IsInside">
+				<el-row>
 					<el-col :xs="24" :lg="12" class="mb20">
 						<el-form-item ref="Entity_PageName_FormItem" prop="Entity.PageName"
 							:label="$t('message._admin.menu.vm.PageName')"
@@ -192,6 +192,7 @@ onMounted(() => {
 		state.vmModel.Entity.ID = useRouter().currentRoute.value.query.id as any;
 	}
 	state.menuData = getMenuData(routesList.value);
+	console.log(state.menuData)
 	frameworkmenuApi().get(state.vmModel.Entity.ID ?? "").then((data: any) => { other.setValue(state.vmModel, data); modelChange(state.vmModel.SelectedModule, false) });
 	other.getSelectList('/api/_account/GetFrameworkRoles', [], false).then(x => { state.allRoles = x });
 	other.getSelectList('/api/_FrameworkMenu/GetFolders', [], false).then(x => { state.allParents = x });
@@ -248,7 +249,9 @@ const modelChange = (value: any, reset: boolean = true) => {
 	}
 	else {
 		state.allActions = [];
-		state.vmModel.Entity.Url = '';
+		if(state.vmModel.Entity.IsInside == true){
+			state.vmModel.Entity.Url = '';
+		}
 	}
 }
 const handleCheckAllChange = (val: boolean) => {
