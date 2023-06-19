@@ -93,7 +93,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         if (context.HttpContext.Items.ContainsKey("DONOTUSE_REQUESTBODY"))
                         {
                             string body = context.HttpContext.Items["DONOTUSE_REQUESTBODY"].ToString();
-                            var joption = new JsonSerializerOptions();
+                            var joption = new JsonSerializerOptions(Core.CoreProgram.DefaultJsonOption);
                             joption.Converters.Add(new BodyConverter());
                             try
                             {
