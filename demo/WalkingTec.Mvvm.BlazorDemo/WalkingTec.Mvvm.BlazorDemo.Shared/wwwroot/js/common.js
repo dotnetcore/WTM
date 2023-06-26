@@ -59,9 +59,9 @@ window.urlFuncs = {
                     var a = document.createElement('a');
                     a.download = filename;
                     a.href = e.target.result;
-                    $("body").append(a);
+                    document.body.append(a);
                     a.click();
-                    $(a).remove();
+                    a.remove();
                 }
             }
         };
