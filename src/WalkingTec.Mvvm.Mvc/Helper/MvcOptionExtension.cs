@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             options.JsonSerializerOptions.PropertyNamingPolicy = null;
             options.JsonSerializerOptions.IgnoreNullValues = true;
-            options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+            options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
             options.JsonSerializerOptions.AllowTrailingCommas = true;
             options.JsonSerializerOptions.Converters.Add(new NullableConverter<int>());
             options.JsonSerializerOptions.Converters.Add(new NullableConverter<long>());
@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.Mvc
             Core.CoreProgram.DefaultJsonOption = options.JsonSerializerOptions;
             JsonSerializerOptions jsonOptions2 = new JsonSerializerOptions();
             jsonOptions2.PropertyNamingPolicy = null;
-            jsonOptions2.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+            options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
             jsonOptions2.AllowTrailingCommas = true;
             jsonOptions2.Converters.Add(new NullableConverter<int>());
             jsonOptions2.Converters.Add(new NullableConverter<long>());
