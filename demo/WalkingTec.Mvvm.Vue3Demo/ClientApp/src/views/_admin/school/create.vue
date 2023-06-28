@@ -42,7 +42,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.add,false">
+<script setup lang="ts" name="message._system.common.vm.add;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
 import schoolApi from '/@/api/school';

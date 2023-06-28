@@ -43,7 +43,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="学校管理,true,WalkingTec.Mvvm.ReactDemo.Controllers,School">
+<script setup lang="ts" name="学校管理;true;WalkingTec.Mvvm.ReactDemo.Controllers;School">
 import { defineAsyncComponent, reactive, onMounted, ref, getCurrentInstance } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import schoolapi from '/@/api/school';

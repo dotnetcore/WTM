@@ -60,7 +60,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.menukey.ActionLog,true,WalkingTec.Mvvm.Admin.Api,ActionLog">
+<script setup lang="ts" name="message._system.menukey.ActionLog;true;WalkingTec.Mvvm.Admin.Api;ActionLog">
 import { defineAsyncComponent, reactive, onMounted, ref, getCurrentInstance } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import actionlogApi from '/@/api/actionlog';

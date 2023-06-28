@@ -80,7 +80,7 @@ export async function initBackEndControlRoutes() {
 	// 添加动态路由
 	await setAddRoute();
 	// 设置路由到 pinia routesList 中（已处理成多级嵌套路由）及缓存多级嵌套数组处理后的一维数组
-	await setFilterMenuAndCacheTagsViewRoutes();
+    await setFilterMenuAndCacheTagsViewRoutes();
 }
 
 /**
@@ -212,7 +212,7 @@ export function dynamicImport(dynamicViewsModules: Record<string, Function>, com
 async function GetLocalFile() {
 	const keys = Object.keys(viewsModules);
 	const rv: any[] = [];
-	for (let i = 0; i < keys.length; i++) {
+    for (let i = 0; i < keys.length; i++) {
 		const key = keys[i];
 		const k = key.replace(/..\/views|../, '');
 		const match = k.match(/\/(.*?)\/.*?/) ?? [];
@@ -249,21 +249,24 @@ async function GetLocalFile() {
 			let ishide = false;
 			let className = '';
 			let title = '';
+            var nname = p.replace(/\//, '_');
 			if (cmp.default && cmp.default.name) {
-				const narray = cmp.default.name.split(',');
+				const narray = cmp.default.name.split(';');
 				title = narray[0] ? narray[0] : p.replace(/\//, '_');
 				ishide = (narray.length > 1 && narray[1] == "false") ? true : false;
 				className = narray.length > 2 ? narray[2] : '';
 				if (narray.length > 3) {
 					className += "," + narray[3];
-				}
+                }
+                nname = cmp.default.name;
 			}
 			else {
 				title = p.replace(/\//, '_');
-			}
+            }
+
 			cur.children.push({
 				path: p,
-				name: p.replace(/\//, '_'),
+                name: nname,
 				component: k,
 				meta: {
 					title: title,

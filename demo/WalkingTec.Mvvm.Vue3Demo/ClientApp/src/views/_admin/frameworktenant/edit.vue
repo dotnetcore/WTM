@@ -88,7 +88,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.edit,false">
+<script setup lang="ts" name="message._system.common.vm.edit;false">
 import { ElMessage } from 'element-plus';
 import { array } from 'snabbdom';
 import { reactive, ref, getCurrentInstance, onMounted } from 'vue';

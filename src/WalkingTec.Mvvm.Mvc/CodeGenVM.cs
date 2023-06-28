@@ -2637,7 +2637,7 @@ namespace WalkingTec.Mvvm.Mvc
                 .Replace("$modelname$", ModelName)
                 .Replace("$vmnamespace$", VMNs)
                 .Replace("$des$", ModuleName)
-                .Replace("$controllername$", $"{ControllerNs},{ModelName}")
+                .Replace("$controllername$", $"{ControllerNs};{ModelName}")
                 .Replace("$pagepath$", pagepath);
             Type modelType = Type.GetType(SelectedModel);
             if (name == "Index")

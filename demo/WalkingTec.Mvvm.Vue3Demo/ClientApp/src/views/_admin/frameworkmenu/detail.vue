@@ -133,7 +133,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.detail,false">
+<script setup lang="ts" name="message._system.common.vm.detail;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance, onMounted, defineAsyncComponent } from 'vue';
 import frameworkmenuApi from '/@/api/frameworkmenu';

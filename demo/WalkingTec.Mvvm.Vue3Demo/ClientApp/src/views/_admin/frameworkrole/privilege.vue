@@ -49,7 +49,7 @@
 </template>
 
 
-<script setup lang="ts" name="message._system.common.vm.action_privilege,false">
+<script setup lang="ts" name="message._system.common.vm.action_privilege;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance, onMounted } from 'vue';
 import frameworkroleApi from '/@/api/frameworkrole';

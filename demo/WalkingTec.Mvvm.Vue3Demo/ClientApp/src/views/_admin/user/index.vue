@@ -56,7 +56,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.menukey.UserManagement,true,WalkingTec.Mvvm.Admin.Api,FrameworkUser">
+<script setup lang="ts" name="message._system.menukey.UserManagement;true;WalkingTec.Mvvm.Admin.Api;FrameworkUser">
 import { defineAsyncComponent, reactive, onMounted, onUpdated, ref,nextTick } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import frameworkuserApi from '/@/api/frameworkuser';

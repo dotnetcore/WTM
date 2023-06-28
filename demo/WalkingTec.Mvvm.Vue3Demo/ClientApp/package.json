@@ -3,12 +3,12 @@
 	"version": "2.4.3",
 	"description": "vue3 vite admin template",
 	"license": "MIT",
-	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"serve": "http-server ./dist",
-		"lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/"
-	},
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "http-server ./dist --cors ",
+    "lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/"
+  },
 	"dependencies": {
 		"@element-plus/icons-vue": "^2.1.0",
 		"@wangeditor/editor": "^5.1.23",
@@ -20,6 +20,7 @@
 		"echarts-gl": "^2.0.9",
 		"echarts-wordcloud": "^2.1.0",
 		"element-plus": "^2.3.3",
+		"http-server": "^14.1.1",
 		"js-cookie": "^3.0.1",
 		"js-table2excel": "^1.0.3",
 		"jsplumb": "^2.15.6",
@@ -63,7 +64,6 @@
 		"last 2 versions",
 		"not dead"
 	],
-
 	"engines": {
 		"node": ">=16.0.0",
 		"npm": ">= 7.0.0"

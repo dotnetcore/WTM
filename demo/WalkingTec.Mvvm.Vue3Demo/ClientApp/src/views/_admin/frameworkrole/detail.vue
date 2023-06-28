@@ -38,7 +38,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.detail,false">
+<script setup lang="ts" name="message._system.common.vm.detail;false">
 import { ElMessage } from 'element-plus';
 import { array } from 'snabbdom';
 import { reactive, ref, getCurrentInstance,onMounted } from 'vue';

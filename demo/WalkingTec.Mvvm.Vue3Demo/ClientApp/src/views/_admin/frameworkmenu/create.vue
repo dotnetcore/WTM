@@ -139,7 +139,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.add,false">
+<script setup lang="ts" name="message._system.common.vm.add;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance, onMounted, defineAsyncComponent } from 'vue';
 import frameworkmenuApi from '/@/api/frameworkmenu';
@@ -185,11 +185,7 @@ const state = reactive({
 onMounted(() => {
 	other.getSelectList('/api/_account/GetFrameworkRoles', [], false).then(x => { state.allRoles = x });
 	other.getSelectList('/api/_FrameworkMenu/GetFolders', [], false).then(x => { state.allParents = x });
-	GetLocalFile().then((res:any)=>{
-		console.log(res);
-		state.menuData = getMenuData(res);
-
-	})
+	state.menuData = getMenuData(routesList.value);
 });
 
 // 关闭弹窗
@@ -259,75 +255,6 @@ const handleCheckedChange = (value: string[]) => {
 	isIndeterminate.value = checkedCount > 0 && checkedCount < state.allActions.length
 }
 
-const GetLocalFile= async ()=> {
-	const keys = Object.keys(viewsModules);
-	console.log(keys);
-	const rv: any[] = [];
-	for (let i = 0; i < keys.length; i++) {
-		const key = keys[i];
-		const k = key.replace(/..\/views|../, '');
-		const match = k.match(/\/(.*?)\/.*?/) ?? [];
-		if (match.length > 1) {
-			const name = match[1];
-			if (name == 'home' || name == 'error' || name == 'login') {
-				continue;
-			}
-			let dir = rv.filter((item) => { return item.name == name });
-			let cur = null;
-			if (dir.length == 0) {
-				cur = {
-					path: "/" + name,
-					name: name,
-					component: "layout/routerView/parent.vue",
-					meta: {
-						title: name,
-						isHide: false,
-						isKeepAlive: true,
-						isAffix: false,
-						isIframe: false,
-						icon: "fa fa-folder"
-					},
-					children: []
-				}
-				rv.push(cur);
-			}
-			else {
-				cur = dir[0];
-			}
-			const p = k.replace(/\/index.vue/, '').replace(/.vue/, '')
-
-			const cmp = await viewsModules[key]();
-			let ishide = false;
-			let className = '';
-			let title = '';
-			if (cmp.default && cmp.default.name) {
-				const narray = cmp.default.name.split(',');
-				title = narray[0] ? narray[0] : p.replace(/\//, '_');
-				ishide = (narray.length > 1 && narray[1] == "false") ? true : false;
-				className = narray.length > 2 ? narray[2] : '';
-				if (narray.length > 3) {
-					className += "," + narray[3];
-				}
-			}
-			else {
-				title = p.replace(/\//, '_');
-			}
-			cur.children.push({
-				path: p,
-				name: p.replace(/\//, '_'),
-				component: k,
-				meta: {
-					title: title,
-					isHide: ishide,
-					isKeepAlive: !ishide,
-					className: className,
-					icon: "fa fa-file"
-				}
-			});
-		}
-	}
-	return rv;
-}
 // 暴露变量
 defineExpose({
 });

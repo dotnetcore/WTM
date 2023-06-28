@@ -51,7 +51,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.menukey.FrameworkTenant,true,WalkingTec.Mvvm.Admin.Api,FrameworkTenant">
+<script setup lang="ts" name="message._system.menukey.FrameworkTenant;true;WalkingTec.Mvvm.Admin.Api;FrameworkTenant">
 import { defineAsyncComponent, reactive, onMounted, ref,getCurrentInstance } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import frameworktenantApi from '/@/api/frameworktenant';
