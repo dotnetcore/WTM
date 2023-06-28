@@ -72,7 +72,9 @@ const tableData = ref({
 	header: [
 		{ key: 'MajorName', colWidth: '', title: '专业名称', type: 'textbox', isCheck: true },
 		{ key: 'MajorCode', colWidth: '', title: '专业编号', type: 'textbox', isCheck: true },
-		{ key: 'MajorType', colWidth:'', title:'专业类别', type:'combobox',isCheck:true,comboData:{Required:'必修',Optional:'选修'}}
+		{ key: 'MajorType', colWidth:'', title:'专业类别', type:'combobox',isCheck:true,comboData:{Required:'必修',Optional:'选修'}},
+        { key: 'CityId', colWidth: '', title: 'url测试', type: 'combobox', isCheck: true, comboData: '/api/city/GetCitys' },
+        { key: 'test', colWidth: '250', title: 'test', type: 'date', isCheck: true },
 	],
 	// 配置项（必传）
 	config: {

@@ -39,7 +39,7 @@
 					<template v-else-if="item.type === 'combobox'">
 						<el-select v-model="listvalue[scope.$index][item.key]"
 							:disabled="item.isDisabled || props.config.isDisabled">
-							<el-option v-for="(op, opkey, opindex) in comboData[item.key]" :key="opindex" :value="opkey"
+							<el-option v-for="(op, opkey, opindex) in state.comboData[item.key]" :key="opindex" :value="opkey"
 								:label="op"></el-option>
 						</el-select>
 					</template>
@@ -116,264 +116,266 @@
 
 
 <script setup lang="ts" name="netxTable">
-import { reactive, computed, nextTick, ref, getCurrentInstance } from 'vue';
-import { ElMessage } from 'element-plus';
-import table2excel from 'js-table2excel';
-import Sortable from 'sortablejs';
-import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import fileapi from '/@/api/file'
-import '/@/theme/tableTool.scss';
-import { AxiosResponse } from 'axios';
-import { VueDevToolsIDs } from '@intlify/vue-devtools';
-import printJs from 'print-js';
-import other from '/@/utils/other';
+    import { reactive, computed, nextTick, ref, getCurrentInstance, onMounted } from 'vue';
+    import { ElMessage } from 'element-plus';
+    import table2excel from 'js-table2excel';
+    import Sortable from 'sortablejs';
+    import { storeToRefs } from 'pinia';
+    import { useThemeConfig } from '/@/stores/themeConfig';
+    import fileapi from '/@/api/file'
+    import '/@/theme/tableTool.scss';
+    import { AxiosResponse } from 'axios';
+    import { VueDevToolsIDs } from '@intlify/vue-devtools';
+    import printJs from 'print-js';
+    import other from '/@/utils/other';
 
-const emit = defineEmits(['update:modelValue']);
-// 定义父组件传过来的值
-const props = defineProps({
-	// 列表内容
-	data: {
-		type: Array<any>,
-		default: () => [],
-	},
-	/**
-	 * 表头内容,object数组，可设置
-	 * key:字符串类型，字段名称，
-	 * colWidth:字符串类型，列宽，
-	 * title：字符串类型，列头文字，
-	 * type：字符串类型，可填'text','switch','image','textbox,'combobox','date','icon'
-	 * align: 字符串，可填'left','right','center'，默认是left
-	 * isChecked:是否默认展示
-	 * isDisabled:列中控件是否显示为禁用状态
-	 * comboData:当type='combobox'时，指定下拉菜单的数据，可以为{value1:label1,value2:label2}这种格式，也可以为某个后台url
-	 * imageWidth:当type='image'时，指定图片宽度
-	 * imageHeight:当type='image时'，指定图片高度
-	 * dateType:当type='date'时，指定日期控件模式，可填写'date','month','year','week','datetime','time'
-	 */
-	header: {
-		type: Array<EmptyObjectType>,
-		default: () => [],
-	},
-	/**
-	 * 配置项，可设置
-	 * total: 列表总数
-	 * loading: 布尔值，是否显示加载
-	 * isBorder: 布尔值，是否显示表格边框
-	 * isSerialNo: 布尔值，是否显示表格序号
-	 * isSelection: 布尔值，是否显示表格多选
-	 * isOperate: 布尔值，是否显示表格操作栏
-	 * isDisabled:布尔值，是否禁用
-	 * isSub:是否为子表控件
-	 * hidePagination:是否显示分页
-	 * hideSetting:是否显示设置按钮
-	 * hidePrint:是否显示打印按钮
-	 * hideRefresh:是否显示刷新按钮
-	 */
-	config: {
-		type: Object,
-		default: () => { },
-	},
-	modelValue: {
-		type: Array<EmptyObjectType>,
-		default: () => [],
-	},
-});
+    const emit = defineEmits(['update:modelValue']);
+    // 定义父组件传过来的值
+    const props = defineProps({
+        // 列表内容
+        data: {
+            type: Array<any>,
+            default: () => [],
+        },
+        /**
+         * 表头内容,object数组，可设置
+         * key:字符串类型，字段名称，
+         * colWidth:字符串类型，列宽，
+         * title：字符串类型，列头文字，
+         * type：字符串类型，可填'text','switch','image','textbox,'combobox','date','icon'
+         * align: 字符串，可填'left','right','center'，默认是left
+         * isChecked:是否默认展示
+         * isDisabled:列中控件是否显示为禁用状态
+         * comboData:当type='combobox'时，指定下拉菜单的数据，可以为{value1:label1,value2:label2}这种格式，也可以为某个后台url
+         * imageWidth:当type='image'时，指定图片宽度
+         * imageHeight:当type='image时'，指定图片高度
+         * dateType:当type='date'时，指定日期控件模式，可填写'date','month','year','week','datetime','time'
+         */
+        header: {
+            type: Array<EmptyObjectType>,
+            default: () => [],
+        },
+        /**
+         * 配置项，可设置
+         * total: 列表总数
+         * loading: 布尔值，是否显示加载
+         * isBorder: 布尔值，是否显示表格边框
+         * isSerialNo: 布尔值，是否显示表格序号
+         * isSelection: 布尔值，是否显示表格多选
+         * isOperate: 布尔值，是否显示表格操作栏
+         * isDisabled:布尔值，是否禁用
+         * isSub:是否为子表控件
+         * hidePagination:是否显示分页
+         * hideSetting:是否显示设置按钮
+         * hidePrint:是否显示打印按钮
+         * hideRefresh:是否显示刷新按钮
+         */
+        config: {
+            type: Object,
+            default: () => { },
+        },
+        modelValue: {
+            type: Array<EmptyObjectType>,
+            default: () => [],
+        }        
+    });
 
-const listvalue = computed({
-	get() {
-		return props.modelValue;
-	},
-	set(value) {
-		emit('update:modelValue', value)
-	}
-})
-const comboData = computed(() => {
-	const ch = props.header.filter((item) => item.type === 'combobox');
-	const rv = {} as any;
-	ch.forEach(element => {
-		let cd = {} as any;
-		if (element.comboData && typeof element.comboData == 'string') {
-			other.getSelectList(element.comboData, [], false).then((data: any) => {
-				data.forEach((x: any) => {
-					cd[x.Value] = x.Text
-				});
-			})
-		}
-		else {
-			cd = element.comboData
-		}
-		const newdata = {};
-		rv[element.key] = cd;
-	});
-	return rv;
-});
+    const listvalue = computed({
+        get() {
+            return props.modelValue;
+        },
+        set(value) {
+            emit('update:modelValue', value)
+        }
+    })
 
 
-// 定义变量内容
-const ci = getCurrentInstance() as any;
-const toolSetRef = ref();
-const forPrint = ref();
-const storesThemeConfig = useThemeConfig();
-const { themeConfig } = storeToRefs(storesThemeConfig);
-const state = reactive({
-	searcher: {
-		Page: 1,
-		Limit: 20,
-		SortInfo: null as any
-	},
-	data: ref(props.data),
-	picList: [] as string[],
-	selectlist: [] as EmptyObjectType[],
-	checkListAll: true,
-	checkListIndeterminate: false,
-});
-let searchApi: Function = function (a: any = null, b: any = null) { };
-let isTreeState: any = null;
-// 设置边框显示/隐藏
-const setBorder = computed(() => {
-	return Object.hasOwn(props.config,"isBorder")? props.config.isBorder : false;
-});
-// 获取父组件 配置项（必传）
-const getConfig = computed(() => {
-	return props.config;
-});
-// 设置 tool header 数据
-const setHeader = computed(() => {
-	return props.header.filter((v) => v.isCheck);
-});
-// tool 列显示全选改变时
-const onCheckAllChange = <T>(val: T) => {
-	if (val) props.header.forEach((v) => (v.isCheck = true));
-	else props.header.forEach((v) => (v.isCheck = false));
-	state.checkListIndeterminate = false;
-};
-// tool 列显示当前项改变时
-const onCheckChange = () => {
-	const headers = props.header.filter((v) => v.isCheck).length;
-	state.checkListAll = headers === props.header.length;
-	state.checkListIndeterminate = headers > 0 && headers < props.header.length;
-};
+    // 定义变量内容
+    const ci = getCurrentInstance() as any;
+    const toolSetRef = ref();
+    const forPrint = ref();
+    const storesThemeConfig = useThemeConfig();
+    const { themeConfig } = storeToRefs(storesThemeConfig);
+    const state = reactive({
+        searcher: {
+            Page: 1,
+            Limit: 20,
+            SortInfo: null as any
+        },
+        data: ref(props.data),
+        picList: [] as string[],
+        selectlist: [] as EmptyObjectType[],
+        checkListAll: true,
+        checkListIndeterminate: false,
+        comboData:{},
+    });
+    let searchApi: Function = function (a: any = null, b: any = null) { };
+    let isTreeState: any = null;
+    // 设置边框显示/隐藏
+    const setBorder = computed(() => {
+        return Object.hasOwn(props.config, "isBorder") ? props.config.isBorder : false;
+    });
+    // 获取父组件 配置项（必传）
+    const getConfig = computed(() => {
+        return props.config;
+    });
+    // 设置 tool header 数据
+    const setHeader = computed(() => {
+        return props.header.filter((v) => v.isCheck);
+    });
+    // tool 列显示全选改变时
+    const onCheckAllChange = <T>(val: T) => {
+        if (val) props.header.forEach((v) => (v.isCheck = true));
+        else props.header.forEach((v) => (v.isCheck = false));
+        state.checkListIndeterminate = false;
+    };
+    // tool 列显示当前项改变时
+    const onCheckChange = () => {
+        const headers = props.header.filter((v) => v.isCheck).length;
+        state.checkListAll = headers === props.header.length;
+        state.checkListIndeterminate = headers > 0 && headers < props.header.length;
+    };
 
-// 表格多选改变时，用于导出
-const onSelectionChange = (val: EmptyObjectType[]) => {
-	state.selectlist = val;
-};
+    // 表格多选改变时，用于导出
+    const onSelectionChange = (val: EmptyObjectType[]) => {
+        state.selectlist = val;
+    };
 
-// 排序改变时
-const onSortChange = (columninfo: any) => {
-	if (columninfo.prop && columninfo.order) {
-		state.searcher.SortInfo = {
-			Property: columninfo.prop,
-			Direction: columninfo.order === "descending" ? "Desc" : "Asc"
-		}
-	}
-	else {
-		state.searcher.SortInfo = null;
-	}
-	doSearch();
-};
-// 删除当前项
-const onDelRow = (row: EmptyObjectType) => {
-	//emit('delRow', row);
-};
-// 分页改变
-const onHandleSizeChange = (val: number) => {
-	state.searcher.Limit = val;
-	doSearch();
-};
-// 分页改变
-const onHandleCurrentChange = (val: number) => {
-	state.searcher.Page = val;
-	doSearch();
-};
+    // 排序改变时
+    const onSortChange = (columninfo: any) => {
+        if (columninfo.prop && columninfo.order) {
+            state.searcher.SortInfo = {
+                Property: columninfo.prop,
+                Direction: columninfo.order === "descending" ? "Desc" : "Asc"
+            }
+        }
+        else {
+            state.searcher.SortInfo = null;
+        }
+        doSearch();
+    };
+    // 删除当前项
+    const onDelRow = (row: EmptyObjectType) => {
+        //emit('delRow', row);
+    };
+    // 分页改变
+    const onHandleSizeChange = (val: number) => {
+        state.searcher.Limit = val;
+        doSearch();
+    };
+    // 分页改变
+    const onHandleCurrentChange = (val: number) => {
+        state.searcher.Page = val;
+        doSearch();
+    };
 
-const doSearch = (api: any = null, para: any = null, isTree: any = null, parentKey: string = 'ParentId') => {
+    onMounted(() => {
+        const ch = props.header.filter((item) => item.type === 'combobox');
+        const rv = {} as any;
+        ch.forEach(element => {
+            let cd = {} as any;
+            if (element.comboData && typeof element.comboData == 'string') {
+                other.getSelectList(element.comboData, [], false).then((data: any) => {
+                    data.forEach((x: any) => {
+                        cd[x.Value] = x.Text
+                    });
+                })
+            }
+            else {
+                cd = element.comboData
+            }
+            const newdata = {};
+            rv[element.key] = cd;
+        });
+        state.comboData = rv;
+    });
 
-	if (para !== null) {
-		Object.assign(state.searcher, para);
-	}
-	if (api != null) {
-		searchApi = api;
-	}
-	if (isTree !== null) {
-		isTreeState = isTree
-	}
-	
-	let pro: Promise<AxiosResponse<any, any>> = searchApi(state.searcher);
-	return pro.then(res => {
-		const datatemp: any[] = [];
-		const imageHeaders = props.header.filter((v) => v.isCheck && v.type === 'image');
-		let index = 0;
-		res.Data.forEach((element: EmptyObjectType<any>) => {
-			imageHeaders.forEach((ih) => {
-				element[ih.key + "__localurl__"] = "";
-				if (element[ih.key]) {
-					element[ih.key + "__localurl__"] = '/api/_file/getfile/' + element[ih.key] + "?width=150&height=150";
-					element[ih.key + "__preview__"] = index++;
-					state.picList.push(element[ih.key + "__localurl__"]);
-				}
-			})
-			datatemp.push(element);
-		});
-		if (isTreeState !== true) {
-			state.data = datatemp;
-			props.config.total = res.Count;
-			props.config.loading = false;
-		}
-		else {
-			datatemp.forEach(element => {
-				element['children'] = datatemp.filter(x => x[parentKey] == element.ID);
+    const doSearch = (api: any = null, para: any = null, isTree: any = null, parentKey: string = 'ParentId') => {
 
-			});
-			state.data = datatemp.filter(x => !x[parentKey] || x[parentKey] == '')
-			props.config.total = 0;
-			props.config.loading = false;
-		}
-	}).catch(e=>{		
-		props.config.loading = false;
-	});
-}
+        if (para !== null) {
+            Object.assign(state.searcher, para);
+        }
+        if (api != null) {
+            searchApi = api;
+        }
+        if (isTree !== null) {
+            isTreeState = isTree
+        }
 
-const setData = (data: any[], istree: any = false, parentKey: string = 'ParentId') => {
-	if (istree !== true) {
-		if(props.config.isSub){
-			listvalue.value = data;
-		}
-		else{
-			state.data = data;
-		}
-		props.config.total = data.length;
-		props.config.loading = false;
-	}
-	else {
-		data.forEach(element => {
-			element['children'] = data.filter(x => x[parentKey] == element.ID);
-		});
-		if(props.config.isSub){
-			listvalue.value = data.filter(x => !x[parentKey] || x[parentKey] == '');
-		}
-		else{
-			state.data = data.filter(x => !x[parentKey] || x[parentKey] == '')
-		}
-		props.config.total = 0;
-		props.config.loading = false;
-	}
-}
+        let pro: Promise<AxiosResponse<any, any>> = searchApi(state.searcher);
+        return pro.then(res => {
+            const datatemp: any[] = [];
+            const imageHeaders = props.header.filter((v) => v.isCheck && v.type === 'image');
+            let index = 0;
+            res.Data.forEach((element: EmptyObjectType<any>) => {
+                imageHeaders.forEach((ih) => {
+                    element[ih.key + "__localurl__"] = "";
+                    if (element[ih.key]) {
+                        element[ih.key + "__localurl__"] = '/api/_file/getfile/' + element[ih.key] + "?width=150&height=150";
+                        element[ih.key + "__preview__"] = index++;
+                        state.picList.push(element[ih.key + "__localurl__"]);
+                    }
+                })
+                datatemp.push(element);
+            });
+            if (isTreeState !== true) {
+                state.data = datatemp;
+                props.config.total = res.Count;
+                props.config.loading = false;
+            }
+            else {
+                datatemp.forEach(element => {
+                    element['children'] = datatemp.filter(x => x[parentKey] == element.ID);
 
-const doPrint = () => {
-	var printdata = other.flatTree(state.data, setHeader.value[0].key)
-	printJs({
-		documentTitle: ' ',
-		printable: printdata,
-		type: 'json',
-		properties: setHeader.value.map((item) => {
-			return {
-				field: item.key,
-				displayName: item.title
-			}
-		}),
-		gridHeaderStyle: `
+                });
+                state.data = datatemp.filter(x => !x[parentKey] || x[parentKey] == '')
+                props.config.total = 0;
+                props.config.loading = false;
+            }
+        }).catch(e => {
+            props.config.loading = false;
+        });
+    }
+
+    const setData = (data: any[], istree: any = false, parentKey: string = 'ParentId') => {
+        if (istree !== true) {
+            if (props.config.isSub) {
+                listvalue.value = data;
+            }
+            else {
+                state.data = data;
+            }
+            props.config.total = data.length;
+            props.config.loading = false;
+        }
+        else {
+            data.forEach(element => {
+                element['children'] = data.filter(x => x[parentKey] == element.ID);
+            });
+            if (props.config.isSub) {
+                listvalue.value = data.filter(x => !x[parentKey] || x[parentKey] == '');
+            }
+            else {
+                state.data = data.filter(x => !x[parentKey] || x[parentKey] == '')
+            }
+            props.config.total = 0;
+            props.config.loading = false;
+        }
+    }
+
+    const doPrint = () => {
+        var printdata = other.flatTree(state.data, setHeader.value[0].key)
+        printJs({
+            documentTitle: ' ',
+            printable: printdata,
+            type: 'json',
+            properties: setHeader.value.map((item) => {
+                return {
+                    field: item.key,
+                    displayName: item.title
+                }
+            }),
+            gridHeaderStyle: `
 			font-size:12px;
 			border:0;
             border-top: 1px solid gray;
@@ -381,7 +383,7 @@ const doPrint = () => {
             border-right:1px solid gray;
             border-bottom:1px solid gray;
 		`,
-		gridStyle: `
+            gridStyle: `
 			font-size:12px;
 			border:0;
             border-top: 1px solid gray;
@@ -389,55 +391,55 @@ const doPrint = () => {
             border-right:1px solid gray;
             border-bottom:1px solid gray;
 		`,
-		style: `@page { size: landscape;} `,
+            style: `@page { size: landscape;} `,
 
-	});
-}
-const getSelectedRows = () => {
-	return state.selectlist;
-}
-
-
-// 设置
-const onSetTable = () => {
-	nextTick(() => {
-		const sortable = Sortable.create(toolSetRef.value, {
-			handle: '.handle',
-			dataIdAttr: 'data-key',
-			animation: 150,
-			onEnd: () => {
-				const headerList: EmptyObjectType[] = [];
-				sortable.toArray().forEach((val) => {
-					props.header.forEach((v) => {
-						if (v.key === val) headerList.push({ ...v });
-					});
-				});
-				props.header.length = 0;
-				headerList.forEach((val) => {
-					props.header.push(val);
-				})
-			},
-		});
-	});
-};
+        });
+    }
+    const getSelectedRows = () => {
+        return state.selectlist;
+    }
 
 
-const subDelete = (index: any) => {
+    // 设置
+    const onSetTable = () => {
+        nextTick(() => {
+            const sortable = Sortable.create(toolSetRef.value, {
+                handle: '.handle',
+                dataIdAttr: 'data-key',
+                animation: 150,
+                onEnd: () => {
+                    const headerList: EmptyObjectType[] = [];
+                    sortable.toArray().forEach((val) => {
+                        props.header.forEach((v) => {
+                            if (v.key === val) headerList.push({ ...v });
+                        });
+                    });
+                    props.header.length = 0;
+                    headerList.forEach((val) => {
+                        props.header.push(val);
+                    })
+                },
+            });
+        });
+    };
 
-	listvalue.value.splice(index, 1);
 
-}
+    const subDelete = (index: any) => {
 
-const subCreate = () => {
-	listvalue.value.push({});
-}
-// 暴露变量
-defineExpose({
-	doSearch,
-	getSelectedRows,
-	setData,
-	inheritAttrs: false
-});
+        listvalue.value.splice(index, 1);
+
+    }
+
+    const subCreate = () => {
+        listvalue.value.push({});
+    }
+    // 暴露变量
+    defineExpose({
+        doSearch,
+        getSelectedRows,
+        setData,
+        inheritAttrs: false
+    });
 </script>
 
 <style scoped lang="scss">
