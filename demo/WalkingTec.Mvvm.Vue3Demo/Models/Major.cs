@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,6 +22,9 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
         [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
         public string MajorCode { get; set; }
 
+        public Guid? CityId { get; set; }
+        public City City { get; set; }
+
         [Display(Name = "专业名称")]
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         [Required(ErrorMessage = "{0}是必填项")]
@@ -37,6 +41,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
         [Required()]
         public int? SchoolId { get; set; }
 
+        public DateTime? test { get; set; }
 
         [Display(Name = "所属学校")]
         public School School { get; set; }

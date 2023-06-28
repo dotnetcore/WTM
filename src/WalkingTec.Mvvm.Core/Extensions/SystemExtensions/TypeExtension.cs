@@ -488,7 +488,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
             if (_propertyCache.ContainsKey(self.FullName) == false)
             {
                 var properties = self.GetProperties().ToList();
-                _propertyCache = _propertyCache.Add(self.FullName, properties);
+                try
+                {
+                    _propertyCache = _propertyCache.Add(self.FullName, properties);
+                }
+                catch { }
                 return properties.Where(x => x.Name == name).FirstOrDefault();
             }
             else
@@ -502,7 +506,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
             if (_propertyCache.ContainsKey(self.FullName) == false)
             {
                 var properties = self.GetProperties().ToList();
-                _propertyCache = _propertyCache.Add(self.FullName, properties);
+                try
+                {
+                    _propertyCache = _propertyCache.Add(self.FullName, properties);
+                }
+                catch { }
                 return properties.Where(where).FirstOrDefault();
             }
             else

@@ -50,8 +50,9 @@ export async function initBackEndControlRoutes() {
 	}
 	else {
 		localMenu = formatFlatteningRoutes(localMenu);
-		menu = await getBackEndControlRoutes(useUserInfo().userInfos.menu.filter(x => !x.ParentId || x.ParentId == ''),useUserInfo().userInfos.menu,localMenu);
-		menu.push(...localMenu.filter(x=>x.meta.isHide == true));
+		menu = await getBackEndControlRoutes(useUserInfo().userInfos.menu.filter(x => !x.ParentId || x.ParentId == ''), useUserInfo().userInfos.menu, localMenu);
+		console.log(menu);
+		menu.push(...localMenu.filter(x => x.meta.isHide == true));
 	}
 	// 无登录权限时，添加判断
 	// https://gitee.com/lyt-top/vue-next-admin/issues/I64HVO
@@ -79,7 +80,7 @@ export async function initBackEndControlRoutes() {
 	// 添加动态路由
 	await setAddRoute();
 	// 设置路由到 pinia routesList 中（已处理成多级嵌套路由）及缓存多级嵌套数组处理后的一维数组
-	await setFilterMenuAndCacheTagsViewRoutes();
+    await setFilterMenuAndCacheTagsViewRoutes();
 }
 
 /**
@@ -132,29 +133,40 @@ export async function setAddRoute() {
  * @description isRequestRoutes 为 true，则开启后端控制路由
  * @returns 返回后端路由菜单数据
  */
-export function getBackEndControlRoutes(menus: any[],allMenus: any[],localMenu: any[]) {
+export function getBackEndControlRoutes(menus: any[], allMenus: any[], localMenu: any[]) {
 	let rv: any[] = [];
 	menus.forEach(element => {
 		const newdata = {
 			path: element.Url && element.Url != '' ? element.Url : '/' + element.Id,
 			name: element.Id,
-			component:'',
+			component: '',
 			meta: {
 				title: element.Text,
 				isHide: false,
 				isKeepAlive: true,
+				isLink: '',
 				isAffix: false,
 				isIframe: false,
+				className: null,
 				icon: element.Icon
-			},			
-			children:getBackEndControlRoutes(allMenus.filter(x=>x.ParentId == element.Id),allMenus,localMenu)
+			},
+			children: getBackEndControlRoutes(allMenus.filter(x => x.ParentId == element.Id), allMenus, localMenu)
 		}
-		let comp = localMenu.filter(x=>x.path == newdata.path);
-		if(comp.length>0){
-			newdata.component = comp[0].component;
+		if (newdata.path && (newdata.path.toLowerCase().indexOf("http://") !== -1 || newdata.path.toLowerCase().indexOf("https://") !== -1)) {
+			newdata.meta.isIframe = true;
+			newdata.meta.isLink = newdata.path;
+			newdata.component = "layout/routerView/iframes.vue";
+			newdata.path = '/' + element.Id
 		}
-		else{
-			newdata.component = "layout/routerView/parent.vue";
+		else {
+			let comp = localMenu.filter(x => x.path == newdata.path);
+			if (comp.length > 0) {
+				newdata.component = comp[0].component;
+				newdata.meta.className = comp[0].meta.className;
+			}
+			else {
+				newdata.component = "layout/routerView/parent.vue";
+			}
 		}
 		rv.push(newdata);
 	});
@@ -200,7 +212,7 @@ export function dynamicImport(dynamicViewsModules: Record<string, Function>, com
 async function GetLocalFile() {
 	const keys = Object.keys(viewsModules);
 	const rv: any[] = [];
-	for (let i = 0; i < keys.length; i++) {
+    for (let i = 0; i < keys.length; i++) {
 		const key = keys[i];
 		const k = key.replace(/..\/views|../, '');
 		const match = k.match(/\/(.*?)\/.*?/) ?? [];
@@ -213,7 +225,7 @@ async function GetLocalFile() {
 			let cur = null;
 			if (dir.length == 0) {
 				cur = {
-					path: "/" + name+"_folder",
+					path: "/" + name + "_folder",
 					name: name,
 					component: "layout/routerView/parent.vue",
 					meta: {
@@ -237,21 +249,24 @@ async function GetLocalFile() {
 			let ishide = false;
 			let className = '';
 			let title = '';
+            var nname = p.replace(/\//, '_');
 			if (cmp.default && cmp.default.name) {
-				const narray = cmp.default.name.split(',');
+				const narray = cmp.default.name.split(';');
 				title = narray[0] ? narray[0] : p.replace(/\//, '_');
 				ishide = (narray.length > 1 && narray[1] == "false") ? true : false;
 				className = narray.length > 2 ? narray[2] : '';
 				if (narray.length > 3) {
 					className += "," + narray[3];
-				}
+                }
+                nname = cmp.default.name;
 			}
 			else {
 				title = p.replace(/\//, '_');
-			}
+            }
+
 			cur.children.push({
 				path: p,
-				name: p.replace(/\//, '_'),
+                name: nname,
 				component: k,
 				meta: {
 					title: title,

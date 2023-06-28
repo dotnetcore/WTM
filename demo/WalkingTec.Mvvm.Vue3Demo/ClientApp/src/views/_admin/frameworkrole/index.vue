@@ -56,7 +56,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.menukey.RoleManagement,true,WalkingTec.Mvvm.Admin.Api,FrameworkRole">
+<script setup lang="ts" name="message._system.menukey.RoleManagement;true;WalkingTec.Mvvm.Admin.Api;FrameworkRole">
 import { defineAsyncComponent, reactive, onMounted, ref, getCurrentInstance } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import frameworkRoleApi from '/@/api/frameworkrole';

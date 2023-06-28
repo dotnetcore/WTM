@@ -162,37 +162,45 @@ window.ff = {
             if (para !== undefined) {
                 getpost = "Post";
             }
-            $.ajax({
-                type: getpost,
-                url: url,
-                data: para,
-                success: function (data, textStatus, request) {
-                    if (request.getResponseHeader('IsScript') === 'true') {
-                        eval(data);
-                    }
-                    else {
-                        data = '<div class="layui-card donotuse_pdiv"><div class="layui-card-body donotuse_pdiv" id=\"' + $.cookie("divid") + '\" >' + data + "</div></div>";
-                        var child = window.open("/Home/PIndex#/_framework/redirect");
-                        child.document.close();
-                        $(child.document).ready(function () {
-                            setTimeout(function () {
-                                $('#LAY_app_body', child.document).html(data);
-                                $(child.document).attr("title", title);
-                            }, 500);
-                        });
-                    }
-                    layer.close(index);
-                },
-                error: function (a, b, c) {
-                    layer.close(index);
-                    if (a.responseText !== undefined && a.responseText !== "") {
-                        layer.alert(a.responseText);
-                    }
-                    else {
-                        layer.alert(ff.DONOTUSE_Text_LoadFailed);
-                    }
-                }
+            var child = window.open("/Home/PIndex/#" + url);
+            $(child.document).ready(function() {
+            setTimeout(function() {
+                    $(child.document).attr("title", title);
+                }, 500);
             });
+            layer.close(index);
+        //    $.ajax({
+        //        type: getpost,
+        //        url: url,
+        //        data: para,
+        //        success: function (data, textStatus, request) {
+        //            if (request.getResponseHeader('IsScript') === 'true') {
+        //                eval(data);
+        //            }
+        //            else {
+        //                data = '<div class="layui-card donotuse_pdiv"><div class="layui-card-body donotuse_pdiv" id=\"' + $.cookie("divid") + '\" >' + data + "</div></div>";
+        //                var child = window.open("/Home/PIndex/#/_framework/redirect");
+        //                child.document.close();
+        //                $(child.document).ready(function () {
+        //                    setTimeout(function() {
+        //                        debugger;
+        //                        $('#LAY_app_body', child.document).html(data);
+        //                        $(child.document).attr("title", title);
+        //                    }, 500);
+        //                });
+        //            }
+        //            layer.close(index);
+        //        },
+        //        error: function (a, b, c) {
+        //            layer.close(index);
+        //            if (a.responseText !== undefined && a.responseText !== "") {
+        //                layer.alert(a.responseText);
+        //            }
+        //            else {
+        //                layer.alert(ff.DONOTUSE_Text_LoadFailed);
+        //            }
+        //        }
+        //    });
         }
         else {
             layer.close(index);
@@ -553,7 +561,7 @@ window.ff = {
             this.SetCookie("windowids", wids.join());
         }
         else {
-            if (layui.setter == undefined || layui.setter.pageTabs == undefined) {
+            if (layui.setter == undefined || layui.setter.pageTabs == undefined || window.location.href.toLocaleLowerCase().indexOf("/home/pindex/")>-1) {
                 window.close();
             }
             else if (layui.setter.pageTabs === false || $('.layadmin-tabsbody-item').length === 0) {

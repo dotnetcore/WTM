@@ -17,7 +17,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.import,false">
+<script setup lang="ts" name="message._system.common.vm.import;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance } from 'vue';
 import frameworkuserApi from '/@/api/frameworkuser';

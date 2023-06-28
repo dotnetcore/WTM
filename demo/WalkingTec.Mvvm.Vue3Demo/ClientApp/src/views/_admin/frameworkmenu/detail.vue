@@ -45,7 +45,7 @@
 					</el-col>
 				</el-row>
 
-				<el-row v-if="state.vmModel.Entity.IsInside">
+				<el-row>
 					<el-col :xs="24" :lg="12" class="mb20">
 						<el-form-item ref="Entity_PageName_FormItem" prop="Entity.PageName"
 							:label="$t('message._admin.menu.vm.PageName')"
@@ -133,7 +133,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.detail,false">
+<script setup lang="ts" name="message._system.common.vm.detail;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance, onMounted, defineAsyncComponent } from 'vue';
 import frameworkmenuApi from '/@/api/frameworkmenu';
@@ -223,7 +223,9 @@ const modelChange = (value: any, reset: boolean = true) => {
 	}
 	else {
 		state.allActions = [];
-		state.vmModel.Entity.Url = '';
+		if(state.vmModel.Entity.IsInside == true){
+			state.vmModel.Entity.Url = '';
+		}
 	}
 }
 // 暴露变量

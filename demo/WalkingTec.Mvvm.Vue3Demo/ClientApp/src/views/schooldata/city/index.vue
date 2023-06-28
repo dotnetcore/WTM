@@ -1,4 +1,4 @@
-﻿
+
 <template>
 <div class="card-fill layout-padding">
 <el-card shadow="hover" class="layout-padding-auto" >
@@ -48,7 +48,7 @@
 </template>
 
 
-<script setup lang="ts" name="城市,true,WalkingTec.Mvvm.Vue3Demo.Controllers,City">
+<script setup lang="ts" name="城市;true;WalkingTec.Mvvm.Vue3Demo.Controllers;City">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
 import { CityApi } from '/@/api/schooldata/City';

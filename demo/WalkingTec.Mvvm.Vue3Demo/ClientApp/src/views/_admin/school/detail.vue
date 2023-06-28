@@ -35,7 +35,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.detail,false">
+<script setup lang="ts" name="message._system.common.vm.detail;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
 import schoolApi from '/@/api/school';
@@ -63,9 +63,11 @@ const tableData = ref({
 	data: [],
 	// 表头内容（必传，注意格式）
 	header: [
-		{ key: 'MajorName', colWidth: '', title: '专业名称', type: 'textbox', isCheck: true },
-		{ key: 'MajorCode', colWidth: '', title: '专业编号', type: 'textbox', isCheck: true  },
-		{ key: 'MajorType', colWidth:'', title:'专业类别', type:'combobox',isCheck:true,comboData:{Required:'必修',Optional:'选修'} }
+        { key: 'MajorName', colWidth: '', title: '专业名称', type: 'textbox', isCheck: true },
+        { key: 'MajorCode', colWidth: '', title: '专业编号', type: 'textbox', isCheck: true },
+        { key: 'MajorType', colWidth: '', title: '专业类别', type: 'combobox', isCheck: true, comboData: { Required: '必修', Optional: '选修' } },
+        { key: 'CityId', colWidth: '', title: 'url测试', type: 'combobox', isCheck: true, comboData: '/api/city/GetCitys' },
+        { key: 'test', colWidth: '250', title: 'test', type: 'date', isCheck: true },
 	],
 	// 配置项（必传）
 	config: {

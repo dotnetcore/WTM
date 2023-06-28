@@ -37,7 +37,7 @@
 </template>
 
 
-<script setup lang="ts" name="$des$,true,$controllername$">
+<script setup lang="ts" name="$des$;true;$controllername$">
 import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
 import { $modelname$Api } from '/@/api$pagepath$';

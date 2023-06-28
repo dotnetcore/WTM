@@ -40,7 +40,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.add,false">
+<script setup lang="ts" name="message._system.common.vm.add;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance, onMounted } from 'vue';
 import frameworkroleApi from '/@/api/frameworkrole';

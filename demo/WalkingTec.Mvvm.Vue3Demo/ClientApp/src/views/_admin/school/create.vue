@@ -42,7 +42,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.add,false">
+<script setup lang="ts" name="message._system.common.vm.add;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
 import schoolApi from '/@/api/school';
@@ -72,7 +72,7 @@ const tableData = ref({
 		{ key: 'MajorName', colWidth: '', title: '专业名称', type: 'textbox', isCheck: true },
 		{ key: 'MajorCode', colWidth: '', title: '专业编号', type: 'textbox', isCheck: true },
 		{ key: 'MajorType', colWidth:'', title:'专业类别', type:'combobox',isCheck:true,comboData:{Required:'必修',Optional:'选修'}},
-		{ key: 'MajorTypeUrl', colWidth:'', title:'url测试', type:'combobox',isCheck:true,comboData:'/api/_FrameworkUser/GetFrameworkRoles'},
+		{ key: 'CityId', colWidth:'', title:'url测试', type:'combobox',isCheck:true,comboData:'/api/city/GetCitys'},
 		{ key: 'test', colWidth: '250', title: 'test', type: 'date', isCheck: true },
 	],
 	// 配置项（必传）

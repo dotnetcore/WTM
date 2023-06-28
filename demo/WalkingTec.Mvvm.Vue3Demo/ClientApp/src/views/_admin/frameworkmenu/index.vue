@@ -42,7 +42,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.menukey.MenuMangement,true,WalkingTec.Mvvm.Admin.Api,FrameworkMenu">
+<script setup lang="ts" name="message._system.menukey.MenuMangement;true;WalkingTec.Mvvm.Admin.Api;FrameworkMenu">
 import { defineAsyncComponent, reactive, onMounted, ref, getCurrentInstance } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import frameworkmenuApi from '/@/api/frameworkmenu';

@@ -53,7 +53,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.common.vm.detail,false">
+<script setup lang="ts" name="message._system.common.vm.detail;false">
 import { ElMessage } from 'element-plus';
 import { reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
 import frameworkgroupApi from '/@/api/frameworkgroup';

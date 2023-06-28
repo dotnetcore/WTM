@@ -52,7 +52,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.menukey.DataPrivilege,true,WalkingTec.Mvvm.Admin.Api,DataPrivilege">
+<script setup lang="ts" name="message._system.menukey.DataPrivilege;true;WalkingTec.Mvvm.Admin.Api;DataPrivilege">
 import { defineAsyncComponent, reactive, onMounted, ref, getCurrentInstance } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import dataPrivilegeApi from '/@/api/dataprivilege';

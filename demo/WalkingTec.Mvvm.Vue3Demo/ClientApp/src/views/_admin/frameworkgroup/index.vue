@@ -56,7 +56,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="message._system.menukey.GroupManagement,true,WalkingTec.Mvvm.Admin.Api,FrameworkGroup">
+<script setup lang="ts" name="message._system.menukey.GroupManagement;true;WalkingTec.Mvvm.Admin.Api;FrameworkGroup">
 import { defineAsyncComponent, reactive, onMounted, ref, getCurrentInstance } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import frameworkgroupApi from '/@/api/frameworkgroup';
@@ -99,7 +99,7 @@ const searchData = ref({
 
 // 初始化表格数据
 const getTableData = () => {
-	tableRef.value.doSearch(frameworkgroupApi().search, searchData.value)
+	tableRef.value.doSearch(frameworkgroupApi().search, searchData.value,true)
 		.catch((error: any) => {
 			other.setFormError(ci, error);
 		});
