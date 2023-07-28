@@ -678,16 +678,28 @@ window.ff = {
                         if (usedefaultvalue == true) {
                             df = eval(comboid + "defaultvalues"); 
                       }
-                        window[comboid].update({ data: ff.getComboItems(data.Data,df) });
+                        window[comboid].update({ data: ff.getComboItems(data.Data, df, usedefaultvalue) });
                     }
                     if (controltype === "checkbox") {
                         for (i = 0; i < data.Data.length; i++) {
                             item = data.Data[i];
-                            if (item.Selected === true) {
-                                target.append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
-                            }
+                            if (usedefaultvalue == true) {
+                                var df = [];
+                                df = eval(comboid + "defaultvalues"); 
+                                if (df.indexOf(item.Value) > -1) {
+                                    target.append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                                }
+                                else {
+                                    target.append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                                }
+                           }
                             else {
-                                target.append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                                if (item.Selected === true) {
+                                    target.append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                                }
+                                else {
+                                    target.append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                                }
                             }
                         }
                         form.render('checkbox', targetfilter);
@@ -695,11 +707,23 @@ window.ff = {
                     if (controltype === "radio") {
                         for (i = 0; i < data.Data.length; i++) {
                             item = data.Data[i];
-                            if (item.Selected === true) {
-                                target.append("<input type='radio'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
-                            }
+                            if (usedefaultvalue == true) {
+                                var df = [];
+                                df = eval(comboid + "defaultvalues");
+                                if (df.indexOf(item.Value) > -1) {
+                                    target.append("<input type='radio'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                                }
+                                else {
+                                    target.append("<input type='radio' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                                }
+                           }
                             else {
-                                target.append("<input type='radio' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                                if (item.Selected === true) {
+                                    target.append("<input type='radio'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                                }
+                                else {
+                                    target.append("<input type='radio' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                                }
                             }
                         }
                         form.render('radio', targetfilter);
@@ -1224,22 +1248,24 @@ window.ff = {
         return rv;
     },
 
-    getComboItems: function (data, svals) {
+    getComboItems: function (data, svals, useDefaultvalue) {
         var rv = [];
         if (svals == undefined || svals == null) {
             svals = [];
         }
-        for (var i = 0; i < data.length; i++) {
-            var item = {};
-            item.value = data[i].Value;
-            item.name = data[i].Text;
-            item.disabled = data[i].Disabled;
-            item.selected = data[i].Selected || svals.indexOf(data[i].Value) > -1;
-            item.icon = data[i].Icon;
-            if (data[i].Children != null && data[i].Children.length > 0) {
-                item.children = this.getTreeItems(data[i].Children, svals);
+        if (data != null) {
+            for (var i = 0; i < data.length; i++) {
+                var item = {};
+                item.value = data[i].Value;
+                item.name = data[i].Text;
+                item.disabled = data[i].Disabled;
+                item.selected = useDefaultvalue == true ? svals.indexOf(data[i].Value) > -1 : data[i].Selected;
+                item.icon = data[i].Icon;
+                if (data[i].Children != null && data[i].Children.length > 0) {
+                    item.children = this.getTreeItems(data[i].Children, svals);
+                }
+                rv.push(item);
             }
-            rv.push(item);
         }
         return rv;
     },

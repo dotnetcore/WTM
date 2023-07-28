@@ -194,6 +194,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         {
                             context.Result = ctrl.Forbid(JwtBearerDefaults.AuthenticationScheme);
                         }
+                        else if(controller is BaseApiController bac)
+                        {
+                            context.Result = bac.Forbid();
+                        }
                         else
                         {
                             ContentResult cr = new ContentResult()
@@ -234,8 +238,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 {
                                     context.Result = ctrl.Forbid(JwtBearerDefaults.AuthenticationScheme);
                                 }
-                                else
-                                {
+                            else if (controller is BaseApiController bac)
+                            {
+                                context.Result = bac.Forbid();
+                            }
+                            else
+                            {
                                     ContentResult cr = new ContentResult()
                                     {
                                         Content = MvcProgram._localizer["Sys.NoPrivilege"],
