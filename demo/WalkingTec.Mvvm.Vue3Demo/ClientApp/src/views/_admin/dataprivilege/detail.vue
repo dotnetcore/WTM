@@ -109,7 +109,7 @@ const ci = getCurrentInstance() as any;
 // 打开弹窗
 onMounted(() => {
 	dataPrivilegeApi().get(ci.attrs["wtmdata"]).then((data: any) => other.setValue(state.vmModel, data));
-	other.getSelectList('/api/_FrameworkUser/GetFrameworkGroupsTree',[],true).then(x=>{state.AllGroups = x});
+	other.getSelectList('/api/_account/GetFrameworkGroupsTree',[],true).then(x=>{state.AllGroups = x});
 	other.getSelectList('/api/_DataPrivilege/GetPrivileges',[],true).then(x=>{state.AllPrivileges = x});
 });
 // 关闭弹窗

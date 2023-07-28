@@ -103,7 +103,7 @@ const state = reactive({
 
 // 打开弹窗
 onMounted(() => {
-	other.getSelectList('/api/_FrameworkUser/GetFrameworkGroupsTree', [], true).then(x => { state.AllGroups = x });
+    other.getSelectList('/api/_account/GetFrameworkGroupsTree', [], true).then(x => { state.AllGroups = x });
 	other.getSelectList('/api/_DataPrivilege/GetPrivileges', [], true).then(x => { state.AllPrivileges = x });
 	if (ci.attrs["wtmdata"]) {
 		state.vmModel.DpType = ci.attrs["wtmdata"].DpType;
