@@ -197,6 +197,7 @@ namespace WalkingTec.Mvvm.Core
                                 if (item != null)
                                 {
                                     item.ModuleName += "Api";
+                                    item.ShowOnMenu = false;
                                     apifolder.Children.Add(item);
 
                                 }
