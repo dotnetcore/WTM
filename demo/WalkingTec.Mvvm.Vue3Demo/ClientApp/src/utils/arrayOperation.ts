@@ -23,7 +23,7 @@ export function judementSameArr(newArr: unknown[] | string[], oldArr: string[]):
  * @param b 要比较的对象二
  * @returns 相同返回 true，反之则反
  */
-export function isObjectValueEqual<T>(a: T, b: T): boolean {
+export function isObjectValueEqual<T extends EmptyObjectType>(a: T, b: T): boolean {
 	if (!a || !b) return false;
 	let aProps = Object.getOwnPropertyNames(a);
 	let bProps = Object.getOwnPropertyNames(b);
@@ -53,8 +53,8 @@ export function removeDuplicate(arr: EmptyArrayType, attr?: string) {
 		return arr;
 	} else {
 		if (attr) {
-			const obj: EmptyObjectType = {};
-			return arr.reduce((cur: EmptyArrayType[], item: EmptyArrayType) => {
+            const obj: EmptyObjectType = {};
+            return arr.reduce((cur: EmptyArrayType[], item: any) => {
 				obj[item[attr]] ? '' : (obj[item[attr]] = true && item[attr] && cur.push(item));
 				return cur;
 			}, []);

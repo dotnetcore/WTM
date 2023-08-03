@@ -12,34 +12,34 @@
   <ItemGroup>
     <PackageReference Include="Aliyun.OSS.SDK.NetCore" Version="2.13.0" />
     <PackageReference Include="DotNetCore.NPOI" Version="1.2.3" />
-    <PackageReference Include="Fare" Version="2.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+    <PackageReference Include="Fare" Version="2.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.1" />
-    <PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.4" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.0" />
-    <PackageReference Include="Quartz" Version="3.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="7.21.11" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+    <PackageReference Include="Quartz" Version="3.6.3" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.34" />
   </ItemGroup>
 
 </Project>

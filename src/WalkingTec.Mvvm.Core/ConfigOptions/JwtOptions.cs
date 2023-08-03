@@ -7,7 +7,24 @@ namespace WalkingTec.Mvvm.Core
         public string Issuer { get; set; } = "http://localhost";
         public string Audience { get; set; } = "http://localhost";
         public int Expires { get; set; } = 3600;
-        public string SecurityKey { get; set; } = "wtm";
+        private string _securiteKey= "wtmwtmwtmwtmwtmwtm";
+        public string SecurityKey { get
+            {
+                return _securiteKey;
+            }
+            set {
+                _securiteKey = value;
+                if (_securiteKey.Length < 18)
+                {
+                    var count = 18 - _securiteKey.Length;
+                    for (int i = 0; i < count; i++)
+                    {
+                        _securiteKey += "x";
+                    }
+                }
+
+            }
+        }
         public string LoginPath { get; set; }
     }
 }
