@@ -47,7 +47,8 @@ const header = computed(() => {
   return { Authorization: `Bearer ${Local.get('token')}` }
 })
 watch(filevalue, async () => {
-  if(!filevalue.value){
+    debugger;
+ if(!filevalue.value){
     files.value = [];
     return;
   }
@@ -56,7 +57,6 @@ watch(filevalue, async () => {
     files.value = [];
   }
   if (props.multi == false) {
-
     let fv = null;
     if (files.value && files.value.length > 0) {
       fv = files.value[0].FileId;
@@ -110,7 +110,7 @@ const onSuccess = (res: any, uploadFile: any, uploadFiles: any) => {
   }
 }
 
-const onRemove = (file: any) => {
+    const onRemove = (file: any) => {
   fileApi().deleteFile(file.FileId);
   const f = files.value;
   if (f) {
@@ -123,8 +123,13 @@ const onRemove = (file: any) => {
         index--;
       }
     }
-  }
-  filevalue.value = f.map((item:any)=>{return {FileId: item.FileId, ID: item.keyID}});
+        }
+        if (props.multi == false) {
+            filevalue.value = null;
+        }
+        else {
+            filevalue.value = f.map((item: any) => { return { FileId: item.FileId, ID: item.keyID } });
+        }
 }
 // 暴露变量
 defineExpose({
