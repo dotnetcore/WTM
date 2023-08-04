@@ -146,6 +146,7 @@ import other from '/@/utils/other';
 import { storeToRefs } from 'pinia';
 import { useRoutesList } from '/@/stores/routesList';
 import { useRouter } from "vue-router";
+import { GetLocalFile } from '/@/router/backEnd';
 
 const IconSelector = defineAsyncComponent(() => import('/@/components/iconSelector/index.vue'));
 const ci = getCurrentInstance() as any;
@@ -191,8 +192,10 @@ onMounted(() => {
 	else if (useRouter().currentRoute.value.query.id) {
 		state.vmModel.Entity.ID = useRouter().currentRoute.value.query.id as any;
 	}
-	state.menuData = getMenuData(routesList.value);
-	console.log(state.menuData)
+    GetLocalFile().then(x => {
+        console.log(x);
+        state.menuData = getMenuData(x)
+    });
 	frameworkmenuApi().get(state.vmModel.Entity.ID ?? "").then((data: any) => { other.setValue(state.vmModel, data); modelChange(state.vmModel.SelectedModule, false) });
 	other.getSelectList('/api/_account/GetFrameworkRoles', [], false).then(x => { state.allRoles = x });
 	other.getSelectList('/api/_FrameworkMenu/GetFolders', [], false).then(x => { state.allParents = x });
@@ -221,7 +224,7 @@ const onSubmit = () => {
 	})
 };
 
-const getMenuData = (routes: RouteItems) => {
+const getMenuData = (routes: any) => {
 	const arr: RouteItems = [];
 	routes.map((val: RouteItem) => {
 		if (val.meta?.isHide === false && val.path != '/home') {

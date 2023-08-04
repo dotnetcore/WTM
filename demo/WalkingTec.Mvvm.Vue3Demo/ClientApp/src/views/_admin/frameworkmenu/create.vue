@@ -147,6 +147,7 @@ import other from '/@/utils/other';
 import { storeToRefs } from 'pinia';
 import { useRoutesList } from '/@/stores/routesList';
 import { viewsModules } from '/@/router/backEnd';
+import { GetLocalFile } from '/@/router/backEnd';
 
 const IconSelector = defineAsyncComponent(() => import('/@/components/iconSelector/index.vue'));
 const ci = getCurrentInstance() as any;
@@ -185,7 +186,11 @@ const state = reactive({
 onMounted(() => {
 	other.getSelectList('/api/_account/GetFrameworkRoles', [], false).then(x => { state.allRoles = x });
 	other.getSelectList('/api/_FrameworkMenu/GetFolders', [], false).then(x => { state.allParents = x });
-	state.menuData = getMenuData(routesList.value);
+	
+	GetLocalFile().then(x => {
+        console.log(x);
+        state.menuData = getMenuData(x)
+	});
 });
 
 // 关闭弹窗
@@ -193,7 +198,7 @@ const closeDialog = () => {
 	emit('closeDialog');
 };
 
-const getMenuData = (routes: RouteItems) => {
+const getMenuData = (routes: any) => {
 	const arr: RouteItems = [];
 	routes.map((val: RouteItem) => {
 		if (val.meta?.isHide === false && val.path != '/home') {

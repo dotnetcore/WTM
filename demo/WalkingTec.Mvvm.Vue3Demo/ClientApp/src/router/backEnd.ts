@@ -209,7 +209,7 @@ export function dynamicImport(dynamicViewsModules: Record<string, Function>, com
 	}
 }
 
-async function GetLocalFile() {
+export async function GetLocalFile() {
 	const keys = Object.keys(viewsModules);
 	const rv: any[] = [];
     for (let i = 0; i < keys.length; i++) {
