@@ -188,7 +188,6 @@ onMounted(() => {
 	other.getSelectList('/api/_FrameworkMenu/GetFolders', [], false).then(x => { state.allParents = x });
 	
 	GetLocalFile().then(x => {
-        console.log(x);
         state.menuData = getMenuData(x)
 	});
 });

@@ -5,20 +5,14 @@ import * as svg from '@element-plus/icons-vue';
 const getAlicdnIconfont = () => {
 	return new Promise((resolve, reject) => {
 		nextTick(() => {
-			const styles: any = document.styleSheets;
-			let sheetsList = [];
+            const styles: any = document.styleSheets;
 			let sheetsIconList = [];
 
-			for (let i = 0; i < styles.length; i++) {
-				if(styles[i].cssRules[0].selectorText=='._wtmicon' || styles[i].cssRules[0].selectorText=='.fa'){
-					sheetsList.push(styles[i]);
-				}
-			}
-			for (let i = 0; i < sheetsList.length; i++) {
-				for (let j = 0; j < sheetsList[i].cssRules.length; j++) {
-					if (sheetsList[i].cssRules[j].selectorText && sheetsList[i].cssRules[j].selectorText.indexOf('._wtmicon-') > -1) {
+            for (let i = 0; i < styles.length; i++) {
+                for (let j = 0; j < styles[i].cssRules.length; j++) {
+                    if (styles[i].cssRules[j].selectorText && styles[i].cssRules[j].selectorText.indexOf('._wtmicon-') > -1) {
 						sheetsIconList.push(
-							`${sheetsList[i].cssRules[j].selectorText.substring(1, sheetsList[i].cssRules[j].selectorText.length).replace(/\:\:before/gi, '')}`
+                            `${styles[i].cssRules[j].selectorText.substring(1, styles[i].cssRules[j].selectorText.length).replace(/\:\:before/gi, '')}`
 						);
 					}
 				}
@@ -49,23 +43,17 @@ const getAwesomeIconfont = () => {
 	return new Promise((resolve, reject) => {
 		nextTick(() => {
 			const styles: any = document.styleSheets;
-			let sheetsList = [];
 			let sheetsIconList = [];
-			for (let i = 0; i < styles.length; i++) {
-				if(styles[i].cssRules[0].selectorText=='.fa'){
-					sheetsList.push(styles[i]);
-				}
-			}
-			for (let i = 0; i < sheetsList.length; i++) {
-				for (let j = 0; j < sheetsList[i].cssRules.length; j++) {
+            for (let i = 0; i < styles.length; i++) {
+                for (let j = 0; j < styles[i].cssRules.length; j++) {
 					if (
-						sheetsList[i].cssRules[j].selectorText &&
-						sheetsList[i].cssRules[j].selectorText.indexOf('.fa-') === 0 &&
-						sheetsList[i].cssRules[j].selectorText.indexOf(',') === -1
+                        styles[i].cssRules[j].selectorText &&
+                        styles[i].cssRules[j].selectorText.indexOf('.fa-') === 0 &&
+                        styles[i].cssRules[j].selectorText.indexOf(',') === -1
 					) {
-						if (/::before/.test(sheetsList[i].cssRules[j].selectorText)) {
+                        if (/::before/.test(styles[i].cssRules[j].selectorText)) {
 							sheetsIconList.push(
-								`${sheetsList[i].cssRules[j].selectorText.substring(1, sheetsList[i].cssRules[j].selectorText.length).replace(/\:\:before/gi, '')}`
+                                `${styles[i].cssRules[j].selectorText.substring(1, styles[i].cssRules[j].selectorText.length).replace(/\:\:before/gi, '')}`
 							);
 						}
 					}

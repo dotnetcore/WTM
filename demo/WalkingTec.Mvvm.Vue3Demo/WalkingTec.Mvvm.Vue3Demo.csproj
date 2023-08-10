@@ -32,6 +32,9 @@
     <None Remove="ClientApp\package-lock.json" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Remove="ClientApp\wtmbuild.ts" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>

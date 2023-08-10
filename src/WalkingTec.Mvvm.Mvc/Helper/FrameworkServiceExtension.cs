@@ -48,6 +48,9 @@ using Microsoft.Extensions.FileProviders;
 using WalkingTec.Mvvm.Core.Support.Quartz;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Elsa.Persistence.EntityFramework.Core.Extensions;
+using WalkingTec.Mvvm.Core.WorkFlow;
+using Elsa;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -529,6 +532,27 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddHostedService<QuartzHostService>();
             return services;
         }
+
+        public static IServiceCollection AddWtmWorkflow(this IServiceCollection services, IConfiguration config)
+        {
+            var elsaSection = config.GetSection("Workflow");
+
+            services
+                .AddElsa(elsa => elsa
+                    .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(
+                    "Server=(localdb)\\mssqllocaldb;Database=ElsaGuidesContentApprovalWeb_db;Trusted_Connection=True;"))
+                    .AddConsoleActivities()
+                    .AddActivity<WtmApproveActivity>()
+                    .AddJavaScriptActivities()
+                    .AddHttpActivities(elsaSection.GetSection("Server").Bind)
+                    .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
+                    .AddQuartzTemporalActivities()
+                    //.AddWorkflowsFrom<Startup>()
+                );
+            services.AddElsaApiEndpoints();
+            return services;
+        }
+
         public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services, IConfiguration config)
         {
             var conf = config.Get<Configs>();

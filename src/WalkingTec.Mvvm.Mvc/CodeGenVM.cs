@@ -2654,7 +2654,6 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     var item = pros[i];
                     var mpro = modelType.GetSingleProperty(item.FieldName);
-                    string render = "";
                     string template = "text";
                     string newname = item.FieldName;
                     var property = modelType.GetSingleProperty(item.FieldName);

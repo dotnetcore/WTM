@@ -9,6 +9,7 @@ import { dynamicRoutes, notFoundAndNoPower } from '/@/router/route';
 import { formatTwoStageRoutes, formatFlatteningRoutes, router } from '/@/router/index';
 import { useRoutesList } from '/@/stores/routesList';
 import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
+import axios from 'axios';
 
 // 后端控制路由
 
@@ -112,7 +113,7 @@ export function setFilterRouteEnd() {
 	let filterRouteEnd: any = formatTwoStageRoutes(formatFlatteningRoutes(dynamicRoutes));
 	// notFoundAndNoPower 防止 404、401 不在 layout 布局中，不设置的话，404、401 界面将全屏显示
 	// 关联问题 No match found for location with path 'xxx'
-	filterRouteEnd[0].children = [...filterRouteEnd[0].children, ...notFoundAndNoPower];
+    filterRouteEnd[0].children = [...filterRouteEnd[0].children, ...notFoundAndNoPower];
 	return filterRouteEnd;
 }
 
@@ -123,7 +124,7 @@ export function setFilterRouteEnd() {
  * @link 参考：https://next.router.vuejs.org/zh/api/#addroute
  */
 export async function setAddRoute() {
-	await setFilterRouteEnd().forEach((route: RouteRecordRaw) => {
+    await setFilterRouteEnd().forEach((route: RouteRecordRaw) => {
 		router.addRoute(route);
 	});
 }
@@ -154,7 +155,13 @@ export function getBackEndControlRoutes(menus: any[], allMenus: any[], localMenu
 		}
 		if (newdata.path && (newdata.path.toLowerCase().indexOf("http://") !== -1 || newdata.path.toLowerCase().indexOf("https://") !== -1)) {
 			newdata.meta.isIframe = true;
-			newdata.meta.isLink = newdata.path;
+            newdata.meta.isLink = newdata.path;
+            if (newdata.meta.isLink.indexOf("?") > 0) {
+                newdata.meta.isLink += "&_nomenu=1";
+            }
+            else {
+                newdata.meta.isLink += "?_nomenu=1";
+            }
 			newdata.component = "layout/routerView/iframes.vue";
 			newdata.path = '/' + element.Id
 		}
@@ -211,7 +218,11 @@ export function dynamicImport(dynamicViewsModules: Record<string, Function>, com
 
 export async function GetLocalFile() {
 	const keys = Object.keys(viewsModules);
-	const rv: any[] = [];
+    const rv: any[] = [];
+    var localmenu: EmptyObjectType = {};
+    await axios.get("/menu.json").then((data: any) => {
+       localmenu = data.data;
+    })
     for (let i = 0; i < keys.length; i++) {
 		const key = keys[i];
 		const k = key.replace(/..\/views|../, '');
@@ -243,40 +254,29 @@ export async function GetLocalFile() {
 			else {
 				cur = dir[0];
 			}
-			const p = k.replace(/\/index.vue/, '').replace(/\.vue/, '')
-
-			const cmp = await viewsModules[key]();
-			let ishide = false;
-			let className = '';
-			let title = '';
-            var nname = p.replace(/\//, '_');
-			if (cmp.default && cmp.default.name) {
-				const narray = cmp.default.name.split(';');
-				title = narray[0] ? narray[0] : p.replace(/\//, '_');
-				ishide = (narray.length > 1 && narray[1] == "false") ? true : false;
-				className = narray.length > 2 ? narray[2] : '';
-				if (narray.length > 3) {
-					className += "," + narray[3];
-                }
-                nname = cmp.default.name;
-			}
-			else {
-				title = p.replace(/\//, '_');
+            const p = k.replace(/\/index.vue/, '').replace(/\.vue/, '')
+                let ishide = false;
+                let className = '';
+            let title = '';
+            if (localmenu[p]) {
+                ishide = localmenu[p].ishide;
+                title = localmenu[p].title;
+                className = localmenu[p].className;
             }
-
+           
 			cur.children.push({
 				path: p,
-                name: nname,
+                name: p,
 				component: k,
 				meta: {
 					title: title,
-					isHide: ishide,
+                    isHide: ishide,
 					isKeepAlive: !ishide,
 					className: className,
 					icon: "fa fa-file"
 				}
 			});
 		}
-	}
+    }
 	return rv;
 }

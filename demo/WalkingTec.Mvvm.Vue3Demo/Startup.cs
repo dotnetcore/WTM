@@ -1,16 +1,22 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using WalkingTec.Mvvm.Core.Support.FileHandlers;
+using VueCliMiddleware;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.ReactDemo.Models;
 
-namespace WalkingTec.Mvvm.Demo
+namespace WalkingTec.Mvvm.Vue3Demo
 {
     public class Startup
     {
@@ -34,7 +40,6 @@ namespace WalkingTec.Mvvm.Demo
             services.AddWtmSwagger(true);
             services.AddWtmMultiLanguages(ConfigRoot);
 
-
             services.AddMvc(options =>
             {
                 options.UseWtmMvcOptions();
@@ -56,25 +61,31 @@ namespace WalkingTec.Mvvm.Demo
                 options.FileSubDirSelector = SubDirSelector;
                 options.ReloadUserFunc = ReloadUser;
             });
-            services.AddSignalR();
 
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "wwwroot";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs)
+        public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs, IHostEnvironment env)
         {
-            IconFontsHelper.GenerateIconFont("wwwroot/layui", "wwwroot/font-awesome");
-
             app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
+            DefaultFilesOptions defaultFilesOptions = new DefaultFilesOptions();
+            defaultFilesOptions.DefaultFileNames.Clear();
+            defaultFilesOptions.DefaultFileNames.Add("index.html");
+            app.UseDefaultFiles(defaultFilesOptions);
             app.UseStaticFiles();
             app.UseWtmStaticFiles();
+            app.UseSpaStaticFiles();
+            app.UseWtmSwagger();
             app.UseRouting();
             app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
-            app.UseWtmSwagger();
             app.UseWtm();
 
             app.UseEndpoints(endpoints =>
@@ -85,9 +96,12 @@ namespace WalkingTec.Mvvm.Demo
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapFallbackToFile(env.IsDevelopment() ? "index_dev.html" : "");
             });
 
+
             app.UseWtmContext();
+
         }
 
         /// <summary>
@@ -141,5 +155,4 @@ namespace WalkingTec.Mvvm.Demo
             return null;
         }
     }
-
 }

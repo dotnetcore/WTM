@@ -1,14 +1,17 @@
 <template>
-	<component :is="layouts[themeConfig.layout]" />
+	<component :is="isEmpty? emptyLayout : layouts[themeConfig.layout]" />
+	
 </template>
 
 <script setup lang="ts" name="layout">
-import { onBeforeMount, onUnmounted, defineAsyncComponent } from 'vue';
+import { onBeforeMount, onUnmounted, defineAsyncComponent,ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { Local } from '/@/utils/storage';
 import mittBus from '/@/utils/mitt';
+    import { useRouter } from "vue-router";
 
+    const isEmpty = ref(false)
 // 引入组件
 const layouts: any = {
 	defaults: defineAsyncComponent(() => import('/@/layout/main/defaults.vue')),
@@ -17,6 +20,7 @@ const layouts: any = {
 	columns: defineAsyncComponent(() => import('/@/layout/main/columns.vue')),
 };
 
+    const emptyLayout = defineAsyncComponent(() => import('/@/layout/main/empty.vue'))
 // 定义变量内容
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
@@ -39,7 +43,10 @@ const onLayoutResize = () => {
 	}
 };
 // 页面加载前
-onBeforeMount(() => {
+	onBeforeMount(() => {
+		if (useRouter().currentRoute.value.query._nomenu) {
+			isEmpty.value = true;
+		}
 	onLayoutResize();
 	window.addEventListener('resize', onLayoutResize);
 });

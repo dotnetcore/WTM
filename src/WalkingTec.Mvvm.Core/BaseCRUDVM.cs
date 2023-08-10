@@ -1383,7 +1383,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        private Type? _innerType;
+        private Type _innerType;
         public Type InnerType
         {
             get

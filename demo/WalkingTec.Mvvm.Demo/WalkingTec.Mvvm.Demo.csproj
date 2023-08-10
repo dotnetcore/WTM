@@ -23,6 +23,11 @@
     <Folder Include="wwwroot\layuiadmin\lib\extend\" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <PackageReference Include="Elsa.Designer.Components.Web" Version="2.12.0" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

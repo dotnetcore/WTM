@@ -186,7 +186,6 @@ onMounted(() => {
 		state.vmModel.Entity.ID = useRouter().currentRoute.value.query.id as any;
 	}
     GetLocalFile().then(x => {
-        console.log(x);
         state.menuData = getMenuData(x)
     });
 	frameworkmenuApi().get(state.vmModel.Entity.ID ?? "").then((data: any) => { other.setValue(state.vmModel, data); modelChange(state.vmModel.SelectedModule, false) });
