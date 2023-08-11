@@ -54,6 +54,7 @@ function $modelname$Api() {
 		},
 		exportById: (data: Array<number>|Array<string>) => {
 			return request<any,Blob>({
+				responseType: "blob",
 				url: '/api/$modelname$/ExportExcelByIds',
 				method: 'post',
 				data,

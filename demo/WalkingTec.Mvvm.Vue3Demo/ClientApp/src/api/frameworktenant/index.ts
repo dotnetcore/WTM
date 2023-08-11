@@ -59,6 +59,7 @@ export default function frameworktenantApi() {
 		},
 		exportById: (data: Array<number>|Array<string>) => {
 			return request<any,Blob>({
+                responseType: "blob",
 				url: '/api/_frameworktenant/ExportExcelByIds',
 				method: 'post',
 				data,

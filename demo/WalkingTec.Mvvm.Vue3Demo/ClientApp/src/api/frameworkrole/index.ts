@@ -47,6 +47,7 @@ export default function frameworkroleApi() {
 		},
 		exportById: (data: Array<number>|Array<string>) => {
 			return request<any,Blob>({
+                responseType: "blob",
 				url: '/api/_frameworkrole/ExportExcelByIds',
 				method: 'post',
 				data,

@@ -47,6 +47,7 @@ export default function frameworkmenuApi() {
 		},
 		exportById: (data: Array<number>|Array<string>) => {
 			return request<any,Blob>({
+                responseType: "blob",
 				url: '/api/_frameworkmenu/ExportExcelByIds',
 				method: 'post',
 				data,

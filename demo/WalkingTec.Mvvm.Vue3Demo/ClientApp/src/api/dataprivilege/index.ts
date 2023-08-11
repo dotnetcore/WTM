@@ -48,6 +48,7 @@ export default function dataprivilegeApi() {
 		},
 		exportById: (data: Array<number>|Array<string>) => {
 			return request<any,Blob>({
+                responseType: "blob",
 				url: '/api/_dataprivilege/ExportExcelByIds',
 				method: 'post',
 				data,
