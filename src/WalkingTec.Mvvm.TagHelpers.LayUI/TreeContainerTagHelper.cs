@@ -243,7 +243,7 @@ layui.use(['tree'],function(){{
         {
             foreach (var item in tree)
             {
-                if (item.Id == IdField.Model?.ToString())
+                if (item.Id == IdField?.Model?.ToString())
                 {
                     return item;
                 }
