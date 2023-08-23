@@ -41,13 +41,13 @@ namespace WalkingTec.Mvvm.Core.Models
         public string Name { get; set; }
 
         [Required]
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
 
-        public DateTimeOffset LastExecutedAt { get; set; }
+        public DateTimeOffset? LastExecutedAt { get; set; }
 
-        public DateTimeOffset FinishedAt { get; set; }
-        public DateTimeOffset CancelledAt { get; set; }
-        public DateTimeOffset FaultedAt { get; set; }
+        public DateTimeOffset? FinishedAt { get; set; }
+        public DateTimeOffset? CancelledAt { get; set; }
+        public DateTimeOffset? FaultedAt { get; set; }
         public string Data { get; set; }
         public string LastExecutedActivityId { get; set; }
         [StringLength(450)]

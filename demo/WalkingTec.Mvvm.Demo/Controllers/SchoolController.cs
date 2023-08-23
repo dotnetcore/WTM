@@ -124,6 +124,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 vm.DoEdit();
+                _ = vm.ContinueWorkflowAsync(vm.Entity.Workflow_Id, "同意", "adf adf asdf ").Result;
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();

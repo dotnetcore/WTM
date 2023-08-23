@@ -15,7 +15,9 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
+using WalkingTec.Mvvm.Core.WorkFlow;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -58,6 +60,7 @@ namespace WalkingTec.Mvvm.Core
         Task DoDeleteAsync();
 
         Task<RunWorkflowResult> StartWorkflowAsync(string flowName);
+        Task<CollectedWorkflow> ContinueWorkflowAsync(string workflowId, string actionName, string remark);
         /// <summary>
         /// 彻底删除，对PersistPoco进行物理删除
         /// </summary>
@@ -1331,7 +1334,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 return null;
             }
-            string fid = DC.Set<WorkflowDefinition>().Where(x => x.Name == flowName).Select(x => x.Id).FirstOrDefault();
+            string fid = DC.Set<Elsa_WorkflowDefinition>().Where(x => x.Name == flowName).Select(x => x.DefinitionId).FirstOrDefault();
             if (string.IsNullOrEmpty(fid))
             {
                 MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
@@ -1342,12 +1345,67 @@ namespace WalkingTec.Mvvm.Core
 
             if (workflow != null)
             {
-                var rv = await lp.ExecuteStartableWorkflowAsync(workflow);
-                return rv;
+                try
+                {
+                    var rv = await lp.ExecuteStartableWorkflowAsync(workflow);
+                    using (var ndc = DC.ReCreate())
+                    {
+                        var updateModel = new TModel();
+                        updateModel.SetID(Entity.GetID());
+                        updateModel.SetPropertyValue(nameof(IWorkflow.Workflow_Id), rv.WorkflowInstance.Id);
+                        updateModel.SetPropertyValue(nameof(IWorkflow.Workflow_StartTime), DateTime.Now);
+                        ndc.UpdateProperty(updateModel, nameof(IWorkflow.Workflow_Id));
+                        ndc.UpdateProperty(updateModel, nameof(IWorkflow.Workflow_StartTime));
+                        ndc.SaveChanges();
+                    }
+                    return rv;
+                }
+                catch
+                {
+                    return null;
+                }
             }
             return null;
 
         }
+
+        public virtual async Task<CollectedWorkflow> ContinueWorkflowAsync(string workflowId,string actionName,string remark)
+        {
+            if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)) == false || string.IsNullOrEmpty(workflowId))
+            {
+                MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
+                return null;
+            }
+            if (Entity.HasID() == false)
+            {
+                return null;
+            }
+            var lp = Wtm.ServiceProvider.GetRequiredService<IWorkflowLaunchpad>();
+            var context = new WorkflowsQuery(nameof(WtmApproveActivity), new WtmApproveBookmark(), null, workflowId);
+
+            if (context != null)
+            {
+                try
+                {
+                    var collectedWorkflows = await lp.CollectAndDispatchWorkflowsAsync(context, new WorkflowInput { Input = new WtmApproveInput { Action = actionName, CurrentUser = Wtm.LoginUserInfo, Remark = remark } });
+                    using (var ndc = DC.ReCreate())
+                    {
+                        var updateModel = new TModel();
+                        updateModel.SetID(Entity.GetID());
+                        updateModel.SetPropertyValue(nameof(IWorkflow.Workflow_Status), actionName);
+                        ndc.UpdateProperty(updateModel, nameof(IWorkflow.Workflow_Status));
+                        ndc.SaveChanges();
+                    }
+                    return collectedWorkflows.ToList()[0];
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            return null;
+        }
+
     }
 
     class IncludeInfo

@@ -21,8 +21,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         [Display(Name = "学校类型")]
         public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty<School>(x => x.SchoolType);
 
-        [Display(Name = "添加日期")]
-        public ExcelPropety SchoolTime_Excel = ExcelPropety.CreateProperty<School>(x => x.CreateTime, true);
 
         [Display(Name = "备注")]
         public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty<School>(x => x.Remark);

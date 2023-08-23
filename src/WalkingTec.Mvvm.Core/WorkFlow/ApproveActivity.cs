@@ -33,6 +33,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             UIHint = ActivityInputUIHints.MultiText,
             DefaultSyntax = "Json",
             SupportedSyntaxes = new[] { "Json", "Liquid" },
+            DefaultValue = new[] { "同意", "拒绝" },
             Label = "分支",
             ConsiderValuesAsOutcomes = true)]
         public ICollection<string> PossibleOutcomes { get; set; } = new List<string> { "同意", "拒绝" };

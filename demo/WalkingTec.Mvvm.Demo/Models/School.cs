@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         PRI
     }
 
-    public class School : BasePoco,IWorkflow
+    public class School : WorkflowPoco
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -71,9 +71,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         public City Location { get; set; }
 
         public Guid? CityId { get; set; }
-        public Guid? Workflow_Id { get; set; }
-        public string Workflow_Status { get; set; }
-        public DateTime? Workflow_StartTime { get; set; }
+
     }
 
     public class SchoolPhoto : TopBasePoco, ISubFile
