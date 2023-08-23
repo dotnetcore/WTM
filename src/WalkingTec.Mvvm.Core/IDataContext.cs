@@ -114,6 +114,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>返回true即数据新建完成，进入初始化操作，返回false即数据库已经存在</returns>
         Task<bool> DataInit(object AllModel, bool IsSpa);
 
+        void EnsureCreate();
         IDataContext CreateNew();
         IDataContext ReCreate();
 

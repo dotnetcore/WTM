@@ -47,7 +47,6 @@ const header = computed(() => {
   return { Authorization: `Bearer ${Local.get('token')}` }
 })
 watch(filevalue, async () => {
-    debugger;
  if(!filevalue.value){
     files.value = [];
     return;

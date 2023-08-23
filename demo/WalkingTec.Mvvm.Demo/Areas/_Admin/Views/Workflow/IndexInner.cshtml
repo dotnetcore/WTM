@@ -12,7 +12,7 @@
 
 <elsa-studio-root server-url="@($"{Context.Request.Scheme}://{Context.Request.Host}")"
                   monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min" culture="zh-CN">
-    <elsa-studio-dashboard></elsa-studio-dashboard>
+    <elsa-studio-dashboard culture="zh-CN"></elsa-studio-dashboard>
 </elsa-studio-root>
 
 @* <elsa-studio-workflow-definitions-list>
@@ -26,8 +26,7 @@
     <elsa-studio-dashboard culture="zh-CN"></elsa-studio-dashboard>*@
 <script src="/jquery.min.js"></script>
 <script>
-    function MyPlugin() {        
-    }
+
 
     function WtmApprovePlugin(elsaStudio) {
         const {
@@ -52,6 +51,8 @@
                 },
                 syntax: syntax
             };
+            var test = props.find(x => x.name == 'PossibleOutcomes');
+            console.log(test);
             const expression = possibleOutcomes.expressions[syntax] || [];
 
             // Set the outcomes property of the `context` argument to the list of possible outcomes.
@@ -61,42 +62,42 @@
         });
     }
 
-    function DropdownPlugin(elsaStudio) {
-        const {
-            eventBus
-        } = elsaStudio;
-        eventBus.on("activity-editor-rendering", context => {
-            console.log(context);
-            if (context.activityDescriptor.type != 'SayHelloWorld')
-                return;
-            console.log(document.querySelector('#user'));
+    //function DropdownPlugin(elsaStudio) {
+    //    const {
+    //        eventBus
+    //    } = elsaStudio;
+    //    eventBus.on("activity-editor-rendering", context => {
+    //        console.log(context);
+    //        if (context.activityDescriptor.type != 'WtmApproveActivity')
+    //            return;
+    //        console.log(document.querySelector('#user'));
 
-            $.get("/Flow/FlowInfo/GetFrameworkUsers", function (r) {
-                if (r === undefined || r === null) {
-                    return;
-                }
-                var optionHtml = [];
-                if (r.code == 200 && r.data != undefined && r.data.length > 0) {
-                    for (var i = 0; i < r.data.length; i++) {
-                        //optionHtml+='<option value="'+r.data[i].value+'">'+r.data[i].text+'</option>';
+    //        $.get("/_admin/workflow/GetFrameworkUsers", function (r) {
+    //            if (r === undefined || r === null) {
+    //                return;
+    //            }
+    //            var optionHtml = [];
+    //            if (r.code == 200 && r.data != undefined && r.data.length > 0) {
+    //                for (var i = 0; i < r.data.length; i++) {
+    //                    //optionHtml+='<option value="'+r.data[i].value+'">'+r.data[i].text+'</option>';
 
-                        optionHtml.push({ text: r.data[i].text, value: r.data[i].value });
-                    }
-                }
-                //document.querySelector('#user').setHTML('');
-                //document.querySelector('#user').setHTML(optionHtml);
-                var userC = context.activityDescriptor.inputProperties.find(({ name }) => name === 'user');
-                userC.options.items = optionHtml;
+    //                    optionHtml.push({ text: r.data[i].text, value: r.data[i].value });
+    //                }
+    //            }
+    //            //document.querySelector('#user').setHTML('');
+    //            //document.querySelector('#user').setHTML(optionHtml);
+    //            var userC = context.activityDescriptor.inputProperties.find(({ name }) => name === 'user');
+    //            userC.options.items = optionHtml;
+                
+    //            console.log(userC);
 
-                console.log(userC);
-
-            });
-
-
-        });
+    //        });
 
 
-    }
+    //    });
+
+
+    //}
 
 
     const elsaStudioRoot = document.querySelector('elsa-studio-root');
@@ -104,6 +105,6 @@
     elsaStudioRoot.addEventListener('initializing', e => {
         const elsaStudio = e.detail;
         elsaStudio.pluginManager.registerPlugin(WtmApprovePlugin);
-        elsaStudio.pluginManager.registerPlugin(DropdownPlugin);
+        //elsaStudio.pluginManager.registerPlugin(DropdownPlugin);
     });
 </script>

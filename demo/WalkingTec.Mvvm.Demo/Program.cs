@@ -32,6 +32,7 @@ namespace WalkingTec.Mvvm.Demo
                  })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseStaticWebAssets();
                     webBuilder.UseStartup<Startup>();
                 });
         }

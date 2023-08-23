@@ -1,3 +1,6 @@
+using Elsa.Models;
+using Elsa.Services;
+using Elsa.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +57,7 @@ namespace WalkingTec.Mvvm.Core
         void DoDelete();
         Task DoDeleteAsync();
 
+        Task<RunWorkflowResult> StartWorkflowAsync(string flowName);
         /// <summary>
         /// 彻底删除，对PersistPoco进行物理删除
         /// </summary>
@@ -1316,6 +1320,34 @@ namespace WalkingTec.Mvvm.Core
             return new[] { "Entity." + pi.Name };
         }
 
+        public virtual async Task<RunWorkflowResult> StartWorkflowAsync(string flowName)
+        {
+            if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)) == false)
+            {
+                MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
+                return null;
+            }
+            if(Entity.HasID() == false)
+            {
+                return null;
+            }
+            string fid = DC.Set<WorkflowDefinition>().Where(x => x.Name == flowName).Select(x => x.Id).FirstOrDefault();
+            if (string.IsNullOrEmpty(fid))
+            {
+                MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
+                return null;
+            }
+            var lp = Wtm.ServiceProvider.GetRequiredService<IWorkflowLaunchpad>();
+            var workflow = await lp.FindStartableWorkflowAsync(fid,contextId:Entity.GetID().ToString());
+
+            if (workflow != null)
+            {
+                var rv = await lp.ExecuteStartableWorkflowAsync(workflow);
+                return rv;
+            }
+            return null;
+
+        }
     }
 
     class IncludeInfo

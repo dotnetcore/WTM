@@ -51,6 +51,7 @@ using System.Xml.Linq;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using WalkingTec.Mvvm.Core.WorkFlow;
 using Elsa;
+using Elsa.Providers.WorkflowContexts;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -530,26 +531,44 @@ namespace WalkingTec.Mvvm.Mvc
                 y.MultipartBodyLengthLimit = conf.FileUploadOptions.UploadLimit;
             });
             services.AddHostedService<QuartzHostService>();
+            var cs = conf.Connections;
+            foreach (var item in cs)
+            {
+                var dc = item.CreateDC();
+                dc.EnsureCreate();
+            }
+               
             return services;
         }
 
-        public static IServiceCollection AddWtmWorkflow(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddWtmWorkflow(this IServiceCollection services, IConfiguration config,string csName="default")
         {
             var elsaSection = config.GetSection("Workflow");
+            var conf = config.Get<Configs>();
 
             services
                 .AddElsa(elsa => elsa
-                    .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(
-                    "Server=(localdb)\\mssqllocaldb;Database=ElsaGuidesContentApprovalWeb_db;Trusted_Connection=True;"))
+                    .UseNonPooledEntityFrameworkPersistence(ef => ef.UseSqlServer(
+                    conf.Connections.Where(x => x.Key == csName).Select(x => x.Value).FirstOrDefault()))
                     .AddConsoleActivities()
                     .AddActivity<WtmApproveActivity>()
                     .AddJavaScriptActivities()
                     .AddHttpActivities(elsaSection.GetSection("Server").Bind)
                     .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
                     .AddQuartzTemporalActivities()
-                    //.AddWorkflowsFrom<Startup>()
                 );
             services.AddElsaApiEndpoints();
+            var allTypes = Utils.GetAllModels();
+
+            foreach (var item in allTypes)
+            {
+                if (typeof(IWorkflow).IsAssignableFrom(item))
+                {
+                    var type = typeof(WorkflowRefresher<>).MakeGenericType(item);
+                    services.AddTransient(typeof(IWorkflowContextProvider), type);
+                }
+            }
+
             return services;
         }
 

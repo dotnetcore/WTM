@@ -91,6 +91,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 vm.DoAdd();
+                var rv = vm.StartWorkflowAsync("学校审批").Result;
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();

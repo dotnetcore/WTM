@@ -195,7 +195,10 @@ onMounted(() => {
     GetLocalFile().then(x => {
         state.menuData = getMenuData(x)
     });
-	frameworkmenuApi().get(state.vmModel.Entity.ID ?? "").then((data: any) => { other.setValue(state.vmModel, data); modelChange(state.vmModel.SelectedModule, false) });
+	frameworkmenuApi().get(state.vmModel.Entity.ID ?? "").then((data: any) => {
+		other.setValue(state.vmModel, data);
+		modelChange(state.vmModel.SelectedModule, false)
+	});
 	other.getSelectList('/api/_account/GetFrameworkRoles', [], false).then(x => { state.allRoles = x });
 	other.getSelectList('/api/_FrameworkMenu/GetFolders', [], false).then(x => { state.allParents = x });
 });

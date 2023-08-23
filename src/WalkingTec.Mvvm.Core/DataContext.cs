@@ -21,6 +21,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
@@ -40,6 +41,11 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<FrameworkUserGroup> BaseFrameworkUserGroups { get; set; }
         public DbSet<ActionLog> BaseActionLogs { get; set; }
         public DbSet<FrameworkTenant> FrameworkTenants { get; set; }
+        public DbSet<Elsa_Bookmark> Elsa_Bookmarks { get; set; }
+        public DbSet<Elsa_Trigger> Elsa_Triggers { get; set; }
+        public DbSet<Elsa_WorkflowDefinition> Elsa_WorkflowDefinitions { get; set; }
+        public DbSet<Elsa_WorkflowExecutionLogRecord> Elsa_WorkflowExecutionLogRecords { get; set; }
+        public DbSet<Elsa_WorkflowInstance> Elsa_WorkflowInstances { get; set; }
 
         /// <summary>
         /// FrameworkContext
@@ -371,6 +377,8 @@ namespace WalkingTec.Mvvm.Core
 
         public string Version { get; set; }
         public CS ConnectionString { get; set; }
+
+
         /// <summary>
         /// FrameworkContext
         /// </summary>
@@ -770,6 +778,11 @@ namespace WalkingTec.Mvvm.Core
             }
             return rv;
         }
+
+        public void EnsureCreate()
+        {
+            this.Database.EnsureCreated();
+        }
     }
 
     public class NullContext : IDataContext
@@ -904,6 +917,12 @@ namespace WalkingTec.Mvvm.Core
         public void UpdateProperty<T>(T entity, string fieldName) where T : TopBasePoco
         {
             throw new NotImplementedException();
+        }
+
+        public void EnsureCreate()
+        {
+            throw new NotImplementedException();
+
         }
     }
 

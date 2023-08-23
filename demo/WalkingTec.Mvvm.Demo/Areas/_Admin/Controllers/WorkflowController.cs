@@ -23,5 +23,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             return PartialView();
         }
+
+        [Public]
+        public IActionResult GetFrameworkUsers()
+        {
+            return Ok(DC.Set<FrameworkUser>().GetSelectListItems(Wtm, x => x.Name, x => x.ITCode));
+
+        }
     }
 }

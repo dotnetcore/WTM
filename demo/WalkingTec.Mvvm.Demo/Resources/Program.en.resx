@@ -537,6 +537,9 @@
   <data name="Sys.NotHave" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="Sys.NoWorkflow" xml:space="preserve">
+    <value>No related work flow is found</value>
+  </data>
   <data name="Sys.OK" xml:space="preserve">
     <value>OK</value>
   </data>

@@ -316,7 +316,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null, WtmLocalizationOption lop = null, IDistributedCache cache = null)
+        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null, WtmLocalizationOption lop = null, IDistributedCache cache = null, IServiceProvider sp=null)
         {
             _configInfo = _config?.CurrentValue ?? new Configs();
             _globaInfo = _gd ?? new GlobalData();
@@ -344,6 +344,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 _dc = dc;
             }
+            _serviceProvider = sp;
         }
 
         public void SetServiceProvider(IServiceProvider sp)
