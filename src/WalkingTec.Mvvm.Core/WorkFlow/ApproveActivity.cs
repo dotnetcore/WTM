@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             var rv = new List<ComboSelectListItem>();
             try
             {
-                var check = _wtm.CallAPI<List<ComboSelectListItem>>("self", "/_admin/workflow/GetFrameworkUsers").Result;
+                var check = _wtm.CallAPI<List<ComboSelectListItem>>("self", "/api/_account/GetFrameworkUsers").Result;
                 if (check.Data != null)
                 {
                     rv = check.Data;

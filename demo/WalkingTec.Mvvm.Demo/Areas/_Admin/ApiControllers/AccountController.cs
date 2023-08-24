@@ -183,6 +183,14 @@ namespace WalkingTec.Mvvm.Admin.Api
                 {
                     forapi.Attributes.Add("IsMainHost", false);
                 }
+                if (forapi.Attributes.ContainsKey("IsDebug") == false)
+                {
+                    forapi.Attributes.Add("IsDebug", Wtm.ConfigInfo.IsQuickDebug);
+                }
+                else
+                {
+                    forapi.Attributes["IsDebug"] = Wtm.ConfigInfo.IsQuickDebug;
+                }
                 return Ok(forapi);
             }
         }
@@ -303,6 +311,12 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             var users = DC.Set<FrameworkUserRole>().Where(x => x.RoleCode == keywords).Select(x => x.UserCode).ToList();
             return Ok(users);
+        }
+
+        [Public]
+        public IActionResult GetFrameworkUsers()
+        {
+            return Ok(DC.Set<FrameworkUser>().GetSelectListItems(Wtm, x => x.Name, x => x.ITCode));
         }
 
     }

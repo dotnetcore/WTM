@@ -12,6 +12,14 @@ namespace WalkingTec.Mvvm.Mvc
     [DebugOnly]
     public class _CodeGenController : BaseController
     {
+        public IActionResult Inner()
+        {
+            return View();
+
+        }
+
+
+
         [ActionDescription("代码生成器")]
         public IActionResult Index(UIEnum ui)
         {
