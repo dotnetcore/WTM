@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WalkingTec.Mvvm.Demo
 {

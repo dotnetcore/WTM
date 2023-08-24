@@ -537,7 +537,14 @@ namespace WalkingTec.Mvvm.Mvc
                 var dc = item.CreateDC();
                 dc.EnsureCreate();
             }
-               
+            services.AddApiVersioning(
+             options =>
+             {
+                 options.ReportApiVersions = true;
+                 options.DefaultApiVersion = ApiVersion.Default;
+                 options.AssumeDefaultVersionWhenUnspecified = true;
+             });
+
             return services;
         }
 
