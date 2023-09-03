@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Vue3Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddWtmWorkflow(ConfigRoot);
+            //services.AddWtmWorkflow(ConfigRoot);
             services.AddDistributedMemoryCache();
             services.AddWtmSession(3600, ConfigRoot);
             services.AddWtmCrossDomain(ConfigRoot);

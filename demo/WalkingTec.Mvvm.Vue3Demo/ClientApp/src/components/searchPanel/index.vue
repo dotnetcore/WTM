@@ -1,17 +1,17 @@
 <template class="table-search-container">
-	<el-card accordion :body-style="{padding:'10px'}" v-bind="$attrs">
+		<el-card accordion :body-style="{padding:'10px'}" v-bind="$attrs">
 			<div class="card-header" @click="state.isExpand=!state.isExpand">
 				<el-text style="text-align: left;flex:1">{{$t('message._system.searchPanel.condition')}}</el-text>
-					<div>
-						<el-button type="primary" @click.stop="onSearch(tableSearchRef)">{{$t('message._system.searchPanel.search')}} </el-button>
-						<el-button type="info" class="ml10" @click.stop="onReset(tableSearchRef)">{{$t('message._system.searchPanel.reset')}}</el-button>
-					</div>
+				<div>
+					<el-button type="primary" @click.stop="onSearch(tableSearchRef)">{{$t('message._system.searchPanel.search')}} </el-button>
+					<el-button type="info" class="ml10" @click.stop="onReset(tableSearchRef)">{{$t('message._system.searchPanel.reset')}}</el-button>
+				</div>
 			</div>
-			<el-form v-if="state.isExpand" ref="tableSearchRef" :model="props.modelValue" label-width="100px" class="search-form">
+			<el-form v-show="state.isExpand" ref="tableSearchRef" :model="props.modelValue" label-width="100px" class="search-form">
 				<slot></slot>
 			</el-form>
-	</el-card>
-	<div style="height:10px"></div>
+		</el-card>
+		<div style="height:10px"></div>
 </template>
 
 <script setup lang="ts">
@@ -31,7 +31,6 @@ const state = reactive({
 });
 
 const onSearch = (formEl: any | undefined) => {
-
 	if (!formEl) return;
 	formEl.validate((valid: boolean) => {
 		if (valid) {
