@@ -124,7 +124,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 vm.DoEdit();
-                _ = vm.ContinueWorkflowAsync(vm.Entity.Workflow_Id, "同意", "adf adf asdf ").Result;
+                _ = vm.ContinueWorkflowAsync("同意", "adf adf asdf ","学校审批").Result;
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();
@@ -168,6 +168,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult Details(int id)
         {
             var vm = Wtm.CreateVM<SchoolVM>(id);
+            var test =vm.GetWorkflowTimeLineAsync().Result;
             return PartialView(vm);
         }
         #endregion

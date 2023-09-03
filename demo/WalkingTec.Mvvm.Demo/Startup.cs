@@ -10,6 +10,7 @@ using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using WalkingTec.Mvvm.Core.WorkFlow;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -58,7 +59,7 @@ namespace WalkingTec.Mvvm.Demo
                 options.ReloadUserFunc = ReloadUser;
             });
             services.AddSignalR();
-
+            services.AddSingleton<IApproveNotification>(new WorkflowNotify());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

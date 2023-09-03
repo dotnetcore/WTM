@@ -274,7 +274,7 @@
     <value>Tenant management</value>
   </data>
   <data name="MenuKey.GroupManagement" xml:space="preserve">
-    <value>Group Management</value>
+    <value>Dept Management</value>
   </data>
   <data name="MenuKey.Login" xml:space="preserve">
     <value>Login</value>
@@ -811,22 +811,22 @@
     <value>Gender</value>
   </data>
   <data name="_Admin.Group" xml:space="preserve">
-    <value>Group</value>
+    <value>Dept</value>
   </data>
   <data name="_Admin.GroupApi" xml:space="preserve">
-    <value>Group management Api</value>
+    <value>Dept management Api</value>
   </data>
   <data name="_Admin.GroupCode" xml:space="preserve">
-    <value>Group code</value>
+    <value>Dept code</value>
   </data>
   <data name="_Admin.GroupDp" xml:space="preserve">
-    <value>Group Dp</value>
+    <value>Dept Dp</value>
   </data>
   <data name="_Admin.GroupManager" xml:space="preserve">
-    <value>Group Manager</value>
+    <value>Dept Manager</value>
   </data>
   <data name="_Admin.GroupName" xml:space="preserve">
-    <value>Group name</value>
+    <value>Dept name</value>
   </data>
   <data name="_Admin.HasMainHost" xml:space="preserve">
     <value>This operation cannot be performed. Please go to the main site for corresponding operation</value>
@@ -1019,5 +1019,17 @@
   </data>
   <data name="_Admin.ZipCode" xml:space="preserve">
     <value>Zip</value>
+  </data>
+  <data name="_Workflow.Canceled" xml:space="preserve">
+    <value>Canceled</value>
+  </data>
+  <data name="_Workflow.Finished" xml:space="preserve">
+    <value>Finished</value>
+  </data>
+  <data name="_Workflow.NotStarted" xml:space="preserve">
+    <value>Not Started</value>
+  </data>
+  <data name="_Workflow.Processing" xml:space="preserve">
+    <value>In Process</value>
   </data>
 </root>

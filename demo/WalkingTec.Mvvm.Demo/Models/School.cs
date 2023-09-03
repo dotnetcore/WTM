@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         PRI
     }
 
-    public class School : WorkflowPoco
+    public class School : BasePoco, IWorkflow
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

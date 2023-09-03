@@ -52,6 +52,8 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using WalkingTec.Mvvm.Core.WorkFlow;
 using Elsa;
 using Elsa.Providers.WorkflowContexts;
+using Elsa.Options;
+using Elsa.Persistence.EntityFramework.PostgreSql;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -554,15 +556,53 @@ namespace WalkingTec.Mvvm.Mvc
             var conf = config.Get<Configs>();
 
             services
-                .AddElsa(elsa => elsa
-                    .UseNonPooledEntityFrameworkPersistence(ef => ef.UseSqlServer(
-                    conf.Connections.Where(x => x.Key == csName).Select(x => x.Value).FirstOrDefault()))
+                .AddElsa(elsa => {
+                    var cs = conf.Connections.Where(x => x.Key == csName).FirstOrDefault();
+                    switch (cs.DbType)
+                    {
+                        case DBTypeEnum.SqlServer:
+                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseSqlServer(cs.Value));
+                            break;
+                        case DBTypeEnum.MySql:
+                            ServerVersion sv = null;
+                            if (string.IsNullOrEmpty(cs.Version) == false)
+                            {
+                                ServerVersion.TryParse(cs.Version, out sv);
+                            }
+                            if (sv == null)
+                            {
+                                sv = ServerVersion.AutoDetect(cs.Value);
+                            }
+                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseMySql(cs.Value, sv));
+                            break;
+                        case DBTypeEnum.PgSql:
+                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UsePostgreSql(cs.Value));
+                            break;
+                        case DBTypeEnum.Memory:
+                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseInMemoryDatabase(cs.Value));
+                            break;
+                        case DBTypeEnum.SQLite:
+                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseSqlite(cs.Value));
+                            break;
+                        case DBTypeEnum.Oracle:
+                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseOracle(cs.Value));
+                            break;
+                        case DBTypeEnum.DaMeng:
+                            break;
+                        case null:
+                            break;
+                        default:
+                            break;
+                    }
+
+                    elsa
                     .AddConsoleActivities()
                     .AddActivity<WtmApproveActivity>()
                     .AddJavaScriptActivities()
                     .AddHttpActivities(elsaSection.GetSection("Server").Bind)
                     .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
-                    .AddQuartzTemporalActivities()
+                    .AddQuartzTemporalActivities();
+                }
                 );
             services.AddElsaApiEndpoints();
             var allTypes = Utils.GetAllModels();
@@ -575,6 +615,7 @@ namespace WalkingTec.Mvvm.Mvc
                     services.AddTransient(typeof(IWorkflowContextProvider), type);
                 }
             }
+            services.AddBookmarkProvider<WtmApproveBookmarkProvider>();
 
             return services;
         }

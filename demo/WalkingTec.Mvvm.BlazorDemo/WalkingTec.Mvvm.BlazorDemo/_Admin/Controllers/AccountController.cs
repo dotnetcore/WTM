@@ -313,12 +313,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Ok(users);
         }
 
-        [Public]
-        public IActionResult GetFrameworkUsers()
-        {
-            return Ok(DC.Set<FrameworkUser>().GetSelectListItems(Wtm, x => x.Name, x => x.ITCode));
-        }
-
     }
 
     public class SimpleLogin

@@ -274,7 +274,7 @@
     <value>租户管理</value>
   </data>
   <data name="MenuKey.GroupManagement" xml:space="preserve">
-    <value>用户组管理</value>
+    <value>部门管理</value>
   </data>
   <data name="MenuKey.Login" xml:space="preserve">
     <value>登录</value>
@@ -814,22 +814,22 @@
     <value>性别</value>
   </data>
   <data name="_Admin.Group" xml:space="preserve">
-    <value>用户组</value>
+    <value>部门</value>
   </data>
   <data name="_Admin.GroupApi" xml:space="preserve">
-    <value>用户组管理Api</value>
+    <value>部门管理Api</value>
   </data>
   <data name="_Admin.GroupCode" xml:space="preserve">
-    <value>用户组编号</value>
+    <value>部门编号</value>
   </data>
   <data name="_Admin.GroupDp" xml:space="preserve">
-    <value>用户组权限</value>
+    <value>部门权限</value>
   </data>
   <data name="_Admin.GroupManager" xml:space="preserve">
     <value>部门主管</value>
   </data>
   <data name="_Admin.GroupName" xml:space="preserve">
-    <value>组名</value>
+    <value>部门名称</value>
   </data>
   <data name="_Admin.HasMainHost" xml:space="preserve">
     <value>当前站点已设置了主站，无法进行此操作，请到主站进行相应操作</value>
@@ -1022,5 +1022,17 @@
   </data>
   <data name="_Admin.ZipCode" xml:space="preserve">
     <value>邮编</value>
+  </data>
+  <data name="_Workflow.Canceled" xml:space="preserve">
+    <value>已取消</value>
+  </data>
+  <data name="_Workflow.Finished" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="_Workflow.NotStarted" xml:space="preserve">
+    <value>未开始</value>
+  </data>
+  <data name="_Workflow.Processing" xml:space="preserve">
+    <value>进行中</value>
   </data>
 </root>

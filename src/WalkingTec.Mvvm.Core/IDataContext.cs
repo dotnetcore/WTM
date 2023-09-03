@@ -116,7 +116,7 @@ namespace WalkingTec.Mvvm.Core
 
         void EnsureCreate();
         IDataContext CreateNew();
-        IDataContext ReCreate();
+        IDataContext ReCreate(ILoggerFactory _logger = null);
 
         /// <summary>
         /// 执行存储过程，返回datatable

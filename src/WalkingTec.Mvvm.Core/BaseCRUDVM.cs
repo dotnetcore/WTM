@@ -18,6 +18,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.WorkFlow;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -59,8 +60,10 @@ namespace WalkingTec.Mvvm.Core
         void DoDelete();
         Task DoDeleteAsync();
 
-        Task<RunWorkflowResult> StartWorkflowAsync(string flowName);
-        Task<CollectedWorkflow> ContinueWorkflowAsync(string workflowId, string actionName, string remark);
+        Task<RunWorkflowResult> StartWorkflowAsync(string flowName=null);
+        Task<RunWorkflowResult> ContinueWorkflowAsync(string actionName, string remark, string flowName=null, string tag = null);
+        Task<List<ApproveTimeLine>> GetWorkflowTimeLineAsync(string flowName = null);
+        Task<WorkflowInstance> GetWorkflowInstanceAsync(string flowName = null);
         /// <summary>
         /// 彻底删除，对PersistPoco进行物理删除
         /// </summary>
@@ -1323,7 +1326,7 @@ namespace WalkingTec.Mvvm.Core
             return new[] { "Entity." + pi.Name };
         }
 
-        public virtual async Task<RunWorkflowResult> StartWorkflowAsync(string flowName)
+        public virtual async Task<RunWorkflowResult> StartWorkflowAsync(string flowName=null)
         {
             if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)) == false)
             {
@@ -1334,44 +1337,38 @@ namespace WalkingTec.Mvvm.Core
             {
                 return null;
             }
-            string fid = DC.Set<Elsa_WorkflowDefinition>().Where(x => x.Name == flowName).Select(x => x.DefinitionId).FirstOrDefault();
-            if (string.IsNullOrEmpty(fid))
+
+            string workflowId = null;
+            if (string.IsNullOrEmpty(flowName))
+            {
+                workflowId = DC.Set<Elsa_WorkflowDefinition>().Where(x => x.Data.Contains($"\"contextType\": \"{typeof(TModel).FullName}, {typeof(TModel).Assembly.GetName().Name}\"")).Select(x => x.DefinitionId).FirstOrDefault();
+            }
+            else
+            {
+                workflowId = DC.Set<Elsa_WorkflowDefinition>().Where(x => x.Name == flowName).Select(x => x.DefinitionId).FirstOrDefault();
+            }
+            if (string.IsNullOrEmpty(workflowId))
             {
                 MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
                 return null;
             }
             var lp = Wtm.ServiceProvider.GetRequiredService<IWorkflowLaunchpad>();
-            var workflow = await lp.FindStartableWorkflowAsync(fid,contextId:Entity.GetID().ToString());
-
+            var workflow = await lp.FindStartableWorkflowAsync(workflowId, contextId: Entity.GetID().ToString(), tenantId: Wtm.LoginUserInfo.CurrentTenant);
             if (workflow != null)
             {
-                try
-                {
-                    var rv = await lp.ExecuteStartableWorkflowAsync(workflow);
-                    using (var ndc = DC.ReCreate())
-                    {
-                        var updateModel = new TModel();
-                        updateModel.SetID(Entity.GetID());
-                        updateModel.SetPropertyValue(nameof(IWorkflow.Workflow_Id), rv.WorkflowInstance.Id);
-                        updateModel.SetPropertyValue(nameof(IWorkflow.Workflow_StartTime), DateTime.Now);
-                        ndc.UpdateProperty(updateModel, nameof(IWorkflow.Workflow_Id));
-                        ndc.UpdateProperty(updateModel, nameof(IWorkflow.Workflow_StartTime));
-                        ndc.SaveChanges();
-                    }
-                    return rv;
-                }
-                catch
-                {
-                    return null;
-                }
+                workflow.WorkflowInstance.Variables.Set("Submitter", Wtm.LoginUserInfo.ITCode);
+                workflow.WorkflowInstance.Name = flowName;
+                var rv = await lp.ExecuteStartableWorkflowAsync(workflow);
+                return rv;
             }
+
             return null;
 
         }
 
-        public virtual async Task<CollectedWorkflow> ContinueWorkflowAsync(string workflowId,string actionName,string remark)
+        public virtual async Task<RunWorkflowResult> ContinueWorkflowAsync(string actionName, string remark, string flowName=null, string tag = null)
         {
-            if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)) == false || string.IsNullOrEmpty(workflowId))
+            if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)) == false)
             {
                 MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
                 return null;
@@ -1380,32 +1377,55 @@ namespace WalkingTec.Mvvm.Core
             {
                 return null;
             }
-            var lp = Wtm.ServiceProvider.GetRequiredService<IWorkflowLaunchpad>();
-            var context = new WorkflowsQuery(nameof(WtmApproveActivity), new WtmApproveBookmark(), null, workflowId);
 
-            if (context != null)
+            try
             {
-                try
+                var lp = Wtm.ServiceProvider.GetRequiredService<IWorkflowLaunchpad>();
+                var query = new WorkflowsQuery(nameof(WtmApproveActivity), new WtmApproveBookmark(Wtm.LoginUserInfo.ITCode, string.IsNullOrEmpty(flowName)?typeof(TModel).FullName:flowName, tag, Entity.GetID().ToString()), null, null, null, Wtm.LoginUserInfo.CurrentTenant);
+                if (query != null)
                 {
-                    var collectedWorkflows = await lp.CollectAndDispatchWorkflowsAsync(context, new WorkflowInput { Input = new WtmApproveInput { Action = actionName, CurrentUser = Wtm.LoginUserInfo, Remark = remark } });
-                    using (var ndc = DC.ReCreate())
+                    //不直接使用Wtm.LoginUserInfo，否则elsa会把所有信息序列化保存到WorkflowInstances表中
+                    LoginUserInfo li = new LoginUserInfo();
+                    li.ITCode = Wtm.LoginUserInfo.ITCode;
+                    li.Name = Wtm.LoginUserInfo.Name;
+                    li.UserId = Wtm.LoginUserInfo.UserId;
+                    li.PhotoId = Wtm.LoginUserInfo.PhotoId;
+                    li.Groups = Wtm.LoginUserInfo.Groups;
+                    li.Roles = Wtm.LoginUserInfo.Roles;
+                    li.TenantCode = Wtm.LoginUserInfo.CurrentTenant;
+                    var flows = await lp.FindWorkflowsAsync(query);
+                    foreach (var item in flows)
                     {
-                        var updateModel = new TModel();
-                        updateModel.SetID(Entity.GetID());
-                        updateModel.SetPropertyValue(nameof(IWorkflow.Workflow_Status), actionName);
-                        ndc.UpdateProperty(updateModel, nameof(IWorkflow.Workflow_Status));
-                        ndc.SaveChanges();
+                        if (item.WorkflowInstance == null)
+                        {
+                            var result = await lp.ExecutePendingWorkflowAsync(item, new WorkflowInput { Input = new WtmApproveInput { Action = actionName, CurrentUser = li, Remark = remark } });
+                            return result;
+                        }
                     }
-                    return collectedWorkflows.ToList()[0];
+                    MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
+                    return null;
                 }
-                catch
+                else
                 {
+                    MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
                     return null;
                 }
             }
+            catch { }
+
             return null;
         }
 
+        public virtual async Task<List<ApproveTimeLine>> GetWorkflowTimeLineAsync(string flowName = null)
+        {
+            var rv = await Wtm.CallAPI<List<ApproveTimeLine>>("", $"{Wtm.HostAddress}/_workflow/GetTimeLine?flowname={flowName}&entitytype={typeof(TModel).FullName}&entityid={Entity.GetID()}");
+            return rv.Data;
+        }
+        public virtual async Task<WorkflowInstance> GetWorkflowInstanceAsync(string flowName = null)
+        {
+            var rv = await Wtm.CallAPI<WorkflowInstance>("", $"{Wtm.HostAddress}/_workflow/GetWorkflow?flowname={flowName}&entitytype={typeof(TModel).FullName}&entityid={Entity.GetID()}");
+            return rv.Data;
+        }
     }
 
     class IncludeInfo

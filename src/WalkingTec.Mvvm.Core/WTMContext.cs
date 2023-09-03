@@ -297,6 +297,19 @@ namespace WalkingTec.Mvvm.Core
         public string BaseUrl { get; set; }
         #endregion
 
+        public string HostAddress { get
+            {
+                if (this.HttpContext?.Request != null)
+                {
+                    return $"{this.HttpContext.Request.Scheme}://{this.HttpContext.Request.Host}";
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
         public SimpleLog Log { get; set; }
 
         protected ILogger<ActionLog> Logger { get; set; }
@@ -1178,6 +1191,8 @@ params string[] groupcode)
                 if (string.IsNullOrEmpty(domainName))
                 {
                     client = factory.CreateClient();
+                    client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
                 }
                 else
                 {
@@ -1193,11 +1208,11 @@ params string[] groupcode)
                         }
                     }
                 }
-                if (string.IsNullOrEmpty(_loginUserInfo?.RemoteToken) == false)
+                if (string.IsNullOrEmpty(LoginUserInfo?.RemoteToken) == false)
                 {
                     if (client.DefaultRequestHeaders.Any(x => x.Key == "Authorization") == false)
                     {
-                        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _loginUserInfo.RemoteToken);
+                        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + LoginUserInfo.RemoteToken);
                     }
                 }
 

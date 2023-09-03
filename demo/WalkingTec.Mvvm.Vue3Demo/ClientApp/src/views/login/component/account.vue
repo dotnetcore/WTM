@@ -62,8 +62,8 @@ const router = useRouter();
 const state = reactive({
 	isShowPassword: false,
 	ruleForm: {
-		Account: 'admin',
-		Password: '000000',
+        Account: import.meta.env.PROD == true?'':'admin',
+        Password: import.meta.env.PROD == true?"":'000000',
 		Tenant: '',
 	},
 	loading: {

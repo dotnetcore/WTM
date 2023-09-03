@@ -39,6 +39,7 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<FrameworkRole> BaseFrameworkRoles { get; set; }
         public DbSet<FrameworkUserRole> BaseFrameworkUserRoles { get; set; }
         public DbSet<FrameworkUserGroup> BaseFrameworkUserGroups { get; set; }
+        public DbSet<FrameworkWorkflow> FrameworkWorkflows { get; set; }
         public DbSet<ActionLog> BaseActionLogs { get; set; }
         public DbSet<FrameworkTenant> FrameworkTenants { get; set; }
         public DbSet<Elsa_Bookmark> Elsa_Bookmarks { get; set; }
@@ -427,7 +428,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public IDataContext ReCreate()
+        public IDataContext ReCreate(ILoggerFactory _logger=null)
         {
             if (this?.Database?.CurrentTransaction != null)
             {
@@ -445,6 +446,11 @@ namespace WalkingTec.Mvvm.Core
                    rv =(IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
                 }
                 rv.SetTenantCode(this.TenantCode);
+                if (_logger != null)
+                {
+                    rv.IsDebug = true;
+                    rv.SetLoggerFactory(_logger);
+                }
                 return rv;
             }
         }
@@ -454,7 +460,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="entity">实体</param>
         public void AddEntity<T>(T entity) where T : TopBasePoco
         {
-            this.Entry(entity).State = EntityState.Added;
+            this.Entry(entity).State = EntityState.Added;            
         }
 
         /// <summary>
@@ -835,7 +841,7 @@ namespace WalkingTec.Mvvm.Core
 
         }
 
-        public IDataContext ReCreate()
+        public IDataContext ReCreate(ILoggerFactory _logger = null)
         {
             throw new NotImplementedException();
         }

@@ -18,7 +18,7 @@
         src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
 
 
-<elsa-studio-root server-url="@($"{Context.Request.Scheme}://{Context.Request.Host}")"
+<elsa-studio-root server-url="@($"{Context.Request.Scheme}://{Context.Request.Host}")" tenant=""
                   monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min" culture="zh-CN">
     <elsa-studio-dashboard culture="@requestCulture.RequestCulture.UICulture.Name"></elsa-studio-dashboard>
 </elsa-studio-root>
@@ -32,26 +32,26 @@
             eventBus
         } = elsaStudio;
 
-        eventBus.on('activity-design-displaying', context => {
+        //eventBus.on('activity-design-displaying', context => {
 
-            const activityModel = context.activityModel;
+        //    const activityModel = context.activityModel;
 
-            if (activityModel.type !== 'WtmApproveActivity')
-                return;
-            const props = activityModel.properties || [];
-            const syntax = 'Json';
-            const possibleOutcomes = props.find(x => x.name == 'PossibleOutcomes') || {
-                expressions: {
-                    'Json': '[]'
-                },
-                syntax: syntax
-            };
-            var test = props.find(x => x.name == 'PossibleOutcomes');
-            console.log(test);
-            const expression = possibleOutcomes.expressions[syntax] || [];
-            context.outcomes = !!expression['$values'] ? expression['$values'] : Array.isArray(expression) ?
-                expression : JSON.parse(expression) || [];
-        });
+        //    if (activityModel.type !== 'WtmApproveActivity')
+        //        return;
+        //    const props = activityModel.properties || [];
+        //    const syntax = 'Json';
+        //    const possibleOutcomes = props.find(x => x.name == 'PossibleOutcomes') || {
+        //        expressions: {
+        //            'Json': '[]'
+        //        },
+        //        syntax: syntax
+        //    };
+        //    var test = props.find(x => x.name == 'PossibleOutcomes');
+        //    console.log(test);
+        //    const expression = possibleOutcomes.expressions[syntax] || [];
+        //    context.outcomes = !!expression['$values'] ? expression['$values'] : Array.isArray(expression) ?
+        //        expression : JSON.parse(expression) || [];
+        //});
     }
 
     const elsaStudioRoot = document.querySelector('elsa-studio-root');
@@ -67,8 +67,8 @@
   <script>
         elsaStudioRoot.addEventListener('initialized', e => {
             $("img[alt='Workflow']").remove();
-            $("intl-message[label='Workflow Definitions']").html("流程配置");
-            $("intl-message[label='Workflow Instances']").html("流程管理");
+            $("intl-message[label='Workflow Definitions']").html("流程定义");
+            $("intl-message[label='Workflow Instances']").html("流程实例");
             $("intl-message[label='Workflow Registry']").remove();
         });
     </script>
