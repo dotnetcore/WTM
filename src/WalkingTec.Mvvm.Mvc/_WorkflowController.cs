@@ -165,5 +165,20 @@ namespace WalkingTec.Mvvm.Mvc
             return Ok(instance);
         }
 
+        public async Task<IActionResult> GetMyApprove(string flowname, string entitytype, string entityid,string tag,int page=1,int take=20)
+        {
+            var rv = await DC.Set<FrameworkWorkflow>()
+                .Where(x=>x.UserCode == Wtm.LoginUserInfo.ITCode)
+                .Where(x=>x.TenantCode == Wtm.LoginUserInfo.CurrentTenant)
+                .CheckEqual(flowname, x => x.WorkflowName)
+                .CheckEqual(entitytype, x => x.ModelType)
+                .CheckEqual(entityid, x => x.ModelID)
+                .CheckEqual(tag, x => x.Tag)
+                .OrderByDescending(x=>x.StartTime)
+                .Skip((page-1)*take).Take(take)
+                .ToListAsync();
+            return Ok(rv);
+        }
+
     }
 }

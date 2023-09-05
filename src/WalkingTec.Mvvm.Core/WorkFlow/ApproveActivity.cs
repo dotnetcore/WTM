@@ -20,9 +20,9 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace WalkingTec.Mvvm.Core.WorkFlow
 {
     [Trigger(
-   Category = "审批",
-   DisplayName = "标准审批",
-   Description = "审批流程配置",Outcomes = new[] {"同意","拒绝"})]
+   Category = "工作流",
+   DisplayName = "审批",
+   Description = "审批流程",Outcomes = new[] {"同意","拒绝"})]
     public class WtmApproveActivity : Elsa.Services.Activity, IActivityPropertyOptionsProvider
     {
         [ActivityInput(
@@ -30,8 +30,8 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             DefaultSyntax = "Json",
             SupportedSyntaxes = new[] { "Json", "Liquid" },
             IsDesignerCritical = true,
-            OptionsProvider = typeof(WtmApproveActivity),            
-            Label = "审批人")]
+            //OptionsProvider = typeof(WtmApproveActivity),            
+            Label = "审批人ITCode")]
         public ICollection<string> ApproveUsers { get; set; }
 
         [ActivityInput(IsBrowsable = false, DefaultSyntax = "Json")]
