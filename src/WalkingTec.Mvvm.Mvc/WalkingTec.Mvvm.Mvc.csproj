@@ -15,7 +15,6 @@
   <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\Spa\Vue\**\*.txt" />
     <EmbeddedResource Include="Views\**\*.cshtml" />
-    <Content Remove="Workflow.json" />
     <None Remove="GeneratorFiles\Spa\Blazor\Controller.txt" />
     <None Remove="GeneratorFiles\Spa\Blazor\Create.txt" />
     <None Remove="GeneratorFiles\Spa\Blazor\Details.txt" />
@@ -75,7 +74,6 @@
     <EmbeddedResource Include="GeneratorFiles\Spa\Vue3\Import.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\Vue3\Index.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\Vue3\indexapi.txt" />
-    <EmbeddedResource Include="Workflow.json" />
   </ItemGroup>
 
   <ItemGroup>
