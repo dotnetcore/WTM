@@ -11,6 +11,8 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core.WorkFlow;
+using WalkingTec.Mvvm.Mvc.Helper;
+using System.Reflection;
 
 namespace WalkingTec.Mvvm.Demo
 {

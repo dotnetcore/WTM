@@ -181,7 +181,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("GetActionsByModelId")]
         [AllRights]
-        public JsonResult GetActionsByModelId(string Id)
+        public ActionResult GetActionsByModelId(string Id)
         {
             if (string.IsNullOrEmpty(Id))
             {

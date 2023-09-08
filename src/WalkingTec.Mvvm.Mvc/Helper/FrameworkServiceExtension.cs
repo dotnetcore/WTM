@@ -54,6 +54,8 @@ using Elsa;
 using Elsa.Providers.WorkflowContexts;
 using Elsa.Options;
 using Elsa.Persistence.EntityFramework.PostgreSql;
+using Elsa.Server.Api.Mapping;
+using Elsa.Server.Api.Services;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -604,7 +606,20 @@ namespace WalkingTec.Mvvm.Mvc
                     .AddQuartzTemporalActivities();
                 }
                 );
-            services.AddElsaApiEndpoints();
+            //       services.AddElsaApiEndpoints();
+
+            services
+    .AddSingleton<ConnectionConverter>()
+    .AddSingleton<ActivityBlueprintConverter>()
+    .AddScoped<IWorkflowBlueprintMapper, WorkflowBlueprintMapper>()
+    .AddSingleton<IEndpointContentSerializerSettingsProvider, EndpointContentSerializerSettingsProvider>()
+    .AddAutoMapperProfile<AutoMapperProfile>()
+    .AddSignalR();
+            services.AddMvc(options =>
+            {
+                options.Conventions.Add(new MyNewtonsoftJsonConvention(null));
+            });
+
             var allTypes = Utils.GetAllModels();
 
             foreach (var item in allTypes)
