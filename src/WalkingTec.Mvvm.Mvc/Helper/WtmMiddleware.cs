@@ -153,7 +153,7 @@ namespace WalkingTec.Mvvm.Mvc
                 .Replace("\"description\":\"Set the CorrelationId of the workflow to a given value.\"", "\"description\":\"设置流程的关联ID\"")
                 .Replace("\"description\":\"Triggers periodically based on a specified CRON expression.\"", "\"description\":\"使用CRON表达式触发\"")
                 .Replace("\"category\":\"Control Flow\"", "\"category\":\"控制流\"")
-                .Replace("\"description\": \"Break out of a While, For or ForEach loop.\"", "\"description\":\"中断While, For 或者 ForEach 循环\"")
+                .Replace("\"description\":\"Break out of a While, For or ForEach loop.\"", "\"description\":\"中断While, For 或者 ForEach 循环\"")
                 .Replace("\"displayName\":\"Finish\"", "\"displayName\":\"结束\"")
                 .Replace("\"description\":\"Removes any blocking activities from the current container (workflow or composite activity).\"", "\"description\":\"取消所有暂停的动作，标记流程结束\"")
                 .Replace("\"description\":\"Iterate between two numbers.\"", "\"description\":\"在两个数字之间循环\"")
@@ -167,7 +167,7 @@ namespace WalkingTec.Mvvm.Mvc
                 .Replace("\"hint\":\"WaitAll:wait for all incoming activities to have executed. WaitAny:continue execution as soon as any of the incoming activity has executed.\"", "\"hint\":\"等待全部:等待所有动作都完成. 等候任意:任意动作完成就可以继续\"")
                 .Replace("\"text\":\"WaitAll\"", "\"text\":\"等候全部\"")
                 .Replace("\"text\":\"WaitAny\"", "\"text\":\"等候任意\"")
-                .Replace("\"displayName\": \"Parallel for Each\"","\"displayName\":\"并行 for Each\"")
+                .Replace("\"displayName\":\"Parallel for Each\"","\"displayName\":\"并行 for Each\"")
                 .Replace("\"description\":\"Iterate over a collection in parallel.\"", "\"description\":\"并行循环一个集合\"")
                 .Replace("\"displayName\":\"Switch\"", "\"displayName\":\"开关\"")
                 .Replace("\"description\":\"Evaluate multiple conditions and continue execution depending on the results.\"", "\"description\":\"评估多个条件的值，并且根据值运行\"")
@@ -179,10 +179,10 @@ namespace WalkingTec.Mvvm.Mvc
                 .Replace("\"description\":\"Invoke a specific compensable activity.\"", "\"description\":\"运行一个可补偿的动作\"")
                 .Replace("\"displayName\":\"Confirm", "\"displayName\":\"确认")
                 .Replace("\"description\":\"Confirm a specific compensable activity.\"", "\"description\":\"确认一个可补偿的动作\"")
-                .Replace("\"category\": \"Scripting\"", "\"category\": \"脚本\"")
-                .Replace("\"displayName\": \"Run JavaScript\"", "\"displayName\": \"运行Javascript\"")
-                .Replace("\"description\": \"Run JavaScript code.\"", "\"description\": \"运行Javascript脚本\"")
-                .Replace("\"category\": \"Email\"", "\"category\": \"电子邮件\"")
+                .Replace("\"category\":\"Scripting\"", "\"category\":\"脚本\"")
+                .Replace("\"displayName\":\"Run JavaScript\"", "\"displayName\":\"运行Javascript\"")
+                .Replace("\"description\":\"Run JavaScript code.\"", "\"description\":\"运行Javascript脚本\"")
+                .Replace("\"category\":\"Email\"", "\"category\":\"电子邮件\"")
                 .Replace("\"displayName\":\"Composite Activity\"", "\"displayName\":\"组合动作\"");
 
             return rv;

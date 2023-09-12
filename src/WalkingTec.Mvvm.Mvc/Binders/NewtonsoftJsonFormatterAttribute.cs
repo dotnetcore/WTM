@@ -11,6 +11,8 @@ using System.Buffers;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Elsa.Server.Api.Services;
+using Elsa.Server.Api.Helpers;
 
 namespace WalkingTec.Mvvm.Mvc.Binders
 {
@@ -36,13 +38,25 @@ namespace WalkingTec.Mvvm.Mvc.Binders
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
+            var jsonOptions = context.HttpContext.RequestServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
+            var jsonSettings = jsonOptions.Value.SerializerSettings;
+            if (context.Controller.GetType().FullName.StartsWith("Elsa.Server.Api"))
+            {
+                if (context.Controller.GetType().FullName.StartsWith("Elsa.Server.Api.Endpoints.WorkflowDefinitions"))
+                {
+                    jsonSettings = SerializationHelper.GetSettingsForWorkflowDefinition();
+                }
+                else
+                {
+                    jsonSettings = SerializationHelper.GetSettingsForEndpoint();
+                }
+            }
             if (context.Result is ObjectResult objectResult)
             {
-                var jsonOptions = context.HttpContext.RequestServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
 
                 objectResult.Formatters.RemoveType<SystemTextJsonOutputFormatter>();
                 objectResult.Formatters.Add(new NewtonsoftJsonOutputFormatter(
-                    jsonOptions.Value.SerializerSettings,
+                    jsonSettings,
                     context.HttpContext.RequestServices.GetRequiredService<ArrayPool<char>>(),
                     context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcOptions>>().Value,
                     context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcNewtonsoftJsonOptions>>().Value));
@@ -50,11 +64,10 @@ namespace WalkingTec.Mvvm.Mvc.Binders
             else if(context.Result is JsonResult jr)
             {
                 ObjectResult obj = new ObjectResult(jr.Value);
-                var jsonOptions = context.HttpContext.RequestServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
 
                 obj.Formatters.RemoveType<SystemTextJsonOutputFormatter>();
                 obj.Formatters.Add(new NewtonsoftJsonOutputFormatter(
-                    jsonOptions.Value.SerializerSettings,
+                    jsonSettings,
                     context.HttpContext.RequestServices.GetRequiredService<ArrayPool<char>>(),
                     context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcOptions>>().Value,
                     context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcNewtonsoftJsonOptions>>().Value));
