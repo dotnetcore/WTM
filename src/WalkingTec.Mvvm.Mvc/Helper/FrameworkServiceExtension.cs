@@ -603,7 +603,8 @@ namespace WalkingTec.Mvvm.Mvc
                     .AddJavaScriptActivities()
                     .AddHttpActivities(elsaSection.GetSection("Server").Bind)
                     .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
-                    .AddQuartzTemporalActivities();
+                    .AddQuartzTemporalActivities()
+                    .AddCustomTenantAccessor<ElsaTenantAccessor>();
                 }
                 );
             //services.AddElsaApiEndpoints();

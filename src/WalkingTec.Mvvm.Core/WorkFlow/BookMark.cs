@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             var info = (await context.ReadActivityPropertyAsync<WtmApproveActivity, ICollection<string>>(x => x.ApproveUsers, cancellationToken))?.ToList() ?? new List<string>();
             var tag = (await context.ReadActivityPropertyAsync<WtmApproveActivity, string>(x => x.Tag, cancellationToken));
             var name = context.ActivityExecutionContext.WorkflowExecutionContext.WorkflowBlueprint.Name??"";
-            var model = context.ActivityExecutionContext.WorkflowExecutionContext.WorkflowBlueprint.ContextOptions.ContextType?.FullName;
+            var model = context.ActivityExecutionContext.WorkflowExecutionContext.WorkflowBlueprint.ContextOptions?.ContextType?.FullName;
             var id = context.ActivityExecutionContext.WorkflowExecutionContext.ContextId?.ToString()??"";
             List<BookmarkResult> rv = new List<BookmarkResult>();
             if (info?.Any() == true)
