@@ -926,7 +926,7 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 if (string.IsNullOrEmpty(item.TDomain) == false)
                                 {
-                                    Regex r = new Regex("(http://|https://)?(.+)(/)?");
+                                    Regex r = new Regex("(http://|https://)?(.+?)(/)?$");
                                     var m = r.Match(item.TDomain);
                                     if (m.Success)
                                     {

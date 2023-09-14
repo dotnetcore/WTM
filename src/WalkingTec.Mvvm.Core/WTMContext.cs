@@ -686,9 +686,16 @@ params string[] groupcode)
 
             var tenants = GlobaInfo.AllTenant ?? new List<FrameworkTenant>();
             string tc = _loginUserInfo?.CurrentTenant;
-            if (tc == null && HttpContext?.Request?.Host != null)
+            if (tc == null && HttpContext?.Request.Headers.ContainsKey("Referer")==true)
             {
-                tc = tenants.Where(x => x.TDomain != null && x.TDomain.ToLower() == HttpContext.Request.Host.ToString().ToLower()).Select(x => x.TCode).FirstOrDefault();
+                Regex r = new Regex("(http://|https://)?(.+?)(/)?$");
+                var m = r.Match(HttpContext?.Request.Headers["Referer"]);
+                string dom = "";
+                if (m.Success)
+                {
+                    dom = m.Groups[2].Value;
+                }
+                tc = tenants.Where(x => x.TDomain != null && x.TDomain.ToLower() == dom.ToLower()).Select(x => x.TCode).FirstOrDefault();
             }
             if (tc != null)
             {
