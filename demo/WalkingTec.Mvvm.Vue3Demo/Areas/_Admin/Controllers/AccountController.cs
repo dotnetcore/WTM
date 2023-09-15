@@ -118,6 +118,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 Password = Utils.GetMD5String(regInfo.Password),
                 IsValid = true,
                 PhotoId = regInfo.PhotoId,
+                TenantCode = DC.TenantCode
             };
             if (hasuserrole != null)
             {

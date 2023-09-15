@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
 using MySqlConnector;
 using Npgsql;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -613,7 +614,8 @@ namespace WalkingTec.Mvvm.Core
                     {
                         sv = ServerVersion.AutoDetect(CSName);
                     }
-                    optionsBuilder.UseMySql(CSName, sv);
+                    optionsBuilder.UseMySql(CSName, sv, b => b.SchemaBehavior(MySqlSchemaBehavior.Translate,
+    (schema, entity) => $"{entity}"));
                     break;
                 case DBTypeEnum.PgSql:
                     optionsBuilder.UseNpgsql(CSName);

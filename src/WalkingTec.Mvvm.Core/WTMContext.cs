@@ -367,9 +367,9 @@ namespace WalkingTec.Mvvm.Core
 
         public LoginUserInfo DoLogin(string username, string password, string tenant)
         {
-            if(tenant == "")
+            if(string.IsNullOrEmpty(tenant))
             {
-                tenant = null;
+                tenant = DC.TenantCode;               
             }
             if (tenant == null && HttpContext.User.Identity.IsAuthenticated)
             {
