@@ -15,7 +15,7 @@ export function authDirective(app: App) {
 			const stores = useUserInfo();
 			if(stores.userInfos.isDebug == false){
 				if (!stores.userInfos.authBtnList.some((v: string) => {								
-					return v === binding.value
+                    return v.toLowerCase() === binding.value.toLowerCase()
 				})) el.parentNode.removeChild(el);
 			}
 		},

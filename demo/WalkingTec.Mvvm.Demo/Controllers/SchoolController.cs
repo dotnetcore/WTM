@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.HSSF.Util;
@@ -341,6 +342,11 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public IActionResult Download(long id, long[] ids)
         {
             return File(Array.Empty<byte>(), "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now:yyyy-MM-dd}.xls");
+        }
+
+        public IActionResult GetAllSchools()
+        {
+            return Ok(DC.Set<School>().GetSelectListItems(Wtm, x => x.SchoolName));
         }
     }
 }

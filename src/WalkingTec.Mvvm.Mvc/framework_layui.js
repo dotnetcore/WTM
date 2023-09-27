@@ -1259,7 +1259,7 @@ window.ff = {
                 item.value = data[i].Value;
                 item.name = data[i].Text;
                 item.disabled = data[i].Disabled;
-                item.selected = useDefaultvalue == true ? svals.indexOf(data[i].Value) > -1 : data[i].Selected;
+                item.selected = useDefaultvalue == true ? svals.indexOf(data[i].Value) > -1 : (data[i].Selected || svals.indexOf(data[i].Value) > -1);
                 item.icon = data[i].Icon;
                 if (data[i].Children != null && data[i].Children.length > 0) {
                     item.children = this.getTreeItems(data[i].Children, svals);

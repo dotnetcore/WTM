@@ -7,7 +7,7 @@
     <wt:textbox field="Entity.MajorName" />
     <wt:combobox field="Entity.MajorType" />
     <wt:textbox field="Entity.Remark" />
-    <wt:combobox field="Entity.SchoolId" items="AllSchools" />
+        <wt:combobox field="Entity.SchoolId" item-url="/Major/GetAllSchools" />
   </wt:row>
   <wt:row items-per-row="ItemsPerRowEnum.One">
     <wt:transfer field="SelectedStudentMajorsIDs" item-url="/Major/GetStudents" />

@@ -231,7 +231,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
         public async Task<ActionResult> GetAllSchools()
         {
-            await Task.Delay(500);
+            //await Task.Delay(500);
             return JsonMore(DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName));
         }
     }
