@@ -77,15 +77,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Elsa.Activities.Email" Version="2.12.0" />
-    <PackageReference Include="Elsa.Activities.Http" Version="2.12.0" />
-    <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.12.0" />
-    <PackageReference Include="Elsa.Persistence.EntityFramework.MySql" Version="2.12.0" />
-    <PackageReference Include="Elsa.Persistence.EntityFramework.Oracle" Version="2.12.0" />
-    <PackageReference Include="Elsa.Persistence.EntityFramework.PostgreSql" Version="2.12.0" />
-    <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.12.0" />
-    <PackageReference Include="Elsa.Persistence.EntityFramework.SqlServer" Version="2.12.0" />
-    <PackageReference Include="Elsa.Server.Api" Version="2.12.0" />
+    <PackageReference Include="Elsa.Activities.Email" Version="2.13.0" />
+    <PackageReference Include="Elsa.Activities.Http" Version="2.13.0" />
+    <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.13.0" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.MySql" Version="2.13.0" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.Oracle" Version="2.13.0" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.PostgreSql" Version="2.13.0" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.13.0" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.SqlServer" Version="2.13.0" />
+    <PackageReference Include="Elsa.Server.Api" Version="2.13.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.0" />

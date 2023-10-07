@@ -55,7 +55,8 @@ namespace WalkingTec.Mvvm.Core
         ExportExcel,
         AddRow,
         RemoveRow,
-        ActionsGroup
+        ActionsGroup,
+        Approve
     }
     #endregion
 

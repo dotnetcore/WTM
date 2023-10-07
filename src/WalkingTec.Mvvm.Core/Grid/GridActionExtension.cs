@@ -56,6 +56,13 @@ namespace WalkingTec.Mvvm.Core
             string qs = null;
             switch (standardType)
             {
+                case GridActionStandardTypesEnum.Approve:
+                    iconcls = "layui-icon layui-icon-form";
+                    gridname = CoreProgram._localizer?["Sys.Approve"];
+                    paraType = GridActionParameterTypesEnum.SingleId;
+                    showInRow = true;
+                    hideOnToolBar = true;
+                    break;
                 case GridActionStandardTypesEnum.Create:
                     iconcls = "layui-icon layui-icon-add-1";
                     gridname = CoreProgram._localizer?["Sys.Create"];

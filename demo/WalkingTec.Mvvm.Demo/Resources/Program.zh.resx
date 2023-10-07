@@ -306,11 +306,17 @@
   <data name="Sys.Admin" xml:space="preserve">
     <value>超级管理员</value>
   </data>
+  <data name="Sys.Aggree" xml:space="preserve">
+    <value>同意</value>
+  </data>
   <data name="Sys.All" xml:space="preserve">
     <value>全部</value>
   </data>
   <data name="Sys.ApiDoc" xml:space="preserve">
     <value>Api文档</value>
+  </data>
+  <data name="Sys.Approve" xml:space="preserve">
+    <value>审批</value>
   </data>
   <data name="Sys.AttemptedValueIsInvalidAccessor" xml:space="preserve">
     <value>'{0}' 不是 {1} 的有效格式</value>
@@ -596,6 +602,9 @@
   </data>
   <data name="Sys.Refresh" xml:space="preserve">
     <value>刷新</value>
+  </data>
+  <data name="Sys.Refuse" xml:space="preserve">
+    <value>拒绝</value>
   </data>
   <data name="Sys.Reset" xml:space="preserve">
     <value>重置</value>
@@ -1019,6 +1028,9 @@
   </data>
   <data name="_Admin.UsersCount" xml:space="preserve">
     <value>包含用户</value>
+  </data>
+  <data name="_Admin.WorkflowApi" xml:space="preserve">
+    <value>工作流Api</value>
   </data>
   <data name="_Admin.ZipCode" xml:space="preserve">
     <value>邮编</value>

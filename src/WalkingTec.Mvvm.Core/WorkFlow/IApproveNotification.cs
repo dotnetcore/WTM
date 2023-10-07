@@ -9,6 +9,6 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
     public interface IApproveNotification
     {
         void OnStart(ApproveInfo info);
-        void OnResumt(ApproveInfo info);
+        void OnResume(ApproveInfo info);
     }
 }

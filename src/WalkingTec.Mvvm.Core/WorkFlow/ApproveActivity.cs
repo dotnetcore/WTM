@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             var rv = new List<ComboSelectListItem>();
             try
             {
-                var check = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflow/GetWorkflowUsers").Result;
+                var check = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers").Result;
                 if (check.Data != null)
                 {
                     rv = check.Data;
@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                 query += $"itcode={item}&";
             }
             query += "1=1";
-            var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflow/GetWorkflowUsers?{query}").Result;
+            var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers?{query}").Result;
             ApproveUsersFullText = names.Data.Select(x=> $"{x.Text}({x.Value})").ToList();
             foreach (var item in ApproveUsers)
             {
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             WtmApproveInput input = context.Input as WtmApproveInput;           
             Remark = input?.Remark;
             ApprovedBy = input.CurrentUser.Name + "("+ input.CurrentUser.ITCode.ToLower()+")";
-            if (ApproveUsers.Any(x => x.ToLower() == input.CurrentUser.ITCode.ToLower()))
+            if ((input?.Action =="同意" || input?.Action =="拒绝") && ApproveUsers.Any(x => x.ToLower() == input.CurrentUser.ITCode.ToLower()))
             {
                 var exist = _wtm.DC.Set<FrameworkWorkflow>().Where(x=>
                     x.WorkflowId == context.WorkflowInstance.Id
@@ -148,7 +148,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                         query += $"itcode={item}&";
                     }
                     query += "1=1";
-                    var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflow/GetWorkflowUsers?{query}").Result;
+                    var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers?{query}").Result;
                     ApproveInfo info = new ApproveInfo
                     {
                         ApprovedBy = input.CurrentUser,
@@ -160,7 +160,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                         TagName = this.Tag,
                         Approvers = names.Data.Select(x => new LoginUserInfo { ITCode = x.Value.ToString(), Name = x.Text }).ToList()
                     };
-                    notify.OnResumt(info);
+                    notify.OnResume(info);
                 }
 
 

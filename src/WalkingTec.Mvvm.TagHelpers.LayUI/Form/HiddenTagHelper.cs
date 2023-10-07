@@ -58,6 +58,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.Attributes.Add("value", value);
                 }
                 output.Attributes.Add("class", "layui-input");
+                output.Attributes.SetAttribute("id", Id);
             }
             else
             {

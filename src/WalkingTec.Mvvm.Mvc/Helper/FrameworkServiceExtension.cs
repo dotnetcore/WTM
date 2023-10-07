@@ -56,6 +56,7 @@ using Elsa.Options;
 using Elsa.Persistence.EntityFramework.PostgreSql;
 using Elsa.Server.Api.Mapping;
 using Elsa.Server.Api.Services;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -541,6 +542,11 @@ namespace WalkingTec.Mvvm.Mvc
                 var dc = item.CreateDC();
                 dc.EnsureCreate();
             }
+            services.AddVersionedApiExplorer(o=>
+            {
+                o.GroupNameFormat = "'v'VVV";
+                o.SubstituteApiVersionInUrl = true;
+            });
             services.AddApiVersioning(
              options =>
              {
@@ -607,15 +613,15 @@ namespace WalkingTec.Mvvm.Mvc
                     .AddCustomTenantAccessor<ElsaTenantAccessor>();
                 }
                 );
-            //services.AddElsaApiEndpoints();
+            services.AddElsaApiEndpoints();
 
-            services
-    .AddSingleton<ConnectionConverter>()
-    .AddSingleton<ActivityBlueprintConverter>()
-    .AddScoped<IWorkflowBlueprintMapper, WorkflowBlueprintMapper>()
-    .AddSingleton<IEndpointContentSerializerSettingsProvider, EndpointContentSerializerSettingsProvider>()
-    .AddAutoMapperProfile<AutoMapperProfile>()
-    .AddSignalR();
+    //        services
+    //.AddSingleton<ConnectionConverter>()
+    //.AddSingleton<ActivityBlueprintConverter>()
+    //.AddScoped<IWorkflowBlueprintMapper, WorkflowBlueprintMapper>()
+    //.AddSingleton<IEndpointContentSerializerSettingsProvider, EndpointContentSerializerSettingsProvider>()
+    //.AddAutoMapperProfile<AutoMapperProfile>()
+    //.AddSignalR();
             services.AddMvc(options =>
             {
                 options.Conventions.Add(new MyNewtonsoftJsonConvention(null));

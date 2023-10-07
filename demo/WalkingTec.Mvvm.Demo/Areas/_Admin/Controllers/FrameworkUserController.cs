@@ -128,6 +128,41 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
         }
 
+        [ActionDescription("Sys.Approve")]
+        public ActionResult Approve(string id)
+        {
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id);
+            vm.Entity.Password = null;
+            return PartialView(vm);
+        }
+
+        [ActionDescription("Sys.Approve")]
+        [HttpPost]
+        [ValidateFormItemOnly]
+        public async Task<ActionResult> Approve(FrameworkUserVM vm)
+        {
+            if (ModelState.Any(x => x.Key != "Entity.Password" && x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid))
+            {
+                return PartialView(vm);
+            }
+            else
+            {
+                ModelState.Clear();
+                await vm.DoEditAsync();
+                await vm.ContinueWorkflowAsync(vm.ActionName,vm.Remark);
+                if (!ModelState.IsValid)
+                {
+                    vm.DoReInit();
+                    return PartialView(vm);
+                }
+                else
+                {
+                    return FFResult().CloseDialog().RefreshGridRow(vm.Entity.ID);
+                }
+            }
+        }
+
+
         [ActionDescription("Login.ChangePassword")]
         public ActionResult Password(Guid id)
         {

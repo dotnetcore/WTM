@@ -303,11 +303,17 @@
   <data name="Sys.Admin" xml:space="preserve">
     <value>Admin</value>
   </data>
+  <data name="Sys.Aggree" xml:space="preserve">
+    <value>Agree</value>
+  </data>
   <data name="Sys.All" xml:space="preserve">
     <value>All</value>
   </data>
   <data name="Sys.ApiDoc" xml:space="preserve">
     <value>Api Doc</value>
+  </data>
+  <data name="Sys.Approve" xml:space="preserve">
+    <value>Approve</value>
   </data>
   <data name="Sys.AttemptedValueIsInvalidAccessor" xml:space="preserve">
     <value>The value '{0}' is not valid for {1}.</value>
@@ -593,6 +599,9 @@
   </data>
   <data name="Sys.Refresh" xml:space="preserve">
     <value>Refresh</value>
+  </data>
+  <data name="Sys.Refuse" xml:space="preserve">
+    <value>Refuse</value>
   </data>
   <data name="Sys.Reset" xml:space="preserve">
     <value>Reset</value>
@@ -1016,6 +1025,9 @@
   </data>
   <data name="_Admin.UsersCount" xml:space="preserve">
     <value>Users</value>
+  </data>
+  <data name="_Admin.WorkflowApi" xml:space="preserve">
+    <value>Workflow Api</value>
   </data>
   <data name="_Admin.ZipCode" xml:space="preserve">
     <value>Zip</value>

@@ -105,7 +105,8 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 var rv = vm.DoReg();
-                if (rv == true)
+
+                if (rv == true && ModelState.IsValid)
                 {
                     return FFResult().CloseDialog().Message(Localizer["Reg.Success"]);
                 }

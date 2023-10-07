@@ -2,15 +2,9 @@
 
 <wt:form vm="@Model">
   <wt:row items-per-row="ItemsPerRowEnum.Three">
-    <wt:display field="Entity.SchoolCode" padding-text="km/l" hide-label="true"/>
-    <wt:display field="Entity.SchoolName" label-width="60" />
-    <wt:display field="Entity.SchoolType" padding-text="km/l"/>
-    <wt:display field="Entity.Remark" padding-text="km/l"/>
-        <wt:upload field="Entity.PhotoId" upload-type="ImageFile" preview-width="128" disabled/>
-        <wt:upload field="Entity.FileId" disabled />
-        <wt:multiupload field="Entity.Photos" upload-type="ImageFile" preview-width="128" disabled/>
-        <wt:multiupload field="Entity.Files" upload-type="AllFiles" disabled />
+        <wt:flowinfo vm="@Model"/>
     </wt:row>
+
     <wt:row align=" AlignEnum.Right">
         <wt:closebutton />
     </wt:row>

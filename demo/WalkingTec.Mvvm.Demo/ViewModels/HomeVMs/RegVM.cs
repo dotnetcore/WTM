@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 {
@@ -63,13 +64,15 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 ITCode = ITCode,
                 Name = Name,
                 Password = Utils.GetMD5String(Password),
-                IsValid = true,
+                IsValid = false,
                 CellPhone = CellPhone,
                 Email = Email
             };
 
             DC.Set<FrameworkUser>().Add(user);
             DC.SaveChanges();
+            var vm = Wtm.CreateVM<FrameworkUserVM>(user.ID);
+            _=vm.StartWorkflowAsync().Result;
             return true;
         }
     }

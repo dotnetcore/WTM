@@ -1,9 +1,12 @@
 using Elsa.Models;
+using Elsa.Persistence.Specifications;
+using Elsa.Persistence;
 using Elsa.Services;
 using Elsa.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1353,10 +1356,10 @@ namespace WalkingTec.Mvvm.Core
                 return null;
             }
             var lp = Wtm.ServiceProvider.GetRequiredService<IWorkflowLaunchpad>();
-            var workflow = await lp.FindStartableWorkflowAsync(workflowId, contextId: Entity.GetID().ToString(), tenantId: Wtm.LoginUserInfo.CurrentTenant);
+            var workflow = await lp.FindStartableWorkflowAsync(workflowId, contextId: Entity.GetID().ToString(), tenantId: Wtm.LoginUserInfo?.CurrentTenant);
             if (workflow != null)
             {
-                workflow.WorkflowInstance.Variables.Set("Submitter", Wtm.LoginUserInfo.ITCode);
+                workflow.WorkflowInstance.Variables.Set("Submitter", Wtm.LoginUserInfo?.ITCode);
                 workflow.WorkflowInstance.Name = flowName;
                 var rv = await lp.ExecuteStartableWorkflowAsync(workflow);
                 return rv;
@@ -1418,14 +1421,15 @@ namespace WalkingTec.Mvvm.Core
 
         public virtual async Task<List<ApproveTimeLine>> GetWorkflowTimeLineAsync(string flowName = null)
         {
-            var rv = await Wtm.CallAPI<List<ApproveTimeLine>>("", $"{Wtm.HostAddress}/_workflow/GetTimeLine?flowname={flowName}&entitytype={typeof(TModel).FullName}&entityid={Entity.GetID()}");
+            var rv = await Wtm.CallAPI<List<ApproveTimeLine>>("", $"{Wtm.HostAddress}/_workflowapi/GetTimeLine?flowname={flowName}&entitytype={typeof(TModel).FullName}&entityid={Entity.GetID()}");
             return rv.Data;
         }
         public virtual async Task<WorkflowInstance> GetWorkflowInstanceAsync(string flowName = null)
         {
-            var rv = await Wtm.CallAPI<WorkflowInstance>("", $"{Wtm.HostAddress}/_workflow/GetWorkflow?flowname={flowName}&entitytype={typeof(TModel).FullName}&entityid={Entity.GetID()}");
+            var rv = await Wtm.CallAPI<WorkflowInstance>("", $"{Wtm.HostAddress}/_workflowapi/GetWorkflow?flowname={flowName}&entitytype={typeof(TModel).FullName}&entityid={Entity.GetID()}");
             return rv.Data;
         }
+
     }
 
     class IncludeInfo

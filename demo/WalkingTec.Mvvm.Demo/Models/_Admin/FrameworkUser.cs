@@ -7,7 +7,7 @@ namespace WalkingTec.Mvvm.Core
     /// FrameworkUser
     /// </summary>
     [Table("FrameworkUsers")]
-    public class FrameworkUser : FrameworkUserBase
+    public class FrameworkUser : FrameworkUserBase,IWorkflow
     {
 
         [Display(Name = "_Admin.Email")]

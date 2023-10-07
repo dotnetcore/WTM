@@ -211,7 +211,9 @@ namespace WalkingTec.Mvvm.Core
         public string PropertyNameInParent { get; set; }
         [JsonIgnore]
         public BaseVM ParentVM { get; set; }
-
+        [Display(Name = "_Admin.Remark")]
+        public string Remark { get; set; }
+        public string ActionName { get; set; }
         #endregion
 
         #region Event

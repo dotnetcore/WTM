@@ -15,13 +15,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         {
             return new List<GridAction>
             {
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Approve, "", "_Admin",dialogWidth: 800).SetBindVisiableColName("CanApprove"),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Create, "", "_Admin",dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Edit, "", "_Admin",dialogWidth: 800),
                 this.MakeAction("FrameworkUser","Password",Localizer?["Login.ChangePassword"],Localizer?["Login.ChangePassword"], GridActionParameterTypesEnum.SingleId,"_Admin",400).SetShowInRow(true),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Delete, "","_Admin",dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Details, "", "_Admin",dialogWidth: 600),
-                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.BatchEdit, "","_Admin", dialogWidth: 800),
-               this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.BatchEdit, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
             };
@@ -38,6 +39,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 this.MakeGridHeader(x => x.GroupName_view),
                 this.MakeGridHeader(x=> x.PhotoId,170).SetFormat(PhotoIdFormat),
                 this.MakeGridHeader(x => x.IsValid).SetHeader(Localizer["Sys.Enable"]).SetWidth(80),
+                this.MakeGridHeader(x => "CanApprove").SetHide().SetFormat((a, b) =>
+                {
+                    if(a.CanApprove) { return "true"; }
+                    else { return "false"; }
+                }),
                 this.MakeGridHeaderAction(width: 280)
             };
         }
@@ -75,6 +81,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             return query;
         }
 
+        public override void AfterDoSearcher()
+        {
+            var ids = DC.Set<FrameworkWorkflow>().Where(x => x.WorkflowName == "注册审批" && x.UserCode == Wtm.LoginUserInfo.ITCode).Select(x => x.ModelID).ToList();
+            foreach (var item in EntityList)
+            {
+                if (ids.Contains(item.GetID().ToString()))
+                {
+                    item.CanApprove = true;
+                }
+            }
+        }
     }
 
     public class FrameworkUser_View : FrameworkUser
@@ -84,5 +101,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         [Display(Name = "_Admin.Group")]
         public string GroupName_view { get; set; }
+
+        public bool CanApprove { get; set; }
     }
 }
