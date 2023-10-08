@@ -108,21 +108,25 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                 });
             }
             _wtm.DC.SaveChanges();
-            var notify = _wtm.ServiceProvider.GetRequiredService<IApproveNotification>();
-            if (notify != null)
+            try
             {
-                ApproveInfo info = new ApproveInfo
+                var notify = _wtm.ServiceProvider.GetRequiredService<IApproveNotification>();
+                if (notify != null)
                 {
-                    EntityId = context.ContextId,
-                    EntityType = context.WorkflowExecutionContext.WorkflowContext?.GetType(),
-                    FlowInstanceId = context.WorkflowInstance.Id,
-                    FlowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
-                    SubmitBy = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
-                    TagName = this.Tag,
-                    Approvers = names.Data.Select(x => new LoginUserInfo { ITCode = x.Value.ToString(), Name = x.Text }).ToList()
-                };
-                notify.OnStart(info);
+                    ApproveInfo info = new ApproveInfo
+                    {
+                        EntityId = context.ContextId,
+                        EntityType = context.WorkflowExecutionContext.WorkflowContext?.GetType(),
+                        FlowInstanceId = context.WorkflowInstance.Id,
+                        FlowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
+                        SubmitBy = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
+                        TagName = this.Tag,
+                        Approvers = names.Data.Select(x => new LoginUserInfo { ITCode = x.Value.ToString(), Name = x.Text }).ToList()
+                    };
+                    notify.OnStart(info);
+                }
             }
+            catch { }
             return Suspend();
         }
 
@@ -138,31 +142,33 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                 &&  x.ActivityId == context.ActivityId).ToList();
                 _wtm.DC.Set<FrameworkWorkflow>().RemoveRange(exist);
                 _wtm.DC.SaveChanges();
-
-                var notify = _wtm.ServiceProvider.GetRequiredService<IApproveNotification>();
-                if (notify != null)
+                try
                 {
-                    var query = "";
-                    foreach (var item in ApproveUsers)
+                    var notify = _wtm.ServiceProvider.GetRequiredService<IApproveNotification>();
+                    if (notify != null)
                     {
-                        query += $"itcode={item}&";
+                        var query = "";
+                        foreach (var item in ApproveUsers)
+                        {
+                            query += $"itcode={item}&";
+                        }
+                        query += "1=1";
+                        var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers?{query}").Result;
+                        ApproveInfo info = new ApproveInfo
+                        {
+                            ApprovedBy = input.CurrentUser,
+                            EntityId = context.ContextId,
+                            EntityType = context.WorkflowExecutionContext.WorkflowContext?.GetType(),
+                            FlowInstanceId = context.WorkflowInstance.Id,
+                            FlowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
+                            SubmitBy = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
+                            TagName = this.Tag,
+                            Approvers = names.Data.Select(x => new LoginUserInfo { ITCode = x.Value.ToString(), Name = x.Text }).ToList()
+                        };
+                        notify.OnResume(info);
                     }
-                    query += "1=1";
-                    var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers?{query}").Result;
-                    ApproveInfo info = new ApproveInfo
-                    {
-                        ApprovedBy = input.CurrentUser,
-                        EntityId = context.ContextId,
-                        EntityType = context.WorkflowExecutionContext.WorkflowContext?.GetType(),
-                        FlowInstanceId = context.WorkflowInstance.Id,
-                        FlowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
-                        SubmitBy = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
-                        TagName = this.Tag,
-                        Approvers = names.Data.Select(x => new LoginUserInfo { ITCode = x.Value.ToString(), Name = x.Text }).ToList()
-                    };
-                    notify.OnResume(info);
                 }
-
+                catch { }
 
                 return Outcome(input?.Action);
 
