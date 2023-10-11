@@ -24,7 +24,7 @@
     </el-col>
     <el-col :xs="24" :lg="12" class="mb20">
         <el-form-item ref="Entity_Remark_FormItem" prop="Entity.Remark" label="备注">
-            <el-input v-model="stateSchoolVue3.vmModel.Entity.Remark" clearable></el-input>
+            <Editor v-model="stateSchoolVue3.vmModel.Entity.Remark" clearable></Editor>
         </el-form-item>
     </el-col>
     <el-col :xs="24" :lg="12" class="mb20">
