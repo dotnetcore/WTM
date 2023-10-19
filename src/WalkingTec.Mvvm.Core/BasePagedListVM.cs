@@ -300,15 +300,16 @@ namespace WalkingTec.Mvvm.Core
                         }
 
                         //建立excel单元格
-                        ICell cell;
+                        ICell cell=null;
                         if (col.FieldType?.IsNumber() == true)
                         {
+                            double trydouble = 0;
                             cell = DR.CreateCell(ColIndex, CellType.Numeric);
-                            try
+                            if (double.TryParse(text, out trydouble))
                             {
-                                cell.SetCellValue(Convert.ToDouble(text));
+                                cell.SetCellValue(trydouble);
                             }
-                            catch { }
+
                         }
                         else
                         {

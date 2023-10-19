@@ -57,6 +57,7 @@ using Elsa.Persistence.EntityFramework.PostgreSql;
 using Elsa.Server.Api.Mapping;
 using Elsa.Server.Api.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -726,6 +727,22 @@ namespace WalkingTec.Mvvm.Mvc
                                  }
                              },
                              ValidateLifetime = true
+                         };
+                         options.Events = new JwtBearerEvents
+                         {
+                             OnMessageReceived = context =>
+                             {
+                                 var accessToken = context.Request.Query["access_token"];
+
+                                 // If the request is for our hub...
+                                 var path = context.HttpContext.Request.Path;
+                                 if (!string.IsNullOrEmpty(accessToken))
+                                 {
+                                     // Read the token out of the query string
+                                     context.Token = accessToken;
+                                 }
+                                 return Task.CompletedTask;
+                             }
                          };
                      })
                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>

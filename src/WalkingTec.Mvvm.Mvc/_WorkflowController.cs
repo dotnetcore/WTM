@@ -29,6 +29,7 @@ using WalkingTec.Mvvm.Core.WorkFlow;
 namespace WalkingTec.Mvvm.Mvc
 {
     [AuthorizeJwtWithCookie]
+    [AllRights]
     public class _WorkflowController : BaseController
     {
         [ActionDescription("流程管理")]
