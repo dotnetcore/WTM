@@ -1215,12 +1215,9 @@ params string[] groupcode)
                         }
                     }
                 }
-                if (string.IsNullOrEmpty(LoginUserInfo?.RemoteToken) == false)
+                if (client.DefaultRequestHeaders.Any(x => x.Key == "Authorization") == false && string.IsNullOrEmpty(LoginUserInfo?.RemoteToken) == false)
                 {
-                    if (client.DefaultRequestHeaders.Any(x => x.Key == "Authorization") == false)
-                    {
-                        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + LoginUserInfo.RemoteToken);
-                    }
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + LoginUserInfo.RemoteToken);
                 }
 
                 //如果配置了代理，则使用代理
