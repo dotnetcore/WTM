@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                         rv = this.Approved + this.Action;
                         break;
                     case "_start":
-                        rv = this.Approvers + "提交审批";
+                        rv = this.Approved + "提交审批";
                         break;
                     case "_finish":
                         rv = "流程结束";

@@ -58,6 +58,8 @@ using Elsa.Server.Api.Mapping;
 using Elsa.Server.Api.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using System.Threading.Tasks;
+using Elsa.Activities.Http;
+using Elsa.Activities.Http.Services;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -563,6 +565,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var elsaSection = config.GetSection("Workflow");
             var conf = config.Get<Configs>();
+            services.AddSingleton<AuthenticationBasedHttpEndpointAuthorizationHandler>();
 
             services
                 .AddElsa(elsa => {
@@ -608,21 +611,37 @@ namespace WalkingTec.Mvvm.Mvc
                     .AddConsoleActivities()
                     .AddActivity<WtmApproveActivity>()
                     .AddJavaScriptActivities()
-                    .AddHttpActivities(elsaSection.GetSection("Server").Bind)
+                    .AddHttpActivities(x=> {
+                        if (conf.Domains.ContainsKey("server")) {
+                            x.BaseUrl = new Uri(conf.Domains["server"].Address);
+                        }
+                        x.HttpEndpointAuthorizationHandlerFactory = sp => sp.GetRequiredService<AuthenticationBasedHttpEndpointAuthorizationHandler>();
+                    })
                     .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
                     .AddQuartzTemporalActivities()
                     .AddCustomTenantAccessor<ElsaTenantAccessor>();
                 }
                 );
             services.AddElsaApiEndpoints();
+            if (conf.Domains.ContainsKey("server"))
+            {
+                services.AddHttpClient(nameof(SendHttpRequest)).ConfigureHttpClient((s,x) =>
+                {
+                    x.BaseAddress = new Uri(conf.Domains["server"].Address);
+                    var ss = s.CreateScope();
+                    var _wtm = ss.ServiceProvider.GetRequiredService<WTMContext>();
+                    x.DefaultRequestHeaders.Add("Authorization", "Bearer " + _wtm.LoginUserInfo?.RemoteToken);
+                });
+            }
 
-    //        services
-    //.AddSingleton<ConnectionConverter>()
-    //.AddSingleton<ActivityBlueprintConverter>()
-    //.AddScoped<IWorkflowBlueprintMapper, WorkflowBlueprintMapper>()
-    //.AddSingleton<IEndpointContentSerializerSettingsProvider, EndpointContentSerializerSettingsProvider>()
-    //.AddAutoMapperProfile<AutoMapperProfile>()
-    //.AddSignalR();
+
+            //        services
+            //.AddSingleton<ConnectionConverter>()
+            //.AddSingleton<ActivityBlueprintConverter>()
+            //.AddScoped<IWorkflowBlueprintMapper, WorkflowBlueprintMapper>()
+            //.AddSingleton<IEndpointContentSerializerSettingsProvider, EndpointContentSerializerSettingsProvider>()
+            //.AddAutoMapperProfile<AutoMapperProfile>()
+            //.AddSignalR();
             services.AddMvc(options =>
             {
                 options.Conventions.Add(new MyNewtonsoftJsonConvention(null));

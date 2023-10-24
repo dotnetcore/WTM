@@ -22,6 +22,7 @@ using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.WorkFlow;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -1032,6 +1033,16 @@ namespace WalkingTec.Mvvm.Core
                 }
                 DC.DeleteEntity(Entity);
                 DC.SaveChanges();
+                if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)))
+                {
+                    var wi = DC.Set<Elsa_WorkflowInstance>().CheckEqual(typeof(TModel).FullName, x => x.ContextType).CheckEqual(Entity.GetID().ToString(), x => x.ContextId).ToList();
+                    DC.Set<Elsa_WorkflowInstance>().RemoveRange(wi);
+                    var wl = DC.Set<Elsa_WorkflowExecutionLogRecord>().CheckContain(wi.Select(x=>x.ID).ToList(), x => x.WorkflowInstanceId).ToList();
+                    DC.Set<Elsa_WorkflowExecutionLogRecord>().RemoveRange(wl);
+                    var ww = DC.Set<FrameworkWorkflow>().CheckContain(wi.Select(x => x.ID).ToList(), x => x.WorkflowId).ToList();
+                    DC.Set<FrameworkWorkflow>().RemoveRange(ww);
+                    DC.SaveChanges();
+                }
                 if (Wtm.ServiceProvider != null)
                 {
                     var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
@@ -1362,6 +1373,11 @@ namespace WalkingTec.Mvvm.Core
                 workflow.WorkflowInstance.Variables.Set("Submitter", Wtm.LoginUserInfo?.ITCode);
                 workflow.WorkflowInstance.Name = flowName;
                 var rv = await lp.ExecuteStartableWorkflowAsync(workflow);
+                if(rv?.WorkflowInstance?.Faults?.Count > 0)
+                {
+                    MSD.AddModelError(" workflowfault", rv?.WorkflowInstance?.Faults[0].Message);
+
+                }
                 return rv;
             }
 

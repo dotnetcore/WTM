@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         Id = x.ActivityId,
                         Time = x.Timestamp.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("yyyy-MM-dd HH:mm:ss", null),
-                        Action = x.EventName == "Executed" ? "等待审批" : x.Data["Outcomes"].Values<string>().FirstOrDefault(),
+                        Action = x.EventName == "Executed" ? "等待审批" : x.Data.ContainsKey("Outcomes")?x.Data["Outcomes"].Values<string>().FirstOrDefault():"",
                         Remark = "",
                         Approvers = "",
                         Approved = ""

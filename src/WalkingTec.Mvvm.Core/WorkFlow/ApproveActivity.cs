@@ -90,6 +90,10 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             }
             query += "1=1";
             var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers?{query}").Result;
+            if(names.Data == null || names.Data.Count == 0)
+            {
+                return Fault("无法找到审批用户");
+            }
             ApproveUsersFullText = names.Data.Select(x=> $"{x.Text}({x.Value})").ToList();
             foreach (var item in ApproveUsers)
             {

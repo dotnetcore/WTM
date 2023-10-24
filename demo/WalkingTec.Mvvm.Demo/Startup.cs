@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Demo
             app.UseSession();
             app.UseWtmSwagger();
             app.UseWtm();
-
+            app.UseHttpActivities();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -118,6 +118,9 @@ namespace WalkingTec.Mvvm.Demo
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
             //指定哪些模型需要数据权限
+            //pris.Add(new DataPrivilegeInfo<City>("城市权限", m => (string)(object)m.Name));
+            //pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
+            //pris.Add(new DataPrivilegeInfo<Major>("专业权限", m => m.MajorName));
 
             return pris;
         }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
 namespace WalkingTec.Mvvm.Core
@@ -204,6 +205,17 @@ namespace WalkingTec.Mvvm.Core
                             }
                         }
                         DC.DeleteEntity(Entity);
+
+                        if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)))
+                        {
+                            var wi = DC.Set<Elsa_WorkflowInstance>().CheckEqual(typeof(TModel).FullName, x => x.ContextType).CheckEqual(Entity.GetID().ToString(), x => x.ContextId).ToList();
+                            DC.Set<Elsa_WorkflowInstance>().RemoveRange(wi);
+                            var wl = DC.Set<Elsa_WorkflowExecutionLogRecord>().CheckContain(wi.Select(x => x.ID).ToList(), x => x.WorkflowInstanceId).ToList();
+                            DC.Set<Elsa_WorkflowExecutionLogRecord>().RemoveRange(wl);
+                            var ww = DC.Set<FrameworkWorkflow>().CheckContain(wi.Select(x => x.ID).ToList(), x => x.WorkflowId).ToList();
+                            DC.Set<FrameworkWorkflow>().RemoveRange(ww);
+                        }
+
                     }
                 }
                 catch (Exception e)
