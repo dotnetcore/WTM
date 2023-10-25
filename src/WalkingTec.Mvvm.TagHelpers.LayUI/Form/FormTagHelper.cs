@@ -128,7 +128,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 //因为框架默认的Batch本身是一个Post方法，无法使用同名方法处理提交后的工作
                 if (Vm.Model is IBaseBatchVM<BaseVM>)
                 {
-                    output.Attributes.SetAttribute("action", baseVM?.CurrentUrl.Replace("/Batch", "/DoBatch") ?? "#");
+                    output.Attributes.SetAttribute("action",Regex.Replace(baseVM?.CurrentUrl,"/Batch", "/DoBatch", RegexOptions.IgnoreCase) ?? "#");
                 }
                 else
                 {
