@@ -24,9 +24,26 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             T rv = context.WorkflowExecutionContext.WorkflowContext as T;
             if (rv == null)
             {
+                var test = Utils.GetAllVms().Where(x => typeof(IBaseCRUDVM<TopBasePoco>).IsAssignableFrom(x)).ToList();
+                var vmType = Utils.GetAllVms().Where(x => typeof(IBaseCRUDVM<TopBasePoco>).IsAssignableFrom(x) && x.GetInterface("IBaseCRUDVM`1")?.GenericTypeArguments[0] == typeof(T)).FirstOrDefault();
+                IBaseCRUDVM<TopBasePoco> vm = null;
+                if (vmType != null)
+                {
+                    vm = vmType.GetConstructor(System.Type.EmptyTypes).Invoke(null) as IBaseCRUDVM<TopBasePoco>;
+                }
                 using (var dc = _wtm.DC.ReCreate())
                 {
-                    rv = await dc.Set<T>().CheckID(context.ContextId).FirstOrDefaultAsync(cancellationToken);
+                    if (vm != null)
+                    {
+                        (vm as BaseVM).DC = dc;
+                        vm.SetEntityById(context.ContextId);
+                        rv = vm.Entity as T;
+                    }
+                    else
+                    {
+                        rv = await dc.Set<T>().CheckID(context.ContextId).FirstOrDefaultAsync(cancellationToken);
+
+                    }
                 }
             }
             return rv;

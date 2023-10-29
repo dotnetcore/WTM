@@ -654,7 +654,7 @@ namespace WalkingTec.Mvvm.Mvc
                 if (typeof(IWorkflow).IsAssignableFrom(item))
                 {
                     var type = typeof(WorkflowRefresher<>).MakeGenericType(item);
-                    services.AddTransient(typeof(IWorkflowContextProvider), type);
+                    services.TryAddTransient(typeof(IWorkflowContextProvider), type);
                 }
             }
             services.AddBookmarkProvider<WtmApproveBookmarkProvider>();

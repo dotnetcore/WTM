@@ -97,7 +97,6 @@ namespace WalkingTec.Mvvm.Core
             return _allAssemblies;
         }
 
-        private static List<Type> _allModelTypes= new List<Type>();
         public static List<Type> GetAllModels()
         {
             if (_allModels == null)
@@ -132,6 +131,29 @@ namespace WalkingTec.Mvvm.Core
                 _allModels = allTypes;
             }
             return _allModels;
+        }
+
+        private static List<Type> _allVMs;
+        public static List<Type> GetAllVms()
+        {
+            if (_allVMs == null)
+            {
+                var modelAsms = Utils.GetAllAssembly();
+                var allTypes = new List<Type>();// 所有 DbSet<> 的泛型类型
+                                                // 获取所有 DbSet<T> 的泛型类型 T
+                foreach (var asm in modelAsms)
+                {
+                    try
+                    {
+                        var dcModule = asm.GetExportedTypes().Where(x => typeof(BaseVM).IsAssignableFrom(x)).ToList();
+                        allTypes.AddRange(dcModule);
+                    }
+                    catch { }
+                }
+                _allVMs = allTypes;
+            }
+            return _allVMs;
+
         }
 
         public static SimpleMenu FindMenu(string url, List<SimpleMenu> menus)
