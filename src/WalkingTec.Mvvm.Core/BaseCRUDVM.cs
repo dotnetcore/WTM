@@ -1369,13 +1369,18 @@ namespace WalkingTec.Mvvm.Core
             }
 
             string workflowId = null;
+            string workflowname = null;
             if (string.IsNullOrEmpty(flowName))
             {
-                workflowId = DC.Set<Elsa_WorkflowDefinition>().Where(x => x.Data.Contains($"\"contextType\": \"{typeof(TModel).FullName}, {typeof(TModel).Assembly.GetName().Name}\"")).Select(x => x.DefinitionId).FirstOrDefault();
+                var temp = DC.Set<Elsa_WorkflowDefinition>().Where(x => x.Data.Contains($"\"contextType\": \"{typeof(TModel).FullName}, {typeof(TModel).Assembly.GetName().Name}\"")).Select(x => new { id = x.DefinitionId, name = x.Name }).FirstOrDefault();
+                workflowId = temp.id;
+                workflowname = temp.name;
             }
             else
             {
-                workflowId = DC.Set<Elsa_WorkflowDefinition>().Where(x => x.Name == flowName).Select(x => x.DefinitionId).FirstOrDefault();
+                var temp = DC.Set<Elsa_WorkflowDefinition>().Where(x => x.Name == flowName).Select(x=> new { id = x.DefinitionId, name = x.Name }).FirstOrDefault();
+                workflowId = temp.id;
+                workflowname = temp.name;
             }
             if (string.IsNullOrEmpty(workflowId))
             {
@@ -1387,7 +1392,7 @@ namespace WalkingTec.Mvvm.Core
             if (workflow != null)
             {
                 workflow.WorkflowInstance.Variables.Set("Submitter", Wtm.LoginUserInfo?.ITCode);
-                workflow.WorkflowInstance.Name = flowName;
+                workflow.WorkflowInstance.Name = workflowname;
                 var rv = await lp.ExecuteStartableWorkflowAsync(workflow);
                 if(rv?.WorkflowInstance?.Faults?.Count > 0)
                 {

@@ -210,8 +210,9 @@ $('#{search.SearchBtnId}').on('click', function () {{
                         {
                             firstkey = key;
                         }
-                                                output.PostElement.AppendHtml($@"
-$(""#{Id}"").find(""button[type=submit]:first"").parent().prepend(""<div class='layui-input-block' style='text-align:left'><label style='color:red'>{Regex.Replace(error.ErrorMessage,"<script>","", RegexOptions.IgnoreCase)}</label></div>"");
+                        string temperr = error.ErrorMessage.Replace("<", "&lg;").Replace(">", "&rg;");
+                        output.PostElement.AppendHtml($@"
+$(""#{Id}"").find(""button[type=submit]:first"").parent().prepend(""<div class='layui-input-block' style='text-align:left'><label style='color:red'>{temperr}</label></div>"");
 ");
                     }
                     if (haserror == true)
