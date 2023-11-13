@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// The value to be submitted
         /// </summary>
-        public object Value { get; set; }
+        public string Value { get; set; }
 
     }
 

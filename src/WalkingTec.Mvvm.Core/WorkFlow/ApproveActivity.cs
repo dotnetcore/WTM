@@ -2,20 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Elsa;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
 using Elsa.Design;
 using Elsa.Metadata;
 using Elsa.Services.Models;
 using Microsoft.Extensions.DependencyInjection;
-using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Core.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WalkingTec.Mvvm.Core.WorkFlow
 {
@@ -30,21 +22,51 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             DefaultSyntax = "Json",
             SupportedSyntaxes = new[] { "Json", "Liquid" },
             IsDesignerCritical = true,
-            //OptionsProvider = typeof(WtmApproveActivity),            
             Label = "审批人ITCode")]
-        public ICollection<string> ApproveUsers { get; set; }
+        public List<string> ApproveUsers { get; set; }
 
         [ActivityInput(IsBrowsable = false, DefaultSyntax = "Json")]
         public List<string> ApproveUsersFullText { get; set; }
 
-        //[ActivityInput(
-        //    UIHint = ActivityInputUIHints.MultiText,
-        //    DefaultSyntax = "Json",
-        //    SupportedSyntaxes = new[] { "Json", "Liquid" },
-        //    DefaultValue = new string[] {"同意", "拒绝"},
-        //    Label = "分支",
-        //    ConsiderValuesAsOutcomes = true)]
-        //public ICollection<string> PossibleOutcomes { get; set; }
+
+        [ActivityInput(
+            UIHint = ActivityInputUIHints.MultiText,
+            DefaultSyntax = "Json",
+            SupportedSyntaxes = new[] { "Json", "Liquid" },
+            IsDesignerCritical = true,
+            OptionsProvider = typeof(WtmApproveActivity),            
+            Label = "角色审批")]
+        public ICollection<string> ApproveRoles { get; set; }
+
+
+        [ActivityInput(
+            UIHint = ActivityInputUIHints.MultiText,
+            DefaultSyntax = "Json",
+            SupportedSyntaxes = new[] { "Json", "Liquid" },
+            IsDesignerCritical = true,
+            Hint = "请选择",
+            OptionsProvider = typeof(WtmApproveActivity),
+            Label = "部门审批")]
+        public ICollection<string> ApproveGroups { get; set; }
+
+
+        [ActivityInput(
+            UIHint = ActivityInputUIHints.MultiText,
+            DefaultSyntax = "Json",
+            SupportedSyntaxes = new[] { "Json", "Liquid" },
+            IsDesignerCritical = true,
+            OptionsProvider = typeof(WtmApproveActivity),
+            Label = "部门主管审批")]
+        public ICollection<string> ApproveManagers { get; set; }
+
+        [ActivityInput(
+            UIHint = ActivityInputUIHints.MultiText,
+            DefaultSyntax = "Json",
+            SupportedSyntaxes = new[] { "Json", "Liquid" },
+            IsDesignerCritical = true,            
+            OptionsProvider = typeof(WtmApproveActivity),
+            Label = "特殊审批")]
+        public ICollection<string> ApproveSpecials { get; set; }
 
         [ActivityInput(IsBrowsable = false, Label = "备注")]
         public string Remark { get; set; }
@@ -67,16 +89,53 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
         public object GetOptions(PropertyInfo property)
         {
             var rv = new List<ComboSelectListItem>();
-            try
+            if (property.Name == "ApproveRoles")
             {
-                var check = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers").Result;
-                if (check.Data != null)
+                try
                 {
-                    rv = check.Data;
+                    var check = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowRoles").Result;
+                    if (check.Data != null)
+                    {
+                        rv = check.Data;
+                    }
                 }
+                catch { }
+                return rv;
             }
-            catch { }
-            return rv.Select(x=> new SelectListItem { Text = $"{x.Text}({x.Value})" , Value = x.Value.ToString()}).ToList();
+            if (property.Name == "ApproveGroups")
+            {
+                try
+                {
+                    var check = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowGroups").Result;
+                    if (check.Data != null)
+                    {
+                        rv = check.Data;
+                    }
+                }
+                catch { }
+                return rv;
+            }
+            if (property.Name == "ApproveManagers")
+            {
+                try
+                {
+                    var check = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowGroups").Result;
+                    if (check.Data != null)
+                    {
+                        rv = check.Data;
+                    }
+                }
+                catch { }
+                rv.ForEach(x => x.Text += "主管");
+                return rv;
+            }
+            if (property.Name == "ApproveSpecials")
+            {
+                rv.Add(new ComboSelectListItem { Text = "流程发起者", Value = "1" });
+                rv.Add(new ComboSelectListItem { Text = "流程发起者所在部门主管", Value = "2" });
+                return rv;
+            }
+            return rv;
         }
 
 
@@ -84,32 +143,145 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
         {
             var entity = context.GetWorkflowContext();
             var query = "";
-            foreach (var item in ApproveUsers)
+            ApproveUsersFullText = new List<string>();
+            List<ComboSelectListItem> users = new List<ComboSelectListItem>();
+            List<ComboSelectListItem> roles = new List<ComboSelectListItem>();
+            List<ComboSelectListItem> groups = new List<ComboSelectListItem>();
+            List<ComboSelectListItem> managers = new List<ComboSelectListItem>();
+            if(ApproveUsers == null)
             {
-                query += $"itcode={item}&";
+                ApproveUsers = new List<string>();
             }
-            query += "1=1";
-            var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers?{query}").Result;
-            if(names.Data == null || names.Data.Count == 0)
+            //添加特殊审批
+            if (ApproveSpecials?.Count > 0)
             {
-                return Fault("无法找到审批用户");
-            }
-            ApproveUsersFullText = names.Data.Select(x=> $"{x.Text}({x.Value})").ToList();
-            foreach (var item in ApproveUsers)
-            {
-                _wtm.DC.Set<FrameworkWorkflow>().Add(new FrameworkWorkflow
+                var submitter = context.WorkflowInstance.Variables.Get("Submitter")?.ToString();
+                foreach (var item in ApproveSpecials)
                 {
-                    ActivityId = context.ActivityId,
-                    WorkflowId = context.WorkflowInstance.Id,
-                    UserCode = item,
-                    WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
-                    ModelID = context.ContextId,
-                    ModelType = context.WorkflowExecutionContext.WorkflowContext?.GetType()?.FullName,
-                    TenantCode = context.WorkflowInstance.TenantId,
-                    Submitter = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
-                    StartTime = DateTime.Now,
-                    Tag = this.Tag
-                });
+                    //发起者自身
+                    if(item == "1")
+                    {
+                        if (string.IsNullOrEmpty(submitter)==false)
+                        {
+                            ApproveUsers.Add(submitter);
+                        }
+                    }
+                    else if(item == "2")
+                    {
+                        query = $"itcode={submitter}";
+
+                        var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowMyGroupManagers?{query}").Result;
+                        users = names.Data ?? new List<ComboSelectListItem>();
+                        if (users.Count > 0)
+                        {
+                            ApproveUsers.Add(users.FirstOrDefault()?.Text);
+                        }
+                    }
+                }
+            }
+            //添加部门管理员到ApproveUsers
+            if (ApproveManagers?.Count > 0)
+            {
+                query = "";
+                foreach (var item in ApproveManagers)
+                {
+                    query += $"ids={item}&";
+                }
+                query += "1=1";
+                var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowGroupManagers?{query}").Result;
+                managers = names.Data ?? new List<ComboSelectListItem>();
+                foreach (var item in managers)
+                {
+                    if (string.IsNullOrEmpty(item.Text) == false)
+                    {
+                        ApproveUsers.Add(item.Text);
+                    }
+                }
+            }
+
+            if (ApproveUsers?.Count > 0)
+            {
+                query = "";
+                foreach (var item in ApproveUsers)
+                {
+                    query += $"itcode={item}&";
+                }
+                query += "1=1";
+                var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers?{query}").Result;
+                users = names.Data ?? new List<ComboSelectListItem>();
+                ApproveUsersFullText.AddRange(users.Select(x => $"{x.Text}({x.Value})").ToList());
+                foreach (var item in ApproveUsers)
+                {
+                    _wtm.DC.Set<FrameworkWorkflow>().Add(new FrameworkWorkflow
+                    {
+                        ActivityId = context.ActivityId,
+                        WorkflowId = context.WorkflowInstance.Id,
+                        UserCode = item,
+                        WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
+                        ModelID = context.ContextId,
+                        ModelType = context.WorkflowExecutionContext.WorkflowContext?.GetType()?.FullName,
+                        TenantCode = context.WorkflowInstance.TenantId,
+                        Submitter = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
+                        StartTime = DateTime.Now,
+                        Tag = this.Tag
+                    });
+                }
+            }
+            if (ApproveRoles?.Count > 0)
+            {
+                query = "";
+                foreach (var item in ApproveRoles)
+                {
+                    query += $"ids={item}&";
+                }
+                query += "1=1";
+                var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowRoles?{query}").Result;
+                roles = names.Data??new List<ComboSelectListItem>();                
+                ApproveUsersFullText.AddRange(roles.Select(x => $"{x.Text}").ToList());
+                foreach (var item in ApproveRoles)
+                {
+                    _wtm.DC.Set<FrameworkWorkflow>().Add(new FrameworkWorkflow
+                    {
+                        ActivityId = context.ActivityId,
+                        WorkflowId = context.WorkflowInstance.Id,
+                        UserCode = "r:"+item,
+                        WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
+                        ModelID = context.ContextId,
+                        ModelType = context.WorkflowExecutionContext.WorkflowContext?.GetType()?.FullName,
+                        TenantCode = context.WorkflowInstance.TenantId,
+                        Submitter = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
+                        StartTime = DateTime.Now,
+                        Tag = this.Tag
+                    });
+                }
+            }
+            if (ApproveGroups?.Count > 0)
+            {
+                query = "";
+                foreach (var item in ApproveGroups)
+                {
+                    query += $"ids={item}&";
+                }
+                query += "1=1";
+                var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowGroups?{query}").Result;
+                groups = names.Data ?? new List<ComboSelectListItem>();
+                ApproveUsersFullText.AddRange(groups.Select(x => $"{x.Text}").ToList());
+                foreach (var item in ApproveGroups)
+                {
+                    _wtm.DC.Set<FrameworkWorkflow>().Add(new FrameworkWorkflow
+                    {
+                        ActivityId = context.ActivityId,
+                        WorkflowId = context.WorkflowInstance.Id,
+                        UserCode = "g:" + item,
+                        WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
+                        ModelID = context.ContextId,
+                        ModelType = context.WorkflowExecutionContext.WorkflowContext?.GetType()?.FullName,
+                        TenantCode = context.WorkflowInstance.TenantId,
+                        Submitter = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
+                        StartTime = DateTime.Now,
+                        Tag = this.Tag
+                    });
+                }
             }
             _wtm.DC.SaveChanges();
             try
@@ -125,7 +297,9 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                         FlowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
                         SubmitBy = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
                         TagName = this.Tag,
-                        Approvers = names.Data.Select(x => new LoginUserInfo { ITCode = x.Value.ToString(), Name = x.Text }).ToList()
+                        Approvers = users.Select(x => new LoginUserInfo { ITCode = x.Value.ToString(), Name = x.Text }).ToList(),
+                        ApproveRoles = roles.Select(x=> new Support.Json.SimpleRole { ID= Guid.Parse(x.Value.ToString()), RoleName = x.Text }).ToList(),
+                        ApproveGroups = groups.Select(x => new Support.Json.SimpleGroup { ID = Guid.Parse(x.Value.ToString()), GroupName = x.Text }).ToList(),
                     };
                     notify.OnStart(info);
                 }
@@ -139,7 +313,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             WtmApproveInput input = context.Input as WtmApproveInput;           
             Remark = input?.Remark;
             ApprovedBy = input.CurrentUser.Name + "("+ input.CurrentUser.ITCode.ToLower()+")";
-            if ((input?.Action =="同意" || input?.Action =="拒绝") && ApproveUsers.Any(x => x.ToLower() == input.CurrentUser.ITCode.ToLower()))
+            if (input?.Action =="同意" || input?.Action =="拒绝")
             {
                 var exist = _wtm.DC.Set<FrameworkWorkflow>().Where(x=>
                     x.WorkflowId == context.WorkflowInstance.Id
@@ -151,13 +325,6 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                     var notify = _wtm.ServiceProvider.GetRequiredService<IApproveNotification>();
                     if (notify != null)
                     {
-                        var query = "";
-                        foreach (var item in ApproveUsers)
-                        {
-                            query += $"itcode={item}&";
-                        }
-                        query += "1=1";
-                        var names = _wtm.CallAPI<List<ComboSelectListItem>>("", $"{_wtm.HostAddress}/_workflowapi/GetWorkflowUsers?{query}").Result;
                         ApproveInfo info = new ApproveInfo
                         {
                             ApprovedBy = input.CurrentUser,
@@ -167,7 +334,6 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                             FlowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
                             SubmitBy = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
                             TagName = this.Tag,
-                            Approvers = names.Data.Select(x => new LoginUserInfo { ITCode = x.Value.ToString(), Name = x.Text }).ToList()
                         };
                         notify.OnResume(info);
                     }

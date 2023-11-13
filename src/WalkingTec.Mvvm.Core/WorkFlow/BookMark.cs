@@ -33,20 +33,45 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
     {
         public override async ValueTask<IEnumerable<BookmarkResult>> GetBookmarksAsync(BookmarkProviderContext<WtmApproveActivity> context, CancellationToken cancellationToken)
         {
-            var info = (await context.ReadActivityPropertyAsync<WtmApproveActivity, ICollection<string>>(x => x.ApproveUsers, cancellationToken))?.ToList() ?? new List<string>();
+            var userinfo = (await context.ReadActivityPropertyAsync<WtmApproveActivity, ICollection<string>>(x => x.ApproveUsers, cancellationToken))?.ToList() ?? new List<string>();
+            var roleinfo = (await context.ReadActivityPropertyAsync<WtmApproveActivity, ICollection<string>>(x => x.ApproveRoles, cancellationToken))?.ToList() ?? new List<string>();
+            var groupinfo = (await context.ReadActivityPropertyAsync<WtmApproveActivity, ICollection<string>>(x => x.ApproveGroups, cancellationToken))?.ToList() ?? new List<string>();
+            var managerinfo = (await context.ReadActivityPropertyAsync<WtmApproveActivity, ICollection<string>>(x => x.ApproveManagers, cancellationToken))?.ToList() ?? new List<string>();
             var tag = (await context.ReadActivityPropertyAsync<WtmApproveActivity, string>(x => x.Tag, cancellationToken));
             var name = context.ActivityExecutionContext.WorkflowExecutionContext.WorkflowBlueprint.Name??"";
             var model = context.ActivityExecutionContext.WorkflowExecutionContext.WorkflowBlueprint.ContextOptions?.ContextType?.FullName;
             var id = context.ActivityExecutionContext.WorkflowExecutionContext.ContextId?.ToString()??"";
-            List<BookmarkResult> rv = new List<BookmarkResult>();
-            if (info?.Any() == true)
+            if(tag == "")
             {
-                rv.AddRange(info.Select(x => Result(new WtmApproveBookmark(x, name,tag,id))));
+                tag = null;
+            }
+            List<BookmarkResult> rv = new List<BookmarkResult>();
+            if (userinfo?.Any() == true)
+            {
+                rv.AddRange(userinfo.Select(x => Result(new WtmApproveBookmark(x, name,tag,id))));
                 if(string.IsNullOrEmpty(model) == false)
                 {
-                    rv.AddRange(info.Select(x => Result(new WtmApproveBookmark(x, model, tag, id))));
+                    rv.AddRange(userinfo.Select(x => Result(new WtmApproveBookmark(x, model, tag, id))));
                 }
-
+            }
+            if (roleinfo?.Any() == true)
+            {
+                rv.AddRange(roleinfo.Select(x => Result(new WtmApproveBookmark(x, name, tag, id))));
+                if (string.IsNullOrEmpty(model) == false)
+                {
+                    rv.AddRange(roleinfo.Select(x => Result(new WtmApproveBookmark(x, model, tag, id))));
+                }
+            }
+            if (groupinfo?.Any() == true)
+            {
+                rv.AddRange(groupinfo.Select(x => Result(new WtmApproveBookmark(x, name, tag, id))));
+                if (string.IsNullOrEmpty(model) == false)
+                {
+                    rv.AddRange(groupinfo.Select(x => Result(new WtmApproveBookmark(x, model, tag, id))));
+                }
+            }
+            if(rv.Count > 0)
+            {
                 return rv;
             }
             return new BookmarkResult[0];

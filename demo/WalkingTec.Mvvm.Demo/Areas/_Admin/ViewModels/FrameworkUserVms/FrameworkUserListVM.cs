@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override void AfterDoSearcher()
         {
-            var ids = DC.Set<FrameworkWorkflow>().Where(x => x.WorkflowName == "注册审批" && x.UserCode == Wtm.LoginUserInfo.ITCode).Select(x => x.ModelID).ToList();
+            var ids = GetMyApproveIds();
             foreach (var item in EntityList)
             {
                 if (ids.Contains(item.GetID().ToString()))

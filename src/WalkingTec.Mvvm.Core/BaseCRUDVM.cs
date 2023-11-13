@@ -23,6 +23,7 @@ using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.WorkFlow;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Npgsql.Logging;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -1421,18 +1422,18 @@ namespace WalkingTec.Mvvm.Core
             try
             {
                 var lp = Wtm.ServiceProvider.GetRequiredService<IWorkflowLaunchpad>();
+                //不直接使用Wtm.LoginUserInfo，否则elsa会把所有信息序列化保存到WorkflowInstances表中
+                LoginUserInfo li = new LoginUserInfo();
+                li.ITCode = Wtm.LoginUserInfo.ITCode;
+                li.Name = Wtm.LoginUserInfo.Name;
+                li.UserId = Wtm.LoginUserInfo.UserId;
+                li.PhotoId = Wtm.LoginUserInfo.PhotoId;
+                li.Groups = Wtm.LoginUserInfo.Groups;
+                li.Roles = Wtm.LoginUserInfo.Roles;
+                li.TenantCode = Wtm.LoginUserInfo.CurrentTenant;
                 var query = new WorkflowsQuery(nameof(WtmApproveActivity), new WtmApproveBookmark(Wtm.LoginUserInfo.ITCode, string.IsNullOrEmpty(flowName)?typeof(TModel).FullName:flowName, tag, Entity.GetID().ToString()), null, null, null, Wtm.LoginUserInfo.CurrentTenant);
                 if (query != null)
                 {
-                    //不直接使用Wtm.LoginUserInfo，否则elsa会把所有信息序列化保存到WorkflowInstances表中
-                    LoginUserInfo li = new LoginUserInfo();
-                    li.ITCode = Wtm.LoginUserInfo.ITCode;
-                    li.Name = Wtm.LoginUserInfo.Name;
-                    li.UserId = Wtm.LoginUserInfo.UserId;
-                    li.PhotoId = Wtm.LoginUserInfo.PhotoId;
-                    li.Groups = Wtm.LoginUserInfo.Groups;
-                    li.Roles = Wtm.LoginUserInfo.Roles;
-                    li.TenantCode = Wtm.LoginUserInfo.CurrentTenant;
                     var flows = await lp.FindWorkflowsAsync(query);
                     foreach (var item in flows)
                     {
@@ -1442,14 +1443,50 @@ namespace WalkingTec.Mvvm.Core
                             return result;
                         }
                     }
-                    MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
-                    return null;
                 }
-                else
+                if(Wtm.LoginUserInfo.Roles != null)
                 {
-                    MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
-                    return null;
+                    foreach (var role in Wtm.LoginUserInfo.Roles)
+                    {
+                        query = new WorkflowsQuery(nameof(WtmApproveActivity), new WtmApproveBookmark(role.ID.ToString(), string.IsNullOrEmpty(flowName) ? typeof(TModel).FullName : flowName, tag, Entity.GetID().ToString()), null, null, null, Wtm.LoginUserInfo.CurrentTenant);
+                        if (query != null)
+                        {
+                            var flows = await lp.FindWorkflowsAsync(query);
+                            foreach (var item in flows)
+                            {
+                                if (item.WorkflowInstance == null)
+                                {
+                                    var result = await lp.ExecutePendingWorkflowAsync(item, new WorkflowInput { Input = new WtmApproveInput { Action = actionName, CurrentUser = li, Remark = remark } });
+                                    return result;
+                                }
+                            }
+                        }
+
+                    }
                 }
+                if (Wtm.LoginUserInfo.Groups != null)
+                {
+                    foreach (var group in Wtm.LoginUserInfo.Groups)
+                    {
+                        query = new WorkflowsQuery(nameof(WtmApproveActivity), new WtmApproveBookmark(group.ID.ToString(), string.IsNullOrEmpty(flowName) ? typeof(TModel).FullName : flowName, tag, Entity.GetID().ToString()), null, null, null, Wtm.LoginUserInfo.CurrentTenant);
+                        if (query != null)
+                        {
+
+                            var flows = await lp.FindWorkflowsAsync(query);
+                            foreach (var item in flows)
+                            {
+                                if (item.WorkflowInstance == null)
+                                {
+                                    var result = await lp.ExecutePendingWorkflowAsync(item, new WorkflowInput { Input = new WtmApproveInput { Action = actionName, CurrentUser = li, Remark = remark } });
+                                    return result;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                MSD.AddModelError(" noworkflow", CoreProgram._localizer?["Sys.NoWorkflow"]);
+                return null;
             }
             catch { }
 

@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MySqlConnector;
 using Npgsql;
 using NpgsqlTypes;
@@ -1222,6 +1223,30 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 DC.SaveChanges();
+            }
+        }
+
+        public List<string> GetMyApproveIds(string flowname = null)
+        {
+            var mt = ModelType.GetParentWorkflowPoco();
+            if (mt != null)
+            {
+                var roleids = Wtm.LoginUserInfo.Roles.Select(x => "r:" + x.ID).ToList();
+                var groupids = Wtm.LoginUserInfo.Groups.Select(x => "g:" + x.ID).ToList();
+
+                var ids = DC.Set<FrameworkWorkflow>()
+                     .CheckEqual(flowname, x => x.WorkflowName)
+                     .CheckEqual(mt.FullName, x => x.ModelType)
+                     .Where(x => x.UserCode == Wtm.LoginUserInfo.ITCode
+                        || roleids.Contains(x.UserCode)
+                        || groupids.Contains(x.UserCode))
+                     .Where(x => x.TenantCode == Wtm.LoginUserInfo.CurrentTenant)
+                   .Select(x => x.ModelID).ToList();
+                return ids;
+            }
+            else
+            {
+                return new List<string>();
             }
         }
     }

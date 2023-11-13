@@ -40,6 +40,8 @@ namespace WalkingTec.Mvvm.Core
         byte[] GenerateExcel();
 
         string TotalText { get; set; }
+
+        List<string> GetMyApproveIds(string flowname = null);
         #region Old
         event Action<IBasePagedListVM<T, S>> OnAfterInitList;
         /// <summary>
