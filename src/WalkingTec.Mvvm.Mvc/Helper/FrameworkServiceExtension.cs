@@ -561,7 +561,7 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IServiceCollection AddWtmWorkflow(this IServiceCollection services, IConfiguration config,string csName="default")
+        public static IServiceCollection AddWtmWorkflow(this IServiceCollection services, IConfiguration config,string csName="default",Action<ElsaOptionsBuilder> options=null)
         {
             var elsaSection = config.GetSection("Workflow");
             var conf = config.Get<Configs>();
@@ -620,6 +620,8 @@ namespace WalkingTec.Mvvm.Mvc
                     .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
                     .AddQuartzTemporalActivities()
                     .AddCustomTenantAccessor<ElsaTenantAccessor>();
+
+                    options?.Invoke(elsa);
                 }
                 );
             services.AddElsaApiEndpoints();
