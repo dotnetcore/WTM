@@ -1226,7 +1226,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public List<string> GetMyApproveIds(string flowname = null)
+        public List<FrameworkWorkflow> GetMyApproves(string flowname = null)
         {
             var mt = ModelType.GetParentWorkflowPoco();
             if (mt != null)
@@ -1240,13 +1240,12 @@ namespace WalkingTec.Mvvm.Core
                      .Where(x => x.UserCode == Wtm.LoginUserInfo.ITCode
                         || roleids.Contains(x.UserCode)
                         || groupids.Contains(x.UserCode))
-                     .Where(x => x.TenantCode == Wtm.LoginUserInfo.CurrentTenant)
-                   .Select(x => x.ModelID).ToList();
+                     .Where(x => x.TenantCode == Wtm.LoginUserInfo.CurrentTenant).ToList();
                 return ids;
             }
             else
             {
-                return new List<string>();
+                return new List<FrameworkWorkflow>();
             }
         }
     }

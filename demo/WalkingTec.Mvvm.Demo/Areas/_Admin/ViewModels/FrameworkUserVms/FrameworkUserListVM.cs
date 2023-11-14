@@ -83,10 +83,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override void AfterDoSearcher()
         {
-            var ids = GetMyApproveIds();
+            var ids = GetMyApproves();
             foreach (var item in EntityList)
             {
-                if (ids.Contains(item.GetID().ToString()))
+                var m = ids.Find(x => x.ModelID == item.GetID().ToString());
+                if (m!=null)
                 {
                     item.CanApprove = true;
                 }
