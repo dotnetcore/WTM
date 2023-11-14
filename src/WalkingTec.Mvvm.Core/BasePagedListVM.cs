@@ -1231,8 +1231,8 @@ namespace WalkingTec.Mvvm.Core
             var mt = ModelType.GetParentWorkflowPoco();
             if (mt != null)
             {
-                var roleids = Wtm.LoginUserInfo.Roles.Select(x => "r:" + x.ID).ToList();
-                var groupids = Wtm.LoginUserInfo.Groups.Select(x => "g:" + x.ID).ToList();
+                var roleids = Wtm.LoginUserInfo.Roles?.Select(x => "r:" + x.ID).ToList();
+                var groupids = Wtm.LoginUserInfo.Groups?.Select(x => "g:" + x.ID).ToList();
 
                 var ids = DC.Set<FrameworkWorkflow>()
                      .CheckEqual(flowname, x => x.WorkflowName)
