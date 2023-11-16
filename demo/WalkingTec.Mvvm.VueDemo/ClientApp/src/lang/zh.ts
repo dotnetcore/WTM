@@ -7,7 +7,8 @@ export default {
     frameworkuser: "用户管理",
     frameworkmenu: "菜单管理",
     dataprivilege: "数据权限",
-    frameworktenant: "租户管理",
+        frameworktenant: "租户管理",
+    workflow:"流程管理",
     systemManagement: "系统管理",
     isMainHost: "当前站点已设置了主站，无法进行此操作，请到主站进行相应操作"
   },

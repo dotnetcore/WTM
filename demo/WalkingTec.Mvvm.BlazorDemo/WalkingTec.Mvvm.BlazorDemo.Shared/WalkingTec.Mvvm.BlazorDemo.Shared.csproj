@@ -8,6 +8,7 @@
     <PackageReference Include="BootstrapBlazor" Version="7.7.1" />
     <PackageReference Include="BootstrapBlazor.Chart" Version="7.5.2" />
     <PackageReference Include="BootstrapBlazor.SummerNote" Version="7.3.2" />
+    <PackageReference Include="Elsa.Designer.Components.Web" Version="2.13.0" />
   </ItemGroup>
 
   <ItemGroup>

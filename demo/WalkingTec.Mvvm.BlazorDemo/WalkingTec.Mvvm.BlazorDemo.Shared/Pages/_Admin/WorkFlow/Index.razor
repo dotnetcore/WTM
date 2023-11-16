@@ -1,0 +1,16 @@
+@page "/_Admin/WorkFlow"
+@using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
+@inherits BasePage
+@attribute [ActionDescription("MenuKey.Workflow", "")]
+
+<IFrame Src="@url" frameborder="0" style="width:100%;height:100%"></IFrame>
+
+    @code{
+
+        string url = "";
+        protected override void OnInitialized()
+        {
+        url = "/_workflow/inner?access_token=" + UserInfo.RemoteToken;
+        }
+
+}

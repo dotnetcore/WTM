@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core;
@@ -18,7 +19,7 @@ builder.Logging.AddConsole();
 builder.Logging.AddWTMLogger();
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", builder.Environment.ContentRootPath } });
 builder.Services.AddRazorPages();
-
+builder.Services.AddWtmWorkflow(builder.Configuration);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddWtmSession(3600, builder.Configuration);
 builder.Services.AddWtmCrossDomain(builder.Configuration);
@@ -76,10 +77,10 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapFallbackToFile(app.Environment.IsDevelopment() ? "index_dev.html" : "");
 });
 
 app.UseWtmContext();
-app.UseReact();
 app.Run();
 
 public partial class Program

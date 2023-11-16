@@ -8,7 +8,8 @@ export default {
     frameworkmenu: "Menu management",
     dataprivilege: "Data privileges",
     frameworktenant: "Tenant",
-    systemManagement: "System",
+        workflow: "Workflow",
+   systemManagement: "System",
     isMainHost:
       "This operation cannot be performed. Please go to the main site for corresponding operation"
   },

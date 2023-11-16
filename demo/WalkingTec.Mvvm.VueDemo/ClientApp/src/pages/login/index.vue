@@ -80,8 +80,8 @@ export default class Login extends Vue {
     this.isloading = true;
     this["login"](this.formData)
       .then(res => {
-        this.isloading = false;
-        setCookie(config.tokenKey, res.Id);
+          this.isloading = false;
+        setCookie(config.tokenKey, res.RemoteToken);
         location.href = `/index.html#/?redirect=${this.redirect}`;
       })
       .catch(() => {

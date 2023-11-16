@@ -26,13 +26,14 @@ namespace WalkingTec.Mvvm.Vue3Demo
                   })
                  .ConfigureLogging((hostingContext, logging) =>
                  {
-                     logging.ClearProviders();
+                     logging.ClearProviders(); 
                      logging.AddConsole();
                      logging.AddWTMLogger();
                  })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseWebRoot("wwwroot").UseStaticWebAssets();
                 });
         }
 

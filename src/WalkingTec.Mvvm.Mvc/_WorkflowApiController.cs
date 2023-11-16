@@ -38,6 +38,7 @@ namespace WalkingTec.Mvvm.Mvc
     {
 
         [HttpGet("[action]")]
+        [NoLog]
         [Public]
         public IActionResult GetWorkflowUsers([FromQuery]string[] itcode)
         {
@@ -60,6 +61,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpGet("[action]")]
         [Public]
+        [NoLog]
         public IActionResult GetWorkflowGroups([FromQuery] string[] ids)
         {
                 if (ConfigInfo.HasMainHost)
@@ -77,6 +79,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpGet("[action]")]
         [Public]
+        [NoLog]
         public IActionResult GetWorkflowGroupManagers([FromQuery] string[] ids)
         {
             if (ConfigInfo.HasMainHost)
@@ -94,6 +97,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpGet("[action]")]
         [Public]
+        [NoLog]
         public IActionResult GetWorkflowMyGroupManagers([FromQuery] string itcode)
         {
             if (ConfigInfo.HasMainHost)
@@ -110,6 +114,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpGet("[action]")]
         [Public]
+        [NoLog]
         public IActionResult GetWorkflowRoles([FromQuery] string[] ids)
         {
 
@@ -130,6 +135,7 @@ namespace WalkingTec.Mvvm.Mvc
 
 
         [HttpGet("[action]")]
+        [NoLog]
         public async Task<IActionResult> GetTimeLine(string flowname,string entitytype,string entityid)
         {
 
@@ -199,6 +205,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [HttpGet("[action]")]
+        [NoLog]
         public async Task<IActionResult> GetWorkflow(string flowname, string entitytype, string entityid)
         {
             var workflowId = DC.Set<Elsa_WorkflowInstance>().CheckEqual(flowname, x => x.Name).CheckEqual(entitytype, x => x.ContextType).CheckEqual(entityid, x => x.ContextId)
@@ -209,6 +216,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [HttpGet("[action]")]
+        [NoLog]
         public async Task<IActionResult> GetMyApprove(string flowname, string entitytype, string entityid,string tag,int page=1,int take=20)
         {
             var roleids = Wtm.LoginUserInfo.Roles.Select(x => "r" + x.ID).ToList();

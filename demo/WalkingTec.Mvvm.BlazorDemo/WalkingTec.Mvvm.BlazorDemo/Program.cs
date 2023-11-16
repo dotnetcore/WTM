@@ -20,7 +20,7 @@ builder.Logging.AddConsole();
 builder.Logging.AddWTMLogger();
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", builder.Environment.ContentRootPath } });
 builder.Services.AddRazorPages();
-
+builder.Services.AddWtmWorkflow(builder.Configuration);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddWtmSession(3600, builder.Configuration);
 builder.Services.AddWtmCrossDomain(builder.Configuration);

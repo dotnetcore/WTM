@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VueCliMiddleware;
@@ -20,7 +23,7 @@ builder.Logging.AddConsole();
 builder.Logging.AddWTMLogger();
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", builder.Environment.ContentRootPath } });
 builder.Services.AddRazorPages();
-
+builder.Services.AddWtmWorkflow(builder.Configuration);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddWtmSession(3600, builder.Configuration);
 builder.Services.AddWtmCrossDomain(builder.Configuration);
@@ -79,16 +82,9 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
-    if (app.Environment.EnvironmentName == "Development")
-    {
-        endpoints.MapToVueCliProxy(
-            "{*path}",
-            new SpaOptions { SourcePath = "ClientApp" },
-            npmScript: "start",
-            regex: "No issues found.");
-    }
+    endpoints.MapFallbackToFile(app.Environment.IsDevelopment() ? "index_dev.html" : "");
 });
-
+builder.WebHost.UseWebRoot("wwwroot").UseStaticWebAssets();
 app.UseWtmContext();
 if (app.Environment.EnvironmentName == "Development")
 {

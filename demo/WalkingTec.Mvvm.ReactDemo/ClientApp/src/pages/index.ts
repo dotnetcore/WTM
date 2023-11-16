@@ -42,7 +42,12 @@ export default {
         controller: 'WalkingTec.Mvvm.Admin.Api,FrameworkTenant',
         component: React.lazy(() => import('./frameworktenant'))
     }
-
+    , frameworkworkflow: {
+        name: 'MenuKey.Workflow',
+        path: '/frameworkworkflow',
+        controller: '',
+        component: React.lazy(() => import('./frameworkworkflow'))
+    }
 , school: {
         name: '学校管理',
         path: '/school',

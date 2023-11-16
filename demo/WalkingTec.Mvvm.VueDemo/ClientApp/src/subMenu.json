@@ -48,6 +48,12 @@
     "Url": "/frameworktenant"
   },
   {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "2c7dc631-5b41-458b-91f9-7c3cd82bce1f",
+    "Text": "workflow",
+    "Url": "/workflow"
+  },
+  {
     "Id": "c4664415-83c4-4cac-88fe-386932644bcd",
     "ParentId": null,
     "Text": "学生管理",
