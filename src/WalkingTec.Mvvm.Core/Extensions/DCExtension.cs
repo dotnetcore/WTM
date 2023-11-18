@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         public static List<TreeSelectListItem> GetTreeSelectListItems<T>(this IQueryable<T> baseQuery
             , WTMContext wtmcontext
             , Expression<Func<T, string>> textField
-            , Expression<Func<T, string>> valueField = null
+            , Expression<Func<T, object>> valueField = null
             , Expression<Func<T, string>> iconField = null
             , Expression<Func<T, string>> urlField = null
             , Expression<Func<T, string>> tagField = null
@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 valueField = x => x.GetID().ToString();
             }
-            Expression<Func<T,string>> idfield = x => x.GetID().ToString();
+            Expression<Func<T, string>> idfield = x => x.GetID().ToString();
             Expression<Func<T, string>> parentField = x => x.GetParentID().ToString();
 
             //定义PE
@@ -86,7 +86,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
             //绑定Value字段，形成类似 Value = valueField 的表达式
             var valueMI = typeof(TreeSelectListItem).GetMember("Value")[0];
-            MemberBinding valueBind = Expression.Bind(valueMI, cp.Change(valueField.Body, pe));
+            var temp = cp.Change(valueField.Body, pe);
+            var tempp = Expression.Call(temp, "ToString", new Type[] { });
+            MemberBinding valueBind = Expression.Bind(valueMI, tempp);
 
             //绑定ParentId字段，形成类似 Value = valueField 的表达式
             var parentMI = typeof(TreeSelectListItem).GetMember("ParentId")[0];
@@ -144,7 +146,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
 
             //合并创建新类和绑定字段的表达式，形成类似 new SimpleTextAndValue{ Text = textField, Value = valueField} 的表达式
-            MemberInitExpression init = Expression.MemberInit(newItem, textBind, valueBind, iconBind, parentBind, urlBind, tagBind, expandBind,idBind);
+            MemberInitExpression init = Expression.MemberInit(newItem, textBind, valueBind, iconBind, parentBind, urlBind, tagBind, expandBind, idBind);
 
             //将最终形成的表达式转化为Lambda，形成类似 x=> new SimpleTextAndValue { Text = x.textField, Value = x.valueField} 的表达式
             var lambda = Expression.Lambda<Func<T, TreeSelectListItem>>(init, pe);
@@ -231,7 +233,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
             //绑定Value字段，形成类似 Value = valueField 的表达式
             var valueMI = typeof(ComboSelectListItem).GetMember("Value")[0];
-            MemberBinding valueBind = Expression.Bind(valueMI, cp.Change(valueField.Body, pe));
+            var temp = cp.Change(valueField.Body, pe);
+            var tempp = Expression.Call(temp, "ToString", new Type[] { });
+            MemberBinding valueBind = Expression.Bind(valueMI, tempp);
 
             //如果是树形结构，给ParentId赋值
             MemberBinding parentBind = null;
@@ -307,7 +311,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         //}
                         //else
                         //{
-                            query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
+                        query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
                         //}
                     }
                     else
@@ -402,7 +406,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 ParameterExpression ipe = pe;
 
                 //格式化idfeild，保存在data中
-                for (int i=0;i<splits.Length;i++)
+                for (int i = 0; i < splits.Length; i++)
                 {
                     var item = splits[i];
                     var proname = item;
@@ -428,7 +432,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         petype = typeof(T);
                     }
-                    if(islist == true || i == splits.Length-1)
+                    if (islist == true || i == splits.Length - 1)
                     {
                         data.Add((iexp, ipe, islist));
                         ipe = Expression.Parameter(petype);
@@ -438,7 +442,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
                 //确定最终关联的表名
                 string tableName = "";
-                if(data.Count > 0)
+                if (data.Count > 0)
                 {
                     var last = data.Last().exp as MemberExpression;
                     string fieldname = last?.Member?.Name;
@@ -458,11 +462,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         }
                     }
                 }
-                
+
                 //如果dps为空，则拼接一个返回假的表达式，这样就查询不出任何数据
                 if (dps == null)
                 {
-                    if(tableName == "")
+                    if (tableName == "")
                     {
                         continue;
                     }
@@ -488,7 +492,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         //}
                         //else
                         //{
-                            exp = falseExp;
+                        exp = falseExp;
                         //}
                     }
                     //如果有关联 Id
@@ -498,10 +502,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         //如果关联 Id 包括null，则代表可以访问所有数据，就不需要再拼接where条件了
                         if (!ids.Contains(null))
                         {
-                            for(int i=data.Count-1; i>=0; i--)
+                            for (int i = data.Count - 1; i >= 0; i--)
                             {
                                 var d = data[i];
-                                if(d.islist == true)
+                                if (d.islist == true)
                                 {
                                     var lastd = data[i + 1];
                                     var queryable = Expression.Call(
@@ -1001,7 +1005,7 @@ where S : struct
                 if (pro.GetCustomAttribute<NotMappedAttribute>() != null)
                 {
                     var idpro = sourceType.GetSingleProperty(FieldName + "Id");
-                    if(idpro != null)
+                    if (idpro != null)
                     {
                         return idpro.Name;
                     }
@@ -1096,7 +1100,7 @@ where S : struct
             foreach (var item in Ids)
             {
                 object vv = PropertyHelper.ConvertValue(item, peid.Type);
-                add.Invoke(list,new object[] { vv });              
+                add.Invoke(list, new object[] { vv });
             }
             Expression dpleft = Expression.Constant(list);
             Expression dpcondition = Expression.Call(dpleft, listtype.GetMethod("Contains"), peid);

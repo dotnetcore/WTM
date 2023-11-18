@@ -523,23 +523,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     AddSubButton(vmQualifiedName, rowBtnStrBuilder, toolBarBtnStrBuilder, gridBtnEventStrBuilder, vm, item);
                 }
             }
-            if (hasButtonGroup == true)
-            {
-                toolBarBtnStrBuilder.Append($@"<script type=""text/javascript"" des=""buttongroup"">layui.use([""form""], function () {{
-                            var form = layui.form, $ = layui.jquery;
-                            $("".downpanel"").on(""click"", "".layui-select-title"", function(e) {{
-                                $("".layui-form-select"").not($(this).parents("".layui-form-select"")).removeClass(""layui-form-selected"");
-                                $(this).parents("".layui-form-select"").toggleClass(""layui-form-selected"");
-                                            e.stopPropagation();
-                                        }});
-                            $(document).click(function(event) {{
-                            var _con2 = $("".downpanel"");
-                            if (!_con2.is (event.target) && (_con2.has(event.target).length === 0)) {{
-                            _con2.removeClass(""layui -form-selected"");
-                            }}
-                            }});
-                            }});</script>");
-            }
 
             #endregion
 
@@ -666,6 +649,25 @@ setTimeout(function(){{
             output.PostElement.AppendHtml($@"
 {(string.IsNullOrEmpty(ListVM.DetailGridPrix) ? string.Empty : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
 ");
+            if (hasButtonGroup == true)
+            {
+                output.PostElement.AppendHtml($@"<script>
+                        setTimeout(function(){{
+                            var form = layui.form, $ = layui.jquery;
+                            $("".downpanel"").on(""click"", "".layui-select-title"", function(e) {{
+                                $("".layui-form-select"").not($(this).parents("".layui-form-select"")).removeClass(""layui-form-selected"");
+                                $(this).parents("".layui-form-select"").toggleClass(""layui-form-selected"");
+                                            e.stopPropagation();
+                                        }});
+                            $(document).click(function(event) {{
+                            var _con2 = $("".downpanel"");
+                            if (!_con2.is (event.target) && (_con2.has(event.target).length === 0)) {{
+                            _con2.removeClass(""layui -form-selected"");
+                            }}
+                            }});
+                            }},500);</script>");
+            }
+
             base.Process(context, output);
         }
 
