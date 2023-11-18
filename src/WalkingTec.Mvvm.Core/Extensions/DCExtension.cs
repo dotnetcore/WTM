@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         public static List<TreeSelectListItem> GetTreeSelectListItems<T>(this IQueryable<T> baseQuery
             , WTMContext wtmcontext
             , Expression<Func<T, string>> textField
-            , Expression<Func<T, string>> valueField = null
+            , Expression<Func<T, object>> valueField = null
             , Expression<Func<T, string>> iconField = null
             , Expression<Func<T, string>> urlField = null
             , Expression<Func<T, string>> tagField = null
@@ -86,7 +86,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
             //绑定Value字段，形成类似 Value = valueField 的表达式
             var valueMI = typeof(TreeSelectListItem).GetMember("Value")[0];
-            MemberBinding valueBind = Expression.Bind(valueMI, cp.Change(valueField.Body, pe));
+            var temp = cp.Change(valueField.Body, pe);
+            var tempp = Expression.Call(temp, "ToString", new Type[] { });
+            MemberBinding valueBind = Expression.Bind(valueMI, tempp);
 
             //绑定ParentId字段，形成类似 Value = valueField 的表达式
             var parentMI = typeof(TreeSelectListItem).GetMember("ParentId")[0];
@@ -231,7 +233,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
             //绑定Value字段，形成类似 Value = valueField 的表达式
             var valueMI = typeof(ComboSelectListItem).GetMember("Value")[0];
-            MemberBinding valueBind = Expression.Bind(valueMI, cp.Change(valueField.Body, pe));
+            var temp = cp.Change(valueField.Body, pe);
+            var tempp=Expression.Call(temp, "ToString", new Type[] { });
+            MemberBinding valueBind = Expression.Bind(valueMI, tempp);
 
             //如果是树形结构，给ParentId赋值
             MemberBinding parentBind = null;

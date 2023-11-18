@@ -19,9 +19,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Controllers
     public partial class ChartController : BaseApiController
     {
         [HttpGet("GetCitys")]
+        [Public]
         public ActionResult GetCitys()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
+            return Ok(DC.Set<City>().GetTreeSelectListItems(Wtm, x => x.Name, x=>x.ID));
         }
 
         [HttpPost("GetCharts")]
