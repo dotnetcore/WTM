@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core.WorkFlow;
 using WalkingTec.Mvvm.Mvc.Helper;
 using System.Reflection;
+using System;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -22,6 +23,7 @@ namespace WalkingTec.Mvvm.Demo
 
         public Startup(IWebHostEnvironment env, IConfiguration config)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             ConfigRoot = config;
         }
 
@@ -69,6 +71,7 @@ namespace WalkingTec.Mvvm.Demo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs)
         {
+
             IconFontsHelper.GenerateIconFont("wwwroot/layui", "wwwroot/font-awesome");
 
             app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
