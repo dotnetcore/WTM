@@ -24,7 +24,6 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             T rv = context.WorkflowExecutionContext.WorkflowContext as T;
             if (rv == null)
             {
-                var test = Utils.GetAllVms().Where(x => typeof(IBaseCRUDVM<TopBasePoco>).IsAssignableFrom(x)).ToList();
                 var vmType = Utils.GetAllVms().Where(x => typeof(IBaseCRUDVM<TopBasePoco>).IsAssignableFrom(x) && x.GetInterface("IBaseCRUDVM`1")?.GenericTypeArguments[0] == typeof(T)).FirstOrDefault();
                 IBaseCRUDVM<TopBasePoco> vm = null;
                 if (vmType != null)
