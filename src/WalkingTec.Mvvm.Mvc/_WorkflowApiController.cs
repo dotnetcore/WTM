@@ -220,7 +220,7 @@ namespace WalkingTec.Mvvm.Mvc
         public async Task<IActionResult> GetMyApprove(string flowname, string entitytype, string entityid,string tag,int page=1,int take=20)
         {
             var roleids = Wtm.LoginUserInfo.Roles.Select(x => "r" + x.ID).ToList();
-            var groupids = Wtm.LoginUserInfo.Roles.Select(x => "g" + x.ID).ToList();
+            var groupids = Wtm.LoginUserInfo.Groups.Select(x => "g" + x.ID).ToList();
             var rv = await DC.Set<FrameworkWorkflow>()
                 .Where(x => x.UserCode == Wtm.LoginUserInfo.ITCode
                     || roleids.Contains(x.UserCode)
