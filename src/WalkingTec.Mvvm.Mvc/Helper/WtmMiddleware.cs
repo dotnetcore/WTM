@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +45,15 @@ namespace WalkingTec.Mvvm.Mvc
                 //    context.Response.Cookies.Append(c.Key,c.Value);
 
                 //}
-                await context.Response.WriteAsync(this.TranslateWorkflow(txt));
+                var cul = Thread.CurrentThread.CurrentCulture;
+                if (cul.Name?.ToLower() == "zh" || cul.Name?.ToLower() == "zh-cn")
+                {
+                    await context.Response.WriteAsync(this.TranslateWorkflow(txt));
+                }
+                else
+                {
+                    await context.Response.WriteAsync(txt);
+                }
                 return;
             }
             if (context.Request.Path == "/")

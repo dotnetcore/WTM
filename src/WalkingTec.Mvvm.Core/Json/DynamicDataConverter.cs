@@ -34,6 +34,25 @@ namespace WalkingTec.Mvvm.Core.Json
                     {
                         level--;
                     }
+                    if(reader.TokenType == JsonTokenType.StartArray)
+                    {
+                        List<object> list = new List<object>();
+                        reader.Read();
+                        while(reader.TokenType!= JsonTokenType.EndArray)
+                        {
+                            var inner = JsonSerializer.Deserialize<DynamicData>(ref reader, options);
+                            if(inner.Fields.Count == 1 && inner.Fields.First().Key == "")
+                            {
+                                list.Add(inner.Fields.First().Value);
+                            }
+                            else
+                            {
+                                list.Add(inner);
+                            }
+                            reader.Read();
+                        }
+                        rv.Fields.Add(currentkey, list);
+                    }
                     if (reader.TokenType == JsonTokenType.PropertyName)
                     {
                         currentkey = reader.GetString();

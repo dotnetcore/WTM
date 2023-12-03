@@ -4,6 +4,11 @@
 }
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var culturename = requestCulture.RequestCulture.UICulture.Name;
+    if(culturename == "zh")
+    {
+        culturename = "zh-CN";
+    }
 }
 
 <link rel="icon" type="image/png" sizes="32x32"
@@ -19,8 +24,8 @@
 
 
 <elsa-studio-root server-url="@($"{Context.Request.Scheme}://{Context.Request.Host}")" tenant=""
-                  monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min" culture="zh-CN">
-    <elsa-studio-dashboard culture="@requestCulture.RequestCulture.UICulture.Name"></elsa-studio-dashboard>
+                  monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min" culture="@culturename">
+    <elsa-studio-dashboard culture="@culturename"></elsa-studio-dashboard>
 </elsa-studio-root>
 
 <script src="/jquery.min.js"></script>
@@ -55,14 +60,13 @@
     }
 
     const elsaStudioRoot = document.querySelector('elsa-studio-root');
-
     elsaStudioRoot.addEventListener('initializing', e => {
         const elsaStudio = e.detail;
         elsaStudio.pluginManager.registerPlugin(WtmApprovePlugin);
     });
 
 </script>
-@if (requestCulture.RequestCulture.UICulture.Name.ToLower().Contains("zh"))
+@if (culturename=="zh-CN")
 {
   <script>
         elsaStudioRoot.addEventListener('initialized', e => {

@@ -14,6 +14,8 @@ using WalkingTec.Mvvm.Core.WorkFlow;
 using WalkingTec.Mvvm.Mvc.Helper;
 using System.Reflection;
 using System;
+using Elsa.Retention.Extensions;
+using NodaTime;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -31,9 +33,22 @@ namespace WalkingTec.Mvvm.Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddWtmWorkflow(ConfigRoot, options: elsa => {
+            services.AddWtmWorkflow(ConfigRoot, options: elsa =>
+            {
                 elsa.AddActivity<SMSActivity>();
             });
+
+            services.AddRetentionServices(options =>
+             {
+                 // Bind options from configuration.
+                 options.SweepInterval = Duration.FromHours(1);
+                 options.BatchSize = 500;
+                 // Configure a custom specification filter pipeline that deletes cancelled, faulted and completed workflows.
+                 options.ConfigureSpecificationFilter = filter => filter.AddAndSpecification(
+                     new WorkflowStatusFilterSpecification(null,""))
+                 ;
+             });
+
             services.AddDistributedMemoryCache();
             services.AddWtmSession(3600, ConfigRoot);
             services.AddWtmCrossDomain(ConfigRoot);

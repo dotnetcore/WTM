@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.13.0" />
+    <PackageReference Include="Elsa.Retention" Version="2.13.0" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

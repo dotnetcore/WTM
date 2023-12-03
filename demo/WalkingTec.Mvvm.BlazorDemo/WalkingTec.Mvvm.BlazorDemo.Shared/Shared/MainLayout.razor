@@ -335,6 +335,6 @@
 
     private async Task TabChanged(bool v)
     {
-        await JSRuntime.InvokeAsync<bool>("localStorageFuncs.set", "wtmtab",v);
+        await JSRuntime.InvokeAsync<string>("localStorageFuncs.set", "wtmtab",v);
     }
 }
