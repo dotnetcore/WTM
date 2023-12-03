@@ -1,6 +1,7 @@
 @page "/_Admin/FrameworkUser/Create"
 @using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 @inherits BasePage
+@attribute [ActionDescription("新建用户")]
 
 
     <ValidateForm @ref="vform" Model="@Model" OnValidSubmit="@Submit">
