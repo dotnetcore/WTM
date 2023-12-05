@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -38,6 +39,12 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <returns>Excel文件</returns>
         byte[] GenerateExcel();
+
+        /// <summary>
+        /// 查询并生成Excel
+        /// </summary>
+        /// <returns>Excel文件</returns>
+        Task<byte[]> GenerateExcelAsync();
 
         string TotalText { get; set; }
 
