@@ -14,45 +14,54 @@
 			<el-table-column v-for="(item, index) in setHeader" :key="index"
 				:show-overflow-tooltip="item.type !== 'combobox' && item.type !== 'switch' && item.type !== 'date' && item.type !== 'textbox'"
 				:prop="item.key" :width="item.colWidth" :label="item.title" :sortable="item.sortable" :align="item.align">
-				<template v-slot="scope">
-					<template v-if="item.type === 'image'">
-						<el-image :preview-teleported="true" v-if="scope.row[item.key + '__localurl__'] !== ''"
-							:style="{ 'width': item.imageWidth ? item.imageWidth + 'px' : 'undefined', 'height': item.imageHeight ? item.imageHeight + 'px' : 'undefined', 'border-radius': '5px' }"
-							:src="scope.row[item.key + '__localurl__']" :initial-index="scope.row[item.key + '__preview__']"
-							:preview-src-list="state.picList" :title="$t('message._system.table.preview')" />
-					</template>
-					<template v-else-if="item.type === 'icon' && props.config.isSub !== true">
-						<i :class="scope.row[item.key]"></i>
-					</template>
-					<template v-else-if="item.type === 'switch' && props.config.isSub !== true">
-						<el-switch
-							:model-value="(scope.row[item.key] && (scope.row[item.key] === true || scope.row[item.key] === 'true')) ? true : false" />
-					</template>
-					<template v-else-if="item.type === 'switch' && props.config.isSub === true">
-						<el-switch v-model="listvalue[scope.$index][item.key]"
-							:disabled="item.isDisabled || props.config.isDisabled" />
-					</template>
-					<template v-else-if="item.type === 'textbox'">
-						<el-input v-model="listvalue[scope.$index][item.key]"
-							:disabled="item.isDisabled || props.config.isDisabled"></el-input>
-					</template>
-					<template v-else-if="item.type === 'combobox'">
-						<el-select v-model="listvalue[scope.$index][item.key]"
-							:disabled="item.isDisabled || props.config.isDisabled">
-							<el-option v-for="(op, opkey, opindex) in state.comboData[item.key]" :key="opindex" :value="opkey"
-								:label="op"></el-option>
-						</el-select>
-					</template>
-					<template v-else-if="item.type === 'date'">
-						<el-date-picker v-if="item.dateType !== 'time'" v-model="listvalue[scope.$index][item.key]"
-							:type="item.dateType ?? 'datetime'" :disabled="item.isDisabled || props.config.isDisabled" />
-						<el-time-picker v-else v-model="listvalue[scope.$index][item.key]"
-							:disabled="item.isDisabled || props.config.isDisabled" />
-					</template>
-					<template v-else>
-						{{ scope.row[item.key] }}
-					</template>
-				</template>
+                <template v-slot="scope">
+                    <template v-if="item.formatter">
+                        {{item.formatter(scope.row,scope.row[item.key])}}
+                    </template>
+                    <template v-else-if="item.type === 'image'">
+                        <el-image :preview-teleported="true" v-if="scope.row[item.key + '__localurl__'] !== ''"
+                                  :style="{ 'width': item.imageWidth ? ite         * m.imageWidth + 'px' : 'undefined', 'height': item.imageHeight ? item.imageHeight + 'px' : 'undefined', 'border-radius': '5px' }"
+                                  :src="scope.row[item.key + '__localurl__']" :initial-index="scope.row[item.key + '__preview__']"
+                                  :preview-src-list="state.picList" :title="$t('message._system.table.preview')" />
+                    </template>
+                    <template v-else-if="item.type === 'file' && props.config.isSub !== true">
+                        <el-button text type="primary" @click="download(scope.row[item.key])">
+                            {{
+				$t('message._system.common.vm.download')
+                            }}
+                        </el-button>
+                    </template>
+                    <template v-else-if="item.type === 'icon' && props.config.isSub !== true">
+                        <i :class="scope.row[item.key]"></i>
+                    </template>
+                    <template v-else-if="item.type === 'switch' && props.config.isSub !== true">
+                        <el-switch :model-value="(scope.row[item.key] && (scope.row[item.key] === true || scope.row[item.key] === 'true')) ? true : false" />
+                    </template>
+                    <template v-else-if="item.type === 'switch' && props.config.isSub === true">
+                        <el-switch v-model="listvalue[scope.$index][item.key]"
+                                   :disabled="item.isDisabled || props.config.isDisabled" />
+                    </template>
+                    <template v-else-if="item.type === 'textbox'">
+                        <el-input v-model="listvalue[scope.$index][item.key]"
+                                  :disabled="item.isDisabled || props.config.isDisabled"></el-input>
+                    </template>
+                    <template v-else-if="item.type === 'combobox'">
+                        <el-select v-model="listvalue[scope.$index][item.key]"
+                                   :disabled="item.isDisabled || props.config.isDisabled">
+                            <el-option v-for="(op, opkey, opindex) in state.comboData[item.key]" :key="opindex" :value="opkey"
+                                       :label="op"></el-option>
+                        </el-select>
+                    </template>
+                    <template v-else-if="item.type === 'date'">
+                        <el-date-picker v-if="item.dateType !== 'time'" v-model="listvalue[scope.$index][item.key]"
+                                        :type="item.dateType ?? 'datetime'" :disabled="item.isDisabled || props.config.isDisabled" />
+                        <el-time-picker v-else v-model="listvalue[scope.$index][item.key]"
+                                        :disabled="item.isDisabled || props.config.isDisabled" />
+                    </template>
+                    <template v-else>
+                        {{ scope.row[item.key] }}
+                    </template>
+                </template>
 			</el-table-column>
 
 			<slot name="operation" v-if="props.config.isOperate && props.config.isDisabled != true">
@@ -142,7 +151,7 @@
          * key:字符串类型，字段名称，
          * colWidth:字符串类型，列宽，
          * title：字符串类型，列头文字，
-         * type：字符串类型，可填'text','switch','image','textbox,'combobox','date','icon'
+         * type：字符串类型，可填'text','switch','image','textbox,'combobox','date','icon','file'
          * align: 字符串，可填'left','right','center'，默认是left
          * isChecked:是否默认展示
          * isDisabled:列中控件是否显示为禁用状态
@@ -150,6 +159,7 @@
          * imageWidth:当type='image'时，指定图片宽度
          * imageHeight:当type='image时'，指定图片高度
          * dateType:当type='date'时，指定日期控件模式，可填写'date','month','year','week','datetime','time'
+         * formatter:传递一个function(row,data)，row为该行的数据，data为该列绑定的数据，返回一个字符串用于显示
          */
         header: {
             type: Array<EmptyObjectType>,
@@ -427,6 +437,12 @@
     const subDelete = (index: any) => {
 
         listvalue.value.splice(index, 1);
+
+    }
+
+    const download = (data: any) => {
+
+        fileapi().downloadFile(data);
 
     }
 
