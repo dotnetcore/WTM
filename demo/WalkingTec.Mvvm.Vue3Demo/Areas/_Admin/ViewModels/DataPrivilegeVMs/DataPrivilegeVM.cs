@@ -77,7 +77,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     string user = null;
                     if (ConfigInfo.HasMainHost && Wtm.LoginUserInfo?.CurrentTenant == null)
                     {
-                        var check = Wtm.CallAPI<List<ComboSelectListItem>>("mainhost", "/api/_account/GetUserById").Result;
+                        var check = Wtm.CallAPI<List<ComboSelectListItem>>("mainhost", "/api/_account/GetUserById?keywords=" + Entity.UserCode).Result;
                         if (check.Data != null)
                         {
                             user = check.Data.Where(x => x.Value.ToString() == Entity.UserCode).Select(x => x.Value.ToString()).FirstOrDefault();

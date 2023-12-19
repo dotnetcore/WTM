@@ -176,6 +176,10 @@ namespace WalkingTec.Mvvm.Admin.Api
                 {
                     forapi.Attributes.Remove("IsMainHost");
                 }
+                if (forapi.Attributes.ContainsKey("IsDebug"))
+                {
+                    forapi.Attributes.Remove("IsDebug");
+                }
                 if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(Wtm.LoginUserInfo.TenantCode) == true)
                 {
                     forapi.Attributes.Add("IsMainHost", true);
@@ -184,7 +188,8 @@ namespace WalkingTec.Mvvm.Admin.Api
                 {
                     forapi.Attributes.Add("IsMainHost", false);
                 }
-                forapi.Attributes.Add("IsDebug", Wtm.ConfigInfo.IsQuickDebug);
+                    forapi.Attributes.Add("IsDebug", Wtm.ConfigInfo.IsQuickDebug);
+                
                 return Ok(forapi);
             }
         }

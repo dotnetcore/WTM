@@ -21,7 +21,7 @@ const service: AxiosInstance = axios.create({
 service.interceptors.request.use(
 	(config) => {
 		// 在发送请求之前做些什么 token
-		if (Local.get('token')) {
+        if (Local.get('token') && config.url?.toLocaleLowerCase().includes("/api/_account/loginjwt") == false) {
 			config.headers!['Authorization'] = `Bearer ${Local.get('token')}`;
 		}
 		config.headers!['Accept-Language'] = Local.get('themeConfig')['globalI18n'];
