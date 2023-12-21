@@ -20,14 +20,14 @@
                     </template>
                     <template v-else-if="item.type === 'image'">
                         <el-image :preview-teleported="true" v-if="scope.row[item.key + '__localurl__'] !== ''"
-                                  :style="{ 'width': item.imageWidth ? ite         * m.imageWidth + 'px' : 'undefined', 'height': item.imageHeight ? item.imageHeight + 'px' : 'undefined', 'border-radius': '5px' }"
+                                  :style="{ 'width': item.imageWidth ? item.imageWidth + 'px' : 'undefined', 'height': item.imageHeight ? item.imageHeight + 'px' : 'undefined', 'border-radius': '5px' }"
                                   :src="scope.row[item.key + '__localurl__']" :initial-index="scope.row[item.key + '__preview__']"
                                   :preview-src-list="state.picList" :title="$t('message._system.table.preview')" />
                     </template>
                     <template v-else-if="item.type === 'file' && props.config.isSub !== true">
                         <el-button text type="primary" @click="download(scope.row[item.key])">
                             {{
-				$t('message._system.common.vm.download')
+				                $t('message._system.common.vm.download')
                             }}
                         </el-button>
                     </template>
