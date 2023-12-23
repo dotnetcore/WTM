@@ -92,7 +92,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     });
 
                 }
-                output.PostElement.AppendHtml($"<script>ff.LoadComboItems('checkbox','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(values)})</script>");
+                output.PostElement.AppendHtml($"<script>ff.LoadComboItems('checkbox','{ItemUrl}','{Id}','{Field.Name}',{JsonSerializer.Serialize(values)},undefined,{Disabled.ToString().ToLower()})</script>");
             }
             else
             {
@@ -156,7 +156,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 var item = listItems[i];
                 var selected = item.Selected ? " checked" : " ";
                 output.PostContent.AppendHtml($@"
-<input type=""checkbox"" name=""{Field.Name}"" value=""{item.Value}"" title=""{item.Text}"" {selected} {(Disabled ? "disabled=\"\"" : string.Empty)}/>");
+<input type=""checkbox"" name=""{Field.Name}"" value=""{item.Value}"" title=""{item.Text}"" {selected} {(Disabled ? "disabled" : string.Empty)}/>");
             }
             output.PostElement.AppendHtml($@"
 <input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />

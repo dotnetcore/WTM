@@ -739,7 +739,7 @@ window.ff = {
         ff.ChainChange("", target[0], "");
     },
 
-    LoadComboItems: function (controltype,url, controlid, targetname,svals, cb) {
+    LoadComboItems: function (controltype,url, controlid, targetname,svals, cb,disabled) {
         var target = $("#" + controlid);
         var targetfilter = target.attr("lay-filter");
         var ismulticombo = target.attr("wtm-combo") != undefined;
@@ -763,19 +763,23 @@ window.ff = {
                    });
                }
                if (controltype === "combo") {
-                   var da = ff.getComboItems(data.Data, svals);
+                   var da = ff.getComboItems(data.Data, svals,undefined,disabled);
                     window[controlid].update({ data: da });
                }
                if (controltype === "checkbox") {
                    target[0].innerHTML = "";
                    for (i = 0; i < data.Data.length; i++) {
                        item = data.Data[i];
+                       var che = "";
+                       var dis = "";
                        if (item.Selected === true || svals.indexOf(item.Value) > -1) {
-                           target.append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                           che = " checked ";
                        }
-                       else {
-                           target.append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                       if (disabled==true) {
+                           dis = " disabled ";
                        }
+                       target.append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'" + che + dis+"/>");
+
                    }
                    layui.form.render('checkbox', targetfilter + "div");
                }
@@ -1248,7 +1252,7 @@ window.ff = {
         return rv;
     },
 
-    getComboItems: function (data, svals, useDefaultvalue) {
+    getComboItems: function (data, svals, useDefaultvalue,disabled) {
         var rv = [];
         if (svals == undefined || svals == null) {
             svals = [];
@@ -1258,7 +1262,7 @@ window.ff = {
                 var item = {};
                 item.value = data[i].Value;
                 item.name = data[i].Text;
-                item.disabled = data[i].Disabled;
+                item.disabled = disabled!=undefined?disabled: data[i].Disabled;
                 item.selected = useDefaultvalue == true ? svals.indexOf(data[i].Value) > -1 : (data[i].Selected || svals.indexOf(data[i].Value) > -1);
                 item.icon = data[i].Icon;
                 if (data[i].Children != null && data[i].Children.length > 0) {
