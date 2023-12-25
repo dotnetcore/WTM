@@ -108,7 +108,11 @@ const state = reactive({
 const ci = getCurrentInstance() as any;
 // 打开弹窗
 onMounted(() => {
-	dataPrivilegeApi().get(ci.attrs["wtmdata"]).then((data: any) => other.setValue(state.vmModel, data));
+	dataPrivilegeApi().get(ci.attrs["wtmdata"]).then((data: any) => {
+		other.setValue(state.vmModel, data);
+		modelChange(state.vmModel.Entity.TableName);
+		}
+	);
 	other.getSelectList('/api/_account/GetFrameworkGroupsTree',[],true).then(x=>{state.AllGroups = x});
 	other.getSelectList('/api/_DataPrivilege/GetPrivileges',[],true).then(x=>{state.AllPrivileges = x});
 });

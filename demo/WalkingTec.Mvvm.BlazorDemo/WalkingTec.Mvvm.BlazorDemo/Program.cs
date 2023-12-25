@@ -115,7 +115,7 @@ else
     });
 }
 app.UseBlazorFrameworkFiles();
-app.UseWtmContext();
+app.UseWtmContext(true);
 
 app.Run();
 

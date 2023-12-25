@@ -216,7 +216,8 @@
                     {
                         Text = item.PageName,
                         Icon = item.Icon,
-                        Url = item.Url
+                        Url = item.Url,
+                        Match = NavLinkMatch.All
                     };
                 if (item.Children != null)
                 {
@@ -228,7 +229,8 @@
                             {
                                 Text = child.PageName,
                                 Icon = child.Icon,
-                                Url = child.Url
+                                Url = child.Url,
+                                Match = NavLinkMatch.All
                             });
                     }
                     m.Items = items;
@@ -292,7 +294,8 @@
                 {
                     Text = wtmblazor.Localizer[item.PageName],
                     Icon = item.Icon,
-                    Url = item.Url
+                    Url = item.Url,
+                    Match = NavLinkMatch.All
                 };
             if (m.Url != null)
             {
@@ -335,6 +338,6 @@
 
     private async Task TabChanged(bool v)
     {
-        await JSRuntime.InvokeAsync<bool>("localStorageFuncs.set", "wtmtab",v);
+        await JSRuntime.InvokeAsync<string>("localStorageFuncs.set", "wtmtab",v);
     }
 }
