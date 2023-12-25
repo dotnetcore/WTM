@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.MajorVMs
         [Display(Name = "专业类别")]
         public MajorTypeEnum? MajorType { get; set; }
         [Display(Name = "备注")]
-        public String Remark { get; set; }
+        public new String Remark { get; set; }
         [Display(Name = "所属学校")]
         public int? SchoolId { get; set; }
 

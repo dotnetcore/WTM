@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>4.3</TypeScriptToolsVersion>
@@ -10,6 +10,14 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
     <PreserveCompilationReferences>true</PreserveCompilationReferences>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>NU1608</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>NU1608</NoWarn>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
@@ -31,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.13.0" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.7.4">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.3.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

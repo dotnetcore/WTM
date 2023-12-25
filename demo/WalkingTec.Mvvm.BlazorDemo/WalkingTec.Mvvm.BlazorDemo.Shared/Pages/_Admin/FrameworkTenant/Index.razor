@@ -33,7 +33,7 @@
             }
             @if (IsAccessable("/api/_FrameworkTenant/BatchDelete"))
             {
-                <TableToolbarPopconfirmButton TItem="FrameworkTenant_View" Color="Color.Danger"
+                <TableToolbarPopConfirmButton TItem="FrameworkTenant_View" Color="Color.Danger"
                                       Icon="fa fa-fw fa-trash" Text="@WtmBlazor.Localizer["Sys.Delete"]"
                                       OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                       ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />

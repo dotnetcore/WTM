@@ -23,7 +23,6 @@ using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.WorkFlow;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Npgsql.Logging;
 
 namespace WalkingTec.Mvvm.Core
 {

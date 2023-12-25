@@ -561,7 +561,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             return Wtm.ReadFromCache<string>("githubstar", () =>
             {
-                var s = Wtm.CallAPI<github>("github", "/repos/dotnetcore/wtm").Result.Data;
+                var s = Wtm.CallAPI<Github>("github", "/repos/dotnetcore/wtm").Result.Data;
                 return s == null ? "" : s.stargazers_count.ToString();
             }, 1800);
         }
@@ -572,7 +572,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var rv = Wtm.ReadFromCache<string>("githubinfo", () =>
             {
-                var s = Wtm.CallAPI<github>("github", "/repos/dotnetcore/wtm").Result;
+                var s = Wtm.CallAPI<Github>("github", "/repos/dotnetcore/wtm").Result;
                 return JsonSerializer.Serialize(s);
             }, 1800);
             return Content(rv, "application/json");
@@ -585,7 +585,7 @@ namespace WalkingTec.Mvvm.Mvc
             return "";
         }
 
-        private class github
+        private class Github
         {
             public int stargazers_count { get; set; }
             public int forks_count { get; set; }
@@ -624,7 +624,7 @@ namespace WalkingTec.Mvvm.Mvc
                 float y2 = rnd.Next(codeH);
 
                 Color clr = color[rnd.Next(color.Length)];
-                bmp.Mutate(x => x.DrawLines(clr, 1.0f, new PointF(x1,y1), new PointF(x2,y2)));
+                bmp.Mutate(x => x.DrawLine(clr, 1.0f, new PointF(x1,y1), new PointF(x2,y2)));
             }
             //画验证码
             for (int i = 0; i < chkCode.Length; i++)

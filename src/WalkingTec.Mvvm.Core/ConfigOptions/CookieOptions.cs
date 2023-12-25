@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -12,6 +11,6 @@ namespace WalkingTec.Mvvm.Core
         public string LogoutPath { get; set; } = "/Login/Logout";
         public string AccessDeniedPath { get; set; } = "/Login/Login";
         public string Domain { get; set; } = "";
-        public string ReturnUrlParameter { get; set; } = CookieAuthenticationDefaults.ReturnUrlParameter;
+        public string ReturnUrlParameter { get; set; } = "ReturnUrl";
     }
 }

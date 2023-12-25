@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
         [Display(Name = "学校类型")]
         public SchoolTypeEnum? SchoolType { get; set; }
         [Display(Name = "备注")]
-        public String Remark { get; set; }
+        public new String Remark { get; set; }
         [Display(Name = "地点")]
         public Guid? PlaceId { get; set; }
 

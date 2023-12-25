@@ -109,20 +109,20 @@
 
     @code{
 
-        private githubpoco model = new githubpoco();
+    private Githubpoco model = new Githubpoco();
         protected override async Task OnInitializedAsync()
         {
             try
             {
                 var client = WtmBlazor.ClientFactory.CreateClient("github");
-                var info = await client.GetFromJsonAsync<githubpoco>("/repos/dotnetcore/wtm");
+            var info = await client.GetFromJsonAsync<Githubpoco>("/repos/dotnetcore/wtm");
                 model = info;
             }
             catch (Exception)
             {
             }
         }
-        public class githubpoco
+        public class Githubpoco
         {
             public int stargazers_count { get; set; }
             public int forks_count { get; set; }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core.Extensions

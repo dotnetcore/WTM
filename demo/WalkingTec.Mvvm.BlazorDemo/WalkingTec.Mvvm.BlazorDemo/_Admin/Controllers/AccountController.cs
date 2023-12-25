@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
 
         [AllowAnonymous]
-        [HttpPost("[action]")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] string tenant = null, [FromForm] bool rememberLogin = false)
         {
 
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [AllowAnonymous]
-        [HttpPost("[action]")]
+        [HttpPost("LoginJwt")]
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
             var user = Wtm.DoLogin(loginInfo.Account, loginInfo.Password, loginInfo.Tenant);
@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [Public]
-        [HttpGet("[action]")]
+        [HttpGet("LoginRemote")]
         public async Task<IActionResult> LoginRemote([FromQuery] string _remotetoken)
         {
             if (Wtm?.LoginUserInfo != null)
@@ -91,7 +91,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [AllRights]
-        [HttpGet("[action]")]
+        [HttpGet("SetTenant")]
         public IActionResult SetTenant([FromQuery] string tenant)
         {
             bool rv = Wtm.SetCurrentTenant(tenant == "" ? null : tenant);
@@ -99,7 +99,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [AllowAnonymous]
-        [HttpPost("[action]")]
+        [HttpPost("Reg")]
         public IActionResult Reg(SimpleReg regInfo)
         {
             var exist = DC.Set<FrameworkUser>().Any(x => x.ITCode.ToLower() == regInfo.ITCode.ToLower());

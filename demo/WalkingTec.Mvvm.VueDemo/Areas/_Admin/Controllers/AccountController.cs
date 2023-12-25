@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
 
         [AllowAnonymous]
-        [HttpPost("[action]")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromForm] string account, [FromForm] string password, [FromForm] string tenant = null, [FromForm] bool rememberLogin = false)
         {
 
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [AllowAnonymous]
-        [HttpPost("[action]")]
+        [HttpPost("LoginJwt")]
         public async Task<IActionResult> LoginJwt(SimpleLogin loginInfo)
         {
             var user = Wtm.DoLogin(loginInfo.Account, loginInfo.Password, loginInfo.Tenant);

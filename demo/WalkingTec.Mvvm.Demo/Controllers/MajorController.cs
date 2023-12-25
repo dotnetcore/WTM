@@ -229,9 +229,8 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             return JsonMore(DC.Set<Student>().GetSelectListItems(Wtm, x => x.Name));
         }
-        public async Task<ActionResult> GetAllSchools()
+        public ActionResult GetAllSchools()
         {
-            //await Task.Delay(500);
             return JsonMore(DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName));
         }
     }

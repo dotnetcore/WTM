@@ -632,13 +632,20 @@ namespace WalkingTec.Mvvm.Core
                 case DBTypeEnum.Oracle:
                     optionsBuilder.UseOracle(CSName, option =>
                     {
-                        if (string.IsNullOrEmpty(Version) == false)
+                        switch (Version)
                         {
-                            option.UseOracleSQLCompatibility(Version);
-                        }
-                        else
-                        {
-                            option.UseOracleSQLCompatibility("11");
+                            case "19":
+                                option.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion19);
+                                break;
+                            case "21":
+                                option.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion21);
+                                break;
+                            case "23":
+                                option.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion23);
+                                break;
+                            default:
+                                option.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion19);
+                                break;
                         }
                     });
                     break;

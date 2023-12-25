@@ -99,7 +99,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
         public SchoolTypeEnum? SchoolType { get; set; }
 
-        public string Remark { get; set; }
+        public new string Remark { get; set; }
 
     }
     public class MajorEdit : BaseVM

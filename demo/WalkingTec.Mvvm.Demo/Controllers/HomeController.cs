@@ -158,18 +158,18 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [AllowAnonymous]
-        public github GetGithubInfo()
+        public Github GetGithubInfo()
         {
-            var rv = Wtm.ReadFromCache<github>("githubinfo", () =>
+            var rv = Wtm.ReadFromCache<Github>("githubinfo", () =>
             {
-                var s = Wtm.CallAPI<github>("github", "repos/dotnetcore/wtm", 60).Result;
+                var s = Wtm.CallAPI<Github>("github", "repos/dotnetcore/wtm", 60).Result;
                 return s.Data;
             }, 1800);
 
             return rv;
         }
 
-        public class github
+        public class Github
         {
             public int stargazers_count { get; set; }
             public int forks_count { get; set; }

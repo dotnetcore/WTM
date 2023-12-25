@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.ReactDemo</AssemblyName>
     <Title>$(AssemblyName)</Title>
@@ -11,6 +11,14 @@
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
     <PreserveCompilationReferences>true</PreserveCompilationReferences>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1701;1702;NU1608</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1701;1702;NU1608</NoWarn>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />

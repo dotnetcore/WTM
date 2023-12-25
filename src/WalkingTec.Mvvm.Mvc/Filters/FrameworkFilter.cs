@@ -319,7 +319,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                     if (string.IsNullOrEmpty(pagetitle) == false)
                     {
-                        context.HttpContext.Response.Headers.Add("X-wtm-PageTitle", Convert.ToBase64String(Encoding.UTF8.GetBytes(pagetitle)));
+                        context.HttpContext.Response.Headers.Append("X-wtm-PageTitle", Convert.ToBase64String(Encoding.UTF8.GetBytes(pagetitle)));
                     }
                     context.HttpContext.Response.Cookies.Append("divid", model.ViewDivId);
                 }

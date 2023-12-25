@@ -47,7 +47,7 @@
         }
         @if (IsAccessable("/api/School/BatchDelete"))
         {
-            <TableToolbarPopconfirmButton TItem="School_View" Color="Color.Primary"
+            <TableToolbarPopConfirmButton TItem="School_View" Color="Color.Primary"
                                           Icon="fa fa-fw fa-trash" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />

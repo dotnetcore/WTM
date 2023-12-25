@@ -1,5 +1,4 @@
 using System;
-using WalkingTec.Mvvm.Core.Exceptions;
 
 namespace WalkingTec.Mvvm.Mvc
 {

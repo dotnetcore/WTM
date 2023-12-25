@@ -1,11 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;NU1608</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;NU1608</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="8.0.2" />
+    <PackageReference Include="BootstrapBlazor" Version="8.0.6" />
     <PackageReference Include="BootstrapBlazor.Chart" Version="8.0.1" />
     <PackageReference Include="BootstrapBlazor.SummerNote" Version="8.0.1" />
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.13.0" />

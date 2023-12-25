@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>4.5</TypeScriptToolsVersion>
@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;1705;1591;0809;1587;1570</NoWarn>
+    <NoWarn>1701;1702;1705;1591;0809;1587;1570;NU1608</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="ClientApp\dist\**" />
@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.13.0" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.5.3">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.3.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

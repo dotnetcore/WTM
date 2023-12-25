@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc</AssemblyName>
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
@@ -86,14 +86,14 @@
     <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.13.0" />
     <PackageReference Include="Elsa.Persistence.EntityFramework.SqlServer" Version="2.13.0" />
     <PackageReference Include="Elsa.Server.Api" Version="2.13.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
     <PackageReference Include="VueCliMiddleware" Version="6.0.0" />
   </ItemGroup>
 
