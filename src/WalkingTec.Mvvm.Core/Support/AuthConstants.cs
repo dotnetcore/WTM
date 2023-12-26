@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Core.Auth
             //
             // Summary:
             //     Unique Identifier for the End-User at the Issuer.
-            public const string Subject = "sub";
+            public const string Subject = "itcode";
             //
             // Summary:
             //     The iat (issued at) claim identifies the time at which the JWT was issued, ,

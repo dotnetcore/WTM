@@ -66,7 +66,7 @@
             }
             else
             {
-                await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], rv.Errors.Message[0]);
+                await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], userinfo.Errors?.Message[0]);
             }
 
         }

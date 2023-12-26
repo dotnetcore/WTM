@@ -60,6 +60,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using System.Threading.Tasks;
 using Elsa.Activities.Http;
 using Elsa.Activities.Http.Services;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -763,8 +764,12 @@ namespace WalkingTec.Mvvm.Mvc
                                      context.Token = accessToken;
                                  }
                                  return Task.CompletedTask;
+                             },
+                             OnTokenValidated = (context) => {
+                                 JsonWebToken token = context.SecurityToken as JsonWebToken;
+                                 return Task.FromResult(token);
                              }
-                         };
+                            };
                      })
                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                     {

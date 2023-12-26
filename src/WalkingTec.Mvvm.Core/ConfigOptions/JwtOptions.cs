@@ -14,9 +14,9 @@ namespace WalkingTec.Mvvm.Core
             }
             set {
                 _securiteKey = value;
-                if (_securiteKey.Length < 18)
+                if (_securiteKey.Length < 32)
                 {
-                    var count = 18 - _securiteKey.Length;
+                    var count = 32 - _securiteKey.Length;
                     for (int i = 0; i < count; i++)
                     {
                         _securiteKey += "x";
