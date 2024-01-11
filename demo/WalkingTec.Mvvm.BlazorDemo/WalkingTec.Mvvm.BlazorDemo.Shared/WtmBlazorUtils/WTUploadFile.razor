@@ -150,7 +150,7 @@
         }
         if (suc == false)
         {
-            await WtmBlazor.Toast.Error(content: WtmBlazor.Localizer["Sys.UploadFailed"]);
+            await WtmBlazor.Toast.Error(WtmBlazor.Localizer["Sys.Error"], WtmBlazor.Localizer["Sys.UploadFailed"]);
         }
 
     }

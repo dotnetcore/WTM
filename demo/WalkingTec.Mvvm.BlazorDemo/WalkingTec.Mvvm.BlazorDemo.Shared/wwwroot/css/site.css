@@ -107,23 +107,27 @@
     background-color: #03152A
 }
 
-.layout.is-page.color1 .layout-side {
-    background-color: #212529;
-    background-color: #03152A
+.layout {
+    --bb-layout-title-color: #c0c4cc;
 }
 
-.layout.is-page.color1 .layout-footer {
-    background-color: #ffffff
-}
+    .layout.is-page.color1 .layout-side {
+        background-color: #03152A;
+        color: #c0c4cc;
+    }
 
-.layout.is-page.color1 .layout-header-bar {
-    background-color: #2b7cd0;
-    border-color: #014186;
-}
+    .layout.is-page.color1 .layout-footer {
+        background-color: #ffffff
+    }
 
-.layout.is-page.color1 .layout-drawer:hover {
-    background-color: #3184dc;
-}
+    .layout.is-page.color1 .layout-header-bar {
+        background-color: #2b7cd0;
+        border-color: #014186;
+    }
+
+    .layout.is-page.color1 .layout-drawer:hover {
+        background-color: #3184dc;
+    }
 
 .widget .dropdown-body h3 {
     color: #666666;
