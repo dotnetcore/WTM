@@ -291,6 +291,9 @@
   <data name="MenuKey.UserManagement" xml:space="preserve">
     <value>用户管理</value>
   </data>
+  <data name="MenuKey.Workflow" xml:space="preserve">
+    <value>流程管理</value>
+  </data>
   <data name="MenuMangement" xml:space="preserve">
     <value>菜单管理</value>
   </data>

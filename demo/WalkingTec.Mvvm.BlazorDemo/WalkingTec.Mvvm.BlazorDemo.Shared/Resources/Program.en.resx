@@ -291,6 +291,9 @@
   <data name="MenuKey.UserManagement" xml:space="preserve">
     <value>User Management</value>
   </data>
+  <data name="MenuKey.Workflow" xml:space="preserve">
+    <value>Workflow</value>
+  </data>
   <data name="Reg.Success" xml:space="preserve">
     <value>Registered successfully</value>
   </data>

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WalkingTec.Mvvm.Core": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:55990;http://localhost:55991"
+    }
+  }
+}
