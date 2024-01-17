@@ -222,15 +222,21 @@ export function handleOpenLink(val: RouteItem) {
 }
 
 export function downloadFile(data: Blob) {
-	const match = (<any>data)["contentDisposition"].match(/filename\s*=\s*(.+);/i);
-	let filename = ``;
-	if (match && match.length > 1) {
-		filename = match[1];
-	}
+    let filename = ``;
+    let match = (<any>data)["contentDisposition"].match(/filename\*=UTF-8''(.+)$/i);
+    if (match && match.length > 1) {
+        filename = match[1];
+    }
+    else {
+        match = (<any>data)["contentDisposition"].match(/filename\s*=\s*(.+);/i);
+        if (match && match.length > 1) {
+            filename = match[1];
+        }
+    }
 	const href = URL.createObjectURL(data);
 	const aLink = document.createElement('a');
 	aLink.setAttribute('href', href);
-	aLink.setAttribute('download', filename);
+    aLink.setAttribute('download', window.decodeURI(filename));
 	aLink.click();
 	aLink.remove();
 }
