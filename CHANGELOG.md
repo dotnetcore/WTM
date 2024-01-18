@@ -2,6 +2,12 @@
 
 ## v6.x.x
 
+##6.5.4(2024-1-19)
+* **修改：**  修复工作流在Oracle中不能正常启动的问题
+* **修改：**  修复_workflowapi/GetMyApprove方法
+* **修改：**  修复LayUI模式下checkbox不能禁用的问题
+
+
 ##6.5.1(2023-11-19)
 * **修改：**  修复GetSelectItemList方法的bug
 * **修改：**  修复LayUI Tab页中使用按钮组会导致Tab页切换失效的问题

@@ -60,6 +60,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using System.Threading.Tasks;
 using Elsa.Activities.Http;
 using Elsa.Activities.Http.Services;
+using Elsa.Persistence.EntityFramework.Core;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -597,7 +598,7 @@ namespace WalkingTec.Mvvm.Mvc
                             elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseSqlite(cs.Value));
                             break;
                         case DBTypeEnum.Oracle:
-                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseOracle(cs.Value));
+                            elsa.UseNonPooledEntityFrameworkPersistence<WtmElsaContext>(ef => ef.UseOracle(cs.Value,op=>op.UseOracleSQLCompatibility(cs.Version??"11")));
                             break;
                         case DBTypeEnum.DaMeng:
                             break;
