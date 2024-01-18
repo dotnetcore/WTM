@@ -590,6 +590,11 @@ namespace WalkingTec.Mvvm.Core
             if (DBType == DBTypeEnum.Oracle)
             {
                 modelBuilder.Model.SetMaxIdentifierLength(30);
+                modelBuilder.Entity<Elsa_Bookmark>().ToTable("Bookmarks");
+                modelBuilder.Entity<Elsa_Trigger>().ToTable("Triggers");
+                modelBuilder.Entity<Elsa_WorkflowDefinition>().ToTable("WorkflowDefinitions");
+                modelBuilder.Entity<Elsa_WorkflowExecutionLogRecord>().ToTable("WorkflowExecutionLogRecords");
+                modelBuilder.Entity<Elsa_WorkflowInstance>().ToTable("WorkflowInstances");
             }
         }
 

@@ -598,7 +598,24 @@ namespace WalkingTec.Mvvm.Mvc
                             elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseSqlite(cs.Value));
                             break;
                         case DBTypeEnum.Oracle:
-                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseOracle(cs.Value));
+                            elsa.UseNonPooledEntityFrameworkPersistence<WtmElsaContext>(ef => ef.UseOracle(cs.Value, op =>
+                            {
+                                switch (cs.Version)
+                                {
+                                    case "19":
+                                        op.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion19);
+                                        break;
+                                    case "21":
+                                        op.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion21);
+                                        break;
+                                    case "23":
+                                        op.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion23);
+                                        break;
+                                    default:
+                                        op.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion19);
+                                        break;
+                                }
+                            }));
                             break;
                         case DBTypeEnum.DaMeng:
                             break;
