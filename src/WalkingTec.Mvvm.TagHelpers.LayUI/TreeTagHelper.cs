@@ -245,7 +245,9 @@ var {Id} = xmSelect.render({{
                 }
 
                 output.PostElement.AppendHtml(hidden);
-
+            output.PostElement.AppendHtml($@"
+<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />
+");
             base.Process(context, output);
         }
 
