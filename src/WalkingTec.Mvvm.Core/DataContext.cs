@@ -607,7 +607,12 @@ namespace WalkingTec.Mvvm.Core
             switch (DBType)
             {
                 case DBTypeEnum.SqlServer:
-                    optionsBuilder.UseSqlServer(CSName);
+                    var ver = 120;
+                    if (string.IsNullOrEmpty(Version)==false)
+                    {
+                        int.TryParse(Version, out ver);
+                    }
+                    optionsBuilder.UseSqlServer(CSName,o => o.UseCompatibilityLevel(ver));
                     break;
                 case DBTypeEnum.MySql:
                     ServerVersion sv = null;

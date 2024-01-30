@@ -574,7 +574,12 @@ namespace WalkingTec.Mvvm.Mvc
                     switch (cs.DbType)
                     {
                         case DBTypeEnum.SqlServer:
-                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseSqlServer(cs.Value));
+                            var ver = 120;
+                            if (string.IsNullOrEmpty(cs.Version) == false)
+                            {
+                                int.TryParse(cs.Version, out ver);
+                            }
+                            elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseSqlServer(cs.Value, o => o.UseCompatibilityLevel(ver)));
                             break;
                         case DBTypeEnum.MySql:
                             ServerVersion sv = null;
