@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -227,6 +228,105 @@ namespace WalkingTec.Mvvm.Core
                 return bt;
             }
         }
+
+
+        /// <summary>
+        /// 生成Excel
+        /// </summary>
+        /// <returns>生成的Excel文件</returns>
+        public virtual async Task<byte[]> GenerateExcelAsync()
+        {
+            NeedPage = false;
+
+            //获取导出的表头
+            if (GridHeaders == null)
+            {
+                GetHeaders();
+            }
+
+            //去掉ID列和Action列
+            RemoveActionAndIdColumn();
+
+            var query = SearcherMode == ListVMSearchModeEnum.CheckExport ? GetCheckedExportQuery() : GetExportQuery();
+            int listcount = await query.CountAsync();
+
+            //获取分成Excel的个数
+            ExportMaxCount = ExportMaxCount == 0 ? 1000000 : (ExportMaxCount > 1000000 ? 1000000 : ExportMaxCount);
+            ExportExcelCount = listcount < ExportMaxCount ? 1 : ((listcount % ExportMaxCount) == 0 ? (listcount / ExportMaxCount) : (listcount / ExportMaxCount + 1));
+
+            //如果是1，直接下载Excel，如果是多个，下载ZIP包
+            if (ExportExcelCount == 1)
+            {
+                var data = await query.ToListAsync();
+                return DownLoadExcel(data);
+            }
+            else
+            {
+                Guid g = Guid.NewGuid();
+                var FileName = typeof(TModel).Name + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff");
+                //文件根目录            
+                string RootPath = $"{Wtm.ConfigInfo.HostRoot}\\export{g}";
+
+                //文件夹目录
+                string FilePath = $"{RootPath}//FileFolder";
+
+                //压缩包目录
+                string ZipPath = $"{RootPath}//{g}.zip";
+
+                //打开文件夹
+                DirectoryInfo FileFolder = new DirectoryInfo(FilePath);
+                if (!FileFolder.Exists)
+                {
+                    //创建文件夹
+                    FileFolder.Create();
+                }
+                else
+                {
+                    //清空文件夹
+                    FileSystemInfo[] Files = FileFolder.GetFileSystemInfos();
+                    foreach (var item in Files)
+                    {
+                        if (item is DirectoryInfo)
+                        {
+                            DirectoryInfo Directory = new DirectoryInfo(item.FullName);
+                            Directory.Delete(true);
+                        }
+                        else
+                        {
+                            File.Delete(item.FullName);
+                        }
+                    }
+                }
+                for (int i = 0; i < ExportExcelCount; i++)
+                {
+                    var data = await query.Skip(i * ExportMaxCount).Take(ExportMaxCount).ToListAsync();
+                    var WorkBook = GenerateWorkBook(data);
+                    string SavePath = $"{FilePath}/{FileName}_{i + 1}.xlsx";
+                    using (FileStream FS = new FileStream(SavePath, FileMode.CreateNew))
+                    {
+                        WorkBook.Write(FS);
+                    }
+                }
+
+                //生成压缩包
+                ZipFile.CreateFromDirectory(FilePath, ZipPath);
+
+                //读取压缩包
+                FileStream ZipFS = new FileStream(ZipPath, FileMode.Open, FileAccess.Read);
+                byte[] bt = new byte[ZipFS.Length];
+                ZipFS.Read(bt, 0, bt.Length);
+                ZipFS.Close();
+
+                //删除根目录文件夹
+                DirectoryInfo RootFolder = new DirectoryInfo(RootPath);
+                if (RootFolder.Exists)
+                {
+                    RootFolder.Delete(true);
+                }
+                return bt;
+            }
+        }
+
 
         /// <summary>
         /// 根据集合生成单个Excel
