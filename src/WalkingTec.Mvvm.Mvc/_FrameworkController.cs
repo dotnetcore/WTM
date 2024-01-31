@@ -624,7 +624,7 @@ namespace WalkingTec.Mvvm.Mvc
                 float y2 = rnd.Next(codeH);
 
                 Color clr = color[rnd.Next(color.Length)];
-                bmp.Mutate(x => x.DrawLines(clr, 1.0f, new PointF(x1,y1), new PointF(x2,y2)));
+                bmp.Mutate(x => x.DrawLine(clr, 1.0f, new PointF(x1,y1), new PointF(x2,y2)));
             }
             //画验证码
             for (int i = 0; i < chkCode.Length; i++)
