@@ -34,7 +34,9 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                 {
                     if (vm != null)
                     {
+                        (vm as BaseVM).Wtm = this._wtm;
                         (vm as BaseVM).DC = dc;
+
                         vm.SetEntityById(context.ContextId);
                         rv = vm.Entity as T;
                     }
