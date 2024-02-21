@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core.WorkFlow
 {
-    public class WorkflowRefresher<T> : WorkflowContextRefresher<T> where T : TopBasePoco,IWorkflow
+    public class WorkflowRefresher<T> : WorkflowContextRefresher<T> where T : TopBasePoco, IWorkflow
     {
 
         private WTMContext _wtm;
@@ -34,7 +34,9 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                 {
                     if (vm != null)
                     {
+                        (vm as BaseVM).Wtm = this._wtm;
                         (vm as BaseVM).DC = dc;
+
                         vm.SetEntityById(context.ContextId);
                         rv = vm.Entity as T;
                     }
@@ -51,13 +53,13 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
         public override async ValueTask<string> SaveAsync(SaveWorkflowContext<T> context, CancellationToken cancellationToken = default)
         {
             var data = context.Context;
-                using (var dc = _wtm.DC.ReCreate(_wtm.LoggerFactory))
-                {
-                    var existing = await dc.Set<T>().CheckID(data.GetID()).FirstOrDefaultAsync(cancellationToken);
-                    (dc as DbContext).Entry(existing).CurrentValues.SetValues(data);
-                    await dc.SaveChangesAsync(cancellationToken);
-                }
-            
+            using (var dc = _wtm.DC.ReCreate(_wtm.LoggerFactory))
+            {
+                var existing = await dc.Set<T>().CheckID(data.GetID()).FirstOrDefaultAsync(cancellationToken);
+                (dc as DbContext).Entry(existing).CurrentValues.SetValues(data);
+                await dc.SaveChangesAsync(cancellationToken);
+            }
+
             return data.GetID().ToString();
         }
     }
