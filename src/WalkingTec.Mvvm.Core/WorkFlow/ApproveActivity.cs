@@ -7,6 +7,7 @@ using Elsa.Attributes;
 using Elsa.Design;
 using Elsa.Metadata;
 using Elsa.Services.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace WalkingTec.Mvvm.Core.WorkFlow
@@ -315,9 +316,11 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
             ApprovedBy = input.CurrentUser.Name + "("+ input.CurrentUser.ITCode.ToLower()+")";
             if (input?.Action =="同意" || input?.Action =="拒绝")
             {
-                var exist = _wtm.DC.Set<FrameworkWorkflow>().Where(x=>
+                var exist = _wtm.DC.Set<FrameworkWorkflow>().IgnoreQueryFilters()
+                    .Where(x=>
                     x.WorkflowId == context.WorkflowInstance.Id
-                &&  x.ActivityId == context.ActivityId).ToList();
+                &&  x.ActivityId == context.ActivityId
+                &&  x.TenantCode == context.WorkflowInstance.TenantId).ToList();
                 _wtm.DC.Set<FrameworkWorkflow>().RemoveRange(exist);
                 _wtm.DC.SaveChanges();
                 try

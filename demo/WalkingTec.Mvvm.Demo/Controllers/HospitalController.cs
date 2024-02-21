@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
@@ -57,6 +57,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 vm.DoAdd();
+                var rv = vm.StartWorkflowAsync("医院审批").Result;
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();
@@ -90,6 +91,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 vm.DoEdit();
+                _ = vm.ContinueWorkflowAsync("同意", "adf adf asdf ", "医院审批").Result;
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();

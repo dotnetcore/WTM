@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.Models.Virus
        Class1, 
     }
     
-    public class Hospital: TopBasePoco, ITenant
+    public class Hospital: TopBasePoco, ITenant, IWorkflow
     {
         [Display(Name = "医院名称")]
         [Required(ErrorMessage = "医院名称是必填项")]
