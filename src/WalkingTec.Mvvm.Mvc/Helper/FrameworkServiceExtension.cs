@@ -58,6 +58,7 @@ using Elsa.Server.Api.Mapping;
 using Elsa.Server.Api.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using System.Threading.Tasks;
+using DUWENINK.Captcha.DI;
 using Elsa.Activities.Http;
 using Elsa.Activities.Http.Services;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -567,6 +568,12 @@ namespace WalkingTec.Mvvm.Mvc
             var elsaSection = config.GetSection("Workflow");
             var conf = config.Get<Configs>();
             services.AddSingleton<AuthenticationBasedHttpEndpointAuthorizationHandler>();
+
+            #region Add Captcha
+
+            services.AddDUWENINKCaptcha();//使用验证码
+
+            #endregion
 
             services
                 .AddElsa(elsa => {

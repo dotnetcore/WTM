@@ -15,6 +15,7 @@
   <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\Spa\Vue\**\*.txt" />
     <EmbeddedResource Include="Views\**\*.cshtml" />
+    <None Remove="fonts\Candara.ttf" />
     <None Remove="GeneratorFiles\Spa\Blazor\Controller.txt" />
     <None Remove="GeneratorFiles\Spa\Blazor\Create.txt" />
     <None Remove="GeneratorFiles\Spa\Blazor\Details.txt" />
@@ -32,6 +33,9 @@
     <None Remove="GeneratorFiles\Spa\Vue\Edit.txt" />
     <None Remove="GeneratorFiles\Spa\Vue\Import.txt" />
     <None Remove="GeneratorFiles\Spa\Vue\index.txt" />
+    <Content Include="fonts\Candara.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="framework_layui.js" />
     <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
@@ -77,6 +81,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DUWENINK.Captcha" Version="0.5.0" />
     <PackageReference Include="Elsa.Activities.Email" Version="2.13.0" />
     <PackageReference Include="Elsa.Activities.Http" Version="2.13.0" />
     <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.13.0" />
@@ -90,8 +95,6 @@
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.5" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
@@ -101,6 +104,19 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="fonts\impact.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\monbaiti.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\STCAIYUN.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
