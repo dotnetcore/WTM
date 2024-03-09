@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using DUWENINK.Captcha;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NPOI.SS.Formula.Functions;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
@@ -31,8 +33,16 @@ namespace WalkingTec.Mvvm.Mvc
 {
     [AllRights]
     [ActionDescription("Framework")]
-    public class _FrameworkController : BaseController
+    public class _FrameworkController(ISecurityCodeHelper securityCode) : BaseController
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly ISecurityCodeHelper _securityCode = securityCode;
+
+
+
+
 
         [HttpPost]
         [Public]
@@ -596,58 +606,12 @@ namespace WalkingTec.Mvvm.Mvc
         [AllowAnonymous]
         public ActionResult GetVerifyCode()
         {
-            int codeW = 80;
-            int codeH = 30;
-            int fontSize = 16;
-            string chkCode = string.Empty;
-            Color[] color = { Color.Black, Color.Red, Color.Blue, Color.Green, Color.Orange, Color.Brown, Color.DarkBlue, Color.PaleGreen };
-            string[] font = { "Times New Roman" };
-            char[] character = { '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'd', 'e', 'f', 'h', 'k', 'm', 'n', 'r', 'x', 'y', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'W', 'X', 'Y' };
-            //生成验证码字符串
-            Random rnd = new Random();
-            for (int i = 0; i < 4; i++)
-            {
-                chkCode += character[rnd.Next(character.Length)];
-            }
+            var chkCode = _securityCode.GetRandomEnDigitalText(4);
             //写入Session用于验证码校验，可以对校验码进行加密，提高安全性
             HttpContext.Session.Set<string>("verify_code", chkCode);
-
-            //创建画布
-            Image bmp = new Image<Rgba32>(codeW, codeH);
-
-            //画噪线
-            for (int i = 0; i < 3; i++)
-            {
-                float x1 = rnd.Next(codeW);
-                float y1 = rnd.Next(codeH);
-                float x2 = rnd.Next(codeW);
-                float y2 = rnd.Next(codeH);
-
-                Color clr = color[rnd.Next(color.Length)];
-                bmp.Mutate(x => x.DrawLine(clr, 1.0f, new PointF(x1,y1), new PointF(x2,y2)));
-            }
-            //画验证码
-            for (int i = 0; i < chkCode.Length; i++)
-            {
-                Font ft = new Font(SystemFonts.Get("Arial"), fontSize);
-                Color clr = color[rnd.Next(color.Length)];
-                bmp.Mutate(x => x.DrawText(chkCode[i].ToString(),ft,clr,new PointF((float)i * 18, (float)0)));
-            }
-            //将验证码写入图片内存流中，以image/png格式输出
-            MemoryStream ms = new MemoryStream();
-            try
-            {
-                bmp.SaveAsPng(ms);
-                return File(ms.ToArray(), "image/jpeg");
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            finally
-            {
-                bmp.Dispose();
-            }
+            var imgbyte = _securityCode.GetEnDigitalCodeByte(chkCode);
+            return File(imgbyte, "image/png");
+        
         }
 
         [Public]
