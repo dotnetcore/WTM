@@ -81,7 +81,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DUWENINK.Captcha" Version="0.6.0" />
+    <PackageReference Include="DUWENINK.Captcha" Version="0.7.0" />
     <PackageReference Include="Elsa.Activities.Email" Version="2.14.1" />
     <PackageReference Include="Elsa.Activities.Http" Version="2.14.1" />
     <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.14.1" />
