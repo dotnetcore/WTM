@@ -27,9 +27,6 @@
         background-color: #1893a7;
     }
 
-.layout-drawer-body {
-    padding: 1rem;
-}
 
 .layout-item {
     cursor: pointer;
@@ -106,7 +103,9 @@
 .layout.is-page.color1 .layout-side .layout-banner {
     background-color: #03152A
 }
-
+.layout.is-page.color1 .layout-side .menu {
+    --bs-nav-link-color: #c0c4cc;
+}
 .layout {
     --bb-layout-title-color: #c0c4cc;
 }

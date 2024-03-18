@@ -9,7 +9,7 @@
         <BootstrapInput @bind-Value="@Model.Entity.SchoolCode" />
         <BootstrapInput @bind-Value="@Model.Entity.SchoolName" />
         <Select @bind-Value="@Model.Entity.SchoolType" PlaceHolder="@WtmBlazor.Localizer["Sys.PleaseSelect"]" />
-        <BootstrapInput @bind-Value="@Model.Entity.Remark" />
+        <Editor IsEditor="true" @bind-Value="@Model.Entity.Remark" PlaceHolder="" ShowSubmit="false" Language="@GetLanguageStr()" />
         <WTUploadImage @bind-Value="@Model.Entity.PhotoId" />
          <WTUploadFile @bind-Value="@Model.Entity.Photos" />
        <WTUploadFile @bind-Value="@Model.Entity.FileId" />

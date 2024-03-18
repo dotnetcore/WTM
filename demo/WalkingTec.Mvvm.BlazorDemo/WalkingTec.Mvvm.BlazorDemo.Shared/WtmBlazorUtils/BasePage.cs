@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
@@ -339,6 +340,14 @@ namespace WtmBlazorUtils
             await JSRuntime.InvokeVoidAsync("urlFuncs.download", url, JsonSerializer.Serialize(data, CoreProgram.DefaultPostJsonOption), method.ToString());
         }
 
+        public string GetLanguageStr()
+        {
+            if (CultureInfo.CurrentUICulture.Name.Contains("zh"))
+            {
+                return "zh-CN";
+            }
+            else return CultureInfo.CurrentUICulture.Name;
+        }
     }
 
     public class WtmBlazorContext
