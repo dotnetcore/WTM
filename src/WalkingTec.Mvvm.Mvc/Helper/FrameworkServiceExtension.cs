@@ -519,6 +519,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public static IServiceCollection AddWtmContext(this IServiceCollection services, IConfiguration config, Action<WtmContextOption> options = null)
         {
+            services.AddDUWENINKCaptcha();//使用验证码
             var conf = config.Get<Configs>();
             WtmContextOption op = new WtmContextOption();
             options?.Invoke(op);
@@ -568,12 +569,6 @@ namespace WalkingTec.Mvvm.Mvc
             var elsaSection = config.GetSection("Workflow");
             var conf = config.Get<Configs>();
             services.AddSingleton<AuthenticationBasedHttpEndpointAuthorizationHandler>();
-
-            #region Add Captcha
-
-            services.AddDUWENINKCaptcha();//使用验证码
-
-            #endregion
 
             services
                 .AddElsa(elsa => {

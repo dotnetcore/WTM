@@ -8,6 +8,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs;
 using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -68,7 +69,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return Json(rv);
         }
 
-        public IActionResult GetCharts(ChartVM vm)
+        public IActionResult GetCharts(ActionLogSearcher Searcher)
         {
             //var data = new List<ChartData>();
             //for (int i = 0; i < 5; i++)
@@ -124,12 +125,12 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
             //int group = int.Parse((max - min) / 2);
             var data = Wtm.DC.Set<ActionLog>().AsNoTracking()
-                .CheckContain(vm.Searcher.ITCode, x => x.ITCode)
-                .CheckContain(vm.Searcher.ActionUrl, x => x.ActionUrl)
-                .CheckContain(vm.Searcher.LogType, x => x.LogType)
-                .CheckContain(vm.Searcher.IP, x => x.IP)
-                .CheckBetween(vm.Searcher.ActionTime?.GetStartTime(), vm.Searcher.ActionTime?.GetEndTime(), x => x.ActionTime, includeMax: false)
-                .CheckWhere(vm.Searcher.Duration, x => x.Duration >= vm.Searcher.Duration)
+                .CheckContain(Searcher.ITCode, x => x.ITCode)
+                .CheckContain(Searcher.ActionUrl, x => x.ActionUrl)
+                .CheckContain(Searcher.LogType, x => x.LogType)
+                .CheckContain(Searcher.IP, x => x.IP)
+                .CheckBetween(Searcher.ActionTime?.GetStartTime(), Searcher.ActionTime?.GetEndTime(), x => x.ActionTime, includeMax: false)
+                .CheckWhere(Searcher.Duration, x => x.Duration >= Searcher.Duration)
                       .Select(x => new
                       {
                           abc =

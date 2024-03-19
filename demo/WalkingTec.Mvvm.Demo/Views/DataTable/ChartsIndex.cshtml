@@ -4,17 +4,17 @@
 
 @*<wt:chart field="@Model.charts" type="Bar" title="abcd" height="400"/>
   <wt:chart field="@Model.charts" type="Pie" title="abcd" height="400" />*@
-<wt:searchpanel vm="@Model" reset-btn="true" chart-id="c1,c2,c3,c4,c5" grid-id="">
+<wt:searchpanel vm="@Model" reset-btn="true" chart-id="c1,c2,c3,c4,c5" grid-id="" chart-prefix="Searchertest">
   <wt:row items-per-row="ItemsPerRowEnum.Three">
     <wt:row items-per-row=" ItemsPerRowEnum.Three">
-      <wt:combobox field="Searcher.LogType" empty-text="@Localizer["Sys.All"]" />
-      <wt:textbox field="Searcher.ITCode" />
-      <wt:textbox field="Searcher.ActionUrl" />
+      <wt:combobox field="Searchertest.LogType" empty-text="@Localizer["Sys.All"]" />
+      <wt:textbox field="Searchertest.ITCode" />
+      <wt:textbox field="Searchertest.ActionUrl" />
     </wt:row>
     <wt:row items-per-row=" ItemsPerRowEnum.Three">
-      <wt:datetime field="Searcher.ActionTime" type="DateTime" range="true" />
-      <wt:textbox field="Searcher.IP" />
-      <wt:textbox field="Searcher.Duration" />
+            <wt:datetime field="Searchertest.ActionTime" type="DateTime" range="true" />
+            <wt:textbox field="Searchertest.IP" />
+            <wt:textbox field="Searchertest.Duration" />
     </wt:row>
   </wt:row>
 </wt:searchpanel>

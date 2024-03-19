@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 关联的 Chart 组件的 Id
         /// </summary>
         public string ChartId { get; set; }
-
+        public string ChartPrefix { get; set; }
         private string _searchBtnId;
         /// <summary>
         /// 搜索按钮Id
@@ -237,7 +238,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 foreach (var item in ChartId.Split(','))
                 {
                     refreshchartjs += $@"
-    ff.RefreshChart('{item}');
+    ff.RefreshChart('{item}',{(string.IsNullOrEmpty(ChartPrefix)==true? "undefined":$"'{ChartPrefix}'")});
 ";
                 }
             }

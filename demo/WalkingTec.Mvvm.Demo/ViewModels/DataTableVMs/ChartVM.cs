@@ -9,13 +9,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
 {
     public class ChartVM : BaseVM
     {
-        public ActionLogSearcher Searcher { get; set; }
+        public ActionLogSearcher Searchertest { get; set; }
 
         protected override void InitVM()
         {
-            Searcher = new ActionLogSearcher();
-            Searcher.CopyContext(this);
-            Searcher.DoInit();
+            Searchertest = new ActionLogSearcher();
+            Searchertest.CopyContext(this);
+            Searchertest.DoInit();
         }
     }
 }
