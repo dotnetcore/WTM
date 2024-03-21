@@ -1,0 +1,44 @@
+@page "/WorkFlowDemo/Details/{id}"
+@using WalkingTec.Mvvm.BlazorDemo.ViewModel.WorkFlowDemoVMs;
+@inherits BasePage
+
+<ValidateForm @ref="vform" Model="@Model" >
+
+    <Tab IsBorderCard="true">
+        <TabItem Text="基本信息">
+            <Row ItemsPerRow="ItemsPerRow.Two" RowType="RowType.Normal">
+
+                <Display @bind-Value="@Model.Entity.Content" />
+            </Row>
+        </TabItem>
+        <TabItem Text="审批信息">
+            <WTApproveHistory Model="@Model" />
+        </TabItem>
+    </Tab>
+
+    <div class="modal-footer table-modal-footer">
+        <Button Color="Color.Primary" Icon="fa fa-save" Text="@WtmBlazor.Localizer["Sys.Close"]" OnClick="OnClose" />
+    </div>
+</ValidateForm>
+
+@code {
+
+    private WorkFlowDemoVM Model = null;
+    private ValidateForm vform { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var rv = await WtmBlazor.Api.CallAPI<WorkFlowDemoVM>($"/api/WorkFlowDemo/{id}");
+        Model = rv.Data;
+    }
+
+    public void OnClose()
+    {
+        CloseDialog();
+    }
+
+}

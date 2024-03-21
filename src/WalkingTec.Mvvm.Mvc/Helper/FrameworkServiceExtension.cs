@@ -635,6 +635,7 @@ namespace WalkingTec.Mvvm.Mvc
                     elsa
                     .AddConsoleActivities()
                     .AddActivity<WtmApproveActivity>()
+                    .AddActivity<BackApproveActivity>()
                     .AddJavaScriptActivities()
                     .AddHttpActivities(x=> {
                         if (conf.Domains.ContainsKey("server")) {
@@ -685,7 +686,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
             services.AddBookmarkProvider<WtmApproveBookmarkProvider>();
-
+            services.AddBookmarkProvider<BackApproveBookmarkProvider>();
             return services;
         }
 

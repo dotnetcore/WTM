@@ -1,0 +1,61 @@
+@namespace WtmBlazorUtils
+@inherits WTComponent
+@inject WtmBlazorContext WtmBlazor
+@using System.Linq.Expressions;
+@using WalkingTec.Mvvm.Core.WorkFlow
+
+<Timeline Items="timelineItems"></Timeline>
+@code{
+
+    [Parameter]
+    public object Model { get; set; }
+    public string FlowName{ get; set; }
+    private List<TimelineItem> timelineItems{get;set;}
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Model != null)
+        {
+            var vm = (Model as IBaseCRUDVM<TopBasePoco>);
+            if (vm != null)
+            {
+                if (vm.Entity.HasID())
+                {
+                    var query = $"flowname={FlowName}&entitytype={vm.Entity.GetType().FullName}&entityid={vm.Entity.GetID()}";
+                    var list = await WtmBlazor.Api.CallAPI<List<ApproveTimeLine>>($"/_workflowapi/gettimeline?{query}", HttpMethodEnum.GET, new Dictionary<string, string>());
+                    timelineItems = new List<TimelineItem>();
+                    foreach (var item in list.Data)
+                    {
+                        var ti = new TimelineItem
+                            {
+                                Content = item.Time,
+                                Description = item.Message                             
+                            };
+
+                        if (item.Action == "提交")
+                        {
+                            ti.Color = Color.Dark;
+                        }
+
+                        if(item.Action == "同意")
+                        {
+                            ti.Color = Color.Success;
+                        }
+                        if (item.Action == "回退")
+                        {
+                            ti.Color = Color.Warning;
+                        }
+                        if(item.Action == "拒绝")
+                        {
+                            ti.Color = Color.Danger;
+                        }
+                        timelineItems.Add(ti);
+                    }
+
+                }
+            }
+        }
+
+    }
+
+}

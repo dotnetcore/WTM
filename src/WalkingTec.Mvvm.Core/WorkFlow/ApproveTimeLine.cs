@@ -27,9 +27,11 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                         break;
                     case "同意":
                     case "拒绝":
+                    case "回退":
                         rv = this.Approved + this.Action;
                         break;
                     case "_start":
+                    case "提交":
                         rv = this.Approved + "提交审批";
                         break;
                     case "_finish":

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\WalkingTec.Mvvm.BlazorDemo.Model\WalkingTec.Mvvm.BlazorDemo.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WorkFlowDemoVMs\" />
+  </ItemGroup>
+
 </Project>
