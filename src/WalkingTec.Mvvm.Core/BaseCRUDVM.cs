@@ -1430,7 +1430,26 @@ namespace WalkingTec.Mvvm.Core
                 li.Groups = Wtm.LoginUserInfo.Groups;
                 li.Roles = Wtm.LoginUserInfo.Roles;
                 li.TenantCode = Wtm.LoginUserInfo.CurrentTenant;
-                var query = new WorkflowsQuery(nameof(WtmApproveActivity), new WtmApproveBookmark(Wtm.LoginUserInfo.ITCode, string.IsNullOrEmpty(flowName)?typeof(TModel).FullName:flowName, tag, Entity.GetID().ToString()), null, null, null, Wtm.LoginUserInfo.CurrentTenant);
+
+                var bookmark = new WtmApproveBookmark(Wtm.LoginUserInfo.ITCode, string.IsNullOrEmpty(flowName) ? typeof(TModel).FullName : flowName, tag, Entity.GetID().ToString());
+
+                var input = new WorkflowInput { Input = new WtmApproveInput { Action = actionName, CurrentUser = li, Remark = remark } };
+
+                var backQuery = new WorkflowsQuery(nameof(BackApproveActivity), bookmark, null, null, null, Wtm.LoginUserInfo.CurrentTenant);
+                {
+                    var flows = await lp.FindWorkflowsAsync(backQuery);
+                    foreach (var flow in flows)
+                    {
+                        if (flow.WorkflowInstance == null)
+                        {
+                            var result = await lp.ExecutePendingWorkflowAsync(flow, input);
+                            return result;
+                        }
+                    }
+                }
+
+
+                var query = new WorkflowsQuery(nameof(WtmApproveActivity), bookmark, null, null, null, Wtm.LoginUserInfo.CurrentTenant);
                 if (query != null)
                 {
                     var flows = await lp.FindWorkflowsAsync(query);
@@ -1438,7 +1457,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         if (item.WorkflowInstance == null)
                         {
-                            var result = await lp.ExecutePendingWorkflowAsync(item, new WorkflowInput { Input = new WtmApproveInput { Action = actionName, CurrentUser = li, Remark = remark } });
+                            var result = await lp.ExecutePendingWorkflowAsync(item, input);
                             return result;
                         }
                     }
@@ -1455,7 +1474,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 if (item.WorkflowInstance == null)
                                 {
-                                    var result = await lp.ExecutePendingWorkflowAsync(item, new WorkflowInput { Input = new WtmApproveInput { Action = actionName, CurrentUser = li, Remark = remark } });
+                                    var result = await lp.ExecutePendingWorkflowAsync(item, input);
                                     return result;
                                 }
                             }
@@ -1476,7 +1495,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 if (item.WorkflowInstance == null)
                                 {
-                                    var result = await lp.ExecutePendingWorkflowAsync(item, new WorkflowInput { Input = new WtmApproveInput { Action = actionName, CurrentUser = li, Remark = remark } });
+                                    var result = await lp.ExecutePendingWorkflowAsync(item, input);
                                     return result;
                                 }
                             }

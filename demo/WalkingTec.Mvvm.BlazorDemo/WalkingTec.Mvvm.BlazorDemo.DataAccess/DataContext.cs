@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using WalkingTec.Mvvm.BlazorDemo.Model;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Demo.Models.Virus;
@@ -39,6 +40,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.DataAccess
         public DbSet<ControlCenter> ControlCenters { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Report> Reports { get; set; }
+
+        public DbSet<WorkFlowDemo> WorkFlowDemo { get; set; }
 
         public override async Task<bool> DataInit(object allModules, bool IsSpa)
         {

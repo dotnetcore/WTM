@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NetBox.Extensions;
+using Newtonsoft.Json.Linq;
 using NodaTime;
 using NPOI.SS.Formula.Functions;
 using Open.Linq.AsyncExtensions;
@@ -149,33 +150,34 @@ namespace WalkingTec.Mvvm.Mvc
                 var specification = new Elsa.Persistence.Specifications.WorkflowExecutionLogRecords.WorkflowInstanceIdSpecification(workflowId);
                 var orderBy = OrderBySpecification.OrderBy<WorkflowExecutionLogRecord>(x => x.Timestamp);
                 var records = await log.FindManyAsync(specification, orderBy).ToList();
-                var rv = records.Where(x => x.ActivityType == nameof(WtmApproveActivity) && x.EventName != "Executing" && x.EventName != "Resuming" && x.EventName != "Suspended")
+                var rv = records.Where(x => (x.ActivityType == nameof(WtmApproveActivity) || x.ActivityType == nameof(BackApproveActivity)) && x.EventName != "Executing" && x.EventName != "Resuming" && x.EventName != "Suspended")
                     .Select(x =>
-                    new ApproveTimeLine
-                    {
-                        Id = x.ActivityId,
-                        Time = x.Timestamp.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("yyyy-MM-dd HH:mm:ss", null),
-                        Action = x.EventName == "Executed" ? "等待审批" : x.Data.ContainsKey("Outcomes")?x.Data["Outcomes"].Values<string>().FirstOrDefault():"",
-                        Remark = "",
-                        Approvers = "",
-                        Approved = ""
-                    }
+                         new ApproveTimeLine
+                         {
+                             Id = x.ActivityId,
+                             Time = x.Timestamp.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("yyyy-MM-dd HH:mm:ss", null),
+                             Action = x.EventName == "Executed" ? "等待审批" : x.Data.ContainsKey("Outcomes") ? x.Data["Outcomes"].Values<string>().FirstOrDefault() : "",
+                             Remark = x?.Data.ContainsKey("Remark") ?? false ? x.Data["Remark"].Value<string>() ?? "" : "",
+                             Approvers = x?.Data.ContainsKey("ApproveUsersFullText") ?? false ? x.Data["ApproveUsersFullText"].Values<string>()?.ToSepratedString() ?? "" : "",
+                             Approved = x?.Data.ContainsKey("ApprovedBy") ?? false ? x.Data["ApprovedBy"].Value<string>() ?? "" : "",
+                         }
                 ).ToList();
-                rv = rv.Where(x => string.IsNullOrEmpty(x.Action) == false).ToList();
-                foreach (var record in rv)
-                {
-                    var ad = instance.ActivityData[record.Id];
-                    object approved, remark, approvers;
-                    ad.TryGetValue(nameof(WtmApproveActivity.ApprovedBy), out approved);
-                    ad.TryGetValue(nameof(WtmApproveActivity.Remark), out remark);
-                    ad.TryGetValue(nameof(WtmApproveActivity.ApproveUsersFullText), out approvers);
-                    record.Approved = (approved as string) ?? "";
-                    record.Approvers = (approvers as List<string>)?.ToSepratedString() ?? "";
-                    if (record.Action != "等待审批")
-                    {
-                        record.Remark = (remark as string) ?? "";
-                    }
-                }
+                rv = rv.Where(x => string.IsNullOrEmpty(x.Action) == false && string.IsNullOrEmpty(x.Approvers) == false).ToList();
+                //foreach (var record in rv)
+                //{
+                //    var ad = instance.ActivityData[record.Id];
+                //    object approved, remark, approvers;
+                //    ad.TryGetValue(nameof(WtmApproveActivity.ApprovedBy), out approved);
+                //    ad.TryGetValue(nameof(WtmApproveActivity.Remark), out remark);
+                //    ad.TryGetValue(nameof(WtmApproveActivity.ApproveUsersFullText), out approvers);
+                //    record.Approved = (approved as string) ?? "";
+                //    record.Approvers = (approvers as List<string>)?.ToSepratedString() ?? "";
+                //    if (record.Action != "等待审批")
+                //    {
+                //        record.Remark = (remark as string) ?? "";
+                //    }
+                //}
+                
                 ApproveTimeLine first = new ApproveTimeLine
                 {
                     Action = "_start",

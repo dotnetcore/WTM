@@ -78,4 +78,31 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
         }
 
     }
+
+    public class BackApproveBookmarkProvider : BookmarkProvider<WtmApproveBookmark, BackApproveActivity>
+    {
+        public override async ValueTask<IEnumerable<BookmarkResult>> GetBookmarksAsync(BookmarkProviderContext<BackApproveActivity> context, CancellationToken cancellationToken)
+        {
+            List<BookmarkResult> rv = new List<BookmarkResult>();
+
+            var name = context.ActivityExecutionContext.WorkflowExecutionContext.WorkflowBlueprint.Name ?? "";
+            var model = context.ActivityExecutionContext.WorkflowExecutionContext.WorkflowBlueprint.ContextOptions?.ContextType?.FullName;
+            var id = context.ActivityExecutionContext.WorkflowExecutionContext.ContextId?.ToString() ?? "";
+            var tag = "提交";
+
+            var data = context.ActivityExecutionContext.WorkFlowApproveRecord();
+
+            if (data != null && data.Approved != null)
+            {
+                rv.Add(Result(new WtmApproveBookmark(data.Approved, name, tag, id)));
+
+                if (!string.IsNullOrEmpty(model))
+                {
+                    rv.Add(Result(new WtmApproveBookmark(data.Approved, model, tag, id)));
+                }
+            }
+
+            return rv;
+        }
+    }
 }

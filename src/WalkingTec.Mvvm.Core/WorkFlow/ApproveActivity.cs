@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
 using Elsa.Design;
@@ -15,9 +16,12 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
     [Trigger(
    Category = "工作流",
    DisplayName = "审批",
-   Description = "审批流程", Outcomes = new[] { "同意", "拒绝" })]
+   Description = "审批流程", Outcomes = new[] { "回退", "同意", "拒绝" })]
     public class WtmApproveActivity : Elsa.Services.Activity, IActivityPropertyOptionsProvider
     {
+
+
+
         [ActivityInput(
             UIHint = ActivityInputUIHints.MultiText,
             DefaultSyntax = "Json",
@@ -72,8 +76,11 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
         [ActivityInput(IsBrowsable = false, Label = "备注")]
         public string Remark { get; set; }
 
-        [ActivityInput(IsBrowsable = false, Label = "审批人")]
+        [ActivityInput(IsBrowsable = false, Label = "审批人(明细)")]
         public string ApprovedBy { get; set; }
+
+        [ActivityInput(IsBrowsable = false, Label = "审批人")]
+        public string Approved { get; set; }
 
         [ActivityInput(
            UIHint = ActivityInputUIHints.SingleLine,
@@ -142,7 +149,10 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
-            var entity = context.GetWorkflowContext();
+
+            var ardata = context.WorkFlowActivityRecord();
+
+
             var query = "";
             ApproveUsersFullText = new List<string>();
             List<ComboSelectListItem> users = new List<ComboSelectListItem>();
@@ -306,15 +316,40 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                 }
             }
             catch { }
+
+            context.JournalData.Add("ApproveUsersFullText", ApproveUsersFullText ?? []);
+
+            context.WorkFlowApproveRecord(new WorkFlowApproveRecord()
+            {
+                ApproveUsersFullText = ApproveUsersFullText ?? []
+            });
+
             return Suspend();
         }
 
         protected override IActivityExecutionResult OnResume(ActivityExecutionContext context)
         {
-            WtmApproveInput input = context.Input as WtmApproveInput;
-            Remark = input?.Remark;
-            ApprovedBy = input.CurrentUser.Name + "(" + input.CurrentUser.ITCode.ToLower() + ")";
-            if (input?.Action == "同意" || input?.Action == "拒绝")
+
+            var ardata = context.WorkFlowActivityRecord();
+
+            if (context.Input != null)
+            {
+                WtmApproveInput input = context.Input as WtmApproveInput;
+                //记录当前流程信息
+                context.WorkFlowActivityRecord(input);
+                ardata = context.WorkFlowActivityRecord();
+            }
+
+
+            var remark = ardata?.Remark;
+
+            var ar = context.WorkFlowApproveRecord();
+
+            ar.Approved = ardata.ITCode;
+            ar.ApprovedBy = ardata.Name + "(" + ardata.ITCode.ToLower() + ")";
+
+
+            if (ardata?.Action == "同意" || ardata?.Action == "拒绝" || ardata?.Action == "回退")
             {
                 var exist = _wtm.DC.Set<FrameworkWorkflow>().IgnoreQueryFilters()
                     .Where(x =>
@@ -323,28 +358,35 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
                 && x.TenantCode == context.WorkflowInstance.TenantId).ToList();
                 _wtm.DC.Set<FrameworkWorkflow>().RemoveRange(exist);
                 _wtm.DC.SaveChanges();
-                try
-                {
-                    var notify = _wtm.ServiceProvider.GetRequiredService<IApproveNotification>();
-                    if (notify != null)
-                    {
-                        ApproveInfo info = new ApproveInfo
-                        {
-                            ApprovedBy = input.CurrentUser,
-                            EntityId = context.ContextId,
-                            EntityType = context.WorkflowExecutionContext.WorkflowContext?.GetType(),
-                            FlowInstanceId = context.WorkflowInstance.Id,
-                            FlowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
-                            SubmitBy = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
-                            TagName = this.Tag,
-                        };
-                        notify.OnResume(info);
-                    }
-                }
-                catch { }
 
-                return Outcome(input?.Action);
+                //try
+                //{
+                //    var notify = _wtm.ServiceProvider.GetService<IApproveNotification>();
+                //    if (notify != null)
+                //    {
+                //        ApproveInfo info = new ApproveInfo
+                //        {
+                //            ApprovedBy = input.CurrentUser,
+                //            EntityId = context.ContextId,
+                //            EntityType = context.WorkflowExecutionContext.WorkflowContext?.GetType(),
+                //            FlowInstanceId = context.WorkflowInstance.Id,
+                //            FlowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name,
+                //            SubmitBy = context.WorkflowInstance.Variables.Get("Submitter")?.ToString(),
+                //            TagName = this.Tag,
+                //        };
+                //        notify.OnResume(info);
+                //    }
+                //}
+                //catch { }
 
+                //写入Elsa日志
+                context.JournalData.Add("Remark", remark);
+                context.JournalData.Add("ApprovedBy", ar.Approved);
+                context.JournalData.Add("ApproveUsersFullText", ar.ApproveUsersFullText ?? []);
+                //写入流程审批记录
+                context.WorkFlowApproveRecord(ar);
+
+                return Outcome(ardata?.Action);
             }
             else
             {

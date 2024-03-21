@@ -214,6 +214,7 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "_Admin.Remark")]
         public string Remark { get; set; }
         public string ActionName { get; set; }
+        public string Tag { get; set; }
         #endregion
 
         #region Event
