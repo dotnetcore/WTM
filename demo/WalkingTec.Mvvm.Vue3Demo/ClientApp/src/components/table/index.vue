@@ -48,7 +48,7 @@
                     <template v-else-if="item.type === 'combobox'">
                         <el-select v-model="listvalue[scope.$index][item.key]"
                                    :disabled="item.isDisabled || props.config.isDisabled">
-                            <el-option v-for="(op, opkey, opindex) in state.comboData[item.key]" :key="opindex" :value="opkey"
+                            <el-option v-for="(op, opkey, opindex) in state.comboData[item.key]" :key="opindex" :value="test(state.comboData[item.key],opkey)"
                                        :label="op"></el-option>
                         </el-select>
                     </template>
@@ -225,6 +225,18 @@
     const setBorder = computed(() => {
         return Object.hasOwn(props.config, "isBorder") ? props.config.isBorder : false;
     });
+
+    const test = (a,b)=>{
+        if (b == 'true') {
+            return true;
+        }
+        else if (b == 'false') {
+            return false;
+        }
+        else {
+            return b;
+        }
+    }
     // 获取父组件 配置项（必传）
     const getConfig = computed(() => {
         return props.config;
