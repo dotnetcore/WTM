@@ -138,70 +138,73 @@ namespace WalkingTec.Mvvm.Mvc
         [NoLog]
         public async Task<IActionResult> GetTimeLine(string flowname,string entitytype,string entityid)
         {
-
+            List<ApproveTimeLine> all = [];
             var lp = Wtm.ServiceProvider.GetRequiredService<IWorkflowInstanceStore>();
             var log = Wtm.ServiceProvider.GetRequiredService<IWorkflowExecutionLogStore>();
-            var workflowId = DC.Set<Elsa_WorkflowInstance>().CheckEqual(flowname, x => x.Name).CheckEqual(entitytype, x => x.ContextType).CheckEqual(entityid, x => x.ContextId)
-                .Select(x => x.ID).FirstOrDefault();
-            var instance = await lp.FindByIdAsync(workflowId);
-            if (instance != null)
+            var workflowIds = DC.Set<Elsa_WorkflowInstance>().CheckEqual(flowname, x => x.Name).CheckEqual(entitytype, x => x.ContextType).CheckEqual(entityid, x => x.ContextId)
+                .OrderBy(x=>x.CreatedAt).Select(x => x.ID).ToList();
+            foreach (var workflowId in workflowIds)
             {
-                var specification = new Elsa.Persistence.Specifications.WorkflowExecutionLogRecords.WorkflowInstanceIdSpecification(workflowId);
-                var orderBy = OrderBySpecification.OrderBy<WorkflowExecutionLogRecord>(x => x.Timestamp);
-                var records = await log.FindManyAsync(specification, orderBy).ToList();
-                var rv = records.Where(x => x.ActivityType == nameof(WtmApproveActivity) && x.EventName != "Executing" && x.EventName != "Resuming" && x.EventName != "Suspended")
-                    .Select(x =>
-                    new ApproveTimeLine
+                var instance = await lp.FindByIdAsync(workflowId);
+                if (instance != null)
+                {
+                    var specification = new Elsa.Persistence.Specifications.WorkflowExecutionLogRecords.WorkflowInstanceIdSpecification(workflowId);
+                    var orderBy = OrderBySpecification.OrderBy<WorkflowExecutionLogRecord>(x => x.Timestamp);
+                    var records = await log.FindManyAsync(specification, orderBy).ToList();
+                    var rv = records.Where(x => x.ActivityType == nameof(WtmApproveActivity) && x.EventName != "Executing" && x.EventName != "Resuming" && x.EventName != "Suspended")
+                        .Select(x =>
+                        new ApproveTimeLine
+                        {
+                            Id = x.ActivityId,
+                            Time = x.Timestamp.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("yyyy-MM-dd HH:mm:ss", null),
+                            Action = x.EventName == "Executed" ? "等待审批" : x.Data.ContainsKey("Outcomes") ? x.Data["Outcomes"].Values<string>().FirstOrDefault() : "",
+                            Remark = "",
+                            Approvers = "",
+                            Approved = ""
+                        }
+                    ).ToList();
+                    rv = rv.Where(x => string.IsNullOrEmpty(x.Action) == false).ToList();
+                    foreach (var record in rv)
                     {
-                        Id = x.ActivityId,
-                        Time = x.Timestamp.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("yyyy-MM-dd HH:mm:ss", null),
-                        Action = x.EventName == "Executed" ? "等待审批" : x.Data.ContainsKey("Outcomes")?x.Data["Outcomes"].Values<string>().FirstOrDefault():"",
-                        Remark = "",
-                        Approvers = "",
-                        Approved = ""
+                        var ad = instance.ActivityData[record.Id];
+                        object approved, remark, approvers;
+                        ad.TryGetValue(nameof(WtmApproveActivity.ApprovedBy), out approved);
+                        ad.TryGetValue(nameof(WtmApproveActivity.Remark), out remark);
+                        ad.TryGetValue(nameof(WtmApproveActivity.ApproveUsersFullText), out approvers);
+                        record.Approved = (approved as string) ?? "";
+                        record.Approvers = (approvers as List<string>)?.ToSepratedString() ?? "";
+                        if (record.Action != "等待审批")
+                        {
+                            record.Remark = (remark as string) ?? "";
+                        }
                     }
-                ).ToList();
-                rv = rv.Where(x => string.IsNullOrEmpty(x.Action) == false).ToList();
-                foreach (var record in rv)
-                {
-                    var ad = instance.ActivityData[record.Id];
-                    object approved, remark, approvers;
-                    ad.TryGetValue(nameof(WtmApproveActivity.ApprovedBy), out approved);
-                    ad.TryGetValue(nameof(WtmApproveActivity.Remark), out remark);
-                    ad.TryGetValue(nameof(WtmApproveActivity.ApproveUsersFullText), out approvers);
-                    record.Approved = (approved as string) ?? "";
-                    record.Approvers = (approvers as List<string>)?.ToSepratedString() ?? "";
-                    if (record.Action != "等待审批")
+                    ApproveTimeLine first = new ApproveTimeLine
                     {
-                        record.Remark = (remark as string) ?? "";
-                    }
-                }
-                ApproveTimeLine first = new ApproveTimeLine
-                {
-                    Action = "_start",
-                    Approved = instance.Variables.Get("Submitter")?.ToString()?? "",
-                    Approvers = "",
-                    Id = "",
-                    Remark = "",
-                    Time = instance.CreatedAt.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("yyyy-MM-dd HH:mm:ss", null)
-                };
-                rv.Insert(0, first);
-                if(instance.FinishedAt != null)
-                {
-                    ApproveTimeLine last = new ApproveTimeLine
-                    {
-                        Action = "_finish",
-                        Approved = "",
+                        Action = "_start",
+                        Approved = instance.Variables.Get("Submitter")?.ToString() ?? "",
                         Approvers = "",
                         Id = "",
                         Remark = "",
-                        Time = instance.FinishedAt.Value.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("yyyy-MM-dd HH:mm:ss", null)
+                        Time = instance.CreatedAt.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("yyyy-MM-dd HH:mm:ss", null)
                     };
-                    rv.Add(last);
+                    rv.Insert(0, first);
+                    if (instance.FinishedAt != null)
+                    {
+                        ApproveTimeLine last = new ApproveTimeLine
+                        {
+                            Action = "_finish",
+                            Approved = "",
+                            Approvers = "",
+                            Id = "",
+                            Remark = "",
+                            Time = instance.FinishedAt.Value.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).ToString("yyyy-MM-dd HH:mm:ss", null)
+                        };
+                        rv.Add(last);
+                    }
+                    all.AddRange(rv);
                 }
-                return Ok(rv);
             }
-            return Ok(new List<ApproveTimeLine>());
+            return Ok(all);
         }
 
         [HttpGet("[action]")]

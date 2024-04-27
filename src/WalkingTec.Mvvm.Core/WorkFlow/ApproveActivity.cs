@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
         [ActivityInput(
             UIHint = ActivityInputUIHints.MultiText,
             DefaultSyntax = "Json",
-            SupportedSyntaxes = new[] { "Json", "Liquid" },
+            SupportedSyntaxes = new[] { "Json", "Liquid","JavaScript" },
             IsDesignerCritical = true,
             Label = "审批人ITCode")]
         public List<string> ApproveUsers { get; set; }
