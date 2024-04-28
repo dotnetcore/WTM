@@ -1010,12 +1010,17 @@ window.ff = {
         form.remove();
     },
 
-    RefreshChart: function (chartid) {
+    RefreshChart: function (chartid,chartpre) {
         var postdata = '';
 
         var searcher = $('form[chartlink*="' + chartid + '"]');
         if (searcher !== undefined && searcher.length > 0) {
-            postdata = ff.GetSearchFormData(searcher[0].id,"Searcher");
+            if (chartpre) {
+                postdata = ff.GetSearchFormData(searcher[0].id, chartpre);
+            }
+            else {
+                postdata = ff.GetSearchFormData(searcher[0].id, "Searcher");
+            }
         }
             $.ajax({
                 cache: false,

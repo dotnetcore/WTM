@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -36,7 +37,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             get
             {
-                if(_searcherVM == null)
+                if (_searcherVM == null)
                 {
                     if (ListVM == null)
                     {
@@ -63,7 +64,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (string.IsNullOrEmpty(_gridId))
                 {
-                    if (_gridIdUserSet==null)
+                    if (_gridIdUserSet == null)
                     {
                         if (ListVM != null)
                         {
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 关联的 Chart 组件的 Id
         /// </summary>
         public string ChartId { get; set; }
-
+        public string ChartPrefix { get; set; }
         private string _searchBtnId;
         /// <summary>
         /// 搜索按钮Id
@@ -137,7 +138,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             get
             {
                 string rv = "";
-                if(string.IsNullOrEmpty(Vm?.Name) == false) {
+                if (string.IsNullOrEmpty(Vm?.Name) == false)
+                {
                     rv = Vm?.Name;
                     if (ListVM != null)
                     {
@@ -146,12 +148,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
                 else
                 {
-                    if(ListVM != null)
+                    if (ListVM != null)
                     {
                         rv = "Searcher";
                     }
                 }
-                if(IsInSelector == true)
+                if (IsInSelector == true)
                 {
                     rv = rv.Replace(".Searcher", "").Replace("Searcher", "");
                 }
@@ -165,28 +167,28 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 IsInSelector = true;
             }
-            if(OldPost == true)
+            if (OldPost == true)
             {
                 output.Attributes.Add("oldpost", true);
             }
 
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             bool show = false;
-            if(SearcherVM?.IsExpanded != null)
+            if (SearcherVM?.IsExpanded != null)
             {
                 Expanded = SearcherVM?.IsExpanded;
             }
-            if(Expanded != null)
+            if (Expanded != null)
             {
                 show = Expanded.Value;
             }
             else
             {
-                show =_configs.UIOptions.SearchPanel.DefaultExpand;
+                show = _configs.UIOptions.SearchPanel.DefaultExpand;
             }
 
             string showpage = "";
-            if(ListVM?.NeedPage == true)
+            if (ListVM?.NeedPage == true)
             {
                 showpage = $@",page:{{
         rpptext:'{THProgram._localizer["Sys.RecordsPerPage"]}',
@@ -233,15 +235,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var refreshchartjs = "";
             if (string.IsNullOrEmpty(ChartId) == false)
             {
-                output.Attributes.SetAttribute("chartlink",  ChartId);
+                output.Attributes.SetAttribute("chartlink", ChartId);
                 foreach (var item in ChartId.Split(','))
                 {
                     refreshchartjs += $@"
-    ff.RefreshChart('{item}');
+    ff.RefreshChart('{item}',{(string.IsNullOrEmpty(ChartPrefix) == true ? "undefined" : $"'{ChartPrefix}'")});
 ";
                 }
             }
-                output.PostElement.AppendHtml($@"
+            output.PostElement.AppendHtml($@"
 <script>
   layui.use(['table','element'], function () {{
     const table = layui.table;
