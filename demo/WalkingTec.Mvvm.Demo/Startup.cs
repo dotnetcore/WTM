@@ -27,6 +27,7 @@ namespace WalkingTec.Mvvm.Demo
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             ConfigRoot = config;
+            ConfigRoot["Connections:0:Value"] = "Server=(localdb)\\mssqllocaldb;Database=next;Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
 

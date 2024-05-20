@@ -875,7 +875,7 @@ namespace WalkingTec.Mvvm.Core
                                 {
                                     ModuleName = pages[j].ActionDes._localizer[pages[j].ActionDes.Description],
                                     NameSpace = m[i].NameSpace,
-                                    ClassName = pages[j].MethodName,
+                                    ClassName = pages[j].Module.ClassName + pages[j].MethodName,
                                     Actions = submit ? new List<SimpleAction>() : new List<SimpleAction>() { pages[j] },
                                     Area = m[i].Area
                                 });
