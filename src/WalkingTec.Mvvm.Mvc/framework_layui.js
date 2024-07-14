@@ -967,7 +967,14 @@ window.ff = {
             defaultcondition = {};
         }
         var tempwhere = {};
-        $.extend(tempwhere, defaultcondition);
+        for (let item in defaultcondition) {
+            if (formData["Searcher." + item]) {
+
+            }
+            else {
+                tempwhere[item] = defaultcondition[item]
+            }
+        }
         $.extend(tempwhere, formData);
        for (let item in tempwhere) {
             if (item.startsWith("Searcher.") == false) {
