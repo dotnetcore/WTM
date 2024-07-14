@@ -25,7 +25,7 @@ $columns$
         }
         @if (IsAccessable("/api/$modelname$/BatchDelete"))
         {
-            <TableToolbarPopconfirmButton TItem="$modelname$_View" Color="Color.Primary"
+            <TableToolbarPopConfirmButton TItem="$modelname$_View" Color="Color.Primary"
                                           Icon="fa fa-fw fa-trash" Text="@WtmBlazor.Localizer["Sys.BatchDelete"]"
                                           OnConfirm="@OnBatchDeleteClick" Content="@WtmBlazor.Localizer["Sys.BatchDeleteConfirm"]" CloseButtonText="@WtmBlazor.Localizer["Sys.Close"]"
                                           ConfirmButtonText="@WtmBlazor.Localizer["Sys.BatchDelete"]" ConfirmButtonColor="Color.Danger" />
