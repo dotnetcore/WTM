@@ -143,7 +143,7 @@ export function getBackEndControlRoutes(menus: any[], allMenus: any[], localMenu
 			component: '',
 			meta: {
 				title: element.Text,
-				isHide: false,
+				isHide: !element.ShowOnMenu,
 				isKeepAlive: true,
 				isLink: '',
 				isAffix: false,

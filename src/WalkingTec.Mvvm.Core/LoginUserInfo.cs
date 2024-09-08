@@ -214,7 +214,7 @@ namespace WalkingTec.Mvvm.Core
                             .ToList();
                 }
             }
-            var topdata = context.GlobaInfo.AllMenus.Where(x => x.ShowOnMenu && (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName))).ToList();
+            var topdata = context.GlobaInfo.AllMenus.Where(x =>x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
             var allowedids = context.LoginUserInfo?.FunctionPrivileges?.Select(x => x.MenuItemId).ToList();
             foreach (var item in topdata)
             {
@@ -226,7 +226,8 @@ namespace WalkingTec.Mvvm.Core
                         ParentId = item.ParentId?.ToString()?.ToLower(),
                         Text = item.PageName,
                         Url = item.Url,
-                        Icon = item.Icon
+                        Icon = item.Icon,
+                        ShowOnMenu = item.ShowOnMenu
                     });
                 }
             }
