@@ -76,6 +76,7 @@ namespace WalkingTec.Mvvm.Core.Support.Json
 
         public string Icon { get; set; }
 
+        public bool ShowOnMenu { get; set; }
     }
 
     public class LayUIMenu
