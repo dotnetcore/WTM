@@ -38,6 +38,14 @@ namespace WalkingTec.Mvvm.Mvc
             if (Wtm.LoginUserInfo.Roles.Any(x => x.RoleCode == "001") ||
                 Wtm.LoginUserInfo.Roles.Any(x => x.RoleName == "流程管理员"))
             {
+                if (Wtm.LoginUserInfo.TenantCode != null)
+                {
+                    Response.Cookies.Append("workflowtenant", Wtm.LoginUserInfo.TenantCode);
+                }
+                else
+                {
+                    Response.Cookies.Delete("workflowtenant");
+                }
                 return View();
             }
             return Forbid();
