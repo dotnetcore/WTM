@@ -6,12 +6,15 @@ using Elsa.Persistence.Specifications;
 using Elsa.Server.Api.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NetBox.Extensions;
 using NodaTime;
+using NPOI.Util.Collections;
 using Open.Linq.AsyncExtensions;
 using System;
 using System.Collections.Generic;
@@ -38,6 +41,14 @@ namespace WalkingTec.Mvvm.Mvc
             if (Wtm.LoginUserInfo.Roles.Any(x => x.RoleCode == "001") ||
                 Wtm.LoginUserInfo.Roles.Any(x => x.RoleName == "流程管理员"))
             {
+                if (Wtm.LoginUserInfo.TenantCode != null)
+                {
+                    Response.Cookies.Append("workflowtenant", Wtm.LoginUserInfo.TenantCode);
+                }
+                else
+                {
+                    Response.Cookies.Delete("workflowtenant");
+                }
                 return View();
             }
             return Forbid();

@@ -24,7 +24,17 @@ namespace WalkingTec.Mvvm.Core.WorkFlow
 
             string t = null;
             var wtm = _hca.HttpContext.RequestServices.GetRequiredService<WTMContext>();
-            t = wtm?.LoginUserInfo?.CurrentTenant;
+            if (wtm?.LoginUserInfo != null)
+            {
+                t = wtm?.LoginUserInfo?.CurrentTenant;
+            }
+            else
+            {
+                if (_hca.HttpContext.Request.Cookies.ContainsKey("workflowtenant"))
+                {
+                    t = _hca.HttpContext.Request.Cookies["workflowtenant"];
+                }
+            }
             return Task.FromResult(t);
         }
     }
