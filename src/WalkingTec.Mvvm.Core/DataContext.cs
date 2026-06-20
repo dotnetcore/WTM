@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
 using MySqlConnector;
 using Npgsql;
+using Dm;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -587,7 +588,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            if (DBType == DBTypeEnum.Oracle)
+            if (DBType == DBTypeEnum.Oracle || DBType == DBTypeEnum.DaMeng)
             {
                 modelBuilder.Model.SetMaxIdentifierLength(30);
                 modelBuilder.Entity<Elsa_Bookmark>().ToTable("Bookmarks");
@@ -636,9 +637,9 @@ namespace WalkingTec.Mvvm.Core
                 case DBTypeEnum.SQLite:
                     optionsBuilder.UseSqlite(CSName);
                     break;
-                //case DBTypeEnum.DaMeng:
-                //    optionsBuilder.UseDm(CSName);
-                //    break;
+                case DBTypeEnum.DaMeng:
+                    optionsBuilder.UseDm(CSName);
+                    break;
                 case DBTypeEnum.Oracle:
                     optionsBuilder.UseOracle(CSName, option =>
                     {
@@ -796,6 +797,9 @@ namespace WalkingTec.Mvvm.Core
                     break;
                 case DBTypeEnum.SQLite:
                     rv = new SqliteParameter(name, value) { Direction = dir };
+                    break;
+                case DBTypeEnum.DaMeng:
+                    rv = new DmParameter(name, value) { Direction = dir };
                     break;
                 case DBTypeEnum.Oracle:
                     //rv = new OracleParameter(name, value) { Direction = dir };

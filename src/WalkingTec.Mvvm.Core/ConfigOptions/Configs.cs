@@ -148,6 +148,28 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
 
+        #region Workflow
+
+        private bool? _enableWorkflow;
+
+        /// <summary>
+        /// Enable Elsa workflow
+        /// </summary>
+        public bool EnableWorkflow
+        {
+            get
+            {
+                return _enableWorkflow ?? false;
+            }
+            set
+            {
+                _enableWorkflow = value;
+            }
+        }
+
+        #endregion
+
+
         public string ErrorHandler { get; set; } = "/_Framework/Error";
 
         #region Cookie prefix

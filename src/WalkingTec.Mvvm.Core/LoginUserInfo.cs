@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using NPOI.SS.Formula.Functions;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
@@ -44,11 +43,11 @@ namespace WalkingTec.Mvvm.Core
 
         public Dictionary<string, object> Attributes { get; set; }
         /// <summary>
-        /// 用户的页面权限列表
+        /// 用户的页面权限列�?
         /// </summary>
         public List<SimpleFunctionPri> FunctionPrivileges { get; set; }
         /// <summary>
-        /// 用户的数据权限列表
+        /// 用户的数据权限列�?
         /// </summary>
         public List<SimpleDataPri> DataPrivileges { get; set; }
         public long TimeTick { get; set; } = DateTime.Now.Ticks;
@@ -77,7 +76,7 @@ namespace WalkingTec.Mvvm.Core
 
                 if (userInfo != null)
                 {
-                    // 初始化用户信息
+                    // 初始化用户信�?
                     var roleIDs = userInfo.UserRoles.ToList();
                     var groupIDs = userInfo.UserGroups.ToList();
                     List<SimpleGroup> groups = allgroups.Where(x => groupIDs.Contains(x.GroupCode)).ToList();
@@ -128,7 +127,7 @@ namespace WalkingTec.Mvvm.Core
             var gc = moregroups.Select(x => x.GroupCode).ToList();
             var rc = this.Roles.Select(x=>x.RoleCode).ToList();
 
-            //查找登录用户的页面权限
+            //查找登录用户的页面权�?
             var funcPrivileges = await DC.Set<FunctionPrivilege>().AsNoTracking()
                 .Where(x => x.RoleCode != null && rc.Contains(x.RoleCode))
                 .Distinct()
@@ -290,3 +289,4 @@ namespace WalkingTec.Mvvm.Core
         }
     }
 }
+

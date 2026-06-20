@@ -10,11 +10,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NPOI.HSSF.Util;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
@@ -92,9 +92,9 @@ namespace WalkingTec.Mvvm.Core
         protected bool isEntityListSet = false;
 
         /// <summary>
-        /// 声明XSSF
+        /// 声明文件流
         /// </summary>
-        protected XSSFWorkbook xssfworkbook;
+        protected byte[] excelData;
 
         /// <summary>
         /// 唯一性验证
@@ -149,12 +149,12 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
-        #region 可重写方法
+        ///
 
         /// <summary>
         /// 设置数据唯一性验证，子类中如果需要数据唯一性验证，应重写此方法
         /// </summary>
-        /// <returns>唯一性属性</returns>
+        /// <returns>
         public virtual DuplicatedInfo<P> SetDuplicatedCheck()
         {
             return null;
@@ -181,9 +181,19 @@ namespace WalkingTec.Mvvm.Core
                 //对EntityList赋值
                 SetEntityData();
 
+                //允许子类修改EntityList
+                SetCustomEntityData();
+
                 //设置标识为初始化
                 isEntityListSet = true;
             }
+        }
+
+        /// <summary>
+        /// EntityList 填充完毕后调用，子类可重写此方法对 EntityList 进行自定义修改
+        /// </summary>
+        protected virtual void SetCustomEntityData()
+        {
         }
 
         /// <summary>
@@ -199,9 +209,8 @@ namespace WalkingTec.Mvvm.Core
             try
             {
                 TemplateData = new List<T>();
-                xssfworkbook = new XSSFWorkbook();
 
-                //【CHECK】上传附件的ID为空
+                ///
                 if (UploadFileId == null)
                 {
                     ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.PleaseUploadTemplate"] });
@@ -211,149 +220,154 @@ namespace WalkingTec.Mvvm.Core
                 if (Wtm.ServiceProvider != null)
                 {
                     var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
-                   // var tempdc = Wtm.DC;
-                    file = fp.GetFile(UploadFileId, true,Wtm.CreateDC(false));
-                    //Wtm.DC = tempdc;
+                    file = fp.GetFile(UploadFileId, true, Wtm.CreateDC(false));
                 }
                 if (file == null)
                 {
                     ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
                     return;
                 }
-                xssfworkbook = new XSSFWorkbook(file.DataStream);
+
+                byte[] fileBytes;
+                using (var ms = new MemoryStream())
+                {
+                    file.DataStream.CopyTo(ms);
+                    fileBytes = ms.ToArray();
+                }
                 file.DataStream.Dispose();
+                excelData = fileBytes;
+
                 Template.InitExcelData();
                 Template.InitCustomFormat();
 
-                //【CHECK】判断是否上传的是正确的模板数据
-                string TemplateHiddenName = xssfworkbook.GetSheetAt(1).GetRow(0).Cells[2].ToString();
-                if (ValidityTemplateType && !TemplateHiddenName.Equals(typeof(T).Name))
+                using (var doc = SpreadsheetDocument.Open(new MemoryStream(fileBytes), false))
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
-                    return;
-                }
+                    var workbookPart = doc.WorkbookPart;
+                    if (workbookPart?.Workbook == null) return;
+                    var sheetsElement = workbookPart.Workbook.GetFirstChild<Sheets>();
+                    if (sheetsElement == null) return;
+                    var sheets = sheetsElement.Elements<Sheet>()
+                        .OrderBy(s => s.SheetId?.Value ?? 0).ToList();
 
-                //获取数据的Sheet页信息
-                ISheet sheet = xssfworkbook.GetSheetAt(0);
-                sheet.ForceFormulaRecalculation = true;
-                XSSFFormulaEvaluator XE = new XSSFFormulaEvaluator(xssfworkbook);
-                IEnumerator rows = sheet.GetRowEnumerator();
-                var cells = sheet.GetRow(0).Cells;
-
-                //获取模板中所有字段的属性
-                List<ExcelPropety> ListTemplateProptetys = new List<ExcelPropety>();
-                var ListPropetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
-                for (int i = 0; i < ListPropetys.Count(); i++)
-                {
-                    ExcelPropety ep = (ExcelPropety)ListPropetys[i].GetValue(Template);
-                    ListTemplateProptetys.Add(ep);
-                }
-
-                //【CHECK】验证模板的列数是否正确
-                var dynamicColumn = ListTemplateProptetys.Where(x => x.DataType == ColumnDataType.Dynamic).FirstOrDefault();
-                int columnCount = dynamicColumn == null ? ListTemplateProptetys.Count : (ListTemplateProptetys.Count + dynamicColumn.DynamicColumns.Count - 1);
-                if (columnCount != cells.Count)
-                {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
-                    return;
-                }
-
-                //【CHECK】判断字段是否根据顺序能一对一相对应。  //是否可以去除？
-                int pIndex = 0;
-                HasSubTable = false;
-                for (int i = 0; i < cells.Count; i++)
-                {
-                    //是否有子表
-                    HasSubTable = ListTemplateProptetys[pIndex].SubTableType != null ? true : HasSubTable;
-                    //if (ListTemplateProptetys[pIndex].DataType != ColumnDataType.Dynamic)
-                    //{
-                    //    if (cells[i].ToString().Trim('*') != ListTemplateProptetys[pIndex].ColumnName)
-                    //    {
-                    //        ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
-                    //        return;
-                    //    }
-                    //    pIndex++;
-                    //}
-                    //else
-                    //{
-                    //    var listDynamicColumns = ListTemplateProptetys[i].DynamicColumns;
-                    //    int dcCount = listDynamicColumns.Count;
-                    //    for (int dclIndex = 0; dclIndex < dcCount; dclIndex++)
-                    //    {
-                    //        if (cells[i].ToString().Trim('*') != listDynamicColumns[dclIndex].ColumnName)
-                    //        {
-                    //            ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
-                    //            break;
-                    //        }
-                    //        i = i + 1;
-                    //    }
-                    //    i = i - 1;
-                        pIndex++;
-                    //}
-                }
-
-                //如果有子表，则设置主表字段非必填
-                if (HasSubTable)
-                {
-                    for (int i = 0; i < cells.Count; i++)
+                    // read previous template format
+                    if (sheets.Count >= 2)
                     {
-                        ListTemplateProptetys[i].IsNullAble = ListTemplateProptetys[i].SubTableType == null ? true : ListTemplateProptetys[i].IsNullAble;
+                        var markerPart = (WorksheetPart)workbookPart.GetPartById(sheets[1].Id);
+                        var markerSheet = markerPart.Worksheet.GetFirstChild<SheetData>();
+                        var markerRow = markerSheet.Elements<Row>().FirstOrDefault();
+                        if (markerRow != null)
+                        {
+                            // 查找 C1 单元格，按引用精确查找
+                            Cell markerCell = markerRow.Elements<Cell>()
+                                .FirstOrDefault(c => c.CellReference?.Value == "C1");
+                            string TemplateHiddenName = GetCellTextValue(markerCell, workbookPart);
+                            if (ValidityTemplateType && (string.IsNullOrEmpty(TemplateHiddenName) || !TemplateHiddenName.Equals(typeof(T).Name)))
+                            {
+                                ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
+                                return;
+                            }
+                        }
                     }
-                }
 
-                //向TemplateData中赋值
-                int rowIndex = 2;
-                rows.MoveNext();
-                while (rows.MoveNext())
-                {
-                    XSSFRow row = (XSSFRow)rows.Current;
-                    if (IsEmptyRow(row, columnCount))
+                    ///
+                    if (sheets.Count == 0) return;
+                    var dataPart = (WorksheetPart)workbookPart.GetPartById(sheets[0].Id);
+                    var dataSheet = dataPart.Worksheet.GetFirstChild<SheetData>();
+                    var allRows = dataSheet.Elements<Row>().ToList();
+                    if (allRows.Count == 0) return;
+
+                    var headerRow = allRows[0];
+                    int headerCellCount = headerRow.Elements<Cell>().Count();
+
+                    ///
+                    List<ExcelPropety> ListTemplateProptetys = new List<ExcelPropety>();
+                    var ListPropetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
+                    for (int i = 0; i < ListPropetys.Count(); i++)
                     {
+                        ExcelPropety ep = (ExcelPropety)ListPropetys[i].GetValue(Template);
+                        ListTemplateProptetys.Add(ep);
+                    }
+
+                    ///
+                    var dynamicColumn = ListTemplateProptetys.Where(x => x.DataType == ColumnDataType.Dynamic).FirstOrDefault();
+                    int columnCount = dynamicColumn == null ? ListTemplateProptetys.Count : (ListTemplateProptetys.Count + dynamicColumn.DynamicColumns.Count - 1);
+                    if (columnCount != headerCellCount)
+                    {
+                        ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
                         return;
                     }
 
-                    T result = new T();
-                    pIndex = 0;
-                    for (int i = 0; i < columnCount; i++)
+                    ///
+                    int pIndex = 0;
+                    HasSubTable = false;
+                    for (int i = 0; i < headerCellCount; i++)
                     {
-                        //获取列的值
-                        string value = row.GetCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK).ToString();
-                        ExcelPropety excelPropety = CopyExcelPropety(ListTemplateProptetys[pIndex]);
-
-                        if (excelPropety.DataType == ColumnDataType.Text)
-                        {
-                            ICell cell = row.GetCell(i);
-                            value = GetCellFormulaValue(XE, cell, value);
-                        }
-
-                        if (excelPropety.DataType == ColumnDataType.Dynamic)
-                        {
-                            int dynamicColCount = excelPropety.DynamicColumns.Count();
-                            for (int dynamicColIndex = 0; dynamicColIndex < dynamicColCount; dynamicColIndex++)
-                            {
-                                excelPropety.DynamicColumns[dynamicColIndex].ValueValidity(row.GetCell(i + dynamicColIndex, MissingCellPolicy.CREATE_NULL_AS_BLANK).ToString(), ErrorListVM.EntityList, rowIndex);
-                            }
-                            i = i + dynamicColCount - 1;
-                        }
-                        else
-                        {
-                            excelPropety.ValueValidity(value, ErrorListVM.EntityList, rowIndex);
-                        }
-
-                        //如果没有错误，进行赋值
-                        if (ErrorListVM.EntityList.Count == 0)
-                        {
-                            var pts = ListPropetys[pIndex];
-                            pts.SetValue(result, excelPropety);
-                        }
-
+                        HasSubTable = ListTemplateProptetys[pIndex].SubTableType != null ? true : HasSubTable;
                         pIndex++;
                     }
-                    result.ExcelIndex = rowIndex;
-                    TemplateData.Add(result);
-                    rowIndex++;
-                }
 
+                    ///
+                    if (HasSubTable)
+                    {
+                        for (int i = 0; i < headerCellCount; i++)
+                        {
+                            ListTemplateProptetys[i].IsNullAble = ListTemplateProptetys[i].SubTableType == null ? true : ListTemplateProptetys[i].IsNullAble;
+                        }
+                    }
+
+                    ///
+                    int rowIndex = 2;
+                    for (int r = 1; r < allRows.Count; r++)
+                    {
+                        var row = allRows[r];
+                        var cells = row.Elements<Cell>().ToList();
+
+                        if (IsEmptyRowOpenXml(cells, columnCount))
+                        {
+                            return;
+                        }
+
+                        T result = new T();
+                        pIndex = 0;
+                        for (int i = 0; i < columnCount; i++)
+                        {
+                            string value = i < cells.Count ? GetCellTextValue(cells[i], workbookPart) : "";
+                            ExcelPropety excelPropety = CopyExcelPropety(ListTemplateProptetys[pIndex]);
+
+                            if (excelPropety.DataType == ColumnDataType.Text)
+                            {
+                                value = GetCellFormulaValueOpenXml(cells.ElementAtOrDefault(i), value);
+                            }
+
+                            if (excelPropety.DataType == ColumnDataType.Dynamic)
+                            {
+                                int dynamicColCount = excelPropety.DynamicColumns.Count();
+                                for (int dynamicColIndex = 0; dynamicColIndex < dynamicColCount; dynamicColIndex++)
+                                {
+                                    string dv = (i + dynamicColIndex < cells.Count) ? GetCellTextValue(cells[i + dynamicColIndex], workbookPart) : "";
+                                    excelPropety.DynamicColumns[dynamicColIndex].ValueValidity(dv, ErrorListVM.EntityList, rowIndex);
+                                }
+                                i = i + dynamicColCount - 1;
+                            }
+                            else
+                            {
+                                excelPropety.ValueValidity(value, ErrorListVM.EntityList, rowIndex);
+                            }
+
+                            //如果没有错误，进行赋值
+                            if (ErrorListVM.EntityList.Count == 0)
+                            {
+                                var pts = ListPropetys[pIndex];
+                                pts.SetValue(result, excelPropety);
+                            }
+
+                            pIndex++;
+                        }
+                        result.ExcelIndex = rowIndex;
+                        TemplateData.Add(result);
+                        rowIndex++;
+                    }
+                }
                 return;
             }
             catch
@@ -362,23 +376,87 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        #region 进行公式计算
-        public string GetCellFormulaValue(XSSFFormulaEvaluator XE, ICell cell, string Value)
+        ///
+        /// <summary>
+///
+        /// </summary>
+        public static string GetCellTextValue(Cell cell, WorkbookPart workbookPart = null)
         {
+            if (cell == null) return "";
+
+            // Handle inline string
+            if (cell.DataType?.Value == CellValues.InlineString && cell.InlineString != null)
+            {
+                return cell.InlineString.Text?.Text ?? "";
+            }
+
+            // Handle shared string — resolve via SharedStringTable
+            if (cell.DataType?.Value == CellValues.SharedString && cell.CellValue != null)
+            {
+                int idx;
+                if (int.TryParse(cell.CellValue.Text, out idx) && workbookPart != null)
+                {
+                    var sst = workbookPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+                    if (sst != null)
+                    {
+                        var items = sst.SharedStringTable.Elements<SharedStringItem>().ToList();
+                        if (idx >= 0 && idx < items.Count)
+                        {
+                            return items[idx].InnerText ?? "";
+                        }
+                    }
+                }
+                return cell.CellValue.Text;
+            }
+
+            // Handle formula cached value
+            if (cell.CellFormula != null && cell.CellValue != null)
+            {
+                return cell.CellValue.Text;
+            }
+
+            // Handle plain CellValue
+            if (cell.CellValue != null)
+            {
+                return cell.CellValue.Text;
+            }
+
+            // Last resort: try inner text or InlineString without DataType
+            if (cell.InlineString != null)
+            {
+                return cell.InlineString.Text?.Text ?? "";
+            }
+            if (!string.IsNullOrEmpty(cell.InnerText))
+            {
+                return cell.InnerText;
+            }
+
+            return "";
+        }
+
+        public string GetCellFormulaValueOpenXml(Cell cell, string Value)
+        {
+            if (cell == null) return Value;
             if (!string.IsNullOrEmpty(Value) && Value.IndexOf("=") == 0)
             {
-                try
+                #region
+                if (cell.CellValue != null)
                 {
-                    string Formula = Value.Substring(1);
-                    cell.SetCellFormula(Formula);
-                    XE.EvaluateFormulaCell(cell);
-                    Value = cell.NumericCellValue.ToString();
-                }
-                catch (Exception)
-                {
+                    return cell.CellValue.Text;
                 }
             }
             return Value;
+        }
+
+        private bool IsEmptyRowOpenXml(List<Cell> cells, int colCount, WorkbookPart workbookPart = null)
+        {
+            if (cells == null || cells.Count == 0) return true;
+            for (int i = 0; i < Math.Min(colCount, cells.Count); i++)
+            {
+                string val = GetCellTextValue(cells[i], workbookPart);
+                if (!string.IsNullOrEmpty(val?.Trim())) return false;
+            }
+            return true;
         }
         #endregion
 
@@ -898,10 +976,10 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 保存指定表中的数据
         /// </summary>
-        /// <returns>成功返回True，失败返回False</returns>
+        /// <returns></returns>
         public virtual bool BatchSaveData()
         {
-            //删除不必要的附件
+            ///
             if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
             {
                 var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
@@ -1081,7 +1159,7 @@ namespace WalkingTec.Mvvm.Core
             //    var table = new DataTable();
             //    var props = typeof(K).GetAllProperties().Distinct(x => x.Name);
 
-            //    //生成Table的列
+            ///
             //    foreach (var propertyInfo in props)
             //    {
             //        var notmapped = propertyInfo.GetCustomAttribute<NotMappedAttribute>();
@@ -1094,7 +1172,7 @@ namespace WalkingTec.Mvvm.Core
             //        }
             //    }
 
-            //    //给Table赋值
+            ///
             //    var values = new object[table.Columns.Count];
             //    foreach (var item in list)
             //    {
@@ -1111,7 +1189,7 @@ namespace WalkingTec.Mvvm.Core
             //        }
             //        table.Rows.Add(values);
             //    }
-            //    //检测是否有继承字段，如果存在，进行赋值
+            #region
             //    string Discriminator = dc.GetFieldName<K>("Discriminator");
             //    if (!string.IsNullOrEmpty(Discriminator))
             //    {
@@ -1127,27 +1205,13 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
-        #region 验证是否空行
+        ///
         /// <summary>
-        /// 验证Excel中某行是否为空行
+#region
         /// </summary>
-        /// <param name="row">行数</param>
-        /// <param name="colCount">列数</param>
-        /// <returns>True代表空行，False代表非空行</returns>
-        private bool IsEmptyRow(XSSFRow row, int colCount)
-        {
-            bool result = true;
-            for (int i = 0; i < colCount; i++)
-            {
-                string value = row.GetCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK).ToString();
-                if (!string.IsNullOrEmpty(value))
-                {
-                    result = false;
-                    break;
-                }
-            }
-            return result;
-        }
+        /// <param name="row">
+        /// <param name="colCount">
+        /// <returns>
         #endregion
 
         #region 复制Excel属性
@@ -1377,8 +1441,6 @@ namespace WalkingTec.Mvvm.Core
                 }
                 var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
                 fa = fp.GetFile(UploadFileId, true, DC);
-                xssfworkbook = new XSSFWorkbook(fa.DataStream);
-                fa.DataStream.Dispose();
                 var propetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
                 List<ExcelPropety> excelPropetys = new List<ExcelPropety>();
                 for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
@@ -1387,37 +1449,51 @@ namespace WalkingTec.Mvvm.Core
                     excelPropetys.Add(ep);
                 }
                 int columnCount = excelPropetys.Count;
-                //int excelPropetyCount = excelPropetys.Count;
                 var dynamicColumn = excelPropetys.Where(x => x.DataType == ColumnDataType.Dynamic).FirstOrDefault();
                 if (dynamicColumn != null)
                 {
                     columnCount = columnCount + dynamicColumn.DynamicColumns.Count - 1;
                 }
-                ISheet sheet = xssfworkbook.GetSheetAt(0);
-                var errorStyle = xssfworkbook.CreateCellStyle();
-                IFont f = xssfworkbook.CreateFont();
-                f.Color = HSSFColor.Red.Index;
-                errorStyle.SetFont(f);
-                errorStyle.IsLocked = true;
-                foreach (var e in ErrorListVM?.EntityList)
+                byte[] newBytes;
+                using (var ms = new MemoryStream(excelData))
+                using (var doc = SpreadsheetDocument.Open(ms, true))
                 {
-                    if (e.Index > 0)
+                    var workbookPart = doc.WorkbookPart;
+                    var sheets = workbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().ToList();
+                    if (sheets.Count > 0)
                     {
-                        var c = sheet.GetRow((int)(e.Index - 1)).CreateCell(columnCount);
-                        c.CellStyle = errorStyle;
-                        c.SetCellValue(e.Message);
-                    }
-                }
-                MemoryStream ms = new MemoryStream();
-                xssfworkbook.Write(ms);
-                ms.Position = 0;
+                        var dataPart = (WorksheetPart)workbookPart.GetPartById(sheets[0].Id);
+                        var sheetData = dataPart.Worksheet.GetFirstChild<SheetData>();
 
-                var newfile = fp.Upload("Error-" + fa.FileName, ms.Length, ms);
-                ms.Close();
-                ms.Dispose();
-                err = CoreProgram._localizer?["Sys.ImportError"];
-                mse.Form.Add("Entity.Import", err);
-                mse.Form.Add("Entity.ErrorFileId", newfile.GetID());
+                        foreach (var e in ErrorListVM?.EntityList)
+                        {
+                            if (e.Index > 0)
+                            {
+                                uint rowIdx = (uint)(e.Index - 1);
+                                Row row = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex == rowIdx);
+                                if (row != null)
+                                {
+                                    string colLetter = OpenXmlHelper.GetColumnLetter(columnCount);
+                                    string cellRef = $"{colLetter}{rowIdx}";
+                                    Cell errorCell = new Cell() { CellReference = cellRef };
+                                    errorCell.DataType = CellValues.InlineString;
+                                    errorCell.AppendChild(new InlineString(new Text(e.Message)));
+                                    row.AppendChild(errorCell);
+                                }
+                            }
+                        }
+                    }
+                    workbookPart.Workbook.Save();
+                    newBytes = ms.ToArray();
+                }
+                using (var uploadMs = new MemoryStream(newBytes))
+                {
+                    uploadMs.Position = 0;
+                    var newfile = fp.Upload("Error-" + fa.FileName, uploadMs.Length, uploadMs);
+                    err = CoreProgram._localizer?["Sys.ImportError"];
+                    mse.Form.Add("Entity.Import", err);
+                    mse.Form.Add("Entity.ErrorFileId", newfile.GetID());
+                }
             }
             else
             {
@@ -1427,7 +1503,6 @@ namespace WalkingTec.Mvvm.Core
         }
     }
 
-    #region 辅助类
     public class ErrorMessage : TopBasePoco
     {
         [Display(Name = "Sys.RowIndex")]
@@ -1464,7 +1539,5 @@ namespace WalkingTec.Mvvm.Core
             return EntityList.AsQueryable().OrderBy(x => x.Index);
         }
     }
-
-    #endregion
 
 }

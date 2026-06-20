@@ -1,8 +1,6 @@
-using NPOI.HSSF.UserModel;
-using NPOI.OpenXmlFormats.Spreadsheet;
-using NPOI.SS.UserModel;
-using NPOI.SS.Util;
-using NPOI.XSSF.UserModel;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -154,108 +152,183 @@ namespace WalkingTec.Mvvm.Core
 
         #region 设定Excel数据验证
         /// <summary>
-        /// 设置Excel单元格样式（标题），数据格式
+        /// 设置Excel数据验证格式（OpenXML）
         /// </summary>
         /// <param name="dateType">数据类型</param>
-        /// <param name="porpetyIndex">单元格索引</param>
-        /// <param name="sheet">Sheet页</param>
-        /// <param name="dataSheet">数据Sheet页</param>
-        /// <param name="dataStyle">样式</param>
-        /// <param name="dataFormat">格式</param>
-        public void SetColumnFormat(ColumnDataType dateType, int porpetyIndex, ISheet sheet, ISheet dataSheet, ICellStyle dataStyle, IDataFormat dataFormat)
+        /// <param name="columnIndex">列索引</param>
+        /// <param name="worksheetPart">工作表部件</param>
+        /// <param name="dataSheetPart">数据参考表部件</param>
+        /// <param name="workbookPart">工作簿部件（用于创建命名范围）</param>
+        /// <param name="sheetName">主表名称</param>
+        /// <param name="dataSheetName">数据表名称</param>
+        /// <param name="numberFormatId">输出：数字格式ID</param>
+        /// <returns>数据样式索引</returns>
+        public void SetColumnFormat(ColumnDataType dateType, int columnIndex,
+            WorksheetPart worksheetPart, WorksheetPart dataSheetPart,
+            WorkbookPart workbookPart, string sheetName, string dataSheetName,
+            out uint? numberFormatId, out bool isLocked)
         {
-            XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper((XSSFSheet)sheet);
-            CellRangeAddressList CellRangeList = new CellRangeAddressList(1, 1048576 - 1, porpetyIndex, porpetyIndex); //超过1048576最大行数，打开Excel会报错
-            XSSFDataValidationConstraint dvConstraint = null;
-            XSSFDataValidation dataValidation = null;
+            isLocked = this.ReadOnly;
+            numberFormatId = null;
+            Worksheet worksheet = worksheetPart.Worksheet;
+            DataValidations dataValidations = worksheet.GetFirstChild<DataValidations>();
+            if (dataValidations == null)
+            {
+                dataValidations = new DataValidations();
+                worksheet.InsertAfter(dataValidations, worksheet.GetFirstChild<SheetData>());
+            }
+
+            string cellRange = $"{OpenXmlHelper.GetColumnLetter(columnIndex)}2:{OpenXmlHelper.GetColumnLetter(columnIndex)}1048576";
+            string errTitle = CoreProgram._localizer?["Sys.Error"]?.ToString() ?? "Error";
+            string errInputNum = CoreProgram._localizer?["Sys.PleaseInputNumber"]?.ToString() ?? "Please input integer";
+            string promptNumFmt = CoreProgram._localizer?["Sys.PleaseInputNumberFormat"]?.ToString() ?? "Number format";
+            string errInputDec = CoreProgram._localizer?["Sys.PleaseInputDecimal"]?.ToString() ?? "Please input decimal";
+            string promptDecFmt = CoreProgram._localizer?["Sys.PleaseInputDecimalFormat"]?.ToString() ?? "Decimal format";
+            string errExistData = CoreProgram._localizer?["Sys.PleaseInputExistData"]?.ToString() ?? "Please select from list";
+            string comboBox = CoreProgram._localizer?["Sys.ComboBox"]?.ToString() ?? "ComboBox";
+            string errTextLen = CoreProgram._localizer?["Sys.WrongTextLength"]?.ToString() ?? "Wrong text length";
+            string promptInputText = CoreProgram._localizer?["Sys.PleaseInputText"]?.ToString() ?? "Please input text";
+            string dataRange = CoreProgram._localizer?["Sys.DataRange"]?.ToString() ?? "Range";
 
             switch (dateType)
             {
                 case ColumnDataType.Date:
                 case ColumnDataType.DateTime:
-                    //因为DateTime类型，添加Validation报错，所以去掉
-                    dataStyle.DataFormat = dataFormat.GetFormat("yyyy-MM-dd HH:mm:ss");
+                    numberFormatId = 165; // yyyy-MM-dd HH:mm:ss
                     break;
                 case ColumnDataType.Number:
                     this.MinValueOrLength = string.IsNullOrEmpty(this.MinValueOrLength) ? long.MinValue.ToString() : this.MinValueOrLength;
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? long.MaxValue.ToString() : this.MaxValuseOrLength;
-                    dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateNumericConstraint(ValidationType.INTEGER, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength);
-                    dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.PleaseInputNumber"]);
-                    dataStyle.DataFormat = dataFormat.GetFormat("0");
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.PleaseInputNumberFormat"], CoreProgram._localizer?["Sys.DataRange", MinValueOrLength, MaxValuseOrLength]);
+                    numberFormatId = 1; // 0
+                    var numDv = new DataValidation()
+                    {
+                        Type = DataValidationValues.Whole,
+                        AllowBlank = this.IsNullAble,
+                        ShowErrorMessage = true,
+                        ShowInputMessage = true,
+                        SequenceOfReferences = new ListValue<StringValue>() { InnerText = cellRange },
+                        ErrorTitle = errTitle,
+                        Error = errInputNum,
+                        PromptTitle = promptNumFmt,
+                        Prompt = $"{dataRange} {MinValueOrLength} - {MaxValuseOrLength}"
+                    };
+                    numDv.Formula1 = new DocumentFormat.OpenXml.Spreadsheet.Formula1(this.MinValueOrLength);
+                    numDv.Formula2 = new DocumentFormat.OpenXml.Spreadsheet.Formula2(this.MaxValuseOrLength);
+                    dataValidations.AppendChild(numDv);
                     break;
                 case ColumnDataType.Float:
                     this.MinValueOrLength = string.IsNullOrEmpty(this.MinValueOrLength) ? decimal.MinValue.ToString() : this.MinValueOrLength;
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? decimal.MaxValue.ToString() : this.MaxValuseOrLength;
-                    dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateNumericConstraint(ValidationType.DECIMAL, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength);
-                    dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.PleaseInputDecimal"]);
-                    dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("0.00");
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.PleaseInputDecimalFormat"], CoreProgram._localizer?["Sys.DataRange", MinValueOrLength, MaxValuseOrLength]);
+                    numberFormatId = 4; // 0.00
+                    var decDv = new DataValidation()
+                    {
+                        Type = DataValidationValues.Decimal,
+                        AllowBlank = this.IsNullAble,
+                        ShowErrorMessage = true,
+                        ShowInputMessage = true,
+                        SequenceOfReferences = new ListValue<StringValue>() { InnerText = cellRange },
+                        ErrorTitle = errTitle,
+                        Error = errInputDec,
+                        PromptTitle = promptDecFmt,
+                        Prompt = $"{dataRange} {MinValueOrLength} - {MaxValuseOrLength}"
+                    };
+                    decDv.Formula1 = new DocumentFormat.OpenXml.Spreadsheet.Formula1(this.MinValueOrLength);
+                    decDv.Formula2 = new DocumentFormat.OpenXml.Spreadsheet.Formula2(this.MaxValuseOrLength);
+                    dataValidations.AppendChild(decDv);
                     break;
                 case ColumnDataType.Bool:
-                    dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateFormulaListConstraint("Sheet1!$A$1:$B$1");
-                    dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.PleaseInputExistData"]);
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.ComboBox"], CoreProgram._localizer?["Sys.PleaseInputExistData"]);
+                    var boolDv = new DataValidation()
+                    {
+                        Type = DataValidationValues.List,
+                        AllowBlank = this.IsNullAble,
+                        ShowErrorMessage = true,
+                        ShowInputMessage = true,
+                        SequenceOfReferences = new ListValue<StringValue>() { InnerText = cellRange },
+                        ErrorTitle = errTitle,
+                        Error = errExistData,
+                        PromptTitle = comboBox,
+                        Prompt = errExistData
+                    };
+                    boolDv.Formula1 = new DocumentFormat.OpenXml.Spreadsheet.Formula1("Sheet2!$A$1:$B$1");
+                    dataValidations.AppendChild(boolDv);
+                    numberFormatId = 49; // @
                     break;
                 case ColumnDataType.Text:
                     this.MinValueOrLength = string.IsNullOrEmpty(this.MinValueOrLength) ? "0" : this.MinValueOrLength;
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? "2000" : this.MaxValuseOrLength;
-                    dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateNumericConstraint(ValidationType.TEXT_LENGTH, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength);
-                    dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.WrongTextLength"]);
-                    dataStyle.DataFormat = dataFormat.GetFormat("@");
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.PleaseInputText"], CoreProgram._localizer?["Sys.DataRange", MinValueOrLength, MaxValuseOrLength]);
+                    var textDv = new DataValidation()
+                    {
+                        Type = DataValidationValues.TextLength,
+                        AllowBlank = this.IsNullAble,
+                        ShowErrorMessage = true,
+                        ShowInputMessage = true,
+                        SequenceOfReferences = new ListValue<StringValue>() { InnerText = cellRange },
+                        ErrorTitle = errTitle,
+                        Error = errTextLen,
+                        PromptTitle = promptInputText,
+                        Prompt = $"{dataRange} {MinValueOrLength} - {MaxValuseOrLength}"
+                    };
+                    textDv.Formula1 = new DocumentFormat.OpenXml.Spreadsheet.Formula1(this.MinValueOrLength);
+                    textDv.Formula2 = new DocumentFormat.OpenXml.Spreadsheet.Formula2(this.MaxValuseOrLength);
+                    dataValidations.AppendChild(textDv);
+                    numberFormatId = 49; // @
                     break;
                 case ColumnDataType.ComboBox:
                 case ColumnDataType.Enum:
                     int count = this.ListItems.Count() == 0 ? 1 : this.ListItems.Count();
-                    string cloIndex = "";
-                    if (porpetyIndex > 25)
+                    string colLetter = OpenXmlHelper.GetColumnLetter(columnIndex);
+                    string rangeName = "dicRange" + columnIndex;
+
+                    // 创建工作簿中的命名范围
+                    DefinedNames definedNames = workbookPart.Workbook.GetFirstChild<DefinedNames>();
+                    if (definedNames == null)
                     {
-                        cloIndex += Convert.ToChar((int)(Math.Floor(porpetyIndex / 26d)) - 1 + 65);
+                        definedNames = new DefinedNames();
+                        workbookPart.Workbook.AppendChild(definedNames);
                     }
-                    cloIndex += Convert.ToChar(65 + porpetyIndex % 26).ToString();
-                    IName range = sheet.Workbook.CreateName();
-                    range.RefersToFormula = "Sheet2!$" + cloIndex + "$1:$" + cloIndex + "$" + count;
-                    range.NameName = "dicRange" + porpetyIndex;
-                    dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateFormulaListConstraint("dicRange" + porpetyIndex);
-                    dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.PleaseInputExistData"]);
-                    var listItemsTemp = this.ListItems.ToList();
+                    var definedName = new DefinedName()
+                    {
+                        Name = rangeName,
+                        Text = $"{dataSheetName}!${colLetter}$1:${colLetter}${count}"
+                    };
+                    definedNames.AppendChild(definedName);
+
+                    // 写入下拉列表项到数据表
+                    SheetData dataSheetData = dataSheetPart.Worksheet.GetFirstChild<SheetData>();
                     for (int rowIndex = 0; rowIndex < this.ListItems.Count(); rowIndex++)
                     {
-                        IRow dataSheetRow = dataSheet.GetRow(rowIndex);
-                        if (dataSheetRow == null)
-                        {
-                            dataSheetRow = dataSheet.CreateRow(rowIndex);
-                        }
-                        dataSheetRow.CreateCell(porpetyIndex).SetCellValue(listItemsTemp[rowIndex].Text);
-                        dataStyle.DataFormat = dataFormat.GetFormat("@");
-                        dataSheetRow.Cells.Where(x => x.ColumnIndex == porpetyIndex).FirstOrDefault().CellStyle = dataStyle;
+                        Row dataRow = OpenXmlHelper.GetOrCreateRow(dataSheetData, rowIndex + 1);
+                        Cell dataCell = OpenXmlHelper.CreateCell($"{colLetter}{rowIndex + 1}",
+                            this.ListItems.ToList()[rowIndex].Text,
+                            CellValues.String, null);
+                        dataRow.AppendChild(dataCell);
                     }
-                    dataValidation.CreatePromptBox(CoreProgram._localizer?["Sys.ComboBox"], CoreProgram._localizer?["Sys.PleaseInputExistData"]);
+
+                    var comboDv = new DataValidation()
+                    {
+                        Type = DataValidationValues.List,
+                        AllowBlank = this.IsNullAble,
+                        ShowErrorMessage = true,
+                        ShowInputMessage = true,
+                        SequenceOfReferences = new ListValue<StringValue>() { InnerText = cellRange },
+                        ErrorTitle = errTitle,
+                        Error = errExistData,
+                        PromptTitle = comboBox,
+                        Prompt = errExistData
+                    };
+                    comboDv.Formula1 = new DocumentFormat.OpenXml.Spreadsheet.Formula1(rangeName);
+                    dataValidations.AppendChild(comboDv);
+                    numberFormatId = 49; // @
                     break;
                 default:
-                    dvConstraint = (XSSFDataValidationConstraint)dvHelper.CreateNumericConstraint(ValidationType.TEXT_LENGTH, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength);
-                    dataValidation = (XSSFDataValidation)dvHelper.CreateValidation(dvConstraint, CellRangeList);
-                    dataValidation.CreateErrorBox(CoreProgram._localizer?["Sys.Error"], CoreProgram._localizer?["Sys.WrongTextLength"]);
-                    dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("@");
+                    numberFormatId = 49; // @
                     break;
             }
-            if (dataValidation == null)
+
+            if (dataValidations.HasChildren)
             {
-                return;
+                dataValidations.Count = (uint)dataValidations.ChildElements.Count;
             }
-            if (!this.IsNullAble)
-            {
-                dataValidation.EmptyCellAllowed = false;
-            }
-            sheet.SetDefaultColumnStyle(porpetyIndex, dataStyle);
-            dataValidation.ShowErrorBox = true;
-            sheet.AddValidationData(dataValidation);
         }
         #endregion
 

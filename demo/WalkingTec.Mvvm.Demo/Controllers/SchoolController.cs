@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NPOI.HSSF.Util;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
@@ -333,8 +332,8 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult ExportExcel(SchoolListVM vm)
         {
             vm.ExportMaxCount = 5; //自定义每个Excel最多数据行数，默认是100万
-            vm.ExportTitleBackColor = HSSFColor.Black.Index;
-            vm.ExportTitleFontColor = HSSFColor.White.Index;
+            vm.ExportTitleBackColor = "000000";
+            vm.ExportTitleFontColor = "FFFFFF";
             return vm.GetExportData();
         }
 

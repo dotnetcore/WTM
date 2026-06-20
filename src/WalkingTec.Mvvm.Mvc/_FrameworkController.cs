@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NPOI.SS.Formula.Functions;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
@@ -79,7 +78,7 @@ namespace WalkingTec.Mvvm.Mvc
             ViewBag.LinkField = _DONOT_USE_LINK_FIELD;
             ViewBag.TriggerUrl = _DONOT_USE_TRIGGER_URL;
             ViewBag.CurrentCS = cs;
-            #region 获取选中的数据
+            #region 获取选中的数�?
             ViewBag.SelectData = "[]";
             ViewBag.SelectorValueField = _DONOT_USE_VFIELD;
             if (listVM.Ids?.Count > 0)
@@ -190,12 +189,12 @@ namespace WalkingTec.Mvvm.Mvc
 
 
         /// <summary>
-        /// 单元格编辑
+        /// 单元格编�?
         /// </summary>
         /// <param name="_DONOT_USE_VMNAME"></param>
         /// <param name="id">实体主键</param>
         /// <param name="field">属性名</param>
-        /// <param name="value">属性值</param>
+        /// <param name="value">属性�?/param>
         /// <returns></returns>
         [HttpPost]
         public IActionResult UpdateModelProperty(string _DONOT_USE_VMNAME, Guid id, string field, string value)
@@ -293,7 +292,7 @@ namespace WalkingTec.Mvvm.Mvc
             var controllerDes = ex.Error.TargetSite.DeclaringType.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
             var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
             var postDes = ex.Error.TargetSite.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
-            //给日志的多语言属性赋值
+            //给日志的多语言属性赋�?
             log.ModuleName = controllerDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
             log.ActionName = actionDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.Name;
             if (postDes != null)
@@ -607,7 +606,7 @@ namespace WalkingTec.Mvvm.Mvc
         public ActionResult GetVerifyCode()
         {
             var chkCode = _securityCode.GetRandomEnDigitalText(4);
-            //写入Session用于验证码校验，可以对校验码进行加密，提高安全性
+            //写入Session用于验证码校验，可以对校验码进行加密，提高安全�?
             HttpContext.Session.Set<string>("verify_code", chkCode);
             var imgbyte = _securityCode.GetEnDigitalCodeByte(chkCode);
             return File(imgbyte, "image/png");
@@ -633,7 +632,7 @@ namespace WalkingTec.Mvvm.Mvc
             IWtmFile file = null;
             if (Request.Form.Files != null && Request.Form.Files.Count() > 0)
             {
-                //通过文件流方式上传附件
+                //通过文件流方式上传附�?
                 var FileData = Request.Form.Files[0];
                 file = fp.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir, dc: Wtm.CreateDC(cskey: _DONOT_USE_CS));
             }
@@ -756,3 +755,4 @@ namespace WalkingTec.Mvvm.Mvc
         }
     }
 }
+

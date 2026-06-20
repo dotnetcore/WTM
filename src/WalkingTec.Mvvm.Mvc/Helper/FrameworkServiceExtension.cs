@@ -33,7 +33,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -548,18 +548,6 @@ namespace WalkingTec.Mvvm.Mvc
                 var dc = item.CreateDC();
                 dc.EnsureCreate();
             }
-            services.AddVersionedApiExplorer(o=>
-            {
-                o.GroupNameFormat = "'v'VVV";
-                o.SubstituteApiVersionInUrl = true;
-            });
-            services.AddApiVersioning(
-             options =>
-             {
-                 options.ReportApiVersions = true;
-                 options.DefaultApiVersion = ApiVersion.Default;
-                 options.AssumeDefaultVersionWhenUnspecified = true;
-             });
 
             return services;
         }
@@ -625,6 +613,8 @@ namespace WalkingTec.Mvvm.Mvc
                             }));
                             break;
                         case DBTypeEnum.DaMeng:
+                            // Elsa does not have an official DaMeng persistence package.
+                            // DaMeng EF Core is registered in DataContext.OnConfiguring for the main app.
                             break;
                         case null:
                             break;
@@ -838,25 +828,20 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-                var bearer = new OpenApiSecurityScheme()
-                {
-                    Description = "JWT Bearer",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
 
-                };
-                c.AddSecurityDefinition("Bearer", bearer);
-                var sr = new OpenApiSecurityRequirement();
-                sr.Add(new OpenApiSecurityScheme
+                var securityScheme = new OpenApiSecurityScheme
                 {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                }, new string[] { });
-                c.AddSecurityRequirement(sr);
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "JWT Bearer"
+                };
+                c.AddSecurityDefinition("Bearer", securityScheme);
+
+                var sr = new OpenApiSecurityRequirement();
+                sr[new OpenApiSecuritySchemeReference("Bearer", null, null)] = new List<string>();
+                c.AddSecurityRequirement(doc => sr);
+
                 c.SchemaFilter<SwaggerFilter>();
                 if (useFullName == true)
                 {

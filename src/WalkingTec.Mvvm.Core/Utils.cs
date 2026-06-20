@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using NPOI.HSSF.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -243,48 +242,15 @@ namespace WalkingTec.Mvvm.Core
             ToAdd = tempToAdd.AsEnumerable();
         }
 
-        public static short GetExcelColor(string color)
+        public static string GetExcelColor(string color)
         {
-            var colors = typeof(HSSFColor).GetNestedTypes().ToList();
-            foreach (var col in colors)
-            {
-                var pro = col.GetField("hexString");
-                if (pro == null)
-                {
-                    continue;
-                }
-                var hex = pro.GetValue(null);
-                var rgb = hex.ToString().Split(':');
-                for (int i = 0; i < rgb.Length; i++)
-                {
-                    if (rgb[i].Length > 2)
-                    {
-                        rgb[i] = rgb[i].Substring(0, 2);
-                    }
-                }
-                int r = Convert.ToInt16(rgb[0], 16);
-                int g = Convert.ToInt16(rgb[1], 16);
-                int b = Convert.ToInt16(rgb[2], 16);
-
-                if (color.Length == 8)
-                {
-                    color = color.Substring(2);
-                }
-                string c1 = color.Substring(0, 2);
-                string c2 = color.Substring(2, 2);
-                string c3 = color.Substring(4, 2);
-
-                int r1 = Convert.ToInt16(c1, 16);
-                int g1 = Convert.ToInt16(c2, 16);
-                int b1 = Convert.ToInt16(c3, 16);
-
-
-                if (r == r1 && g == g1 && b == b1)
-                {
-                    return (short)col.GetField("index").GetValue(null);
-                }
-            }
-            return HSSFColor.COLOR_NORMAL;
+            if (string.IsNullOrEmpty(color))
+                return "000000";
+            if (color.Length == 8)
+                color = color.Substring(2);
+            if (!color.StartsWith("#"))
+                color = "#" + color;
+            return color.Substring(1).ToUpper();
         }
 
         /// <summary>

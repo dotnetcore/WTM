@@ -16,10 +16,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MySqlConnector;
 using Npgsql;
 using NpgsqlTypes;
-using NPOI.HSSF.Util;
-using NPOI.SS.UserModel;
-using NPOI.SS.Util;
-using NPOI.XSSF.UserModel;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -203,10 +202,7 @@ namespace WalkingTec.Mvvm.Core
                     var data = query.Skip(i * ExportMaxCount).Take(ExportMaxCount).ToList();
                     var WorkBook = GenerateWorkBook(data);
                     string SavePath = $"{FilePath}/{FileName}_{i + 1}.xlsx";
-                    using (FileStream FS = new FileStream(SavePath, FileMode.CreateNew))
-                    {
-                        WorkBook.Write(FS);
-                    }
+                    File.WriteAllBytes(SavePath, WorkBook);
                 }
 
                 //生成压缩包
@@ -233,163 +229,197 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="List"></param>
         /// <returns></returns>
-        private IWorkbook GenerateWorkBook(List<TModel> List)
+        private byte[] GenerateWorkBook(List<TModel> List)
         {
-            IWorkbook book = new XSSFWorkbook();
-            ISheet sheet = book.CreateSheet();
-            IRow row = sheet.CreateRow(0);
-
-            //创建表头样式
-            ICellStyle headerStyle = book.CreateCellStyle();
-            headerStyle.FillBackgroundColor = ExportTitleBackColor == null ? HSSFColor.LightBlue.Index : ExportTitleBackColor.Value;
-            headerStyle.FillPattern = FillPattern.SolidForeground;
-            headerStyle.FillForegroundColor = ExportTitleBackColor == null ? HSSFColor.LightBlue.Index : ExportTitleBackColor.Value;
-            headerStyle.BorderBottom = BorderStyle.Thin;
-            headerStyle.BorderTop = BorderStyle.Thin;
-            headerStyle.BorderLeft = BorderStyle.Thin;
-            headerStyle.BorderRight = BorderStyle.Thin;
-            IFont font = book.CreateFont();
-            font.FontName = "Calibri";
-            font.FontHeightInPoints = 12;
-            font.Color = ExportTitleFontColor == null ? HSSFColor.Black.Index : ExportTitleFontColor.Value;
-            headerStyle.SetFont(font);
-
-            ICellStyle cellStyle = book.CreateCellStyle();
-            cellStyle.BorderBottom = BorderStyle.Thin;
-            cellStyle.BorderTop = BorderStyle.Thin;
-            cellStyle.BorderLeft = BorderStyle.Thin;
-            cellStyle.BorderRight = BorderStyle.Thin;
-
-            //生成表头
-            int max = MakeExcelHeader(sheet, GridHeaders, 0, 0, headerStyle);
-
-            //放入数据
-            var ColIndex = 0;
-            for (int i = 0; i < List.Count; i++)
+            using (MemoryStream ms = new MemoryStream())
             {
-                ColIndex = 0;
-                var DR = sheet.CreateRow(i + max);
-                foreach (var baseCol in GridHeaders)
+                using (SpreadsheetDocument doc = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
                 {
-                    foreach (var col in baseCol.BottomChildren)
+                    WorkbookPart workbookPart = doc.AddWorkbookPart();
+                    workbookPart.Workbook = new Workbook();
+                    workbookPart.Workbook.AppendChild(new Sheets());
+
+                    // 创建样式
+                    string backColor = string.IsNullOrEmpty(ExportTitleBackColor) ? "B0C4DE" : ExportTitleBackColor.TrimStart('#');
+                    string fontColor = string.IsNullOrEmpty(ExportTitleFontColor) ? "000000" : ExportTitleFontColor.TrimStart('#');
+
+                    var stylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
+                    stylesPart.Stylesheet = CreateExportStylesheet(backColor, fontColor);
+                    stylesPart.Stylesheet.Save();
+
+                    // 创建 Sheet
+                    WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    worksheetPart.Worksheet = new Worksheet(new SheetData());
+                    SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+
+                    Sheet sheet = new Sheet()
                     {
-                        //处理枚举变量的多语言
-                        bool IsEmunBoolParp = false;
-                        var proType = col.FieldType;
-                        if (proType.IsEnumOrNullableEnum())
-                        {
-                            IsEmunBoolParp = true;
-                        }                       //获取数据，并过滤特殊字符
-                        string text = Regex.Replace(col.GetText(List[i]).ToString(), @"<[^>]*>", String.Empty);
+                        Id = workbookPart.GetIdOfPart(worksheetPart),
+                        SheetId = 1,
+                        Name = typeof(TModel).Name
+                    };
+                    workbookPart.Workbook.GetFirstChild<Sheets>().AppendChild(sheet);
 
-                        //处理枚举变量的多语言
-                        if (IsEmunBoolParp)
-                        {
-                            string enumdisplay = PropertyHelper.GetEnumDisplayName(proType, text);
-                            if (string.IsNullOrEmpty(enumdisplay) == false)
-                            {
-                                text = enumdisplay;
-                            }
+                    // 创建表头
+                    int max = MakeExcelHeader(worksheetPart, sheetData, GridHeaders, 0, 0);
 
-                            else
+                    // 放入数据
+                    for (int i = 0; i < List.Count; i++)
+                    {
+                        int colIndex = 0;
+                        Row dataRow = new Row() { RowIndex = (uint)(i + max + 1) };
+                        foreach (var baseCol in GridHeaders)
+                        {
+                            foreach (var col in baseCol.BottomChildren)
                             {
-                                if (int.TryParse(text, out int enumvalue))
+                                bool isEnumBoolProp = false;
+                                var proType = col.FieldType;
+                                if (proType.IsEnumOrNullableEnum())
                                 {
-                                    text = PropertyHelper.GetEnumDisplayName(proType, enumvalue);
+                                    isEnumBoolProp = true;
                                 }
+                                string text = Regex.Replace(col.GetText(List[i]).ToString(), @"<[^>]*>", String.Empty);
+
+                                if (isEnumBoolProp)
+                                {
+                                    string enumdisplay = PropertyHelper.GetEnumDisplayName(proType, text);
+                                    if (string.IsNullOrEmpty(enumdisplay) == false)
+                                    {
+                                        text = enumdisplay;
+                                    }
+                                    else if (int.TryParse(text, out int enumvalue))
+                                    {
+                                        text = PropertyHelper.GetEnumDisplayName(proType, enumvalue);
+                                    }
+                                }
+
+                                string cellRef = OpenXmlHelper.GetCellReference(colIndex, i + max);
+                                Cell cell = new Cell() { CellReference = cellRef, StyleIndex = 2 };
+
+                                if (col.FieldType?.IsNumber() == true && double.TryParse(text, out double trydouble))
+                                {
+                                    cell.DataType = CellValues.Number;
+                                    cell.CellValue = new CellValue(trydouble);
+                                }
+                                else
+                                {
+                                    cell.DataType = CellValues.InlineString;
+                                    cell.AppendChild(new InlineString(new Text(text ?? "")));
+                                }
+                                dataRow.AppendChild(cell);
+                                colIndex++;
                             }
                         }
-
-                        //建立excel单元格
-                        ICell cell=null;
-                        if (col.FieldType?.IsNumber() == true)
-                        {
-                            double trydouble = 0;
-                            cell = DR.CreateCell(ColIndex, CellType.Numeric);
-                            if (double.TryParse(text, out trydouble))
-                            {
-                                cell.SetCellValue(trydouble);
-                            }
-
-                        }
-                        else
-                        {
-                            cell = DR.CreateCell(ColIndex);
-                            cell.SetCellValue(text);
-                        }
-                        cell.CellStyle = cellStyle;
-                        ColIndex++;
+                        sheetData.AppendChild(dataRow);
                     }
+
+                    workbookPart.Workbook.Save();
                 }
-            }            
-            return book;
+                return ms.ToArray();
+            }
         }
 
         private byte[] DownLoadExcel(List<TModel> data)
         {
-            var book = GenerateWorkBook(data);
-            byte[] rv = new byte[] { };
-            using (MemoryStream ms = new MemoryStream())
-            {
-                book.Write(ms);
-                rv = ms.ToArray();
-            }
-            return rv;
+            return GenerateWorkBook(data);
         }
 
         /// <summary>
-        /// 生成Excel的表头
+        /// 生成Excel的表头（多级表头）
         /// </summary>
-        /// <param name="sheet"></param>
-        /// <param name="cols"></param>
-        /// <param name="rowIndex"></param>
-        /// <param name="colIndex"></param>
-        /// <param name="style"></param>
-        /// <returns></returns>
-        private int MakeExcelHeader(ISheet sheet, IEnumerable<IGridColumn<TModel>> cols, int rowIndex, int colIndex, ICellStyle style)
+        private int MakeExcelHeader(WorksheetPart worksheetPart, SheetData sheetData, IEnumerable<IGridColumn<TModel>> cols, int rowIndex, int colIndex)
         {
-            var row = sheet.GetRow(rowIndex);
+            var row = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex == (uint)(rowIndex + 1));
             if (row == null)
             {
-                row = sheet.CreateRow(rowIndex);
+                row = new Row() { RowIndex = (uint)(rowIndex + 1) };
+                sheetData.AppendChild(row);
             }
+
             int maxLevel = cols.Select(x => x.MaxLevel).Max();
-            //循环所有列
             foreach (var col in cols)
             {
-                //添加新单元格
-                var cell = row.CreateCell(colIndex);
-                cell.CellStyle = style;
-                cell.SetCellValue(col.Title);
-                var bcount = col.BottomChildren.Count();
-                var rowspan = 0;
-                if (rowIndex >= 0)
-                {
-                    rowspan = maxLevel - col.MaxLevel;
-                }
-                var cellRangeAddress = new CellRangeAddress(rowIndex, rowIndex + rowspan, colIndex, colIndex + bcount - 1);
-                sheet.AddMergedRegion(cellRangeAddress);
+                string cellRef = OpenXmlHelper.GetCellReference(colIndex, rowIndex);
+                var cell = new Cell() { CellReference = cellRef, StyleIndex = 1 };
+                cell.DataType = CellValues.InlineString;
+                cell.AppendChild(new InlineString(new Text(col.Title)));
+                row.AppendChild(cell);
+
+                int bcount = col.BottomChildren.Count();
+                int rowspan = rowIndex >= 0 ? maxLevel - col.MaxLevel : 0;
+
+                // 合并单元格
                 if (rowspan > 0 || bcount > 1)
                 {
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                }
-                for (int i = cellRangeAddress.FirstRow; i <= cellRangeAddress.LastRow; i++)
-                {
-                    IRow r = CellUtil.GetRow(i, sheet);
-                    for (int j = cellRangeAddress.FirstColumn; j <= cellRangeAddress.LastColumn; j++)
+                    MergeCells mergeCells = worksheetPart.Worksheet.GetFirstChild<MergeCells>();
+                    if (mergeCells == null)
                     {
-                        ICell c = CellUtil.GetCell(r, (short)j);
-                        c.CellStyle = style;
+                        mergeCells = new MergeCells();
+                        worksheetPart.Worksheet.InsertAfter(mergeCells, sheetData);
                     }
+                    string startRef = OpenXmlHelper.GetCellReference(colIndex, rowIndex);
+                    string endRef = OpenXmlHelper.GetCellReference(colIndex + bcount - 1, rowIndex + rowspan);
+                    mergeCells.AppendChild(new MergeCell() { Reference = $"{startRef}:{endRef}" });
                 }
+
                 if (col.Children != null && col.Children.Count() > 0)
                 {
-                    MakeExcelHeader(sheet, col.Children, rowIndex + rowspan + 1, colIndex, style);
+                    MakeExcelHeader(worksheetPart, sheetData, col.Children, rowIndex + rowspan + 1, colIndex);
                 }
                 colIndex += bcount;
             }
             return maxLevel;
+        }
+
+        private static Stylesheet CreateExportStylesheet(string headerBackColor, string headerFontColor)
+        {
+            var stylesheet = new Stylesheet();
+
+            var fonts = new Fonts(
+                new Font(), // 0 - 默认
+                new Font(   // 1 - 标题字体
+                    new FontName() { Val = "Calibri" },
+                    new FontSize() { Val = 12 },
+                    new Color() { Rgb = new HexBinaryValue(headerFontColor) }
+                )
+            );
+
+            var fills = new Fills(
+                new Fill(new PatternFill() { PatternType = PatternValues.None }),
+                new Fill(new PatternFill() { PatternType = PatternValues.Gray125 }),
+                new Fill(   // 2 - 标题背景
+                    new PatternFill(new ForegroundColor() { Rgb = new HexBinaryValue(headerBackColor) })
+                    { PatternType = PatternValues.Solid }
+                )
+            );
+
+            var borders = new Borders(
+                new Border(), // 0
+                new Border(   // 1 - 细边框
+                    new LeftBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
+                    new RightBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
+                    new TopBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
+                    new BottomBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
+                    new DiagonalBorder()
+                )
+            );
+
+            var cellFormats = new CellFormats(
+                new CellFormat(), // 0
+                new CellFormat(   // 1 - 标题居中
+                    new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }
+                ) { FontId = 1, FillId = 2, BorderId = 1, ApplyFont = true, ApplyFill = true, ApplyBorder = true, ApplyAlignment = true },
+                new CellFormat(   // 2 - 数据单元格带边框
+                    new Alignment() { Vertical = VerticalAlignmentValues.Center, WrapText = true }
+                ) { FontId = 0, FillId = 0, BorderId = 1, ApplyFont = true, ApplyBorder = true, ApplyAlignment = true }
+            );
+
+            stylesheet.AppendChild(fonts);
+            stylesheet.AppendChild(fills);
+            stylesheet.AppendChild(borders);
+            stylesheet.AppendChild(cellFormats);
+
+            return stylesheet;
         }
 
         #endregion
@@ -448,16 +478,16 @@ namespace WalkingTec.Mvvm.Core
         public int ExportExcelCount { get; set; }
 
         /// <summary>
-        /// 导出文件第一行背景颜色，使用HSSFColor，例如：HSSFColor.Red.Index
+        /// 导出文件第一行背景颜色（十六进制，例如 "B0C4DE"）
         /// </summary>
         [JsonIgnore]
-        public short? ExportTitleBackColor { get; set; }
+        public string ExportTitleBackColor { get; set; } = "B0C4DE";
 
         /// <summary>
-        /// 导出文件第一行文字颜色，使用HSSFColor，例如：HSSFColor.Red.Index
+        /// 导出文件第一行文字颜色（十六进制，例如 "000000"）
         /// </summary>
         [JsonIgnore]
-        public short? ExportTitleFontColor { get; set; }
+        public string ExportTitleFontColor { get; set; } = "000000";
 
         /// <summary>
         /// 数据列表

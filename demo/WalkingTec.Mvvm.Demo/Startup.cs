@@ -27,28 +27,33 @@ namespace WalkingTec.Mvvm.Demo
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             ConfigRoot = config;
-            ConfigRoot["Connections:0:Value"] = "Server=(localdb)\\mssqllocaldb;Database=next;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //ConfigRoot["Connections:0:Value"] = "Server=(localdb)\\mssqllocaldb;Database=next;Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddWtmWorkflow(ConfigRoot, options: elsa =>
+            var configs = ConfigRoot.Get<Configs>();
+            if (configs.EnableWorkflow)
             {
-                elsa.AddActivity<SMSActivity>();
-            });
+                services.AddWtmWorkflow(ConfigRoot, options: elsa =>
+                {
+                    elsa.AddActivity<SMSActivity>();
+                });
 
-            services.AddRetentionServices(options =>
-             {
-                 // Bind options from configuration.
-                 options.SweepInterval = Duration.FromHours(1);
-                 options.BatchSize = 500;
-                 // Configure a custom specification filter pipeline that deletes cancelled, faulted and completed workflows.
-                 options.ConfigureSpecificationFilter = filter => filter.AddAndSpecification(
-                     new WorkflowStatusFilterSpecification(null,""))
-                 ;
-             });
+                services.AddRetentionServices(options =>
+                 {
+                     // Bind options from configuration.
+                     options.SweepInterval = Duration.FromHours(1);
+                     options.BatchSize = 500;
+                     // Configure a custom specification filter pipeline that deletes cancelled, faulted and completed workflows.
+                     options.ConfigureSpecificationFilter = filter => filter.AddAndSpecification(
+                         new WorkflowStatusFilterSpecification(null,""))
+                     ;
+                 });
+                services.AddSingleton<IApproveNotification>(new WorkflowNotify());
+            }
 
             services.AddDistributedMemoryCache();
             services.AddWtmSession(3600, ConfigRoot);
@@ -81,7 +86,6 @@ namespace WalkingTec.Mvvm.Demo
                 options.ReloadUserFunc = ReloadUser;
             });
             services.AddSignalR();
-            services.AddSingleton<IApproveNotification>(new WorkflowNotify());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,7 +105,10 @@ namespace WalkingTec.Mvvm.Demo
             app.UseSession();
             app.UseWtmSwagger();
             app.UseWtm();
-            app.UseHttpActivities();
+            if (configs.CurrentValue.EnableWorkflow)
+            {
+                app.UseHttpActivities();
+            }
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -1,13 +1,12 @@
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
-using NPOI.HSSF.UserModel;
-using NPOI.HSSF.Util;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -99,9 +98,6 @@ namespace WalkingTec.Mvvm.Core
             string SheetName = !string.IsNullOrEmpty(FileDisplayName) ? FileDisplayName : this.GetType().Name;
             displayName = SheetName + "_" + DateTime.Now.ToString("yyyy-MM-dd") + "_" + DateTime.Now.ToString("hh^mm^ss") + ".xlsx";
 
-            //1.声明Excel文档
-            IWorkbook workbook = new XSSFWorkbook();
-
             //加载初始化数据和下拉菜单数据，可重载
             InitExcelData();
 
@@ -111,199 +107,252 @@ namespace WalkingTec.Mvvm.Core
             //设置初始化数据到DataTable中
             SetTemplateDataValus();
 
-            //2.设置workbook的sheet页
-            ISheet sheet = workbook.CreateSheet();
-            workbook.SetSheetName(0, SheetName);
-
-            //3.设置Sheet页的Row
-            IRow row = sheet.CreateRow(0);
-            row.HeightInPoints = 20;
-
-            ISheet enumSheet = workbook.CreateSheet();
-            IRow enumSheetRow1 = enumSheet.CreateRow(0);
-            enumSheetRow1.CreateCell(0).SetCellValue(CoreProgram._localizer?["Sys.Yes"]);
-            enumSheetRow1.CreateCell(1).SetCellValue(CoreProgram._localizer?["Sys.No"]);
-            enumSheetRow1.CreateCell(2).SetCellValue(this.GetType().Name); //为模板添加标记,必要时可添加版本号
-
-            ISheet dataSheet = workbook.CreateSheet();
-
-            #region 设置excel模板列头
-            //默认灰色
-            var headerStyle = GetCellStyle(workbook);
-            headerStyle.IsLocked = true;
-
-            //黄色
-            var yellowStyle = GetCellStyle(workbook, BackgroudColorEnum.Yellow);
-            yellowStyle.IsLocked = true;
-
-            //红色
-            var redStyle = GetCellStyle(workbook, BackgroudColorEnum.Red);
-            redStyle.IsLocked = true;
-
-            //取得所有ExcelPropety
-            var propetys = this.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
-
-            //设置列的索引
-            int _currentColunmIndex = 0;
-
-            //设置Excel是否需要保护，默认不保护
-            bool IsProtect = false;
-
-            //循环类的属性，赋值给列
-            for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
+            using (MemoryStream ms = new MemoryStream())
             {
-                //依次获取属性字段
-                ExcelPropety excelPropety = (ExcelPropety)propetys[porpetyIndex].GetValue(this);
-                ColumnDataType dateType = (excelPropety.DataType == ColumnDataType.DateTime || excelPropety.DataType == ColumnDataType.Date) ? ColumnDataType.Text : excelPropety.DataType; //日期类型默认设置成Text类型,在赋值时会进行日期验证
-
-                //设置是否保护Excel
-                if (excelPropety.ReadOnly)
+                using (SpreadsheetDocument doc = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
                 {
-                    IsProtect = true;
-                }
-                //给必填项加星号
-                string colName = excelPropety.IsNullAble ? excelPropety.ColumnName : excelPropety.ColumnName + "*";
-                row.CreateCell(_currentColunmIndex).SetCellValue(colName);
+                    WorkbookPart workbookPart = doc.AddWorkbookPart();
+                    workbookPart.Workbook = new Workbook();
+                    workbookPart.Workbook.AppendChild(new Sheets());
 
-                //修改列头样式
-                switch (excelPropety.BackgroudColor)
-                {
-                    case BackgroudColorEnum.Yellow:
-                        row.Cells[_currentColunmIndex].CellStyle = yellowStyle;
-                        break;
-                    case BackgroudColorEnum.Red:
-                        row.Cells[_currentColunmIndex].CellStyle = redStyle;
-                        break;
-                    default:
-                        row.Cells[_currentColunmIndex].CellStyle = headerStyle;
-                        break;
-                }
+                    // 创建样式表
+                    var stylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
+                    stylesPart.Stylesheet = CreateTemplateStylesheet();
+                    stylesPart.Stylesheet.Save();
 
-                var dataStyle = workbook.CreateCellStyle();
-                var dataFormat = workbook.CreateDataFormat();
+                    // 创建主Sheet
+                    WorksheetPart sheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    sheetPart.Worksheet = new Worksheet(new SheetData());
+                    SheetData sheetData = sheetPart.Worksheet.GetFirstChild<SheetData>();
 
-                if (dateType == ColumnDataType.Dynamic)
-                {
-                    int dynamicColCount = excelPropety.DynamicColumns.Count();
-                    for (int dynamicColIndex = 0; dynamicColIndex < dynamicColCount; dynamicColIndex++)
+                    Sheet sheet = new Sheet()
                     {
-                        var dynamicCol = excelPropety.DynamicColumns.ToList()[dynamicColIndex];
-                        string dynamicColName = excelPropety.IsNullAble ? dynamicCol.ColumnName : dynamicCol.ColumnName + "*";
-                        row.CreateCell(_currentColunmIndex).SetCellValue(dynamicColName);
-                        row.Cells[_currentColunmIndex].CellStyle = headerStyle;
-                        if (dynamicCol.ReadOnly)
-                        {
-                            IsProtect = true;
-                        }
-                        //设定列宽
-                        if (excelPropety.CharCount > 0)
-                        {
-                            sheet.SetColumnWidth(_currentColunmIndex, excelPropety.CharCount * 256);
-                            dataStyle.WrapText = true;
-                        }
-                        else
-                        {
-                            sheet.AutoSizeColumn(_currentColunmIndex);
-                        }
-                        //设置单元格样式及数据类型
-                        dataStyle.IsLocked = excelPropety.ReadOnly;
-                        dynamicCol.SetColumnFormat(dynamicCol.DataType, _currentColunmIndex, sheet, dataSheet, dataStyle, dataFormat);
-                        _currentColunmIndex++;
-                    }
-                }
-                else
-                {
-                    //设定列宽
-                    if (excelPropety.CharCount > 0)
-                    {
-                        sheet.SetColumnWidth(_currentColunmIndex, excelPropety.CharCount * 256);
-                        dataStyle.WrapText = true;
-                    }
-                    else
-                    {
-                        sheet.AutoSizeColumn(_currentColunmIndex);
-                    }
-                    //设置是否锁定
-                    dataStyle.IsLocked = excelPropety.ReadOnly;
-                    //设置单元格样式及数据类型
-                    excelPropety.SetColumnFormat(dateType, _currentColunmIndex, sheet, dataSheet, dataStyle, dataFormat);
-                    _currentColunmIndex++;
-                }
-            }
-            #endregion
+                        Id = workbookPart.GetIdOfPart(sheetPart),
+                        SheetId = 1,
+                        Name = SheetName
+                    };
+                    workbookPart.Workbook.GetFirstChild<Sheets>().AppendChild(sheet);
 
-            #region 添加模版数据
-            if (TemplateDataTable?.Rows.Count > 0)
-            {
-                for (int i = 0; i < TemplateDataTable.Rows.Count; i++)
-                {
-                    DataRow tableRow = TemplateDataTable.Rows[i];
-                    IRow dataRow = sheet.CreateRow(1 + i);
+                    // 创建第二Sheet（枚举/布尔参考数据）
+                    WorksheetPart enumSheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    enumSheetPart.Worksheet = new Worksheet(new SheetData());
+                    SheetData enumSheetData = enumSheetPart.Worksheet.GetFirstChild<SheetData>();
+                    Row enumRow = new Row() { RowIndex = 1 };
+                    // enumSheet: A1=Yes, B1=No, C1=template type marker
+                    enumRow.AppendChild(new Cell()
+                    {
+                        CellReference = "A1",
+                        DataType = CellValues.InlineString,
+                        InlineString = new InlineString(new Text(CoreProgram._localizer?["Sys.Yes"] ?? "Yes"))
+                    });
+                    enumRow.AppendChild(new Cell()
+                    {
+                        CellReference = "B1",
+                        DataType = CellValues.InlineString,
+                        InlineString = new InlineString(new Text(CoreProgram._localizer?["Sys.No"] ?? "No"))
+                    });
+                    enumRow.AppendChild(new Cell()
+                    {
+                        CellReference = "C1",
+                        DataType = CellValues.InlineString,
+                        InlineString = new InlineString(new Text(this.GetType().Name))
+                    });
+                    enumSheetData.AppendChild(enumRow);
+
+                    Sheet enumSheet = new Sheet()
+                    {
+                        Id = workbookPart.GetIdOfPart(enumSheetPart),
+                        SheetId = 2,
+                        Name = "Sheet2"
+                    };
+                    workbookPart.Workbook.GetFirstChild<Sheets>().AppendChild(enumSheet);
+
+                    // 创建第三Sheet（数据Sheet - 给下拉框用）
+                    WorksheetPart dataSheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    dataSheetPart.Worksheet = new Worksheet(new SheetData());
+                    SheetData dataSheetData = dataSheetPart.Worksheet.GetFirstChild<SheetData>();
+
+                    Sheet dataSheet = new Sheet()
+                    {
+                        Id = workbookPart.GetIdOfPart(dataSheetPart),
+                        SheetId = 3,
+                        Name = "Sheet3"
+                    };
+                    workbookPart.Workbook.GetFirstChild<Sheets>().AppendChild(dataSheet);
+
+                    // 设置列头
+                    var propetys = this.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
+                    int _currentColunmIndex = 0;
+                    bool IsProtect = false;
+
+                    Row headerRow = new Row() { RowIndex = 1, Height = 20 };
+
                     for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
                     {
-                        string colName = propetys[porpetyIndex].Name;
-                        tableRow[colName].ToString();
-                        dataRow.CreateCell(porpetyIndex).SetCellValue(tableRow[colName].ToString());
+                        ExcelPropety excelPropety = (ExcelPropety)propetys[porpetyIndex].GetValue(this);
+                        ColumnDataType dateType = (excelPropety.DataType == ColumnDataType.DateTime || excelPropety.DataType == ColumnDataType.Date) ? ColumnDataType.Text : excelPropety.DataType;
+
+                        if (excelPropety.ReadOnly)
+                            IsProtect = true;
+
+                        string colName = excelPropety.IsNullAble ? excelPropety.ColumnName : excelPropety.ColumnName + "*";
+
+                        // 确定表头样式索引: 1=灰, 2=黄, 3=红
+                        uint headerStyleIndex = 1;
+                        switch (excelPropety.BackgroudColor)
+                        {
+                            case BackgroudColorEnum.Yellow: headerStyleIndex = 2; break;
+                            case BackgroudColorEnum.Red: headerStyleIndex = 3; break;
+                        }
+
+                        string cellRef = OpenXmlHelper.GetCellReference(_currentColunmIndex, 0);
+                        var headerCell = new Cell() { CellReference = cellRef, StyleIndex = headerStyleIndex };
+                        headerCell.DataType = CellValues.InlineString;
+                        headerCell.AppendChild(new InlineString(new Text(colName)));
+                        headerRow.AppendChild(headerCell);
+
+                        // 设置数据单元格样式与验证
+                        uint? numberFormatId = null;
+                        bool isLocked = false;
+                        excelPropety.SetColumnFormat(dateType, _currentColunmIndex, sheetPart, dataSheetPart,
+                            workbookPart, SheetName, "Sheet3", out numberFormatId, out isLocked);
+                        if (isLocked) IsProtect = true;
+
+                        // 设置列宽
+                        Columns columns = sheetPart.Worksheet.GetFirstChild<Columns>();
+                        if (columns == null)
+                        {
+                            columns = new Columns();
+                            sheetPart.Worksheet.InsertBefore(columns, sheetPart.Worksheet.GetFirstChild<SheetData>());
+                        }
+                        uint colNum = (uint)(_currentColunmIndex + 1);
+                        double width = excelPropety.CharCount > 0 ? excelPropety.CharCount : 15;
+                        columns.AppendChild(new Column() { Min = colNum, Max = colNum, Width = width, CustomWidth = true });
+
+                        _currentColunmIndex++;
                     }
+                    sheetData.AppendChild(headerRow);
+
+                    // 添加模版数据
+                    if (TemplateDataTable?.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < TemplateDataTable.Rows.Count; i++)
+                        {
+                            DataRow tableRow = TemplateDataTable.Rows[i];
+                            Row dataRow = new Row() { RowIndex = (uint)(i + 2) };
+                            for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
+                            {
+                                string colName = propetys[porpetyIndex].Name;
+                                string cellRef2 = OpenXmlHelper.GetCellReference(porpetyIndex, i + 1);
+                                var dataCell = OpenXmlHelper.CreateCell(cellRef2, tableRow[colName].ToString(), CellValues.String);
+                                dataRow.AppendChild(dataCell);
+                            }
+                            sheetData.AppendChild(dataRow);
+                        }
+                    }
+
+                    // 冻结窗格
+                    var sheetProperties = new SheetProperties();
+                    sheetProperties.AppendChild(new Pane()
+                    {
+                        VerticalSplit = 1,
+                        HorizontalSplit = 0,
+                        TopLeftCell = "A2",
+                        ActivePane = PaneValues.BottomLeft,
+                        State = PaneStateValues.Frozen
+                    });
+                    sheetPart.Worksheet.AppendChild(sheetProperties);
+
+                    // 保护Sheet
+                    if (IsProtect)
+                    {
+                        sheetPart.Worksheet.AppendChild(new SheetProtection()
+                        {
+                            Sheet = true,
+                            Password = "password"
+                        });
+                    }
+
+                    // 隐藏第2和第3个Sheet
+                    workbookPart.Workbook.AppendChild(new BookViews(new WorkbookView() { ShowHorizontalScroll = true }));
+                    enumSheet.State = SheetStateValues.Hidden;
+                    dataSheet.State = SheetStateValues.Hidden;
+
+                    workbookPart.Workbook.Save();
                 }
+                return ms.ToArray();
             }
-            #endregion
-
-            //冻结行
-            sheet.CreateFreezePane(0, 1, 0, 1);
-
-            //锁定excel
-            if (IsProtect)
-            {
-                sheet.ProtectSheet("password");
-            }
-
-            //隐藏前2个Sheet
-            workbook.SetSheetHidden(1, SheetState.Hidden);
-            workbook.SetSheetHidden(2, SheetState.Hidden);
-
-            //返回byte数组
-            MemoryStream ms = new MemoryStream();
-            workbook.Write(ms);
-            return ms.ToArray();
         }
-        #endregion
 
-        #region 取得表头的样式
-        private static ICellStyle GetCellStyle(IWorkbook workbook, BackgroudColorEnum backgroudColor = BackgroudColorEnum.Grey)
+        private static Stylesheet CreateTemplateStylesheet()
         {
-            var headerStyle = workbook.CreateCellStyle();
+            var stylesheet = new Stylesheet();
 
-            //设定表头样式
-            headerStyle.BorderBottom = BorderStyle.Thin;
-            headerStyle.BorderLeft = BorderStyle.Thin;
-            headerStyle.BorderRight = BorderStyle.Thin;
-            headerStyle.BorderTop = BorderStyle.Thin;
+            // 字体
+            var fonts = new Fonts(
+                new Font(), // 0 - 默认
+                new Font(new FontName() { Val = "Calibri" }, new FontSize() { Val = 11 }) // 1 - 标题
+            );
 
-            //用灰色填充背景
-            short headerbg;
+            // 填充
+            var fills = new Fills(
+                new Fill(new PatternFill() { PatternType = PatternValues.None }),
+                new Fill(new PatternFill() { PatternType = PatternValues.Gray125 }),
+                new Fill(new PatternFill(new ForegroundColor() { Rgb = new HexBinaryValue("D9E2F3") }) { PatternType = PatternValues.Solid }),  // 2 - 灰色
+                new Fill(new PatternFill(new ForegroundColor() { Rgb = new HexBinaryValue("FFF2CC") }) { PatternType = PatternValues.Solid }),  // 3 - 黄色
+                new Fill(new PatternFill(new ForegroundColor() { Rgb = new HexBinaryValue("FCE4EC") }) { PatternType = PatternValues.Solid })   // 4 - 红色
+            );
 
-            switch (backgroudColor)
-            {
-                case BackgroudColorEnum.Grey:
-                    headerbg = HSSFColor.LightBlue.Index;
-                    break;
-                case BackgroudColorEnum.Yellow:
-                    headerbg = HSSFColor.LightYellow.Index;
-                    break;
-                case BackgroudColorEnum.Red:
-                    headerbg = HSSFColor.Pink.Index;
-                    break;
-                default:
-                    headerbg = HSSFColor.Pink.Index;
-                    break;
-            }
+            // 边框
+            var borders = new Borders(
+                new Border(), // 0
+                new Border(   // 1 - 细边框
+                    new LeftBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
+                    new RightBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
+                    new TopBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
+                    new BottomBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
+                    new DiagonalBorder()
+                )
+            );
 
-            headerStyle.FillForegroundColor = headerbg;
-            headerStyle.FillPattern = FillPattern.SolidForeground;
-            headerStyle.FillBackgroundColor = headerbg;
-            headerStyle.Alignment = HorizontalAlignment.Center;
-            return headerStyle;
+            // 数字格式: 165+为自定义格式
+            var numberingFormats = new NumberingFormats(
+                new NumberingFormat() { NumberFormatId = 165, FormatCode = "yyyy-MM-dd HH:mm:ss" }
+            );
+
+            // 单元格格式
+            var cellFormats = new CellFormats(
+                new CellFormat(), // 0 - 默认
+                new CellFormat(   // 1 - 灰色表头
+                    new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center, WrapText = true }
+                ) { FontId = 1, FillId = 2, BorderId = 1, ApplyFont = true, ApplyFill = true, ApplyBorder = true, ApplyAlignment = true },
+                new CellFormat(   // 2 - 黄色表头
+                    new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center, WrapText = true }
+                ) { FontId = 1, FillId = 3, BorderId = 1, ApplyFont = true, ApplyFill = true, ApplyBorder = true, ApplyAlignment = true },
+                new CellFormat(   // 3 - 红色表头
+                    new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center, WrapText = true }
+                ) { FontId = 1, FillId = 4, BorderId = 1, ApplyFont = true, ApplyFill = true, ApplyBorder = true, ApplyAlignment = true },
+                new CellFormat(   // 4 - 数据单元格(文本)
+                    new Alignment() { WrapText = true }
+                ) { FontId = 0, FillId = 0, BorderId = 1, NumberFormatId = 49, ApplyNumberFormat = true, ApplyFont = true, ApplyBorder = true, ApplyAlignment = true },
+                new CellFormat(   // 5 - 数据单元格(数字)
+                    new Alignment() { WrapText = true }
+                ) { FontId = 0, FillId = 0, BorderId = 1, NumberFormatId = 1, ApplyNumberFormat = true, ApplyFont = true, ApplyBorder = true, ApplyAlignment = true },
+                new CellFormat(   // 6 - 数据单元格(小数)
+                    new Alignment() { WrapText = true }
+                ) { FontId = 0, FillId = 0, BorderId = 1, NumberFormatId = 4, ApplyNumberFormat = true, ApplyFont = true, ApplyBorder = true, ApplyAlignment = true },
+                new CellFormat(   // 7 - 数据单元格(日期)
+                    new Alignment() { WrapText = true }
+                ) { FontId = 0, FillId = 0, BorderId = 1, NumberFormatId = 165, ApplyNumberFormat = true, ApplyFont = true, ApplyBorder = true, ApplyAlignment = true }
+            );
+
+            stylesheet.AppendChild(numberingFormats);
+            stylesheet.AppendChild(fonts);
+            stylesheet.AppendChild(fills);
+            stylesheet.AppendChild(borders);
+            stylesheet.AppendChild(cellFormats);
+
+            return stylesheet;
         }
         #endregion
 
