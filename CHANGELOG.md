@@ -1,5 +1,20 @@
 # 更新日志
 
+## v10.x
+## v10.0.0(2026-06-24)
+
+* **修改：**   全面升级支持 .NET 10
+* **修改：**   Excel 操作从 DotNetCore.NPOI 替换为 DocumentFormat.OpenXml，消除 SharpZipLib/System.Drawing.Common 安全漏洞
+* **修改：**   添加达梦（DaMeng）数据库支持，EF Core 提供程序 DM.Microsoft.EntityFrameworkCore
+* **新增：**   BaseImportVM 新增 SetCustomEntityData() 虚方法，子类可在 EntityList 填充后自定义修改
+* **新增：**   Configs 新增 EnableWorkflow 配置项，appsettings 中设置即可按需加载 Elsa 工作流
+* **修改：**   升级 Swashbuckle 到 10.x，适配 Microsoft.OpenApi 2.x API
+* **修改：**   升级 Elsa 到 2.17.0、Quartz 到 3.15.1
+* **修改：**   升级测试框架 MSTest，修复兼容性问题
+* **修复：**   Elsa API 路由 apiVersion 约束在 .NET 10 下缺失问题
+* **修复：**   Vue3Demo 前端 npm 包升级（Element Plus locale 路径适配、Sass 弃用警告消除）
+* **移除：**   由于精力有限，从v10开始前端框架只专注Vue3的支持，layui，blazor，react等不保证在V10下可以正常使用
+
 ## v8.x.x
 
 ##8.1.12(2024-10-10)
