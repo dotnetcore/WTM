@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\demo\WalkingTec.Mvvm.Demo\WalkingTec.Mvvm.Demo.csproj" />
     <ProjectReference Include="..\WalkingTec.Mvvm.Test.Mock\WalkingTec.Mvvm.Test.Mock.csproj" />
   </ItemGroup>
 

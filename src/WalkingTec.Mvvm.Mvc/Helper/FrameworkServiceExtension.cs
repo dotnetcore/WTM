@@ -549,6 +549,12 @@ namespace WalkingTec.Mvvm.Mvc
                 dc.EnsureCreate();
             }
 
+            // Register apiVersion route constraint for Elsa workflow API endpoints
+            services.Configure<RouteOptions>(options =>
+            {
+                options.ConstraintMap.Add("apiVersion", typeof(ApiVersionRouteConstraint));
+            });
+
             return services;
         }
 
