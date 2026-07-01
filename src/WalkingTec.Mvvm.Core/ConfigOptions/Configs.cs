@@ -538,5 +538,30 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        #region DeepSeek
+
+        private DeepSeekOption _deepSeek;
+
+        /// <summary>
+        /// DeepSeek AI configuration
+        /// </summary>
+        public DeepSeekOption DeepSeek
+        {
+            get
+            {
+                if (_deepSeek == null)
+                {
+                    _deepSeek = new DeepSeekOption();
+                }
+                return _deepSeek;
+            }
+            set
+            {
+                _deepSeek = value;
+            }
+        }
+
+        #endregion
+
     }
 }

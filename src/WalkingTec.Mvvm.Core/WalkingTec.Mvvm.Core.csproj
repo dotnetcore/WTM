@@ -10,7 +10,7 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" PrivateAssets="All" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1432,6 +1432,52 @@ params string[] groupcode)
             this._dc?.Dispose();
         }
 
+        /// <summary>
+        /// 调用 DeepSeek API 进行对话
+        /// </summary>
+        /// <param name="question">用户问题</param>
+        /// <param name="systemMessage">系统提示词，定义 AI 的角色和行为</param>
+        /// <returns>DeepSeek 回复内容</returns>
+        public async Task<string> DeepSeek(string question, string systemMessage = null)
+        {
+            var cfg = ConfigInfo?.DeepSeek;
+            if (cfg == null || string.IsNullOrEmpty(cfg.ApiKey))
+                throw new Exception("DeepSeek is not configured. Set DeepSeek:ApiKey in appsettings.json.");
+
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri(cfg.ApiUrl);
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {cfg.ApiKey}");
+
+            var messages = new List<object>();
+            if (!string.IsNullOrEmpty(systemMessage))
+            {
+                messages.Add(new { role = "system", content = systemMessage });
+            }
+            messages.Add(new { role = "user", content = question });
+
+            var body = new
+            {
+                model = cfg.Model,
+                messages = messages,
+                temperature = cfg.Temperature,
+                max_tokens = cfg.MaxTokens
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(body), System.Text.Encoding.UTF8, "application/json");
+            var resp = await client.PostAsync("/chat/completions", content);
+            resp.EnsureSuccessStatusCode();
+            var json = await resp.Content.ReadAsStringAsync();
+
+            using var doc = JsonDocument.Parse(json);
+            var reply = doc.RootElement
+                .GetProperty("choices")[0]
+                .GetProperty("message")
+                .GetProperty("content")
+                .GetString();
+
+            return reply;
+        }
+
         #endregion
     }
 
