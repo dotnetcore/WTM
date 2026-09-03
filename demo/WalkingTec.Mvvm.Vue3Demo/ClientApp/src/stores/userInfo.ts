@@ -22,8 +22,15 @@ export const useUserInfo = defineStore('userInfo', {
 			menu:[],
 			roles: [],
 			authBtnList: [],
+			},
+		}),
+	getters: {
+		// Pinia getter 会缓存结果，仅在 authBtnList 变化时重新生成。
+		// 权限指令和组件可以复用同一个 Set，避免每个按钮重复遍历权限数组。
+		authBtnSet: (state): Set<string> => {
+			return new Set(state.userInfos.authBtnList.map((value) => value.trim().toLowerCase()).filter(Boolean));
 		},
-	}),
+	},
 	actions: {
 		async setUserInfos() {
 			// 存储用户信息到浏览器缓存
