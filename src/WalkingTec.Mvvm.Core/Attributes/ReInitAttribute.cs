@@ -2,6 +2,9 @@
 
 namespace WalkingTec.Mvvm.Core
 {
+    /// <summary>
+    /// ReInit方法的触发模式枚举：仅提交失败时触发、仅提交成功时触发或始终触发
+    /// </summary>
     public enum ReInitModes { FAILEDONLY, SUCCESSONLY, ALWAYS }
 
     /// <summary>

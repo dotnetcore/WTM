@@ -1,110 +1,113 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using WalkingTec.Mvvm.Test.Mock;
+using System;
+using System.Linq;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Core.Test.VM
 {
     [TestClass]
-    public class BaseBatchVMTest
+    [TestCategory("Batch")]
+    public class BaseBatchVMTest : CrudTestBase
     {
-        private BaseBatchVM<School, SchoolEdit> _schoolvm = new BaseBatchVM<School, SchoolEdit>();
-        private BaseBatchVM<Major, MajorEdit> _majorvm = new BaseBatchVM<Major, MajorEdit>();
-        private string _seed;
+        private BaseBatchVM<School, SchoolEdit> _schoolvm;
+
+        private static readonly Guid Id1 = Guid.Parse("3E32E2A6-3B09-43CF-8E49-9DE26DCC30AE");
+        private static readonly Guid Id2 = Guid.Parse("2BBE998F-D639-483E-AC0C-8FC7C18A77A3");
 
         public BaseBatchVMTest()
         {
-            _seed = Guid.NewGuid().ToString();
-            _schoolvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
-            _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
-
+            InitSeed();
+            _schoolvm = new BaseBatchVM<School, SchoolEdit> { Wtm = NewWtmContext("schooluser") };
         }
 
         [TestMethod]
-        [Description("单表修改指定字段")]
-        [DataTestMethod]
         [DataRow("111", "test1", SchoolTypeEnum.PRI, "newremark1")]
         [DataRow("222", "test2", SchoolTypeEnum.PUB, "newremark2")]
         public void SingleTableDoEditFields(string code, string name, SchoolTypeEnum? schooltype, string remark)
         {
             InitData();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using (var ctx = NewContext())
             {
-                SchoolEdit s2 = new SchoolEdit();
-                s2.SchoolCode = code;
-                s2.SchoolName = name;
-                s2.SchoolType = schooltype;
-                s2.Remark = remark;
-                _schoolvm.DC = context;
-                _schoolvm.LinkedVM = s2;
+                _schoolvm.DC = ctx;
+                _schoolvm.LinkedVM = new SchoolEdit { SchoolCode = code, SchoolName = name, SchoolType = schooltype, Remark = remark };
                 _schoolvm.FC.Add("LinkedVM.SchoolCode", 0);
                 _schoolvm.FC.Add("LinkedVM.SchoolName", 0);
                 _schoolvm.FC.Add("LinkedVM.SchoolType", 0);
                 _schoolvm.FC.Add("LinkedVM.Remark", 0);
-                _schoolvm.Ids = new string[2] { "3E32E2A6-3B09-43CF-8E49-9DE26DCC30AE", "2BBE998F-D639-483E-AC0C-8FC7C18A77A3" };
+                _schoolvm.Ids = new[] { Id1.ToString(), Id2.ToString() };
                 _schoolvm.DoBatchEdit();
             }
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                var rv = context.Set<School>().ToList();
-                Assert.AreEqual(2, rv.Count());
-                Assert.AreEqual(code, rv[0].SchoolCode);
-                Assert.AreEqual(name, rv[0].SchoolName);
-                Assert.AreEqual(schooltype, rv[0].SchoolType);
-                Assert.AreEqual(remark, rv[0].Remark);
-                Assert.AreEqual(code, rv[1].SchoolCode);
-                Assert.AreEqual(name, rv[1].SchoolName);
-                Assert.AreEqual(schooltype, rv[1].SchoolType);
-                Assert.AreEqual(remark, rv[1].Remark);
-            }
+            using var verifyCtx = NewContext();
+            var rv = verifyCtx.Set<School>().ToList();
+            Assert.AreEqual(2, rv.Count);
+            Assert.AreEqual(code, rv[0].SchoolCode);
+            Assert.AreEqual(name, rv[0].SchoolName);
+            Assert.AreEqual(schooltype, rv[0].SchoolType);
+            Assert.AreEqual(remark, rv[0].Remark);
+            Assert.AreEqual(code, rv[1].SchoolCode);
+            Assert.AreEqual(name, rv[1].SchoolName);
+            Assert.AreEqual(schooltype, rv[1].SchoolType);
+            Assert.AreEqual(remark, rv[1].Remark);
         }
 
-        public void InitData()
+        [TestMethod]
+        public void DoBatchDelete()
         {
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            InitData();
+
+            using (var ctx = NewContext())
             {
-                School s2 = new School();
-                context.Set<School>().Add(new School
-                {
-                    ID = new Guid("3E32E2A6-3B09-43CF-8E49-9DE26DCC30AE"),
-                    SchoolCode = "001",
-                    SchoolName = "school1",
-                    SchoolType =  SchoolTypeEnum.PRI,
-                    Remark = "remark1"
-                });
-                context.Set<School>().Add(new School
-                {
-                    ID = new Guid("2BBE998F-D639-483E-AC0C-8FC7C18A77A3"),
-                    SchoolCode = "002",
-                    SchoolName = "school2",
-                    SchoolType =  SchoolTypeEnum.PRI,
-                    Remark = "remark2"
-                });
-                context.SaveChanges();
+                AssertCount(ctx.Set<School>(), 2);
+                _schoolvm.DC = ctx;
+                _schoolvm.Ids = new[] { Id1.ToString(), Id2.ToString() };
+                _schoolvm.DoBatchDelete();
             }
 
+            using var verifyCtx = NewContext();
+            AssertCount(verifyCtx.Set<School>(), 0);
+        }
+
+        [TestMethod]
+        public void DoBatchDelete_EmptyIds_DoesNotCrash()
+        {
+            using var ctx = NewContext();
+            _schoolvm.DC = ctx;
+            _schoolvm.Ids = new string[0];
+            _schoolvm.DoBatchDelete();
+            // 空 ID 数组不应抛异常
+        }
+
+        [TestMethod]
+        public void DoBatchEdit_EmptyIds_SkipsGracefully()
+        {
+            InitData();
+            using var ctx = NewContext();
+            _schoolvm.DC = ctx;
+            _schoolvm.LinkedVM = new SchoolEdit { SchoolCode = "xxx" };
+            _schoolvm.Ids = new string[0];
+            _schoolvm.DoBatchEdit();
+            // 空 ID 数组不应修改任何记录
+            var schools = ctx.Set<School>().ToList();
+            Assert.AreEqual(2, schools.Count);
+            Assert.AreEqual("001", schools[0].SchoolCode); // unchanged
+        }
+
+        private void InitData()
+        {
+            using var ctx = NewContext();
+            ctx.Set<School>().Add(new School { ID = Id1, SchoolCode = "001", SchoolName = "school1", SchoolType = SchoolTypeEnum.PRI, Remark = "remark1" });
+            ctx.Set<School>().Add(new School { ID = Id2, SchoolCode = "002", SchoolName = "school2", SchoolType = SchoolTypeEnum.PRI, Remark = "remark2" });
+            ctx.SaveChanges();
         }
     }
 
-    public class SchoolEdit:BaseVM
+    public class SchoolEdit : BaseVM
     {
         public string SchoolCode { get; set; }
-
         public string SchoolName { get; set; }
-
         public SchoolTypeEnum? SchoolType { get; set; }
-
         public new string Remark { get; set; }
-
     }
-    public class MajorEdit : BaseVM
-    {
-
-    }
-
 }

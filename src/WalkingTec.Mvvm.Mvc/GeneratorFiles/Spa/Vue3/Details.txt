@@ -22,7 +22,7 @@ import {  ElMessageBox, ElMessage } from 'element-plus';
 import { defineAsyncComponent,reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue';
 import { $modelname$Api } from '/@/api$pagepath$';
 import other from '/@/utils/other';
-import fileApi from '/@/api/file';
+import fileApi from '/@/api/admin/file';
 import { useRouter } from "vue-router";
 const ci = getCurrentInstance() as any;
 

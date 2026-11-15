@@ -1,15 +1,29 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.Core
 {
 
+    /// <summary>
+    /// 基础实体接口，定义模型应具备的创建/更新审计字段（时间与操作人）
+    /// </summary>
     public interface IBasePoco
     {
+        /// <summary>
+        /// 创建时间
+        /// </summary>
         DateTime? CreateTime { get; set; }
+        /// <summary>
+        /// 创建人
+        /// </summary>
         string CreateBy { get; set; }
+        /// <summary>
+        /// 最后更新时间
+        /// </summary>
         DateTime? UpdateTime { get; set; }
+        /// <summary>
+        /// 最后更新人
+        /// </summary>
         string UpdateBy { get; set; }
     }
 

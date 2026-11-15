@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,11 +5,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc
 {
+    /// <summary>
+    /// API 鉴权方式枚举，用于代码生成时为 Controller 选择对应的授权特性
+    /// </summary>
     public enum ApiAuthMode
     {
         [Display(Name = "Both Jwt and Cookie")]
@@ -23,6 +26,10 @@ namespace WalkingTec.Mvvm.Mvc
         Cookie
     }
 
+    /// <summary>
+    /// 代码生成器核心 ViewModel，根据用户选择的模型和字段配置，
+    /// 生成 Controller、各类 ViewModel、前端页面（LayUI、React、VUE、VUE3、Blazor）以及对应的测试代码
+    /// </summary>
     [ReInit(ReInitModes.ALWAYS)]
     public class CodeGenVM : BaseVM
     {
@@ -355,6 +362,9 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        /// <summary>
+        /// 初始化 VM：若已选择模型，则遍历所有数据库连接，找到包含该模型 DbSet 的 DataContext 并赋值给 DC；同时初始化字段列表 VM
+        /// </summary>
         protected override void InitVM()
         {
             if (string.IsNullOrEmpty(SelectedModel) == false)
@@ -375,6 +385,9 @@ namespace WalkingTec.Mvvm.Mvc
             FieldList = new CodeGenListVM();
             FieldList.CopyContext(this);
         }
+        /// <summary>
+        /// 执行代码生成：将生成的 Controller、各类 ViewModel 以及对应前端框架的页面文件写入磁盘，最后生成测试代码
+        /// </summary>
         public void DoGen()
         {
             File.WriteAllText($"{ControllerDir}{Path.DirectorySeparatorChar}{ModelName}{(IsApi == true ? "Api" : "")}Controller.cs", GenerateController(), Encoding.UTF8);
@@ -385,8 +398,10 @@ namespace WalkingTec.Mvvm.Mvc
             File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}{(IsApi == true ? "Api" : "")}ImportVM.cs", GenerateVM("ImportVM"), Encoding.UTF8);
             File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}{(IsApi == true ? "Api" : "")}Searcher.cs", GenerateVM("Searcher"), Encoding.UTF8);
 
+            // 仅在生成 MVC 模式（非纯 API）时才需要生成前端页面文件
             if (IsApi == false)
             {
+                // 生成 LayUI 的 cshtml 视图文件
                 if (UI == UIEnum.LayUI)
                 {
                     File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Index.cshtml", GenerateView("ListView"), Encoding.UTF8);
@@ -398,6 +413,7 @@ namespace WalkingTec.Mvvm.Mvc
                     File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}BatchEdit.cshtml", GenerateView("BatchEditView"), Encoding.UTF8);
                     File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}BatchDelete.cshtml", GenerateView("BatchDeleteView"), Encoding.UTF8);
                 }
+                // 生成 React 或 VUE 的前端页面，先创建页面目录结构
                 if (UI == UIEnum.React || UI == UIEnum.VUE)
                 {
                     if (Directory.Exists($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}") == false)
@@ -412,6 +428,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store");
                     }
+                    // 生成 React 的页面文件
                     if (UI == UIEnum.React)
                     {
                         File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}action.tsx", GenerateReactView("action"), Encoding.UTF8);
@@ -424,6 +441,7 @@ namespace WalkingTec.Mvvm.Mvc
                         File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}index.tsx", GetResource("index.txt", "Spa.React").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
                         File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}style.less", GetResource("style.txt", "Spa.React").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
                     }
+                    // 生成 VUE 的页面文件
                     if (UI == UIEnum.VUE)
                     {
                         List<string> apipneeded = new List<string>();
@@ -503,6 +521,7 @@ namespace WalkingTec.Mvvm.Mvc
                     #endregion
                 }
 
+                // 生成 Blazor 的 razor 页面文件
                 if (UI == UIEnum.Blazor)
                 {
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Index.razor", GenerateBlazorView("Index"), Encoding.UTF8);
@@ -511,6 +530,7 @@ namespace WalkingTec.Mvvm.Mvc
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Details.razor", GenerateBlazorView("Details"), Encoding.UTF8);
                     File.WriteAllText($"{ShareDir}{Path.DirectorySeparatorChar}Import.razor", GenerateBlazorView("Import"), Encoding.UTF8);
                 }
+                // 生成 VUE3 的页面及 api 文件
                 if (UI == UIEnum.VUE3)
                 {
                     //Todo 生成vue3页面
@@ -533,6 +553,7 @@ namespace WalkingTec.Mvvm.Mvc
                     File.WriteAllText($"{pathapi}index.ts", GenerateVue3View("indexapi"), Encoding.UTF8);
                 }
             }
+            // 生成测试代码并写入测试项目
             var test = GenerateTest();
             if (test != "")
             {
@@ -547,10 +568,15 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        /// <summary>
+        /// 生成 Controller 代码：根据 UI 类型和是否为 API 选择模板目录及授权特性，并替换命名空间、模型名等占位符
+        /// </summary>
+        /// <returns>生成的 Controller 代码文本</returns>
         public string GenerateController()
         {
             string dir = "";
             string jwt = "";
+            // MVC 模式使用 Mvc 模板目录；SPA 模式根据 UI 类型选择模板目录，并按鉴权方式设置授权特性
             if (UI == UIEnum.LayUI && IsApi == false)
             {
                 dir = "Mvc";
@@ -621,9 +647,15 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        /// <summary>
+        /// 生成各类 ViewModel 代码，根据 name 选择对应模板，并拼接字段属性、初始化逻辑、表格列、搜索条件等占位符内容
+        /// </summary>
+        /// <param name="name">VM 类型名称，可选值为 CrudVM、ListVM、BatchVM、ImportVM、Searcher</param>
+        /// <returns>生成的 ViewModel 代码文本</returns>
         public string GenerateVM(string name)
         {
             var rv = GetResource($"{name}.txt").Replace("$modelnamespace$", ModelNS).Replace("$vmnamespace$", VMNs).Replace("$modelname$", ModelName).Replace("$area$", $"{Area ?? ""}").Replace("$classname$", $"{ModelName}{(IsApi == true ? "Api" : "")}");
+            // Searcher 和 BatchVM 需要生成字段属性定义，以及关联表下拉数据的初始化代码
             if (name == "Searcher" || name == "BatchVM")
             {
                 string prostring = "";
@@ -705,6 +737,7 @@ namespace WalkingTec.Mvvm.Mvc
                 rv = rv.Replace("$pros$", prostring).Replace("$init$", initstr);
                 rv = GetRelatedNamespace(pros, rv);
             }
+            // ListVM 需要生成表格列头、Select 投影、搜索条件、关联字段属性、格式化方法及标准按钮等代码
             if (name == "ListVM")
             {
                 string headerstring = "";
@@ -857,6 +890,7 @@ namespace WalkingTec.Mvvm.Mvc
                 rv = rv.Replace("$headers$", headerstring).Replace("$where$", wherestring).Replace("$select$", selectstring).Replace("$subpros$", subprostring).Replace("$format$", formatstring).Replace("$actions$", actionstring);
                 rv = GetRelatedNamespace(pros, rv);
             }
+            // CrudVM 需要生成关联表下拉数据、SetInclude 语句，以及多对多中间表的新增和修改处理代码
             if (name == "CrudVM")
             {
                 string prostr = "";
@@ -928,6 +962,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 rv = GetRelatedNamespace(pros, rv);
             }
+            // ImportVM 需要生成 Excel 导入字段属性，以及关联表下拉数据的初始化代码
             if (name == "ImportVM")
             {
                 string prostring = "";
@@ -978,9 +1013,15 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        /// <summary>
+        /// 生成 LayUI（MVC）视图代码：根据视图类型拼接对应的 TagHelper 标签，包括表单控件、搜索区域和查询地址
+        /// </summary>
+        /// <param name="name">视图类型名称，如 ListView、CreateView、EditView、DeleteView、DetailsView、ImportView、BatchEditView、BatchDeleteView</param>
+        /// <returns>生成的视图代码文本</returns>
         public string GenerateView(string name)
         {
             var rv = GetResource($"{name}.txt", "Mvc").Replace("$vmnamespace$", VMNs).Replace("$modelname$", ModelName);
+            // 表单类视图：根据字段的关联关系和类型生成对应的 TagHelper 表单控件
             if (name == "CreateView" || name == "EditView" || name == "DeleteView" || name == "DetailsView" || name == "BatchEditView")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -1090,6 +1131,7 @@ namespace WalkingTec.Mvvm.Mvc
                 fieldstr.Append("</wt:row>");
                 rv = rv.Replace("$fields$", fieldstr.ToString());
             }
+            // 列表视图：生成搜索区域的表单控件，并设置列表的数据查询地址
             if (name == "ListView")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -1156,6 +1198,10 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        /// <summary>
+        /// 生成控制器测试代码：为模型属性生成随机值，拼接新增、修改、删除、批量修改等测试用例的属性赋值与断言代码
+        /// </summary>
+        /// <returns>生成的测试代码文本；若测试项目目录不存在则返回空字符串</returns>
         public string GenerateTest()
         {
             var rv = "";
@@ -1184,6 +1230,7 @@ namespace WalkingTec.Mvvm.Mvc
                         rv = GetResource($"ApiTestTopPoco.txt").Replace("$cns$", ControllerNs).Replace("$tns$", TestNs).Replace("$vns$", VMNs).Replace("$model$", ModelName).Replace("$mns$", ModelNS).Replace("$dns$", DataNs).Replace("$classnamel$", $"{ModelName}{(IsApi == true ? "Api" : "")}");
                     }
                 }
+                // 为模型属性生成随机值，依次拼接新增、修改、批量修改测试所需的属性赋值与断言代码
                 var modelprops = modelType.GetRandomValues();
                 var batchpros = FieldInfos.Where(x => x.IsBatchField == true).ToList();
                 string cpros = "";
@@ -1238,11 +1285,6 @@ namespace WalkingTec.Mvvm.Mvc
                 var modelpros2 = modelType.GetRandomValues();
                 foreach (var pro in modelpros2)
                 {
-                    //if (pro.Key.ToLower() == "id")
-                    //{
-                    //    continue;
-                    //}
-
                     if (pro.Value == "$fk$")
                     {
                         mpros += $@"
@@ -1299,6 +1341,13 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        /// <summary>
+        /// 生成测试中为外键字段构造关联测试数据的辅助方法，并递归处理多级外键引用
+        /// </summary>
+        /// <param name="keyname">外键属性名称</param>
+        /// <param name="t">外键关联的类型</param>
+        /// <param name="exist">已处理过的类型列表，用于避免重复生成</param>
+        /// <returns>生成的辅助方法代码文本；若类型已处理过则返回空字符串</returns>
         private string GenerateAddFKModel(string keyname, Type t, List<Type> exist)
         {
             if (exist == null)
@@ -1364,11 +1413,17 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        /// <summary>
+        /// 生成 React 前端页面代码：根据页面类型拼接表格列定义、表单与搜索 model 配置、表单项标签等 tsx 代码
+        /// </summary>
+        /// <param name="name">页面文件名称，如 table、models、search、forms、action、other</param>
+        /// <returns>生成的 React 页面代码文本</returns>
         public string GenerateReactView(string name)
         {
             var rv = GetResource($"{name}.txt", "Spa.React.views")
                 .Replace("$modelname$", ModelName.ToLower());
             Type modelType = Type.GetType(SelectedModel);
+            // 生成表格列定义，根据字段类型和关联关系设置渲染方式（布尔、图片、下载等）
             if (name == "table")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -1437,6 +1492,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 return rv.Replace("$columns$", fieldstr.ToString()).Replace("$rowheight$", rowheight.ToString());
             }
+            // 生成表单 model 和搜索 model 的字段配置
             if (name == "models")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -1654,6 +1710,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return rv;
             }
+            // 生成表单页面的 FormItem 标签
             if (name == "forms")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -1701,6 +1758,12 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
 
+        /// <summary>
+        /// 生成 VUE 前端页面代码：根据页面类型拼接页面配置、弹窗表单、列表首页及 store 的 api 请求定义等代码
+        /// </summary>
+        /// <param name="name">页面文件名称，如 index、config、views.dialog-form、store.api</param>
+        /// <param name="apineeded">需要调用后端下拉数据 api 的名称集合，生成过程中会向其中追加</param>
+        /// <returns>生成的 VUE 页面代码文本</returns>
         public string GenerateVUEView(string name, List<string> apineeded)
         {
             var rv = GetResource($"{name}.txt", "Spa.Vue")
@@ -1710,6 +1773,7 @@ namespace WalkingTec.Mvvm.Mvc
                 apineeded = new List<string>();
             }
             Type modelType = Type.GetType(SelectedModel);
+            // 生成页面配置：表格列定义及枚举类型的选项定义
             if (name == "config")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -1806,6 +1870,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 return rv.Replace("$fields$", fieldstr.ToString()).Replace("$rowheight$", rowheight.ToString()).Replace("$enums$", enumstr.ToString());
             }
+            // 生成弹窗表单的字段配置，并记录需要调用的下拉数据 api
             if (name == "views.dialog-form")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -1953,6 +2018,7 @@ namespace WalkingTec.Mvvm.Mvc
                 return rv.Replace("$fields$", fieldstr.ToString()).Replace("$actions$", a1).Replace("$runactions$", a2).Replace("$import$", import);
             }
 
+            // 生成列表首页：搜索字段配置及布尔、附件等特殊列的模板代码
             if (name == "index")
             {
                 StringBuilder fieldstr2 = new StringBuilder();
@@ -1984,14 +2050,14 @@ namespace WalkingTec.Mvvm.Mvc
                                 if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon"))
                                 {
                                     actions.AppendLine($@"      <template #{fk}=""rowData"">
-        <el-image v-if=""!!rowData.row.{fk}"" style=""width: 100px; height: 100px"" :src=""'/api/_file/downloadFile/'+rowData.row.{fk}"" fit=""cover"" />
+        <el-image v-if=""!!rowData.row.{fk}"" style=""width: 100px; height: 100px"" :src=""'/api/admin/file/downloadFile/'+rowData.row.{fk}"" fit=""cover"" />
       </template>
 ");
                                 }
                                 else
                                 {
                                     actions.AppendLine($@"      <template #{fk}=""rowData"">
-        <el-link icon=""el-icon-edit"" v-if=""!!rowData.row.{fk}"" :href=""'/api/_file/downloadFile/'+rowData.row.{fk}"">{{{{ $t(""table.download"")}}}}</el-link>
+        <el-link icon=""el-icon-edit"" v-if=""!!rowData.row.{fk}"" :href=""'/api/admin/file/downloadFile/'+rowData.row.{fk}"">{{{{ $t(""table.download"")}}}}</el-link>
       </template>
 ");
                                 }
@@ -2125,6 +2191,7 @@ namespace WalkingTec.Mvvm.Mvc
                     .Replace("$acts$", a1).Replace("$runactions$", a2);
 
             }
+            // 生成 store 中下拉数据 api 的请求定义
             if (name == "store.api")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -2147,6 +2214,11 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        /// <summary>
+        /// 生成 Blazor 页面代码：根据页面类型拼接 razor 组件的表格列、搜索控件、表单控件及下拉数据 api 初始化代码
+        /// </summary>
+        /// <param name="name">页面名称，如 Index、Create、Edit、Details、Import</param>
+        /// <returns>生成的 Blazor 页面代码文本</returns>
         public string GenerateBlazorView(string name)
         {
             string pagepath = string.IsNullOrEmpty(Area) ? $"/{ModelName}" : $"/{Area}/{ModelName}";
@@ -2165,6 +2237,7 @@ namespace WalkingTec.Mvvm.Mvc
                 .Replace("$controllername$", $"{ControllerNs},{ModelName}")
                 .Replace("$pagepath$", pagepath);
             Type modelType = Type.GetType(SelectedModel);
+            // 生成列表页：表格列定义、搜索区控件及下拉数据 api 的初始化代码
             if (name == "Index")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -2215,7 +2288,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 template = @"
             <Template Context=""data"">
                 @if (data.Value.HasValue){
-                    <Button Size=""Size.ExtraSmall"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{data.Value}"",null, HttpMethodEnum.GET))"" />
+                    <Button Size=""Size.ExtraSmall"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/admin/file/DownloadFile/{data.Value}"",null, HttpMethodEnum.GET))"" />
                 }
             </Template>";
                             }
@@ -2363,6 +2436,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
 
 
+            // 生成新建/编辑页面：根据字段类型和关联关系选择对应的表单控件
             if (name == "Create" || name == "Edit")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -2513,6 +2587,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 return rv.Replace("$formfields$", fieldstr.ToString()).Replace("$fieldinit$", fieldinit.ToString()).Replace("$init$", apiinit.ToString());
             }
+            // 生成详情页面：使用只读控件展示数据，附件字段生成下载按钮
             if (name == "Details")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -2598,7 +2673,7 @@ namespace WalkingTec.Mvvm.Mvc
                 @if (Model.{bindfield}.HasValue){{
                     <div>
                           <label class=""control-label is-display"">{label}</label>
-                          <div><Button Size=""Size.Small"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/_file/DownloadFile/{{Model.{bindfield}}}"",null, HttpMethodEnum.GET))"" /></div>
+                          <div><Button Size=""Size.Small"" Text=""@WtmBlazor.Localizer[""Sys.Download""]"" OnClick=""@(async x => await Download($""/api/admin/file/DownloadFile/{{Model.{bindfield}}}"",null, HttpMethodEnum.GET))"" /></div>
                     </div>
                 }}
 ");
@@ -2629,6 +2704,11 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        /// <summary>
+        /// 生成 VUE3 前端页面代码：根据页面类型拼接表格列定义、搜索区控件、表单控件及下拉数据初始化等 vue/ts 代码
+        /// </summary>
+        /// <param name="name">页面名称，如 Index、Create、Edit、Details、Import、indexapi</param>
+        /// <returns>生成的 VUE3 页面代码文本</returns>
         public string GenerateVue3View(string name)
         {
             string pagepath = string.IsNullOrEmpty(Area) ? $"/{ModelName}" : $"/{Area.ToLower()}/{ModelName}";
@@ -2640,6 +2720,7 @@ namespace WalkingTec.Mvvm.Mvc
                 .Replace("$controllername$", $"{ControllerNs};{ModelName}")
                 .Replace("$pagepath$", pagepath);
             Type modelType = Type.GetType(SelectedModel);
+            // 生成列表页：表格列定义、搜索区控件、搜索实体初始化及下拉数据 api 的调用代码
             if (name == "Index")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -2662,11 +2743,6 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         template = "switch";
                     }
-                    //if (mpro.PropertyType == typeof(DateTime) || mpro.PropertyType == typeof(DateTime?))
-                    //{
-                    //    render = "FormatString=\"yyyy-MM-dd HH: mm: ss\"";
-
-                    //}
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
@@ -2838,6 +2914,7 @@ namespace WalkingTec.Mvvm.Mvc
                 return rv.Replace("$columns$", fieldstr.ToString()).Replace("$searchentity$", searchentity.ToString()).Replace("$searchfields$", fieldstr2.ToString()).Replace("$init$", apiinit.ToString()).Replace("$fieldinit$", fieldinit.ToString());
             }
 
+            // 生成新建/编辑/详情页面：根据字段类型和关联关系选择表单控件，详情页控件为禁用状态
             if (name == "Create" || name == "Edit" || name == "Details")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -3048,6 +3125,12 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        /// <summary>
+        /// 从程序集内嵌资源中读取代码生成模板的原始文本
+        /// </summary>
+        /// <param name="fileName">模板文件名（不含路径）</param>
+        /// <param name="subdir">模板所在的子目录名称，为空时表示位于 GeneratorFiles 根目录</param>
+        /// <returns>模板文件的文本内容</returns>
         public string GetResource(string fileName, string subdir = "")
         {
             //获取编译在程序中的Controller原始代码文本
@@ -3067,6 +3150,12 @@ namespace WalkingTec.Mvvm.Mvc
             return content;
         }
 
+        /// <summary>
+        /// 收集字段及其关联类型所在的命名空间，并将代码文本中的占位符替换为所需的 using 语句
+        /// </summary>
+        /// <param name="pros">需要处理的字段信息列表</param>
+        /// <param name="s">包含命名空间占位符的代码文本</param>
+        /// <returns>替换了 using 语句之后的代码文本</returns>
         private string GetRelatedNamespace(List<FieldInfo> pros, string s)
         {
             string otherns = @"";
@@ -3101,8 +3190,15 @@ namespace WalkingTec.Mvvm.Mvc
 
     }
 
+    /// <summary>
+    /// 字段关联类型枚举：普通字段、一对多关联、多对多关联
+    /// </summary>
     public enum FieldInfoType { Normal, One2Many, Many2Many }
 
+    /// <summary>
+    /// 代码生成器中描述模型字段的信息类，记录字段名称、关联关系，
+    /// 以及是否用于搜索、列表、表单、导入、批量修改等场景
+    /// </summary>
     public class FieldInfo
     {
         public string FieldName { get; set; }
@@ -3148,6 +3244,12 @@ namespace WalkingTec.Mvvm.Mvc
         /// </summary>
         public string SubIdField { get; set; }
 
+        /// <summary>
+        /// 获取字段在生成代码中使用的属性名：一对多关联时返回外键属性名，否则返回字段本身的名称
+        /// </summary>
+        /// <param name="DC">数据上下文，用于查询外键信息</param>
+        /// <param name="modelType">字段所属的模型类型</param>
+        /// <returns>生成代码中使用的属性名称</returns>
         public string GetField(IDataContext DC, Type modelType)
         {
             if (this.InfoType == FieldInfoType.One2Many)
@@ -3161,6 +3263,12 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        /// <summary>
+        /// 获取外键属性的基础类型名称（short、int、long、Guid、string），用于生成代码中的类型声明
+        /// </summary>
+        /// <param name="DC">数据上下文，用于查询外键信息</param>
+        /// <param name="modelType">字段所属的模型类型</param>
+        /// <returns>外键类型的名称字符串</returns>
         public string GetFKType(IDataContext DC, Type modelType)
         {
             Type fktype = null;

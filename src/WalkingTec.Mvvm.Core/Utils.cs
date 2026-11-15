@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,17 +9,26 @@ using System.Runtime.Loader;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Core.Support;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
+    /// <summary>
+    /// 框架通用工具类，提供程序集扫描、加解密、文件处理、菜单查找等静态辅助方法
+    /// </summary>
     public class Utils
     {
 
+        // 已加载的业务程序集缓存
         private static List<Assembly> _allAssemblies;
+        // 扫描得到的模型类型缓存
         private static List<Type> _allModels;
+        /// <summary>
+        /// 根据当前界面语言获取冒号分隔符，中文环境返回全角冒号，其他环境返回半角冒号
+        /// </summary>
+        /// <returns>当前语言对应的冒号字符</returns>
         public static string GetCurrentComma()
         {
             if (CultureInfo.CurrentUICulture.Name == "zh-cn")
@@ -34,6 +41,10 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 获取应用程序相关的所有业务程序集，扫描入口程序集所在目录并过滤系统及第三方框架库
+        /// </summary>
+        /// <returns>加载完成的业务程序集列表</returns>
         public static List<Assembly> GetAllAssembly()
         {
             if (_allAssemblies == null)
@@ -41,11 +52,13 @@ namespace WalkingTec.Mvvm.Core
                 _allAssemblies = new List<Assembly>();
                 string path = null;
                 string singlefile = null;
+                // 优先获取入口程序集所在路径
                 try
                 {
                     path = Assembly.GetEntryAssembly()?.Location;
                 }
                 catch { }
+                // 单文件发布等情况下入口程序集路径为空，改用当前进程主模块所在目录
                 if (string.IsNullOrEmpty(path))
                 {
                     singlefile = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
@@ -54,6 +67,7 @@ namespace WalkingTec.Mvvm.Core
                 var dir = new DirectoryInfo(Path.GetDirectoryName(path));
 
                 var dlls = dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
+                // 系统及第三方框架程序集名称前缀，这些程序集不参与业务扫描
                 string[] systemdll = new string[]
                 {
                 "Microsoft.",
@@ -80,6 +94,7 @@ namespace WalkingTec.Mvvm.Core
                 };
 
                 var filtered = dlls.Where(x => systemdll.Any(y => x.Name.StartsWith(y)) == false);
+                // 逐个加载目录下的业务 dll，单个加载失败时跳过
                 foreach (var dll in filtered)
                 {
                     try
@@ -96,6 +111,10 @@ namespace WalkingTec.Mvvm.Core
             return _allAssemblies;
         }
 
+        /// <summary>
+        /// 获取所有 DataContext 中通过 DbSet 定义的模型类型
+        /// </summary>
+        /// <returns>模型类型列表</returns>
         public static List<Type> GetAllModels()
         {
             if (_allModels == null)
@@ -132,7 +151,12 @@ namespace WalkingTec.Mvvm.Core
             return _allModels;
         }
 
+        // 扫描得到的 VM 类型缓存
         private static List<Type> _allVMs;
+        /// <summary>
+        /// 获取所有继承自 BaseVM 的视图模型类型
+        /// </summary>
+        /// <returns>视图模型类型列表</returns>
         public static List<Type> GetAllVms()
         {
             if (_allVMs == null)
@@ -155,6 +179,12 @@ namespace WalkingTec.Mvvm.Core
 
         }
 
+        /// <summary>
+        /// 根据 url 在菜单列表中查找匹配的菜单，依次按完整 url、去掉参数、去掉 index 后缀的方式逐步匹配
+        /// </summary>
+        /// <param name="url">要查找的 url 地址</param>
+        /// <param name="menus">菜单列表</param>
+        /// <returns>匹配到的菜单，未找到时返回 null</returns>
         public static SimpleMenu FindMenu(string url, List<SimpleMenu> menus)
         {
             if (url == null)
@@ -195,11 +225,24 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 将字段名转换为前端页面可用的元素 Id，把点号、方括号、负号等特殊字符替换掉
+        /// </summary>
+        /// <param name="fieldName">字段名</param>
+        /// <returns>转换后的元素 Id</returns>
         public static string GetIdByName(string fieldName)
         {
             return fieldName == null ? "" : fieldName.Replace(".", "_").Replace("[", "_").Replace("]", "_").Replace("-","minus");
         }
 
+        /// <summary>
+        /// 按 ID 比较新旧两个列表的差异，输出需要删除和需要添加的元素
+        /// </summary>
+        /// <typeparam name="T">列表元素类型，必须是 TopBasePoco 的子类</typeparam>
+        /// <param name="oldList">旧列表</param>
+        /// <param name="newList">新列表</param>
+        /// <param name="ToRemove">输出参数：旧列表中存在而新列表中不存在的元素</param>
+        /// <param name="ToAdd">输出参数：新列表中存在而旧列表中不存在的元素</param>
         public static void CheckDifference<T>(IEnumerable<T> oldList, IEnumerable<T> newList, out IEnumerable<T> ToRemove, out IEnumerable<T> ToAdd) where T : TopBasePoco
         {
             List<T> tempToRemove = new List<T>();
@@ -242,6 +285,11 @@ namespace WalkingTec.Mvvm.Core
             ToAdd = tempToAdd.AsEnumerable();
         }
 
+        /// <summary>
+        /// 将颜色字符串转换为 Excel 使用的 6 位十六进制颜色值，去掉 Alpha 通道和井号前缀
+        /// </summary>
+        /// <param name="color">原始颜色字符串</param>
+        /// <returns>大写的 6 位十六进制颜色值，空值返回 000000</returns>
         public static string GetExcelColor(string color)
         {
             if (string.IsNullOrEmpty(color))
@@ -570,6 +618,13 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 根据连接串名称和读写模式获取实际使用的连接串 Key，读模式下随机选择一个读库连接实现读写分离
+        /// </summary>
+        /// <param name="cs">连接串名称</param>
+        /// <param name="mode">读写模式，read 表示读库</param>
+        /// <param name="config">系统配置</param>
+        /// <returns>实际使用的连接串 Key</returns>
         public static string GetCS(string cs, string mode, Configs config)
         {
             if(cs == null)
@@ -577,6 +632,7 @@ namespace WalkingTec.Mvvm.Core
                 return null;
             }
 
+            // 配置中不存在同名连接串时，回退到 default 连接串
             if (config.Connections.Any(x => x.Key.ToLower() == cs.ToLower()) == false)
             {
                 cs = "default";
@@ -586,6 +642,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 cs = cs.Substring(0, index);
             }
+            // 读模式下从所有以 cs_ 开头的读库连接中随机选择一个
             if (mode?.ToLower() == "read")
             {
                 var reads = config.Connections.Where(x => x.Key.StartsWith(cs + "_")).Select(x => x.Key).ToList();
@@ -599,6 +656,14 @@ namespace WalkingTec.Mvvm.Core
             return cs;
         }
 
+        /// <summary>
+        /// 根据附件 ID 获取附件文件的访问 url，指向框架内置的 GetFile 接口
+        /// </summary>
+        /// <param name="dc">数据上下文</param>
+        /// <param name="fileAttachmentId">附件 ID</param>
+        /// <param name="isIntranetUrl">是否生成内网地址</param>
+        /// <param name="urlHeader">url 前缀</param>
+        /// <returns>附件访问 url，附件不存在时返回空字符串</returns>
         public static string GetUrlByFileAttachmentId(IDataContext dc, Guid? fileAttachmentId, bool isIntranetUrl = false, string urlHeader = null)
         {
             string url = string.Empty;
@@ -686,6 +751,7 @@ namespace WalkingTec.Mvvm.Core
             return stringDecrypted;
         }
 
+        // 生成 DES 加密提供器：密钥超过 8 字节时截断，不足时用空格补齐，Key 和 IV 使用同一字节数组
         private static DES GenerateDESCryptoServiceProvider(string key)
         {
             var dCrypter = DES.Create();
@@ -763,6 +829,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        // 计算字节数组的 MD5 哈希，并格式化为大写 32 位十六进制字符串
         private static string MD5String(byte[] buffer)
         {
             var md5 = MD5.Create();
@@ -810,6 +877,7 @@ namespace WalkingTec.Mvvm.Core
                 ModuleName = x.ModuleName,
                 NameSpace = x.NameSpace,
             }).ToList();
+            // 遍历所有模块，将页面类型的 Action 拆分为独立的 SimpleModule，便于按页面分配权限
             var mCount = m.Count;
             var toRemove = new List<SimpleModule>();
             for (int i = 0; i < mCount; i++)

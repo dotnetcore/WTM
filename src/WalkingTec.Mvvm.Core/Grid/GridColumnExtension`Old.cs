@@ -61,11 +61,25 @@ namespace WalkingTec.Mvvm.Core
             self.NeedGroup = needGroup;
             return self;
         }
+        /// <summary>
+        /// 设置是否锁定列
+        /// </summary>
+        /// <typeparam name="T">列表的数据源类</typeparam>
+        /// <param name="self">目标列</param>
+        /// <param name="locked">是否锁定</param>
+        /// <returns>列对象</returns>
         public static GridColumn<T> SetLocked<T>(this GridColumn<T> self, bool locked) where T : TopBasePoco
         {
             self.IsLocked = locked;
             return self;
         }
+        /// <summary>
+        /// 设置是否允许排序
+        /// </summary>
+        /// <typeparam name="T">列表的数据源类</typeparam>
+        /// <param name="self">目标列</param>
+        /// <param name="sortable">是否允许排序</param>
+        /// <returns>列对象</returns>
         public static GridColumn<T> SetSortable<T>(this GridColumn<T> self, bool sortable = false) where T : TopBasePoco
         {
             self.Sortable = sortable;
@@ -107,18 +121,6 @@ namespace WalkingTec.Mvvm.Core
             self.Flex = flex;
             return self;
         }
-        ///// <summary>
-        ///// 时间与数字类型Format
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="self"></param>
-        ///// <param name="format"></param>
-        ///// <returns></returns>
-        //public static GridColumn<T> SetFormat<T>(this GridColumn<T> self, string format) where T : TopBasePoco
-        //{
-        //    self.StringFormat = format;
-        //    return self;
-        //}
         /// <summary>
         /// 列内容的格式化函数
         /// </summary>

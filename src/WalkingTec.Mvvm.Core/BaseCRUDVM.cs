@@ -1,28 +1,21 @@
-using Elsa.Models;
-using Elsa.Persistence.Specifications;
-using Elsa.Persistence;
-using Elsa.Services;
-using Elsa.Services.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-using NodaTime;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Elsa.Models;
+using Elsa.Services;
+using Elsa.Services.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
+using WalkingTec.Mvvm.Core.Support.AiCode;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.WorkFlow;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -32,6 +25,9 @@ namespace WalkingTec.Mvvm.Core
     /// <typeparam name="T">继承TopBasePoco的类</typeparam>
     public interface IBaseCRUDVM<out T> where T : TopBasePoco, new()
     {
+        /// <summary>
+        /// 当前操作的实体对象
+        /// </summary>
         T Entity { get; }
         /// <summary>
         /// 根据主键Id获取Entity
@@ -50,28 +46,68 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         void DoAdd();
 
+        /// <summary>
+        /// 异步添加
+        /// </summary>
+        /// <returns>异步任务</returns>
         Task DoAddAsync();
 
         /// <summary>
         /// 修改
         /// </summary>
         void DoEdit(bool updateAllFields);
+        /// <summary>
+        /// 异步修改
+        /// </summary>
+        /// <param name="updateAllFields">为true时更新全部字段，为false时只更新表单提交的字段</param>
+        /// <returns>异步任务</returns>
         Task DoEditAsync(bool updateAllFields);
 
         /// <summary>
         /// 删除，对于TopBasePoco进行物理删除，对于PersistPoco把IsValid修改为false
         /// </summary>
         void DoDelete();
+        /// <summary>
+        /// 异步删除，对于TopBasePoco进行物理删除，对于PersistPoco把IsValid修改为false
+        /// </summary>
+        /// <returns>异步任务</returns>
         Task DoDeleteAsync();
 
+        /// <summary>
+        /// 启动实体对应的工作流
+        /// </summary>
+        /// <param name="flowName">流程名称，为空时根据实体类型自动查找关联的流程定义</param>
+        /// <returns>工作流运行结果，实体未保存或找不到流程定义时返回null</returns>
         Task<RunWorkflowResult> StartWorkflowAsync(string flowName=null);
+        /// <summary>
+        /// 继续执行实体当前挂起的工作流，依次按当前用户、用户所属角色、用户所属组查找匹配的审批节点
+        /// </summary>
+        /// <param name="actionName">审批动作名称</param>
+        /// <param name="remark">审批备注</param>
+        /// <param name="flowName">流程名称，为空时默认使用实体类型的全名</param>
+        /// <param name="tag">流程标签，用于区分同一实体上的多个流程实例</param>
+        /// <returns>工作流运行结果，没有匹配的待审批流程时返回null</returns>
         Task<RunWorkflowResult> ContinueWorkflowAsync(string actionName, string remark, string flowName=null, string tag = null);
+        /// <summary>
+        /// 获取实体工作流的审批时间线
+        /// </summary>
+        /// <param name="flowName">流程名称</param>
+        /// <returns>审批时间线列表</returns>
         Task<List<ApproveTimeLine>> GetWorkflowTimeLineAsync(string flowName = null);
+        /// <summary>
+        /// 获取实体当前的工作流实例
+        /// </summary>
+        /// <param name="flowName">流程名称</param>
+        /// <returns>工作流实例</returns>
         Task<WorkflowInstance> GetWorkflowInstanceAsync(string flowName = null);
         /// <summary>
         /// 彻底删除，对PersistPoco进行物理删除
         /// </summary>
         void DoRealDelete();
+        /// <summary>
+        /// 异步彻底删除，对PersistPoco进行物理删除
+        /// </summary>
+        /// <returns>异步任务</returns>
         Task DoRealDeleteAsync();
 
         /// <summary>
@@ -85,7 +121,13 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         bool ByPassBaseValidation { get; set; }
 
+        /// <summary>
+        /// 验证数据，默认验证重复数据
+        /// </summary>
         void Validate();
+        /// <summary>
+        /// 模型状态服务，用于向模型状态中添加验证错误信息
+        /// </summary>
         IModelStateService MSD { get; }
     }
 
@@ -95,7 +137,13 @@ namespace WalkingTec.Mvvm.Core
     /// <typeparam name="TModel">继承TopBasePoco的类</typeparam>
     public class BaseCRUDVM<TModel> : BaseVM, IBaseCRUDVM<TModel> where TModel : TopBasePoco, new()
     {
+        /// <summary>
+        /// 通过反射获取的EF Core Include方法（接收Lambda表达式参数的版本），供动态构建Include表达式树时调用
+        /// </summary>
         internal static readonly MethodInfo IncludeMethodInfo = typeof(EntityFrameworkQueryableExtensions).GetTypeInfo().GetDeclaredMethods("Include").Single((MethodInfo mi) => mi.GetGenericArguments().Count() == 2 && mi.GetParameters().Any((ParameterInfo pi) => pi.Name == "navigationPropertyPath" && pi.ParameterType != typeof(string)));
+        /// <summary>
+        /// 通过反射获取的EF Core ThenInclude方法（上一层为集合导航属性的版本），供动态构建ThenInclude表达式树时调用
+        /// </summary>
         internal static readonly MethodInfo ThenIncludeAfterEnumerableMethodInfo = (from mi in typeof(EntityFrameworkQueryableExtensions).GetTypeInfo().GetDeclaredMethods("ThenInclude")
                                                                                     where mi.GetGenericArguments().Count() == 3
                                                                                     select mi).Single(delegate (MethodInfo mi)
@@ -104,8 +152,17 @@ namespace WalkingTec.Mvvm.Core
                                                                                         return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
                                                                                     });
 
+        /// <summary>
+        /// 通过反射获取的EF Core ThenInclude方法（上一层为单个引用导航属性的版本），供动态构建ThenInclude表达式树时调用
+        /// </summary>
         internal static readonly MethodInfo ThenIncludeAfterReferenceMethodInfo = typeof(EntityFrameworkQueryableExtensions).GetTypeInfo().GetDeclaredMethods("ThenInclude").Single((MethodInfo mi) => mi.GetGenericArguments().Count() == 3 && mi.GetParameters()[0].ParameterType.GenericTypeArguments[1].IsGenericParameter);
+        /// <summary>
+        /// 当前操作的实体对象
+        /// </summary>
         public TModel Entity { get; set; }
+        /// <summary>
+        /// 是否跳过基类的唯一性验证，批量导入的时候唯一性验证会由存储过程完成，不需要单独调用本类的验证方法
+        /// </summary>
         [JsonIgnore]
         public bool ByPassBaseValidation { get; set; }
 
@@ -121,15 +178,12 @@ namespace WalkingTec.Mvvm.Core
             var ctor = typeof(TModel).GetConstructor(Type.EmptyTypes);
             Entity = ctor.Invoke(null) as TModel;
             //初始化VM中所有List<>的类
-            //var lists = typeof(TModel).GetAllProperties().Where(x => x.PropertyType.IsGeneric(typeof(List<>)));
-            //foreach (var li in lists)
-            //{
-            //    var gs = li.PropertyType.GetGenericArguments();
-            //    var newObj = Activator.CreateInstance(typeof(List<>).MakeGenericType(gs[0]));
-            //    li.SetValue(Entity, newObj, null);
-            //}
         }
 
+        /// <summary>
+        /// 获取当前实体类型的基础查询对象
+        /// </summary>
+        /// <returns>实体类型的IQueryable查询对象</returns>
         public IQueryable<TModel> GetBaseQuery()
         {
             return DC.Set<TModel>();
@@ -190,6 +244,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<IncludeInfo> exps = new List<IncludeInfo>();
                     Expression current = item.Body;
+                    //从Lambda表达式体的最深层向外逐层解析成员访问，收集所有TopBasePoco类型的关联成员，串成Include链
                     while (current != null && current.NodeType != ExpressionType.Parameter)
                     {
                         if (current.NodeType == ExpressionType.MemberAccess)
@@ -234,6 +289,7 @@ namespace WalkingTec.Mvvm.Core
                         continue;
                     }
                     includeInfo.Add(exps[0]);
+                    //用表达式树拼接 Include 和 ThenInclude 调用链，模拟EF Core的强类型关联加载
                     Expression includeExpression = query.Expression;
                     ParameterExpression para = Expression.Parameter(ModelType, "x");
                     MemberExpression newme = Expression.MakeMemberAccess(para, exps[0].mi);
@@ -282,6 +338,7 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
 
+            //处理链上含有NotMapped成员的软关联：构建Select投影，在投影里用子查询填充NotMapped的关联属性
             List<IncludeInfo> softincludes = includeInfo.Where(x => x.HasNotMapped == true).ToList();
             if (softincludes.Count > 0)
             {
@@ -370,6 +427,10 @@ namespace WalkingTec.Mvvm.Core
             DC.SaveChanges();
         }
 
+        /// <summary>
+        /// 异步添加，进行默认的添加操作。子类如有自定义操作应重载本函数
+        /// </summary>
+        /// <returns>异步任务</returns>
         public virtual async Task DoAddAsync()
         {
             DoAddPrepare();
@@ -386,8 +447,15 @@ namespace WalkingTec.Mvvm.Core
             await DC.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 添加前的准备工作：先校验AI代码字段（黑名单+试编译，防止绕过前端直接提交恶意代码），
+        /// 再清空关联实体、自动设定审计字段、处理子表外键，并将实体挂载到DataContext
+        /// </summary>
         private void DoAddPrepare()
         {
+            //AI代码安全校验：不通过时向ModelState报错并中止，实体不落库
+            if (AiCodeCompiler.ValidateAiCodeFields(Entity, MSD) == false)
+                return;
             var pros = typeof(TModel).GetAllProperties();
             //将所有TopBasePoco的属性赋空值，防止添加关联的重复内容
             if (typeof(TModel) != typeof(FileAttachment))
@@ -554,6 +622,11 @@ namespace WalkingTec.Mvvm.Core
 
         }
 
+        /// <summary>
+        /// 异步修改，进行默认的修改操作。子类如有自定义操作应重载本函数
+        /// </summary>
+        /// <param name="updateAllFields">为true时，框架会更新当前Entity的全部值，为false时，框架会检查Request.Form里的key，只更新表单提交的字段</param>
+        /// <returns>异步任务</returns>
         public virtual async Task DoEditAsync(bool updateAllFields = false)
         {
             DoEditPrepare(updateAllFields);
@@ -571,19 +644,21 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 修改前的准备工作：先校验AI代码字段（黑名单+试编译，防止绕过前端直接提交恶意代码），
+        /// 再自动设定更新时间和更新人、清空关联实体、对比子表差异，并根据updateAllFields决定更新全部字段还是仅更新表单提交的字段
+        /// </summary>
+        /// <param name="updateAllFields">为true时更新全部字段，为false时只更新表单提交的字段</param>
         private void DoEditPrepare(bool updateAllFields)
         {
+            //AI代码安全校验：不通过时向ModelState报错并中止，实体不落库
+            if (AiCodeCompiler.ValidateAiCodeFields(Entity, MSD) == false)
+                return;
             if (typeof(IBasePoco).IsAssignableFrom(typeof(TModel)))
             {
                 IBasePoco ent = Entity as IBasePoco;
-                //if (ent.UpdateTime == null)
-                //{
                 ent.UpdateTime = DateTime.Now;
-                //}
-                //if (string.IsNullOrEmpty(ent.UpdateBy))
-                //{
                 ent.UpdateBy = LoginUserInfo?.ITCode;
-                //}
             }
             var pros = typeof(TModel).GetAllProperties();
             //pros = pros.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(NotMappedAttribute)) == false).ToList();
@@ -675,11 +750,11 @@ namespace WalkingTec.Mvvm.Core
                                 continue;
                             }
 
+                            //用表达式树构建查询，获取数据库中该主表ID对应的现有子表数据
                             var set = DC.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(ftype);
                             var dataquery = set.Invoke(DC, null) as IQueryable<TopBasePoco>;
                             ParameterExpression pe = Expression.Parameter(ftype);
                             Expression member = Expression.MakeMemberAccess(pe, ftype.GetSingleProperty(fkname));
-                            //member = Expression.Call(member, "ToString", new Type[] { });
                             Expression right = Expression.Constant(string.IsNullOrEmpty(softkey) ? Entity.GetID() : Entity.GetPropertyValue(softkey), member.Type);
                             Expression condition = Expression.Equal(member, right);
                             var exp = Expression.Call(
@@ -694,16 +769,22 @@ namespace WalkingTec.Mvvm.Core
                             IEnumerable<TopBasePoco> toadd = null;
                             IEnumerable<TopBasePoco> toremove = null;
                             Utils.CheckDifference(data, list, out toremove, out toadd);
-                            //设定子表应该更新的字段
+                            //设定子表应该更新的字段（从所有行的FC中收集字段名全集）
                             List<string> setnames = new List<string>();
+                            var fcPrefix = $"{this.GetParentStr().ToLower()}entity." + pro.Name.ToLower() + "[";
                             foreach (var field in FC.Keys)
                             {
                                 var f = field.ToLower();
-
-                                if (f.StartsWith($"{this.GetParentStr().ToLower()}entity." + pro.Name.ToLower() + "[0]."))
+                                if (f.StartsWith(fcPrefix))
                                 {
-                                    string name = f.Replace($"{this.GetParentStr().ToLower()}entity." + pro.Name.ToLower() + "[0].", "");
-                                    setnames.Add(name);
+                                    // 从 "entity.proName[N].fieldName" 中提取 fieldName
+                                    int bracketEnd = f.IndexOf("].", fcPrefix.Length);
+                                    if (bracketEnd > 0)
+                                    {
+                                        string name = f.Substring(bracketEnd + 2);
+                                        if (setnames.Contains(name) == false)
+                                            setnames.Add(name);
+                                    }
                                 }
                             }
 
@@ -789,6 +870,7 @@ namespace WalkingTec.Mvvm.Core
                                 DC.AddEntity(item);
                             }
                         }
+                        //页面传来的子表数据为空时，删除数据库中该主表ID对应的全部子表数据
                         else if ((pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
                         {
                             if (string.IsNullOrEmpty(fkname))
@@ -800,7 +882,6 @@ namespace WalkingTec.Mvvm.Core
                             var dataquery = set.Invoke(DC, null) as IQueryable<TopBasePoco>;
                             ParameterExpression pe = Expression.Parameter(ftype);
                             Expression member = Expression.MakeMemberAccess(pe, ftype.GetSingleProperty(fkname));
-                            //member = Expression.Call(member, "ToString", new Type[] { });
                             Expression right = Expression.Constant(string.IsNullOrEmpty(softkey) ? Entity.GetID() : Entity.GetPropertyValue(softkey), member.Type);
                             Expression condition = Expression.Equal(member, right);
                             var exp = Expression.Call(
@@ -846,8 +927,10 @@ namespace WalkingTec.Mvvm.Core
             #endregion
 
 
+            //只更新表单提交的字段：根据FC中提交的key，将对应的主表字段逐个标记为更新状态
             if (updateAllFields == false)
             {
+                //树形结构时，如果ParentId指向自身，则从FC中移除ParentId，避免形成自引用
                 if (typeof(TreePoco).IsAssignableFrom(typeof(TModel)))
                 {
                     var cid = Entity.GetID();
@@ -896,6 +979,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
+                //更新全部字段：树形结构下如果ParentId指向自身，则将其置为null，然后更新整个实体
                 if (typeof(TreePoco).IsAssignableFrom(typeof(TModel)))
                 {
                     var cid = Entity.GetID();
@@ -946,6 +1030,10 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 异步删除，进行默认的删除操作。子类如有自定义操作应重载本函数
+        /// </summary>
+        /// <returns>异步任务</returns>
         public virtual async Task DoDeleteAsync()
         {
             //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
@@ -1033,6 +1121,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 DC.DeleteEntity(Entity);
                 DC.SaveChanges();
+                //如果实体参与过工作流，同时删除关联的工作流实例、执行日志和流程记录
                 if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)))
                 {
                     var wi = DC.Set<Elsa_WorkflowInstance>().CheckEqual(typeof(TModel).FullName, x => x.ContextType).CheckEqual(Entity.GetID().ToString(), x => x.ContextId).ToList();
@@ -1062,6 +1151,10 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 异步物理删除，对于普通的TopBasePoco和Delete操作相同，对于PersistPoco则进行真正的删除。子类如有自定义操作应重载本函数
+        /// </summary>
+        /// <returns>异步任务</returns>
         public virtual async Task DoRealDeleteAsync()
         {
             try
@@ -1102,6 +1195,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 DC.DeleteEntity(Entity);
                 await DC.SaveChangesAsync();
+                //如果实体参与过工作流，同时删除关联的工作流实例、执行日志和流程记录
                 if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)))
                 {
                     var wi = DC.Set<Elsa_WorkflowInstance>().CheckEqual(typeof(TModel).FullName, x => x.ContextType).CheckEqual(Entity.GetID().ToString(), x => x.ContextId).ToList();
@@ -1173,55 +1267,6 @@ namespace WalkingTec.Mvvm.Core
             if (ByPassBaseValidation == false)
             {
                 base.Validate();
-                ////如果msd是BasicMSD，则认为他是手动创建的，也就是说并没有走asp.net core默认的模型验证
-                ////那么手动验证模型
-                //if (Wtm?.MSD is BasicMSD)
-                //{
-                //    var valContext = new ValidationContext(this.Entity);
-                //    List<ValidationResult> error = new List<ValidationResult>();
-                //    if (!Validator.TryValidateObject(Entity, valContext, error, true))
-                //    {
-                //        foreach (var item in error)
-                //        {
-                //            string key = item.MemberNames.FirstOrDefault();
-                //            if (MSD.Keys.Contains(key) == false)
-                //            {
-                //                MSD.AddModelError($"Entity.{key}", item.ErrorMessage);
-                //            }
-                //        }
-                //    }
-                //    var list = typeof(TModel).GetAllProperties().Where(x => x.PropertyType.IsListOf<TopBasePoco>());
-                //    foreach (var item in list)
-                //    {
-                //        var it = item.GetValue(Entity) as IEnumerable;
-                //        if(it == null)
-                //        {
-                //            continue;
-                //        }
-                //        var contextset = false;
-                //        foreach (var e in it)
-                //        {
-                //            if(contextset == false)
-                //            {
-                //                valContext = new ValidationContext(e);
-                //                contextset = true;
-                //            }
-
-                //            if (!Validator.TryValidateObject(e, valContext, error, true))
-                //            {
-                //                foreach (var err in error)
-                //                {
-                //                    string key = err.MemberNames.FirstOrDefault();
-                //                    if (MSD.Keys.Contains(key) == false)
-                //                    {
-                //                        MSD.AddModelError($"Entity.{item.Name}.{key}", err.ErrorMessage);
-                //                    }
-                //                }
-                //            }
-
-                //        }
-                //    }
-                //}
 
                 //验证重复数据
                 ValidateDuplicateData();
@@ -1286,17 +1331,9 @@ namespace WalkingTec.Mvvm.Core
                     }
 
                     //如果要求判断id不重复，则去掉id不相等的判断，加入id相等的判断
-                    //if (props.Any(x => x.Name.ToLower() == "id"))
-                    //{
-                    //    conditions.RemoveAt(0);
-                    //    BinaryExpression idEqual = Expression.Equal(idLeft, idRight);
-                    //    conditions.Insert(0, idEqual);
-                    //}
-                    //int count = 0;
                     if (conditions.Count > 1)
                     {
                         //循环添加条件并生成Where语句
-                        //Expression conExp = conditions[0];
                         Expression whereCallExpression = baseExp.Expression;
                         for (int i = 0; i < conditions.Count; i++)
                         {
@@ -1356,6 +1393,11 @@ namespace WalkingTec.Mvvm.Core
             return new[] { "Entity." + pi.Name };
         }
 
+        /// <summary>
+        /// 启动实体对应的工作流
+        /// </summary>
+        /// <param name="flowName">流程名称，为空时根据实体类型自动查找关联的流程定义</param>
+        /// <returns>工作流运行结果，实体未保存或找不到流程定义时返回null</returns>
         public virtual async Task<RunWorkflowResult> StartWorkflowAsync(string flowName=null)
         {
             if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)) == false)
@@ -1406,6 +1448,14 @@ namespace WalkingTec.Mvvm.Core
 
         }
 
+        /// <summary>
+        /// 继续执行实体当前挂起的工作流，依次按当前用户、用户所属角色、用户所属组查找匹配的审批节点
+        /// </summary>
+        /// <param name="actionName">审批动作名称</param>
+        /// <param name="remark">审批备注</param>
+        /// <param name="flowName">流程名称，为空时默认使用实体类型的全名</param>
+        /// <param name="tag">流程标签，用于区分同一实体上的多个流程实例</param>
+        /// <returns>工作流运行结果，没有匹配的待审批流程时返回null</returns>
         public virtual async Task<RunWorkflowResult> ContinueWorkflowAsync(string actionName, string remark, string flowName=null, string tag = null)
         {
             if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)) == false)
@@ -1492,11 +1542,21 @@ namespace WalkingTec.Mvvm.Core
             return null;
         }
 
+        /// <summary>
+        /// 调用工作流接口获取实体的审批时间线
+        /// </summary>
+        /// <param name="flowName">流程名称</param>
+        /// <returns>审批时间线列表</returns>
         public virtual async Task<List<ApproveTimeLine>> GetWorkflowTimeLineAsync(string flowName = null)
         {
             var rv = await Wtm.CallAPI<List<ApproveTimeLine>>("", $"{Wtm.HostAddress}/_workflowapi/GetTimeLine?flowname={flowName}&entitytype={typeof(TModel).FullName}&entityid={Entity.GetID()}");
             return rv.Data;
         }
+        /// <summary>
+        /// 调用工作流接口获取实体当前的工作流实例
+        /// </summary>
+        /// <param name="flowName">流程名称</param>
+        /// <returns>工作流实例</returns>
         public virtual async Task<WorkflowInstance> GetWorkflowInstanceAsync(string flowName = null)
         {
             var rv = await Wtm.CallAPI<WorkflowInstance>("", $"{Wtm.HostAddress}/_workflowapi/GetWorkflow?flowname={flowName}&entitytype={typeof(TModel).FullName}&entityid={Entity.GetID()}");
@@ -1505,14 +1565,33 @@ namespace WalkingTec.Mvvm.Core
 
     }
 
+    /// <summary>
+    /// 记录Include链中单个节点的信息，通过Next和Pre指针把多级成员访问串联成链，供解析和构建Include表达式使用
+    /// </summary>
     class IncludeInfo
     {
+        /// <summary>
+        /// 当前节点对应的成员信息
+        /// </summary>
         public MemberInfo mi { get; set; }
+        /// <summary>
+        /// 当前节点对应的成员类型
+        /// </summary>
         public Type t { get; set; }
+        /// <summary>
+        /// Include链中的下一个节点，即层级更深一级的关联成员
+        /// </summary>
         public IncludeInfo Next { get; set; }
+        /// <summary>
+        /// Include链中的上一个节点，即层级更浅一级的关联成员
+        /// </summary>
         public IncludeInfo Pre { get; set; }
 
+        //IsNotMapped属性的背后缓存字段
         private bool? _isnotmapped;
+        /// <summary>
+        /// 当前节点对应的成员是否标记了NotMapped特性
+        /// </summary>
         public bool IsNotMapped
         {
             get
@@ -1525,6 +1604,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 判断从当前节点起的整条Include链上是否存在NotMapped成员
+        /// </summary>
         public bool HasNotMapped
         {
             get
@@ -1542,7 +1624,11 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        //SoftKey属性的背后缓存字段
         private string _softkey;
+        /// <summary>
+        /// 关联实体类型上由SoftKey特性指定的关联字段名称
+        /// </summary>
         public string SoftKey
         {
             get
@@ -1556,7 +1642,11 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        //SoftFK属性的背后缓存字段
         private string _softfk;
+        /// <summary>
+        /// 当前成员上由SoftFK特性指定的外键字段名称
+        /// </summary>
         public string SoftFK
         {
             get
@@ -1570,7 +1660,11 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        //InnerType属性的背后缓存字段
         private Type _innerType;
+        /// <summary>
+        /// 当前节点关联的实际实体类型，若成员为集合则取集合的元素类型
+        /// </summary>
         public Type InnerType
         {
             get
@@ -1588,16 +1682,24 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 为NotMapped的软关联成员构建查询表达式，通过SoftKey或SoftFK指定的字段模拟关联查询
+        /// </summary>
+        /// <param name="parentpe">父对象对应的参数表达式</param>
+        /// <param name="DC">数据上下文</param>
+        /// <returns>构建好的查询表达式，无法构建软关联时返回null</returns>
         public Expression SoftSelect(ParameterExpression parentpe, IDataContext DC)
         {
             Expression rv = null;
 
+            //非NotMapped的普通成员，直接构建成员访问表达式
             if (this.IsNotMapped == false)
             {
                 rv = Expression.MakeMemberAccess(parentpe, parentpe.Type.GetSingleProperty(this.mi.Name));
             }
             else
             {
+                //NotMapped的软关联成员：根据SoftKey或SoftFK构建子查询，模拟关联加载
                 if (this.t.IsList() == false)
                 {
                     if (string.IsNullOrEmpty(this.SoftKey))
@@ -1619,6 +1721,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else
                 {
+                    //列表关联：以子表的SoftFK字段等于父表SoftKey指定字段的值作为条件，构建Where子查询
                     if (string.IsNullOrEmpty(this.SoftFK))
                     {
                         return rv;
@@ -1642,6 +1745,7 @@ namespace WalkingTec.Mvvm.Core
                          Expression.Lambda(condition, new ParameterExpression[] { pe }));
                 }
             }
+            //如果链上还有更深层级，构建Select投影，在投影中递归填充下一层的软关联数据
             if (this.Next != null)
             {
                 ParameterExpression pe = Expression.Parameter(this.InnerType);
@@ -1675,6 +1779,7 @@ namespace WalkingTec.Mvvm.Core
                lambda);
             }
 
+            //单个关联用FirstOrDefault取值，列表关联用ToList取值
             if (this.t.IsList() == false)
             {
                 rv = Expression.Call(

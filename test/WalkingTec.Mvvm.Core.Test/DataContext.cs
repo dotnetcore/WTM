@@ -11,6 +11,10 @@ namespace WalkingTec.Mvvm.Core.Test
         {
         }
 
+        public DataContext(CS cs) : base(cs)
+        {
+        }
+
         public DbSet<Major> Majors { get; set; }
         public DbSet<OptMajor> OptMajors { get; set; }
         public DbSet<School> Schools { get; set; }

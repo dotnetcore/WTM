@@ -119,6 +119,12 @@ namespace WalkingTec.Mvvm.Core
             self.ShowDialog = showDialog;
             return self;
         }
+        /// <summary>
+        /// 是否强制使用Post方式提交请求
+        /// </summary>
+        /// <param name="self">目标动作</param>
+        /// <param name="forcepost">是否强制Post</param>
+        /// <returns>列表动作</returns>
         public static GridAction SetForcePost(this GridAction self, bool forcepost = true)
         {
             self.ForcePost = forcepost;

@@ -10,6 +10,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
     {
         #region Guid Extensions
 
+        /// <summary>
+        /// 将 Guid 转换为不带分隔符的字符串形式
+        /// </summary>
+        /// <param name="self">Guid 值</param>
+        /// <returns>不带连字符的 Guid 字符串</returns>
         public static string ToNoSplitString(this Guid self)
         {
             return self.ToString().Replace("-", string.Empty);
@@ -27,6 +32,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var mtype = self.GetType();
             if(typeof(IBaseCRUDVM<TopBasePoco>).IsAssignableFrom(mtype))
             {
+                //通过无参构造函数创建同类型 CRUD VM 的新实例
                 var rv = mtype.GetConstructor(Type.EmptyTypes).Invoke(null);
                 var toppros = mtype.GetAllProperties();
                 foreach (var tpro in toppros)
@@ -50,6 +56,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         }
                         tpro.SetValue(rv, newEntity);
                     }
+                    //非 Entity 的其他 VM 属性直接复制到新实例
                     else
                     {
                         if (tpro.CanWrite)

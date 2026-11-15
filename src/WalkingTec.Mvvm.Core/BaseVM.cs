@@ -3,14 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -30,6 +27,9 @@ namespace WalkingTec.Mvvm.Core
 
         #region Property
 
+        /// <summary>
+        /// 框架上下文，保存当前请求相关的环境信息（数据上下文、Session、登录用户、缓存等）
+        /// </summary>
         [JsonIgnore]
         public WTMContext Wtm { get; set; }
 
@@ -142,6 +142,9 @@ namespace WalkingTec.Mvvm.Core
         public Configs ConfigInfo { get => Wtm?.ConfigInfo; }
 
 
+        /// <summary>
+        /// UI服务，提供生成前台页面脚本等界面相关的功能
+        /// </summary>
         [JsonIgnore]
         public IUIService UIService { get => Wtm?.UIService; }
 
@@ -157,6 +160,9 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public string ParentWindowId { get => Wtm?.ParentWindowId; }
 
+        /// <summary>
+        /// 分布式缓存，用于读写缓存数据
+        /// </summary>
         [JsonIgnore]
         public IDistributedCache Cache { get => Wtm?.Cache; }
 
@@ -201,18 +207,36 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public List<string> DeletedFileIds { get; set; } = new List<string>();
 
+        /// <summary>
+        /// 当前Controller的名称
+        /// </summary>
         [JsonIgnore]
         public string ControllerName { get; set; }
 
+        /// <summary>
+        /// 多语言本地化服务，用于获取翻译后的文本
+        /// </summary>
         [JsonIgnore]
         public IStringLocalizer Localizer { get => Wtm?.Localizer; }
 
+        /// <summary>
+        /// 本VM在父VM中对应的属性名
+        /// </summary>
         [JsonIgnore]
         public string PropertyNameInParent { get; set; }
+        /// <summary>
+        /// 父VM实例，用于构建VM之间的父子关系
+        /// </summary>
         [JsonIgnore]
         public BaseVM ParentVM { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         [Display(Name = "_Admin.Remark")]
         public string Remark { get; set; }
+        /// <summary>
+        /// 当前Action的名称
+        /// </summary>
         public string ActionName { get; set; }
         #endregion
 
@@ -250,6 +274,10 @@ namespace WalkingTec.Mvvm.Core
             OnAfterReInit?.Invoke(this);
         }
 
+        /// <summary>
+        /// 递归初始化指定VM中所有BaseVM类型的子VM属性（跳过ParentVM以避免循环引用）
+        /// </summary>
+        /// <param name="vm">需要初始化子VM的VM实例</param>
         private void InitSubVM(BaseVM vm)
         {
             var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
@@ -264,6 +292,10 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 递归重新初始化指定VM中所有BaseVM类型的子VM属性（跳过ParentVM以避免循环引用）
+        /// </summary>
+        /// <param name="vm">需要重新初始化子VM的VM实例</param>
         private void ReInitSubVM(BaseVM vm)
         {
             var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
@@ -308,12 +340,17 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="vm">复制的源</param>
         public void CopyContext(BaseVM vm)
         {
+            // 直接引用赋值，使本VM与源VM共享同一套上下文环境（Wtm、表单数据、Controller信息等）
             Wtm = vm.Wtm;
             FC = vm.FC;
             ControllerName = vm.ControllerName;
             CreatorAssembly = vm.CreatorAssembly;
         }
 
+        /// <summary>
+        /// 获取本VM在父VM链路上的完整属性路径，例如 Parent.Child.Self
+        /// </summary>
+        /// <returns>以点号分隔的属性路径字符串，顶级VM返回空字符串</returns>
         public string GetParentStr()
         {
             string rv = "";

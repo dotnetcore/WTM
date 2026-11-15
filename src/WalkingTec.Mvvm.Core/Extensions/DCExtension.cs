@@ -7,7 +7,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -57,13 +56,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 query = AppendSelfDPWhere(query, wtmcontext, dps);
             }
-
-            //if (typeof(IPersistPoco).IsAssignableFrom(typeof(T)))
-            //{
-            //    var mod = new IsValidModifier();
-            //    var newExp = mod.Modify(query.Expression);
-            //    query = query.Provider.CreateQuery<T>(newExp) as IOrderedQueryable<T>;
-            //}
 
             //处理后面要使用的expression
             if (valueField == null)
@@ -163,6 +155,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 rv = query.Select(lambda).ToList();
             }
 
+            //将扁平列表组装为树形结构：为每个节点找到其子节点挂到Children属性下，并把子节点从顶层列表中移除
             List<TreeSelectListItem> toDel = new List<TreeSelectListItem>();
 
             rv.ForEach(x =>
@@ -212,14 +205,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 query = AppendSelfDPWhere(query, wtmcontext, dps);
             }
 
-            //if (typeof(IPersistPoco).IsAssignableFrom(typeof(T)))
-            //{
-            //    var mod = new IsValidModifier();
-            //    var newExp = mod.Modify(query.Expression);
-            //    query = query.Provider.CreateQuery<T>(newExp) as IOrderedQueryable<T>;
-            //}
-
-
             //定义PE
             ParameterExpression pe = Expression.Parameter(typeof(T));
             ChangePara cp = new ChangePara();
@@ -244,7 +229,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 var parentMember = Expression.MakeMemberAccess(pe, typeof(TreePoco<>).GetSingleProperty("ParentId"));
                 var p = Expression.Call(parentMember, "ToString", new Type[] { });
-                //var p1 = Expression.Call(p, "ToLower", new Type[] { });
                 parentBind = Expression.Bind(parentMI, p);
             }
             else
@@ -296,7 +280,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 //如果dps参数是空，则生成 1!=1 这种错误的表达式，这样就查不到任何数据了
                 if (dps == null)
                 {
-                    query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
+                    if (isBasePoco == true)
+                    {
+                        var selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+                        query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
+                    }
+                    else
+                    {
+                        query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
+                    }
                 }
                 else
                 {
@@ -304,15 +296,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     var ids = dps.Where(x => x.TableName == query.ElementType.Name).Select(x => x.RelateId).ToList();
                     if (ids == null || ids.Count() == 0)
                     {
-                        //if (isBasePoco == true)
-                        //{
-                        //    var selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
-                        //    query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
-                        //}
-                        //else
-                        //{
+                        if (isBasePoco == true)
+                        {
+                            var selfexp = Expression.Equal(Expression.Property(pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+                            query = query.Where(Expression.Lambda<Func<T, bool>>(selfexp, pe));
+                        }
+                        else
+                        {
                         query = query.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(Expression.Constant(1), Expression.Constant(1)), pe));
-                        //}
+                        }
                     }
                     else
                     {
@@ -325,52 +317,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             return query;
         }
-
-        /// <summary>
-        /// 为查询语句添加关联表的权限过滤
-        /// </summary>
-        /// <typeparam name="T">源数据类</typeparam>
-        /// <param name="baseQuery">源Query</param>
-        /// <param name="wtmcontext"></param>
-        /// <param name="IdFields">关联表外键</param>
-        /// <returns>修改后的查询语句</returns>
-        //public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, WTMContext wtmcontext, params Expression<Func<T, object>>[] IdFields) where T : TopBasePoco
-        //{
-        //    var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
-        //    //循环所有关联外键
-        //    List<string> tableNameList = new List<string>();
-        //    foreach (var IdField in IdFields)
-        //    {
-
-        //        //将外键 Id 用.分割，循环生成指向最终id的表达式，比如x=> x.a.b.Id
-        //        var fieldName = IdField.GetPropertyName(false);
-        //        //获取关联的类
-        //        string typename = "";
-        //        //如果外键名称不是‘id’，则根据model层的命名规则，它应该是xxxId，所以抹掉最后的 Id 应该是关联的类名
-        //        if (fieldName.ToLower() != "id")
-        //        {
-        //            fieldName = fieldName.Remove(fieldName.Length - 2);
-        //            var dtype = IdField.GetPropertyInfo().DeclaringType;
-        //            if (dtype == typeof(TreePoco) && fieldName == "Parent")
-        //            {
-        //                typename = typeof(T).Name;
-        //            }
-        //            else
-        //            {
-        //                typename = dtype.GetSingleProperty(fieldName).PropertyType.Name;
-        //            }
-        //        }
-        //        //如果是 Id，则本身就是关联的类
-        //        else
-        //        {
-        //            typename = typeof(T).Name;
-        //        }
-        //        tableNameList.Add(typename);
-
-        //    }
-        //    //var test = DPWhere(baseQuery, dps, tableNameList, IdFields);
-        //    return DPWhere(baseQuery, wtmcontext, tableNameList, IdFields);
-        //}
 
         #region AddBy YOUKAI 20160310
         /// <summary>
@@ -385,8 +331,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
         {
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
 
-            // var dpsSetting = BaseVM.AllDPS;
             ParameterExpression pe = Expression.Parameter(typeof(T));
+            //预先生成恒真(1==1)和恒假(1!=1)两个表达式，分别作为默认条件和查不到任何数据的条件
             Expression left1 = Expression.Constant(1);
             Expression right1 = Expression.Constant(1);
             Expression trueExp = Expression.Equal(left1, right1);
@@ -470,7 +416,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         continue;
                     }
-                    exp = falseExp;
+                    if (typeof(IBasePoco).IsAssignableFrom(data.Last().pe.Type))
+                    {
+                        exp = Expression.Equal(Expression.Property(data.Last().pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+                    }
+                    else
+                    {
+                        exp = falseExp;
+                    }
                 }
                 else
                 {
@@ -485,15 +438,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     //如果没有关联的id，则拼接一个返回假的where，是语句查询不到任何数据
                     if (ids == null || ids.Count == 0)
                     {
-                        //bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(data.Last().pe.Type);
-                        //if (isBasePoco)
-                        //{
-                        //    exp = Expression.Equal(Expression.Property(data.Last().pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
-                        //}
-                        //else
-                        //{
+                        bool isBasePoco = typeof(IBasePoco).IsAssignableFrom(data.Last().pe.Type);
+                        if (isBasePoco)
+                        {
+                            exp = Expression.Equal(Expression.Property(data.Last().pe, "CreateBy"), Expression.Constant(wtmcontext.LoginUserInfo?.ITCode));
+                        }
+                        else
+                        {
                         exp = falseExp;
-                        //}
+                        }
                     }
                     //如果有关联 Id
                     else
@@ -531,6 +484,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                 }
                 //把所有where里的条件用And拼接在一起
+                //实际这里使用OrElse把多个外键的权限条件按"或"关系拼接，满足任一外键的权限即可通过
                 if (finalExp == null)
                 {
                     finalExp = exp;
@@ -555,6 +509,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
         #endregion
 
+        /// <summary>
+        /// 对查询结果进行排序，支持多级排序
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="sortInfo">排序信息，JSON格式的排序条件列表</param>
+        /// <param name="defaultSorts">默认排序条件，当sortInfo为空时使用</param>
+        /// <returns>排序后的查询</returns>
         public static IOrderedQueryable<T> Sort<T>(this IQueryable<T> baseQuery, string sortInfo, params SortInfo[] defaultSorts) where T : TopBasePoco
         {
             List<SortInfo> info = new List<SortInfo>();
@@ -563,6 +525,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 if (defaultSorts == null || defaultSorts.Length == 0)
                 {
+                    //没有任何排序条件时，默认按ID字段排序
                     ParameterExpression pe = Expression.Parameter(typeof(T));
                     var idproperty = typeof(T).GetSingleProperty("ID");
                     Expression pro = Expression.Property(pe, idproperty);
@@ -586,10 +549,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 var temp = JsonSerializer.Deserialize<List<SortInfo>>(sortInfo);
                 info.AddRange(temp);
             }
+            //按顺序应用排序条件，第一个条件使用OrderBy，后续条件使用ThenBy实现多级排序
             foreach (var item in info)
             {
                 ParameterExpression pe = Expression.Parameter(typeof(T));
                 var idproperty = typeof(T).GetSingleProperty(item.Property);
+                if (idproperty == null) continue;  // 忽略无效的属性名
                 Expression pro = Expression.Property(pe, idproperty);
                 Type proType = typeof(T).GetSingleProperty(item.Property).PropertyType;
                 if (item.Direction == SortDir.Asc)
@@ -642,6 +607,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 当val不为空时，追加指定成员等于val的查询条件，默认使用ID字段
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="val">要比较的值</param>
+        /// <param name="member">指定进行比较的成员表达式，为空则使用ID字段</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val, Expression<Func<T, object>> member = null)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
@@ -656,6 +629,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             Expression peid = Expression.Property(pe, idproperty);
             var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
+            //如果Id属性是可空类型，则取其Value属性，以便与常量直接比较
             if (idproperty.PropertyType.IsNullable())
             {
                 peid = Expression.Property(peid, "Value");
@@ -663,6 +637,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
         }
 
+        /// <summary>
+        /// 追加按ParentId字段等于val的查询条件
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="val">父节点Id字符串</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckParentID<T>(this IQueryable<T> baseQuery, string val)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
@@ -670,6 +651,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             idproperty = typeof(T).GetSingleProperty("ParentId");
             Expression peid = Expression.Property(pe, idproperty);
             var p = Expression.Call(peid, "ToString", new Type[] { });
+            //val为null时查询ParentId为null的数据（即根节点），否则将ParentId转为字符串后按值比较
             if (val == null)
             {
                 return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(null)), pe));
@@ -681,6 +663,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
 
+        /// <summary>
+        /// 当val不为空时，追加指定成员的值包含在val列表中的查询条件，默认使用ID字段
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="val">Id字符串列表</param>
+        /// <param name="member">指定进行比较的成员表达式，为空则使用ID字段</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckIDs<T>(this IQueryable<T> baseQuery, List<string> val, Expression<Func<T, object>> member = null)
         {
             if (val == null || val.Count == 0)
@@ -698,16 +688,31 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 idproperty = member.GetPropertyInfo();
             }
             Expression peid = Expression.Property(pe, idproperty);
+            //生成类似 List.Contains(id) 的查询条件
             var exp = val.GetContainIdExpression(typeof(T), pe, peid).Body;
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(exp, pe));
         }
 
 
+        /// <summary>
+        /// 追加指定成员不为null的查询条件
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="member">要判断的成员表达式</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckNotNull<T>(this IQueryable<T> baseQuery, Expression<Func<T, object>> member)
         {
             return baseQuery.CheckNotNull<T>(member.GetPropertyName());
         }
 
+        /// <summary>
+        /// 追加指定成员不为null的查询条件
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="member">要判断的成员名称</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckNotNull<T>(this IQueryable<T> baseQuery, string member)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
@@ -717,6 +722,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
 
+        /// <summary>
+        /// 追加指定成员为null的查询条件
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="member">要判断的成员表达式</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckNull<T>(this IQueryable<T> baseQuery, Expression<Func<T, object>> member)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
@@ -774,6 +786,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return baseQuery.Where(where);
         }
 
+        /// <summary>
+        /// 当val不为空时，追加指定字符串字段等于val的查询条件
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="val">要比较的字符串值</param>
+        /// <param name="field">要比较的字符串字段表达式</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckEqual<T>(this IQueryable<T> baseQuery, string val, Expression<Func<T, string>> field)
         {
             if (val == null || val == "")
@@ -789,6 +809,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// 当val不为空时，追加指定可空字段等于val的查询条件
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <typeparam name="S">字段的值类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="val">要比较的可空值</param>
+        /// <param name="field">要比较的可空字段表达式</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckEqual<T, S>(this IQueryable<T> baseQuery, S? val, Expression<Func<T, S?>> field)
             where S : struct
         {
@@ -804,6 +833,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// 追加指定可空字段等于val的查询条件，是可空参数版本的重载
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <typeparam name="S">字段的值类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="val">要比较的值</param>
+        /// <param name="field">要比较的可空字段表达式</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckEqual<T, S>(this IQueryable<T> baseQuery, S val, Expression<Func<T, S?>> field)
     where S : struct
         {
@@ -812,6 +850,18 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
 
+        /// <summary>
+        /// 当valMin或valMax不为空时，追加指定字段处于区间内的查询条件
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <typeparam name="S">字段的值类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="valMin">区间最小值，为null时不限制下界</param>
+        /// <param name="valMax">区间最大值，为null时不限制上界</param>
+        /// <param name="field">要比较的字段表达式</param>
+        /// <param name="includeMin">是否包含最小值（大于等于），默认为true</param>
+        /// <param name="includeMax">是否包含最大值（小于等于），默认为true</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckBetween<T, S>(this IQueryable<T> baseQuery, S? valMin, S? valMax, Expression<Func<T, S?>> field, bool includeMin = true, bool includeMax = true)
     where S : struct
         {
@@ -836,6 +886,18 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// 追加指定字段处于区间内的查询条件，是可空参数版本的重载
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <typeparam name="S">字段的值类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="valMin">区间最小值</param>
+        /// <param name="valMax">区间最大值</param>
+        /// <param name="field">要比较的字段表达式</param>
+        /// <param name="includeMin">是否包含最小值，默认为true</param>
+        /// <param name="includeMax">是否包含最大值，默认为true</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckBetween<T, S>(this IQueryable<T> baseQuery, S valMin, S valMax, Expression<Func<T, S?>> field, bool includeMin = true, bool includeMax = true)
 where S : struct
         {
@@ -844,6 +906,18 @@ where S : struct
             return CheckBetween(baseQuery, a, b, field, includeMin, includeMax);
         }
 
+        /// <summary>
+        /// 追加指定字段处于区间内的查询条件，是可空参数版本的重载
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <typeparam name="S">字段的值类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="valMin">区间最小值</param>
+        /// <param name="valMax">区间最大值</param>
+        /// <param name="field">要比较的字段表达式</param>
+        /// <param name="includeMin">是否包含最小值，默认为true</param>
+        /// <param name="includeMax">是否包含最大值，默认为true</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckBetween<T, S>(this IQueryable<T> baseQuery, S? valMin, S valMax, Expression<Func<T, S?>> field, bool includeMin = true, bool includeMax = true)
 where S : struct
         {
@@ -852,6 +926,18 @@ where S : struct
             return CheckBetween(baseQuery, a, b, field, includeMin, includeMax);
         }
 
+        /// <summary>
+        /// 追加指定字段处于区间内的查询条件，是可空参数版本的重载
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <typeparam name="S">字段的值类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="valMin">区间最小值</param>
+        /// <param name="valMax">区间最大值</param>
+        /// <param name="field">要比较的字段表达式</param>
+        /// <param name="includeMin">是否包含最小值，默认为true</param>
+        /// <param name="includeMax">是否包含最大值，默认为true</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckBetween<T, S>(this IQueryable<T> baseQuery, S valMin, S? valMax, Expression<Func<T, S?>> field, bool includeMin = true, bool includeMax = true)
 where S : struct
         {
@@ -860,6 +946,15 @@ where S : struct
             return CheckBetween(baseQuery, a, b, field, includeMin, includeMax);
         }
 
+        /// <summary>
+        /// 当val不为空时，追加指定字符串字段包含val的模糊查询条件
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="val">要包含的字符串值</param>
+        /// <param name="field">要查询的字符串字段表达式</param>
+        /// <param name="ignoreCase">是否忽略大小写，默认为true</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckContain<T>(this IQueryable<T> baseQuery, string val, Expression<Func<T, string>> field, bool ignoreCase = true)
         {
             if (string.IsNullOrEmpty(val))
@@ -885,6 +980,15 @@ where S : struct
             }
         }
 
+        /// <summary>
+        /// 当val不为空时，追加指定字段的值包含在val列表中的查询条件
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <typeparam name="S">字段的值类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="val">要匹配的值列表</param>
+        /// <param name="field">要比较的字段表达式</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckContain<T, S>(this IQueryable<T> baseQuery, List<S> val, Expression<Func<T, S>> field)
         {
             if (val == null || val.Count == 0 || (val.Count == 1 && val[0] == null))
@@ -901,6 +1005,15 @@ where S : struct
             }
         }
 
+        /// <summary>
+        /// 当val不为空时，追加指定字段的值包含在val字符串列表中的查询条件，常用于多选下拉框过滤
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <typeparam name="S">字段的值类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="val">要匹配的Id字符串列表</param>
+        /// <param name="field">要比较的字段表达式</param>
+        /// <returns>追加了查询条件的query</returns>
         public static IQueryable<T> CheckContain<T, S>(this IQueryable<T> baseQuery, List<string> val, Expression<Func<T, S>> field)
         {
             if (val == null || val.Count == 0 || (val.Count == 1 && val[0] == null))
@@ -915,6 +1028,13 @@ where S : struct
             }
         }
 
+        /// <summary>
+        /// 动态选择指定字段的值并转为字符串，形成字符串序列的查询
+        /// </summary>
+        /// <typeparam name="T">数据类类型</typeparam>
+        /// <param name="baseQuery">基础查询</param>
+        /// <param name="fieldName">要选择的字段名称</param>
+        /// <returns>字段值字符串的查询</returns>
         public static IQueryable<string> DynamicSelect<T>(this IQueryable<T> baseQuery, string fieldName)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
@@ -933,6 +1053,12 @@ where S : struct
         }
 
 
+        /// <summary>
+        /// 获取指定模型对应的数据库表名
+        /// </summary>
+        /// <typeparam name="T">模型类型</typeparam>
+        /// <param name="self">DataContext</param>
+        /// <returns>数据库表名</returns>
         public static string GetTableName<T>(this IDataContext self)
         {
             return self.Model.FindEntityType(typeof(T)).GetTableName();
@@ -1033,6 +1159,13 @@ where S : struct
             }
         }
 
+        /// <summary>
+        /// 通过字段表达式获取该字段在数据库中对应的列名
+        /// </summary>
+        /// <typeparam name="T">模型类型</typeparam>
+        /// <param name="self">DataContext</param>
+        /// <param name="field">字段表达式</param>
+        /// <returns>数据库列名</returns>
         public static string GetFieldName<T>(this IDataContext self, Expression<Func<T, object>> field)
         {
             string pname = field.GetPropertyName();
@@ -1040,12 +1173,26 @@ where S : struct
         }
 
 
+        /// <summary>
+        /// 通过字段名称获取该字段在数据库中对应的列名
+        /// </summary>
+        /// <typeparam name="T">模型类型</typeparam>
+        /// <param name="self">DataContext</param>
+        /// <param name="fieldname">字段名称</param>
+        /// <returns>数据库列名</returns>
         public static string GetFieldName<T>(this IDataContext self, string fieldname)
         {
             var rv = self.Model.FindEntityType(typeof(T)).FindProperty(fieldname);
             return rv?.GetColumnName(new Microsoft.EntityFrameworkCore.Metadata.StoreObjectIdentifier());
         }
 
+        /// <summary>
+        /// 通过模型和外键列名查找该外键对应的关联到主表的属性名称
+        /// </summary>
+        /// <param name="self">DataContext</param>
+        /// <param name="sourceType">子表model类型</param>
+        /// <param name="fkname">外键列名</param>
+        /// <returns>关联主表的属性名称</returns>
         public static string GetPropertyNameByFk(this IDataContext self, Type sourceType, string fkname)
         {
             try
@@ -1067,6 +1214,13 @@ where S : struct
         }
 
 
+        /// <summary>
+        /// 将Id字符串列表转换为类似 List.Contains(id) 的Lambda查询条件
+        /// </summary>
+        /// <typeparam name="TModel">数据类类型</typeparam>
+        /// <param name="Ids">Id字符串列表</param>
+        /// <param name="peid">指定要比较的Id表达式，为空则使用ID字段</param>
+        /// <returns>包含判断的Lambda表达式</returns>
         public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null)
         {
             ParameterExpression pe = Expression.Parameter(typeof(TModel));
@@ -1074,6 +1228,14 @@ where S : struct
             return rv;
         }
 
+        /// <summary>
+        /// 将Id字符串列表转换为类似 List.Contains(id) 的Lambda查询条件
+        /// </summary>
+        /// <param name="Ids">Id字符串列表</param>
+        /// <param name="modeltype">数据类类型</param>
+        /// <param name="pe">Lambda表达式的参数</param>
+        /// <param name="peid">指定要比较的Id表达式，为空则使用ID字段</param>
+        /// <returns>包含判断的Lambda表达式</returns>
         public static LambdaExpression GetContainIdExpression(this List<string> Ids, Type modeltype, ParameterExpression pe, Expression peid = null)
         {
             if (Ids == null)
@@ -1093,6 +1255,7 @@ where S : struct
                     peid = (peid as LambdaExpression).Body;
                 }
             }
+            //根据id属性的类型构造对应泛型的List，并把字符串形式的Id逐个转换类型后加入List
             var propertype = peid.GetPropertyInfo().PropertyType;
             var listtype = typeof(List<>).MakeGenericType(propertype);
             var list = listtype.GetConstructor(Type.EmptyTypes).Invoke(null);
@@ -1102,6 +1265,7 @@ where S : struct
                 object vv = PropertyHelper.ConvertValue(item, peid.Type);
                 add.Invoke(list, new object[] { vv });
             }
+            //生成类似 List.Contains(id) 的条件，并包装成Lambda表达式返回
             Expression dpleft = Expression.Constant(list);
             Expression dpcondition = Expression.Call(dpleft, listtype.GetMethod("Contains"), peid);
             var rv = Expression.Lambda(typeof(Func<,>).MakeGenericType(modeltype, typeof(bool)), dpcondition, pe);
@@ -1119,6 +1283,7 @@ where S : struct
                 throw new ArgumentNullException(nameof(self));
             if (self.Database == null)
                 throw new ArgumentNullException(nameof(self.Database));
+            //内存数据库不支持事务，统一返回假事务；已存在事务说明是嵌套调用，同样返回假事务以避免冲突
             if (@"Microsoft.EntityFrameworkCore.InMemory".Equals(self.Database.ProviderName, StringComparison.OrdinalIgnoreCase))
                 return FakeNestedTransaction.DefaultTransaction;
             return self.Database.CurrentTransaction == null ? self.Database.BeginTransaction() : FakeNestedTransaction.DefaultTransaction;
@@ -1142,48 +1307,84 @@ where S : struct
         }
     }
 
+    /// <summary>
+    /// DbCommand相关扩展函数
+    /// </summary>
     public static class DbCommandExtension
     {
+        /// <summary>
+        /// 为命令添加参数（预留方法，暂未实现具体逻辑）
+        /// </summary>
+        /// <param name="command">DbCommand命令</param>
         public static void AddParameter(this DbCommand command)
         {
 
         }
     }
 
+    /// <summary>
+    /// 假事务，用于处理同一DataContext下嵌套事务的场景，避免嵌套的事务引发冲突
+    /// </summary>
     internal class FakeNestedTransaction : Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction
     {
+        /// <summary>
+        /// 默认的假事务实例，所有嵌套事务共用
+        /// </summary>
         internal static readonly FakeNestedTransaction DefaultTransaction = new FakeNestedTransaction();
 
         private FakeNestedTransaction() { }
 
+        /// <summary>
+        /// 释放事务，假事务不执行任何操作
+        /// </summary>
         public void Dispose()
         {
         }
 
+        /// <summary>
+        /// 提交事务，假事务不执行任何操作，由最外层的真实事务统一提交
+        /// </summary>
         public void Commit()
         {
         }
 
+        /// <summary>
+        /// 回滚事务，假事务直接抛出异常，将错误向上层传递
+        /// </summary>
         public void Rollback()
         {
             throw new TransactionInDoubtException("an exception occurs while executing the nested transaction or processing the results");
         }
 
+        /// <summary>
+        /// 异步提交事务，假事务未实现
+        /// </summary>
+        /// <param name="cancellationToken">取消令牌</param>
         public Task CommitAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 异步回滚事务，假事务未实现
+        /// </summary>
+        /// <param name="cancellationToken">取消令牌</param>
         public Task RollbackAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 异步释放事务，假事务未实现
+        /// </summary>
         public ValueTask DisposeAsync()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 事务Id，假事务固定返回空Guid
+        /// </summary>
         public Guid TransactionId => Guid.Empty;
     }
 }

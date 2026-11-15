@@ -2,8 +2,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WalkingTec.Mvvm.Core
 {
+    /// <summary>
+    /// 持久化模型接口，通过 IsValid 属性提供软删除标记，
+    /// 实现该接口的模型不会被物理删除，而是标记为无效
+    /// </summary>
     public interface IPersistPoco
     {
+        /// <summary>
+        /// 数据有效性标记；为 false 时表示数据已被软删除，不应再出现在业务查询结果中
+        /// </summary>
         bool IsValid { get; set; }
     }
 

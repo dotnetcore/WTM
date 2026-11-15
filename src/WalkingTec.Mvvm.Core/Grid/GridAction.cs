@@ -30,7 +30,13 @@ namespace WalkingTec.Mvvm.Core
         /// 传递多个 Id 或 null
         /// </summary>
         MultiIdWithNull,
+        /// <summary>
+        /// 子表格新增行，不需要传递Id
+        /// </summary>
         AddRow,
+        /// <summary>
+        /// 子表格删除行，传递要删除行的Id
+        /// </summary>
         RemoveRow
     }
 
@@ -43,28 +49,79 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public enum GridActionStandardTypesEnum
     {
+        /// <summary>
+        /// 新建动作，不需要传递Id
+        /// </summary>
         Create,
+        /// <summary>
+        /// 编辑动作，传递单个Id
+        /// </summary>
         Edit,
+        /// <summary>
+        /// 删除动作，传递单个Id
+        /// </summary>
         Delete,
+        /// <summary>
+        /// 简单删除动作，传递单个Id，不弹出窗口直接提交删除
+        /// </summary>
         SimpleDelete,
+        /// <summary>
+        /// 查看详情动作，传递单个Id
+        /// </summary>
         Details,
+        /// <summary>
+        /// 批量修改动作，传递多个Id
+        /// </summary>
         BatchEdit,
+        /// <summary>
+        /// 批量删除动作，传递多个Id
+        /// </summary>
         BatchDelete,
+        /// <summary>
+        /// 简单批量删除动作，传递多个Id，不弹出窗口直接提交删除
+        /// </summary>
         SimpleBatchDelete,
+        /// <summary>
+        /// 导入动作，不需要传递Id
+        /// </summary>
         Import,
+        /// <summary>
+        /// 导出Excel动作，可传递多个Id或null
+        /// </summary>
         ExportExcel,
+        /// <summary>
+        /// 子表格新增行动作
+        /// </summary>
         AddRow,
+        /// <summary>
+        /// 子表格删除行动作
+        /// </summary>
         RemoveRow,
+        /// <summary>
+        /// 动作组，将多个子动作合并为一个下拉按钮组展示
+        /// </summary>
         ActionsGroup,
+        /// <summary>
+        /// 审批动作，传递单个Id
+        /// </summary>
         Approve
     }
     #endregion
 
     #region 导出枚举
+    /// <summary>
+    /// 导出格式枚举
+    /// </summary>
     public enum ExportEnum
     {
+        /// <summary>
+        /// 导出为Excel格式
+        /// </summary>
         [Display(Name = "Excel")]
         Excel = 0,
+        /// <summary>
+        /// 导出为PDF格式
+        /// </summary>
         [Display(Name = "PDF")]
         PDF = 1
     }
@@ -132,6 +189,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public string Area { get; set; }
 
+        /// <summary>
+        /// 是否为导出动作
+        /// </summary>
         public bool IsExport { get; set; }
         /// <summary>
         /// 动作的Controller
@@ -143,17 +203,22 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public string ActionName { get; set; }
 
+        /// <summary>
+        /// 根据Area、Controller、Action和QueryString拼装出的请求地址
+        /// </summary>
         public string Url
         {
             get
             {
                 var rv = "";
+                //设定了Controller时，拼装 /Area/Controller/Action 形式的地址，各段均做Url编码
                 if(string.IsNullOrEmpty(ControllerName) == false){
                     rv = $"/{HttpUtility.UrlEncode(ControllerName)}/{HttpUtility.UrlEncode(ActionName)}";
                     if (!string.IsNullOrEmpty(Area))
                     {
                         rv = $"/{HttpUtility.UrlEncode(Area)}{rv}";
                     }
+                    //有QueryString时附加查询参数，没有时附加“1=1”占位参数保证地址格式统一
                     if (!string.IsNullOrEmpty(QueryString))
                     {
                         rv = $"{rv}?{QueryString}";
@@ -184,6 +249,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public GridActionParameterTypesEnum ParameterType { get; set; }
 
+        /// <summary>
+        /// 是否强制使用Post方式提交请求
+        /// </summary>
         public bool ForcePost { get; set; }
         #endregion
 
@@ -218,6 +286,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public List<GridAction> SubActions { get; set; }
 
+        /// <summary>
+        /// 动作关联的字段名数组，用于在传递Id的同时把指定字段的值一并带入Url
+        /// </summary>
         public string[] whereStr { get; set; }
 
         #endregion

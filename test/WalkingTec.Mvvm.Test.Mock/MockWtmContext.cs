@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Test.Mock
 {
     public static class MockWtmContext
     {
-        public static WTMContext CreateWtmContext(IDataContext dataContext= null, string usercode = null)
+        public static WTMContext CreateWtmContext(IDataContext dataContext= null, string usercode = null, List<IDataPrivilege> dataPrivileges = null)
         {
             GlobalData gd = new GlobalData();
             gd.AllAccessUrls = new List<string>();
@@ -28,6 +28,7 @@ namespace WalkingTec.Mvvm.Test.Mock
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             MockHttpSession mockSession = new MockHttpSession();
             mockHttpRequest.Setup(x => x.Cookies).Returns(new MockCookie());
+            mockHttpRequest.Setup(x => x.Headers).Returns(new HeaderDictionary());
             var cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
             var res = new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory());
             mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(cache);
@@ -35,7 +36,7 @@ namespace WalkingTec.Mvvm.Test.Mock
             mockHttpContext.Setup(x => x.RequestServices).Returns(mockService.Object);
             var httpa = new HttpContextAccessor();
             httpa.HttpContext = mockHttpContext.Object;
-            var wtmcontext = new WTMContext(null, new GlobalData(), httpa, new DefaultUIService(), null,dataContext, res, cache:cache);
+            var wtmcontext = new WTMContext(null, new GlobalData(), httpa, new DefaultUIService(), dataPrivileges, dataContext, res, cache:cache);
             wtmcontext.MSD = new BasicMSD();
             wtmcontext.Session = new SessionServiceProvider(mockSession);
             if (dataContext == null)

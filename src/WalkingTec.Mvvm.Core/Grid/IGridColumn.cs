@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.Core
@@ -27,10 +26,25 @@ namespace WalkingTec.Mvvm.Core
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum EditTypeEnum
     {
+        /// <summary>
+        /// 文本
+        /// </summary>
         Text,
+        /// <summary>
+        /// 文本框
+        /// </summary>
         TextBox,
+        /// <summary>
+        /// 下拉框
+        /// </summary>
         ComboBox,
+        /// <summary>
+        /// 日期时间
+        /// </summary>
         Datetime,
+        /// <summary>
+        /// 复选框
+        /// </summary>
         CheckBox
     }
 
@@ -143,12 +157,24 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         int ChildrenLength { get; }
 
+        /// <summary>
+        /// 单元格编辑类型
+        /// </summary>
         EditTypeEnum? EditType { get; set; }
 
+        /// <summary>
+        /// 编辑类型为ComboBox时的下拉选项数据源
+        /// </summary>
         List<ComboSelectListItem> ListItems { get; set; }
 
+        /// <summary>
+        /// 编辑类型为Datetime时的日期格式
+        /// </summary>
         DateTimeTypeEnum? DateType { get; set; }
 
+        /// <summary>
+        /// 单元格是否只读
+        /// </summary>
         bool IsReadOnly { get; set; }
 
         #region 只读属性 生成 Excel 及其 表头用
@@ -178,6 +204,9 @@ namespace WalkingTec.Mvvm.Core
 
         #region 暂时没有用
 
+        /// <summary>
+        /// 列Id
+        /// </summary>
         string Id { get; set; }
 
         /// <summary>
@@ -185,8 +214,14 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         bool NeedGroup { get; set; }
 
+        /// <summary>
+        /// 是否锁定列
+        /// </summary>
         bool IsLocked { get; set; }
 
+        /// <summary>
+        /// 是否允许排序
+        /// </summary>
         bool Sortable { get; set; }
         /// <summary>
         /// 是否允许多行
@@ -197,8 +232,14 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         int? Flex { get; set; }
 
+        /// <summary>
+        /// 获取列值域类型
+        /// </summary>
         Type FieldType { get; }
 
+        /// <summary>
+        /// 获取属性名称
+        /// </summary>
         string FieldName { get; }
 
         /// <summary>
@@ -209,6 +250,11 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>内容</returns>
         object GetText(object source, bool needFormat = true);
 
+        /// <summary>
+        /// 获取单元格的原始值，不做任何格式化
+        /// </summary>
+        /// <param name="source">源数据</param>
+        /// <returns>原始值</returns>
         object GetObject(object source);
         /// <summary>
         /// 获取前景色
@@ -222,6 +268,10 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="source">源数据</param>
         /// <returns>背景色</returns>
         string GetBackGroundColor(object source);
+        /// <summary>
+        /// 判断本列是否设置了格式化函数
+        /// </summary>
+        /// <returns>设置了格式化函数返回true，否则返回false</returns>
         bool HasFormat();
         #endregion
     }

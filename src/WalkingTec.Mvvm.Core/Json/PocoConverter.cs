@@ -2,30 +2,40 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
-using System.Text.Unicode;
-using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core.Json
 {
+    /// <summary>
+    /// Poco 转换器工厂：为所有继承自 TopBasePoco 的实体类型创建专用的内层转换器。
+    /// </summary>
     public class PocoConverter : JsonConverterFactory
     {
 
+        /// <summary>
+        /// 判断指定类型是否继承自 TopBasePoco。
+        /// </summary>
+        /// <param name="typeToConvert">待判断的类型</param>
+        /// <returns>继承自 TopBasePoco 返回 true，否则返回 false</returns>
         public override bool CanConvert(Type typeToConvert)
         {
             return typeof(TopBasePoco).IsAssignableFrom(typeToConvert);
         }
 
+        /// <summary>
+        /// 为指定的 Poco 实体类型创建内层转换器实例，创建时使用复制并剔除本工厂的序列化选项以避免递归。
+        /// </summary>
+        /// <param name="type">继承自 TopBasePoco 的实体类型</param>
+        /// <param name="options">当前的序列化配置选项</param>
+        /// <returns>与指定类型匹配的转换器实例</returns>
         public override JsonConverter CreateConverter(
             Type type,
             JsonSerializerOptions options)
         {
 
+            //复制序列化选项，并剔除本工厂转换器，防止内层转换器再次触发本工厂造成递归
             var temp = CloneOptions(options);
             foreach (var item in options.Converters)
             {
@@ -45,6 +55,11 @@ namespace WalkingTec.Mvvm.Core.Json
             return converter;
         }
 
+        /// <summary>
+        /// 复制一份序列化选项，供内层转换器独立使用。
+        /// </summary>
+        /// <param name="op">原始序列化选项</param>
+        /// <returns>复制得到的新序列化选项</returns>
         private JsonSerializerOptions CloneOptions(JsonSerializerOptions op)
         {
             JsonSerializerOptions rv = new JsonSerializerOptions();
@@ -65,15 +80,32 @@ namespace WalkingTec.Mvvm.Core.Json
             return rv;
         }
 
+        /// <summary>
+        /// Poco 实体的内层转换器：读取时按实体类型正常反序列化，写出前先清除导航属性中的循环引用。
+        /// </summary>
         private class PocoConverterInner<T> :
             JsonConverter<T> where T : TopBasePoco
         {
+            /// <summary>
+            /// 复制后的序列化选项，已剔除工厂类转换器
+            /// </summary>
             protected readonly JsonSerializerOptions _options;
+            /// <summary>
+            /// 使用指定的序列化选项初始化内层转换器。
+            /// </summary>
+            /// <param name="options">复制后的序列化选项</param>
             public PocoConverterInner(JsonSerializerOptions options)
             {
                 _options = options;
             }
 
+            /// <summary>
+            /// 读取 JSON 并按实体类型 T 反序列化为 Poco 实体（使用剔除工厂转换器后的选项）。
+            /// </summary>
+            /// <param name="reader">JSON 读取器</param>
+            /// <param name="typeToConvert">要转换的目标类型</param>
+            /// <param name="options">序列化配置选项</param>
+            /// <returns>反序列化得到的实体对象</returns>
             public override T Read(
                 ref Utf8JsonReader reader,
                 Type typeToConvert,
@@ -83,24 +115,38 @@ namespace WalkingTec.Mvvm.Core.Json
                 return JsonSerializer.Deserialize<T>(ref reader, _options);
             }
 
+            /// <summary>
+            /// 将 Poco 实体序列化写出：写出前先递归清除导航属性中的循环引用，避免序列化时无限嵌套。
+            /// </summary>
+            /// <param name="writer">JSON 写入器</param>
+            /// <param name="data">要写入的实体对象</param>
+            /// <param name="options">序列化配置选项</param>
             public override void Write(
                 Utf8JsonWriter writer,
                 T data,
                 JsonSerializerOptions options)
             {
                 var _datacache = new Dictionary<string, int>();
+                //先清除循环引用，再按实体类型序列化
                 RemoveCycleReference(data, _datacache);
                 JsonSerializer.Serialize(writer, data, typeof(T), _options);
             }
 
+            /// <summary>
+            /// 递归清除实体导航属性中的循环引用：已处理过的子实体直接置空，未处理过的继续递归处理。
+            /// </summary>
+            /// <param name="Entity">当前正在处理的实体对象</param>
+            /// <param name="datacache">已处理实体的缓存，键为类型全名加 ID，用于检测循环引用</param>
             private void RemoveCycleReference(object Entity, Dictionary<string, int> datacache)
             {
                 var pros = Entity.GetType().GetAllProperties();
+                //以类型全名加 ID 作为当前实体的唯一标识并记入缓存
                 var mainkey = Entity.GetType().FullName + (Entity as TopBasePoco).GetID();
                 datacache.TryAdd(mainkey, 1);
 
                 foreach (var pro in pros)
                 {
+                    //属性本身是 Poco 对象：未处理过的递归处理，已处理过的置空以打断循环引用
                     if (typeof(TopBasePoco).IsAssignableFrom(pro.PropertyType))
                     {
                         var subentity = pro.GetValue(Entity) as TopBasePoco;
@@ -126,6 +172,7 @@ namespace WalkingTec.Mvvm.Core.Json
 
                             if (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list && list.Count() > 0)
                             {
+                                //检查子表列表是否已处理过：只要有一个子项已存在于缓存中，整个列表属性置空以打断循环引用
                                 bool found = false;
                                 foreach (var newitem in list)
                                 {

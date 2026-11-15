@@ -54,6 +54,7 @@ namespace WalkingTec.Mvvm.Core
             string msg = null;
             var ispost = false;
             string qs = null;
+            //根据标准动作类型设定默认的图标、显示文字、参数类型、是否弹窗等属性
             switch (standardType)
             {
                 case GridActionStandardTypesEnum.Approve:
@@ -157,6 +158,7 @@ namespace WalkingTec.Mvvm.Core
                 dialogTitle = gridname;
             }
 
+            //将表达式数组解析为属性名数组，作为whereStr保存
             var list = new List<string>();
             foreach (var item in whereStr)
             {
@@ -225,6 +227,7 @@ namespace WalkingTec.Mvvm.Core
         {
             var iconcls = string.Empty;
 
+            //将表达式数组解析为属性名数组，作为whereStr保存
             var list = new List<string>();
             foreach (var item in whereStr)
             {
@@ -248,6 +251,16 @@ namespace WalkingTec.Mvvm.Core
             };
         }
 
+        /// <summary>
+        /// 创建一个动作组按钮，将多个子动作合并到同一个下拉按钮中展示
+        /// </summary>
+        /// <typeparam name="T">继承自TopBasePoco的类</typeparam>
+        /// <typeparam name="V">继承自ISearcher的类</typeparam>
+        /// <param name="self">self</param>
+        /// <param name="name">按钮显示的文字</param>
+        /// <param name="subActions">动作组中包含的子动作列表</param>
+        /// <param name="whereStr">whereStr</param>
+        /// <returns>列表动作</returns>
         public static GridAction MakeActionsGroup<T, V>(this IBasePagedListVM<T, V> self
             , string name
             , List<GridAction> subActions
@@ -257,6 +270,7 @@ namespace WalkingTec.Mvvm.Core
         {
             var iconcls = string.Empty;
 
+            //将表达式数组解析为属性名数组，作为whereStr保存
             var list = new List<string>();
             foreach (var item in whereStr)
             {
@@ -305,6 +319,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
             where V : ISearcher
         {
+            //目前仅支持Excel导出，忽略传入的导出类型参数
             exportType = ExportEnum.Excel;
 
             var action = new GridAction
@@ -373,6 +388,12 @@ namespace WalkingTec.Mvvm.Core
             return self;
         }
 
+        /// <summary>
+        /// 设置动作是否为导出动作
+        /// </summary>
+        /// <param name="self">目标动作</param>
+        /// <param name="isExport">是否为导出动作</param>
+        /// <returns>列表动作</returns>
         public static GridAction SetIsExport(this GridAction self, bool isExport= true)
         {
             self.IsExport = isExport;

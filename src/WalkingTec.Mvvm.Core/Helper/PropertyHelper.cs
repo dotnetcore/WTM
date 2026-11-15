@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Primitives;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -18,12 +18,18 @@ namespace WalkingTec.Mvvm.Core
     public static class PropertyHelper
     {
 
+        /// <summary>
+        /// 解析表达式树，获取表达式的根对象（常量表达式的值）
+        /// </summary>
+        /// <param name="expression">表达式</param>
+        /// <returns>根对象的值，解析不到时返回null</returns>
         public static object GetExpressionRootObj(Expression expression)
         {
             if (expression == null)
             {
                 return "";
             }
+            //从MemberExpression或Lambda表达式的Body中提取MemberExpression（兼容一元转换表达式）
             Expression me = null;
             LambdaExpression le = null;
             if (expression is MemberExpression)
@@ -42,6 +48,7 @@ namespace WalkingTec.Mvvm.Core
                     me = (le.Body as UnaryExpression).Operand as MemberExpression;
                 }
             }
+            //沿表达式树逐级向上追溯，直到找到根部的常量表达式
             while (me != null && me.NodeType == ExpressionType.MemberAccess)
             {
                 Expression exp = (me as MemberExpression).Expression;
@@ -51,6 +58,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else if (exp is MethodCallExpression)
                 {
+                    //遇到数组或字典的索引调用（get_Item）时，跳过索引直接取被索引的成员继续向上追溯
                     var mexp = exp as MethodCallExpression;
                     if (mexp.Method.Name == "get_Item")
                     {
@@ -80,8 +88,15 @@ namespace WalkingTec.Mvvm.Core
             return null;
         }
 
+        /// <summary>
+        /// 根据类型和属性名（支持多级属性格式）构建属性读取表达式的委托
+        /// </summary>
+        /// <param name="objtype">属性所在实例的类型</param>
+        /// <param name="property">属性名，支持a.b.c多级格式</param>
+        /// <returns>读取属性值的委托</returns>
         public static Func<object, object> GetPropertyExpression(Type objtype, string property)
         {
+            //去掉属性名中的数组下标，如xxx[0]中的[0]
             property = Regex.Replace(property, @"\[[^\]]*\]", string.Empty);
             List<string> level = new List<string>();
             if (property.Contains('.'))
@@ -93,6 +108,7 @@ namespace WalkingTec.Mvvm.Core
                 level.Add(property);
             }
 
+            //按“.”拆分的属性级别，逐级构建属性访问表达式链
             var pe = Expression.Parameter(objtype);
             var member = Expression.Property(pe, objtype.GetSingleProperty(level[0]));
             for (int i = 1; i < level.Count; i++)
@@ -177,11 +193,23 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+        /// <summary>
+        /// 根据参数表达式和成员表达式构建属性访问表达式
+        /// </summary>
+        /// <param name="self">参数表达式</param>
+        /// <param name="member">成员表达式</param>
+        /// <returns>属性访问表达式</returns>
         public static Expression GetMemberExp(this ParameterExpression self, Expression member)
         {
             return self.GetMemberExp(member.GetPropertyName());
         }
 
+        /// <summary>
+        /// 根据参数表达式和逗号分隔的属性名链构建属性访问表达式
+        /// </summary>
+        /// <param name="self">参数表达式</param>
+        /// <param name="memberName">逗号分隔的属性名链</param>
+        /// <returns>属性访问表达式</returns>
         public static Expression GetMemberExp(this ParameterExpression self, string memberName)
         {
             var names = memberName.Split(',');
@@ -336,6 +364,12 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 根据属性名获取属性值
+        /// </summary>
+        /// <param name="obj">属性所在实例</param>
+        /// <param name="property">属性名</param>
+        /// <returns>属性值，获取失败时返回空字符串</returns>
         public static object GetPropertyValue(this object obj, string property)
         {
             //获取表达式的值，并过滤单引号
@@ -350,12 +384,19 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 获取子表同级别属性的值集合：根据带数组下标形式的属性名，返回列表中所有对象的指定属性值
+        /// </summary>
+        /// <param name="obj">属性所在实例</param>
+        /// <param name="propertyName">带数组下标形式的属性名，如“xxx[0].yyy”</param>
+        /// <returns>同级属性值列表，无法解析时返回空列表</returns>
         public static List<string> GetPropertySiblingValues(this object obj, string propertyName)
         {
             if(obj == null)
             {
                 return new List<string>();
             }
+            //用正则匹配“列表属性[下标].子属性”形式的属性名
             Regex reg = new Regex("(.*?)\\[\\-?\\d?\\]\\.(.*?)$");
             var match = reg.Match(propertyName);
             if (match.Success)
@@ -363,6 +404,7 @@ namespace WalkingTec.Mvvm.Core
                 var name1 = match.Groups[1].Value;
                 var name2 = match.Groups[2].Value;
 
+                //按“.”拆分属性路径，逐级构建访问列表属性的表达式链
                 var levels = name1.Split('.');
                 var objtype = obj.GetType();
                 var pe = Expression.Parameter(objtype);
@@ -371,6 +413,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     member = Expression.Property(member, member.Type.GetSingleProperty(levels[i]));
                 }
+                //构建Cast与Select表达式，将列表中每一项的指定属性转为字符串
                 var pe2 = Expression.Parameter(member.Type.GetGenericArguments()[0]);
                 var cast = Expression.Call(typeof(Enumerable), "Cast", new Type[] { pe2.Type }, member);
 
@@ -445,6 +488,7 @@ namespace WalkingTec.Mvvm.Core
         {
             try
             {
+                //去掉属性名中的数组下标（如xxx[0]中的[0]），并按“.”拆分为多级属性
                 property = Regex.Replace(property, @"\[[^\]]*\]", string.Empty);
                 List<string> level = new List<string>();
                 if (property.Contains('.'))
@@ -460,6 +504,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     level.Insert(0, prefix);
                 }
+                //沿多级属性逐级深入，中间层对象为null时自动创建默认实例
                 object temp = source;
                 Type tempType = source.GetType();
                 for (int i = 0; i < level.Count - 1; i++)
@@ -483,6 +528,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }
 
+                //获取最后一级属性的成员信息，找不到则直接返回
                 var memberInfos = tempType.GetMember(level.Last());
                 if (!memberInfos.Any())
                 {
@@ -501,9 +547,11 @@ namespace WalkingTec.Mvvm.Core
                     isArray = true;
                 }
 
+                //值为字符串形式（如表单提交的数据）时，按目标类型做特殊转换处理
                 if (stringBasedValue == true)
                 {
                     Type propertyType = fproperty.GetMemberType();
+                    //目标为泛型List类型：将字符串值逐项转换后填入列表
                     if (propertyType.IsGeneric(typeof(List<>)) == true)
                     {
                         var list = propertyType.GetConstructor(Type.EmptyTypes).Invoke(null) as IList;
@@ -538,6 +586,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                     else if (propertyType.IsArray)
                     {
+                        //目标为数组类型：按元素类型逐项转换后创建数组
                         try
                         {
                             var strVals = (StringValues)value;
@@ -553,6 +602,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                     else
                     {
+                        //其他类型：值为单元素数组时取出第一个元素，否则直接赋值
                         if (isArray)
                         {
                             var a = (value as object[]);
@@ -698,6 +748,12 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+        /// <summary>
+        /// 获取枚举显示名称
+        /// </summary>
+        /// <param name="enumType">枚举类型</param>
+        /// <param name="value">枚举对应的整数值</param>
+        /// <returns>枚举显示名称</returns>
         public static string GetEnumDisplayName(Type enumType, int value)
         {
             string rv = "";
@@ -792,6 +848,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 try
                 {
+                    //以反引号包裹的值代表集合（如“1,2,3”），按目标集合的元素类型逐项转换后填充
                     if (value.ToString().StartsWith("`") && value.ToString().EndsWith("`"))
                     {
                         string inner = value.ToString().Trim('`').TrimEnd(',');
@@ -818,8 +875,16 @@ namespace WalkingTec.Mvvm.Core
             return val;
         }
 
+        /// <summary>
+        /// 通过反射创建指定元素类型的泛型列表，并将值数组逐个包装成实体后加入列表
+        /// </summary>
+        /// <param name="innerType">列表的元素类型</param>
+        /// <param name="propertyName">为元素赋值的属性名</param>
+        /// <param name="values">要赋给各元素属性的值数组</param>
+        /// <returns>生成的泛型列表对象</returns>
         public static object MakeList(Type innerType, string propertyName, object[] values)
         {
+            //通过反射创建泛型列表实例并获取其Add方法
             object rv = typeof(List<>).MakeGenericType(innerType).GetConstructor(Type.EmptyTypes).Invoke(null);
             var mi = rv.GetType().GetMethod("Add");
             var con = innerType.GetConstructor(Type.EmptyTypes);

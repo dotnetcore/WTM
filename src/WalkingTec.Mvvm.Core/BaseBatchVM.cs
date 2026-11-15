@@ -1,12 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
@@ -33,7 +32,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 列表数据的Id数组
         /// </summary>
-        //IEnumerable<Guid> Ids { get; set; }
         string[] Ids { get; set; }
 
         /// <summary>
@@ -77,7 +75,6 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public BaseBatchVM()
         {
-            //this.Ids = new List<Guid>();
             ErrorMessage = new Dictionary<string, string>();
         }
 
@@ -124,6 +121,7 @@ namespace WalkingTec.Mvvm.Core
             var isBasePoco = typeof(IBasePoco).IsAssignableFrom(modelType);
             var query = DC.Set<TModel>().AsQueryable();
             var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
+            // 预加载附件集合属性，便于删除数据时同步清理子附件
             foreach (var f in fas)
             {
                 query = query.Include(f.Name);
@@ -146,6 +144,7 @@ namespace WalkingTec.Mvvm.Core
                     var Entity = entityList[i];
                     if (isPersist)
                     {
+                        // 软删除：将IsValid置为false，并更新修改时间和修改人
                         (Entity as IPersistPoco).IsValid = false;
                         DC.UpdateProperty(Entity, "IsValid");
                         if (isBasePoco)
@@ -206,6 +205,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         DC.DeleteEntity(Entity);
 
+                        // 如果模型实现了工作流接口，则同时删除关联的工作流实例、执行日志和流程记录
                         if (typeof(IWorkflow).IsAssignableFrom(typeof(TModel)))
                         {
                             var wi = DC.Set<Elsa_WorkflowInstance>().CheckEqual(typeof(TModel).FullName, x => x.ContextType).CheckEqual(Entity.GetID().ToString(), x => x.ContextId).ToList();
@@ -333,11 +333,6 @@ namespace WalkingTec.Mvvm.Core
                     }
 
                     //调用controller方法验证model
-                    //try
-                    //{
-                    //    Controller.GetType().GetMethod("RedoValidation").Invoke(Controller, new object[] { entity });
-                    //}
-                    //catch { }
                     //如果有对应的BaseCRUDVM则使用其进行数据验证
                     if (vm != null)
                     {
@@ -414,6 +409,9 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+        /// <summary>
+        /// 重新执行列表查询，并将批量操作的错误信息回填到列表数据中以便前台显示
+        /// </summary>
         protected void RefreshErrorList()
         {
             ListVM.DoSearch();

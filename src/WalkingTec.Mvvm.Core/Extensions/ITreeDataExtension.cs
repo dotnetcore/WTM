@@ -39,10 +39,17 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 获取当前节点在树形结构中所处的层级，根节点为 0 级
+        /// </summary>
+        /// <typeparam name="T">树形结构类</typeparam>
+        /// <param name="self">树形结构实例</param>
+        /// <returns>当前节点的层级，根节点返回 0</returns>
         public static int GetLevel<T>(this T self)
             where T : TreePoco<T>
         {
             int level = 0;
+            //沿父节点一路向上遍历到根节点，每上一层层级加一
             while (self.Parent != null)
             {
                 level++;
@@ -105,6 +112,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 将单个树形结构节点转变为标准列表
+        /// </summary>
+        /// <typeparam name="T">树形结构类</typeparam>
+        /// <param name="self">树形结构实例</param>
+        /// <param name="order">排序字段，可以为空</param>
+        /// <returns>返回标准列表，包含本节点及其所有子节点，所有节点都在同一级上</returns>
         public static List<T> FlatTree<T>(this T self, Func<T, object> order = null)
     where T : TreePoco<T>
         {
@@ -114,6 +128,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 将标准列表组装成树形结构，返回顶层节点列表，子节点挂载在各节点的 Children 属性上
+        /// </summary>
+        /// <typeparam name="T">树形结构类</typeparam>
+        /// <param name="self">树形结构实例列表</param>
+        /// <param name="order">排序字段，可以为空</param>
+        /// <returns>树形结构列表，只包含顶层节点，子节点存放在各节点的 Children 属性中</returns>
         public static List<T> MakeTree<T>(this List<T> self, Func<T, object> order = null)
       where T : TreePoco<T>
         {
@@ -124,15 +145,18 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             foreach (var item in self)
             {
+                //初始化 Children 列表，避免后续添加子节点时出现空引用
                 if(item.Children == null)
                 {
                     item.Children = new List<T>();
                 }
+                //从列表中找出父节点为当前节点的数据作为其子节点，并反向设置 Parent 属性
                 var children = self.Where(x => x.ParentId == item.ID).ToList();
                 children.ForEach(x =>x.Parent = item);
                 item.Children.AddRange(children);
                 rv.Add(item);                
             }
+            //没有父节点的即为顶层节点，只返回顶层节点以形成树形结构
             return rv.Where(x=>x.ParentId == null).ToList();
         }
         /// <summary>

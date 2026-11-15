@@ -14,7 +14,13 @@ namespace WalkingTec.Mvvm.Core
     /// <typeparam name="T">重复数据类</typeparam>
     public class DuplicatedGroup<T>
     {
+        /// <summary>
+        /// 是否启用多租户过滤
+        /// </summary>
         public bool UseTenant { get; set; } = true;
+        /// <summary>
+        /// 本组中需要同时判断重复的字段列表
+        /// </summary>
         public List<DuplicatedField<T>> Fields { get; set; }
     }
 
@@ -27,6 +33,9 @@ namespace WalkingTec.Mvvm.Core
         //重复数据分组
         public List<DuplicatedGroup<T>> Groups { get; set; }
 
+        /// <summary>
+        /// 构造重复数据信息，初始化空的分组列表
+        /// </summary>
         public DuplicatedInfo()
         {
             Groups = new List<DuplicatedGroup<T>>();
@@ -60,6 +69,10 @@ namespace WalkingTec.Mvvm.Core
         //直接可顺序关联出的字段
         protected Expression<Func<T, object>> _directFieldExp { get; set; }
 
+        /// <summary>
+        /// 获取重复字段对应的实体属性信息
+        /// </summary>
+        /// <returns>属性信息列表</returns>
         public virtual List<PropertyInfo> GetProperties()
         {
             List<PropertyInfo> rv = new List<PropertyInfo>
@@ -82,12 +95,6 @@ namespace WalkingTec.Mvvm.Core
             var prop = PropertyHelper.GetPropertyInfo(_directFieldExp);
             var func = _directFieldExp.Compile();
             var val = func.Invoke(Entity);
-
-            ////如果字段值为null则跳过，因为一般情况下null值不会被认为重复
-            //if (val == null)
-            //{
-            //    return res;
-            //}
 
             //如果字段值是空字符串，则跳过
             if (val is string && val.ToString() == string.Empty)
@@ -135,6 +142,9 @@ namespace WalkingTec.Mvvm.Core
             return equal;
         }
 
+        /// <summary>
+        /// 受保护的构造函数，供子类使用
+        /// </summary>
         protected DuplicatedField()
         {
 
@@ -157,6 +167,10 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public interface IComplexDuplicatedField
     {
+        /// <summary>
+        /// 获取复杂重复字段关联的中间表类型
+        /// </summary>
+        /// <returns>中间表类型</returns>
         Type GetMiddleTableType();
     }
 
@@ -177,6 +191,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         private List<Expression<Func<V, object>>> _subFieldExps { get; set; }
 
+        /// <summary>
+        /// 受保护的构造函数，供子类使用
+        /// </summary>
         protected ComplexDuplicatedField()
         {
 
@@ -195,6 +212,10 @@ namespace WalkingTec.Mvvm.Core
             _subFieldExps.AddRange(FieldExps);
         }
 
+        /// <summary>
+        /// 获取复杂重复字段关联的中间表类型
+        /// </summary>
+        /// <returns>中间表类型</returns>
         public Type GetMiddleTableType()
         {
             return typeof(V);

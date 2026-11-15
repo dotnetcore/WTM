@@ -4,19 +4,41 @@ using System.Text.RegularExpressions;
 
 namespace WalkingTec.Mvvm.Core
 {
+    /// <summary>
+    /// 日期范围类，表示由开始时间和结束时间组成的时间区间，
+    /// 支持日期、日期时间、年、月、时间等多种类型，并可在DateTime、DateTimeOffset、TimeSpan及字符串之间相互转换
+    /// </summary>
     public sealed class DateRange
     {
+        //UTC模式下的默认纪元时间(1970-01-01 UTC)
         private static readonly DateTime UtCDefaultEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        //默认纪元时间(1970-01-01 本地时间)
         private static readonly DateTime DefaultEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local);
 
+        //默认的日期类型为DateTime
         private static readonly DateTimeTypeEnum DefaultType = DateTimeTypeEnum.DateTime;
 
 
+        /// <summary>
+        /// 私有无参构造函数，不允许外部以无参方式创建日期范围
+        /// </summary>
         private DateRange() { }
 
 
+        /// <summary>
+        /// 以开始时间和结束时间构造日期范围，日期类型默认为DateTime，纪元默认为本地时间
+        /// </summary>
+        /// <param name="startTime">开始时间</param>
+        /// <param name="endTime">结束时间</param>
         public DateRange(DateTime startTime, DateTime endTime) : this(startTime, endTime, DefaultType, DefaultEpoch) { }
 
+        /// <summary>
+        /// 以开始时间、结束时间、日期类型和纪元时间构造日期范围
+        /// </summary>
+        /// <param name="startTime">开始时间</param>
+        /// <param name="endTime">结束时间</param>
+        /// <param name="type">日期类型</param>
+        /// <param name="epoch">时间戳纪元基准时间</param>
         public DateRange(DateTime startTime, DateTime endTime, DateTimeTypeEnum type, DateTime epoch)
         {
             Type = type;
@@ -26,8 +48,20 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 以相对纪元的时间间隔构造日期范围，日期类型默认为DateTime，纪元默认为本地时间
+        /// </summary>
+        /// <param name="startSpan">开始时间相对纪元的偏移量</param>
+        /// <param name="endSpan">结束时间相对纪元的偏移量</param>
         public DateRange(TimeSpan startSpan, TimeSpan endSpan) : this(startSpan, endSpan, DefaultType, DefaultEpoch) { }
 
+        /// <summary>
+        /// 以相对纪元的时间间隔、日期类型和纪元时间构造日期范围
+        /// </summary>
+        /// <param name="startSpan">开始时间相对纪元的偏移量</param>
+        /// <param name="endSpan">结束时间相对纪元的偏移量</param>
+        /// <param name="type">日期类型</param>
+        /// <param name="epoch">时间戳纪元基准时间</param>
         public DateRange(TimeSpan startSpan, TimeSpan endSpan, DateTimeTypeEnum type, DateTime epoch)
         {
             Type = type;
@@ -36,8 +70,20 @@ namespace WalkingTec.Mvvm.Core
             SetEndTime(epoch.Add(endSpan));
         }
 
+        /// <summary>
+        /// 以DateTimeOffset形式的开始和结束时间构造日期范围，日期类型默认为DateTime，纪元默认为本地时间
+        /// </summary>
+        /// <param name="startOffset">开始时间的DateTimeOffset表示</param>
+        /// <param name="endOffset">结束时间的DateTimeOffset表示</param>
         public DateRange(DateTimeOffset startOffset, DateTimeOffset endOffset) : this(startOffset, endOffset, DefaultType, DefaultEpoch) { }
 
+        /// <summary>
+        /// 以DateTimeOffset形式的开始时间、结束时间、日期类型和纪元时间构造日期范围
+        /// </summary>
+        /// <param name="startOffset">开始时间的DateTimeOffset表示</param>
+        /// <param name="endOffset">结束时间的DateTimeOffset表示</param>
+        /// <param name="type">日期类型</param>
+        /// <param name="epoch">时间戳纪元基准时间</param>
         public DateRange(DateTimeOffset startOffset, DateTimeOffset endOffset, DateTimeTypeEnum type, DateTime epoch)
         {
             Type = type;
@@ -46,21 +92,39 @@ namespace WalkingTec.Mvvm.Core
             SetEndTime(endOffset.DateTime);
         }
 
+        /// <summary>
+        /// 时间戳纪元基准时间
+        /// </summary>
         public readonly DateTime Epoch = DefaultEpoch;
 
+        /// <summary>
+        /// 日期范围类型
+        /// </summary>
         public readonly DateTimeTypeEnum Type = DefaultType;
 
 
+        /// <summary>
+        /// 日期范围的字符串表示，格式为 开始时间 ~ 结束时间
+        /// </summary>
         public string Value => ToString();
 
 
+        //开始时间
         private DateTime? _startTime;
 
+        /// <summary>
+        /// 获取开始时间
+        /// </summary>
+        /// <returns>开始时间，未设置时返回null</returns>
         public DateTime? GetStartTime()
         {
             return _startTime;
         }
 
+        /// <summary>
+        /// 设置开始时间；若给定值晚于当前结束时间，则不做任何修改
+        /// </summary>
+        /// <param name="value">要设置的开始时间</param>
         public void SetStartTime(DateTime? value)
         {
             if (value == null) return;
@@ -71,8 +135,13 @@ namespace WalkingTec.Mvvm.Core
             _startTime = value;
         }
 
+        //结束时间
         private DateTime? _endTime;
 
+        /// <summary>
+        /// 获取结束时间：Date类型自动延后一天；DateTime类型下若结束时间为零点或与开始时间相同，同样延后一天，以保证查询能覆盖整个结束日
+        /// </summary>
+        /// <returns>结束时间，未设置时返回null</returns>
         public DateTime? GetEndTime()
         {
             switch (Type)
@@ -87,6 +156,10 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 设置结束时间；若给定值早于当前开始时间，则不做任何修改
+        /// </summary>
+        /// <param name="value">要设置的结束时间</param>
         public void SetEndTime(DateTime? value)
         {
             if (value == null) return;
@@ -98,6 +171,10 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 以DateTimeOffset形式获取开始时间
+        /// </summary>
+        /// <returns>开始时间的DateTimeOffset表示，未设置时返回null</returns>
         public DateTimeOffset? GetStartOffset()
         {
             if (_startTime == null)
@@ -105,12 +182,20 @@ namespace WalkingTec.Mvvm.Core
             return _startTime <= DateTimeOffset.MinValue.LocalDateTime ? DateTimeOffset.MinValue : new DateTimeOffset(GetStartTime().Value);
         }
 
+        /// <summary>
+        /// 以DateTimeOffset形式设置开始时间
+        /// </summary>
+        /// <param name="value">要设置的开始时间</param>
         public void SetStartOffset(DateTimeOffset? value)
         {
             if (value == null) return;
             SetStartTime(value.Value.LocalDateTime);
         }
 
+        /// <summary>
+        /// 以DateTimeOffset形式获取结束时间
+        /// </summary>
+        /// <returns>结束时间的DateTimeOffset表示，未设置时返回null</returns>
         public DateTimeOffset? GetEndOffset()
         {
             if (_endTime == null)
@@ -118,6 +203,10 @@ namespace WalkingTec.Mvvm.Core
             return _endTime <= DateTimeOffset.MinValue.LocalDateTime ? DateTimeOffset.MinValue : new DateTimeOffset(GetEndTime().Value);
         }
 
+        /// <summary>
+        /// 以DateTimeOffset形式设置结束时间
+        /// </summary>
+        /// <param name="value">要设置的结束时间</param>
         public void SetEndOffset(DateTimeOffset? value)
         {
             if (value == null) return;
@@ -125,6 +214,10 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 获取开始时间相对纪元的时间间隔
+        /// </summary>
+        /// <returns>开始时间相对纪元的偏移量，结束时间未设置时返回null</returns>
         public TimeSpan? GetStartSpan()
         {
             if (_endTime == null)
@@ -132,12 +225,20 @@ namespace WalkingTec.Mvvm.Core
             return GetStartTime() - Epoch.ToLocalTime();
         }
 
+        /// <summary>
+        /// 以相对纪元的时间间隔设置开始时间
+        /// </summary>
+        /// <param name="value">开始时间相对纪元的偏移量</param>
         public void SetStartSpan(TimeSpan? value)
         {
             if (value == null) return;
             SetStartTime(Epoch.Add(value.Value));
         }
 
+        /// <summary>
+        /// 获取结束时间相对纪元的时间间隔
+        /// </summary>
+        /// <returns>结束时间相对纪元的偏移量，结束时间未设置时返回null</returns>
         public TimeSpan? GetEndSpan()
         {
             if (_endTime == null)
@@ -145,22 +246,41 @@ namespace WalkingTec.Mvvm.Core
             return GetEndTime() - Epoch.ToLocalTime();
         }
 
+        /// <summary>
+        /// 以相对纪元的时间间隔设置结束时间
+        /// </summary>
+        /// <param name="value">结束时间相对纪元的偏移量</param>
         public void SetEndSpan(TimeSpan? value)
         {
             if (value == null) return;
             SetEndTime(Epoch.Add(value.Value));
         }
 
+        /// <summary>
+        /// 按日期类型对应的默认格式输出日期范围字符串
+        /// </summary>
+        /// <returns>格式化后的日期范围字符串，开始或结束时间未设置时返回空字符串</returns>
         public override string ToString()
         {
             return ToString(DateTimeFormatDic[Type], "~");
         }
 
+        /// <summary>
+        /// 按指定格式输出日期范围字符串
+        /// </summary>
+        /// <param name="format">日期时间输出格式</param>
+        /// <returns>格式化后的日期范围字符串</returns>
         public string ToString(string format)
         {
             return ToString(format, "~");
         }
 
+        /// <summary>
+        /// 按指定格式和分隔符输出日期范围字符串
+        /// </summary>
+        /// <param name="format">日期时间输出格式</param>
+        /// <param name="rangeSplit">开始时间与结束时间之间的分隔符</param>
+        /// <returns>格式化后的日期范围字符串，开始或结束时间未设置时返回空字符串</returns>
         public string ToString(string format, string rangeSplit)
         {
             if (_startTime.HasValue && _endTime.HasValue)
@@ -168,6 +288,9 @@ namespace WalkingTec.Mvvm.Core
             return string.Empty;
         }
 
+        /// <summary>
+        /// 各日期类型对应的默认输出格式字典
+        /// </summary>
         public static readonly Dictionary<DateTimeTypeEnum, string> DateTimeFormatDic = new Dictionary<DateTimeTypeEnum, string>()
         {
             { DateTimeTypeEnum.Date,"yyyy-MM-dd"},
@@ -177,6 +300,11 @@ namespace WalkingTec.Mvvm.Core
             { DateTimeTypeEnum.Time,"HH:mm:ss"},
         };
 
+        /// <summary>
+        /// 将给定时间的DateTimeKind转换成与纪元一致的类型，必要时在本地时间、UTC时间和未指定类型之间换算
+        /// </summary>
+        /// <param name="time">待转换的时间</param>
+        /// <returns>DateTimeKind与纪元一致的时间</returns>
         private DateTime SwitchTime(DateTime time)
         {
             if (Epoch.Kind == time.Kind)
@@ -214,8 +342,14 @@ namespace WalkingTec.Mvvm.Core
             return time;
         }
 
+        /// <summary>
+        /// 默认日期范围，即今天
+        /// </summary>
         public static DateRange Default => Today;
 
+        /// <summary>
+        /// 最近90天(本地时间)的日期范围
+        /// </summary>
         public static DateRange NinetyDays
         {
             get
@@ -225,6 +359,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 最近30天(本地时间)的日期范围
+        /// </summary>
         public static DateRange ThirtyDays
         {
             get
@@ -234,6 +371,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 最近两周(本地时间)的日期范围
+        /// </summary>
         public static DateRange TwoWeek
         {
             get
@@ -243,6 +383,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 最近一周(本地时间)的日期范围
+        /// </summary>
         public static DateRange Week
         {
             get
@@ -252,6 +395,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 今天(本地时间)的日期范围
+        /// </summary>
         public static DateRange Today
         {
             get
@@ -262,6 +408,9 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 昨天(本地时间)的日期范围
+        /// </summary>
         public static DateRange Yesterday
         {
             get
@@ -272,8 +421,14 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 默认UTC日期范围，即UTC今天
+        /// </summary>
         public static DateRange UtcDefault => UtcToday;
 
+        /// <summary>
+        /// UTC时间最近90天的日期范围
+        /// </summary>
         public static DateRange UtcNinetyDays
         {
             get
@@ -283,6 +438,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// UTC时间最近30天的日期范围
+        /// </summary>
         public static DateRange UtcThirtyDays
         {
             get
@@ -292,6 +450,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// UTC时间最近两周的日期范围
+        /// </summary>
         public static DateRange UtcTwoWeek
         {
             get
@@ -301,6 +462,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// UTC时间最近一周的日期范围
+        /// </summary>
         public static DateRange UtcWeek
         {
             get
@@ -311,6 +475,9 @@ namespace WalkingTec.Mvvm.Core
 
         }
 
+        /// <summary>
+        /// UTC时间当天的日期范围
+        /// </summary>
         public static DateRange UtcToday
         {
             get
@@ -320,6 +487,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// UTC时间昨天的日期范围
+        /// </summary>
         public static DateRange UtcYesterday
         {
             get
@@ -330,6 +500,7 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        //各日期类型用于从字符串中提取日期时间的正则表达式字典
         private static readonly Dictionary<DateTimeTypeEnum, string> DateTimeRegexDic = new Dictionary<DateTimeTypeEnum, string>()
         {
             { DateTimeTypeEnum.DateTime,@"((\d{4}|\d{3}|\d{2}|\d{1})[-](1[0-2]|0?[1-9])[-](3[01]|[12][0-9]|0?[1-9])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d)"},
@@ -339,6 +510,12 @@ namespace WalkingTec.Mvvm.Core
             { DateTimeTypeEnum.Year,@"(\d{4}|\d{3}|\d{2}|\d{1})"},
         };
 
+        /// <summary>
+        /// 尝试将字符串解析为日期范围：先按~分隔符解析，失败后再按各日期类型的正则表达式提取起止时间
+        /// </summary>
+        /// <param name="input">待解析的字符串</param>
+        /// <param name="result">解析成功时输出的日期范围，失败时为null</param>
+        /// <returns>解析成功返回true，否则返回false</returns>
         public static bool TryParse(string input, out DateRange result)
         {
             if (TryParse(input, new[] { '~' }, out result)) return true;
@@ -354,6 +531,13 @@ namespace WalkingTec.Mvvm.Core
             return false;
         }
 
+        /// <summary>
+        /// 尝试按指定的字符分隔符将字符串解析为日期范围
+        /// </summary>
+        /// <param name="input">待解析的字符串</param>
+        /// <param name="separator">开始时间与结束时间之间的分隔字符数组</param>
+        /// <param name="result">解析成功时输出的日期范围，失败时为null</param>
+        /// <returns>解析成功返回true，否则返回false</returns>
         public static bool TryParse(string input, char[] separator, out DateRange result)
         {
             result = null;
@@ -365,6 +549,13 @@ namespace WalkingTec.Mvvm.Core
             return values.Length == 2 && TryParse(values[0], values[1], DefaultEpoch, out result);
         }
 
+        /// <summary>
+        /// 尝试按指定的字符串分隔符将字符串解析为日期范围
+        /// </summary>
+        /// <param name="input">待解析的字符串</param>
+        /// <param name="separator">开始时间与结束时间之间的分隔字符串数组</param>
+        /// <param name="result">解析成功时输出的日期范围，失败时为null</param>
+        /// <returns>解析成功返回true，否则返回false</returns>
         public static bool TryParse(string input, string[] separator, out DateRange result)
         {
             result = null;
@@ -376,6 +567,12 @@ namespace WalkingTec.Mvvm.Core
             return values.Length == 2 && TryParse(values[0], values[1], DefaultEpoch, out result);
         }
 
+        /// <summary>
+        /// 尝试将包含开始时间和结束时间的字符串数组解析为日期范围
+        /// </summary>
+        /// <param name="input">包含开始时间和结束时间两个元素的字符串数组</param>
+        /// <param name="result">解析成功时输出的日期范围，失败时为null</param>
+        /// <returns>解析成功返回true，否则返回false</returns>
         public static bool TryParse(string[] input, out DateRange result)
         {
             result = null;
@@ -383,6 +580,14 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 尝试将开始时间和结束时间的字符串表示解析为日期范围，按开始时间字符串的长度自动识别年、月、时间、日期和日期时间类型
+        /// </summary>
+        /// <param name="startTime">开始时间字符串</param>
+        /// <param name="endTime">结束时间字符串</param>
+        /// <param name="epoch">时间戳纪元基准时间</param>
+        /// <param name="result">解析成功时输出的日期范围，失败时为null</param>
+        /// <returns>解析成功返回true，否则返回false</returns>
         public static bool TryParse(string startTime, string endTime, DateTime epoch, out DateRange result)
         {
             result = null;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -26,6 +25,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
             where V : ISearcher
         {
+            //从表达式中提取MemberExpression，兼容直接传入成员表达式和Lambda表达式两种形式
             MemberExpression me = null;
             if (columnExp is MemberExpression)
             {
@@ -39,6 +39,7 @@ namespace WalkingTec.Mvvm.Core
                     me = le.Body as MemberExpression;
                 }
             }
+            //默认居中对齐；字符串类型的列自动改为左对齐
             var alignType = GridColumnAlignEnum.Center;
             if (me != null)
             {
@@ -82,6 +83,16 @@ namespace WalkingTec.Mvvm.Core
             return new GridColumn<T>() { Title = title };
         }
 
+        /// <summary>
+        /// 创建一个操作列，默认固定在表格右侧，用于放置行级动作按钮
+        /// </summary>
+        /// <typeparam name="T">继承自TopBasePoco的类</typeparam>
+        /// <typeparam name="V">继承自ISearcher的类</typeparam>
+        /// <param name="self">self</param>
+        /// <param name="title">列标题，不指定时使用系统默认的“操作”文字</param>
+        /// <param name="width">列宽，默认160</param>
+        /// <param name="rowspan">纵向跨越的单元格数</param>
+        /// <returns>操作列</returns>
         public static GridColumn<T> MakeGridHeaderAction<T, V>(this IBasePagedListVM<T, V> self
             , string title = null
             , int? width = 160
@@ -155,34 +166,6 @@ namespace WalkingTec.Mvvm.Core
             return self;
         }
 
-        ///// <summary>
-        ///// 设定当前列头 列横跨的单元格数
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="self"></param>
-        ///// <param name="colspan">这种情况下不用设置 Field 和 Width </param>
-        ///// <returns></returns>
-        //public static GridColumn<T> SetColspan<T>(this GridColumn<T> self, int colspan)
-        //    where T : TopBasePoco
-        //{
-        //    self.Colspan = colspan;
-        //    return self;
-        //}
-
-        ///// <summary>
-        ///// 设定当前列头 纵向跨越的单元格数
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="self"></param>
-        ///// <param name="rowspan">纵向跨越的单元格数</param>
-        ///// <returns></returns>
-        //public static GridColumn<T> SetRowspan<T>(this GridColumn<T> self, int rowspan)
-        //    where T : TopBasePoco
-        //{
-        //    self.Rowspan = rowspan;
-        //    return self;
-        //}
-
         /// <summary>
         /// 设定是否允许排序 (ASCII码排序)
         /// </summary>
@@ -225,37 +208,13 @@ namespace WalkingTec.Mvvm.Core
             return self;
         }
 
-        ///// <summary>
-        ///// 设定是否允许编辑
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="self"></param>
-        ///// <param name="edit">如果设置 true，则对应列的单元格将会被允许编辑，目前只支持type="text"的input编辑。</param>
-        ///// <returns></returns>
-        //public static GridColumn<T> SetEdit<T>(this GridColumn<T> self, bool edit = true)
-        //    where T : TopBasePoco
-        //{
-        //    self.Edit = edit;
-        //    return self;
-        //}
-
-        ///// <summary>
-        ///// 设定自定义模板
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="self"></param>
-        ///// <param name="templet">在默认情况下，单元格的内容是完全按照数据接口返回的content原样输出的，
-        ///// 如果你想对某列的单元格添加链接等其它元素，你可以借助该参数来轻松实现。
-        ///// 这是一个非常实用的功能，你的表格内容会因此而丰富多样。
-        ///// </param>
-        ///// <returns></returns>
-        //public static GridColumn<T> SetTemplet<T>(this GridColumn<T> self, string templet)
-        //    where T : TopBasePoco
-        //{
-        //    self.Templet = templet;
-        //    return self;
-        //}
-
+        /// <summary>
+        /// 该方法已被弃用，请使用SetHide代替，调用后不产生任何效果
+        /// </summary>
+        /// <typeparam name="T">列表的数据源类</typeparam>
+        /// <param name="self">目标列</param>
+        /// <param name="hidden">是否隐藏</param>
+        /// <returns>列对象</returns>
         [Obsolete("该方法已经被弃用，请使用 SetHide 代替")]
         public static GridColumn<T> SetHidden<T>(this GridColumn<T> self, bool hidden = true) where T : TopBasePoco
         {

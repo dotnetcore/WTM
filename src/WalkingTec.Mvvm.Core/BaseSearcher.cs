@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -40,10 +39,19 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public Dictionary<string, object> FC { get; set; }
 
+        /// <summary>
+        /// Controller传递过来的ModelState信息
+        /// </summary>
         [JsonIgnore]
         public IModelStateService MSD { get => Wtm?.MSD; }
 
+        /// <summary>
+        /// 是否以纯文本方式输出数据
+        /// </summary>
         public bool? IsPlainText { get; set; }
+        /// <summary>
+        /// 是否将枚举以字符串方式输出
+        /// </summary>
         public bool? IsEnumToString { get; set; }
         /// <summary>
         /// 获取VM的全名
@@ -95,6 +103,9 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public LoginUserInfo LoginUserInfo { get => Wtm?.LoginUserInfo; }
 
+        /// <summary>
+        /// PartialView中主Div的Id
+        /// </summary>
         [JsonIgnore]
         public string ViewDivId { get; set; }
         #region 未使用
@@ -110,6 +121,9 @@ namespace WalkingTec.Mvvm.Core
         public bool? IsExpanded { get; set; }
 
         private Guid _uniqueId;
+        /// <summary>
+        /// Searcher实例的Id
+        /// </summary>
         [JsonIgnore]
         public string UniqueId
         {
@@ -123,6 +137,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 框架上下文，保存当前请求相关的环境信息（数据上下文、Session、登录用户、缓存等）
+        /// </summary>
         [JsonIgnore]
         public WTMContext Wtm { get; set; }
         #endregion
@@ -177,6 +194,9 @@ namespace WalkingTec.Mvvm.Core
             InitVM();
         }
 
+        /// <summary>
+        /// 验证函数，MVC会在提交数据的时候自动调用本函数
+        /// </summary>
         public virtual void Validate()
         {
 

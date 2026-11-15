@@ -1,11 +1,8 @@
 using System;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using WalkingTec.Mvvm.Admin.Api;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Demo;
-using WalkingTec.Mvvm.Mvc.Admin.Controllers;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 using WalkingTec.Mvvm.Test.Mock;
 
@@ -16,41 +13,52 @@ namespace WalkingTec.Mvvm.Admin.Test
     {
         private ActionLogController _controller;
         private string _seed;
+
         public ActionLogControllerTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateController<ActionLogController>(new DataContext(_seed, DBTypeEnum.Memory), "user");
+            _controller = MockController.CreateApi<ActionLogController>(new Vue3Demo.DataContext(_seed, DBTypeEnum.Memory), "user");
         }
 
         [TestMethod]
         public void SearchTest()
         {
-            PartialViewResult rv = (PartialViewResult)_controller.Index();
-            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
-
-            string rv2 = _controller.Search((rv.Model as ActionLogListVM).Searcher);
-            Assert.IsTrue(rv2.Contains("\"Code\":200"));
+            var rv = _controller.Search(new ActionLogSearcher());
+            Assert.IsTrue(string.IsNullOrEmpty((rv as ContentResult)?.Content) == false);
         }
 
         [TestMethod]
-        public void DetailsTest()
+        public void GetTest()
         {
-            ActionLog l = new ActionLog();
-            using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
+            var log = new ActionLog();
+            using (var ctx = new Vue3Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
-                context.Set<ActionLog>().Add(l);
-                context.SaveChanges();
+                ctx.Set<ActionLog>().Add(log);
+                ctx.SaveChanges();
             }
-            PartialViewResult rv = (PartialViewResult)_controller.Details(l.ID.ToString());
-            Assert.IsInstanceOfType(rv.Model, typeof(IBaseCRUDVM<TopBasePoco>));
-            Assert.AreEqual(l.ID, (rv.Model as IBaseCRUDVM<TopBasePoco>).Entity.ID);
+            var vm = _controller.Get(log.ID);
+            Assert.IsNotNull(vm);
+            Assert.AreEqual(log.ID, vm.Entity.ID);
         }
 
         [TestMethod]
-        public void DetailsFailTest()
+        public void BatchDeleteTest()
         {
-            Assert.ThrowsException<Exception>(() => _controller.Details("-1"), "数据不存在");
+            var log = new ActionLog();
+            using (var ctx = new Vue3Demo.DataContext(_seed, DBTypeEnum.Memory))
+            {
+                ctx.Set<ActionLog>().Add(log);
+                ctx.SaveChanges();
+            }
+            var rv = _controller.BatchDelete(new[] { log.ID.ToString() });
+            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
         }
 
+        [TestMethod]
+        public void ExportTest()
+        {
+            var rv = _controller.ExportExcel(new ActionLogSearcher());
+            Assert.IsNotNull(rv);
+        }
     }
 }

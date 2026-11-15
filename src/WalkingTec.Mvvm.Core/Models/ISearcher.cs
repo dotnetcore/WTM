@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -35,14 +34,23 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         Dictionary<string, object> FC { get; set; }
 
+        /// <summary>
+        /// 数据库上下文，用于执行查询等数据操作
+        /// </summary>
         IDataContext DC { get; set; }
         /// <summary>
         /// VMFullName
         /// </summary>
         string VMFullName { get; }
 
+        /// <summary>
+        /// 当前会话服务，提供 Session 的读写能力
+        /// </summary>
         ISessionService Session { get;  }
 
+        /// <summary>
+        /// 当前登录用户信息
+        /// </summary>
         LoginUserInfo LoginUserInfo { get; }
         /// <summary>
         /// 排序信息

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
+    /// <summary>
+    /// 列表 VM 相关的扩展函数，用于生成列表页面所需的 Json 数据
+    /// </summary>
     public static class ListVMExtension
     {
         /// <summary>
@@ -51,6 +54,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return $"[{sb}]";
         }
 
+        /// <summary>
+        /// 根据格式化类型调用相应的 UI 服务，将 ColumnFormatInfo 转换为前端可显示的 Html 内容
+        /// </summary>
+        /// <param name="vm">当前 VM，用于获取 UIService 等上下文</param>
+        /// <param name="info">列的格式化信息</param>
+        /// <returns>转换后的 Html 字符串</returns>
         private static string GetFormatResult(BaseVM vm, ColumnFormatInfo info)
         {
             string rv = "";
@@ -121,6 +130,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             sb.Append('{');
             bool containsID = false;
             bool addHiddenID = false;
+            //记录需要单独设置前景色或背景色的列，最终输出为 列名__bgcolor/列名__forecolor 字段
             Dictionary<string, (string, string)> colorcolumns = new Dictionary<string, (string, string)>();
             foreach (var baseCol in self.GetHeaders())
             {
@@ -301,11 +311,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 break;
                         }
                     }
+                    //如果是明细表格，为每行第一个单元格附加隐藏的主键输入框，供后台提交时绑定
                     if (string.IsNullOrEmpty(self.DetailGridPrix) == false && addHiddenID == false)
                     {
                         html += $@"<input hidden name='{self.DetailGridPrix}[{index}].ID' value='{sou.GetID()}'/>";
                         addHiddenID = true;
                     }
+                    //非内嵌对象时对内容进行转义并添加引号，保证生成的 Json 格式正确
                     if (inner == false)
                     {
                         html = "\"" + html.RemoveSpecialChar().Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
@@ -387,12 +399,25 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 获取 ListVM 搜索结果的结构化对象，供 API 接口直接序列化返回
+        /// </summary>
+        /// <typeparam name="T">数据模型类型</typeparam>
+        /// <param name="self">列表 VM 实例</param>
+        /// <param name="PlainText">true 返回纯文本，false 返回格式化后的 Html 内容</param>
+        /// <returns>包含 Data、Count、Page、PageCount、Msg、Code 字段的匿名对象</returns>
         public static object GetJsonForApi<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true) where T : TopBasePoco, new()
         {
             return new { Data = self.GetEntityList(), Count = self.Searcher.Count, PageCount = self.Searcher.PageCount, Page = self.Searcher.Page, Msg = "success", Code = 200 };
         }
 
 
+        /// <summary>
+        /// 生成包含 VM 校验错误信息的 Json 格式返回值
+        /// </summary>
+        /// <typeparam name="T">数据模型类型</typeparam>
+        /// <param name="self">列表 VM 实例</param>
+        /// <returns>包含第一条错误信息的 Json 字符串，Code 为 400</returns>
         public static string GetError<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco, new()
         {
             return $@"{{""Data"":{{}},""Count"":0,""Page"":0,""PageCount"":0,""Msg"":""{(self as BaseVM).MSD.GetFirstError()}"",""Code"":400}}";

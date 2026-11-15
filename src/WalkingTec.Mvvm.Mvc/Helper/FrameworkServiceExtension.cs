@@ -1,14 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using DUWENINK.Captcha.DI;
+using Elsa;
+using Elsa.Activities.Http;
+using Elsa.Activities.Http.Services;
+using Elsa.Options;
+using Elsa.Persistence.EntityFramework.Core.Extensions;
+using Elsa.Persistence.EntityFramework.PostgreSql;
+using Elsa.Providers.WorkflowContexts;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -29,9 +37,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using WalkingTec.Mvvm.Core;
@@ -39,52 +49,27 @@ using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.Support.Json;
+using WalkingTec.Mvvm.Core.Support.Quartz;
+using WalkingTec.Mvvm.Core.WorkFlow;
 using WalkingTec.Mvvm.Mvc.Auth;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Helper;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
-using Microsoft.AspNetCore.SpaServices.Extensions;
-using Microsoft.Extensions.FileProviders;
-using WalkingTec.Mvvm.Core.Support.Quartz;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using Elsa.Persistence.EntityFramework.Core.Extensions;
-using WalkingTec.Mvvm.Core.WorkFlow;
-using Elsa;
-using Elsa.Providers.WorkflowContexts;
-using Elsa.Options;
-using Elsa.Persistence.EntityFramework.PostgreSql;
-using Elsa.Server.Api.Mapping;
-using Elsa.Server.Api.Services;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using System.Threading.Tasks;
-using DUWENINK.Captcha.DI;
-using Elsa.Activities.Http;
-using Elsa.Activities.Http.Services;
-using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace WalkingTec.Mvvm.Mvc
 {
+    /// <summary>
+    /// WTM 框架服务注册与中间件配置核心扩展类，
+    /// 提供 AddWtmContext、AddWtmWorkflow、AddWtmAuthentication 等服务注册方法，
+    /// 以及 UseWtmContext、UseWtmCrossDomain 等中间件配置方法
+    /// </summary>
     public static class FrameworkServiceExtension
     {
 
-        //private static Configs _wtmconfigs;
-        //private static Configs WtmConfigs
-        //{
-        //    get
-        //    {
-        //        if(_wtmconfigs == null)
-        //        {
-        //            ConfigurationBuilder cb = new ConfigurationBuilder();
-        //            _wtmconfigs = cb.WTMConfig(null).Build().Get<Configs>();
-        //        }
-        //        return _wtmconfigs;
-        //    }
-        //}
-
-
-
-
+        /// <summary>
+        /// 创建框架全局数据对象并加载所有程序集
+        /// </summary>
+        /// <returns>全局数据对象</returns>
         private static GlobalData GetGlobalData()
         {
             var gd = new GlobalData();
@@ -92,11 +77,21 @@ namespace WalkingTec.Mvvm.Mvc
             return gd;
         }
 
+        /// <summary>
+        /// 获取系统所有菜单：快速调试模式下按模块和区域自动生成菜单，
+        /// 否则从默认连接的数据库中读取 FrameworkMenu 表
+        /// </summary>
+        /// <param name="allModule">所有模块列表</param>
+        /// <param name="isQuickdebug">是否为快速调试模式</param>
+        /// <param name="connections">所有数据库连接配置</param>
+        /// <returns>菜单列表</returns>
         private static List<SimpleMenu> GetAllMenus(List<SimpleModule> allModule, bool isQuickdebug, List<CS> connections)
         {
+            // 创建本地化工厂，用于默认区域名称等菜单文本的本地化
             var localizer = new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
             var menus = new List<SimpleMenu>();
 
+            // 快速调试模式：按区域（Area）和页面 Action 自动生成菜单
             if (isQuickdebug)
             {
                 menus = new List<SimpleMenu>();
@@ -131,6 +126,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
+                // 正常模式：从默认连接的数据库中读取 FrameworkMenu 表生成菜单
                 try
                 {
                     using (var dc = connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
@@ -481,6 +477,11 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        /// <summary>
+        /// 按名称从依赖上下文中定位并加载运行时程序集
+        /// </summary>
+        /// <param name="name">程序集名称</param>
+        /// <returns>加载的程序集，找不到时返回 null</returns>
         private static Assembly GetRuntimeAssembly(string name)
         {
             var path = Assembly.GetEntryAssembly().Location;
@@ -489,6 +490,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return null;
             }
+            // 依次从应用基目录、引用程序集路径和 NuGet 包目录解析程序集物理路径
             var r = new CompositeCompilationAssemblyResolver(new ICompilationAssemblyResolver[]
         {
             new AppBaseCompilationAssemblyResolver(Path.GetDirectoryName(path)),
@@ -517,6 +519,15 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        /// <summary>
+        /// 注册 WTM 框架核心服务：读取配置、初始化全局数据、注册 WTMContext、数据权限、
+        /// 文件处理、表单选项和 Quartz 后台任务，按配置初始化各数据库连接，
+        /// 并注册大模型、知识库和嵌入等 AI 相关服务
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <param name="config">应用配置</param>
+        /// <param name="options">框架上下文配置委托，可设置连接串选择器、数据权限等</param>
+        /// <returns>服务集合</returns>
         public static IServiceCollection AddWtmContext(this IServiceCollection services, IConfiguration config, Action<WtmContextOption> options = null)
         {
             services.AddDUWENINKCaptcha();//使用验证码
@@ -532,9 +543,11 @@ namespace WalkingTec.Mvvm.Mvc
             DataContextFilter._csfunc = op.CsSelector;
             WtmFileProvider._subDirFunc = op.FileSubDirSelector;
             WTMContext.ReloadUserFunc = op.ReloadUserFunc;
+            // 默认注册空实现的 DataContext，具体数据库上下文由框架按连接配置创建
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
             services.AddScoped<WtmFileProvider>();
+            // 放宽表单绑定限制，支持大量表单项和大文件上传
             services.Configure<FormOptions>(y =>
             {
                 y.ValueCountLimit = 5000;
@@ -542,6 +555,7 @@ namespace WalkingTec.Mvvm.Mvc
                 y.MultipartBodyLengthLimit = conf.FileUploadOptions.UploadLimit;
             });
             services.AddHostedService<QuartzHostService>();
+            // 遍历所有配置的连接，创建数据库并初始化表结构
             var cs = conf.Connections;
             foreach (var item in cs)
             {
@@ -555,18 +569,52 @@ namespace WalkingTec.Mvvm.Mvc
                 options.ConstraintMap.Add("apiVersion", typeof(ApiVersionRouteConstraint));
             });
 
+            // 大模型对话服务
+            if (conf.Llm?.Enabled == true)
+            {
+                services.AddSingleton(new LlmService(conf.Llm));
+            }
+
+            // AI代码功能：初始化执行超时配置
+            WalkingTec.Mvvm.Core.Support.AiCode.AiCodeRunner.TimeoutMs = conf.AiCode?.TimeoutSeconds * 1000 ?? 5000;
+
+            // 知识库后台处理服务
+            services.AddHostedService<KnowledgeProcessingHostedService>();
+
+            // 嵌入服务 — 根据 EmbeddingOptions 配置选择
+            if (conf.EmbeddingOptions != null && !string.IsNullOrEmpty(conf.EmbeddingOptions.ApiKey))
+            {
+                services.AddScoped<IEmbeddingService>(sp => new OpenAIEmbeddingService(conf.EmbeddingOptions));
+            }
+            else
+            {
+                services.AddScoped<IEmbeddingService, BuiltInEmbeddingService>();
+            }
+
             return services;
         }
 
+        /// <summary>
+        /// 注册 WTM 工作流（Elsa）相关服务：按指定连接配置 Elsa 持久化数据库，
+        /// 注册控制台、审批、脚本、HTTP、邮件、定时等活动，
+        /// 并为所有工作流类注册上下文提供程序和审批书签提供程序
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <param name="config">应用配置</param>
+        /// <param name="csName">工作流持久化使用的连接串名称，默认为 default</param>
+        /// <param name="options">Elsa 配置委托，可追加自定义配置</param>
+        /// <returns>服务集合</returns>
         public static IServiceCollection AddWtmWorkflow(this IServiceCollection services, IConfiguration config,string csName="default",Action<ElsaOptionsBuilder> options=null)
         {
             var elsaSection = config.GetSection("Workflow");
             var conf = config.Get<Configs>();
+            // 注册基于认证的 HTTP 端点授权处理器，供 Elsa 工作流 HTTP 活动使用
             services.AddSingleton<AuthenticationBasedHttpEndpointAuthorizationHandler>();
 
             services
                 .AddElsa(elsa => {
                     var cs = conf.Connections.Where(x => x.Key == csName).FirstOrDefault();
+                    // 根据连接的数据库类型选择对应的 Elsa EF Core 持久化提供程序
                     switch (cs.DbType)
                     {
                         case DBTypeEnum.SqlServer:
@@ -598,6 +646,7 @@ namespace WalkingTec.Mvvm.Mvc
                         case DBTypeEnum.SQLite:
                             elsa.UseNonPooledEntityFrameworkPersistence(ef => ef.UseSqlite(cs.Value));
                             break;
+                        // Oracle 使用自定义的 WtmElsaContext（不使用独立 Schema），并按配置版本设置 SQL 兼容级别
                         case DBTypeEnum.Oracle:
                             elsa.UseNonPooledEntityFrameworkPersistence<WtmElsaContext>(ef => ef.UseOracle(cs.Value, op =>
                             {
@@ -628,6 +677,7 @@ namespace WalkingTec.Mvvm.Mvc
                             break;
                     }
 
+                    // 注册各类工作流活动：控制台、审批、JavaScript 脚本、HTTP、邮件、Quartz 定时，并使用自定义租户访问器
                     elsa
                     .AddConsoleActivities()
                     .AddActivity<WtmApproveActivity>()
@@ -645,7 +695,9 @@ namespace WalkingTec.Mvvm.Mvc
                     options?.Invoke(elsa);
                 }
                 );
+            // 注册 Elsa 的 API 端点
             services.AddElsaApiEndpoints();
+            // 为工作流 HTTP 活动注册指向主站的 HttpClient，并附加当前用户的远程令牌
             if (conf.Domains.ContainsKey("server"))
             {
                 services.AddHttpClient(nameof(SendHttpRequest)).ConfigureHttpClient((s,x) =>
@@ -658,18 +710,12 @@ namespace WalkingTec.Mvvm.Mvc
             }
 
 
-            //        services
-            //.AddSingleton<ConnectionConverter>()
-            //.AddSingleton<ActivityBlueprintConverter>()
-            //.AddScoped<IWorkflowBlueprintMapper, WorkflowBlueprintMapper>()
-            //.AddSingleton<IEndpointContentSerializerSettingsProvider, EndpointContentSerializerSettingsProvider>()
-            //.AddAutoMapperProfile<AutoMapperProfile>()
-            //.AddSignalR();
             services.AddMvc(options =>
             {
                 options.Conventions.Add(new MyNewtonsoftJsonConvention(null));
             });
 
+            // 为所有实现 IWorkflow 的工作流类注册对应的 WorkflowRefresher 上下文提供程序
             var allTypes = Utils.GetAllModels();
 
             foreach (var item in allTypes)
@@ -685,11 +731,35 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
+        /// <summary>
+        /// 判断密钥是否为框架模板默认密钥（含按框架规则补位到32位后的比较）。
+        /// 默认密钥公开在开源代码中，任何人可用其伪造JWT，正式环境必须更换
+        /// </summary>
+        /// <param name="key">配置中的密钥</param>
+        /// <returns>是默认密钥或空密钥返回true</returns>
+        private static bool IsKnownDefaultKey(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return false; //空密钥由配置绑定时的其他校验处理，这里只管已知默认值
+            //按 JwtOptions.SecurityKey 的补位规则补齐后比较
+            var padded = key.PadRight(32, 'x');
+            return padded == "superSecretKey@345xxxxxxxxxxxxxx" //模板appsettings默认值
+                || padded == "wtmwtmwtmwtmwtmwtmxxxxxxxxxxxxxx"; //JwtOption属性默认值
+        }
+
+        /// <summary>
+        /// 注册跨域（CORS）服务：按配置中的策略列表注册各域名的跨域策略，
+        /// 未配置策略时注册允许所有来源的默认策略
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <param name="config">应用配置</param>
+        /// <returns>服务集合</returns>
         public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services, IConfiguration config)
         {
             var conf = config.Get<Configs>();
             services.AddCors(options =>
             {
+                // 配置了跨域策略时按策略名逐个注册；否则注册允许任意来源的默认策略
                 if (conf.CorsOptions?.Policy?.Count > 0)
                 {
                     foreach (var item in conf.CorsOptions.Policy)
@@ -711,16 +781,26 @@ namespace WalkingTec.Mvvm.Mvc
                     options.AddPolicy("_donotusedefault",
                         builder =>
                         {
+                            //注意：这里故意不调用 AllowCredentials —— 反射任意Origin（SetIsOriginAllowed=true）
+                            //与允许凭据组合等于向任意网站开放带Cookie/凭据的跨域读取（绕过同源策略窃取数据）。
+                            //需要带凭据的跨域请配置 CorsOptions.Policy 白名单（主子站iframe嵌套不受影响，
+                            //iframe属页面导航不受CORS管辖；子站页面在iframe内调用自身API为同源请求）
                             builder.SetIsOriginAllowed((a) => true)
                                                 .AllowAnyHeader()
                                                 .AllowAnyMethod()
-                                                .AllowCredentials()
                                                 .WithExposedHeaders("Content-Disposition");
                         });
                 }
             });
             return services;
         }
+        /// <summary>
+        /// 注册 Session 服务，并按配置设置会话 Cookie 名称和空闲超时时间
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <param name="timeout">会话空闲超时时间（秒）</param>
+        /// <param name="config">应用配置</param>
+        /// <returns>服务集合</returns>
         public static IServiceCollection AddWtmSession(this IServiceCollection services, int timeout, IConfiguration config)
         {
             var conf = config.Get<Configs>();
@@ -731,6 +811,13 @@ namespace WalkingTec.Mvvm.Mvc
             });
             return services;
         }
+        /// <summary>
+        /// 注册框架认证服务：默认使用 Cookie 认证，同时支持 JwtBearer 认证，
+        /// 并按配置完成令牌校验参数和 Cookie 选项的设置
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <param name="config">应用配置</param>
+        /// <returns>服务集合</returns>
         public static IServiceCollection AddWtmAuthentication(this IServiceCollection services, IConfiguration config)
         {
             var conf = config.Get<Configs>();
@@ -740,10 +827,21 @@ namespace WalkingTec.Mvvm.Mvc
 
             var cookieOptions = conf.CookieOptions;
 
+            //安全检查：正式模式（非QuickDebug）下拒绝使用框架模板默认密钥。
+            //默认密钥及其补位规则公开在开源代码中，攻击者可用其伪造任意用户身份的JWT（含永不过期的管理员token），
+            //历史上曾以此实现零密码完全接管
+            if (conf.IsQuickDebug == false)
+            {
+                if (IsKnownDefaultKey(jwtOptions?.SecurityKey))
+                    throw new InvalidOperationException("JwtOptions.SecurityKey 使用了框架默认密钥，正式环境（IsQuickDebug=false）必须在 appsettings.json 中改为自定义的强密钥后再启动");
+            }
+
+            // 清除 JWT 入站声明类型的默认映射，保留令牌中的原始声明名称
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                      .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                      {
+                         // 配置 JWT 校验参数：颁发者、受众、签名密钥以及生命周期校验
                          options.TokenValidationParameters = new TokenValidationParameters
                          {
                              NameClaimType = AuthConstants.JwtClaimTypes.Name,
@@ -770,6 +868,7 @@ namespace WalkingTec.Mvvm.Mvc
                              },
                              ValidateLifetime = true
                          };
+                         // 配置 JwtBearer 事件：支持从查询串读取令牌（如 WebSocket 场景），令牌验证通过后原样返回
                          options.Events = new JwtBearerEvents
                          {
                              OnMessageReceived = context =>
@@ -791,6 +890,7 @@ namespace WalkingTec.Mvvm.Mvc
                              }
                             };
                      })
+                   // 配置 Cookie 认证：Cookie 名称、域、过期时间、滑动过期以及登录、登出、拒绝访问路径
                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                     {
                         options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + conf.CookiePre + "." + AuthConstants.CookieAuthName;
@@ -800,7 +900,6 @@ namespace WalkingTec.Mvvm.Mvc
                         options.ClaimsIssuer = cookieOptions.Issuer;
                         options.SlidingExpiration = cookieOptions.SlidingExpiration;
                         options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
-                        // options.SessionStore = new MemoryTicketStore();
 
                         options.LoginPath = cookieOptions.LoginPath;
                         options.LogoutPath = cookieOptions.LogoutPath;
@@ -810,6 +909,12 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
+        /// <summary>
+        /// 注册 HttpClient 工厂，并为配置文件中的每个域名（Domains）注册对应的命名 HttpClient
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <param name="config">应用配置</param>
+        /// <returns>服务集合</returns>
         public static IServiceCollection AddWtmHttpClient(this IServiceCollection services, IConfiguration config)
         {
             var conf = config.Get<Configs>();
@@ -829,12 +934,19 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
+        /// <summary>
+        /// 注册 Swagger 文档生成服务，包含 JWT Bearer 安全定义和框架自定义的 Schema 过滤器
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <param name="useFullName">是否使用类型的全名作为 SchemaId，避免不同命名空间的同名类冲突</param>
+        /// <returns>服务集合</returns>
         public static IServiceCollection AddWtmSwagger(this IServiceCollection services, bool useFullName = false)
         {
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
+                // 配置 JWT Bearer 认证的安全定义与全局安全要求
                 var securityScheme = new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.Http,
@@ -857,6 +969,13 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
+        /// <summary>
+        /// 注册多语言服务：设置资源路径、默认文化与支持的文化列表，并可指定自定义本地化资源类型
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <param name="config">应用配置</param>
+        /// <param name="op">本地化选项配置委托</param>
+        /// <returns>服务集合</returns>
         public static IServiceCollection AddWtmMultiLanguages(this IServiceCollection services, IConfiguration config, Action<WtmLocalizationOption> op = null)
         {
             var conf = config.Get<Configs>();
@@ -877,25 +996,31 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
+        /// <summary>
+        /// 为 MVC 启用数据注解本地化，并将所有注解的本地化资源统一指向指定类型所在的资源
+        /// </summary>
+        /// <param name="builder">MVC 构建器</param>
+        /// <param name="programType">用于定位本地化资源的类型，通常为主程序的 Program 类</param>
+        /// <returns>MVC 构建器</returns>
         public static IMvcBuilder AddWtmDataAnnotationsLocalization(this IMvcBuilder builder, Type programType)
         {
             builder.AddDataAnnotationsLocalization(options =>
              {
                  options.DataAnnotationLocalizerProvider = (type, factory) =>
                  {
-                     //if (Core.CoreProgram.Buildindll.Any(x => type.FullName.StartsWith(x)))
-                     //{
-                     //    return factory.Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
-                     //}
-                     //else
-                     //{
                      return factory.Create(programType);
-                     //}
                  };
              });
             return builder;
         }
 
+        /// <summary>
+        /// 初始化 WTM 框架运行环境：设置核心本地化、扫描控制器生成模块与 URL、
+        /// 配置菜单和租户的缓存获取函数、汇总免权限地址、初始化文件提供程序，并执行数据库数据初始化
+        /// </summary>
+        /// <param name="app">应用构建器</param>
+        /// <param name="isspa">是否为 SPA（单页应用）模式</param>
+        /// <returns>应用构建器</returns>
         public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app, bool isspa = false)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
@@ -903,23 +1028,6 @@ namespace WalkingTec.Mvvm.Mvc
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
             var localfactory = app.ApplicationServices.GetRequiredService<IStringLocalizerFactory>();
             var lop = app.ApplicationServices.GetService<WtmLocalizationOption>();
-
-            //获取所有程序集
-            //var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
-            //if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
-            //{
-            //    gd.AllAssembly.Add(mvc);
-            //}
-            //var core = GetRuntimeAssembly("WalkingTec.Mvvm.Core");
-            //if (core != null && gd.AllAssembly.Contains(core) == false)
-            //{
-            //    gd.AllAssembly.Add(core);
-            //}
-            //var layui = GetRuntimeAssembly("WalkingTec.Mvvm.TagHelpers.LayUI");
-            //if (layui != null && gd.AllAssembly.Contains(layui) == false)
-            //{
-            //    gd.AllAssembly.Add(layui);
-            //}
 
             //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
             Type programType = null;
@@ -940,6 +1048,7 @@ namespace WalkingTec.Mvvm.Mvc
             gd.AllModule = GetAllModules(controllers);
             var modules = Utils.ResetModule(gd.AllModule, false);
             gd.CustomUserType = gd.GetPocoTypesAssignableFrom<FrameworkUserBase>().Where(x => x.Name.ToLower() == "frameworkuser").FirstOrDefault();
+            // 设置菜单获取函数：优先读取分布式缓存，未命中时按当前模式生成菜单并缓存一小时
             gd.SetMenuGetFunc(() =>
             {
                 var menus = new List<SimpleMenu>();
@@ -959,6 +1068,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                 return menus;
             });
+            // 设置租户获取函数：启用多租户时从默认数据库读取启用的租户并缓存一小时
             gd.SetTenantGetFunc(() =>
             {
                 var tenants = new List<FrameworkTenant>();
@@ -971,6 +1081,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         using (var dc = configs.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                         {
+                            // 支持自定义租户类型：把自定义租户及其扩展属性一并读入
                             var cusTenantType = gd.GetPocoTypesAssignableFrom<FrameworkTenant>().FirstOrDefault();
                             if (cusTenantType != null)
                             {
@@ -1027,6 +1138,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 return tenants;
             });
+            // 为所有模块的 Action 生成访问地址，并处理带 id 参数和可选参数路由的情况
             foreach (var m in gd.AllModule)
             {
                 if (isspa == false && m.IsApi == true)
@@ -1068,9 +1180,11 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
 
+            // 汇总免权限验证的地址和仅限主站（主租户）访问的地址
             gd.AllAccessUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true).Select(x => x.Url).ToList();
             gd.AllMainTenantOnlyUrls = gd.AllModule.SelectMany(x => x.Actions).Where(x => x.MainHostOnly == true || x.Module.MainHostOnly == true).Select(x => x.Url).ToList();
             WtmFileProvider.Init(configs, gd);
+            // 执行框架数据初始化；若容器中注册的是 NullContext，则逐个连接分别执行初始化
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var fixdc = scope.ServiceProvider.GetRequiredService<IDataContext>();
@@ -1091,6 +1205,11 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return app;
         }
+        /// <summary>
+        /// 启用请求本地化中间件：按配置设置默认文化与支持的文化，并将当前线程文化设为默认文化
+        /// </summary>
+        /// <param name="app">应用构建器</param>
+        /// <returns>应用构建器</returns>
         public static IApplicationBuilder UseWtmMultiLanguages(this IApplicationBuilder app)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
@@ -1107,9 +1226,15 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return app;
         }
+        /// <summary>
+        /// 启用跨域中间件，仅在配置允许跨域时按策略挂载 CORS
+        /// </summary>
+        /// <param name="app">应用构建器</param>
+        /// <returns>应用构建器</returns>
         public static IApplicationBuilder UseWtmCrossDomain(this IApplicationBuilder app)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
+            // 启用跨域时挂载 CORS 中间件：有配置策略时使用第一个策略，否则使用默认策略
             if (configs.CorsOptions.EnableAll == true)
             {
                 if (configs.CorsOptions?.Policy?.Count > 0)
@@ -1124,8 +1249,14 @@ namespace WalkingTec.Mvvm.Mvc
             return app;
         }
 
+        /// <summary>
+        /// 启用框架内置静态文件服务，将 Mvc 程序集的内嵌资源映射到 /_js 虚拟路径
+        /// </summary>
+        /// <param name="app">应用构建器</param>
+        /// <returns>应用构建器</returns>
         public static IApplicationBuilder UseWtmStaticFiles(this IApplicationBuilder app)
         {
+            // 将 Mvc 程序集中的内嵌资源映射到 /_js 虚拟路径，提供框架内置静态文件
             app.UseStaticFiles(new StaticFileOptions
             {
                 RequestPath = new PathString("/_js"),
@@ -1137,9 +1268,16 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
 
+        /// <summary>
+        /// 启用 Swagger 中间件和 SwaggerUI 页面
+        /// </summary>
+        /// <param name="app">应用构建器</param>
+        /// <param name="showInDebugOnly">是否仅在快速调试模式下显示，默认为 true</param>
+        /// <returns>应用构建器</returns>
         public static IApplicationBuilder UseWtmSwagger(this IApplicationBuilder app, bool showInDebugOnly = true)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
+            // 快速调试模式或明确要求显示时才启用 Swagger
             if (configs.IsQuickDebug == true || showInDebugOnly == false)
             {
                 app.UseSwagger();
@@ -1151,6 +1289,11 @@ namespace WalkingTec.Mvvm.Mvc
             return app;
         }
 
+        /// <summary>
+        /// 配置 React 单页应用：启用 Spa 静态文件服务，开发环境下代理到 React 开发服务器
+        /// </summary>
+        /// <param name="app">应用构建器</param>
+        /// <returns>应用构建器</returns>
         public static IApplicationBuilder UseReact(this IApplicationBuilder app)
         {
             var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
@@ -1158,6 +1301,7 @@ namespace WalkingTec.Mvvm.Mvc
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
+                // 开发环境下启动 React 开发服务器（npm start），生产环境使用已构建的静态文件
                 if (env.IsDevelopment())
                 {
                     spa.UseReactDevelopmentServer(npmScript: "start");

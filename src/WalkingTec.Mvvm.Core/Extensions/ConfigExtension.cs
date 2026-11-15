@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
+    /// <summary>
+    /// 配置文件相关的扩展函数，用于构建 WTM 框架的标准配置
+    /// </summary>
     public static class ConfigExtension
     {
         /// <summary>
@@ -38,6 +40,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 rv = rv.AddJsonFile(jsonFileName, optional: true, reloadOnChange: true);
             }
             rv = rv.AddEnvironmentVariables();
+            //将宿主根目录写入内存配置，供后续读取 HostRoot 配置项时使用
             if (env != null)
             {
                 rv = rv.AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", env.ContentRootPath } });
@@ -50,10 +53,16 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
 
+        /// <summary>
+        /// 设置当前目录为配置文件所在目录，并以此为基准目录构建配置
+        /// </summary>
+        /// <param name="cb">配置构建器</param>
+        /// <returns>设置基准目录后的配置构建器</returns>
         public static IConfigurationBuilder WTM_SetCurrentDictionary(this IConfigurationBuilder cb)
         {
             CurrentDirectoryHelpers.SetCurrentDirectory();
 
+            //如果当前目录下没有 appsettings.json，则尝试到程序集输出目录中寻找
             if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")))
             {
                 var binLocation = Assembly.GetEntryAssembly()?.Location;
@@ -127,6 +136,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
 
 
+        /// <summary>
+        /// 修正 IIS InProcess 模式下当前目录指向错误的问题，将当前目录设置为站点的物理路径
+        /// </summary>
         public static void SetCurrentDirectory()
 
         {

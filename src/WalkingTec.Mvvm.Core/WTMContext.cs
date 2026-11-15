@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -15,38 +14,63 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Core.Json;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
+    /// <summary>
+    /// WTM 框架的每请求上下文中枢，贯穿一次请求的完整生命周期。
+    /// 集中持有数据上下文(DC)、当前登录用户(LoginUserInfo)、分布式缓存(Cache)、系统配置(ConfigInfo)、
+    /// 全局数据(GlobaInfo)、会话(Session)、UI服务(UIService)等核心对象；
+    /// 并提供 CreateVM 视图模型工厂、DoLogin 登录验证、CreateDC 多数据库上下文创建、
+    /// CallAPI 远程接口调用等框架级 API，是 Controller 与 ViewModel 之间传递上下文的桥梁。
+    /// </summary>
     public class WTMContext : IDisposable
     {
         private HttpContext _httpContext;
+        /// <summary>
+        /// 当前HTTP上下文
+        /// </summary>
         public HttpContext HttpContext { get => _httpContext; }
 
         private IServiceProvider _serviceProvider;
+        /// <summary>
+        /// 服务提供者；未显式设置时回退使用当前HTTP请求的 RequestServices
+        /// </summary>
         public IServiceProvider ServiceProvider { get => _serviceProvider ?? _httpContext?.RequestServices; }
 
 
         private List<IDataPrivilege> _dps;
+        /// <summary>
+        /// 系统中配置的数据权限(IDataPrivilege)列表，定义哪些模型参与数据权限过滤
+        /// </summary>
         public List<IDataPrivilege> DataPrivilegeSettings { get => _dps; }
 
         private Configs _configInfo;
+        /// <summary>
+        /// 系统配置信息，对应 appsettings 中 WTM 节点的配置
+        /// </summary>
         public Configs ConfigInfo { get => _configInfo; }
 
         private GlobalData _globaInfo;
+        /// <summary>
+        /// 全局数据，包含系统所有菜单、页面权限、数据权限、租户、程序集等静态信息
+        /// </summary>
         public GlobalData GlobaInfo { get => _globaInfo; }
 
         private IUIService _uiservice;
+        /// <summary>
+        /// UI服务，按当前UI框架(如LayUI)提供前端相关操作的统一接口
+        /// </summary>
         public IUIService UIService { get => _uiservice; }
 
         private IDistributedCache _cache;
+        /// <summary>
+        /// 分布式缓存，用于缓存用户信息、租户角色/用户组等数据
+        /// </summary>
         public IDistributedCache Cache
         {
             get
@@ -55,14 +79,23 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 当前使用的连接串Key；为空时使用 default 连接
+        /// </summary>
         public string CurrentCS
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 当前使用的数据库类型；为空时使用连接配置中的默认数据库类型
+        /// </summary>
         public DBTypeEnum? CurrentDbType { get; set; }
 
+        /// <summary>
+        /// 父窗口的WindowId；弹出窗口向打开它的页面回传数据时用来定位目标窗口
+        /// </summary>
         public string ParentWindowId
         {
             get
@@ -70,6 +103,7 @@ namespace WalkingTec.Mvvm.Core
                 string rv = null;
                 if (WindowIds != null)
                 {
+                    //窗口链按逗号分隔，倒数第二个即父窗口
                     var ids = WindowIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     if (ids.Length > 1)
                     {
@@ -81,6 +115,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 当前窗口的WindowId
+        /// </summary>
         public string CurrentWindowId
         {
             get
@@ -88,6 +125,7 @@ namespace WalkingTec.Mvvm.Core
                 string rv = null;
                 if (WindowIds != null)
                 {
+                    //窗口链按逗号分隔，最后一个即当前窗口
                     var ids = WindowIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     if (ids.Length > 0)
                     {
@@ -99,6 +137,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 当前弹窗链的窗口ID串（逗号分隔，存储在Cookie中）
+        /// </summary>
         public string WindowIds
         {
             get
@@ -106,6 +147,7 @@ namespace WalkingTec.Mvvm.Core
                 string rv = string.Empty;
                 try
                 {
+                    //先从Cookie读取windowguid，再读取该guid对应的窗口链串
                     if (HttpContext.Request.Cookies.TryGetValue($"{ConfigInfo?.CookiePre}windowguid", out string windowguid) == true)
                     {
 
@@ -120,19 +162,32 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 会话服务，提供对Session的读写操作
+        /// </summary>
         public ISessionService Session { get; set; }
 
+        /// <summary>
+        /// 模型验证服务，用于向ModelState添加验证错误信息
+        /// </summary>
         public IModelStateService MSD { get; set; }
 
+        /// <summary>
+        /// 外部注册的用户重载委托；设置后 ReloadUser 将优先调用它加载用户，用于自定义用户来源
+        /// </summary>
         public static Func<WTMContext, string, LoginUserInfo> ReloadUserFunc { get; set; }
 
         #region DataContext
 
         private IDataContext _dc;
+        /// <summary>
+        /// 当前使用的数据上下文(DataContext)；未设置时延迟创建，自动按当前连接串和租户选择数据库
+        /// </summary>
         public IDataContext DC
         {
             get
             {
+                //延迟创建：尚未初始化时按当前连接串/租户信息自动创建 DataContext
                 if (_dc == null)
                 {
                     _dc = this.CreateDC();
@@ -150,17 +205,23 @@ namespace WalkingTec.Mvvm.Core
         #region Current User
 
         private LoginUserInfo _loginUserInfo;
+        /// <summary>
+        /// 当前登录用户信息；未加载时自动从缓存或数据库加载（支持JWT认证和远程令牌两种方式），赋值时会同步写入缓存
+        /// </summary>
         public LoginUserInfo LoginUserInfo
         {
             get
             {
-                if (_loginUserInfo == null && HttpContext?.User?.Identity?.IsAuthenticated == true) // 用户认证通过后，当前上下文不包含用户数据
+                if (_loginUserInfo == null && HttpContext?.User?.Identity?.IsAuthenticated == true) //用户认证通过后，当前上下文尚不包含用户数据，需要从Claims中提取并加载
                 {
+                    //从JWT的Claims中提取用户标识和租户编码
                     var userIdStr = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault();
                     var tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault();
                     string usercode = userIdStr;
+                    //以"用户名+租户"组合为缓存键，优先从缓存读取用户信息
                     var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr + "$`$" + tenant}";
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
+                    //缓存未命中时调用 ReloadUser 从数据库重新加载用户，并写回缓存
                     if (_loginUserInfo == null)
                     {
                         try
@@ -178,9 +239,11 @@ namespace WalkingTec.Mvvm.Core
                         }
                     }
                 }
+                //未登录但请求携带 _remotetoken 参数（跨系统远程认证）时，尝试解析远程令牌获取用户
                 if (_loginUserInfo == null && HttpContext?.Request.Query.Any(x => x.Key == "_remotetoken") == true)
                 {
                     var remoteToken = HttpContext?.Request.Query["_remotetoken"][0];
+                    //非主站点模式：直接解析远程JWT令牌，后续流程与上面的JWT认证相同
                     if (ConfigInfo.HasMainHost == false)
                     {
                         JwtSecurityToken token = new JwtSecurityToken();
@@ -189,6 +252,7 @@ namespace WalkingTec.Mvvm.Core
                             token = new JwtSecurityToken(remoteToken);
                         }
                         catch { }
+                        //从远程JWT令牌的Claims中提取用户标识和租户编码，同样先读缓存、未命中再 ReloadUser 加载
                         var userIdStr = token.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault();
                         var tenant = token.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault();
                         string usercode = userIdStr;
@@ -213,6 +277,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                     else if (string.IsNullOrEmpty(remoteToken) == false)
                     {
+                        //主站点模式：携带远程令牌时，通过 ReloadUser 到主站点验证并加载用户信息
                         try
                         {
                             _loginUserInfo = ReloadUser("null");
@@ -233,6 +298,7 @@ namespace WalkingTec.Mvvm.Core
             }
             set
             {
+                //赋值为null时清除缓存中的用户信息；赋具体值时写入缓存
                 if (value == null)
                 {
                     Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo?.ITCode + "$`$" + _loginUserInfo?.TenantCode}");
@@ -246,23 +312,32 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        //本地化资源来源类型；未配置时默认取入口程序集中的 Program 类
         private Type _localizerType;
         private IStringLocalizerFactory _stringLocalizerFactory;
         private IStringLocalizer _localizer;
         private ILoggerFactory _loggerFactory;
+        /// <summary>
+        /// 日志工厂
+        /// </summary>
         public ILoggerFactory LoggerFactory { get { return _loggerFactory; } }
+        /// <summary>
+        /// 多语言本地化服务，用于读取多语言资源文本
+        /// </summary>
         public IStringLocalizer Localizer
         {
             get
             {
                 if (_localizer == null && _stringLocalizerFactory != null)
                 {
+                    //未显式指定本地化类型时，使用入口程序集的 Program 类型作为本地化来源
                     if (_localizerType == null)
                     {
                         _localizerType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                     }
                     _localizer = _stringLocalizerFactory.Create(_localizerType);
                 }
+                //无法创建本地化实例时，退回使用框架的全局本地化器
                 return _localizer ?? WalkingTec.Mvvm.Core.CoreProgram._localizer;
             }
         }
@@ -294,9 +369,15 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region URL
+        /// <summary>
+        /// 站点根地址
+        /// </summary>
         public string BaseUrl { get; set; }
         #endregion
 
+        /// <summary>
+        /// 当前请求的主机地址（协议+域名+端口）；无请求上下文时返回空字符串
+        /// </summary>
         public string HostAddress { get
             {
                 if (this.HttpContext?.Request != null)
@@ -310,18 +391,28 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 当前请求关联的简易日志对象(SimpleLog)，用于暂存Action日志数据
+        /// </summary>
         public SimpleLog Log { get; set; }
 
+        /// <summary>
+        /// ActionLog 专用日志记录器
+        /// </summary>
         protected ILogger<ActionLog> Logger { get; set; }
 
 
         private IQueryable<FrameworkUserBase> _baseUserQuery;
+        /// <summary>
+        /// 系统自定义用户类型（继承自 FrameworkUserBase）的数据查询源，供登录验证等内部逻辑使用
+        /// </summary>
         public IQueryable<FrameworkUserBase> BaseUserQuery
         {
             get
             {
                 if (_baseUserQuery == null && this.GlobaInfo?.CustomUserType != null && DC != null)
                 {
+                    //自定义用户类型编译期未知，通过反射调用 DC 的泛型 Set 方法获取其查询源
                     var set = DC.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(GlobaInfo.CustomUserType);
                     _baseUserQuery = set.Invoke(DC, null) as IQueryable<FrameworkUserBase>;
                 }
@@ -329,6 +420,20 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 构造函数，由依赖注入容器调用，装配上下文所需的各种系统对象
+        /// </summary>
+        /// <param name="_config">系统配置（Options监视器）</param>
+        /// <param name="_gd">全局数据</param>
+        /// <param name="_http">HTTP上下文访问器</param>
+        /// <param name="_ui">UI服务</param>
+        /// <param name="_dp">数据权限设置列表</param>
+        /// <param name="dc">已创建的数据上下文</param>
+        /// <param name="stringLocalizer">多语言本地化工厂</param>
+        /// <param name="loggerFactory">日志工厂</param>
+        /// <param name="lop">本地化选项</param>
+        /// <param name="cache">分布式缓存</param>
+        /// <param name="sp">服务提供者</param>
         public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null, WtmLocalizationOption lop = null, IDistributedCache cache = null, IServiceProvider sp=null)
         {
             _configInfo = _config?.CurrentValue ?? new Configs();
@@ -349,6 +454,7 @@ namespace WalkingTec.Mvvm.Core
                 _dp = new List<IDataPrivilege>();
             }
             _dps = _dp;
+            //NullContext 是容器注入的空实现占位，统一转为 null，让 DC 属性按需延迟创建
             if (dc is NullContext)
             {
                 _dc = null;
@@ -360,13 +466,26 @@ namespace WalkingTec.Mvvm.Core
             _serviceProvider = sp;
         }
 
+        /// <summary>
+        /// 手动设置服务提供者，用于非依赖注入场景下补充服务定位能力
+        /// </summary>
+        /// <param name="sp">服务提供者</param>
         public void SetServiceProvider(IServiceProvider sp)
         {
             this._serviceProvider = sp;
         }
 
+        /// <summary>
+        /// 执行登录验证：主站点模式下转发到主站点完成认证；否则在本地数据库验证用户名密码，
+        /// 加载用户完整信息（角色、权限、数据权限等）并签发JWT令牌
+        /// </summary>
+        /// <param name="username">用户名(ITCode)</param>
+        /// <param name="password">密码明文，验证时转为MD5比对</param>
+        /// <param name="tenant">租户编码，为空时取当前DataContext或当前登录用户的租户</param>
+        /// <returns>登录成功返回用户信息(含令牌)，失败返回null</returns>
         public LoginUserInfo DoLogin(string username, string password, string tenant)
         {
+            //未指定租户时，依次尝试从当前DataContext和已认证用户的Claims中获取
             if(string.IsNullOrEmpty(tenant))
             {
                 tenant = DC.TenantCode;               
@@ -375,8 +494,10 @@ namespace WalkingTec.Mvvm.Core
             {
                 tenant = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.TenantCode).Select(x => x.Value).FirstOrDefault() ?? tenant;
             }
+            //主站点模式（本系统作为子站点，用户中心部署在主站点）：登录验证转发到主站点完成
             if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(tenant) == true)
             {
+                //优先取已保存的远程令牌，其次从请求的 _remotetoken 参数获取
                 var remoteToken = _loginUserInfo?.RemoteToken ?? HttpContext?.Request.Query?.Where(x => x.Key == "_remotetoken").Select(x => x.Value.First()).FirstOrDefault();
                 if (HttpContext.User.Identity.IsAuthenticated)
                 {
@@ -385,9 +506,10 @@ namespace WalkingTec.Mvvm.Core
                     LoginUserInfo rv = null;
                 if (string.IsNullOrEmpty(remoteToken) == false)
                 {
+                    //携带远程令牌时，直接到主站点验证并获取用户信息
                     Dictionary<string, string> headers = new Dictionary<string, string>();
                     headers.Add("Authorization", "Bearer " + remoteToken);
-                    var user = CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers).Result;
+                    var user = CallAPI<LoginUserInfo>("mainhost", "/api/admin/account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers).Result;
                     rv = user.Data;
                     if (rv != null)
                     {
@@ -396,13 +518,14 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else if(string.IsNullOrEmpty(password)==false)
                 {
-                    var loginjwt = CallAPI<Token>("mainhost", "/api/_account/loginjwt", HttpMethodEnum.POST, new { Account = username, Password = password }, 10).Result;
+                    //无远程令牌但有密码时，先用账号密码到主站点登录换取JWT令牌
+                    var loginjwt = CallAPI<Token>("mainhost", "/api/admin/account/loginjwt", HttpMethodEnum.POST, new { Account = username, Password = password }, 10).Result;
                     if (string.IsNullOrEmpty(loginjwt?.Data?.AccessToken) == false)
                     {
                         remoteToken = loginjwt?.Data?.AccessToken;
                         Dictionary<string, string> headers = new Dictionary<string, string>();
                         headers.Add("Authorization", "Bearer " + remoteToken);
-                        var user = CallAPI<LoginUserInfo>("mainhost", "/api/_account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers).Result;
+                        var user = CallAPI<LoginUserInfo>("mainhost", "/api/admin/account/checkuserinfo?IsApi=false", HttpMethodEnum.GET, new { }, 10, headers: headers).Result;
                         rv = user.Data;
                         if (rv != null)
                         {
@@ -412,33 +535,27 @@ namespace WalkingTec.Mvvm.Core
                 }
                 if (rv != null)
                 {
-                    //var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{rv.ITCode + "$`$" + rv.TenantCode}";
-                    //var cacheuser = Cache.Get<LoginUserInfo>(cacheKey);
-                    //if (cacheuser != null && cacheuser.TimeTick >= rv.TimeTick)
-                    //{
-                    //    rv = cacheuser;
-                    //}
-                    //else
-                    //{
                         rv.LoadBasicInfoAsync(this).Wait();
-                    //}
                 }
                 return rv;
             }
             else
             {
+                //本地模式：直接在当前（或租户独立的）数据库中验证用户并签发令牌
                 bool exist = false;
                 username = HttpContext.User.Claims.Where(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Select(x => x.Value).FirstOrDefault() ?? username;
                 var ct = GlobaInfo.AllTenant.Where(x => x.TCode == tenant).FirstOrDefault();
                 //如果找不到指定的tenant，说明租户不存在，直接返回null
-                if(ct == null && string.IsNullOrEmpty(tenant) == false)
+                if (ct == null && string.IsNullOrEmpty(tenant) == false)
                 {
                     return null;
                 }
+                //租户配置了独立数据库时，切换到租户自己的DataContext
                 if (ct != null)
                 {
                     _dc = ct.CreateDC(this);
                 }
+                //已通过JWT认证的用户只需验证用户存在且有效；未认证用户需同时比对密码(MD5)
                 if (HttpContext.User.Identity.IsAuthenticated)
                 {
                     exist = BaseUserQuery.IgnoreQueryFilters().Any(x => x.ITCode == username && x.TenantCode == tenant && x.IsValid==true);
@@ -457,24 +574,21 @@ namespace WalkingTec.Mvvm.Core
                     ITCode = username,
                     TenantCode = tenant
                 };
-                //var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{username + "$`$" + tenant}";
-                //var cacheuser = Cache.Get<LoginUserInfo>(cacheKey);
-                //if (cacheuser != null)
-                //{
-                //    user = cacheuser;
-                //}
-                //else
-                //{
+                    //加载用户的角色、权限、数据权限等完整信息
                     user.LoadBasicInfoAsync(this).Wait();
-                //}
                 user.RemoteToken = null;
-                var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
+                    //为用户签发本系统的JWT令牌
+                    var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
                 var token = authService.IssueTokenAsync(user).Result;
                 user.RemoteToken = token.AccessToken;
                 return user;
             }
         }
 
+        /// <summary>
+        /// 刷新当前用户的JWT令牌
+        /// </summary>
+        /// <returns>新签发的令牌；未登录时返回null</returns>
         public Token RefreshToken()
         {
             if(LoginUserInfo == null)
@@ -482,9 +596,10 @@ namespace WalkingTec.Mvvm.Core
                 return null;
             }
             string rt = null;
+            //主站点模式且非租户用户：先到主站点刷新远程令牌；否则沿用当前用户的远程令牌
             if (ConfigInfo.HasMainHost && LoginUserInfo?.CurrentTenant == null)
             {
-                var r = CallAPI<Token>("mainhost", $"/api/_account/RefreshToken", HttpMethodEnum.POST, new { }).Result;
+                var r = CallAPI<Token>("mainhost", $"/api/admin/account/RefreshToken", HttpMethodEnum.POST, new { }).Result;
                 rt = r?.Data?.AccessToken;
             }
             else
@@ -492,6 +607,7 @@ namespace WalkingTec.Mvvm.Core
                 rt = LoginUserInfo.RemoteToken;
            }
             var _authService = ServiceProvider.GetRequiredService<ITokenService>();
+            //用当前用户信息重新签发本地令牌，并携带远程令牌
             var rv = _authService.IssueTokenAsync(new LoginUserInfo
             {
                 ITCode = LoginUserInfo.ITCode,
@@ -501,8 +617,17 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+        /// <summary>
+        /// 读取缓存模式的封装：缓存命中直接返回，未命中时执行委托获取数据并写入缓存
+        /// </summary>
+        /// <typeparam name="T">缓存数据的类型</typeparam>
+        /// <param name="key">缓存键</param>
+        /// <param name="setFunc">缓存未命中时生成数据的委托</param>
+        /// <param name="timeout">缓存过期时间（秒），为空则永久缓存</param>
+        /// <returns>缓存或委托返回的数据</returns>
         public T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
         {
+            //缓存未命中时执行委托获取数据，并按是否指定过期时间写回缓存
             if (Cache.TryGetValue(key, out T rv) == false || rv == null)
             {
                 T data = setFunc();
@@ -525,9 +650,15 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 移除指定用户的信息缓存，使下次请求重新从数据库加载用户
+        /// </summary>
+        /// <param name="userIds">用户ITCode数组</param>
+        /// <returns>异步任务</returns>
         public async Task RemoveUserCache(
             params string[] userIds)
         {
+            //按用户ITCode拼出缓存键并逐个删除
             foreach (var userId in userIds)
             {
                 var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId + "$`$" + LoginUserInfo?.CurrentTenant}";
@@ -535,15 +666,21 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 移除指定角色下所有用户的信息缓存
+        /// </summary>
+        /// <param name="rolecode">角色编码数组</param>
+        /// <returns>异步任务</returns>
         public async Task RemoveUserCacheByRole(
     params string[] rolecode)
         {
             List<string> userids = new List<string>();
+            //主站点模式：调用主站点接口按角色查用户；否则直接查询本地的 FrameworkUserRole 表
             if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(LoginUserInfo?.CurrentTenant) == true)
             {
                 foreach (var item in rolecode)
                 {
-                    var rv = await CallAPI<List<string>>("mainhost", $"/api/_frameworkuser/GetUserByRole?keywords={item}");
+                    var rv = await CallAPI<List<string>>("mainhost", $"/api/admin/frameworkuser/GetUserByRole?keywords={item}");
                     if (rv != null && rv.Data != null)
                     {
                         userids.AddRange(rv.Data);
@@ -561,15 +698,21 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 移除指定用户组下所有用户的信息缓存
+        /// </summary>
+        /// <param name="groupcode">用户组编码数组</param>
+        /// <returns>异步任务</returns>
         public async Task RemoveUserCacheByGroup(
 params string[] groupcode)
         {
             List<string> userids = new List<string>();
+            //主站点模式：调用主站点接口按用户组查用户；否则直接查询本地的 FrameworkUserGroup 表
             if (ConfigInfo.HasMainHost && string.IsNullOrEmpty(LoginUserInfo?.CurrentTenant) == true)
             {
                 foreach (var item in groupcode)
                 {
-                    var rv = await CallAPI<List<string>>("mainhost", $"/api/_frameworkuser/GetUserByGroup?keywords={item}");
+                    var rv = await CallAPI<List<string>>("mainhost", $"/api/admin/frameworkuser/GetUserByGroup?keywords={item}");
                     if (rv != null && rv.Data != null)
                     {
                         userids.AddRange(rv.Data);
@@ -587,6 +730,11 @@ params string[] groupcode)
             }
         }
 
+        /// <summary>
+        /// 移除指定租户的用户组缓存
+        /// </summary>
+        /// <param name="tenant">租户编码</param>
+        /// <returns>异步任务</returns>
         public async Task RemoveGroupCache(string tenant)
         {
 
@@ -594,6 +742,11 @@ params string[] groupcode)
                 await Cache.DeleteAsync(key);
         }
 
+        /// <summary>
+        /// 移除指定租户的角色缓存
+        /// </summary>
+        /// <param name="tenant">租户编码</param>
+        /// <returns>异步任务</returns>
         public async Task RemoveRoleCache(string tenant)
         {
 
@@ -602,6 +755,11 @@ params string[] groupcode)
             
         }
 
+        /// <summary>
+        /// 获取指定租户的全部用户组（带缓存）
+        /// </summary>
+        /// <param name="tenant">租户编码</param>
+        /// <returns>租户下的用户组列表</returns>
         public List<SimpleGroup> GetTenantGroups(string tenant)
         {
             var key = $"{GlobalConstants.CacheKey.TenantGroups}:{tenant}";
@@ -611,6 +769,7 @@ params string[] groupcode)
                 List<SimpleGroup> groups = null;
                 try
                 {
+                    //租户配置了独立数据库时使用租户连接，否则使用 default 连接；忽略全局过滤器读取该租户全部用户组
                     var dbtenant = GlobaInfo.AllTenant.Where(x => x.TCode == tenant && x.IsUsingDB == true).FirstOrDefault();
                     using (var dc = dbtenant == null ? ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC() : dbtenant.CreateDC(this))
                     {
@@ -634,6 +793,11 @@ params string[] groupcode)
             return rv;
         }
 
+        /// <summary>
+        /// 获取指定租户的全部角色（带缓存）
+        /// </summary>
+        /// <param name="tenant">租户编码</param>
+        /// <returns>租户下的角色列表</returns>
         public List<SimpleRole> GetTenantRoles(string tenant)
         {
             var key = $"{GlobalConstants.CacheKey.TenantRoles}:{tenant}";
@@ -642,6 +806,7 @@ params string[] groupcode)
                 List<SimpleRole> roles = null;
                 try
                 {
+                    //租户配置了独立数据库时使用租户连接，否则使用 default 连接；忽略全局过滤器读取该租户全部角色
                     var dbtenant = GlobaInfo.AllTenant.Where(x => x.TCode == tenant && x.IsUsingDB == true).FirstOrDefault();
                     using (var dc = dbtenant == null ? ConfigInfo.Connections.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC() : dbtenant.CreateDC(this))
                     {
@@ -664,10 +829,16 @@ params string[] groupcode)
         }
 
 
+        /// <summary>
+        /// 切换当前登录用户操作的租户
+        /// </summary>
+        /// <param name="tenant">目标租户编码</param>
+        /// <returns>切换成功返回true，无权限切换返回false</returns>
         public bool SetCurrentTenant(string tenant)
         {
             if (LoginUserInfo != null)
             {
+                //仅当用户未绑定租户、已属于该租户、或该租户是其所属主租户的子租户时才允许切换
                 if (LoginUserInfo.TenantCode == null || LoginUserInfo.TenantCode == tenant || GlobaInfo.AllTenant.Any(x => x.TCode == tenant && x.TenantCode == LoginUserInfo.TenantCode))
                 {
                     LoginUserInfo.CurrentTenant = tenant;
@@ -679,6 +850,14 @@ params string[] groupcode)
         }
 
         #region CreateDC
+        /// <summary>
+        /// 创建数据上下文：按连接串Key、当前租户等信息选择合适的数据库连接；
+        /// 支持租户独立数据库、日志专用连接(defaultlog)等机制
+        /// </summary>
+        /// <param name="isLog">是否创建写日志用的上下文，为true时优先使用 defaultlog 连接</param>
+        /// <param name="cskey">连接串Key，为空时依次尝试 CurrentCS、租户连接、default</param>
+        /// <param name="logerror">是否为上下文设置日志工厂</param>
+        /// <returns>创建的数据上下文</returns>
         public virtual IDataContext CreateDC(bool isLog = false, string cskey = null, bool logerror = true)
         {
             string cs = cskey ?? CurrentCS;
@@ -686,6 +865,7 @@ params string[] groupcode)
 
             var tenants = GlobaInfo.AllTenant ?? new List<FrameworkTenant>();
             string tc = _loginUserInfo?.CurrentTenant;
+            //当前用户未指定租户时，尝试从请求的 Referer 域名反查租户（支持租户独立域名）
             if (tc == null && HttpContext?.Request.Headers.ContainsKey("Referer")==true)
             {
                 Regex r = new Regex("(http://|https://)?(.+?)(/)?$");
@@ -708,6 +888,7 @@ params string[] groupcode)
                 }
             }
 
+            //写日志时若配置了 defaultlog 连接，则使用专用的日志数据库
             if (isLog == true)
             {
                 if (ConfigInfo.Connections?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
@@ -715,6 +896,7 @@ params string[] groupcode)
                     cs = "defaultlog";
                 }
             }
+            //最终仍未指定连接时，回退使用 default 连接
             if (string.IsNullOrEmpty(cs))
             {
                 cs = "default";
@@ -819,6 +1001,11 @@ params string[] groupcode)
             return false;
         }
 
+        /// <summary>
+        /// 判断某URL是否为公开地址（无需登录即可访问）
+        /// </summary>
+        /// <param name="url">url地址</param>
+        /// <returns>true代表公开地址，false代表需要登录访问</returns>
         public bool IsUrlPublic(string url)
         {
             var isPublic = false;
@@ -827,11 +1014,13 @@ params string[] groupcode)
                 url = Regex.Replace(url, "/do(batch.*)", "/$1", RegexOptions.IgnoreCase);
                 url = url.Trim();
 
+                //#开头的临时地址视为公开
                 if (url.StartsWith("#"))
                 {
                     isPublic = true;
                 }
                 var menus = GlobaInfo.AllMenus;
+                //查找url对应的菜单，菜单标记为公开则任何人可访问
                 var menu = Utils.FindMenu(url, menus);
                 if (menu != null && menu.IsPublic == true)
                 {
@@ -842,8 +1031,19 @@ params string[] groupcode)
             return isPublic;
         }
 
+        /// <summary>
+        /// 记录一条操作日志(ActionLog)，按日志类型映射日志级别并写入日志系统
+        /// </summary>
+        /// <param name="msg">日志内容</param>
+        /// <param name="logtype">日志类型（普通/异常/调试）</param>
+        /// <param name="moduleName">模块名称</param>
+        /// <param name="actionName">操作名称</param>
+        /// <param name="ip">客户端IP</param>
+        /// <param name="url">访问地址，为空时自动取当前请求路径</param>
+        /// <param name="duration">执行耗时（毫秒）</param>
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Normal, string moduleName = "", string actionName = "", string ip = "", string url = "", double duration = 0)
         {
+            //优先复用当前请求已记录的日志对象，否则新建
             var log = this.Log?.GetActionLog();
             if (log == null)
             {
@@ -862,6 +1062,7 @@ params string[] groupcode)
             {
                 log.ActionUrl = this.HttpContext.Request.Path.ToString();
             }
+            //按日志类型映射日志级别：普通=Information，异常=Error，调试=Debug
             LogLevel ll = LogLevel.Information;
             switch (logtype)
             {
@@ -909,6 +1110,7 @@ params string[] groupcode)
             BaseVM rv = ctor.Invoke(null) as BaseVM;
             rv.Wtm = this;
 
+            //初始化FC(前端传值字典)，后续会把QueryString和表单数据填入，供VM读取前端原始提交值
             rv.FC = new Dictionary<string, object>();
             rv.CreatorAssembly = this.GetType().AssemblyQualifiedName;
             rv.ControllerName = this.HttpContext?.Request?.Path;
@@ -953,6 +1155,7 @@ params string[] groupcode)
             {
                 cvm.SetEntityById(Id);
             }
+            //递归初始化VM中所有BaseVM类型的子VM属性
             SetSubVm(rv, passInit);
             //if viewmodel is derrived from IBaseBatchVM<>，set ViewMode's Ids property,and init it's ListVM and EditModel properties
             if (rv is IBaseBatchVM<BaseVM> temp)
@@ -1002,7 +1205,6 @@ params string[] groupcode)
                     }
                 }
                 temp.LinkedVM?.DoInit();
-                //temp.ListVM.DoSearch();
             }
             //if the viewmodel is a ListVM, Init it's searcher
             if (rv is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
@@ -1016,6 +1218,7 @@ params string[] groupcode)
                 lvm.DoInitListVM();
 
             }
+            //导入VM：初始化其Excel模板VM和错误列表VM
             if (rv is IBaseImport<BaseTemplateVM> tvm)
             {
                 var template = tvm.Template;
@@ -1033,8 +1236,15 @@ params string[] groupcode)
             return rv;
         }
 
+        /// <summary>
+        /// 递归初始化 vm 中所有 BaseVM 类型的子VM属性：
+        /// 反射创建未初始化的子VM实例，复制上下文、建立父子关系，并按需调用其 DoInit
+        /// </summary>
+        /// <param name="vm">父VM</param>
+        /// <param name="passInit">为true时不调用子VM的DoInit</param>
         private void SetSubVm(BaseVM vm, bool passInit)
         {
+            //查找所有BaseVM类型的属性（排除ParentVM避免循环引用）
             var sub = vm.GetType().GetAllProperties().Where(x => typeof(BaseVM).IsAssignableFrom(x.PropertyType) && x.Name != "ParentVM");
             foreach (var prop in sub)
             {
@@ -1042,10 +1252,12 @@ params string[] groupcode)
                 bool exist = subins == null ? false : true;
                 if (subins == null)
                 {
+                    //子VM未实例化时，通过无参构造函数反射创建
                     subins = prop.PropertyType.GetConstructor(Type.EmptyTypes).Invoke(null) as BaseVM;
                 }
                 if (subins != null)
                 {
+                    //将父VM的上下文传递给子VM，并记录父子关系
                     subins.CopyContext(vm);
                     subins.ParentVM = vm;
                     subins.PropertyNameInParent = prop.Name;
@@ -1183,6 +1395,18 @@ params string[] groupcode)
         #endregion
 
         #region CallApi
+        /// <summary>
+        /// 调用远程API的核心实现：创建HttpClient、附加认证头、发送请求并反序列化响应
+        /// </summary>
+        /// <typeparam name="T">响应数据的类型</typeparam>
+        /// <param name="domainName">Appsettings中配置的Domain key，为空则创建未命名客户端</param>
+        /// <param name="url">调用地址</param>
+        /// <param name="method">http请求方式</param>
+        /// <param name="content">请求内容</param>
+        /// <param name="timeout">超时时间，单位秒</param>
+        /// <param name="proxy">代理地址</param>
+        /// <param name="headers">自定义http请求头</param>
+        /// <returns>API调用结果（含状态码、数据或错误信息）</returns>
         public async Task<ApiResult<T>> CallAPI<T>(string domainName, string url, HttpMethodEnum method, HttpContent content, int? timeout = null, string proxy = null, Dictionary<string, string> headers = null) where T : class
         {
             ApiResult<T> rv = new ApiResult<T>();
@@ -1205,6 +1429,7 @@ params string[] groupcode)
                 {
                     client = factory.CreateClient(domainName);
                 }
+                //附加调用方自定义的http请求头
                 if (headers != null)
                 {
                     foreach (var item in headers)
@@ -1215,6 +1440,7 @@ params string[] groupcode)
                         }
                     }
                 }
+                //未显式指定Authorization时，自动附加当前登录用户的远程令牌
                 if (client.DefaultRequestHeaders.Any(x => x.Key == "Authorization") == false && string.IsNullOrEmpty(LoginUserInfo?.RemoteToken) == false)
                 {
                     client.DefaultRequestHeaders.Add("Authorization", "Bearer " + LoginUserInfo.RemoteToken);
@@ -1250,6 +1476,7 @@ params string[] groupcode)
                     return rv;
                 }
                 rv.StatusCode = res.StatusCode;
+                //调用成功：按目标类型反序列化响应内容（字节数组、字符串或JSON）
                 if (res.IsSuccessStatusCode == true)
                 {
                     Type dt = typeof(T);
@@ -1273,6 +1500,7 @@ params string[] groupcode)
                 else
                 {
                     string responseTxt = await res.Content.ReadAsStringAsync();
+                    //调用失败：记录错误信息，BadRequest时尝试解析为结构化错误对象
                     if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
 
@@ -1357,6 +1585,17 @@ params string[] groupcode)
             return await CallAPI<T>(domainName, url, method, content, timeout, proxy, headers);
         }
 
+        /// <summary>
+        /// 调用远程API并返回字符串响应（HttpContent版本）
+        /// </summary>
+        /// <param name="domainName">Appsettings中配置的Domain key</param>
+        /// <param name="url">调用地址</param>
+        /// <param name="method">http请求方式</param>
+        /// <param name="content">请求内容</param>
+        /// <param name="timeout">超时时间，单位秒</param>
+        /// <param name="proxy">代理地址</param>
+        /// <param name="headers">自定义http请求头</param>
+        /// <returns>API调用结果（含状态码、数据或错误信息）</returns>
         public async Task<ApiResult<string>> CallAPI(string domainName, string url, HttpMethodEnum method, HttpContent content, int? timeout = null, string proxy = null, Dictionary<string, string> headers = null)
         {
             return await CallAPI<string>(domainName, url, method, content, timeout, proxy, headers);
@@ -1410,6 +1649,10 @@ params string[] groupcode)
         }
 
 
+        /// <summary>
+        /// 获取服务端对外地址：优先使用 Domains 中 serverpub/server 的配置，未配置时取当前请求地址
+        /// </summary>
+        /// <returns>服务端地址</returns>
         private string GetServerUrl()
         {
             var server = ConfigInfo.Domains.Where(x => x.Key.ToLower() == "serverpub").Select(x => x.Value).FirstOrDefault();
@@ -1427,55 +1670,12 @@ params string[] groupcode)
             }
         }
 
+        /// <summary>
+        /// 释放资源，销毁当前持有的DataContext
+        /// </summary>
         public void Dispose()
         {
             this._dc?.Dispose();
-        }
-
-        /// <summary>
-        /// 调用 DeepSeek API 进行对话
-        /// </summary>
-        /// <param name="question">用户问题</param>
-        /// <param name="systemMessage">系统提示词，定义 AI 的角色和行为</param>
-        /// <returns>DeepSeek 回复内容</returns>
-        public async Task<string> DeepSeek(string question, string systemMessage = null)
-        {
-            var cfg = ConfigInfo?.DeepSeek;
-            if (cfg == null || string.IsNullOrEmpty(cfg.ApiKey))
-                throw new Exception("DeepSeek is not configured. Set DeepSeek:ApiKey in appsettings.json.");
-
-            using var client = new HttpClient();
-            client.BaseAddress = new Uri(cfg.ApiUrl);
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {cfg.ApiKey}");
-
-            var messages = new List<object>();
-            if (!string.IsNullOrEmpty(systemMessage))
-            {
-                messages.Add(new { role = "system", content = systemMessage });
-            }
-            messages.Add(new { role = "user", content = question });
-
-            var body = new
-            {
-                model = cfg.Model,
-                messages = messages,
-                temperature = cfg.Temperature,
-                max_tokens = cfg.MaxTokens
-            };
-
-            var content = new StringContent(JsonSerializer.Serialize(body), System.Text.Encoding.UTF8, "application/json");
-            var resp = await client.PostAsync("/chat/completions", content);
-            resp.EnsureSuccessStatusCode();
-            var json = await resp.Content.ReadAsStringAsync();
-
-            using var doc = JsonDocument.Parse(json);
-            var reply = doc.RootElement
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString();
-
-            return reply;
         }
 
         #endregion

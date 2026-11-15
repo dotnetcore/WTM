@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core.ConfigOptions;
 
 namespace WalkingTec.Mvvm.Core
@@ -56,6 +54,7 @@ namespace WalkingTec.Mvvm.Core
             }
             set
             {
+                // 将配置中的域名键统一转为小写后重建字典，并把键回填到 Domain.Name，保证域名查找不区分大小写
                 _domains = new Dictionary<string, Domain>();
                 foreach (var domain in value)
                 {
@@ -72,10 +71,15 @@ namespace WalkingTec.Mvvm.Core
         }
 
         private bool? _hasMainHost;
+
+        /// <summary>
+        /// 是否配置了主域名（Domains 中存在键为 mainhost 的节点）；未配置时默认返回 false
+        /// </summary>
         public bool HasMainHost
         {
             get
             {
+                // 首次访问时从 Domains 中查找 mainhost 节点的地址并缓存判断结果
                 if (_hasMainHost == null)
                 {
                     _mainHost = Domains?.Where(x => x.Key.ToLower() == "mainhost").Select(x => x.Value.Address).FirstOrDefault();
@@ -86,10 +90,15 @@ namespace WalkingTec.Mvvm.Core
         }
 
         private string _mainHost;
+
+        /// <summary>
+        /// 主域名地址（Domains 中 mainhost 节点的 Address）；获取时自动去除末尾的 / 或 \ 分隔符，未配置时返回 null
+        /// </summary>
         public string MainHost
         {
             get
             {
+                // 每次获取时重新查找 mainhost 节点的地址，并去掉末尾的路径分隔符，避免拼接 URL 时出现双斜杠
                 _mainHost = Domains?.Where(x => x.Key.ToLower() == "mainhost").Select(x => x.Value.Address).FirstOrDefault();
                 if(_mainHost != null)
                 {
@@ -170,6 +179,9 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
 
+        /// <summary>
+        /// 统一错误处理页面路径，默认 /_Framework/Error
+        /// </summary>
         public string ErrorHandler { get; set; } = "/_Framework/Error";
 
         #region Cookie prefix
@@ -302,6 +314,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
+                // 未在配置文件中设置时提供默认值：上传限制 20MB、保存模式 database（文件存入数据库）
                 if (_fileUploadOptions == null)
                 {
                     _fileUploadOptions = new FileUploadOptions()
@@ -332,6 +345,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
+                // 未在配置文件中设置时，为表格、下拉框、日期控件、搜索面板等子项逐个提供默认值
                 if (_uiOptions == null)
                 {
                     _uiOptions = new UIOptions();
@@ -465,10 +479,15 @@ namespace WalkingTec.Mvvm.Core
         }
 
         private List<CultureInfo> _supportLanguages;
+
+        /// <summary>
+        /// 支持的语言列表（运行时生成）；由 Languages 属性按逗号分隔后逐个转换为 CultureInfo，默认仅包含 zh（中文）
+        /// </summary>
         public List<CultureInfo> SupportLanguages
         {
             get
             {
+                // 首次访问时将 Languages 按逗号分隔，并逐个转换为 CultureInfo 后缓存
                 if (_supportLanguages == null)
                 {
                     _supportLanguages = new List<CultureInfo>();
@@ -485,6 +504,9 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        /// <summary>
+        /// 站点根地址（含协议与端口，如 http://localhost:5000），供框架拼接完整 URL 使用，默认为空字符串
+        /// </summary>
         public string HostRoot { get; set; } = "";
 
 
@@ -538,30 +560,39 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region DeepSeek
+        #region LLM
 
-        private DeepSeekOption _deepSeek;
+        private LlmOption _llm;
 
         /// <summary>
-        /// DeepSeek AI configuration
+        /// LLM configuration — OpenAI-compatible chat API
         /// </summary>
-        public DeepSeekOption DeepSeek
+        public LlmOption Llm
         {
             get
             {
-                if (_deepSeek == null)
-                {
-                    _deepSeek = new DeepSeekOption();
-                }
-                return _deepSeek;
+                if (_llm == null) _llm = new LlmOption();
+                return _llm;
             }
-            set
-            {
-                _deepSeek = value;
-            }
+            set { _llm = value; }
         }
 
         #endregion
+
+        /// <summary>
+        /// Embedding config
+        /// </summary>
+        public EmbeddingOption EmbeddingOptions { get; set; } = new EmbeddingOption();
+
+        /// <summary>
+        /// AI代码功能配置
+        /// </summary>
+        public AiCodeOptions AiCode { get; set; } = new AiCodeOptions();
+
+        /// <summary>
+        /// Agent对话功能配置
+        /// </summary>
+        public AgentOption Agent { get; set; } = new AgentOption();
 
     }
 }

@@ -1,10 +1,9 @@
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore.Query;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -205,6 +204,7 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
     /// <summary>
     /// 替换表达式中的Where语句
     /// </summary>
+    /// <typeparam name="T">查询的源数据类型</typeparam>
     public class WhereReplaceModifier<T> : ExpressionVisitor where T : TopBasePoco
     {
         private Type _modelType;
@@ -304,6 +304,11 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
             }
         }
 
+        /// <summary>
+        /// 处理扩展节点：添加模式下在查询根节点上拼接新的where条件
+        /// </summary>
+        /// <param name="node">当前表达式节点</param>
+        /// <returns>拼接where后的表达式</returns>
         protected override Expression VisitExtension(Expression node)
         {
             if (_addMode == true && node is QueryRootExpression)
@@ -473,6 +478,11 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
             }
         }
 
+        /// <summary>
+        /// 处理扩展节点：添加模式下在查询根节点上拼接IsValid=true的where条件
+        /// </summary>
+        /// <param name="node">当前表达式节点</param>
+        /// <returns>拼接where后的表达式</returns>
         protected override Expression VisitExtension(Expression node)
         {
             if (_mode == 1 && node is QueryRootExpression)
@@ -625,6 +635,9 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
         }
     }
 
+    /// <summary>
+    /// 清除Select表达式中集合类型的列绑定，避免生成无法翻译的查询语句
+    /// </summary>
     public class ClearSelectMany : ExpressionVisitor
     {
         /// <summary>
@@ -644,6 +657,11 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
             return Visit(expression);
         }
 
+        /// <summary>
+        /// 处理成员初始化表达式，跳过所有集合类型（非可空泛型类型）的成员绑定
+        /// </summary>
+        /// <param name="node">当前表达式节点</param>
+        /// <returns>移除集合绑定后的表达式</returns>
         protected override Expression VisitMemberInit(MemberInitExpression node)
         {
             List<MemberBinding> newbinding = new List<MemberBinding>();
@@ -652,6 +670,7 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
                 bool islist = false;
                 if (node.Bindings[i] is MemberAssignment ma && ma.Expression.Type.GetTypeInfo().IsGenericType == true)
                 {
+                    //泛型但非可空类型的视为集合类型，跳过该绑定
                     if (ma.Expression.Type.GetGenericTypeDefinition() != typeof(Nullable<>))
                     {
                         islist = true;

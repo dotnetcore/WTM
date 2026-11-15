@@ -1,11 +1,26 @@
 namespace WalkingTec.Mvvm.Core.Auth
 {
+    /// <summary>
+    /// 认证相关常量，定义JWT令牌类型、认证类型、Cookie认证方案名称及JWT/OpenID Connect标准Claim(声明)名称
+    /// </summary>
     public static class AuthConstants
     {
+        /// <summary>
+        /// JWT令牌类型标识
+        /// </summary>
         public const string JwtTokenType = "Bearer";
+        /// <summary>
+        /// 认证类型名称
+        /// </summary>
         public const string AuthenticationType = "WTMAuthentication";
+        /// <summary>
+        /// Cookie携带JWT的认证方案名称
+        /// </summary>
         public const string CookieAuthName = "CookieWithJwtAuth";
 
+        /// <summary>
+        /// JWT/OpenID Connect标准Claim(声明)名称常量集合
+        /// </summary>
         public static class JwtClaimTypes
         {
             //
@@ -137,7 +152,13 @@ namespace WalkingTec.Mvvm.Core.Auth
             // Summary:
             //     The role
             public const string Role = "role";
+            /// <summary>
+            /// 租户编号Claim名称
+            /// </summary>
             public const string TenantCode = "tenant";
+            /// <summary>
+            /// 刷新令牌Claim名称
+            /// </summary>
             public const string RToken = "rtoken";
             //
             // Summary:

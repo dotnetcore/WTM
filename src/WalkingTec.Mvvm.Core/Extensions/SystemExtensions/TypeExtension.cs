@@ -14,6 +14,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
     /// </summary>
     public static class TypeExtension
     {
+        /// <summary>
+        /// 类型属性信息缓存，键为类型全名，值为该类型的属性列表，用于减少重复反射
+        /// </summary>
         public static ImmutableDictionary<string, List<PropertyInfo>> _propertyCache { get; set; } = new Dictionary<string, List<PropertyInfo>>().ToImmutableDictionary();
         /// <summary>
         /// 判断是否是泛型
@@ -123,9 +126,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return self.GetTypeInfo().IsPrimitive || self == typeof(decimal);
         }
 
+        /// <summary>
+        /// 判断是否为常用数字类型（含可空数字类型）
+        /// </summary>
+        /// <param name="self">Type 类</param>
+        /// <returns>判断结果</returns>
         public static bool IsNumber(this Type self)
         {
             Type checktype = self;
+            //如果是可空类型，先取出其中的实际类型再判断
             if (self.IsNullable())
             {
                 checktype = self.GetGenericArguments()[0];
@@ -143,6 +152,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         #region 判断是否是Bool
 
+        /// <summary>
+        /// 判断是否为 bool 类型
+        /// </summary>
+        /// <param name="self">Type 类</param>
+        /// <returns>判断结果</returns>
         public static bool IsBool(this Type self)
         {
             return self == typeof(bool);
@@ -171,11 +185,17 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         #endregion
 
+        /// <summary>
+        /// 根据类型中各属性的特性（StringLength、Range 等）生成随机属性值字典，用于代码生成器构造模拟数据
+        /// </summary>
+        /// <param name="self">目标类型</param>
+        /// <returns>属性名与随机值字符串的字典，值为可直接拼入代码的表达式文本</returns>
         public static Dictionary<string, string> GetRandomValues(this Type self)
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
             string pat = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
             var pros = self.GetAllProperties();
+            //框架内置字段及审计字段不参与随机值生成
             List<string> skipFields = new List<string>()
             {
                nameof(TopBasePoco.BatchError),
@@ -202,12 +222,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 string key = pro.Name;
                 string val = "";
                 var notmapped = pro.GetCustomAttribute<NotMappedAttribute>();
+                //跳过 NotMapped、集合类型、关联实体类及排除字段，只为简单属性生成随机值
                 if (notmapped == null &&
                     pro.PropertyType.IsList() == false &&
                     pro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) == false &&
                     skipFields.Contains(key) == false
                     )
                 {
+                    //数字类型：按 Range 特性指定的范围生成随机数，未指定时默认 0 到 100
                     if (pro.PropertyType.IsNumber())
                     {
                         var range = pro.GetCustomAttribute<RangeAttribute>();
@@ -293,6 +315,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         val = DateTime.Now.AddDays(r.Next(-500, 500)).ToString("yyyy-MM-dd HH:mm:ss");
                         val = $"DateTime.Parse(\"{val}\")";
                     }
+                    //如果当前属性名恰好是其他属性名加 id（即外键字段），则用占位符标记
                     if (pros.Where(x => x.Name.ToLower() + "id" == key.ToLower()).Any())
                     {
                         val = "$fk$";
@@ -309,6 +332,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 根据类型中各属性的特性生成用于测试数据的随机属性值字典，字符串属性支持按正则特性生成，枚举随机取值
+        /// </summary>
+        /// <param name="self">目标类型</param>
+        /// <returns>属性名与随机值字符串的字典</returns>
         public static Dictionary<string, string> GetRandomValuesForTestData(this Type self)
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
@@ -340,6 +368,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 string key = pro.Name;
                 string val = "";
                 var notmapped = pro.GetCustomAttribute<NotMappedAttribute>();
+                //读取 Required 特性，用于决定可空字段是否随机生成空值
                 var required = pro.GetCustomAttributes<RequiredAttribute>() != null;
                 if (notmapped == null &&
                     pro.PropertyType.IsList() == false &&
@@ -349,6 +378,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     if (pro.PropertyType.IsNumber())
                     {
+                        //主键不生成随机值，由数据库或框架生成
                         if (pro.Name == "ID")
                         {
                             val = "";
@@ -413,6 +443,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     else if (pro.PropertyType == typeof(string))
                     {
 
+                        //如果设置了正则特性，使用 Xeger 按正则表达式生成随机字符串
                         var reg = pro.GetCustomAttribute<RegularExpressionAttribute>();
                         var length = pro.GetCustomAttribute<StringLengthAttribute>();
 
@@ -483,8 +514,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
 
+        /// <summary>
+        /// 按名称获取类型的单个属性信息，结果会缓存以减少重复反射
+        /// </summary>
+        /// <param name="self">Type 类</param>
+        /// <param name="name">属性名</param>
+        /// <returns>属性信息，未找到时返回 null</returns>
         public static PropertyInfo GetSingleProperty(this Type self, string name)
         {
+            //缓存中没有该类型的属性列表时，先反射获取并写入缓存
             if (_propertyCache.ContainsKey(self.FullName) == false)
             {
                 var properties = self.GetProperties().ToList();
@@ -501,6 +539,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// 按条件获取类型的单个属性信息，结果会缓存以减少重复反射
+        /// </summary>
+        /// <param name="self">Type 类</param>
+        /// <param name="where">筛选属性的条件</param>
+        /// <returns>符合条件的第一个属性信息，未找到时返回 null</returns>
         public static PropertyInfo GetSingleProperty(this Type self, Func<PropertyInfo,bool> where)
         {
             if (_propertyCache.ContainsKey(self.FullName) == false)
@@ -519,6 +563,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// 获取类型的所有属性信息，结果会缓存以减少重复反射
+        /// </summary>
+        /// <param name="self">Type 类</param>
+        /// <returns>类型的属性信息列表</returns>
         public static List<PropertyInfo> GetAllProperties(this Type self)
         {
             if (_propertyCache.ContainsKey(self.FullName) == false)
@@ -543,6 +592,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// 沿基类链向上查找第一个属于系统模型（工作流 Poco）的类型
+        /// </summary>
+        /// <param name="self">Type 类</param>
+        /// <returns>匹配的模型类型，遍历到 object 仍未找到时返回 null</returns>
         public static Type GetParentWorkflowPoco(this Type self)
         {
             if(self == typeof(object))
@@ -555,7 +609,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 return self;
             }
             else
-            {               
+            {
+                //当前类型不是系统模型时，继续向上查找其基类
                 return self.BaseType.GetParentWorkflowPoco();
             }
         }

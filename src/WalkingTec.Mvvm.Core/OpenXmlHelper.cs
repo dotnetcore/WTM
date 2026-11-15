@@ -1,10 +1,8 @@
+using System.IO;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -16,6 +14,8 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取或创建 WorkbookPart
         /// </summary>
+        /// <param name="doc">SpreadsheetDocument文档对象</param>
+        /// <returns>文档的WorkbookPart部件，不存在时新建并初始化</returns>
         public static WorkbookPart GetOrCreateWorkbookPart(SpreadsheetDocument doc)
         {
             if (doc.WorkbookPart == null)
@@ -32,6 +32,9 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取或创建 WorksheetPart
         /// </summary>
+        /// <param name="doc">SpreadsheetDocument文档对象</param>
+        /// <param name="sheetIndex">Sheet的SheetId编号</param>
+        /// <returns>指定编号对应的WorksheetPart部件，不存在时新建</returns>
         public static WorksheetPart GetOrCreateWorksheetPart(SpreadsheetDocument doc, uint sheetIndex)
         {
             var workbookPart = GetOrCreateWorkbookPart(doc);
@@ -65,6 +68,8 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取 SheetData
         /// </summary>
+        /// <param name="worksheetPart">工作表部件</param>
+        /// <returns>工作表中的SheetData数据节点，不存在时追加创建</returns>
         public static SheetData GetSheetData(WorksheetPart worksheetPart)
         {
             return worksheetPart.Worksheet.GetFirstChild<SheetData>()
@@ -74,6 +79,9 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取或创建行
         /// </summary>
+        /// <param name="sheetData">Sheet数据节点</param>
+        /// <param name="rowIndex">行号（与Row的RowIndex对应）</param>
+        /// <returns>指定行的Row对象，不存在时按行号顺序插入创建</returns>
         public static Row GetOrCreateRow(SheetData sheetData, int rowIndex)
         {
             Row row = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex == (uint)rowIndex);
@@ -94,6 +102,11 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 创建单元格
         /// </summary>
+        /// <param name="reference">单元格引用，例如A1</param>
+        /// <param name="value">单元格的值</param>
+        /// <param name="dataType">单元格数据类型（字符串类型会以InlineString方式写入）</param>
+        /// <param name="styleIndex">样式索引，为null时不设置样式</param>
+        /// <returns>创建好的Cell单元格对象</returns>
         public static Cell CreateCell(string reference, string value, CellValues dataType, uint? styleIndex = null)
         {
             var cell = new Cell() { CellReference = reference };
@@ -127,9 +140,12 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取列字母（0=A, 1=B, ..., 25=Z, 26=AA, ...）
         /// </summary>
+        /// <param name="columnIndex">0基的列索引</param>
+        /// <returns>对应的Excel列字母</returns>
         public static string GetColumnLetter(int columnIndex)
         {
             string letter = "";
+            // 按26进制从低位到高位逐位转换，每次进位减1以跳过0，保证A对应0、Z对应25、AA对应26
             while (columnIndex >= 0)
             {
                 letter = (char)('A' + columnIndex % 26) + letter;
@@ -141,6 +157,9 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取单元格引用字符串
         /// </summary>
+        /// <param name="columnIndex">0基的列索引</param>
+        /// <param name="rowIndex">0基的行索引</param>
+        /// <returns>形如A1的单元格引用字符串</returns>
         public static string GetCellReference(int columnIndex, int rowIndex)
         {
             return GetColumnLetter(columnIndex) + (rowIndex + 1);
@@ -149,6 +168,9 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 创建标题样式
         /// </summary>
+        /// <param name="headerBackColor">标题背景色，RRGGBB格式的十六进制字符串</param>
+        /// <param name="headerFontColor">标题字体颜色，RRGGBB格式的十六进制字符串</param>
+        /// <returns>包含标题样式和数据样式的OpenXML样式表</returns>
         public static Stylesheet CreateStylesheet(string headerBackColor = "B0C4DE", string headerFontColor = "000000")
         {
             var stylesheet = new Stylesheet();
@@ -207,6 +229,8 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 从内存流创建 SpreadsheetDocument 用于读取
         /// </summary>
+        /// <param name="stream">包含Excel文件内容的流</param>
+        /// <returns>以只读方式打开的SpreadsheetDocument文档对象</returns>
         public static SpreadsheetDocument OpenForReading(Stream stream)
         {
             return SpreadsheetDocument.Open(stream, false);
@@ -215,6 +239,8 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 创建新的 SpreadsheetDocument 用于写入
         /// </summary>
+        /// <param name="ms">用于写入Excel数据的内存流</param>
+        /// <returns>新建的SpreadsheetDocument文档对象</returns>
         public static SpreadsheetDocument CreateForWriting(MemoryStream ms)
         {
             return SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook);

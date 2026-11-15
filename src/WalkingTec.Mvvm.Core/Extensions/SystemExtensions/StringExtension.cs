@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -95,6 +94,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 将非泛型集合转化为分隔符分隔的字符串
+        /// </summary>
+        /// <param name="self">源数据集合</param>
+        /// <param name="Format">转化每个元素的委托函数，可为空</param>
+        /// <param name="seperator">分隔符，默认为逗号</param>
+        /// <returns>转化后的字符串</returns>
         public static string ToSepratedString(this IEnumerable self, Func<object, string> Format = null, string seperator = ",")
         {
             string rv = "";
@@ -102,6 +108,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 return rv;
             }
+            //循环所有数据，转换后为空的项不参与拼接
             foreach (var item in self)
             {
                 var s = "";
@@ -125,6 +132,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 将 NameValueCollection 转化为 键=值 形式、并以分隔符连接的字符串
+        /// </summary>
+        /// <param name="self">源数据集合</param>
+        /// <param name="seperator">分隔符，默认为逗号</param>
+        /// <returns>转化后的字符串</returns>
         public static string ToSepratedString(this NameValueCollection self, string seperator = ",")
         {
             string rv = "";
@@ -143,6 +156,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 将查询参数追加到 Url 末尾，Url 已包含查询串时用连接符拼接，否则以问号开头拼接
+        /// </summary>
+        /// <param name="self">原始 Url</param>
+        /// <param name="query">要追加的查询参数</param>
+        /// <returns>追加查询参数后的 Url</returns>
         public static string AppendQuery(this string self,string query)
         {
             if(self == null)
@@ -160,6 +179,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return self;
         }
 
+        /// <summary>
+        /// 将字典中的键值对转换为查询参数并追加到 Url 末尾
+        /// </summary>
+        /// <param name="self">原始 Url</param>
+        /// <param name="data">键值对集合</param>
+        /// <returns>追加查询参数后的 Url</returns>
         public static string AppendQuery(this string self, IDictionary data)
         {
             if (self == null)
@@ -167,6 +192,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 return null;
             }
             string query = "";
+            //将键值对拼接为查询参数字符串
             foreach (IDictionaryEnumerator item in data)
             {
                 query += item.Key + "=" + item.Value + "&";
@@ -183,6 +209,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return self;
         }
 
+        /// <summary>
+        /// 将键值对列表转换为查询参数并追加到 Url 末尾
+        /// </summary>
+        /// <param name="self">原始 Url</param>
+        /// <param name="data">键值对列表</param>
+        /// <returns>追加查询参数后的 Url</returns>
         public static string AppendQuery(this string self, List<KeyValuePair<string, string>> data)
         {
             if (self == null)
@@ -206,12 +238,19 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return self;
         }
 
+        /// <summary>
+        /// 将集合转换为查询参数形式的字符串，集合中所有元素使用同一个参数名
+        /// </summary>
+        /// <param name="self">源数据集合</param>
+        /// <param name="name">参数名，默认为 id</param>
+        /// <returns>查询参数形式的字符串</returns>
         public static string ToQueryString(this IEnumerable self, string name=null)
         {
             if(self == null)
             {
                 return "";
             }
+            //未指定参数名时默认使用 id
             if (string.IsNullOrEmpty(name))
             {
                 name = "id";
@@ -228,6 +267,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 移除字符串中的换行、制表等特殊控制字符
+        /// </summary>
+        /// <param name="self">原始字符串</param>
+        /// <returns>移除特殊字符后的字符串</returns>
         public static string RemoveSpecialChar(this string self)
         {
             if(self == null)

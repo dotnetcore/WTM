@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -26,9 +24,27 @@ namespace WalkingTec.Mvvm.Core
     /// <typeparam name="T">导入模版类</typeparam>
     public interface IBaseImport<out T> where T : BaseTemplateVM
     {
+        /// <summary>
+        /// 导入模板
+        /// </summary>
         T Template { get; }
+
+        /// <summary>
+        /// 生成Excel导入模板文件
+        /// </summary>
+        /// <param name="displayName">输出的模板文件显示名称</param>
+        /// <returns>模板文件内容的字节数组</returns>
         byte[] GenerateTemplate(out string displayName);
+
+        /// <summary>
+        /// 设置模板参数，供生成模板时使用
+        /// </summary>
+        /// <param name="parms">参数字典</param>
         void SetParms(Dictionary<string, string> parms);
+
+        /// <summary>
+        /// 导入过程中产生的错误列表
+        /// </summary>
         TemplateErrorListVM ErrorListVM { get; set; }
     }
 
@@ -72,6 +88,9 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public Dictionary<string, string> Parms { get; set; }
 
+        /// <summary>
+        /// 从上传的Excel中解析出的模板数据列表
+        /// </summary>
         protected List<T> TemplateData;
 
         /// <summary>
@@ -118,6 +137,9 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 构造函数
+        /// <summary>
+        /// 初始化导入VM，默认创建错误列表VM和模板实例，并开启模板类型验证
+        /// </summary>
         public BaseImportVM()
         {
             ErrorListVM = new TemplateErrorListVM();
@@ -155,6 +177,8 @@ namespace WalkingTec.Mvvm.Core
         /// 设置数据唯一性验证，子类中如果需要数据唯一性验证，应重写此方法
         /// </summary>
         /// <returns>
+        /// 唯一性验证条件；返回 null 表示不进行唯一性验证
+        /// </returns>
         public virtual DuplicatedInfo<P> SetDuplicatedCheck()
         {
             return null;
@@ -201,6 +225,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public virtual void SetTemplateData()
         {
+            //已解析过模板数据则直接返回，避免重复解析
             if (TemplateData != null && TemplateData.Count > 0)
             {
                 return;
@@ -237,11 +262,14 @@ namespace WalkingTec.Mvvm.Core
                 file.DataStream.Dispose();
                 excelData = fileBytes;
 
+                //初始化模板中的Excel列定义和自定义格式
                 Template.InitExcelData();
                 Template.InitCustomFormat();
 
+                //以只读方式打开上传的Excel文件
                 using (var doc = SpreadsheetDocument.Open(new MemoryStream(fileBytes), false))
                 {
+                    //获取工作簿，并按SheetId顺序取出所有工作表
                     var workbookPart = doc.WorkbookPart;
                     if (workbookPart?.Workbook == null) return;
                     var sheetsElement = workbookPart.Workbook.GetFirstChild<Sheets>();
@@ -250,6 +278,7 @@ namespace WalkingTec.Mvvm.Core
                         .OrderBy(s => s.SheetId?.Value ?? 0).ToList();
 
                     // read previous template format
+                    //读取第二个工作表（模板标记页）C1单元格中记录的模板类型，验证上传文件是否为本模块的模板
                     if (sheets.Count >= 2)
                     {
                         var markerPart = (WorksheetPart)workbookPart.GetPartById(sheets[1].Id);
@@ -271,6 +300,7 @@ namespace WalkingTec.Mvvm.Core
 
                     ///
                     if (sheets.Count == 0) return;
+                    //获取第一个工作表（数据页）的数据区
                     var dataPart = (WorksheetPart)workbookPart.GetPartById(sheets[0].Id);
                     var dataSheet = dataPart.Worksheet.GetFirstChild<SheetData>();
                     var allRows = dataSheet.Elements<Row>().ToList();
@@ -280,6 +310,7 @@ namespace WalkingTec.Mvvm.Core
                     int headerCellCount = headerRow.Elements<Cell>().Count();
 
                     ///
+                    //通过反射获取模板类中定义的所有Excel列属性
                     List<ExcelPropety> ListTemplateProptetys = new List<ExcelPropety>();
                     var ListPropetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
                     for (int i = 0; i < ListPropetys.Count(); i++)
@@ -289,6 +320,7 @@ namespace WalkingTec.Mvvm.Core
                     }
 
                     ///
+                    //计算模板总列数（动态列按其子列数展开），与Excel表头列数不符则认为模板错误
                     var dynamicColumn = ListTemplateProptetys.Where(x => x.DataType == ColumnDataType.Dynamic).FirstOrDefault();
                     int columnCount = dynamicColumn == null ? ListTemplateProptetys.Count : (ListTemplateProptetys.Count + dynamicColumn.DynamicColumns.Count - 1);
                     if (columnCount != headerCellCount)
@@ -298,6 +330,7 @@ namespace WalkingTec.Mvvm.Core
                     }
 
                     ///
+                    //遍历所有列，判断模板中是否定义了子表列
                     int pIndex = 0;
                     HasSubTable = false;
                     for (int i = 0; i < headerCellCount; i++)
@@ -307,6 +340,7 @@ namespace WalkingTec.Mvvm.Core
                     }
 
                     ///
+                    //存在子表时，主表列一律允许为空，因为子表行可以不重复填写主表字段
                     if (HasSubTable)
                     {
                         for (int i = 0; i < headerCellCount; i++)
@@ -316,7 +350,9 @@ namespace WalkingTec.Mvvm.Core
                     }
 
                     ///
+                    //从第二行开始逐行读取数据，连续10个空行视为数据已结束
                     int rowIndex = 2;
+                    int consecutiveEmptyRows = 0;
                     for (int r = 1; r < allRows.Count; r++)
                     {
                         var row = allRows[r];
@@ -324,8 +360,14 @@ namespace WalkingTec.Mvvm.Core
 
                         if (IsEmptyRowOpenXml(cells, columnCount))
                         {
-                            return;
+                            consecutiveEmptyRows++;
+                            if (consecutiveEmptyRows >= 10)
+                            {
+                                return;
+                            }
+                            continue;
                         }
+                        consecutiveEmptyRows = 0;
 
                         T result = new T();
                         pIndex = 0;
@@ -334,11 +376,13 @@ namespace WalkingTec.Mvvm.Core
                             string value = i < cells.Count ? GetCellTextValue(cells[i], workbookPart) : "";
                             ExcelPropety excelPropety = CopyExcelPropety(ListTemplateProptetys[pIndex]);
 
+                            //文本类型列：读取公式的缓存计算结果
                             if (excelPropety.DataType == ColumnDataType.Text)
                             {
                                 value = GetCellFormulaValueOpenXml(cells.ElementAtOrDefault(i), value);
                             }
 
+                            //动态列：依次读取并验证该列展开的所有动态子列
                             if (excelPropety.DataType == ColumnDataType.Dynamic)
                             {
                                 int dynamicColCount = excelPropety.DynamicColumns.Count();
@@ -370,9 +414,10 @@ namespace WalkingTec.Mvvm.Core
                 }
                 return;
             }
-            catch
+            catch (Exception e)
             {
-                ErrorListVM.EntityList.Add(new ErrorMessage { Message = CoreProgram._localizer?["Sys.WrongTemplate"] });
+                var baseMsg = CoreProgram._localizer?["Sys.WrongTemplate"] ?? "WrongTemplate";
+                ErrorListVM.EntityList.Add(new ErrorMessage { Message = $"{baseMsg}({e.GetType().Name}: {e.Message})" });
             }
         }
 
@@ -380,6 +425,9 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
 ///
         /// </summary>
+        /// <param name="cell">要读取的OpenXML单元格</param>
+        /// <param name="workbookPart">单元格所属的工作簿部件，用于解析共享字符串</param>
+        /// <returns>单元格的文本内容；无法解析时返回空字符串</returns>
         public static string GetCellTextValue(Cell cell, WorkbookPart workbookPart = null)
         {
             if (cell == null) return "";
@@ -434,6 +482,12 @@ namespace WalkingTec.Mvvm.Core
             return "";
         }
 
+        /// <summary>
+        /// 获取单元格中公式的缓存计算结果
+        /// </summary>
+        /// <param name="cell">要读取的OpenXML单元格</param>
+        /// <param name="Value">单元格原本读取到的文本值</param>
+        /// <returns>值以等号开头且存在公式缓存值时返回缓存值，否则返回原值</returns>
         public string GetCellFormulaValueOpenXml(Cell cell, string Value)
         {
             if (cell == null) return Value;
@@ -448,6 +502,13 @@ namespace WalkingTec.Mvvm.Core
             return Value;
         }
 
+        /// <summary>
+        /// 判断一行单元格是否全部为空
+        /// </summary>
+        /// <param name="cells">该行包含的单元格列表</param>
+        /// <param name="colCount">需要检查的列数</param>
+        /// <param name="workbookPart">工作簿部件，用于解析单元格文本</param>
+        /// <returns>所有被检查的单元格均为空时返回 true，否则返回 false</returns>
         private bool IsEmptyRowOpenXml(List<Cell> cells, int colCount, WorkbookPart workbookPart = null)
         {
             if (cells == null || cells.Count == 0) return true;
@@ -540,6 +601,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         SetEntityFieldValue(entity, mep.Value, rowIndex, mep.Key, item);
                     }
+                    //如果主表实体支持多租户，设置租户代码
                     if (typeof(ITenant).IsAssignableFrom(entity.GetType()))
                     {
                         ITenant ent = entity as ITenant;
@@ -603,21 +665,10 @@ namespace WalkingTec.Mvvm.Core
                                         ent.TenantCode = LoginUserInfo?.CurrentTenant;
                                     }
 
-                                    //var context = new ValidationContext(SubTypeEntity);
-                                    //var validationResults = new List<ValidationResult>();
-                                    //TryValidateObject(SubTypeEntity, context, validationResults);
-                                    //if (validationResults.Count == 0)
-                                    //{
                                     //将付好值得SubTableType实例添加到List中
                                     list.Add(SubTypeEntity);
 
                                     PropertyHelper.SetPropertyValue(entity, pro.Name, list);
-                                    //}
-                                    //else
-                                    //{
-                                    //    ErrorListVM.EntityList.Add(new ErrorMessage { Message = validationResults.FirstOrDefault()?.ErrorMessage ?? "Error", ExcelIndex = item.ExcelIndex });
-                                    //    break;
-                                    //}
 
                                 }
                                 break;
@@ -655,6 +706,7 @@ namespace WalkingTec.Mvvm.Core
                 vm.CopyContext(this);
                 dinfo = (vm as dynamic).SetDuplicatedCheck();
             }
+            //优先使用导入VM自身定义的唯一性验证，未定义时使用对应CRUD VM的验证
             var cinfo = this.SetDuplicatedCheck();
             finalInfo = new DuplicatedInfo<P>
             {
@@ -675,14 +727,8 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
             //调用controller方法验证model
-            //var vmethod = Controller?.GetType().GetMethod("RedoValidation");
             foreach (var entity in EntityList)
             {
-                //try
-                //{
-                //    vmethod.Invoke(Controller, new object[] { entity });
-                //}
-                //catch { }
 
                 if (vm != null)
                 {
@@ -708,6 +754,14 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 将Excel列的值经过格式化处理后设置到实体对应字段上
+        /// </summary>
+        /// <param name="entity">要赋值的实体对象（主表或子表实例）</param>
+        /// <param name="ep">Excel列属性定义，包含列值和格式化委托</param>
+        /// <param name="rowIndex">当前数据所在Excel行号，用于错误定位</param>
+        /// <param name="fieldName">实体上要赋值的字段名</param>
+        /// <param name="templateVM">当前行的模板数据实例，传递给格式化委托使用</param>
         protected void SetEntityFieldValue(object entity, ExcelPropety ep, int rowIndex, string fieldName, T templateVM)
         {
             if (ep.FormatData != null)
@@ -759,6 +813,12 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 验证修改数据时是否与EntityList中的其他数据重复
+        /// </summary>
+        /// <param name="checkCondition">唯一性验证条件</param>
+        /// <param name="entity">要验证的实体</param>
+        /// <returns>存在重复返回 true，否则返回 false</returns>
         protected bool IsUpdateRecordDuplicated(DuplicatedInfo<P> checkCondition, P entity)
         {
             if (checkCondition != null && checkCondition.Groups.Count > 0)
@@ -821,6 +881,11 @@ namespace WalkingTec.Mvvm.Core
             return false;
         }
 
+        /// <summary>
+        /// 验证当前实体是否与本地EntityList中的其他数据重复，重复时将错误信息加入错误列表
+        /// </summary>
+        /// <param name="checkCondition">唯一性验证条件</param>
+        /// <param name="entity">要验证的实体</param>
         protected void ValidateDuplicateData(DuplicatedInfo<P> checkCondition, P entity)
         {
             if (checkCondition != null && checkCondition.Groups.Count > 0)
@@ -901,6 +966,12 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 对模型的所有属性逐一执行验证特性校验
+        /// </summary>
+        /// <param name="model">要验证的模型对象</param>
+        /// <param name="context">验证上下文</param>
+        /// <param name="results">验证结果集合，失败信息会被加入其中</param>
         private void TryValidateObject(object model, ValidationContext context, ICollection<ValidationResult> results)
         {
             var modelType = model.GetType();
@@ -911,6 +982,13 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 对单个属性执行所有验证特性校验，并将错误信息本地化后加入结果集合
+        /// </summary>
+        /// <param name="value">属性值</param>
+        /// <param name="context">验证上下文</param>
+        /// <param name="results">验证结果集合</param>
+        /// <param name="propertyInfo">属性信息，为空时根据上下文成员名获取</param>
         private void TryValidateProperty(object value, ValidationContext context, ICollection<ValidationResult> results, PropertyInfo propertyInfo = null)
         {
             var modelType = context.ObjectType;
@@ -921,6 +999,7 @@ namespace WalkingTec.Mvvm.Core
 
             if (propertyInfo != null)
             {
+                //获取属性上定义的所有验证特性
                 var rules = propertyInfo.GetCustomAttributes(true).Where(i => i.GetType().BaseType == typeof(ValidationAttribute)).Cast<ValidationAttribute>();
                 var displayName = propertyInfo.GetPropertyDisplayName();
                 var memberName = propertyInfo.Name;
@@ -931,6 +1010,7 @@ namespace WalkingTec.Mvvm.Core
                         string errorMessage = "Error";
                         if (!string.IsNullOrEmpty(rule.ErrorMessage))
                         {
+                            //范围验证：根据最大/最小值的设置情况拼装本地化参数
                             if (rule is RangeAttribute range)
                             {
                                 if (range.Minimum != null && range.Maximum != null)
@@ -946,6 +1026,7 @@ namespace WalkingTec.Mvvm.Core
                                     errorMessage = Wtm.Localizer[rule.ErrorMessage, displayName, range.Maximum];
                                 }
                             }
+                            //字符串长度验证：根据最大/最小长度的设置情况拼装本地化参数
                             else if (rule is StringLengthAttribute sl)
                             {
                                 if (sl.MaximumLength > 0 && sl.MinimumLength > 0)
@@ -980,6 +1061,7 @@ namespace WalkingTec.Mvvm.Core
         public virtual bool BatchSaveData()
         {
             ///
+            //删除提交时标记为删除的临时附件文件
             if (DeletedFileIds != null && DeletedFileIds.Count > 0 && Wtm.ServiceProvider != null)
             {
                 var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
@@ -992,6 +1074,7 @@ namespace WalkingTec.Mvvm.Core
 
             //进行赋值
             SetEntityList();
+            //对每个实体执行数据注解验证，错误信息记入错误列表
             foreach (var entity in EntityList)
             {
                 var context = new ValidationContext(entity);
@@ -1017,6 +1100,7 @@ namespace WalkingTec.Mvvm.Core
             }
             var ModelType = typeof(P);
             //循环数据列表
+            //ListAdd用于收集待Bulk插入的数据（当前Bulk插入为保留的空实现，未实际使用）
             List<P> ListAdd = new List<P>();
             foreach (var item in EntityList)
             {
@@ -1045,6 +1129,7 @@ namespace WalkingTec.Mvvm.Core
                             }
                         }
 
+                        //模板中未定义更新时间字段时，自动更新已有数据的更新时间
                         if (tempPros.Where(x => x.Name == "UpdateTime").SingleOrDefault() == null)
                         {
                             if (typeof(IBasePoco).IsAssignableFrom(exist.GetType()))
@@ -1054,6 +1139,7 @@ namespace WalkingTec.Mvvm.Core
                             }
                         }
 
+                        //模板中未定义更新人字段时，自动更新已有数据的更新人
                         if (tempPros.Where(x => x.Name == "UpdateBy").SingleOrDefault() == null)
                         {
                             if (typeof(IBasePoco).IsAssignableFrom(exist.GetType()))
@@ -1063,7 +1149,6 @@ namespace WalkingTec.Mvvm.Core
                             }
                         }
                         exist.ExcelIndex = item.ExcelIndex;
-                        //DC.UpdateEntity(exist);
 
                         continue;
                     }
@@ -1100,7 +1185,7 @@ namespace WalkingTec.Mvvm.Core
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
                 if (ConfigInfo.Connections.Where(x => x.Key == (CurrentCS ?? "default")).FirstOrDefault().DbType == DBTypeEnum.SqlServer && !HasSubTable && UseBulkSave == true)
                 {
-                    //ListAdd.Add(item);
+                    //预留的Bulk插入分支，当前为空实现
                 }
                 else
                 {
@@ -1133,6 +1218,7 @@ namespace WalkingTec.Mvvm.Core
                     return false;
                 }
             }
+            //导入成功后删除上传的临时文件
             if (string.IsNullOrEmpty(UploadFileId) == false && Wtm.ServiceProvider != null)
             {
                 var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
@@ -1151,68 +1237,8 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="list"></param>
         protected static void BulkInsert<K>(IDataContext dc, string tableName, IList<K> list)
         {
-            //using (var bulkCopy = new SqlBulkCopy(dc.CSName))
-            //{
-            //    bulkCopy.BatchSize = list.Count;
-            //    bulkCopy.DestinationTableName = tableName;
-
-            //    var table = new DataTable();
-            //    var props = typeof(K).GetAllProperties().Distinct(x => x.Name);
-
-            ///
-            //    foreach (var propertyInfo in props)
-            //    {
-            //        var notmapped = propertyInfo.GetCustomAttribute<NotMappedAttribute>();
-            //        var notobject = propertyInfo.PropertyType.Namespace.Equals("System") || propertyInfo.PropertyType.IsEnumOrNullableEnum();
-            //        if (notmapped == null && notobject)
-            //        {
-            //            string Name = dc.GetFieldName<K>(propertyInfo.Name);
-            //            bulkCopy.ColumnMappings.Add(Name, Name);
-            //            table.Columns.Add(Name, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
-            //        }
-            //    }
-
-            ///
-            //    var values = new object[table.Columns.Count];
-            //    foreach (var item in list)
-            //    {
-            //        var Index = 0;
-            //        foreach (var propertyInfo in props)
-            //        {
-            //            var notmapped = propertyInfo.GetCustomAttribute<NotMappedAttribute>();
-            //            var notobject = propertyInfo.PropertyType.Namespace.Equals("System") || propertyInfo.PropertyType.IsEnumOrNullableEnum();
-            //            if (notmapped == null && notobject)
-            //            {
-            //                values[Index] = propertyInfo.GetValue(item);
-            //                Index++;
-            //            }
-            //        }
-            //        table.Rows.Add(values);
-            //    }
-            #region
-            //    string Discriminator = dc.GetFieldName<K>("Discriminator");
-            //    if (!string.IsNullOrEmpty(Discriminator))
-            //    {
-            //        bulkCopy.ColumnMappings.Add("Discriminator", "Discriminator");
-            //        table.Columns.Add("Discriminator", typeof(string));
-            //        for (int i = 0; i < table.Rows.Count; i++)
-            //        {
-            //            table.Rows[i]["Discriminator"] = typeof(K).Name;
-            //        }
-            //    }
-            //    bulkCopy.WriteToServer(table);
-            //}
+            //保留的空实现，当前未执行任何批量插入操作
         }
-        #endregion
-
-        ///
-        /// <summary>
-#region
-        /// </summary>
-        /// <param name="row">
-        /// <param name="colCount">
-        /// <returns>
-        #endregion
 
         #region 复制Excel属性
         /// <summary>
@@ -1399,6 +1425,11 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
+        /// <summary>
+        /// 创建一组字段组成的唯一性验证信息
+        /// </summary>
+        /// <param name="FieldExps">重复验证字段的Lambda表达式数组</param>
+        /// <returns>唯一性验证信息</returns>
         protected DuplicatedInfo<P> CreateFieldsInfo(params DuplicatedField<P>[] FieldExps)
         {
             DuplicatedInfo<P> d = new DuplicatedInfo<P>();
@@ -1428,6 +1459,10 @@ namespace WalkingTec.Mvvm.Core
             return new ComplexDuplicatedField<P, V>(MiddleExp, FieldExps);
         }
 
+        /// <summary>
+        /// 将导入错误信息写入Excel并生成前端需要的错误JSON对象
+        /// </summary>
+        /// <returns>包含错误提示及错误文件Id的ErrorObj对象</returns>
         public ErrorObj GetErrorJson()
         {
             var mse = new ErrorObj();
@@ -1435,12 +1470,14 @@ namespace WalkingTec.Mvvm.Core
             var err = ErrorListVM?.EntityList?.Where(x => x.Index == 0).FirstOrDefault()?.Message;
             if (string.IsNullOrEmpty(err))
             {
+                //没有整体错误时，把具体行的错误写回Excel并生成错误文件供下载
                 Models.IWtmFile fa = null;
                 if(Wtm.ServiceProvider == null) {
                     return mse;
                 }
                 var fp = Wtm.ServiceProvider.GetRequiredService<WtmFileProvider>();
                 fa = fp.GetFile(UploadFileId, true, DC);
+                //反射获取模板中定义的所有Excel列，并计算总列数（动态列按子列展开）
                 var propetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
                 List<ExcelPropety> excelPropetys = new List<ExcelPropety>();
                 for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
@@ -1455,6 +1492,7 @@ namespace WalkingTec.Mvvm.Core
                     columnCount = columnCount + dynamicColumn.DynamicColumns.Count - 1;
                 }
                 byte[] newBytes;
+                //以可写方式打开原始上传的Excel，在每条出错行的行尾追加错误信息单元格
                 using (var ms = new MemoryStream(excelData))
                 using (var doc = SpreadsheetDocument.Open(ms, true))
                 {
@@ -1473,6 +1511,7 @@ namespace WalkingTec.Mvvm.Core
                                 Row row = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex == rowIdx);
                                 if (row != null)
                                 {
+                                    //在最后一列之后追加一个单元格，写入该行的错误信息
                                     string colLetter = OpenXmlHelper.GetColumnLetter(columnCount);
                                     string cellRef = $"{colLetter}{rowIdx}";
                                     Cell errorCell = new Cell() { CellReference = cellRef };
@@ -1486,6 +1525,7 @@ namespace WalkingTec.Mvvm.Core
                     workbookPart.Workbook.Save();
                     newBytes = ms.ToArray();
                 }
+                //将带错误标识的Excel重新上传，返回错误文件Id供前端下载
                 using (var uploadMs = new MemoryStream(newBytes))
                 {
                     uploadMs.Position = 0;
@@ -1503,13 +1543,25 @@ namespace WalkingTec.Mvvm.Core
         }
     }
 
+    /// <summary>
+    /// 导入错误信息，记录Excel中出错的位置及错误内容
+    /// </summary>
     public class ErrorMessage : TopBasePoco
     {
+        /// <summary>
+        /// 错误所在行号（对应Excel中的行）
+        /// </summary>
         [Display(Name = "Sys.RowIndex")]
         public long Index { get; set; }
 
+        /// <summary>
+        /// 错误所在单元格列号
+        /// </summary>
         [Display(Name = "Sys.CellIndex")]
         public long Cell { get; set; }
+        /// <summary>
+        /// 错误信息内容
+        /// </summary>
         [Display(Name = "Sys.ErrorMsg")]
         public string Message { get; set; }
     }
@@ -1520,12 +1572,19 @@ namespace WalkingTec.Mvvm.Core
     public class TemplateErrorListVM : BasePagedListVM<ErrorMessage, BaseSearcher>
     {
 
+        /// <summary>
+        /// 初始化错误列表VM，默认不启用分页
+        /// </summary>
         public TemplateErrorListVM()
         {
             EntityList = new List<ErrorMessage>();
             NeedPage = false;
         }
 
+        /// <summary>
+        /// 初始化错误列表的表格列头，显示行号和错误信息两列
+        /// </summary>
+        /// <returns>表格列头定义集合</returns>
         protected override IEnumerable<IGridColumn<ErrorMessage>> InitGridHeader()
         {
             return new List<GridColumn<ErrorMessage>>{
@@ -1534,6 +1593,10 @@ namespace WalkingTec.Mvvm.Core
             };
         }
 
+        /// <summary>
+        /// 获取错误列表的查询语句，按行号排序
+        /// </summary>
+        /// <returns>按行号升序排列的错误信息查询</returns>
         public override IOrderedQueryable<ErrorMessage> GetSearchQuery()
         {
             return EntityList.AsQueryable().OrderBy(x => x.Index);

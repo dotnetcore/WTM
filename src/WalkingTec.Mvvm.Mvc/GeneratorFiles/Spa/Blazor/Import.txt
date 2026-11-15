@@ -55,7 +55,7 @@
 
         private async Task DownloadErrorFile()
         {
-            await Download($"/api/_file/DownloadFile/{ErrorFileId}", new { }, HttpMethodEnum.GET);
+            await Download($"/api/admin/file/DownloadFile/{ErrorFileId}", new { }, HttpMethodEnum.GET);
         }
 
         public void OnClose()

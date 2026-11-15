@@ -10,19 +10,25 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using MySqlConnector;
-using Npgsql;
-using NpgsqlTypes;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
+using Npgsql;
+using NpgsqlTypes;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
 {
+    /// <summary>
+    /// 列单元格格式化回调委托，根据整行数据和字段原始值计算单元格的显示内容
+    /// </summary>
+    /// <typeparam name="T">列表数据的类型</typeparam>
+    /// <param name="entity">当前行的数据对象</param>
+    /// <param name="fieldValue">当前字段的原始值</param>
+    /// <returns>格式化后的显示内容</returns>
     public delegate object ColumnFormatCallBack<in T>(T entity, object fieldValue) where T : TopBasePoco;
 
     /// <summary>
@@ -34,8 +40,17 @@ namespace WalkingTec.Mvvm.Core
         Export, //导出
         Batch, //批量
         Selector,//选择器
+        /// <summary>
+        /// 主从模式，列表作为主表页面中的明细子表
+        /// </summary>
         MasterDetail, //
+        /// <summary>
+        /// 勾选导出模式，只导出列表中勾选的数据
+        /// </summary>
         CheckExport,
+        /// <summary>
+        /// 自定义模式，供业务代码自行扩展使用
+        /// </summary>
         Custom1, Custom2, Custom3, Custom4, Custom5
     };
 
@@ -50,14 +65,23 @@ namespace WalkingTec.Mvvm.Core
     {
 
 
+        /// <summary>
+        /// 列表合计行的显示文字，默认取本地化资源中的Sys.Total
+        /// </summary>
         [JsonIgnore]
         public string TotalText { get; set; } = CoreProgram._localizer?["Sys.Total"];
 
+        /// <summary>
+        /// 设定自定义查询命令（存储过程或SQL语句），继承的类可重载这个函数让列表用命令方式查询数据，
+        /// 返回null时列表使用GetSearchQuery等Lambda方式查询
+        /// </summary>
+        /// <returns>查询使用的数据库命令，默认返回null</returns>
         public virtual DbCommand GetSearchCommand()
         {
             return null;
         }
 
+        //多级表头深度的缓存
         private int? _childrenDepth;
 
         /// <summary>
@@ -101,6 +125,7 @@ namespace WalkingTec.Mvvm.Core
             return headers.Max(x => x.MaxDepth);
         }
 
+        //页面动作列表的缓存
         private List<GridAction> _gridActions;
 
         /// <summary>
@@ -123,6 +148,10 @@ namespace WalkingTec.Mvvm.Core
             return new List<GridColumn<TModel>>();
         }
 
+        /// <summary>
+        /// 初始化页面动作，继承的类应该重载这个函数来设定列表上的按钮等动作
+        /// </summary>
+        /// <returns>页面动作列表</returns>
         protected virtual List<GridAction> InitGridAction()
         {
             return new List<GridAction>();
@@ -197,6 +226,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                     }
                 }
+                //按每份最大行数分批生成Excel文件
                 for (int i = 0; i < ExportExcelCount; i++)
                 {
                     var data = query.Skip(i * ExportMaxCount).Take(ExportMaxCount).ToList();
@@ -272,6 +302,7 @@ namespace WalkingTec.Mvvm.Core
                         {
                             foreach (var col in baseCol.BottomChildren)
                             {
+                                //枚举类型字段转换为枚举项的显示名称
                                 bool isEnumBoolProp = false;
                                 var proType = col.FieldType;
                                 if (proType.IsEnumOrNullableEnum())
@@ -296,6 +327,7 @@ namespace WalkingTec.Mvvm.Core
                                 string cellRef = OpenXmlHelper.GetCellReference(colIndex, i + max);
                                 Cell cell = new Cell() { CellReference = cellRef, StyleIndex = 2 };
 
+                                //数字类型以数值单元格写入，其余以字符串单元格写入
                                 if (col.FieldType?.IsNumber() == true && double.TryParse(text, out double trydouble))
                                 {
                                     cell.DataType = CellValues.Number;
@@ -319,6 +351,11 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 根据数据集合生成Excel并返回文件内容，单个文件导出时使用
+        /// </summary>
+        /// <param name="data">要导出的数据列表</param>
+        /// <returns>Excel文件的字节数组</returns>
         private byte[] DownLoadExcel(List<TModel> data)
         {
             return GenerateWorkBook(data);
@@ -362,6 +399,7 @@ namespace WalkingTec.Mvvm.Core
                     mergeCells.AppendChild(new MergeCell() { Reference = $"{startRef}:{endRef}" });
                 }
 
+                //如果存在子表头则递归生成下一级表头
                 if (col.Children != null && col.Children.Count() > 0)
                 {
                     MakeExcelHeader(worksheetPart, sheetData, col.Children, rowIndex + rowspan + 1, colIndex);
@@ -371,6 +409,12 @@ namespace WalkingTec.Mvvm.Core
             return maxLevel;
         }
 
+        /// <summary>
+        /// 创建导出Excel使用的样式表，包含标题字体、标题背景色和数据区细边框等样式
+        /// </summary>
+        /// <param name="headerBackColor">标题行背景颜色（十六进制RGB，例如B0C4DE）</param>
+        /// <param name="headerFontColor">标题行文字颜色（十六进制RGB，例如000000）</param>
+        /// <returns>OpenXML的样式表对象</returns>
         private static Stylesheet CreateExportStylesheet(string headerBackColor, string headerFontColor)
         {
             var stylesheet = new Stylesheet();
@@ -425,6 +469,12 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region Old
+        /// <summary>
+        /// 根据指向字段的Lambda表达式和排序方向生成排序信息
+        /// </summary>
+        /// <param name="pro">指向要排序字段的Lambda表达式</param>
+        /// <param name="dir">排序方向</param>
+        /// <returns>生成的排序信息</returns>
         public SortInfo CreateSortInfo(Expression<Func<TModel, object>> pro, SortDir dir)
         {
             SortInfo rv = new SortInfo
@@ -444,6 +494,9 @@ namespace WalkingTec.Mvvm.Core
         ///记录批量操作时列表中选择的Id
         /// </summary>
         public List<string> Ids { get; set; }
+        /// <summary>
+        /// 选择器模式下作为取值字段的属性名，为空则默认使用ID字段
+        /// </summary>
         public string SelectorValueField { get; set; }
         /// <summary>
         /// 是否已经搜索过
@@ -451,6 +504,9 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public bool IsSearched { get; set; }
 
+        /// <summary>
+        /// 是否跳过分页处理；为true时DoSearch不计算总数和页数，直接执行查询填充数据列表
+        /// </summary>
         [JsonIgnore]
         public bool PassSearch { get; set; }
         /// <summary>
@@ -562,11 +618,19 @@ namespace WalkingTec.Mvvm.Core
         {
         }
 
+        /// <summary>
+        /// 判断列表中某行数据是否被选中，继承的类可重载这个函数自定义选中逻辑
+        /// </summary>
+        /// <param name="item">要判断的数据行</param>
+        /// <returns>是否选中</returns>
         public virtual bool GetIsSelected(object item)
         {
             return false;
         }
 
+        /// <summary>
+        /// 执行校验，先校验Searcher中的搜索条件，再校验VM自身
+        /// </summary>
         public override void Validate()
         {
             Searcher?.Validate();
@@ -639,6 +703,7 @@ namespace WalkingTec.Mvvm.Core
             var baseQuery = GetSearchQuery();
             if (ReplaceWhere == null)
             {
+                //如果指定了SelectorValueField且不是ID，则用该字段构造选中条件，否则使用ID字段
                 Expression peid = null;
                 if (string.IsNullOrEmpty(SelectorValueField) == false && SelectorValueField.ToLower() != "id")
                 {
@@ -670,6 +735,10 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public virtual void DoSearch()
         {
+            if (Searcher == null)
+            {
+                Searcher = System.Activator.CreateInstance<TSearcher>();
+            }
             var cmd = GetSearchCommand();
             if (cmd == null)
             {
@@ -708,18 +777,13 @@ namespace WalkingTec.Mvvm.Core
                         var newExp = mod.Modify(query.Expression);
                         query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                     }
+                    //如果设定了排序信息，则替换查询中的排序语句
                     if (Searcher.SortInfo != null)
                     {
                         var mod = new OrderReplaceModifier(Searcher.SortInfo);
                         var newExp = mod.Modify(query.Expression);
                         query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                     }
-                    //if (typeof(IPersistPoco).IsAssignableFrom( typeof(TModel)))
-                    //{
-                    //    var mod = new IsValidModifier();
-                    //    var newExp = mod.Modify(query.Expression);
-                    //    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-                    //}
                     if (PassSearch == false)
                     {
                         //如果需要分页，则添加分页语句
@@ -773,6 +837,11 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 执行GetSearchCommand返回的查询命令，根据数据库类型（MySQL/PostgreSQL/SQLServer）转换参数，
+        /// 存储过程模式下附加搜索模式、分页、排序等参数和总记录数输出参数，并把结果填充到数据列表
+        /// </summary>
+        /// <param name="cmd">要执行的数据库命令</param>
         private void ProcessCommand(DbCommand cmd)
         {
             object total;
@@ -854,6 +923,7 @@ namespace WalkingTec.Mvvm.Core
                     total = EntityList.Count;
                 }
             }
+            //SQL Server数据库
             else
             {
                 List<SqlParameter> parms = new List<SqlParameter>();
@@ -891,6 +961,7 @@ namespace WalkingTec.Mvvm.Core
                 }
 
             }
+            //分页模式下根据输出参数返回的总记录数计算总页数
             if (NeedPage && Searcher.Limit != -1)
             {
                 if (total != null)
@@ -910,6 +981,13 @@ namespace WalkingTec.Mvvm.Core
 
         }
 
+        /// <summary>
+        /// 对时间按指定单位进行偏移
+        /// </summary>
+        /// <param name="dt">原始时间</param>
+        /// <param name="type">时间单位（year/month/day/hour/minute/second）</param>
+        /// <param name="size">偏移的数量，为负数时向前偏移</param>
+        /// <returns>计算后的时间</returns>
         public DateTime AddTime(DateTime dt, string type, int size)
         {
             switch (type)
@@ -975,7 +1053,6 @@ namespace WalkingTec.Mvvm.Core
             }
             if (root != null)
             {
-                //IEnumerable<IGridColumn<TModel>>
                 var aroot = root as List<GridColumn<TModel>>;
                 var toRemove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action).FirstOrDefault();
                 aroot.Remove(toRemove);
@@ -989,11 +1066,18 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 清除所有页面动作
+        /// </summary>
         public void RemoveAction()
         {
             _gridActions = new List<GridAction>();
         }
 
+        /// <summary>
+        /// 删除所有Action列、隐藏列和不导出的列，并根据Model类型删除ID列，导出Excel前调用
+        /// </summary>
+        /// <param name="root">要处理的表头集合，默认从根表头开始处理</param>
         public void RemoveActionAndIdColumn(IEnumerable<IGridColumn<TModel>> root = null)
         {
             if (root == null)
@@ -1008,6 +1092,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 var aroot = root as List<GridColumn<TModel>>;
                 List<GridColumn<TModel>> remove = null;
+                //ID字段为string类型时不按字段名删除ID列，其他类型时连ID列一起删除
                 var idpro = typeof(TModel).GetSingleProperty("ID")?.PropertyType;
                 if (idpro == typeof(string))
                 {
@@ -1053,6 +1138,11 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 处理明细列表提交后的验证错误，把MSD中明细行的错误信息写入对应数据的BatchError字段，
+        /// 并在列表中添加错误列，主要用于主从页面的子表
+        /// </summary>
+        /// <param name="Entities">页面提交的明细数据列表</param>
         public void ProcessListError(List<TModel> Entities)
         {
             if(Entities == null)
@@ -1065,12 +1155,14 @@ namespace WalkingTec.Mvvm.Core
             List<string> keys = new List<string>();
             if (string.IsNullOrEmpty(DetailGridPrix) == false)
             {
+                //如果数据本身已带有错误信息，则直接显示错误列
                 if (EntityList.Any(x => x.BatchError != null))
                 {
                     haserror = true;
                 }
                 else
                 {
+                    //从MSD中查找以明细前缀开头的错误信息，按行号写回对应数据
                     foreach (var item in MSD.Keys)
                     {
                         if (item.StartsWith(DetailGridPrix+"["))
@@ -1104,22 +1196,40 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 使用无参数构造函数创建一个TModel的空对象
+        /// </summary>
+        /// <returns>新创建的数据对象</returns>
         public TModel CreateEmptyEntity()
         {
             return typeof(TModel).GetConstructor(Type.EmptyTypes).Invoke(null) as TModel;
         }
 
+        /// <summary>
+        /// 清空数据列表
+        /// </summary>
         public void ClearEntityList()
         {
             EntityList?.Clear();
         }
 
+        /// <summary>
+        /// 明细表格（子表）的字段前缀，用于在MSD中定位明细行数据的验证错误
+        /// </summary>
         public string DetailGridPrix { get; set; }
 
+        /// <summary>
+        /// 获取列表对应Model的类型
+        /// </summary>
         public Type ModelType => typeof(TModel);
 
         #endregion
 
+        /// <summary>
+        /// 把页面提交的数据列表批量保存到数据库，自动比较数据库中原有数据的差异，
+        /// 分别处理修改、删除和新增，并设置UpdateTime/UpdateBy/CreateTime/CreateBy等字段
+        /// </summary>
+        /// <param name="updateAllFields">是否更新所有字段，为false时只更新页面提交(FC)中包含的字段</param>
         public virtual void UpdateEntityList(bool updateAllFields = false)
         {
             if (EntityList != null)
@@ -1256,6 +1366,11 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 获取当前登录用户（含其所属角色和用户组）对当前Model可审批的流程列表
+        /// </summary>
+        /// <param name="flowname">流程名称，为null时查询所有流程</param>
+        /// <returns>可审批的流程列表</returns>
         public List<FrameworkWorkflow> GetMyApproves(string flowname = null)
         {
             var mt = ModelType.GetParentWorkflowPoco();
@@ -1264,6 +1379,7 @@ namespace WalkingTec.Mvvm.Core
                 var roleids = Wtm.LoginUserInfo.Roles?.Select(x => "r:" + x.ID).ToList();
                 var groupids = Wtm.LoginUserInfo.Groups?.Select(x => "g:" + x.ID).ToList();
 
+                //查询分配给当前用户、其所属角色或用户组的流程
                 var ids = DC.Set<FrameworkWorkflow>()
                      .CheckEqual(flowname, x => x.WorkflowName)
                      .CheckEqual(mt.FullName, x => x.ModelType)

@@ -1,649 +1,414 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using WalkingTec.Mvvm.Core.Implement;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Test.Mock;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Core.Test.VM
 {
+    /// <summary>
+    /// BaseCRUDVM ≤‚ ‘ °™ ◊‘∂®“Â÷˜º¸¿‡–Õ±‰ÃÂ£®long ID£¨string ID£©
+    /// </summary>
     [TestClass]
-    public class BaseCRUDVMTestWithOtherID
+    [TestCategory("CRUD")]
+    public class BaseCRUDVMTestWithOtherID : CrudTestBase
     {
-        private BaseCRUDVM<SchoolWithOtherID> _schoolvm = new BaseCRUDVM<SchoolWithOtherID>();
-        private BaseCRUDVM<MajorWithOtherID> _majorvm = new BaseCRUDVM<MajorWithOtherID>();
-        private BaseCRUDVM<Student> _studentvm = new BaseCRUDVM<Student>();
-        private string _seed;
+        private BaseCRUDVM<SchoolWithOtherID> _schoolvm;
+        private BaseCRUDVM<MajorWithOtherID> _majorvm;
+        private BaseCRUDVM<Student> _studentvm;
 
         public BaseCRUDVMTestWithOtherID()
         {
-            _seed = Guid.NewGuid().ToString();
-            _schoolvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
-            _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
-            _studentvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "studentuser");
+            InitSeed();
+            _schoolvm = new BaseCRUDVM<SchoolWithOtherID> { Wtm = NewWtmContext("schooluser") };
+            _majorvm = new BaseCRUDVM<MajorWithOtherID> { Wtm = NewWtmContext("majoruser") };
+            _studentvm = new BaseCRUDVM<Student> { Wtm = NewWtmContext("studentuser") };
         }
 
+        #region µ•±Ì≤Ÿ◊˜
+
         [TestMethod]
-        [Description("ÂçïË°®Ê∑ªÂä†")]
-        [DataTestMethod]
         [DataRow("111", "test1", SchoolTypeEnum.PRI, "remark1")]
-        [DataRow("222","test2", SchoolTypeEnum.PUB,"remark2")]
+        [DataRow("222", "test2", SchoolTypeEnum.PUB, "remark2")]
         public void SingleTableDoAdd(string code, string name, SchoolTypeEnum schooltype, string remark)
         {
-            SchoolWithOtherID s = new SchoolWithOtherID();
-            s.SchoolCode = code;
-            s.SchoolName = name;
-            s.SchoolType = schooltype;
-            s.Remark = remark;
+            var s = new SchoolWithOtherID { SchoolCode = code, SchoolName = name, SchoolType = schooltype, Remark = remark };
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                var rv = context.Set<SchoolWithOtherID>().ToList();
-                Assert.AreEqual(1, rv.Count());
-                Assert.AreEqual(code, rv[0].SchoolCode);
-                Assert.AreEqual(name, rv[0].SchoolName);
-                Assert.AreEqual(schooltype, rv[0].SchoolType);
-                Assert.AreEqual(remark, rv[0].Remark);
-            }
-            Assert.IsTrue(_schoolvm.MSD.Count == 0);
+            using var ctx = NewContext();
+            var rv = ctx.Set<SchoolWithOtherID>().Single();
+            Assert.AreEqual(code, rv.SchoolCode);
+            Assert.AreEqual(name, rv.SchoolName);
+            Assert.AreEqual(schooltype, rv.SchoolType);
+            Assert.AreEqual(remark, rv.Remark);
+            AssertNoModelError(_schoolvm);
         }
 
         [TestMethod]
-        [Description("ÂçïË°®‰øÆÊîπÂÖ®ÈÉ®Â≠óÊÆµ")]
-        [DataTestMethod]
         [DataRow("111", "test1", SchoolTypeEnum.PRI, "remark1")]
         [DataRow("222", "test2", SchoolTypeEnum.PUB, "remark2")]
         public void SingleTableDoEdit(string code, string name, SchoolTypeEnum schooltype, string remark)
         {
-            SchoolWithOtherID s = new SchoolWithOtherID();
-            s.SchoolCode = "000";
-            s.SchoolName = "default";
-            s.SchoolType = SchoolTypeEnum.PRI;
-            s.Remark = "default";
+            var s = new SchoolWithOtherID { SchoolCode = "000", SchoolName = "default", SchoolType = SchoolTypeEnum.PRI, Remark = "default" };
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using (var ctx = NewContext())
             {
-                SchoolWithOtherID s2 = new SchoolWithOtherID();
-                s2.SchoolCode = code;
-                s2.SchoolName = name;
-                s2.SchoolType = schooltype;
-                s2.Remark = remark;
-                s2.ID = s.ID;
-                _schoolvm.DC = context;
-                _schoolvm.Entity = s2;
+                _schoolvm.DC = ctx;
+                _schoolvm.Entity = new SchoolWithOtherID { ID = s.ID, SchoolCode = code, SchoolName = name, SchoolType = schooltype, Remark = remark };
                 _schoolvm.DoEdit(true);
             }
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                var rv = context.Set<SchoolWithOtherID>().ToList();
-                Assert.AreEqual(1, rv.Count());
-                Assert.AreEqual(code, rv[0].SchoolCode);
-                Assert.AreEqual(name, rv[0].SchoolName);
-                Assert.AreEqual(schooltype, rv[0].SchoolType);
-                Assert.AreEqual(remark, rv[0].Remark);
-            }
+            using var verifyCtx = NewContext();
+            var rv = verifyCtx.Set<SchoolWithOtherID>().Single();
+            Assert.AreEqual(code, rv.SchoolCode);
+            Assert.AreEqual(name, rv.SchoolName);
+            Assert.AreEqual(schooltype, rv.SchoolType);
+            Assert.AreEqual(remark, rv.Remark);
         }
 
-
         [TestMethod]
-        [Description("ÂçïË°®‰øÆÊîπÊåáÂÆöÂ≠óÊÆµ")]
-        [DataTestMethod]
         [DataRow("111", "test1", SchoolTypeEnum.PRI, "remark1")]
         [DataRow("222", "test2", SchoolTypeEnum.PUB, "remark2")]
         public void SingleTableDoEditFields(string code, string name, SchoolTypeEnum schooltype, string remark)
         {
-            SchoolWithOtherID s = new SchoolWithOtherID();
-            s.SchoolCode = "000";
-            s.SchoolName = "default";
-            s.SchoolType = SchoolTypeEnum.PRI;
-            s.Remark = "default";
+            var s = new SchoolWithOtherID { SchoolCode = "000", SchoolName = "default", SchoolType = SchoolTypeEnum.PRI, Remark = "default" };
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using (var ctx = NewContext())
             {
-                SchoolWithOtherID s2 = new SchoolWithOtherID();
-                s2.SchoolCode = code;
-                s2.SchoolName = name;
-                s2.SchoolType = schooltype;
-                s2.Remark = remark;
-                s2.ID = s.ID;
-                _schoolvm.DC = context;
-                _schoolvm.Entity = s2;
+                _schoolvm.DC = ctx;
+                _schoolvm.Entity = new SchoolWithOtherID { ID = s.ID, SchoolCode = code, SchoolName = name, SchoolType = schooltype, Remark = remark };
                 _schoolvm.FC.Add("Entity.SchoolName", name);
                 _schoolvm.DoEdit();
             }
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                var rv = context.Set<SchoolWithOtherID>().ToList();
-                Assert.AreEqual(1, rv.Count());
-                Assert.AreEqual("000", rv[0].SchoolCode);
-                Assert.AreEqual(name, rv[0].SchoolName);
-                Assert.AreEqual(SchoolTypeEnum.PRI, rv[0].SchoolType);
-                Assert.AreEqual("default", rv[0].Remark);
-            }
+            using var verifyCtx = NewContext();
+            var rv = verifyCtx.Set<SchoolWithOtherID>().Single();
+            Assert.AreEqual("000", rv.SchoolCode);
+            Assert.AreEqual(name, rv.SchoolName);
+            Assert.AreEqual(SchoolTypeEnum.PRI, rv.SchoolType);
+            Assert.AreEqual("default", rv.Remark);
         }
 
-
         [TestMethod]
-        [Description("ÂçïË°®Âà†Èô§")]
         public void SingleTableDelete()
         {
-            SchoolWithOtherID s = new SchoolWithOtherID();
-            s.SchoolCode = "000";
-            s.SchoolName = "default";
-            s.SchoolType = SchoolTypeEnum.PUB;
-            s.Remark = "default";
+            var s = new SchoolWithOtherID { SchoolCode = "000", SchoolName = "default", SchoolType = SchoolTypeEnum.PUB, Remark = "default" };
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using (var ctx = NewContext())
             {
-                Assert.AreEqual(1, context.Set<SchoolWithOtherID>().Count());
-                _schoolvm.DC = context;
+                AssertCount(ctx.Set<SchoolWithOtherID>(), 1);
+                _schoolvm.DC = ctx;
                 _schoolvm.Entity = new SchoolWithOtherID { ID = s.ID };
                 _schoolvm.DoDelete();
             }
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                Assert.AreEqual(0, context.Set<SchoolWithOtherID>().Count());
-            }
+            using var verifyCtx = NewContext();
+            AssertCount(verifyCtx.Set<SchoolWithOtherID>(), 0);
         }
 
-        [TestMethod]
-        [Description("‰∏ÄÂØπÂ§ö‰∏ªË°®Âà†Èô§")]
-        public void One2ManyTableDelete()
-        {
-            One2ManyDoAdd();
+        #endregion
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                var id = context.Set<SchoolWithOtherID>().AsNoTracking().First().ID;
-                _schoolvm.DC = context;
-                _schoolvm.Entity = new SchoolWithOtherID { ID = id };
-                _schoolvm.DoDelete();
-            }
-
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                Assert.AreEqual(0, context.Set<SchoolWithOtherID>().Count());
-            }
-        }
+        #region “ª∂‘∂‡≤Ÿ◊˜
 
         [TestMethod]
-        [Description("Â§öÂØπÂ§ö‰∏ªË°®Âà†Èô§")]
-        public void Many2ManyTableDelete()
-        {
-            Many2ManyDoAdd();
-
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                var id = context.Set<Student>().AsNoTracking().First().ID;
-                _studentvm.DC = context;
-                _studentvm.Entity = new Student { ID = id };
-                _studentvm.DoRealDelete();
-            }
-
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                Assert.AreEqual(1, context.Set<Student>().Count(), "‰∏ªË°®ÊòØÂê¶Ê≠£Á°ÆÂà†Èô§");
-                //Assert.AreEqual(1, context.Set<StudentMajor>().Count(), "Â≠êË°®ÊòØÂê¶Ê≠£Á°ÆÂà†Èô§");
-            }
-        }
-
-        [TestMethod]
-        [Description("‰∏ÄÂØπÂ§öÊ∑ªÂä†")]
         public void One2ManyDoAdd()
         {
-            SchoolWithOtherID s = new SchoolWithOtherID();
-            s.SchoolCode = "000";
-            s.SchoolName = "school";
-            s.SchoolType = SchoolTypeEnum.PRI;
-            s.Majors = new List<MajorWithOtherID>();
-            s.Remark = "";
-            s.Majors.Add(new MajorWithOtherID
+            var s = new SchoolWithOtherID
             {
-                ID = "id1",
-                MajorCode = "111",
-                MajorName = "major1",
-                Remark = "",
-                MajorType = MajorTypeEnum.Optional
-            });
-            s.Majors.Add(new MajorWithOtherID
-            {
-                ID = "id2",
-                MajorCode = "222",
-                Remark = "",
-                MajorName = "major2",
-                MajorType = MajorTypeEnum.Required
-            });
+                SchoolCode = "000", SchoolName = "school", SchoolType = SchoolTypeEnum.PRI, Remark = "",
+                Majors = new List<MajorWithOtherID>
+                {
+                    new MajorWithOtherID { ID = "id1", MajorCode = "111", MajorName = "major1", MajorType = MajorTypeEnum.Optional },
+                    new MajorWithOtherID { ID = "id2", MajorCode = "222", MajorName = "major2", MajorType = MajorTypeEnum.Required }
+                }
+            };
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                Assert.AreEqual(1, context.Set<SchoolWithOtherID>().Count());
-                Assert.AreEqual(2, context.Set<MajorWithOtherID>().Count());
-                var rv = context.Set<MajorWithOtherID>().ToList();
-                Assert.AreEqual("id1", rv[0].ID);
-                Assert.AreEqual("111", rv[0].MajorCode);
-                Assert.AreEqual("major1", rv[0].MajorName);
-                Assert.AreEqual(MajorTypeEnum.Optional, rv[0].MajorType);
-                Assert.AreEqual("id2", rv[1].ID);
-                Assert.AreEqual("222", rv[1].MajorCode);
-                Assert.AreEqual("major2", rv[1].MajorName);
-                Assert.AreEqual(MajorTypeEnum.Required, rv[1].MajorType);
+            using var ctx = NewContext();
+            AssertCount(ctx.Set<SchoolWithOtherID>(), 1);
+            AssertCount(ctx.Set<MajorWithOtherID>(), 2);
+            var majors = ctx.Set<MajorWithOtherID>().ToList();
+            Assert.AreEqual("id1", majors[0].ID);
+            Assert.AreEqual("111", majors[0].MajorCode);
+            Assert.AreEqual("major1", majors[0].MajorName);
+            Assert.AreEqual(MajorTypeEnum.Optional, majors[0].MajorType);
+            Assert.AreEqual("id2", majors[1].ID);
+            Assert.AreEqual("222", majors[1].MajorCode);
+            Assert.AreEqual("major2", majors[1].MajorName);
+            Assert.AreEqual(MajorTypeEnum.Required, majors[1].MajorType);
 
-                Assert.AreEqual("schooluser", rv[0].CreateBy);
-                Assert.IsTrue(DateTime.Now.Subtract(rv[0].CreateTime.Value).Seconds < 10);
-                Assert.AreEqual("schooluser", rv[1].CreateBy);
-                Assert.IsTrue(DateTime.Now.Subtract(rv[1].CreateTime.Value).Seconds < 10);
-
-            }
+            AssertCreatedAudit(majors[0], "schooluser");
+            AssertCreatedAudit(majors[1], "schooluser");
         }
 
         [TestMethod]
-        [Description("Â§öÂØπÂ§öÊ∑ªÂä†")]
-        public void Many2ManyDoAdd()
-        {
-            MajorWithOtherID m1 = new MajorWithOtherID
-            {
-                ID = "id1",
-                MajorCode = "111",
-                MajorName = "major1",
-                MajorType = MajorTypeEnum.Optional
-            };
-            MajorWithOtherID m2 = new MajorWithOtherID
-            {
-                ID = "id2",
-                MajorCode = "222",
-                MajorName = "major2",
-                MajorType = MajorTypeEnum.Required
-            };
-            Student s1 = new Student
-            {
-                LoginName = "s1",
-                Password = "aaa",
-                Name = "student1"
-            };
-            Student s2 = new Student
-            {
-                LoginName = "s2",
-                Password = "bbb",
-                Name = "student2"
-            };
-            _majorvm.Entity = m1;
-            _majorvm.DoAdd();
-            _majorvm.Entity = m2;
-            _majorvm.DoAdd();
-
-            s1.StudentMajorWithOtherID = new List<StudentMajorWithOtherID>();
-            s1.StudentMajorWithOtherID.Add(new StudentMajorWithOtherID { MajorId = m1.ID });
-            s2.StudentMajorWithOtherID = new List<StudentMajorWithOtherID>();
-            s2.StudentMajorWithOtherID.Add(new StudentMajorWithOtherID { MajorId = m2.ID });
-            _studentvm.Entity = s1;
-            _studentvm.DoAdd();
-            _studentvm.Entity = s2;
-            _studentvm.DoAdd();
-
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                Assert.AreEqual(2, context.Set<MajorWithOtherID>().Count());
-                Assert.AreEqual(2, context.Set<Student>().Count());
-                Assert.AreEqual(2, context.Set<StudentMajorWithOtherID>().Count());
-                var rv = context.Set<StudentMajorWithOtherID>().ToList();
-                Assert.AreEqual(s1.ID, rv[0].StudentId);
-                Assert.AreEqual(m1.ID, rv[0].MajorId);
-                Assert.AreEqual(s2.ID, rv[1].StudentId);
-                Assert.AreEqual(m2.ID, rv[1].MajorId);
-            }
-        }
-
-
-        [TestMethod]
-        [Description("‰∏ÄÂØπÂ§ö‰øÆÊîπ")]
         public void One2ManyDoEdit()
         {
             One2ManyDoAdd();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using var ctx = NewContext();
+            var schoolId = ctx.Set<SchoolWithOtherID>().Select(x => x.ID).First();
+            var majorId = ctx.Set<MajorWithOtherID>().Select(x => x.ID).First();
+            var s = new SchoolWithOtherID { ID = schoolId };
+            s.Majors = new List<MajorWithOtherID>
             {
-                var id = context.Set<SchoolWithOtherID>().Select(x=>x.ID).First();
-                var mid = context.Set<MajorWithOtherID>().Select(x => x.ID).First();
-                SchoolWithOtherID s = new SchoolWithOtherID { ID = id };
-                s.Majors = new List<MajorWithOtherID>();
-                s.Majors.Add(new MajorWithOtherID
-                {
-                    ID = "id3",
-                    MajorCode = "333",
-                    MajorName = "major3",
-                    MajorType = MajorTypeEnum.Optional
-                });
-                s.Majors.Add(new MajorWithOtherID { ID = mid, MajorCode = "111update" });
-                _schoolvm.Entity = s;
-                _schoolvm.DC = context;
-                _schoolvm.DoEdit(true);
-            }
+                new MajorWithOtherID { ID = "id3", MajorCode = "333", MajorName = "major3", MajorType = MajorTypeEnum.Optional },
+                new MajorWithOtherID { ID = majorId, MajorCode = "111update" }
+            };
+            _schoolvm.Entity = s;
+            _schoolvm.DC = ctx;
+            _schoolvm.DoEdit(true);
 
-            using(var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                var id = context.Set<SchoolWithOtherID>().Select(x => x.ID).First();
-                Assert.AreEqual(1, context.Set<SchoolWithOtherID>().Count());
-                Assert.AreEqual(2, context.Set<MajorWithOtherID>().Where(x=>x.SchoolId == id).Count());
-                var rv1 = context.Set<MajorWithOtherID>().Where(x=>x.MajorCode == "111update").SingleOrDefault();
-                Assert.AreEqual("111update", rv1.MajorCode);
-                Assert.AreEqual(null, rv1.MajorName);
-                Assert.AreEqual(null, rv1.MajorType);
-                var rv2 = context.Set<MajorWithOtherID>().Where(x => x.MajorCode == "333").SingleOrDefault();
-                Assert.AreEqual("333", rv2.MajorCode);
-                Assert.AreEqual("major3", rv2.MajorName);
-                Assert.AreEqual(MajorTypeEnum.Optional, rv2.MajorType);
+            using var verifyCtx = NewContext();
+            AssertCount(verifyCtx.Set<SchoolWithOtherID>(), 1);
+            AssertCount(verifyCtx.Set<MajorWithOtherID>().Where(x => x.SchoolId == schoolId), 2);
 
-                Assert.AreEqual("schooluser", rv1.UpdateBy);
-                Assert.IsTrue(DateTime.Now.Subtract(rv1.UpdateTime.Value).Seconds < 10);
-                Assert.AreEqual("schooluser", rv2.CreateBy);
-                Assert.IsTrue(DateTime.Now.Subtract(rv2.CreateTime.Value).Seconds < 10);
+            var updated = verifyCtx.Set<MajorWithOtherID>().Single(x => x.MajorCode == "111update");
+            Assert.AreEqual("111update", updated.MajorCode);
+            Assert.IsNull(updated.MajorName);
+            Assert.IsNull(updated.MajorType);
 
+            var created = verifyCtx.Set<MajorWithOtherID>().Single(x => x.MajorCode == "333");
+            Assert.AreEqual("333", created.MajorCode);
+            Assert.AreEqual("major3", created.MajorName);
+            Assert.AreEqual(MajorTypeEnum.Optional, created.MajorType);
 
-            }
+            AssertUpdatedAudit(updated, "schooluser");
+            AssertCreatedAudit(created, "schooluser");
         }
 
-
         [TestMethod]
-        [Description("‰∏ÄÂØπÂ§ö‰øÆÊîπÊåáÂÆöÂ≠óÊÆµ")]
         public void One2ManyDoEditFields()
         {
             One2ManyDoAdd();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using var ctx = NewContext();
+            var schoolId = ctx.Set<SchoolWithOtherID>().Select(x => x.ID).First();
+            var majorId = ctx.Set<MajorWithOtherID>().Select(x => x.ID).First();
+            var s = new SchoolWithOtherID { ID = schoolId };
+            s.Majors = new List<MajorWithOtherID>
             {
-                var id = context.Set<SchoolWithOtherID>().Select(x => x.ID).First();
-                var mid = context.Set<MajorWithOtherID>().Select(x => x.ID).First();
-                SchoolWithOtherID s = new SchoolWithOtherID { ID = id };
-                s.Majors = new List<MajorWithOtherID>();
-                s.Majors.Add(new MajorWithOtherID
-                {
-                    ID = "id3",
-                    MajorCode = "333",
-                    MajorName = "major3",
-                    MajorType = MajorTypeEnum.Optional
-                });
-                s.Majors.Add(new MajorWithOtherID { ID = mid, MajorCode = "111update" });
-                _schoolvm.Entity = s;
-                _schoolvm.DC = context;
-                _schoolvm.FC = new Dictionary<string, object>();
-                _schoolvm.FC.Add("Entity.Majors[0].MajorCode",null);
-                _schoolvm.DoEdit();
-            }
+                new MajorWithOtherID { ID = "id3", MajorCode = "333", MajorName = "major3", MajorType = MajorTypeEnum.Optional },
+                new MajorWithOtherID { ID = majorId, MajorCode = "111update" }
+            };
+            _schoolvm.Entity = s;
+            _schoolvm.DC = ctx;
+            _schoolvm.FC = new Dictionary<string, object> { { "Entity.Majors[0].MajorCode", null } };
+            _schoolvm.DoEdit();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                var id = context.Set<SchoolWithOtherID>().Select(x => x.ID).First();
-                Assert.AreEqual(1, context.Set<SchoolWithOtherID>().Count());
-                Assert.AreEqual(2, context.Set<MajorWithOtherID>().Where(x => x.SchoolId == id).Count());
-                var rv1 = context.Set<MajorWithOtherID>().Where(x => x.MajorCode == "111update").SingleOrDefault();
-                Assert.AreEqual("111update", rv1.MajorCode);
-                Assert.AreEqual("major1", rv1.MajorName);
-                Assert.AreEqual( MajorTypeEnum.Optional, rv1.MajorType);
-                var rv2 = context.Set<MajorWithOtherID>().Where(x => x.MajorCode == "333").SingleOrDefault();
-                Assert.AreEqual("333", rv2.MajorCode);
-                Assert.AreEqual("major3", rv2.MajorName);
-                Assert.AreEqual(MajorTypeEnum.Optional, rv2.MajorType);
+            using var verifyCtx = NewContext();
+            AssertCount(verifyCtx.Set<SchoolWithOtherID>(), 1);
+            AssertCount(verifyCtx.Set<MajorWithOtherID>().Where(x => x.SchoolId == schoolId), 2);
 
-                Assert.AreEqual("schooluser", rv1.UpdateBy);
-                Assert.IsTrue(DateTime.Now.Subtract(rv1.UpdateTime.Value).Seconds < 10);
-                Assert.AreEqual("schooluser", rv2.CreateBy);
-                Assert.IsTrue(DateTime.Now.Subtract(rv2.CreateTime.Value).Seconds < 10);
+            var updated = verifyCtx.Set<MajorWithOtherID>().Single(x => x.MajorCode == "111update");
+            Assert.AreEqual("111update", updated.MajorCode);
+            Assert.AreEqual("major1", updated.MajorName);
+            Assert.AreEqual(MajorTypeEnum.Optional, updated.MajorType);
 
+            var created = verifyCtx.Set<MajorWithOtherID>().Single(x => x.MajorCode == "333");
+            Assert.AreEqual("333", created.MajorCode);
+            Assert.AreEqual("major3", created.MajorName);
+            Assert.AreEqual(MajorTypeEnum.Optional, created.MajorType);
 
-            }
+            AssertUpdatedAudit(updated, "schooluser");
+            AssertCreatedAudit(created, "schooluser");
         }
 
+        [TestMethod]
+        public void One2ManyTableDelete()
+        {
+            One2ManyDoAdd();
+
+            using var ctx = NewContext();
+            var id = ctx.Set<SchoolWithOtherID>().AsNoTracking().First().ID;
+            _schoolvm.DC = ctx;
+            _schoolvm.Entity = new SchoolWithOtherID { ID = id };
+            _schoolvm.DoDelete();
+
+            using var verifyCtx = NewContext();
+            AssertCount(verifyCtx.Set<SchoolWithOtherID>(), 0);
+        }
+
+        #endregion
+
+        #region ∂‡∂‘∂‡≤Ÿ◊˜
 
         [TestMethod]
-        [Description("Â§öÂØπÂ§ö‰øÆÊîπ")]
+        public void Many2ManyDoAdd()
+        {
+            var m1 = AddMajorWithOtherID("id1", "111", "major1", MajorTypeEnum.Optional);
+            var m2 = AddMajorWithOtherID("id2", "222", "major2", MajorTypeEnum.Required);
+
+            var s1 = new Student { LoginName = "s1", Password = "p", Name = "student1",
+                StudentMajorWithOtherID = new List<StudentMajorWithOtherID> { new StudentMajorWithOtherID { MajorId = m1.ID } } };
+            var s2 = new Student { LoginName = "s2", Password = "p", Name = "student2",
+                StudentMajorWithOtherID = new List<StudentMajorWithOtherID> { new StudentMajorWithOtherID { MajorId = m2.ID } } };
+
+            _studentvm.Entity = s1; _studentvm.DoAdd();
+            _studentvm.Entity = s2; _studentvm.DoAdd();
+
+            using var ctx = NewContext();
+            AssertCount(ctx.Set<MajorWithOtherID>(), 2);
+            AssertCount(ctx.Set<Student>(), 2);
+            var sm = ctx.Set<StudentMajorWithOtherID>().ToList();
+            AssertCount(sm, 2);
+            Assert.AreEqual(s1.ID, sm[0].StudentId);
+            Assert.AreEqual(m1.ID, sm[0].MajorId);
+            Assert.AreEqual(s2.ID, sm[1].StudentId);
+            Assert.AreEqual(m2.ID, sm[1].MajorId);
+        }
+
+        [TestMethod]
         public void Many2ManyDoEdit()
         {
-            MajorWithOtherID m1 = new MajorWithOtherID
-            {
-                ID = "id1",
-                MajorCode = "111",
-                MajorName = "major1",
-                MajorType = MajorTypeEnum.Optional
-            };
-            MajorWithOtherID m2 = new MajorWithOtherID
-            {
-                ID = "id2",
-                MajorCode = "222",
-                MajorName = "major2",
-                MajorType = MajorTypeEnum.Required
-            };
-            MajorWithOtherID m3 = new MajorWithOtherID
-            {
-                ID = "id3",
-                MajorCode = "333",
-                MajorName = "major3",
-                MajorType = MajorTypeEnum.Required
-            };
-            Student s1 = new Student
-            {
-                LoginName = "s1",
-                Password = "aaa",
-                Name = "student1"
-            };
-            _majorvm.Entity = m1;
-            _majorvm.DoAdd();
-            _majorvm.Entity = m2;
-            _majorvm.DoAdd();
-            _majorvm.Entity = m3;
-            _majorvm.DoAdd();
+            var m1 = AddMajorWithOtherID("id1", "111", "major1", MajorTypeEnum.Optional);
+            var m2 = AddMajorWithOtherID("id2", "222", "major2", MajorTypeEnum.Required);
+            var m3 = AddMajorWithOtherID("id3", "333", "major3", MajorTypeEnum.Required);
 
-            s1.StudentMajorWithOtherID = new List<StudentMajorWithOtherID>();
-            s1.StudentMajorWithOtherID.Add(new StudentMajorWithOtherID { MajorId = m1.ID });
-            s1.StudentMajorWithOtherID.Add(new StudentMajorWithOtherID { MajorId = m2.ID });
+            var s1 = new Student { LoginName = "s1", Password = "p", Name = "student1",
+                StudentMajorWithOtherID = new List<StudentMajorWithOtherID> { new StudentMajorWithOtherID { MajorId = m1.ID }, new StudentMajorWithOtherID { MajorId = m2.ID } } };
+            _studentvm.Entity = s1; _studentvm.DoAdd();
+
+            using var ctx = NewContext();
+            s1.StudentMajorWithOtherID.RemoveAt(0);
+            s1.StudentMajorWithOtherID.Add(new StudentMajorWithOtherID { MajorId = m3.ID });
+            _studentvm.DC = ctx;
             _studentvm.Entity = s1;
-            _studentvm.DoAdd();
+            _studentvm.DoEdit();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                s1.StudentMajorWithOtherID.RemoveAt(0);
-                s1.StudentMajorWithOtherID.Add(new StudentMajorWithOtherID { MajorId = m3.ID });
-                _studentvm.DC = context;
-                _studentvm.Entity = s1;
-                _studentvm.DoEdit();
-            }
-
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                Assert.AreEqual(3, context.Set<MajorWithOtherID>().Count());
-                Assert.AreEqual(1, context.Set<Student>().Count());
-                Assert.AreEqual(2, context.Set<StudentMajorWithOtherID>().Count());
-                var rv1 = context.Set<StudentMajorWithOtherID>().Where(x => x.MajorId == m2.ID).SingleOrDefault();
-                var rv2 = context.Set<StudentMajorWithOtherID>().Where(x => x.MajorId == m3.ID).SingleOrDefault();
-                Assert.AreEqual(s1.ID, rv1.StudentId);
-                Assert.AreEqual(m2.ID, rv1.MajorId);
-                Assert.AreEqual(s1.ID, rv2.StudentId);
-                Assert.AreEqual(m3.ID, rv2.MajorId);
-            }
+            using var verifyCtx = NewContext();
+            AssertCount(verifyCtx.Set<MajorWithOtherID>(), 3);
+            AssertCount(verifyCtx.Set<Student>(), 1);
+            AssertCount(verifyCtx.Set<StudentMajorWithOtherID>(), 2);
+            Assert.IsNotNull(verifyCtx.Set<StudentMajorWithOtherID>().SingleOrDefault(x => x.MajorId == m2.ID));
+            Assert.IsNotNull(verifyCtx.Set<StudentMajorWithOtherID>().SingleOrDefault(x => x.MajorId == m3.ID));
         }
 
-
         [TestMethod]
-        [Description("Â§öÂØπÂ§ö‰øÆÊîπÊ∏ÖÈô§ÂÖ≥ËÅî")]
         public void Many2ManyDoEditClearRelation()
         {
-            MajorWithOtherID m1 = new MajorWithOtherID
-            {
-                ID = "id1",
-                MajorCode = "111",
-                MajorName = "major1",
-                MajorType = MajorTypeEnum.Optional
-            };
-            MajorWithOtherID m2 = new MajorWithOtherID
-            {
-                ID = "id2",
-                MajorCode = "222",
-                MajorName = "major2",
-                MajorType = MajorTypeEnum.Required
-            };
-            MajorWithOtherID m3 = new MajorWithOtherID
-            {
-                ID = "id3",
-                MajorCode = "333",
-                MajorName = "major3",
-                MajorType = MajorTypeEnum.Required
-            };
-            Student s1 = new Student
-            {
-                LoginName = "s1",
-                Password = "aaa",
-                Name = "student1"
-            };
-            _majorvm.Entity = m1;
-            _majorvm.DoAdd();
-            _majorvm.Entity = m2;
-            _majorvm.DoAdd();
-            _majorvm.Entity = m3;
-            _majorvm.DoAdd();
+            var m1 = AddMajorWithOtherID("id1", "111", "major1", MajorTypeEnum.Optional);
+            var m2 = AddMajorWithOtherID("id2", "222", "major2", MajorTypeEnum.Required);
+            var m3 = AddMajorWithOtherID("id3", "333", "major3", MajorTypeEnum.Required);
 
-            s1.StudentMajorWithOtherID = new List<StudentMajorWithOtherID>();
-            s1.StudentMajorWithOtherID.Add(new StudentMajorWithOtherID { MajorId = m1.ID });
-            s1.StudentMajorWithOtherID.Add(new StudentMajorWithOtherID { MajorId = m2.ID });
-            s1.StudentMajorWithOtherID.Add(new StudentMajorWithOtherID { MajorId = m3.ID });
-            _studentvm.Entity = s1;
-            _studentvm.DoAdd();
+            var s1 = new Student { LoginName = "s1", Password = "p", Name = "student1",
+                StudentMajorWithOtherID = new List<StudentMajorWithOtherID> { new StudentMajorWithOtherID { MajorId = m1.ID }, new StudentMajorWithOtherID { MajorId = m2.ID }, new StudentMajorWithOtherID { MajorId = m3.ID } } };
+            _studentvm.Entity = s1; _studentvm.DoAdd();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using (var ctx = NewContext())
             {
-                s1.StudentMajor = null;
-                _studentvm.DC = context;
-                _studentvm.Entity = s1;
-                _studentvm.DoEdit();
+                s1.StudentMajorWithOtherID = null;
+                _studentvm.DC = ctx; _studentvm.Entity = s1; _studentvm.DoEdit();
             }
+            using (var ctx = NewContext())
+                AssertCount(ctx.Set<StudentMajorWithOtherID>(), 3);
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                Assert.AreEqual(3, context.Set<StudentMajorWithOtherID>().Count());
-            }
-
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using (var ctx = NewContext())
             {
                 s1.StudentMajorWithOtherID = new List<StudentMajorWithOtherID>();
-                _studentvm.DC = context;
-                _studentvm.Entity = s1;
-                _studentvm.FC = new Dictionary<string, object>();
-                _studentvm.FC.Add("Entity.StudentMajorWithOtherID", null);
+                _studentvm.DC = ctx; _studentvm.Entity = s1;
+                _studentvm.FC = new Dictionary<string, object> { { "Entity.StudentMajorWithOtherID", null } };
                 _studentvm.DoEdit();
             }
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                Assert.AreEqual(0, context.Set<StudentMajorWithOtherID>().Count());
-            }
+            using var verifyCtx = NewContext();
+            AssertCount(verifyCtx.Set<StudentMajorWithOtherID>(), 0);
         }
 
+        [TestMethod]
+        public void Many2ManyTableDelete()
+        {
+            Many2ManyDoAdd();
+
+            using var ctx = NewContext();
+            var id = ctx.Set<Student>().AsNoTracking().First().ID;
+            _studentvm.DC = ctx;
+            _studentvm.Entity = new Student { ID = id };
+            _studentvm.DoRealDelete();
+
+            using var verifyCtx = NewContext();
+            AssertCount(verifyCtx.Set<Student>(), 1);
+            // TODO: —È÷§÷–º‰±Ì StudentMajorWithOtherID º«¬º «∑Ò±ªº∂¡™…æ≥˝£®µ±«∞ DoRealDelete ––Œ™¥˝»∑»œ£©
+        }
+
+        #endregion
+
+        #region ∂¡»°”ÎŒ®“ª–‘
 
         [TestMethod]
-        [Description("Ê†πÊçÆIDËØªÂèñ")]
-        public void GetTest()
+        public void GetById()
         {
             One2ManyDoAdd();
             _majorvm.SetInclude(x => x.School);
             string id;
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                id = context.Set<MajorWithOtherID>().Select(x => x.ID).FirstOrDefault();
-            }
+            using (var ctx = NewContext())
+                id = ctx.Set<MajorWithOtherID>().Select(x => x.ID).First();
             _majorvm.SetEntityById(id);
-            Assert.IsTrue(_majorvm.Entity.School.ID != 0);
+            Assert.AreNotEqual(0L, _majorvm.Entity.School.ID);
         }
 
         [TestMethod]
-        [Description("ËÆæÁΩÆÂçï‰∏Ä‰∏çÂèØÈáçÂ§çÂ≠óÊÆµ")]
-        public void DuplicateTest()
+        public void DuplicateTest_SingleField()
         {
-
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using (var ctx = NewContext())
             {
-                context.Set<MajorWithOtherID>().Add(new MajorWithOtherID { ID="id1", MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Optional });
-                context.SaveChanges();
+                ctx.Set<MajorWithOtherID>().Add(new MajorWithOtherID { ID = "id1", MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Optional });
+                ctx.SaveChanges();
             }
 
-            _majorvm = new MajorVM1WithOtherID();
-            _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
-            _majorvm.Entity = new MajorWithOtherID {ID="id2", MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required };
+            _majorvm = new MajorVM1WithOtherID { Wtm = NewWtmContext(), Entity = new MajorWithOtherID { ID = "id2", MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required } };
             _majorvm.Validate();
-            Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
+            AssertModelError(_majorvm, "Entity.MajorCode");
         }
 
         [TestMethod]
-        [Description("ËÆæÁΩÆÂ§ö‰∏™‰∏çÂèØÈáçÂ§çÂ≠óÊÆµ")]
-        public void DuplicateTest2()
+        public void DuplicateTest_MultiField()
         {
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            using (var ctx = NewContext())
             {
-                context.Set<MajorWithOtherID>().Add(new MajorWithOtherID {ID="id1", MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Optional });
-                context.SaveChanges();
+                ctx.Set<MajorWithOtherID>().Add(new MajorWithOtherID { ID = "id1", MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Optional });
+                ctx.SaveChanges();
             }
 
-            _majorvm = new MajorVM2WithOtherID();
-            _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
-            _majorvm.Entity = new MajorWithOtherID {ID="id2", MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required };
+            _majorvm = new MajorVM2WithOtherID { Wtm = NewWtmContext(), Entity = new MajorWithOtherID { ID = "id2", MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required } };
             _majorvm.Validate();
-            Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
-            Assert.IsTrue(_majorvm.MSD["Entity.MajorName"].Count > 0);
+            AssertModelError(_majorvm, "Entity.MajorCode");
+            AssertModelError(_majorvm, "Entity.MajorName");
         }
 
+        #endregion
 
-        class MajorVM1 : BaseCRUDVM<Major>
+        #region Helpers
+
+        private MajorWithOtherID AddMajorWithOtherID(string id, string code, string name, MajorTypeEnum type)
         {
-            public override DuplicatedInfo<Major> SetDuplicatedCheck()
-            {
-                return CreateFieldsInfo(SimpleField(x => x.MajorCode));
-            }
-        }
-        class MajorVM2 : BaseCRUDVM<Major>
-        {
-            public override DuplicatedInfo<Major> SetDuplicatedCheck()
-            {
-                return CreateFieldsInfo(SimpleField(x => x.MajorCode)).AddGroup(SimpleField(x=>x.MajorName));
-            }
-        }
-        class MajorVM3 : BaseCRUDVM<OptMajor>
-        {
-            public override DuplicatedInfo<OptMajor> SetDuplicatedCheck()
-            {
-                return CreateFieldsInfo(SimpleField(x => x.MajorCode),SimpleField(x => x.SchoolId));
-            }
+            var m = new MajorWithOtherID { ID = id, MajorCode = code, MajorName = name, MajorType = type };
+            _majorvm.Entity = m;
+            _majorvm.DoAdd();
+            return m;
         }
 
+        #endregion
+
+        #region ƒ⁄≤ø VM ◊”¿‡
 
         class MajorVM1WithOtherID : BaseCRUDVM<MajorWithOtherID>
         {
-            public override DuplicatedInfo<MajorWithOtherID> SetDuplicatedCheck()
-            {
-                return CreateFieldsInfo(SimpleField(x => x.MajorCode));
-            }
+            public override DuplicatedInfo<MajorWithOtherID> SetDuplicatedCheck() => CreateFieldsInfo(SimpleField(x => x.MajorCode));
         }
         class MajorVM2WithOtherID : BaseCRUDVM<MajorWithOtherID>
         {
-            public override DuplicatedInfo<MajorWithOtherID> SetDuplicatedCheck()
-            {
-                return CreateFieldsInfo(SimpleField(x => x.MajorCode)).AddGroup(SimpleField(x => x.MajorName));
-            }
+            public override DuplicatedInfo<MajorWithOtherID> SetDuplicatedCheck() => CreateFieldsInfo(SimpleField(x => x.MajorCode)).AddGroup(SimpleField(x => x.MajorName));
         }
 
+        #endregion
     }
 }

@@ -2,6 +2,9 @@ using System;
 
 namespace WalkingTec.Mvvm.Core
 {
+    /// <summary>
+    /// 数据库操作类型枚举，用于固定连接字符串时区分读操作或写操作
+    /// </summary>
     public enum DBOperationEnum { Default, Read, Write }
     /// <summary>
     /// 标记Controller或Action使用固定的连接字符串，不受其他设定控制
@@ -14,6 +17,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public string CsName { get; set; }
 
+        /// <summary>
+        /// 数据库类型，为null时使用appsettings中的设定
+        /// </summary>
         public DBTypeEnum? DbType { get; set; }
 
         /// <summary>

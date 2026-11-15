@@ -1,3 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Dm;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -6,22 +15,9 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Logging.Debug;
-using Microsoft.Extensions.Options;
 using MySqlConnector;
 using Npgsql;
-using Dm;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Models;
 using WalkingTec.Mvvm.Core.Support.Json;
@@ -33,22 +29,91 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public partial class FrameworkContext : EmptyContext, IDataContext
     {
+        /// <summary>
+        /// 系统菜单
+        /// </summary>
         public DbSet<FrameworkMenu> BaseFrameworkMenus { get; set; }
+        /// <summary>
+        /// 页面功能权限
+        /// </summary>
         public DbSet<FunctionPrivilege> BaseFunctionPrivileges { get; set; }
+        /// <summary>
+        /// 数据权限
+        /// </summary>
         public DbSet<DataPrivilege> BaseDataPrivileges { get; set; }
+        /// <summary>
+        /// 附件
+        /// </summary>
         public DbSet<FileAttachment> BaseFileAttachments { get; set; }
+        /// <summary>
+        /// 用户组
+        /// </summary>
         public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
+        /// <summary>
+        /// 角色
+        /// </summary>
         public DbSet<FrameworkRole> BaseFrameworkRoles { get; set; }
+        /// <summary>
+        /// 用户角色关联
+        /// </summary>
         public DbSet<FrameworkUserRole> BaseFrameworkUserRoles { get; set; }
+        /// <summary>
+        /// 用户与用户组关联
+        /// </summary>
         public DbSet<FrameworkUserGroup> BaseFrameworkUserGroups { get; set; }
+        /// <summary>
+        /// 工作流
+        /// </summary>
         public DbSet<FrameworkWorkflow> FrameworkWorkflows { get; set; }
+        /// <summary>
+        /// 操作日志
+        /// </summary>
         public DbSet<ActionLog> BaseActionLogs { get; set; }
+        /// <summary>
+        /// 租户
+        /// </summary>
         public DbSet<FrameworkTenant> FrameworkTenants { get; set; }
+        /// <summary>
+        /// Elsa工作流书签
+        /// </summary>
         public DbSet<Elsa_Bookmark> Elsa_Bookmarks { get; set; }
+        /// <summary>
+        /// Elsa工作流触发器
+        /// </summary>
         public DbSet<Elsa_Trigger> Elsa_Triggers { get; set; }
+        /// <summary>
+        /// Elsa工作流定义
+        /// </summary>
         public DbSet<Elsa_WorkflowDefinition> Elsa_WorkflowDefinitions { get; set; }
+        /// <summary>
+        /// Elsa工作流执行日志
+        /// </summary>
         public DbSet<Elsa_WorkflowExecutionLogRecord> Elsa_WorkflowExecutionLogRecords { get; set; }
+        /// <summary>
+        /// Elsa工作流实例
+        /// </summary>
         public DbSet<Elsa_WorkflowInstance> Elsa_WorkflowInstances { get; set; }
+        /// <summary>
+        /// 知识库文档
+        /// </summary>
+        public DbSet<KnowledgeDoc> KnowledgeDocs { get; set; }
+        /// <summary>
+        /// 知识库文档分块
+        /// </summary>
+        public DbSet<KnowledgeChunk> KnowledgeChunks { get; set; }
+
+        /// <summary>
+        /// Agent编排流程定义
+        /// </summary>
+        public DbSet<AgentFlow> AgentFlows { get; set; }
+        /// <summary>
+        /// Agent流程执行记录
+        /// </summary>
+        public DbSet<AgentRun> AgentRuns { get; set; }
+        /// <summary>
+        /// Agent对话历史消息（按用户保存，服务端为准）
+        /// </summary>
+        public DbSet<AgentChatMessage> AgentChatMessages { get; set; }
 
         /// <summary>
         /// FrameworkContext
@@ -65,13 +130,27 @@ namespace WalkingTec.Mvvm.Core
         {
         }
 
+        /// <summary>
+        /// 通过连接串、数据库类型和版本构造FrameworkContext
+        /// </summary>
+        /// <param name="cs">连接串</param>
+        /// <param name="dbtype">数据库类型</param>
+        /// <param name="version">数据库版本</param>
         public FrameworkContext(string cs, DBTypeEnum dbtype, string version = null) : base(cs, dbtype, version)
         {
         }
 
+        /// <summary>
+        /// 通过CS对象构造FrameworkContext
+        /// </summary>
+        /// <param name="cs">连接串对象</param>
         public FrameworkContext(CS cs) : base(cs)
         {
         }
+        /// <summary>
+        /// 通过DbContextOptions构造FrameworkContext
+        /// </summary>
+        /// <param name="options">上下文配置</param>
         public FrameworkContext(DbContextOptions options) : base(options) { }
 
         /// <summary>
@@ -85,6 +164,7 @@ namespace WalkingTec.Mvvm.Core
             //wtmtodo: 删除菜单同步删除页面权限
             //modelBuilder.Entity<FunctionPrivilege>().HasOne(x => x.MenuItem).WithMany(x => x.Privileges).HasForeignKey(x => x.MenuItemId).OnDelete(DeleteBehavior.Cascade);
 
+            //获取系统中所有数据模型，统一配置外键删除行为和全局查询过滤器
             var allTypes = Utils.GetAllModels();
 
             foreach (var item in allTypes)
@@ -101,18 +181,22 @@ namespace WalkingTec.Mvvm.Core
                 }
                 List<Expression> list = new List<Expression>();
                 ParameterExpression pe = Expression.Parameter(item);
+                //仅对继承层次中处于顶层的实体类型设置查询过滤器，避免派生类重复配置
                 if (item.BaseType == null || item.BaseType.IsAbstract == true || (item.BaseType == typeof(TopBasePoco) || item.BaseType == typeof(BasePoco) || item.BaseType?.BaseType == typeof(TreePoco)))
                 {
+                    //软删除实体：自动过滤IsValid为false的数据
                     if (typeof(IPersistPoco).IsAssignableFrom(item))
                     {
                         var exp = Expression.Equal(Expression.Property(pe, "IsValid"), Expression.Constant(true));
                         list.Add(exp);
                     }
+                    //多租户实体：自动过滤非当前租户的数据
                     if (typeof(ITenant).IsAssignableFrom(item))
                     {
                         var exp = Expression.Equal(Expression.Property(pe, "TenantCode"), Expression.PropertyOrField(Expression.Constant(this), "TenantCode"));
                         list.Add(exp);
                     }
+                    //将多个过滤条件用AndAlso连接，生成全局查询过滤器
                     if (list.Count > 0)
                     {
                         var finalexp = list[0];
@@ -148,6 +232,7 @@ namespace WalkingTec.Mvvm.Core
             if (emptydb == true)
             {
                 var AllModules = allModules as List<SimpleModule>;
+                //创建默认角色，001为系统管理员，002为普通用户
                 var roles = new FrameworkRole[]
                 {
                     new FrameworkRole{ ID = Guid.NewGuid(), RoleCode = "001", RoleName = CoreProgram._localizer?["Sys.Admin"], TenantCode=TenantCode},
@@ -155,6 +240,7 @@ namespace WalkingTec.Mvvm.Core
                 };
 
                 var adminRole = roles[0];
+                //非租户模式下初始化系统管理菜单目录及内置功能菜单
                 if (Set<FrameworkMenu>().Any() == false && TenantCode == null)
                 {
                     var systemManagement = GetFolderMenu("SystemManagement");
@@ -178,6 +264,7 @@ namespace WalkingTec.Mvvm.Core
                         Set<FrameworkMenu>().Add(systemManagement);
                         Set<FunctionPrivilege>().AddRange(systemManagement.FlatTree().Select(x => new FunctionPrivilege { RoleCode = "001", MenuItemId = x.ID, Allowed = true }));
 
+                        //非SPA模式（LayUI等混合模式）下额外生成API菜单目录，默认不显示在菜单上
                         if (IsSpa == false)
                         {
                             systemManagement.Icon = "layui-icon layui-icon-set";
@@ -234,6 +321,13 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 创建一个仅作为目录的菜单节点
+        /// </summary>
+        /// <param name="FolderText">目录显示文字对应的语言Key</param>
+        /// <param name="isShowOnMenu">是否显示在菜单上</param>
+        /// <param name="isInherite">是否可被租户继承</param>
+        /// <returns>目录菜单节点</returns>
         private FrameworkMenu GetFolderMenu(string FolderText, bool isShowOnMenu = true, bool isInherite = false)
         {
             FrameworkMenu menu = new FrameworkMenu
@@ -250,6 +344,16 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
+        /// <summary>
+        /// 根据模块信息生成MVC模式的功能菜单，主Action生成菜单主链接，其余Action生成子菜单
+        /// </summary>
+        /// <param name="allModules">系统所有模块</param>
+        /// <param name="areaName">区域名称</param>
+        /// <param name="controllerName">控制器名称</param>
+        /// <param name="actionName">主Action名称</param>
+        /// <param name="pageKey">菜单显示文字对应的语言Key</param>
+        /// <param name="displayOrder">显示顺序</param>
+        /// <returns>生成的菜单节点</returns>
         private FrameworkMenu GetMenu(List<SimpleModule> allModules, string areaName, string controllerName, string actionName, string pageKey, int displayOrder)
         {
             var acts = allModules.Where(x => x.ClassName == controllerName && (areaName == null || x.Area?.Prefix?.ToLower() == areaName.ToLower())).SelectMany(x => x.Actions).ToList();
@@ -281,6 +385,14 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
+        /// <summary>
+        /// 根据模块信息生成SPA模式的功能菜单，取Api控制器的第一个Action作为菜单主链接
+        /// </summary>
+        /// <param name="allModules">系统所有模块</param>
+        /// <param name="controllerName">控制器名称</param>
+        /// <param name="pageKey">菜单显示文字对应的语言Key</param>
+        /// <param name="displayOrder">显示顺序</param>
+        /// <returns>生成的菜单节点</returns>
         private FrameworkMenu GetMenu2(List<SimpleModule> allModules, string controllerName, string pageKey, int displayOrder)
         {
             bool allowtenant = controllerName != "FrameworkMenu";
@@ -295,6 +407,7 @@ namespace WalkingTec.Mvvm.Core
             if (menu != null)
             {
                 menu.PageName = pageKey;
+                //页面Url为/{控制器名}；SPA前端按自己的目录约定在DataInit中补充区域前缀（如demo的/_admin）
                 menu.Url = "/" + acts[0].Module.ClassName.ToLower();
                 menu.ActionName = "MainPage";
                 menu.ClassName = acts[0].Module.FullName;
@@ -312,6 +425,14 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
+        /// <summary>
+        /// 根据Action信息生成菜单节点
+        /// </summary>
+        /// <param name="act">Action信息</param>
+        /// <param name="isMainLink">是否为菜单主链接</param>
+        /// <param name="displayOrder">显示顺序</param>
+        /// <param name="allowtenant">是否允许租户使用</param>
+        /// <returns>生成的菜单节点</returns>
         private FrameworkMenu GetMenuFromAction(SimpleAction act, bool isMainLink, int displayOrder = 1, bool allowtenant = true)
         {
             if (act == null)
@@ -349,6 +470,9 @@ namespace WalkingTec.Mvvm.Core
 
     }
 
+    /// <summary>
+    /// 数据上下文基类，支持SqlServer、MySql、PgSql、SQLite、Oracle、达梦及内存数据库等多种数据库
+    /// </summary>
     public partial class EmptyContext : DbContext, IDataContext
     {
         private ILoggerFactory _loggerFactory;
@@ -363,6 +487,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public bool IsFake { get; set; }
         private string _tenantCode;
+        /// <summary>
+        /// 当前租户代码，用于多租户数据隔离
+        /// </summary>
         public string TenantCode
         {
             get
@@ -370,15 +497,27 @@ namespace WalkingTec.Mvvm.Core
                 return _tenantCode;
             }
         }
+        /// <summary>
+        /// 是否为调试模式
+        /// </summary>
         public bool IsDebug { get; set; }
         /// <summary>
         /// CSName
         /// </summary>
         public string CSName { get; set; }
 
+        /// <summary>
+        /// 数据库类型
+        /// </summary>
         public DBTypeEnum DBType { get; set; }
 
+        /// <summary>
+        /// 数据库版本
+        /// </summary>
         public string Version { get; set; }
+        /// <summary>
+        /// 连接串对象
+        /// </summary>
         public CS ConnectionString { get; set; }
 
 
@@ -401,6 +540,12 @@ namespace WalkingTec.Mvvm.Core
             DBType = DBTypeEnum.SqlServer;
         }
 
+        /// <summary>
+        /// 通过连接串、数据库类型和版本构造EmptyContext
+        /// </summary>
+        /// <param name="cs">连接串</param>
+        /// <param name="dbtype">数据库类型</param>
+        /// <param name="version">数据库版本</param>
         public EmptyContext(string cs, DBTypeEnum dbtype, string version = null)
         {
             CSName = cs;
@@ -408,6 +553,10 @@ namespace WalkingTec.Mvvm.Core
             Version = version;
         }
 
+        /// <summary>
+        /// 通过CS对象构造EmptyContext
+        /// </summary>
+        /// <param name="cs">连接串对象</param>
         public EmptyContext(CS cs)
         {
             CSName = cs.Value;
@@ -416,8 +565,16 @@ namespace WalkingTec.Mvvm.Core
             ConnectionString = cs;
         }
 
+        /// <summary>
+        /// 通过DbContextOptions构造EmptyContext
+        /// </summary>
+        /// <param name="options">上下文配置</param>
         public EmptyContext(DbContextOptions options) : base(options) { }
 
+        /// <summary>
+        /// 创建一个同类型的新数据上下文实例
+        /// </summary>
+        /// <returns>新的数据上下文实例</returns>
         public IDataContext CreateNew()
         {
             if (ConnectionString != null)
@@ -430,8 +587,14 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 重建数据上下文，当前存在活动事务时直接返回自身以避免脱离事务
+        /// </summary>
+        /// <param name="_logger">日志工厂，传入时开启调试日志</param>
+        /// <returns>重建后的数据上下文</returns>
         public IDataContext ReCreate(ILoggerFactory _logger=null)
         {
+            //当前上下文存在活动事务时直接返回自身，避免新连接脱离事务
             if (this?.Database?.CurrentTransaction != null)
             {
                 return this;
@@ -588,6 +751,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Oracle和达梦数据库标识符最长30字符，限制标识符长度并缩短Elsa相关表名以避免超长
             if (DBType == DBTypeEnum.Oracle || DBType == DBTypeEnum.DaMeng)
             {
                 modelBuilder.Model.SetMaxIdentifierLength(30);
@@ -605,6 +769,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="optionsBuilder"></param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //根据数据库类型配置对应的EF Core数据库提供程序
             switch (DBType)
             {
                 case DBTypeEnum.SqlServer:
@@ -640,6 +805,7 @@ namespace WalkingTec.Mvvm.Core
                 case DBTypeEnum.DaMeng:
                     optionsBuilder.UseDm(CSName);
                     break;
+                //根据配置的版本号设置Oracle SQL兼容级别，默认为19
                 case DBTypeEnum.Oracle:
                     optionsBuilder.UseOracle(CSName, option =>
                     {
@@ -663,6 +829,7 @@ namespace WalkingTec.Mvvm.Core
                 default:
                     break;
             }
+            //调试模式下开启详细错误信息和敏感数据日志
             if (IsDebug == true)
             {
                 optionsBuilder.EnableDetailedErrors();
@@ -675,11 +842,19 @@ namespace WalkingTec.Mvvm.Core
             base.OnConfiguring(optionsBuilder);
         }
 
+        /// <summary>
+        /// 设置日志工厂，用于输出EF Core日志
+        /// </summary>
+        /// <param name="factory">日志工厂</param>
         public void SetLoggerFactory(ILoggerFactory factory)
         {
             this._loggerFactory = factory;
         }
 
+        /// <summary>
+        /// 设置租户代码，用于多租户数据隔离
+        /// </summary>
+        /// <param name="code">租户代码</param>
         public void SetTenantCode(string code)
         {
             this._tenantCode = code;
@@ -709,18 +884,38 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
+        /// <summary>
+        /// 执行存储过程，返回实体列表
+        /// </summary>
+        /// <typeparam name="TElement">返回的实体类型</typeparam>
+        /// <param name="command">存储过程名称</param>
+        /// <param name="paras">存储过程参数</param>
+        /// <returns>实体列表</returns>
         public IEnumerable<TElement> RunSP<TElement>(string command, params object[] paras)
         {
             return Run<TElement>(command, CommandType.StoredProcedure, paras);
         }
 
         #region 执行Sql语句，返回datatable
+        /// <summary>
+        /// 执行Sql语句，返回datatable结果集
+        /// </summary>
+        /// <param name="sql">查询Sql语句</param>
+        /// <param name="paras">参数</param>
+        /// <returns>datatable结果集</returns>
         public DataTable RunSQL(string sql, params object[] paras)
         {
             return Run(sql, CommandType.Text, paras);
         }
         #endregion
 
+        /// <summary>
+        /// 执行Sql语句，返回实体列表
+        /// </summary>
+        /// <typeparam name="TElement">返回的实体类型</typeparam>
+        /// <param name="sql">查询Sql语句</param>
+        /// <param name="paras">参数</param>
+        /// <returns>实体列表</returns>
         public IEnumerable<TElement> RunSQL<TElement>(string sql, params object[] paras)
         {
             return Run<TElement>(sql, CommandType.Text, paras);
@@ -738,7 +933,9 @@ namespace WalkingTec.Mvvm.Core
         public DataTable Run(string sql, CommandType commandType, params object[] paras)
         {
             DataTable table = new DataTable();
+            //获取当前数据库连接
             var connection = this.Database.GetDbConnection();
+            //记录连接初始状态，若未打开则先打开连接，执行完毕后恢复原状态
             var isClosed = connection.State == ConnectionState.Closed;
             if (isClosed)
             {
@@ -749,6 +946,7 @@ namespace WalkingTec.Mvvm.Core
                 command.CommandText = sql;
                 command.CommandTimeout = 2400;
                 command.CommandType = commandType;
+                //若当前上下文存在活动事务，则将命令加入该事务
                 if (this.Database.CurrentTransaction != null)
                 {
                     command.Transaction = this.Database.CurrentTransaction.GetDbTransaction();
@@ -772,6 +970,14 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
 
+        /// <summary>
+        /// 执行存储过程或Sql语句，返回实体列表
+        /// </summary>
+        /// <typeparam name="TElement">返回的实体类型</typeparam>
+        /// <param name="sql">存储过程名称或Sql语句</param>
+        /// <param name="commandType">命令类型</param>
+        /// <param name="paras">参数</param>
+        /// <returns>实体列表</returns>
         public IEnumerable<TElement> Run<TElement>(string sql, CommandType commandType, params object[] paras)
         {
             IEnumerable<TElement> entityList = new List<TElement>();
@@ -781,6 +987,13 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 根据数据库类型创建对应的命令参数
+        /// </summary>
+        /// <param name="name">参数名</param>
+        /// <param name="value">参数值</param>
+        /// <param name="dir">参数方向</param>
+        /// <returns>数据库命令参数</returns>
         public object CreateCommandParameter(string name, object value, ParameterDirection dir)
         {
             object rv = null;
@@ -808,146 +1021,307 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+        /// <summary>
+        /// 确保数据库已被创建，不存在则创建
+        /// </summary>
         public void EnsureCreate()
         {
             this.Database.EnsureCreated();
         }
     }
 
+    /// <summary>
+    /// 空数据上下文，所有成员均抛出NotImplementedException异常，仅作为占位实现使用
+    /// </summary>
     public class NullContext : IDataContext
     {
 
 
+        /// <summary>
+        /// 当前租户代码
+        /// </summary>
         public string TenantCode { get; }
+        /// <summary>
+        /// 是否为虚拟上下文
+        /// </summary>
         public bool IsFake { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        /// <summary>
+        /// EF Core模型
+        /// </summary>
         public IModel Model => throw new NotImplementedException();
 
+        /// <summary>
+        /// 数据库门面对象
+        /// </summary>
         public DatabaseFacade Database => throw new NotImplementedException();
 
+        /// <summary>
+        /// 连接串名称
+        /// </summary>
         public string CSName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        /// <summary>
+        /// 数据库类型
+        /// </summary>
         public DBTypeEnum DBType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        /// <summary>
+        /// 是否为调试模式
+        /// </summary>
         public bool IsDebug { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        /// <summary>
+        /// 将一个实体设为添加状态
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实体</param>
         public void AddEntity<T>(T entity) where T : TopBasePoco
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 级联删除树形结构实体及其所有子级
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实体</param>
         public void CascadeDelete<T>(T entity) where T : TreePoco
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 根据数据库类型创建对应的命令参数
+        /// </summary>
+        /// <param name="name">参数名</param>
+        /// <param name="value">参数值</param>
+        /// <param name="dir">参数方向</param>
+        /// <returns>数据库命令参数</returns>
         public object CreateCommandParameter(string name, object value, ParameterDirection dir)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 创建一个同类型的新数据上下文实例
+        /// </summary>
+        /// <returns>新的数据上下文实例</returns>
         public IDataContext CreateNew()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 数据初始化
+        /// </summary>
+        /// <param name="AllModel">系统所有模块</param>
+        /// <param name="IsSpa">是否为SPA模式</param>
+        /// <returns>返回true表示需要进行初始化数据操作，返回false即数据库已经存在</returns>
         public Task<bool> DataInit(object AllModel, bool IsSpa)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 将一个实体设为删除状态
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实体</param>
         public void DeleteEntity<T>(T entity) where T : TopBasePoco
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 释放上下文，空实现不执行任何操作
+        /// </summary>
         public void Dispose()
         {
 
         }
 
+        /// <summary>
+        /// 重建数据上下文
+        /// </summary>
+        /// <param name="_logger">日志工厂，传入时开启调试日志</param>
+        /// <returns>重建后的数据上下文</returns>
         public IDataContext ReCreate(ILoggerFactory _logger = null)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 执行存储过程或Sql语句，返回DataTable
+        /// </summary>
+        /// <param name="sql">存储过程名称或Sql语句</param>
+        /// <param name="commandType">命令类型</param>
+        /// <param name="paras">参数</param>
+        /// <returns>DataTable结果集</returns>
         public DataTable Run(string sql, CommandType commandType, params object[] paras)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 执行存储过程或Sql语句，返回实体列表
+        /// </summary>
+        /// <typeparam name="TElement">返回的实体类型</typeparam>
+        /// <param name="sql">存储过程名称或Sql语句</param>
+        /// <param name="commandType">命令类型</param>
+        /// <param name="paras">参数</param>
+        /// <returns>实体列表</returns>
         public IEnumerable<TElement> Run<TElement>(string sql, CommandType commandType, params object[] paras)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 执行存储过程，返回DataTable
+        /// </summary>
+        /// <param name="command">存储过程名称</param>
+        /// <param name="paras">存储过程参数</param>
+        /// <returns>DataTable结果集</returns>
         public DataTable RunSP(string command, params object[] paras)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 执行存储过程，返回实体列表
+        /// </summary>
+        /// <typeparam name="TElement">返回的实体类型</typeparam>
+        /// <param name="command">存储过程名称</param>
+        /// <param name="paras">存储过程参数</param>
+        /// <returns>实体列表</returns>
         public IEnumerable<TElement> RunSP<TElement>(string command, params object[] paras)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 执行Sql语句，返回DataTable
+        /// </summary>
+        /// <param name="command">查询Sql语句</param>
+        /// <param name="paras">参数</param>
+        /// <returns>DataTable结果集</returns>
         public DataTable RunSQL(string command, params object[] paras)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 执行Sql语句，返回实体列表
+        /// </summary>
+        /// <typeparam name="TElement">返回的实体类型</typeparam>
+        /// <param name="sql">查询Sql语句</param>
+        /// <param name="paras">参数</param>
+        /// <returns>实体列表</returns>
         public IEnumerable<TElement> RunSQL<TElement>(string sql, params object[] paras)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 保存所有变更
+        /// </summary>
+        /// <returns>受影响的行数</returns>
         public int SaveChanges()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 保存所有变更
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess">保存成功后是否接受所有变更</param>
+        /// <returns>受影响的行数</returns>
         public int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 异步保存所有变更
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess">保存成功后是否接受所有变更</param>
+        /// <param name="cancellationToken">取消令牌</param>
+        /// <returns>受影响的行数</returns>
         public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 异步保存所有变更
+        /// </summary>
+        /// <param name="cancellationToken">取消令牌</param>
+        /// <returns>受影响的行数</returns>
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 获取指定实体类型的DbSet
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <returns>实体对应的DbSet</returns>
         public DbSet<T> Set<T>() where T : class
         {
             throw new NotImplementedException();
         }
+        /// <summary>
+        /// 设置租户代码，用于多租户数据隔离
+        /// </summary>
+        /// <param name="code">租户代码</param>
         public void SetTenantCode(string code)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 设置日志工厂，用于输出EF Core日志
+        /// </summary>
+        /// <param name="factory">日志工厂</param>
         public void SetLoggerFactory(ILoggerFactory factory)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 将一个实体设为修改状态
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实体</param>
         public void UpdateEntity<T>(T entity) where T : TopBasePoco
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 将一个实体的指定字段设为修改状态
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实体</param>
+        /// <param name="fieldExp">要设定为修改状态的字段表达式</param>
         public void UpdateProperty<T>(T entity, Expression<Func<T, object>> fieldExp) where T : TopBasePoco
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 将一个实体的指定字段设为修改状态
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实体</param>
+        /// <param name="fieldName">要设定为修改状态的字段名</param>
         public void UpdateProperty<T>(T entity, string fieldName) where T : TopBasePoco
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 确保数据库已被创建，不存在则创建
+        /// </summary>
         public void EnsureCreate()
         {
             throw new NotImplementedException();

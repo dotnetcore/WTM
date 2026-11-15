@@ -14,7 +14,15 @@ namespace WalkingTec.Mvvm.Core
     /// <typeparam name="T">列表的数据源类</typeparam>
     public class GridColumn<T> : IGridColumn<T> where T : TopBasePoco
     {
+        /// <summary>
+        /// 是否显示列汇总
+        /// </summary>
         public bool? ShowTotal { get; set; }
+        /// <summary>
+        /// 构造函数，使用列表达式和列宽初始化列
+        /// </summary>
+        /// <param name="columnExp">列绑定的属性表达式</param>
+        /// <param name="width">列宽</param>
         public GridColumn(Expression<Func<T, object>> columnExp, int? width)
         {
             ColumnExp = columnExp;
@@ -33,9 +41,11 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
+                //未显式设定字段名时，优先取列表达式对应的属性名
                 if (_field == null)
                 {
                     _field = PI?.Name;
+                    //属性名取不到时，编译列表达式并求值，将结果作为字段名
                     if (_field == null)
                     {
                         _field = CompiledCol?.Invoke(null).ToString();
@@ -121,6 +131,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (_childrenLen == null)
                 {
+                    //递归统计最底层子列数量：无子列的直接计数，有子列的递归累加
                     var len = 0;
                     if (Children != null && Children.Any())
                     {
@@ -137,12 +148,24 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 单元格编辑类型
+        /// </summary>
         public EditTypeEnum? EditType { get; set; }
 
+        /// <summary>
+        /// 编辑类型为ComboBox时的下拉选项数据源
+        /// </summary>
         public List<ComboSelectListItem> ListItems { get; set; }
 
+        /// <summary>
+        /// 编辑类型为Datetime时的日期格式
+        /// </summary>
         public DateTimeTypeEnum? DateType { get; set; }
 
+        /// <summary>
+        /// 单元格是否只读
+        /// </summary>
         public bool IsReadOnly { get; set; }
 
         #region 只读属性 生成 Excel 及其 表头用
@@ -195,6 +218,7 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         private PropertyInfo _pi;
+        //列表达式对应的属性信息，首次访问时通过解析表达式获取并缓存
         protected PropertyInfo PI
         {
             get
@@ -240,6 +264,7 @@ namespace WalkingTec.Mvvm.Core
         public string Id { get; set; }
 
         private Func<T, object> _compiledCol;
+        //列表达式编译后的委托，用于直接读取数据源中该列的值；无表达式时返回空字符串
         protected Func<T, object> CompiledCol
         {
             get
@@ -277,6 +302,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 属性名称
+        /// </summary>
         public string FieldName
         {
             get
@@ -289,7 +317,13 @@ namespace WalkingTec.Mvvm.Core
         /// 本列是否需要分组
         /// </summary>
         public bool NeedGroup { get; set; }
+        /// <summary>
+        /// 是否锁定列
+        /// </summary>
         public bool IsLocked { get; set; }
+        /// <summary>
+        /// 是否允许排序
+        /// </summary>
         public bool Sortable { get; set; }
         /// <summary>
         /// 是否允许换行
@@ -372,6 +406,10 @@ namespace WalkingTec.Mvvm.Core
         }
 
 
+        /// <summary>
+        /// 判断本列是否设置了格式化函数
+        /// </summary>
+        /// <returns>设置了格式化函数返回true，否则返回false</returns>
         public bool HasFormat()
         {
             if(Format != null)
@@ -393,7 +431,9 @@ namespace WalkingTec.Mvvm.Core
         public virtual object GetText(object source, bool needFormat = true)
         {
             object rv = null;
+            //编译列表达式，取得当前行的原始值
             var col = CompiledCol?.Invoke(source as T);
+            //不需要格式化输出时，如果Format返回的是普通对象（非ColumnFormatInfo），直接返回该对象
             if(needFormat == false && Format != null)
             {
                 var test = Format.Invoke(source as T, col);
@@ -403,6 +443,7 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
 
+            //没有格式化函数或不需要格式化时，按默认规则转换原始值
             if (Format == null || needFormat == false)
             {
                 if (col == null)
@@ -412,6 +453,7 @@ namespace WalkingTec.Mvvm.Core
                 else if (col is DateTime || col is DateTime?)
                 {
                     var datevalue = col as DateTime?;
+                    //时间部分全为0时只输出日期，否则输出完整的日期时间
                     if(datevalue != null)
                     {
                         if (datevalue.Value.Hour == 0 && datevalue.Value.Minute == 0 && datevalue.Value.Second == 0)
@@ -434,6 +476,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else if (col.GetType().Namespace.Equals("System") == false)
                 {
+                    //非System命名空间的复杂类型：需要原始值时序列化为Json字符串，页面显示时使用ToString
                     if (needFormat == false)
                     {
                         rv = JsonSerializer.Serialize(col, CoreProgram.DefaultJsonOption);
@@ -459,6 +502,11 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+        /// <summary>
+        /// 获取单元格的原始值，不做任何格式化
+        /// </summary>
+        /// <param name="source">源数据</param>
+        /// <returns>原始值</returns>
         public virtual object GetObject(object source)
         {
             object rv = CompiledCol?.Invoke(source as T);

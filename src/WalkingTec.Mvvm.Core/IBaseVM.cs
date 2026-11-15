@@ -11,6 +11,9 @@ namespace WalkingTec.Mvvm.Core
     {
         #region Property
 
+        /// <summary>
+        /// WTM运行时上下文，提供配置、日志、本地化等全局服务
+        /// </summary>
         WTMContext Wtm { get; set; }
 
         /// <summary>
@@ -50,10 +53,19 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         Configs ConfigInfo { get;  }
 
+        /// <summary>
+        /// 当前Session服务
+        /// </summary>
         ISessionService Session { get;  }
 
+        /// <summary>
+        /// 分布式缓存
+        /// </summary>
         IDistributedCache Cache { get;  }
 
+        /// <summary>
+        /// 当前登录用户信息
+        /// </summary>
         LoginUserInfo LoginUserInfo { get; }
         #endregion
 

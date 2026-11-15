@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.Core.ConfigOptions
 {
+    /// <summary>
+    /// UEditor 富文本编辑器配置，对应 appsettings.json 中的 UEditorOptions 节；各属性通过 JsonPropertyName 特性与 UEditor 前端 config.json 中的配置项对应，涵盖图片、涂鸦、截图、远程抓取、视频、文件的上传及在线管理配置
+    /// </summary>
     public class UEditorOptions
     {
         #region 上传图片配置项
@@ -162,6 +165,9 @@ namespace WalkingTec.Mvvm.Core.ConfigOptions
 
         #region 抓取远程图片配置
 
+        /// <summary>
+        /// 本地域名列表：抓取远程图片时，这些域名下的图片被视为本地图片，不再转存到自己的服务器；默认包含 127.0.0.1、localhost、img.baidu.com
+        /// </summary>
         [JsonPropertyName("catcherLocalDomain")]
         public string[] CatcherLocalDomain { get; set; } = new string[] { "127.0.0.1", "localhost", "img.baidu.com" };
 

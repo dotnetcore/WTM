@@ -29,6 +29,7 @@ namespace WalkingTec.Mvvm.Mvc.Binders
                 return Task.CompletedTask;
             }
 
+            // 先按模型名直接取值；若取不到，则回退尝试 模型名[Value] 形式的键（对应前台提交 DateRange 的 Value 属性）
             var valueProviderResult = bindingContext.ValueProvider.GetValue(modelName);
             if (valueProviderResult == ValueProviderResult.None)
             {
@@ -48,6 +49,7 @@ namespace WalkingTec.Mvvm.Mvc.Binders
                 return Task.CompletedTask;
             }
 
+            // 尝试将提交的字符串解析为 DateRange 对象，解析成功则以它作为绑定结果，失败则不设置结果
             if(DateRange.TryParse(value,out var dateRange))
                 bindingContext.Result = ModelBindingResult.Success(dateRange);
             return Task.CompletedTask;

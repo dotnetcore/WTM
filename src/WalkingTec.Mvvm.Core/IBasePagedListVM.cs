@@ -14,6 +14,9 @@ namespace WalkingTec.Mvvm.Core
         where T : TopBasePoco
         where S : ISearcher
     {
+        /// <summary>
+        /// 列表对应Model的类型
+        /// </summary>
         Type ModelType { get; }
 
         /// <summary>
@@ -39,15 +42,29 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>Excel文件</returns>
         byte[] GenerateExcel();
 
+        /// <summary>
+        /// 列表合计行显示的文字
+        /// </summary>
         string TotalText { get; set; }
 
+        /// <summary>
+        /// 获取当前登录用户待审批的工作流
+        /// </summary>
+        /// <param name="flowname">工作流名称，为空则查询所有工作流</param>
+        /// <returns>待审批的工作流列表</returns>
         List<FrameworkWorkflow> GetMyApproves(string flowname = null);
         #region Old
+        /// <summary>
+        /// InitListVM 完成后触发的事件
+        /// </summary>
         event Action<IBasePagedListVM<T, S>> OnAfterInitList;
         /// <summary>
         ///记录批量操作时列表中选择的Id
         /// </summary>
         List<string> Ids { get; set; }
+        /// <summary>
+        /// 选择器模式下取值字段的名称
+        /// </summary>
         string SelectorValueField { get; set; }
 
         /// <summary>
@@ -56,6 +73,9 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>Model集合</returns>
         IEnumerable<T> GetEntityList();
 
+        /// <summary>
+        /// 清空已查询的Model列表缓存
+        /// </summary>
         void ClearEntityList();
         /// <summary>
         /// 获取Searcher
@@ -103,6 +123,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         void RemoveActionColumn(object root = null);
 
+        /// <summary>
+        /// 移除列表的所有页面动作
+        /// </summary>
         void RemoveAction();
 
         /// <summary>
@@ -148,6 +171,10 @@ namespace WalkingTec.Mvvm.Core
         /// <returns></returns>
         string SetFullRowBgColor(object entity);
 
+        /// <summary>
+        /// 创建一个空的Model实例
+        /// </summary>
+        /// <returns>空的Model实例</returns>
         T CreateEmptyEntity();
 
         /// <summary>
@@ -155,6 +182,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         string DetailGridPrix { get; set; }
 
+        /// <summary>
+        /// 调用 InitListVM 并触发 OnAfterInitList 事件
+        /// </summary>
         void DoInitListVM();
 
         #endregion

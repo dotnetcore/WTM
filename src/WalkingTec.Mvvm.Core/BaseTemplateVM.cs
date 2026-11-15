@@ -1,15 +1,18 @@
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace WalkingTec.Mvvm.Core
 {
+    /// <summary>
+    /// Excel模板基类，用于生成导入模板和导出数据文件，所有模板VM应继承本类
+    /// </summary>
     public class BaseTemplateVM : BaseVM
     {
         #region 属性
@@ -40,10 +43,14 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 构造函数
+        /// <summary>
+        /// 构造函数，设置默认值并根据Display特性初始化各Excel属性的列头名称
+        /// </summary>
         public BaseTemplateVM()
         {
             ValidityTemplateType = true;
             Parms = new Dictionary<string, string>();
+            // 反射获取所有ExcelPropety类型的字段，若字段带有Display特性则使用其显示名作为列头，否则使用字段默认的显示名
             var propetys = this.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
             for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
             {
@@ -69,6 +76,9 @@ namespace WalkingTec.Mvvm.Core
 
         }
 
+        /// <summary>
+        /// 初始化自定义格式，子类可重载本函数对模板中的Excel列格式进行额外设置
+        /// </summary>
         public virtual void InitCustomFormat()
         {
 
@@ -284,6 +294,10 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 创建模板使用的样式表，定义表头样式（灰/黄/红）和数据单元格样式（文本/数字/小数/日期）
+        /// </summary>
+        /// <returns>OpenXML样式表对象</returns>
         private static Stylesheet CreateTemplateStylesheet()
         {
             var stylesheet = new Stylesheet();
@@ -357,6 +371,9 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 初始化DataTable(不含动态列)
+        /// <summary>
+        /// 根据各Excel属性的数据类型创建TemplateDataTable的列结构（不含动态列）
+        /// </summary>
         private void CreateDataTable()
         {
             TemplateDataTable = new DataTable();

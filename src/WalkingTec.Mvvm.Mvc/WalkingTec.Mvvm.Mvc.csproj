@@ -92,7 +92,6 @@
     <PackageReference Include="Elsa.Persistence.EntityFramework.SqlServer" Version="2.17.0" />
     <PackageReference Include="Elsa.Server.Api" Version="2.17.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="10.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="10.0.9" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.1.7" />

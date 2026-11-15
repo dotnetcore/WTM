@@ -5,6 +5,9 @@ using System.Linq.Expressions;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
+    /// <summary>
+    /// List 相关的扩展函数，用于生成下拉菜单数据和图表数据
+    /// </summary>
     public static class ListExtension
     {
         /// <summary>
@@ -49,6 +52,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        /// <summary>
+        /// 将 ChartData 列表转换为 ECharts 图表所需的 dataset、series 和 legend 配置数据
+        /// </summary>
+        /// <typeparam name="T">源数据类，应为 ChartData 类型</typeparam>
+        /// <param name="self">源数据 List</param>
+        /// <param name="radius">散点图气泡最大半径，默认 100</param>
+        /// <param name="seriesname">数据系列名称，默认为 Info</param>
+        /// <returns>包含 dataset、series、legend 三个字段的对象，供前端 ECharts 使用</returns>
         public static object ToChartData<T>(this List<T> self, int radius = 100, string seriesname = "Info")
         {
             //var data = string.Empty;
@@ -56,6 +67,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 var cd = self as List<ChartData>;
                 var i = 0;
+                //为未指定系列的记录设置默认系列名称
                 for (i = 0; i < cd.Count; i++)
                 {
                     if (string.IsNullOrEmpty(cd[i].Series))
@@ -67,6 +79,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
 
                 var yCount = cd.GroupBy(x => x.Category).ToList();
+                //判断是否存在 X 轴数值，存在则按散点图格式生成数据
                 var isScatter = cd.Any(x => x.ValueX > 0);
                 var dataset = "{\"source\":[";
                 if (isScatter)
@@ -97,6 +110,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
                 else
                 {
+                    //非散点图：按 分类 x 系列 填充二维数组，第一行第一列为表头，缺失的数据补 0
                     object[,] rtc = new object[yCount.Count + 1, series.Length + 1];
                     rtc[0, 0] = $"{seriesname}";
 
@@ -142,6 +156,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     dataset += "]}";
                 }
+                //生成系列及图例的配置字符串，散点图按 Addition 值计算气泡大小
                 var seriesStr = "[";
                 var legend = "{\"data\":[";
                 var max = cd.Max(x => x.Addition);

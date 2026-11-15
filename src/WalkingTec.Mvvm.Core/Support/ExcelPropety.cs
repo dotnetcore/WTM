@@ -1,15 +1,18 @@
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
 {
+    /// <summary>
+    /// Excel列属性类，描述导入/导出模板中一列的字段信息、数据类型、验证规则及格式化方式
+    /// </summary>
     public class ExcelPropety
     {
         #region 属性
@@ -30,19 +33,15 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        /// <summary>
+        /// 字段显示名称
+        /// </summary>
         public string FieldDisplayName { get; set; }
 
+        /// <summary>
+        /// 字段名称
+        /// </summary>
         public string FieldName { get; set; }
-
-        //private string _backgroudColor;
-        ///// <summary>
-        ///// 背景色
-        ///// </summary>
-        //public string BackgroudColor
-        //{
-        //    get { return _backgroudColor; }
-        //    set { _backgroudColor = value; }
-        //}
 
         /// <summary>
         /// 背景色
@@ -70,6 +69,9 @@ namespace WalkingTec.Mvvm.Core
         }
 
         private Type _enumType;
+        /// <summary>
+        /// 枚举类型，设置时自动将枚举值转换为下拉列表项
+        /// </summary>
         public Type EnumType
         {
             get { return _enumType; }
@@ -140,8 +142,14 @@ namespace WalkingTec.Mvvm.Core
             set { _dynamicColumns = value; }
         }
 
+        /// <summary>
+        /// 子表类型，字段属于关联子表时使用
+        /// </summary>
         public Type SubTableType { get; set; }
 
+        /// <summary>
+        /// 是否只读（只读列在Excel中将被锁定）
+        /// </summary>
         public bool ReadOnly { get; set; }
         /// <summary>
         /// 字符数量
@@ -162,6 +170,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="sheetName">主表名称</param>
         /// <param name="dataSheetName">数据表名称</param>
         /// <param name="numberFormatId">输出：数字格式ID</param>
+        /// <param name="isLocked">输出：该列是否锁定，只读列返回true</param>
         /// <returns>数据样式索引</returns>
         public void SetColumnFormat(ColumnDataType dateType, int columnIndex,
             WorksheetPart worksheetPart, WorksheetPart dataSheetPart,
@@ -178,6 +187,7 @@ namespace WalkingTec.Mvvm.Core
                 worksheet.InsertAfter(dataValidations, worksheet.GetFirstChild<SheetData>());
             }
 
+            //数据验证的应用范围：从第2行到Excel最大行数（第1行为表头）
             string cellRange = $"{OpenXmlHelper.GetColumnLetter(columnIndex)}2:{OpenXmlHelper.GetColumnLetter(columnIndex)}1048576";
             string errTitle = CoreProgram._localizer?["Sys.Error"]?.ToString() ?? "Error";
             string errInputNum = CoreProgram._localizer?["Sys.PleaseInputNumber"]?.ToString() ?? "Please input integer";
@@ -428,12 +438,20 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        /// <summary>
+        /// 根据字段Lambda表达式创建Excel列属性，自动识别字段的数据类型，并应用Required、Range、StringLength等特性中定义的验证规则
+        /// </summary>
+        /// <typeparam name="T">字段所属的实体类型</typeparam>
+        /// <param name="field">字段Lambda表达式</param>
+        /// <param name="isDateTime">是否为日期时间类型，默认仅日期</param>
+        /// <returns>创建的Excel列属性</returns>
         public static ExcelPropety CreateProperty<T>(Expression<Func<T, object>> field, bool isDateTime = false)
         {
             ExcelPropety cp = new ExcelPropety();
             cp.FieldDisplayName = field.GetPropertyDisplayName();
             var fname = field.GetPropertyName();
             Type t = field.GetPropertyInfo().PropertyType;
+            //字段表达式指向子表属性时（形如x.Sub.Name），记录子表类型并取最后一级属性名
             if (fname.Contains('.'))
             {
                 int index = fname.LastIndexOf('.');
@@ -444,6 +462,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 cp.FieldName = fname;
             }
+            //可空类型时，未标记Required特性则视为可为空，并解包出实际类型
             if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 var req = field.GetPropertyInfo().GetCustomAttributes(typeof(RequiredAttribute), false).Cast<RequiredAttribute>().FirstOrDefault();
@@ -538,7 +557,13 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public class ProcessResult
     {
+        /// <summary>
+        /// 处理结果中包含的字段值列表
+        /// </summary>
         public List<EntityValue> EntityValues { get; set; }
+        /// <summary>
+        /// 构造处理结果，初始化字段值列表
+        /// </summary>
         public ProcessResult()
         {
             EntityValues = new List<EntityValue>();
@@ -564,6 +589,9 @@ namespace WalkingTec.Mvvm.Core
         public string ErrorMsg { get; set; }
     }
 
+    /// <summary>
+    /// Excel列数据类型枚举
+    /// </summary>
     public enum ColumnDataType { Text, Number, Date, Float, Bool, ComboBox, Enum, Dynamic, DateTime }
 
     #endregion

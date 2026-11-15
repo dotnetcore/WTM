@@ -1,5 +1,4 @@
 using System;
-using Microsoft.AspNetCore.Authorization;
 
 namespace WalkingTec.Mvvm.Core
 {

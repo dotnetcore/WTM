@@ -9,10 +9,17 @@ namespace WalkingTec.Mvvm.Core.Extensions
     {
         #region DateTime Helper
 
+        /// <summary>
+        /// 获取当前时间在所在年份中属于第几周
+        /// </summary>
+        /// <param name="self">当前时间</param>
+        /// <returns>当前时间所在的周数</returns>
         public static int WeekOfYear(this DateTime self)
         {
             var startDayOfYear  = new DateTime(self.Year,1,1);
+            //计算当年第一天距离周一的偏移天数
             var weekOffset = 7 - ( startDayOfYear.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)startDayOfYear.DayOfWeek) + 1;
+            //根据当天是当年第几天和偏移量换算出周数
             var weekOfYear = (int)Math.Ceiling((self.DayOfYear - weekOffset) / 7.0 + (weekOffset == 0 ? 0 : 1));
 
             return weekOfYear;
