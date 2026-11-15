@@ -1,6 +1,21 @@
 # 更新日志
 
 ## v10.x
+## v10.1.0(2026-11-16)
+
+* **新增：**   Agent流程编排：图形化流程设计（AgentFlow/AgentGraph/AgentExecutor）、运行与运行历史、Quartz定时调度、可发布为AI助手技能
+* **新增：**   AI助手对话：系统接口自动注册为工具（ToolScope控制查询/增删改范围）+知识库语义检索工具，对话历史服务端存储，前端面板/悬浮两种模式
+* **新增：**   知识库：文档上传解析与分块（ChunkingService）、向量化（OpenAI兼容Embedding接口）、语义检索问答
+* **新增：**   AiCode动态代码：[AiFunc]/[AiCode]/[AiArgs]标记体系，AI生成→试编译→黑名单拦截→AI安全审查→保存→运行完整闭环，编译结果缓存与可卸载程序集上下文
+* **新增：**   LlmService统一大模型访问（OpenAI兼容Chat/Vision），Llm/Embedding/Agent/AiCode配置节
+* **安全：**   正式模式（IsQuickDebug=false）启动时检测JWT默认密钥并拒绝运行，防止公开默认密钥伪造任意用户令牌
+* **安全：**   AiCode黑名单补强：拦截反射族（Type/GetType/GetMethods/Invoke/CreateDelegate等）、P/Invoke（DllImport）、unsafe/指针/stackalloc、表达式树编译等绕过路径
+* **安全：**   [AiCode]字段保存前在BaseCRUDVM中强制校验（黑名单+试编译），跳过前端直接提交的恶意代码无法落库
+* **安全：**   CORS默认策略（EnableAll）不再附带AllowCredentials，消除"反射任意Origin+凭据"的跨域窃取风险；需要凭据的跨域请配置CorsOptions.Policy白名单
+* **修改：**   高频查询接口标记NoLog不写操作日志（流程列表/运行历史/代码检查/AI代码校验等）
+* **修改：**   个人数据与名称类接口标记AllRights登录即可访问（对话历史、LLM信息、知识库文档列表、内部接口列表、AI函数元数据等）
+* **修改：**   移除DeepSeek专用配置，统一为Llm通用配置节
+
 ## v10.0.0(2026-06-24)
 
 * **修改：**   全面升级支持 .NET 10
