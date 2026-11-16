@@ -1,14 +1,15 @@
 import { useUserInfo } from '/@/stores/userInfo';
-import { judementSameArr } from '/@/utils/arrayOperation';
 
 /**
  * 单个权限验证
  * @param value 权限值
  * @returns 有权限，返回 `true`，反之则反
  */
-export function auth(value: string): boolean {
+export function auth(value: unknown): boolean {
+	if (typeof value !== 'string') return false;
 	const stores = useUserInfo();
-	return stores.userInfos.authBtnList.some((v: string) => v === value);
+	if (stores.userInfos.isDebug === true) return true;
+	return stores.authBtnSet.has(value.trim().toLowerCase());
 }
 
 /**
@@ -16,15 +17,11 @@ export function auth(value: string): boolean {
  * @param value 权限值
  * @returns 有权限，返回 `true`，反之则反
  */
-export function auths(value: Array<string>): boolean {
-	let flag = false;
+export function auths(value: unknown): boolean {
+	if (!Array.isArray(value) || !value.every((item) => typeof item === 'string')) return false;
 	const stores = useUserInfo();
-	stores.userInfos.authBtnList.map((val: string) => {
-		value.map((v: string) => {
-			if (val === v) flag = true;
-		});
-	});
-	return flag;
+	if (stores.userInfos.isDebug === true) return true;
+	return value.some((permission) => stores.authBtnSet.has(permission.trim().toLowerCase()));
 }
 
 /**
@@ -32,7 +29,9 @@ export function auths(value: Array<string>): boolean {
  * @param value 权限值
  * @returns 有权限，返回 `true`，反之则反
  */
-export function authAll(value: Array<string>): boolean {
+export function authAll(value: unknown): boolean {
+	if (!Array.isArray(value) || !value.every((item) => typeof item === 'string')) return false;
 	const stores = useUserInfo();
-	return judementSameArr(value, stores.userInfos.authBtnList);
+	if (stores.userInfos.isDebug === true) return true;
+	return value.length > 0 && value.every((permission) => stores.authBtnSet.has(permission.trim().toLowerCase()));
 }
