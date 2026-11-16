@@ -1,8 +1,0 @@
-@model $vmnamespace$.$modelname$VM
-@inject IStringLocalizer<Program> Localizer;
-
-<wt:form vm="@Model">$fields$
-    <wt:row align="AlignEnum.Right">
-        <wt:closebutton />
-    </wt:row>
-</wt:form>

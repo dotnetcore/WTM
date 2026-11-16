@@ -54,7 +54,6 @@ using WalkingTec.Mvvm.Core.WorkFlow;
 using WalkingTec.Mvvm.Mvc.Auth;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Helper;
-using WalkingTec.Mvvm.TagHelpers.LayUI;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -538,7 +537,8 @@ namespace WalkingTec.Mvvm.Mvc
             var gd = GetGlobalData();
             services.AddHttpContextAccessor();
             services.AddSingleton(gd);
-            services.AddLayui();
+            //LayUI TagHelpers已移除：UIService改注册Core内置的空实现（无UI框架场景返回空字符串）
+            services.AddSingleton<Core.IUIService, Core.Implement.DefaultUIService>();
             services.AddSingleton(op.DataPrivileges ?? new List<IDataPrivilege>());
             DataContextFilter._csfunc = op.CsSelector;
             WtmFileProvider._subDirFunc = op.FileSubDirSelector;
@@ -1261,7 +1261,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 RequestPath = new PathString("/_js"),
                 FileProvider = new EmbeddedFileProvider(
-                    typeof(_CodeGenController).GetTypeInfo().Assembly,
+                    typeof(FrameworkServiceExtension).GetTypeInfo().Assembly,
                     "WalkingTec.Mvvm.Mvc")
             });
             return app;
